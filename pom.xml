@@ -19,6 +19,7 @@
                 <version>1.0-m5.1</version>
                 <configuration>
                     <!-- see goals wiki page for configuration options -->
+                    <!-- https://bitbucket.org/atlassian/jgit-flow/wiki/goals.wiki -->
                 </configuration>
             </plugin>
         </plugins>
