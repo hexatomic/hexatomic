@@ -29,4 +29,11 @@ Verify that the project builds by running `mvn clean verify` in the root of the 
 
 ### Working with pull requests (PRs)
 
-To include **pull requests** in the repository, do `Rebase and merge` rather than the other merging options on GitHub.
+- To include **pull requests** in the repository, do `Rebase and merge` rather than the other merging options on GitHub.
+
+### Internal workflow
+
+Project-internal contributors fork the main repository (hexatomic/hexatomic), do their work in JGitFlow
+branches (feature/hotfix), then write a pull request against develop.
+
+Maintainers work with JGitFlow to work on release branches.
