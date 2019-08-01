@@ -1,0 +1,14 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.corpus_tools</groupId>
+    <artifactId>org.corpus_tools.hexatomic.root</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <parent>
+        <groupId>org.corpus_tools</groupId>
+        <artifactId>org.corpus_tools.hexatomic.configuration</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+        <relativePath>./releng/org.corpus_tools.hexatomic.configuration</relativePath>
+    </parent>
+    <modules/>
+</project>
