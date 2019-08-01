@@ -25,3 +25,9 @@ relesae engineering content.
 ## Build
 
 Verify that the project builds by running `mvn clean verify` in the root of the repository.
+
+## Maintain
+
+### Working with pull requests (PRs)
+
+To include **pull requests** in the repository, do `Rebase and merge` rather than the other merging options on GitHub.
