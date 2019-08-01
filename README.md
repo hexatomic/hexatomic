@@ -37,3 +37,9 @@ Project-internal contributors fork the main repository (hexatomic/hexatomic), do
 branches (feature/hotfix), then write a pull request against develop.
 
 Maintainers work with JGitFlow to work on release branches.
+
+### Naming conventions
+
+- Plugin projects are called `org.corpus_tools.hexatomic.<plugin-name>` and are stored in `/bundles/org.corpus_tools.hexatomic.<plugin-name>`.
+- Feature projects are called `org.corpus_tools.hexatomic.<feature-name>.feature` with an identifier of `org.corpus_tools.hexatomic.<feature-name>`, and 
+are stored in `features/org.corpus_tools.hexatomic.<feature-name>`.
