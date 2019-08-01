@@ -9,8 +9,7 @@ at Humboldt-Universität zu Berlin and Friedrich Schiller University Jena.
 ## Project structure
 
 *Hexatomic* is an Eclipse e4 Application. It is built with Maven and Tycho, and set
-up following [Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial]
-(http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html) by 
+up following [Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial](http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html) by 
 Lars Vogel and Simon Scholz, Version 13.03.2019.
 
 ### Root
