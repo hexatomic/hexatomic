@@ -16,7 +16,7 @@ Lars Vogel and Simon Scholz, Version 13.03.2019.
 
 The root directory contains the main POM.
 
-## releng
+### releng
 
 The `releng` folder contains the project configuration and
 relesae engineering content.
@@ -43,3 +43,7 @@ Maintainers work with JGitFlow to work on release branches.
 - Plugin projects are called `org.corpus_tools.hexatomic.<plugin-name>` and are stored in `/bundles/org.corpus_tools.hexatomic.<plugin-name>`.
 - Feature projects are called `org.corpus_tools.hexatomic.<feature-name>.feature` with an identifier of `org.corpus_tools.hexatomic.<feature-name>`, and 
 are stored in `features/org.corpus_tools.hexatomic.<feature-name>`.
+
+### Repo documentation
+
+All folders that are parent folders shall contain a `README.md` file that explains the contents of the folder.
