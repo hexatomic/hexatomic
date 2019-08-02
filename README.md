@@ -1,5 +1,8 @@
 # Hexatomic
 
+Status `develop`: [![Build Status](https://travis-ci.org/hexatomic/hexatomic.svg?branch=develop)](https://travis-ci.org/hexatomic/hexatomic)  
+Status `master`: [![Build Status](https://travis-ci.org/hexatomic/hexatomic.svg?branch=master)](https://travis-ci.org/hexatomic/hexatomic)
+
 This repository holds the source code for [Hexatomic](https://hexatomic.github.io/hexatomic), 
 an extensible framework for linguistic multi-layer corpus annotation.
 
