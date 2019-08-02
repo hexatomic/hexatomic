@@ -11,5 +11,6 @@
     </parent>
     <modules>
         <module>org.corpus_tools.hexatomic.update</module>
+        <module>org.corpus_tools.hexatomic.product</module>
     </modules>
 </project>
