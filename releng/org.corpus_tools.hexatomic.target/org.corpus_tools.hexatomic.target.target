@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde?>
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1564742108">
+  <locations>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+      <unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
+      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.18.0.v20190528-1257"/>
+      <repository location="http://download.eclipse.org/releases/2019-06/"/>
+    </location>
+  </locations>
+</target>
