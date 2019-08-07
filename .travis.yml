@@ -1,12 +1,52 @@
-language: java
+matrix:
+  include:
+    - language: java
 
-sudo: false
+      sudo: false
 
-jdks:
-  - oraclejdk8
-  - openjdk8
+      jdks:
+        - oraclejdk8
+        - openjdk8
 
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+      addons:
+        apt:
+          packages:
+            - oracle-java8-installer
+
+    - language: rust
+      sudo: false
+
+      cache:
+        - cargo
+
+      rust:
+        - stable
+
+      before_script:
+        # Set an env variable for the currently tagged version
+        - export SHORT_VERSION=`echo ${TRAVIS_TAG:-develop} | sed -E 's/(\.[0-9]+)$//'`
+        # Retrieve and install latest mdbook version
+        - export MDBOOK_VERSION='0.3.1' # Change to use newer version
+        - mkdir $HOME/.mdbook
+        - curl -L -o mdbook.tar.gz https://github.com/rust-lang-nursery/mdBook/releases/download/v$MDBOOK_VERSION/mdbook-v$MDBOOK_VERSION-x86_64-unknown-linux-gnu.tar.gz && tar -C $HOME/.mdbook -xzvf mdbook.tar.gz
+        - rm mdbook.tar.gz
+        - export PATH=$HOME/.mdbook/mdbook:$PATH
+
+      script:
+        # Test the user documentation
+        - $HOME/.mdbook/mdbook test docs/user/
+        # Test the dev documentation
+        - $HOME/.mdbook/mdbook test docs/dev/
+        # Generate the user documentation for potential deploy
+        - $HOME/.mdbook/mdbook build --dest-dir book/${SHORT_VERSION}/user docs/user/
+        # Generate the dev documentation for potential deploy
+        - $HOME/.mdbook/mdbook build --dest-dir book/${SHORT_VERSION}/dev docs/dev/
+
+      deploy:
+        - provider: script
+          script: bash $TRAVIS_BUILD_DIR/releng/sh/deploy-docs.sh
+          on:
+            repo: hexatomic/hexatomic
+            branch: master
+            tags: true
+          skip-cleanup: true
