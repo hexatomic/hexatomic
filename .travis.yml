@@ -8,11 +8,6 @@ matrix:
         - oraclejdk8
         - openjdk8
 
-      addons:
-        apt:
-          packages:
-            - oracle-java8-installer
-
     - language: rust
       sudo: false
 
@@ -49,4 +44,5 @@ matrix:
             repo: hexatomic/hexatomic
             branch: master
             tags: true
+            condition: $TRAVIS_OS_NAME = linux
           skip-cleanup: true
