@@ -2,7 +2,7 @@
 
 Hexatomic is developed on [GitHub](https://github.com) and follows a common development model.
 
-# Versioning
+## Versioning
 
 Hexatomic adheres to [**Semantic Versioning 2.0.0**](https://semver.org).
 
@@ -12,7 +12,7 @@ Versions take the form of `MAJOR.MINOR.PATCH`.
 - `MINOR` versions add "features", i.e., backwards-compatible functionality.
 - `PATCH` versions add backwards-compatible bug fixes.
 
-# GitFlow, Pull Requests, Releases
+## GitFlow, Pull Requests, Releases
 
 `TODO FIXME BELOW`
 
@@ -29,11 +29,11 @@ Maintainers work with JGitFlow to work on release branches.
 
 `TODO FIXME ABOVE`
 
-# Continuous integration
+## Continuous integration
 
-# Pull Requests
+## Pull Requests
 
-# Naming conventions
+## Naming conventions
 
 `TODO FIXME BELOW`
 
@@ -42,3 +42,10 @@ Maintainers work with JGitFlow to work on release branches.
 are stored in `features/org.corpus_tools.hexatomic.<feature-name>`.
 
 `TODO FIXME ABOVE`
+
+## When to hotfix, when to feature
+
+- All bug fixes *on a released version* are hotfixes, as the bugs appear in master
+- develop is always right
+- develop collects features
+- JGitFlow: ALWAYS start hotfixes from `master`!!!
