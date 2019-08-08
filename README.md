@@ -1,5 +1,10 @@
 # Hexatomic
 
+| Documentation | Build Status
+|-------------- |--------------|
+| [Developer & Maintainer Documentation](https://hexatomic.github.io/hexatomic/v0.1.0/dev/)  |  [![Build Status](https://travis-ci.org/hexatomic/hexatomic.svg?branch=master)](https://travis-ci.org/hexatomic/hexatomic) (Linux) | 
+| [User Documentation](https://hexatomic.github.io/hexatomic/v0.1.0/user/) | Coverage |
+
 Status `develop`: [![Build Status](https://travis-ci.org/hexatomic/hexatomic.svg?branch=develop)](https://travis-ci.org/hexatomic/hexatomic)  
 Status `master`: [![Build Status](https://travis-ci.org/hexatomic/hexatomic.svg?branch=master)](https://travis-ci.org/hexatomic/hexatomic)
 
