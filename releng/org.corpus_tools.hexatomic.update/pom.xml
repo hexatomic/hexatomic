@@ -6,6 +6,5 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <artifactId>org.corpus_tools.hexatomic.update</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
     <packaging>eclipse-repository</packaging>
 </project>

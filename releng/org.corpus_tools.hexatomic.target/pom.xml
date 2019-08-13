@@ -5,8 +5,6 @@
         <artifactId>org.corpus_tools.hexatomic.releng</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.corpus_tools</groupId>
     <artifactId>org.corpus_tools.hexatomic.target</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
     <packaging>eclipse-target-definition</packaging>
 </project>

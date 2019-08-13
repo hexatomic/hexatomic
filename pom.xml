@@ -1,8 +1,6 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.corpus_tools</groupId>
     <artifactId>org.corpus_tools.hexatomic.root</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <!-- PARENT -->
