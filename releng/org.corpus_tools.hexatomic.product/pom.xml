@@ -36,6 +36,14 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+      <products>
+        <product>
+          <id>org.corpus_tools.hexatomic.product</id>
+          <archiveFileName>hexatomic-${project.version}</archiveFileName>
+        </product>
+      </products>
+    </configuration>
       </plugin>
     </plugins>
   </build>
