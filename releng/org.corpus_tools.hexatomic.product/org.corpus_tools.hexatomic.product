@@ -15,6 +15,8 @@
 
    <windowImages/>
 
+   <launcher name="hexatomic"/>
+
    <plugins>
       <plugin id="com.ibm.icu"/>
       <plugin id="javax.annotation"/>
