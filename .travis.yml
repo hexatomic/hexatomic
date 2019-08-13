@@ -33,9 +33,9 @@ matrix:
         # Test the dev documentation
         - $HOME/.mdbook/mdbook test docs/dev/
         # Generate the user documentation for potential deploy
-        - $HOME/.mdbook/mdbook build --dest-dir book/${SHORT_VERSION}/user docs/user/
+        - $HOME/.mdbook/mdbook build --dest-dir book/user/${SHORT_VERSION} docs/user/
         # Generate the dev documentation for potential deploy
-        - $HOME/.mdbook/mdbook build --dest-dir book/${SHORT_VERSION}/dev docs/dev/
+        - $HOME/.mdbook/mdbook build --dest-dir book/dev/${SHORT_VERSION} docs/dev/
 
       deploy:
         - provider: script
