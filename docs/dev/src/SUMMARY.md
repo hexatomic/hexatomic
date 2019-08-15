@@ -2,6 +2,7 @@
 
 - [Introduction](./introduction.md)
 - [Technologies](./technologies.md)
+- [Architecture](./architecture.md)
 - [Tooling](./tooling.md)
 - [Development](./development/index.md)
 	- [Workflow](./development/workflow/index.md)
