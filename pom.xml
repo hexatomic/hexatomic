@@ -1,29 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.corpus_tools.hexatomic.root</artifactId>
     <packaging>pom</packaging>
-
     <!-- PARENT -->
-
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.configuration</artifactId>
         <version>0.1.0-SNAPSHOT</version>
         <relativePath>./releng/org.corpus_tools.hexatomic.configuration</relativePath>
     </parent>
-
     <!-- MODULES -->
-
     <modules>
         <module>bundles</module>
         <module>features</module>
         <module>releng</module>
     </modules>
-
     <!-- BUILD -->
     <build>
         <plugins>
+            <!-- USE GITFLOW -->
             <plugin>
                 <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
@@ -42,6 +37,73 @@
                     </gitFlowConfig>
                 </configuration>
             </plugin>
+            <!-- BUILD JAVADOCS -->
+            <plugin>
+                <!-- 
+                Parse version during `validate` phase to create the properties
+                - ${parsedVersion.majorVersion}
+                - ${parsedVersion.minorVersion}
+                - ${parsedVersion.incrementalVersion}
+
+                They are used during the aggregation phase for javadoc by the maven-javadoc-plugin
+                 -->
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>build-apidocs</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <windowtitle>Hexatomic API Documentation</windowtitle>
+                    <doctitle>Hexatomic ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion} API</doctitle>
+                    <!-- <excludePackageNames>*.internal.*</excludePackageNames>-->
+                    <linksource>true</linksource>
+                    <links>
+                        <!-- This list should match the bundles/packages depended on, with the versions as specified in the
+                             target platform -->
+                        <link>https://docs.oracle.com/javase/8/docs/api/</link>
+                    </links>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <!-- JAVADOC REPORTING -->
+    <!--<reporting>
+        <excludeDefaults>true</excludeDefaults>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>aggregate-no-fork</report>
+                            <report>test-aggregate-no-fork</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>-->
 </project>
