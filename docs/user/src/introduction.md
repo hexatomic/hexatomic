@@ -40,6 +40,8 @@ It does not need an internet connection to run, and therefore you can also use i
 
 Specifically, it is an Eclipse e4 application implemented in Java.
 
+Hexatomic is <i class="fa fa-heart"></i> free and open source under the [Apache License, Version 2.0](https://github.com/hexatomic/hexatomic/tree/master/LICENSE).
+
 ## How can Hexatomic be used?
 
 You can use Hexatomic to
