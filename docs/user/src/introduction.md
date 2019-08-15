@@ -44,16 +44,16 @@ Hexatomic is <i class="fa fa-heart"></i> free and open source under the [Apache 
 
 ## How can Hexatomic be used?
 
-You can use Hexatomic to
+You can use Hexatomic to do, for example, any or all of the following:
 
-<i class="fa fa-wrench"></i> build a corpus from scratch;
+<i class="fa fa-wrench"></i> Build a corpus from scratch
 
-<i class="fa fa-object-group"></i> merge different corpora into a new one;
+<i class="fa fa-object-group"></i> Merge different corpora into a new one
 
-<i class="fa fa-pencil"></i> annotate an existing corpus;
+<i class="fa fa-pencil"></i> Annotate an existing corpus
 
-<i class="fa fa-bug"></i> error correct a corpus;
+<i class="fa fa-bug"></i> Error correct a corpus
 
-<i class="fa fa-search"></i> search a corpus.
+<i class="fa fa-search"></i> Search a corpus
 
 
