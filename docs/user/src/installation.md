@@ -19,9 +19,9 @@ That's it. You can now run Hexatomic.
     - double-clicking on the launcher file in a file manager, or
     - starting the launcher file from the command line.
 
-- In *Linux*, the launcher file is simply called `hexatomic` and can be started with `./hexatomic`.  
-- In *Windows*, the launcher file is simply called `hexatomic.exe` and can be started with `hexatomic`.  
-- For *Mac OS X*, we provide an `.app` file called `hexatomic.app`.
+- In **Linux**, the launcher file is simply called `hexatomic` and can be started with `./hexatomic`.  
+- In **Windows**, the launcher file is simply called `hexatomic.exe` and can be started with `hexatomic`.  
+- For **Mac OS X**, we provide an `.app` file called `hexatomic.app`.
 
 ---
 
