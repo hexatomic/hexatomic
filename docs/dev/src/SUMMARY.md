@@ -1,12 +1,10 @@
 # Summary
 
 - [Introduction](./introduction.md)
-- [Technologies](./technologies.md)
-- [Architecture](./architecture.md)
-- [Tooling](./tooling.md)
 - [Development](./development/index.md)
+    - [Development setup](./development/setup.md)
 	- [Workflow](./development/workflow/index.md)
-	    - [Repositories](./development/workflow/repositories.md)
+        - [Repositories](./development/workflow/repositories.md)
 	    - [Project setup](./development/workflow/setup.md)
 - [Maintenance](./maintenance/index.md)
 	- [Pull requests](./maintenance/pull-requests/index.md)

@@ -17,7 +17,7 @@ The Hexatomic software uses the following technologies:
 
 Documentation for Hexatomic includes user, developer, and maintainer documentation, as well as API documentation.
 All textual documentation is written in the **Markdown** markup language and compiled to an online book using **mdbook**.
-API documentation is compiled from **JavaDoc** comments in the source code and compiled to HTML using [TODO].
+API documentation is compiled from **JavaDoc** comments in the source code and compiled to HTML using the **Apache Maven Javadoc Plugin**.
 
 ### Technologies
 
@@ -26,8 +26,20 @@ The Hexatomic documentation uses the following technologies:
 - [**Markdown**](http://web.archive.org/web/20190815113035/https://daringfireball.net/projects/markdown/) in its [**CommonMark**](http://web.archive.org/web/20190815113041/https://commonmark.org/) implementation with the [**pulldown-cmark**](http://web.archive.org/web/20190815113052/https://docs.rs/pulldown-cmark/0.5.3/pulldown_cmark/) parser included in mdbook
 - [**mdbook**](http://web.archive.org/web/20190815112946/https://rust-lang-nursery.github.io/mdBook/) version `0.3.1`
 - [**JavaDoc**](http://web.archive.org/web/20190815113300/https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html)
+- [**Apache Maven Javadoc Plugin**](http://web.archive.org/web/20190815123249/https://maven.apache.org/plugins/maven-javadoc-plugin/index.html) version `3.1.1`
 
-## Build
+## Release Engineering
+
+Hexatomic is built using **Apache Maven** with a plugin to build Eclipse Platform-based software, **Eclipse Tycho**.
+
+### Technologies
+
+The Hexatomic relesae engineering uses the following technologies:
+
+- [**Apache Maven**]()
+- [**Eclipse Tycho**]()
+- [**gitflow**]
+- Maven plugins ...
 
 ## CI
 

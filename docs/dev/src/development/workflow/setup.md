@@ -1,5 +1,7 @@
 # Project setup
 
+> TODO Merge with repositories.md
+
 **Repository structure of [`hexatomic/hexatomic`](https://github.com/hexatomic/hexatomic):**
 
 - **Root directory**
