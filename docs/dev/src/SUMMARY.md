@@ -13,3 +13,4 @@
 	- [Releases](./maintenance/releases/README.md)
 		- [Checklist](./maintenance/releases/checklist.md)
 - [Governance](./governance.md)
+- [License](./LICENSE.md)

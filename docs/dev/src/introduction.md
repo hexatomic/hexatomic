@@ -33,7 +33,7 @@ Lars Vogel and Simon Scholz
 ## License 
 
 ![](https://img.shields.io/badge/CC0-1.0%20Universal-yellowgreen?logo=creative-commons)  
-This documentation is licensed under a [CC0 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/legalcode) license.
+Unless otherwise noted, this documentation is licensed under a [CC0 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/legalcode) license. Please see the section [License](./LICENSE.md) for details.
 
 ---
 

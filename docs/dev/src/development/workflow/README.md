@@ -1,5 +1,49 @@
 # Development workflow
 
+Hexatomic follows a common development workflow: Gitflow. It is a development workflow that works with a specific Git branch structure.
+It is actually quite simple to understand and follow, and based on just a few rules.
+Also, Hexatomic actually uses a [Maven plugin for Gitflow](#maven-plugin-for-gitflow), which makes it really easy to work with Gitflow.
+
+
+If you are interested in learning more about Gitflow, you can read the [original blog post describing it](http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/).
+
+## The Gitflow branching model
+
+Gitflow assumes that there is a single, central "repository of truth".
+In our case, this is the one located at <https://github.com/hexatomic/hexatomic>.
+
+### Main branches
+
+In the repository, there are two **main branches** that *always* exist and have an *infinite lifetime*:
+
+- **`master`**
+- **`develop`**
+
+The `master` branch always reflects the **production-ready** state.
+Said differently, `master` will always contain the *releases* of Hexatomic.
+Any changes that are merged into `master` are releases.
+
+The `develop` branch always contains the latest **finished development changes**.
+That means, whenever a feature is ready to be released, it is merged into `develop`
+to wait for the next release (which will then contain the new feature).
+
+### Supporting branches
+
+In Gitflow, there are three types of branches which help organizing the development and maintenance work:
+
+- **`feature`** branches
+- **`hotfix`** branches
+- **`release`** branches
+
+![](gitflow.png)  
+***Figure:*** **Git branching model overview.** Graphic by Vincent Driessen from the original blog post ["A successful Git branching model"](http://nvie.com/archives/323). Licensed under a [CC BY-SA license](https://creativecommons.org/licenses/by-sa/4.0/). ![](https://img.shields.io/badge/CC-BY%20SA-yellowgreen?logo=creative-commons)
+
+### Maven plugin for Gitflow
+
+
+
+---
+
 Hexatomic is developed on [GitHub](https://github.com) and follows a common development model.
 
 ## Versioning
