@@ -3,12 +3,12 @@
 ## Operating system for development
 
 You can develop and build Hexatomic on Linux, Mac OS and Windows.
-We suggest that you use **Linux** for development, to avoid non-straightforward install procedures for required technologies as well as potential issues with file encodings, paths, and file ALLOWANCES.
+We suggest that you use **Linux** for development, to avoid non-straightforward install procedures for required technologies as well as potential issues with file encodings, paths, and file permissions.
 
 ## Required software
 
-Hexatomic is implemented in **Java** and built with **Apache Maven**.
-You need both on your computer to contribute code to Hexatomic.
+Hexatomic is implemented in **Java**, built with **Apache Maven**, and versioned with **Git**.
+You need all three on your computer to contribute code to Hexatomic.
 
 The documentation is written in Markdown and generated with **mdbook**.
 
@@ -43,7 +43,7 @@ You can check which version of Maven you have installed by typing the following 
 mvn -version
 ```
 
-On Linux, this should produce the following output. the first line is the important one, the other ones may look different, depending on the Linux distribution you use.
+On Linux, this should produce the following output. The first line is the important one, the other ones may look different, depending on the Linux distribution you use.
 
 ```bash
 Apache Maven 3.6.0
@@ -51,6 +51,23 @@ Maven home: /usr/share/maven
 Java version: 1.8.0_222, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
 Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "5.0.0-23-generic", arch: "amd64", family: "unix"
+```
+
+### Git
+
+You need to have a copy of **Git** in **version 2.17.1 or newer** installed on your computer.
+To find out how to install Git on your system, please see the [Git website](https://git-scm.com/).
+
+You can check which version of Git you have installed by typing the following command into the terminal of your computer:
+
+```bash
+git --version
+```
+
+On Linux, this should produce the following output.
+
+```bash
+git version 2.17.1
 ```
 
 ### mdbook
@@ -72,19 +89,35 @@ mdbook v0.3.1
 ```
 
 
-## Suggested editor: Eclipse Integrated Development Environment (IDE)
+## Suggested editor:<br/>Eclipse Integrated Development Environment (IDE)
 
 Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
 While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2019-06 or newer**.
 
 You can download it from the [Eclipse download website](https://www.eclipse.org/downloads/).
+
+### Eclipse IDE installation
+
 The download contains an installer which lets you configure the setup of your IDE.
-To develop Hexatomic, you will need to install Eclipse with the following options:
+To develop Hexatomic, you will need to install [Eclipse IDE for RCP and RAP Developers](https://www.eclipse.org/downloads/packages/release/2019-06/r/eclipse-ide-rcp-and-rap-developers):
 
-- **TODO**
+- Extract the downloaded file.
+- Start the Eclipse installer (`eclipse-inst`).
+- From the list of available Eclipse packages, choose **Eclipse IDE for RCP and RAP Developers**.
 
-After you have installed the IDE itself, install the following tool plugins:
+During the installation, accept licenses, set directories, etc., as you see fit.
 
-- **TODO**
+After you have installed the IDE itself, install the required tool plugins.
 
-You can install these plugins by clicking **TODO**
+### IDE Plugin installation
+
+If not noted otherwise, Eclipse plugins are installed as follows:
+
+- Open the *Install Wizard* via the menu **Help > Install New Software...**
+- In the **Work with:** field, enter the URL of the Update Site for the plugin, given in brackets below.
+- Select the plugins you want to install, and install it with the help of the wizard.
+
+### List of Eclipse IDE plugins required for Hexatomic development
+
+- [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0-SNAPSHOT or newer**  
+(Update Site: <http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/>)

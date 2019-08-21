@@ -3,6 +3,7 @@
 - [Introduction](./introduction.md)
 - [Development](./development/index.md)
     - [Development setup](./development/setup.md)
+        - [Getting the source code](./development/getting-the-source-code.md)
 	- [Workflow](./development/workflow/index.md)
         - [Repositories](./development/workflow/repositories.md)
 	    - [Project setup](./development/workflow/setup.md)
