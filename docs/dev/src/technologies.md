@@ -4,7 +4,7 @@
 
 Hexatomic is an Eclipse e4 application, built on the **Eclipse Platform** for rich client applications, and implemented in **Java**.
 
-For more information, see [Architecture](./architecture.html).
+For more information, see [Architecture](./architecture.md).
 
 ### Technologies
 

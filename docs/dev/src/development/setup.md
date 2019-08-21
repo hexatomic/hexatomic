@@ -89,7 +89,7 @@ mdbook v0.3.1
 ```
 
 
-## Suggested editor:<br/>Eclipse Integrated Development Environment (IDE)
+## Suggested editor: Eclipse Integrated Development Environment (IDE)
 
 Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
 While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2019-06 or newer**.
