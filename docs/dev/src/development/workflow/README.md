@@ -1,5 +1,13 @@
 # Development workflow
 
+> **SUMMARY**
+>
+> - We use [Gitflow](http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/) for developing Hexatomic,
+> with the [Maven plugin for Gitflow](https://github.com/aleksandr-m/gitflow-maven-plugin).
+> - To contribute **new functionality**, create a feature branch by running `mvn gitflow:feature-start` in the repository root, then create a pull request against `develop` on <https://github.com/hexatomic/hexatomic>.
+> - To contribute a **bug fix, add to documentation**, create a feature branch by running `mvn gitflow:feature-start` in the repository root, then create a pull request against `develop` on <https://github.com/hexatomic/hexatomic>.
+
+
 Hexatomic follows a common development workflow: Gitflow. It is a development workflow that works with a specific Git branch structure.
 It is actually quite simple to understand and follow, and based on just a few rules.
 Also, Hexatomic actually uses a [Maven plugin for Gitflow](#maven-plugin-for-gitflow), which makes it really easy to work with Gitflow.
