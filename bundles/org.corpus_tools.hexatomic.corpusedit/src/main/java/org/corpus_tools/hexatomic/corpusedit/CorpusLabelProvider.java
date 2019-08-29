@@ -1,7 +1,6 @@
 package org.corpus_tools.hexatomic.corpusedit;
 
 import org.corpus_tools.salt.core.SNamedElement;
-import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
