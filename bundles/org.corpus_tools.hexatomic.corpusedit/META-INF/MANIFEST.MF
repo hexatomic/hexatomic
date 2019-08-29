@@ -14,3 +14,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.annotation;version="1.2.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.corpusedit
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ swing2swt.jar
