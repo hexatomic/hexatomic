@@ -12,7 +12,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-public class CorpusView {
+public class CorpusStructureView {
 	private Label myLabelInView;
 
 	@PostConstruct
