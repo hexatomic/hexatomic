@@ -1,48 +1,46 @@
 package org.corpus_tools.hexatomic.corpusedit;
 
+import java.net.URL;
+
+import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.graph.IdentifiableElement;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
-public class CorpusLabelProvider implements ILabelProvider {
+public class CorpusLabelProvider extends LabelProvider {
 
-	@Override
-	public void addListener(ILabelProviderListener listener) {
-
-	}
-
-	@Override
-	public void dispose() {
-
-	}
-
-	@Override
-	public boolean isLabelProperty(Object element, String property) {
-		return false;
-	}
-
-	@Override
-	public void removeListener(ILabelProviderListener listener) {
-
-	}
+	private ResourceManager resourceManager;
+	private ImageDescriptor documentImage;
+	
 
 	@Override
 	public Image getImage(Object element) {
-		return null;
+		if(element instanceof SDocument) {
+			return getResourceManager().createImage(getDocumentImage());
+		} else {
+			return super.getImage(element);
+		}
 	}
 
 	@Override
 	public String getText(Object element) {
 		String result = null;
-		
-		if(element instanceof SNamedElement) {
+
+		if (element instanceof SNamedElement) {
 			SNamedElement n = (SNamedElement) element;
 			String name = n.getName();
-			if(name == null || name.isEmpty()) {
+			if (name == null || name.isEmpty()) {
 				// Try the ID
-				if(element instanceof IdentifiableElement) {
+				if (element instanceof IdentifiableElement) {
 					result = ((IdentifiableElement) element).getId();
 				} else {
 					result = "<unnamed " + element.getClass().getSimpleName() + ">";
@@ -51,12 +49,29 @@ public class CorpusLabelProvider implements ILabelProvider {
 				result = n.getName();
 			}
 		}
-		
-		if(result == null || result.isEmpty()) {
+
+		if (result == null || result.isEmpty()) {
 			result = "<unknown>";
 		}
-		
+
 		return result;
 	}
 
+	protected ResourceManager getResourceManager() {
+		if (resourceManager == null) {
+			resourceManager = new LocalResourceManager(JFaceResources.getResources());
+		}
+		return resourceManager;
+	}
+	
+	protected ImageDescriptor getDocumentImage() {
+		if (documentImage == null) {
+			Bundle bundle = FrameworkUtil.getBundle(CorpusLabelProvider.class);
+			URL url = FileLocator.find(bundle, new Path("icons/fontawesome/file-alt-regular.png"), null);
+			if(url != null) {
+				documentImage = ImageDescriptor.createFromURL(url);
+			}
+		}
+		return documentImage;
+	}
 }
