@@ -38,6 +38,7 @@ public class CorpusStructureView {
 		Tree tree = treeViewer.getTree();
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
+		treeViewer.setLabelProvider(new CorpusLabelProvider());
 		new Label(parent, SWT.NONE);
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		
