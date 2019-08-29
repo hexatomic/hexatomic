@@ -2,7 +2,7 @@ package org.corpus_tools.hexatomic.corpusedit;
 
 import javax.annotation.PostConstruct;
 
-import org.corpus_tools.salt.common.SCorpusGraph;
+import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.samples.SampleGenerator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -42,9 +42,9 @@ public class CorpusStructureView {
 		new Label(parent, SWT.NONE);
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		
-		SCorpusGraph g = SampleGenerator.createCorpusStructure();
+		SaltProject p = SampleGenerator.createSaltProject();
 		
-		treeViewer.setInput(g);
+		treeViewer.setInput(p.getCorpusGraphs());
 		
 
 	}
