@@ -1,8 +1,7 @@
-package org.corpus_tools.hexatomic.corpusedit.parts;
+package org.corpus_tools.hexatomic.corpusedit;
 
 import java.util.List;
 
-import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.core.SNode;
 import org.eclipse.jface.viewers.ITreeContentProvider;

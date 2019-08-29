@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.corpusedit.parts;
+package org.corpus_tools.hexatomic.corpusedit;
 
 import javax.annotation.PostConstruct;
 
