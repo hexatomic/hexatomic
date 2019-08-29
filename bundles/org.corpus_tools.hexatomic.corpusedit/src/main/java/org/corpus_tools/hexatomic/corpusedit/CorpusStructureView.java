@@ -1,12 +1,24 @@
 package org.corpus_tools.hexatomic.corpusedit;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.annotation.PostConstruct;
 
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
+import org.corpus_tools.salt.core.GraphTraverseHandler;
+import org.corpus_tools.salt.core.SNamedElement;
+import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.samples.SampleGenerator;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -41,7 +53,65 @@ public class CorpusStructureView {
 		treeViewer.setLabelProvider(new CorpusLabelProvider());
 		new Label(parent, SWT.NONE);
 		treeViewer.setContentProvider(new CorpusTreeProvider());
+		treeViewer.setFilters(new ViewerFilter() {
+			
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if(txtFilter.isEnabled()) {
+					String filterText = txtFilter.getText().trim().toLowerCase();
+					if(!filterText.isEmpty() && element instanceof SNode) {
+						// Check if element or any of its children has a matching name.
+						// If we exclude parents based on their name only, their children won't be included.
+						
+						final AtomicBoolean found = new AtomicBoolean(false);
+						
+						SNode n = (SNode) element;
+						n.getGraph().traverse(Arrays.asList(n), GRAPH_TRAVERSE_TYPE.TOP_DOWN_DEPTH_FIRST, "filter", new GraphTraverseHandler() {
+							
+							@Override
+							public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+									SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+								if(currNode.getName() != null) {
+									if(currNode.getName().toLowerCase().contains(filterText)) {
+										found.set(true);
+									}
+								}
+								
+							}
+							
+							@Override
+							public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+									SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+								
+								
+							}
+							
+							@Override
+							public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+									SRelation<SNode, SNode> relation, SNode currNode, long order) {
+								// search as long no valid child was found
+								return !found.get();
+							}
+						});
+						
+						
+						return found.get();
+					}
+				}
+				return true;
+			}
+		});
 		
+		txtFilter.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				treeViewer.refresh();
+				
+			}
+		});
+		
+		// TODO: set an actual salt project
 		SaltProject p = SampleGenerator.createSaltProject();
 		
 		treeViewer.setInput(p.getCorpusGraphs());
