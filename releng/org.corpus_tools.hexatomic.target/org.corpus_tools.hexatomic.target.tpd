@@ -6,3 +6,7 @@ location 'http://download.eclipse.org/releases/2019-06/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 }
+
+location 'https://korpling.github.io/salt/p2/develop/' {
+	org.corpus-tools.salt-api [3.3.8,3.3.9)
+}

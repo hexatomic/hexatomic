@@ -9,7 +9,8 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.services,
- org.eclipse.e4.core.di.annotations
+ org.eclipse.e4.core.di.annotations,
+ org.corpus-tools.salt-api;bundle-version="3.3.8"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.annotation;version="1.2.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.corpusedit
