@@ -7,21 +7,27 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.core.GraphTraverseHandler;
-import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
+import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -50,7 +56,7 @@ public class CorpusStructureView {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(CorpusStructureView.ChildNameFilter.class);
-	
+
 	private final class ChildNameFilter extends ViewerFilter {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
@@ -122,31 +128,30 @@ public class CorpusStructureView {
 		composite.setLayout(new TreeColumnLayout());
 
 		CorpusLabelProvider labelProvider = new CorpusLabelProvider();
-		
-		
+
 		treeViewer = new TreeViewer(composite, SWT.BORDER);
 		Tree tree = treeViewer.getTree();
-		treeViewer.setColumnProperties(new String[] {"name"});
-		treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree)});
+		treeViewer.setColumnProperties(new String[] { "name" });
+		treeViewer.setCellEditors(new CellEditor[] { new TextCellEditor(tree) });
 		treeViewer.setCellModifier(new ICellModifier() {
-			
+
 			@Override
 			public void modify(Object element, String property, Object value) {
-				if(element instanceof TreeItem) {
+				if (element instanceof TreeItem) {
 					TreeItem item = (TreeItem) element;
-					if(item.getData() instanceof SNamedElement) {
+					if (item.getData() instanceof SNamedElement) {
 						SNamedElement n = (SNamedElement) item.getData();
 						n.setName(value.toString());
 					}
 				}
-				
+
 			}
-			
+
 			@Override
 			public Object getValue(Object element, String property) {
 				return labelProvider.getText(element);
 			}
-			
+
 			@Override
 			public boolean canModify(Object element, String property) {
 				return true;
@@ -155,58 +160,23 @@ public class CorpusStructureView {
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
 		treeViewer.setLabelProvider(labelProvider);
-		
-		
+
 		TreeViewerEditor.create(treeViewer, new ColumnViewerEditorActivationStrategy(treeViewer) {
 			@Override
 			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
 				return event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
 			}
 		}, ColumnViewerEditor.DEFAULT);
-		
-		
 
-		
 		Composite composite_tools = new Composite(parent, SWT.NONE);
 		composite_tools.setLayout(new RowLayout(SWT.HORIZONTAL));
 		composite_tools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 
 		ToolBar toolBar = new ToolBar(composite_tools, SWT.FLAT | SWT.RIGHT);
 
-		ToolItem tltmAdd = new ToolItem(toolBar, SWT.DROP_DOWN);
-		
-		Menu addMenu = new Menu(tltmAdd.getParent().getShell());
-		MenuItem addCorpusGraph = new MenuItem(addMenu, SWT.NONE);
-		addCorpusGraph.setText("Corpus Graph");
-		addCorpusGraph.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/project-diagram-solid.png"));
-		addCorpusGraph.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
-				newGraph.setName("new_corpus_graph");
-			}
-		});
-		
-		
-		tltmAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (e.detail == SWT.ARROW) {
-					Rectangle rect = tltmAdd.getBounds();
-					Point pt = tltmAdd.getParent().toDisplay(new Point(rect.x, rect.y));
-					addMenu.setLocation(pt);
-					addMenu.setVisible(true);
-				}
-			}
-		});
-		tltmAdd.setImage(
-				ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/plus-solid.png"));
-		tltmAdd.setText("Add");
+		createAddMenu(toolBar);
+		createDeleteMenu(toolBar);
 
-		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
-				"icons/fontawesome/trash-alt-regular.png"));
-		tltmDelete.setText("Delete");
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		treeViewer.setFilters(new ChildNameFilter());
 
@@ -221,6 +191,68 @@ public class CorpusStructureView {
 
 		treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 
+	}
+
+	private void createAddMenu(ToolBar toolBar) {
+		ToolItem tltmAdd = new ToolItem(toolBar, SWT.DROP_DOWN);
+		tltmAdd.setImage(
+				ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/plus-solid.png"));
+		tltmAdd.setText("Add");
+		Menu addMenu = new Menu(tltmAdd.getParent().getShell());
+		tltmAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.detail == SWT.ARROW) {
+					Rectangle rect = tltmAdd.getBounds();
+					Point pt = tltmAdd.getParent().toDisplay(new Point(rect.x, rect.y));
+					addMenu.setLocation(pt);
+					addMenu.setVisible(true);
+				}
+			}
+		});
+
+		MenuItem addCorpusGraph = new MenuItem(addMenu, SWT.NONE);
+		addCorpusGraph.setText("Corpus Graph");
+		addCorpusGraph.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+				"icons/fontawesome/project-diagram-solid.png"));
+		addCorpusGraph.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
+				newGraph.setName("new_corpus_graph");
+			}
+		});
+
+		MenuItem addCorpus = new MenuItem(addMenu, SWT.NONE);
+		addCorpus.setText("(Sub-) Corpus");
+		addCorpus.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+				"icons/fontawesome/box-open-solid.png"));
+		addCorpus.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// get the selected corpus graph
+				TreeSelection selection = (TreeSelection) treeViewer.getSelection();
+				if (selection.getFirstElement() instanceof SCorpusGraph) {
+					SCorpusGraph g = (SCorpusGraph) selection.getFirstElement();
+					g.createCorpus(null, "new_corpus");
+				} else if (selection.getFirstElement() instanceof SCorpus) {
+					SCorpus parent = (SCorpus) selection.getFirstElement();
+					parent.getGraph().createCorpus(parent, "new_corpus");
+				} else {
+					ErrorDialog.openError(toolBar.getShell(), "Error when adding (sub-) corpus",
+							"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
+							new Status(Status.ERROR, "unknown", null));
+				}
+			}
+		});
+
+	}
+
+	private void createDeleteMenu(ToolBar toolBar) {
+		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+				"icons/fontawesome/trash-alt-regular.png"));
+		tltmDelete.setText("Delete");
 	}
 
 	@Inject
