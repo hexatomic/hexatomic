@@ -8,24 +8,21 @@ import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.resource.LocalResourceManager;
-import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wb.swt.ResourceManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 public class CorpusLabelProvider extends LabelProvider {
 
-	private ResourceManager resourceManager;
 	private ImageDescriptor documentImage;
 	
 
 	@Override
 	public Image getImage(Object element) {
 		if(element instanceof SDocument) {
-			return getResourceManager().createImage(getDocumentImage());
+			return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/file-alt-regular.png");
 		} else {
 			return super.getImage(element);
 		}
@@ -55,13 +52,6 @@ public class CorpusLabelProvider extends LabelProvider {
 		}
 
 		return result;
-	}
-
-	protected ResourceManager getResourceManager() {
-		if (resourceManager == null) {
-			resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		}
-		return resourceManager;
 	}
 	
 	protected ImageDescriptor getDocumentImage() {
