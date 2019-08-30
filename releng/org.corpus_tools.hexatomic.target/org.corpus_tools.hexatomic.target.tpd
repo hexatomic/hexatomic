@@ -9,6 +9,16 @@ location 'http://download.eclipse.org/releases/2019-06/' {
 	org.eclipse.e4.core.services
 }
 
+location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
+	
+	org.slf4j.api [1.7.10,2.0.0)
+	ch.qos.logback.slf4j [1.1.2,2.0.0)
+	ch.qos.logback.classic [1.1.2,2.0.0)
+	
+}
+
 location 'https://korpling.github.io/salt/p2/develop/' {
-	org.corpus-tools.salt-api [3.3.8,3.3.9)
+	org.corpus-tools.salt-api [3.3.8,3.4.0)
+	org.corpus-tools.salt-extensions [3.3.8,3.4.0)
+	
 }

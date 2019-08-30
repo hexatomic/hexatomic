@@ -7,6 +7,8 @@ import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.extensions.notification.Listener;
+import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
@@ -23,14 +25,43 @@ public class ProjectManager {
 	
 	public static final String TOPIC_PROJECT_CHANGED = "TOPIC_PROJECT_CHANGED";
 
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
+	
 	private SaltProject project;
 	
 	@Inject
 	private IEventBroker events;
+
+	private final SaltNotificationFactory notificationFactory;
 	
 	public ProjectManager() {
-		// create an empty project
+		
+		log.debug("Starting Project Manager");
+		
+		notificationFactory = new SaltNotificationFactory();
+		SaltFactory.setFactory(notificationFactory);
+		notificationFactory.addListener(new ProjectChangeListener());
+		
+		// create an empty project		
 		this.project = SaltFactory.createSaltProject();
+	}
+	
+	/**
+	 * Adds a Salt notification listener for all updates on the Salt project.
+	 * 
+	 * @param listener
+	 */
+	public void addListener(Listener listener) {
+		notificationFactory.addListener(listener);
+	}
+	
+	/**
+	 * Removes a Salt notification listener.
+	 * 
+	 * @param listener
+	 */
+	public void removeListener(Listener listener) {
+		notificationFactory.removeListener(listener);
 	}
 
 	/**
