@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.corpusedit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
@@ -10,7 +11,9 @@ import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SCorpus;
+import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
+import org.corpus_tools.salt.common.SCorpusRelation;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.core.GraphTraverseHandler;
 import org.corpus_tools.salt.core.SGraph;
@@ -19,7 +22,6 @@ import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
@@ -321,43 +323,90 @@ public class CorpusStructureView {
 
 	private void createDeleteMenu(ToolBar toolBar) {
 		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
+				if (selection != null) {
+					if (selection.getFirstElement() instanceof SCorpusGraph) {
+						projectManager.getProject().removeCorpusGraph((SCorpusGraph) selection.getFirstElement());
+						// select nothing
+						treeViewer.setSelection(null);
+						treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+					} else if (selection.getFirstElement() instanceof SCorpus) {
+						SCorpus n = (SCorpus) selection.getFirstElement();
+
+						Optional<SNode> parent = n.getInRelations().stream()
+								.filter((rel) -> rel instanceof SCorpusRelation).findFirst()
+								.map(rel -> ((SCorpusRelation) rel).getSource());
+						if(parent.isPresent()) {
+							// select parent corpus
+							selectSaltObject(parent.get(), true);
+						} else {
+							// use the corpus graph
+							selectSaltObject(n.getGraph(), true);
+						}
+
+						n.getGraph().removeNode(n);
+
+						treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+					} else if (selection.getFirstElement() instanceof SDocument) {
+						SDocument n = (SDocument) selection.getFirstElement();
+						
+						Optional<SNode> parent = n.getInRelations().stream()
+								.filter((rel) -> rel instanceof SCorpusDocumentRelation).findFirst()
+								.map(rel -> ((SCorpusDocumentRelation) rel).getSource());
+						if(parent.isPresent()) {
+							// select parent corpus
+							selectSaltObject(parent.get(), true);
+						} else {
+							// use the corpus graph
+							selectSaltObject(n.getGraph(), true);
+						}
+						
+						n.getGraph().removeNode(n);
+						treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+					}
+				}
+			}
+		});
 		tltmDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
 				"icons/fontawesome/trash-alt-regular.png"));
 		tltmDelete.setText("Delete");
 	}
-	
+
 	private void selectSaltObject(SNamedElement object, boolean reveal) {
-		if(object instanceof SGraph) {
+		if (object instanceof SGraph) {
 			// graphs are top-level, just select the matching root element
 			treeViewer.setSelection(new StructuredSelection(object), reveal);
 		} else if (object instanceof SNode) {
 			SNode n = (SNode) object;
-			
-		
+
 			// try to get all parents of this node
 			final LinkedList<Object> chain = new LinkedList<>();
-			
-			n.getGraph().traverse(Arrays.asList(n), GRAPH_TRAVERSE_TYPE.BOTTOM_UP_DEPTH_FIRST, "parents", new GraphTraverseHandler() {
-				
-				@Override
-				public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
-						SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-					
-					chain.add(currNode);
-				}
-				
-				@Override
-				public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
-						SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-					
-				}
-				
-				@Override
-				public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
-						SRelation<SNode, SNode> relation, SNode currNode, long order) {
-					return true;
-				}
-			});
+
+			n.getGraph().traverse(Arrays.asList(n), GRAPH_TRAVERSE_TYPE.BOTTOM_UP_DEPTH_FIRST, "parents",
+					new GraphTraverseHandler() {
+
+						@Override
+						public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+								SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+
+							chain.add(currNode);
+						}
+
+						@Override
+						public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+								SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+
+						}
+
+						@Override
+						public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+								SRelation<SNode, SNode> relation, SNode currNode, long order) {
+							return true;
+						}
+					});
 
 			// add the corpus graph
 			chain.add(n.getGraph());
@@ -365,12 +414,12 @@ public class CorpusStructureView {
 			Collections.reverse(chain);
 			TreePath path = new TreePath(chain.toArray());
 			treeViewer.setSelection(new TreeSelection(path), reveal);
-			
+
 		}
 	}
 
 	@Inject
-	@Optional
+	@org.eclipse.e4.core.di.annotations.Optional
 	private void subscribeProjectChanged(@UIEventTopic(ProjectManager.TOPIC_PROJECT_CHANGED) String path) {
 		log.debug("Corpus Structure Viewer received update");
 		if (treeViewer != null) {
