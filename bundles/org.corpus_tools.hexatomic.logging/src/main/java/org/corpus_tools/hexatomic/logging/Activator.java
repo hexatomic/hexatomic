@@ -36,14 +36,14 @@ public class Activator implements BundleActivator {
 		context.reset();
 		
 		Location installationLocation = Platform.getInstallLocation();
-		File customLogbackConfig = new File(installationLocation.getURL().getPath(), "logback.xml");
-		if(customLogbackConfig.isFile()) {
+		File productionConfig = new File(installationLocation.getURL().getPath(), "logback.xml");
+		if(productionConfig.isFile()) {
 			// use the customized logging configuration
-			jc.doConfigure(customLogbackConfig);
+			jc.doConfigure(productionConfig);
 		} else {
-			URL url = FileLocator.find(bundle, new Path("logback.xml"), null);
+			URL url = FileLocator.find(bundle, new Path("logback-test.xml"), null);
 			if(url != null ) {
-				// use the default configuration from the classpath
+				// use the default configuration from the classpath for tests
 				jc.doConfigure(url);
 			}
 		}
