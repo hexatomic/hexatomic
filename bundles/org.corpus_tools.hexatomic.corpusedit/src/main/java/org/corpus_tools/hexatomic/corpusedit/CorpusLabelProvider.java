@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.corpusedit;
 
 import java.net.URL;
 
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.graph.IdentifiableElement;
@@ -23,6 +24,8 @@ public class CorpusLabelProvider extends LabelProvider {
 	public Image getImage(Object element) {
 		if(element instanceof SDocument) {
 			return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/file-alt-regular.png");
+		} else if(element instanceof SCorpusGraph) {
+			return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/project-diagram-solid.png");
 		} else {
 			return super.getImage(element);
 		}

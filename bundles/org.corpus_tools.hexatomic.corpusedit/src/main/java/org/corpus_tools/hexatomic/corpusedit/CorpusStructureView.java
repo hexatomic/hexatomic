@@ -25,9 +25,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 public class CorpusStructureView {
 
@@ -107,13 +115,39 @@ public class CorpusStructureView {
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
 		treeViewer.setLabelProvider(new CorpusLabelProvider());
-		
+
 		Composite composite_tools = new Composite(parent, SWT.NONE);
 		composite_tools.setLayout(new RowLayout(SWT.HORIZONTAL));
 		composite_tools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+
+		ToolBar toolBar = new ToolBar(composite_tools, SWT.FLAT | SWT.RIGHT);
+
+		ToolItem tltmAdd = new ToolItem(toolBar, SWT.DROP_DOWN);
 		
-		Button btnDelete = new Button(composite_tools, SWT.NONE);
-		btnDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/trash-alt-regular.png"));
+		Menu addMenu = new Menu(tltmAdd.getParent().getShell());
+		MenuItem addCorpusGraph = new MenuItem(addMenu, SWT.NONE);
+		addCorpusGraph.setText("Corpus Graph");
+
+		
+		tltmAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.detail == SWT.ARROW) {
+					Rectangle rect = tltmAdd.getBounds();
+					Point pt = tltmAdd.getParent().toDisplay(new Point(rect.x, rect.y));
+					addMenu.setLocation(pt);
+					addMenu.setVisible(true);
+				}
+			}
+		});
+		tltmAdd.setImage(
+				ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/plus-solid.png"));
+		tltmAdd.setText("Add");
+
+		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
+		tltmDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+				"icons/fontawesome/trash-alt-regular.png"));
+		tltmDelete.setText("Delete");
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		treeViewer.setFilters(new ChildNameFilter());
 
@@ -138,5 +172,4 @@ public class CorpusStructureView {
 		}
 
 	}
-
 }
