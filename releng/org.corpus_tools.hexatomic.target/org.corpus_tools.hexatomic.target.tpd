@@ -5,6 +5,8 @@ with requirements source configurePhase
 location 'http://download.eclipse.org/releases/2019-06/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
+	org.eclipse.emf.common
+	org.eclipse.e4.core.services
 }
 
 location 'https://korpling.github.io/salt/p2/develop/' {
