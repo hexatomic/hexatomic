@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.corpusedit;
 
 import java.util.List;
 
+import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SNode;
@@ -60,7 +61,8 @@ public class CorpusTreeProvider implements ITreeContentProvider {
 	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof SCorpusGraph) {
-			return !((SCorpusGraph) element).getRoots().isEmpty();
+			List<SNode> roots = ((SCorpusGraph) element).getRoots();
+			return roots != null && !roots.isEmpty();
 		} else if (element instanceof SaltProject) {
 			SaltProject p = (SaltProject) element;
 			return !p.getCorpusGraphs().isEmpty();
