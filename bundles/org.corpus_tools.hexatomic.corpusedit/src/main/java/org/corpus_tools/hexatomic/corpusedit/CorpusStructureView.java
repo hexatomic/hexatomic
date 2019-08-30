@@ -14,7 +14,6 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -25,7 +24,6 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -43,18 +41,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.FillLayout;
-import swing2swt.layout.BoxLayout;
 
 public class CorpusStructureView {
 
@@ -119,26 +115,26 @@ public class CorpusStructureView {
 	@PostConstruct
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
-		
+
 		Composite compositeFilter = new Composite(parent, SWT.NONE);
 		compositeFilter.setLayout(new GridLayout(2, false));
 		compositeFilter.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-				
-				Label lblNewLabel = new Label(compositeFilter, SWT.NONE);
-				lblNewLabel.setText("Filter:");
-		
-				txtFilter = new Text(compositeFilter, SWT.BORDER);
-				txtFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-				txtFilter.setToolTipText("Type to filter for corpus/document name");
-				
-						txtFilter.addModifyListener(new ModifyListener() {
-				
-							@Override
-							public void modifyText(ModifyEvent e) {
-								treeViewer.refresh();
-				
-							}
-						});
+
+		Label lblNewLabel = new Label(compositeFilter, SWT.NONE);
+		lblNewLabel.setText("Filter:");
+
+		txtFilter = new Text(compositeFilter, SWT.BORDER);
+		txtFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtFilter.setToolTipText("Type to filter for corpus/document name");
+
+		txtFilter.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				treeViewer.refresh();
+
+			}
+		});
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -217,6 +213,17 @@ public class CorpusStructureView {
 					Point pt = tltmAdd.getParent().toDisplay(new Point(rect.x, rect.y));
 					addMenu.setLocation(pt);
 					addMenu.setVisible(true);
+				} else {
+					// trigger a default action based on the currently selected tree item
+					TreeSelection selected = (TreeSelection) treeViewer.getSelection();
+					if(selected.getFirstElement() instanceof SCorpus) {
+						addDocument(toolBar.getShell());
+					} else if(selected.getFirstElement() instanceof SCorpusGraph) {
+						addCorpus(toolBar.getShell());
+					} else {
+						// fallback to a corpus graph, which always can be added
+						addCorpusGraph();
+					}
 				}
 			}
 		});
@@ -228,8 +235,7 @@ public class CorpusStructureView {
 		addCorpusGraph.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
-				newGraph.setName("new_corpus_graph");
+				addCorpusGraph();
 			}
 		});
 
@@ -240,22 +246,10 @@ public class CorpusStructureView {
 		addCorpus.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// get the selected corpus graph
-				TreeSelection selection = (TreeSelection) treeViewer.getSelection();
-				if (selection.getFirstElement() instanceof SCorpusGraph) {
-					SCorpusGraph g = (SCorpusGraph) selection.getFirstElement();
-					g.createCorpus(null, "new_corpus");
-				} else if (selection.getFirstElement() instanceof SCorpus) {
-					SCorpus parent = (SCorpus) selection.getFirstElement();
-					parent.getGraph().createCorpus(parent, "new_corpus");
-				} else {
-					ErrorDialog.openError(toolBar.getShell(), "Error when adding (sub-) corpus",
-							"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
-							new Status(Status.ERROR, "unknown", null));
-				}
+				addCorpus(toolBar.getShell());
 			}
 		});
-		
+
 		MenuItem addDocument = new MenuItem(addMenu, SWT.NONE);
 		addDocument.setText("Document");
 		addDocument.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
@@ -263,19 +257,44 @@ public class CorpusStructureView {
 		addDocument.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// get the selected corpus graph
-				TreeSelection selection = (TreeSelection) treeViewer.getSelection();
-				if (selection.getFirstElement() instanceof SCorpus) {
-					SCorpus parent = (SCorpus) selection.getFirstElement();
-					parent.getGraph().createDocument(parent, "new_document");
-				} else {
-					ErrorDialog.openError(toolBar.getShell(), "Error when adding document",
-							"You can only create a document when a corpus is selected",
-							new Status(Status.ERROR, "unknown", null));
-				}
+				addDocument(toolBar.getShell());
 			}
 		});
 
+	}
+
+	private void addCorpusGraph() {
+		SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
+		newGraph.setName("new_corpus_graph");
+	}
+
+	private void addCorpus(Shell shell) {
+		// get the selected corpus graph
+		TreeSelection selection = (TreeSelection) treeViewer.getSelection();
+		if (selection.getFirstElement() instanceof SCorpusGraph) {
+			SCorpusGraph g = (SCorpusGraph) selection.getFirstElement();
+			g.createCorpus(null, "new_corpus");
+		} else if (selection.getFirstElement() instanceof SCorpus) {
+			SCorpus parent = (SCorpus) selection.getFirstElement();
+			parent.getGraph().createCorpus(parent, "new_corpus");
+		} else {
+			ErrorDialog.openError(shell, "Error when adding (sub-) corpus",
+					"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
+					new Status(Status.ERROR, "unknown", null));
+		}
+	}
+
+	private void addDocument(Shell shell) {
+		// get the selected corpus graph
+		TreeSelection selection = (TreeSelection) treeViewer.getSelection();
+		if (selection.getFirstElement() instanceof SCorpus) {
+			SCorpus parent = (SCorpus) selection.getFirstElement();
+			parent.getGraph().createDocument(parent, "new_document");
+		} else {
+			ErrorDialog.openError(shell, "Error when adding document",
+					"You can only create a document when a corpus is selected",
+					new Status(Status.ERROR, "unknown", null));
+		}
 	}
 
 	private void createDeleteMenu(ToolBar toolBar) {
