@@ -1,5 +1,7 @@
 package org.corpus_tools.hexatomic.core;
 
+import javax.inject.Singleton;
+
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SaltProject;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -11,6 +13,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
  *
  */
 @Creatable
+@Singleton
 public class ProjectManager {
 
 	private SaltProject project;
