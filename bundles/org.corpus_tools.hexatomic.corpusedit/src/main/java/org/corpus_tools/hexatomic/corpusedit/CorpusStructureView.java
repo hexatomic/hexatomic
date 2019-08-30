@@ -9,13 +9,21 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.core.GraphTraverseHandler;
+import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -35,10 +43,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
+			.getLogger(CorpusStructureView.ChildNameFilter.class);
+	
 	private final class ChildNameFilter extends ViewerFilter {
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
@@ -109,12 +121,52 @@ public class CorpusStructureView {
 		composite.setLayoutData(gd_composite);
 		composite.setLayout(new TreeColumnLayout());
 
+		CorpusLabelProvider labelProvider = new CorpusLabelProvider();
+		
+		
 		treeViewer = new TreeViewer(composite, SWT.BORDER);
 		Tree tree = treeViewer.getTree();
+		treeViewer.setColumnProperties(new String[] {"name"});
+		treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree)});
+		treeViewer.setCellModifier(new ICellModifier() {
+			
+			@Override
+			public void modify(Object element, String property, Object value) {
+				if(element instanceof TreeItem) {
+					TreeItem item = (TreeItem) element;
+					if(item.getData() instanceof SNamedElement) {
+						SNamedElement n = (SNamedElement) item.getData();
+						n.setName(value.toString());
+					}
+				}
+				
+			}
+			
+			@Override
+			public Object getValue(Object element, String property) {
+				return labelProvider.getText(element);
+			}
+			
+			@Override
+			public boolean canModify(Object element, String property) {
+				return true;
+			}
+		});
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
-		treeViewer.setLabelProvider(new CorpusLabelProvider());
+		treeViewer.setLabelProvider(labelProvider);
+		
+		
+		TreeViewerEditor.create(treeViewer, new ColumnViewerEditorActivationStrategy(treeViewer) {
+			@Override
+			protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+				return event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION;
+			}
+		}, ColumnViewerEditor.DEFAULT);
+		
+		
 
+		
 		Composite composite_tools = new Composite(parent, SWT.NONE);
 		composite_tools.setLayout(new RowLayout(SWT.HORIZONTAL));
 		composite_tools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
