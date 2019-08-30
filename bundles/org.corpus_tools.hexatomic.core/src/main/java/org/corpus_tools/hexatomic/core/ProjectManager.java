@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.core;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -31,19 +32,28 @@ public class ProjectManager {
 	
 	@Inject
 	private IEventBroker events;
+	
+	@Inject
+	private ProjectChangeListener changeListener;
 
-	private final SaltNotificationFactory notificationFactory;
+	private SaltNotificationFactory notificationFactory;
 	
 	public ProjectManager() {
-		
+	
+	}
+	
+	@PostConstruct
+	public void postConstruct() {
 		log.debug("Starting Project Manager");
-		
-		notificationFactory = new SaltNotificationFactory();
-		SaltFactory.setFactory(notificationFactory);
-		notificationFactory.addListener(new ProjectChangeListener());
 		
 		// create an empty project		
 		this.project = SaltFactory.createSaltProject();
+		
+		// register the change listener with Salt		
+		notificationFactory = new SaltNotificationFactory();
+		SaltFactory.setFactory(notificationFactory);
+		notificationFactory.addListener(changeListener);
+		
 	}
 	
 	/**

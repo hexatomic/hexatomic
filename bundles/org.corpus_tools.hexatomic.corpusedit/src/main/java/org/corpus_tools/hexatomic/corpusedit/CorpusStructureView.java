@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.core.GraphTraverseHandler;
 import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNode;
@@ -126,7 +127,14 @@ public class CorpusStructureView {
 		MenuItem addCorpusGraph = new MenuItem(addMenu, SWT.NONE);
 		addCorpusGraph.setText("Corpus Graph");
 		addCorpusGraph.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/project-diagram-solid.png"));
-
+		addCorpusGraph.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
+				newGraph.setName("new_corpus_graph");
+			}
+		});
+		
 		
 		tltmAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
