@@ -43,7 +43,11 @@ public class CorpusTreeProvider implements ITreeContentProvider {
 		} else if (parentElement instanceof SCorpusGraph) {
 			SCorpusGraph g = (SCorpusGraph) parentElement;
 			List<SNode> roots = g.getRoots();
-			return roots.toArray();
+			if (roots == null) {
+				return null;
+			} else {
+				return roots.toArray();
+			}
 		} else if (parentElement instanceof SaltProject) {
 			SaltProject p = (SaltProject) parentElement;
 			List<SCorpusGraph> graphs = p.getCorpusGraphs();
