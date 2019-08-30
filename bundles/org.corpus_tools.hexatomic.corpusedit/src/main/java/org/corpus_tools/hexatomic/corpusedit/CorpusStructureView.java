@@ -1,6 +1,8 @@
 package org.corpus_tools.hexatomic.corpusedit;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
@@ -9,7 +11,9 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusGraph;
+import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.core.GraphTraverseHandler;
+import org.corpus_tools.salt.core.SGraph;
 import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
@@ -24,7 +28,9 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerEditor;
@@ -215,10 +221,10 @@ public class CorpusStructureView {
 					addMenu.setVisible(true);
 				} else {
 					// trigger a default action based on the currently selected tree item
-					TreeSelection selected = (TreeSelection) treeViewer.getSelection();
-					if(selected.getFirstElement() instanceof SCorpus) {
+					StructuredSelection selected = (StructuredSelection) treeViewer.getSelection();
+					if (selected.getFirstElement() instanceof SCorpus) {
 						addDocument(toolBar.getShell());
-					} else if(selected.getFirstElement() instanceof SCorpusGraph) {
+					} else if (selected.getFirstElement() instanceof SCorpusGraph) {
 						addCorpus(toolBar.getShell());
 					} else {
 						// fallback to a corpus graph, which always can be added
@@ -264,37 +270,53 @@ public class CorpusStructureView {
 	}
 
 	private void addCorpusGraph() {
+		log.debug("Adding new corpus graph");
 		SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
 		newGraph.setName("new_corpus_graph");
+
+		log.debug("Selecting created corpus graph");
+		selectSaltObject(newGraph, true);
+
 	}
 
 	private void addCorpus(Shell shell) {
+		SCorpus newCorpus = null;
+
 		// get the selected corpus graph
-		TreeSelection selection = (TreeSelection) treeViewer.getSelection();
+		StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
 		if (selection.getFirstElement() instanceof SCorpusGraph) {
 			SCorpusGraph g = (SCorpusGraph) selection.getFirstElement();
-			g.createCorpus(null, "new_corpus");
+			newCorpus = g.createCorpus(null, "new_corpus");
 		} else if (selection.getFirstElement() instanceof SCorpus) {
 			SCorpus parent = (SCorpus) selection.getFirstElement();
-			parent.getGraph().createCorpus(parent, "new_corpus");
+			newCorpus = parent.getGraph().createCorpus(parent, "new_corpus");
 		} else {
 			ErrorDialog.openError(shell, "Error when adding (sub-) corpus",
 					"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
 					new Status(Status.ERROR, "unknown", null));
 		}
+
+		if (newCorpus != null) {
+			log.debug("Selecting created corpus");
+			selectSaltObject(newCorpus, true);
+		}
 	}
 
 	private void addDocument(Shell shell) {
+
 		// get the selected corpus graph
-		TreeSelection selection = (TreeSelection) treeViewer.getSelection();
+		StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
 		if (selection.getFirstElement() instanceof SCorpus) {
 			SCorpus parent = (SCorpus) selection.getFirstElement();
-			parent.getGraph().createDocument(parent, "new_document");
+			SDocument newDocument = parent.getGraph().createDocument(parent, "new_document");
+			log.debug("Selecting created document");
+			selectSaltObject(newDocument, true);
 		} else {
 			ErrorDialog.openError(shell, "Error when adding document",
 					"You can only create a document when a corpus is selected",
 					new Status(Status.ERROR, "unknown", null));
 		}
+
 	}
 
 	private void createDeleteMenu(ToolBar toolBar) {
@@ -303,12 +325,57 @@ public class CorpusStructureView {
 				"icons/fontawesome/trash-alt-regular.png"));
 		tltmDelete.setText("Delete");
 	}
+	
+	private void selectSaltObject(SNamedElement object, boolean reveal) {
+		if(object instanceof SGraph) {
+			// graphs are top-level, just select the matching root element
+			treeViewer.setSelection(new StructuredSelection(object), reveal);
+		} else if (object instanceof SNode) {
+			SNode n = (SNode) object;
+			
+		
+			// try to get all parents of this node
+			final LinkedList<Object> chain = new LinkedList<>();
+			
+			n.getGraph().traverse(Arrays.asList(n), GRAPH_TRAVERSE_TYPE.BOTTOM_UP_DEPTH_FIRST, "parents", new GraphTraverseHandler() {
+				
+				@Override
+				public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+						SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+					
+					chain.add(currNode);
+				}
+				
+				@Override
+				public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+						SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+					
+				}
+				
+				@Override
+				public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+						SRelation<SNode, SNode> relation, SNode currNode, long order) {
+					return true;
+				}
+			});
+
+			// add the corpus graph
+			chain.add(n.getGraph());
+
+			Collections.reverse(chain);
+			TreePath path = new TreePath(chain.toArray());
+			treeViewer.setSelection(new TreeSelection(path), reveal);
+			
+		}
+	}
 
 	@Inject
 	@Optional
 	private void subscribeProjectChanged(@UIEventTopic(ProjectManager.TOPIC_PROJECT_CHANGED) String path) {
+		log.debug("Corpus Structure Viewer received update");
 		if (treeViewer != null) {
 			treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+			log.debug("Corpus Structure Viewer udpated");
 		}
 
 	}
