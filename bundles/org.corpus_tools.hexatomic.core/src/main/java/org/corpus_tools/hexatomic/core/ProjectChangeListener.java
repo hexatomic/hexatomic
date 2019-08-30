@@ -17,7 +17,8 @@ public class ProjectChangeListener implements Listener {
 
 		events.push(new Event(type, attribute, oldValue, newValue, container));
 
-		log.debug("Project update");
+		log.debug("Project update: type={} attribute={} oldValue={} newValue={} container={}", type, attribute,
+				oldValue, newValue, container);
 
 	}
 
