@@ -22,12 +22,62 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
+
+	private final class ChildNameFilter extends ViewerFilter {
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if (txtFilter.isEnabled()) {
+				String filterText = txtFilter.getText().trim().toLowerCase();
+				if (!filterText.isEmpty() && element instanceof SNode) {
+
+					// Check if element or any of its children has a matching name.
+					// If we exclude parents based on their name only, their children won't be
+					// included.
+					final AtomicBoolean found = new AtomicBoolean(false);
+
+					SNode n = (SNode) element;
+					n.getGraph().traverse(Arrays.asList(n), GRAPH_TRAVERSE_TYPE.TOP_DOWN_DEPTH_FIRST, "filter",
+							new GraphTraverseHandler() {
+
+								@Override
+								public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+										SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+									if (currNode.getName() != null) {
+										if (currNode.getName().toLowerCase().contains(filterText)) {
+											found.set(true);
+										}
+									}
+
+								}
+
+								@Override
+								public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+										SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+
+								}
+
+								@Override
+								public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+										SRelation<SNode, SNode> relation, SNode currNode, long order) {
+									// search as long no valid child was found
+									return !found.get();
+								}
+							});
+
+					return found.get();
+				}
+			}
+			return true;
+		}
+	}
 
 	private Text txtFilter;
 
@@ -57,59 +107,15 @@ public class CorpusStructureView {
 		tree.setHeaderVisible(true);
 		tree.setLinesVisible(true);
 		treeViewer.setLabelProvider(new CorpusLabelProvider());
-		new Label(parent, SWT.NONE);
+		
+		Composite composite_tools = new Composite(parent, SWT.NONE);
+		composite_tools.setLayout(new RowLayout(SWT.HORIZONTAL));
+		composite_tools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		
+		Button btnDelete = new Button(composite_tools, SWT.NONE);
+		btnDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/trash-alt-regular.png"));
 		treeViewer.setContentProvider(new CorpusTreeProvider());
-		treeViewer.setFilters(new ViewerFilter() {
-
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (txtFilter.isEnabled()) {
-					String filterText = txtFilter.getText().trim().toLowerCase();
-					if (!filterText.isEmpty() && element instanceof SNode) {
-						// Check if element or any of its children has a matching name.
-						// If we exclude parents based on their name only, their children won't be
-						// included.
-
-						final AtomicBoolean found = new AtomicBoolean(false);
-
-						SNode n = (SNode) element;
-						n.getGraph().traverse(Arrays.asList(n), GRAPH_TRAVERSE_TYPE.TOP_DOWN_DEPTH_FIRST, "filter",
-								new GraphTraverseHandler() {
-
-									@Override
-									public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
-											SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode,
-											long order) {
-										if (currNode.getName() != null) {
-											if (currNode.getName().toLowerCase().contains(filterText)) {
-												found.set(true);
-											}
-										}
-
-									}
-
-									@Override
-									public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
-											SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode,
-											long order) {
-
-									}
-
-									@Override
-									public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType,
-											String traversalId, SRelation<SNode, SNode> relation, SNode currNode,
-											long order) {
-										// search as long no valid child was found
-										return !found.get();
-									}
-								});
-
-						return found.get();
-					}
-				}
-				return true;
-			}
-		});
+		treeViewer.setFilters(new ChildNameFilter());
 
 		txtFilter.addModifyListener(new ModifyListener() {
 
@@ -127,10 +133,10 @@ public class CorpusStructureView {
 	@Inject
 	@Optional
 	private void subscribeProjectChanged(@UIEventTopic(ProjectManager.TOPIC_PROJECT_CHANGED) String path) {
-		if(treeViewer != null) {
+		if (treeViewer != null) {
 			treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 		}
-		
+
 	}
 
 }
