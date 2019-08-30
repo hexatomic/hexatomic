@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.corpus_tools.hexatomic.logging
+Bundle-Version: 0.0.0.qualifier
+Automatic-Module-Name: org.corpus_tools.hexatomic.logging
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: ch.qos.logback.classic;bundle-version="1.1.2",
+ ch.qos.logback.core;bundle-version="1.1.2",
+ org.eclipse.core.runtime;bundle-version="3.15.300"
+Import-Package: org.slf4j;version="1.7.10",
+ org.slf4j.spi;version="1.7.10"
+Bundle-Activator: org.corpus_tools.hexatomic.logging.Activator
