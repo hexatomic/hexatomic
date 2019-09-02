@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.URI;
 @Singleton
 public class ProjectManager {
 	
-	public static final String TOPIC_PROJECT_CHANGED = "TOPIC_PROJECT_CHANGED";
+	public static final String TOPIC_CORPUS_STRUCTURE_CHANGED = "TOPIC_CORPUS_STRUCTURE_CHANGED";
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
 	
@@ -99,7 +99,7 @@ public class ProjectManager {
 		// TODO error handling
 		project.loadCorpusStructure(path);
 		
-		events.send(TOPIC_PROJECT_CHANGED, path.toFileString());
+		events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
 
 	}
 	
