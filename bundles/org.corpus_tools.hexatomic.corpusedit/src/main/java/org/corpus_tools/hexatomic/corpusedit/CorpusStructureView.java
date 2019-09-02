@@ -453,7 +453,7 @@ public class CorpusStructureView {
 
 	@Inject
 	@org.eclipse.e4.core.di.annotations.Optional
-	private void subscribeProjectChanged(@UIEventTopic(ProjectManager.TOPIC_PROJECT_CHANGED) String path) {
+	private void subscribeProjectChanged(@UIEventTopic(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED) String path) {
 		log.debug("Corpus Structure Viewer received update");
 		if (treeViewer != null) {
 			treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
