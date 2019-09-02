@@ -1,24 +1,23 @@
 package org.corpus_tools.hexatomic.corpusedit.dnd;
 
+import org.corpus_tools.hexatomic.corpusedit.CorpusStructureView;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.core.SNode;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
 
 public class SaltObjectTreeDropTarget extends ViewerDropAdapter {
 
-	/**
-	 * 
-	 */
-	private final TreeViewer treeViewer;
-	
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SaltObjectTreeDropTarget.class);
 
-	public SaltObjectTreeDropTarget(TreeViewer treeViewer) {
+	CorpusStructureView corpusView;
+	
+	public SaltObjectTreeDropTarget(CorpusStructureView corpusView, TreeViewer treeViewer) {
 		super(treeViewer);
-		this.treeViewer = treeViewer;
+		this.corpusView = corpusView;
 	}
 
 	@Override
@@ -31,8 +30,11 @@ public class SaltObjectTreeDropTarget extends ViewerDropAdapter {
 		String docID = (String) data;
 		SNode doc = newParent.getGraph().getNode(docID);
 		if(doc instanceof SDocument) {
-			// this will automatically remove the document from the original parent
+			newParent.getGraph().removeNode(doc);
 			newParent.getGraph().addDocument(newParent, (SDocument) doc);
+			// select the new document
+			corpusView.selectSaltObject(doc, true);
+			return true;
 		}
 		
 		return false;
