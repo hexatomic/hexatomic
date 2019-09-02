@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.corpusedit.dnd.*;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -39,6 +40,9 @@ import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -62,7 +66,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
-	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
+	static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(CorpusStructureView.ChildNameFilter.class);
 
 	private final class ChildNameFilter extends ViewerFilter {
@@ -118,7 +122,7 @@ public class CorpusStructureView {
 	@Inject
 	private ProjectManager projectManager;
 
-	private TreeViewer treeViewer;
+	TreeViewer treeViewer;
 
 	@PostConstruct
 	public void createPartControl(Composite parent) {
@@ -183,6 +187,10 @@ public class CorpusStructureView {
 		});
 		tree.setLinesVisible(true);
 		treeViewer.setLabelProvider(labelProvider);
+		Transfer[] transferTypes = new Transfer[] {TextTransfer.getInstance()};
+		treeViewer.addDragSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDragSource(treeViewer));
+		treeViewer.addDropSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDropTarget(treeViewer));
+		
 
 		TreeViewerEditor.create(treeViewer, new ColumnViewerEditorActivationStrategy(treeViewer) {
 			@Override
