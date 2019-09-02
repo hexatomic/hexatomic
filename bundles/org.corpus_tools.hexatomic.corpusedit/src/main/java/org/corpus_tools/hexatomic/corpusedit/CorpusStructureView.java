@@ -228,6 +228,9 @@ public class CorpusStructureView {
 						addDocument(toolBar.getShell());
 					} else if (selected.getFirstElement() instanceof SCorpusGraph) {
 						addCorpus(toolBar.getShell());
+					} else if (selected.getFirstElement() instanceof SDocument) {
+						// add a sibling document
+						addDocument(toolBar.getShell());
 					} else {
 						// fallback to a corpus graph, which always can be added
 						addCorpusGraph();
@@ -313,9 +316,16 @@ public class CorpusStructureView {
 			SDocument newDocument = parent.getGraph().createDocument(parent, "new_document");
 			log.debug("Selecting created document");
 			selectSaltObject(newDocument, true);
+		} else if (selection.getFirstElement() instanceof SDocument) {
+			// create a sibling document with the same parent (sub-) corpus
+			SDocument sibling = (SDocument) selection.getFirstElement();
+			SCorpus parent = sibling.getGraph().getCorpus(sibling);
+			SDocument newDocument = parent.getGraph().createDocument(parent, "new_document");
+			log.debug("Selecting created document");
+			selectSaltObject(newDocument, true);
 		} else {
 			ErrorDialog.openError(shell, "Error when adding document",
-					"You can only create a document when a corpus is selected",
+					"You can only create a document when a corpus or a sibling document is selected",
 					new Status(Status.ERROR, "unknown", null));
 		}
 
@@ -339,7 +349,7 @@ public class CorpusStructureView {
 						Optional<SNode> parent = n.getInRelations().stream()
 								.filter((rel) -> rel instanceof SCorpusRelation).findFirst()
 								.map(rel -> ((SCorpusRelation) rel).getSource());
-						if(parent.isPresent()) {
+						if (parent.isPresent()) {
 							// select parent corpus
 							selectSaltObject(parent.get(), true);
 						} else {
@@ -352,18 +362,18 @@ public class CorpusStructureView {
 						treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 					} else if (selection.getFirstElement() instanceof SDocument) {
 						SDocument n = (SDocument) selection.getFirstElement();
-						
+
 						Optional<SNode> parent = n.getInRelations().stream()
 								.filter((rel) -> rel instanceof SCorpusDocumentRelation).findFirst()
 								.map(rel -> ((SCorpusDocumentRelation) rel).getSource());
-						if(parent.isPresent()) {
+						if (parent.isPresent()) {
 							// select parent corpus
 							selectSaltObject(parent.get(), true);
 						} else {
 							// use the corpus graph
 							selectSaltObject(n.getGraph(), true);
 						}
-						
+
 						n.getGraph().removeNode(n);
 						treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 					}
