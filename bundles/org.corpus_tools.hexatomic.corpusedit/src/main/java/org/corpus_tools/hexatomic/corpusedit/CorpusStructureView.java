@@ -10,7 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.corpusedit.dnd.*;
+import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
+import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -66,8 +67,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
-	static final org.slf4j.Logger log = org.slf4j.LoggerFactory
-			.getLogger(CorpusStructureView.ChildNameFilter.class);
+	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.ChildNameFilter.class);
 
 	private final class ChildNameFilter extends ViewerFilter {
 		@Override
@@ -187,10 +187,9 @@ public class CorpusStructureView {
 		});
 		tree.setLinesVisible(true);
 		treeViewer.setLabelProvider(labelProvider);
-		Transfer[] transferTypes = new Transfer[] {TextTransfer.getInstance()};
+		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
 		treeViewer.addDragSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDragSource(treeViewer));
 		treeViewer.addDropSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDropTarget(this, treeViewer));
-		
 
 		TreeViewerEditor.create(treeViewer, new ColumnViewerEditorActivationStrategy(treeViewer) {
 			@Override
@@ -283,58 +282,74 @@ public class CorpusStructureView {
 	}
 
 	private void addCorpusGraph() {
-		log.debug("Adding new corpus graph");
-		SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
-		newGraph.setName("new_corpus_graph");
 
-		log.debug("Selecting created corpus graph");
+		int oldSize = projectManager.getProject().getCorpusGraphs() == null ? 0
+				: projectManager.getProject().getCorpusGraphs().size();
+
+		SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
+		newGraph.setName("corpus_graph_" + (oldSize + 1));
+
 		selectSaltObject(newGraph, true);
 
 	}
 
 	private void addCorpus(Shell shell) {
-		SCorpus newCorpus = null;
+
+		SCorpusGraph g = null;
+		SCorpus parent = null;
 
 		// get the selected corpus graph
 		StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
 		if (selection.getFirstElement() instanceof SCorpusGraph) {
-			SCorpusGraph g = (SCorpusGraph) selection.getFirstElement();
-			newCorpus = g.createCorpus(null, "new_corpus");
+			g = (SCorpusGraph) selection.getFirstElement();
+
 		} else if (selection.getFirstElement() instanceof SCorpus) {
-			SCorpus parent = (SCorpus) selection.getFirstElement();
-			newCorpus = parent.getGraph().createCorpus(parent, "new_corpus");
+			parent = (SCorpus) selection.getFirstElement();
+			g = parent.getGraph();
+
 		} else {
 			ErrorDialog.openError(shell, "Error when adding (sub-) corpus",
 					"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
 					new Status(Status.ERROR, "unknown", null));
+			return;
 		}
 
-		if (newCorpus != null) {
-			log.debug("Selecting created corpus");
-			selectSaltObject(newCorpus, true);
+		if (g != null) {
+
+			int oldSize = g.getCorpora() == null ? 0 : g.getCorpora().size();
+			SCorpus newCorpus = g.createCorpus(parent, "corpus_" + (oldSize + 1));
+			if (newCorpus != null) {
+				selectSaltObject(newCorpus, true);
+			}
 		}
+
 	}
 
 	private void addDocument(Shell shell) {
 
 		// get the selected corpus graph
 		StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
+
+		SCorpus parent = null;
+
 		if (selection.getFirstElement() instanceof SCorpus) {
-			SCorpus parent = (SCorpus) selection.getFirstElement();
-			SDocument newDocument = parent.getGraph().createDocument(parent, "new_document");
-			log.debug("Selecting created document");
-			selectSaltObject(newDocument, true);
+			parent = (SCorpus) selection.getFirstElement();
 		} else if (selection.getFirstElement() instanceof SDocument) {
 			// create a sibling document with the same parent (sub-) corpus
 			SDocument sibling = (SDocument) selection.getFirstElement();
-			SCorpus parent = sibling.getGraph().getCorpus(sibling);
-			SDocument newDocument = parent.getGraph().createDocument(parent, "new_document");
-			log.debug("Selecting created document");
-			selectSaltObject(newDocument, true);
+			parent = sibling.getGraph().getCorpus(sibling);
 		} else {
 			ErrorDialog.openError(shell, "Error when adding document",
 					"You can only create a document when a corpus or a sibling document is selected",
 					new Status(Status.ERROR, "unknown", null));
+			return;
+		}
+
+		if (parent != null) {
+			int oldSize = parent.getGraph().getDocuments() == null ? 0 : parent.getGraph().getDocuments().size();
+			SDocument newDocument = parent.getGraph().createDocument(parent, "document_" + (oldSize + 1));
+			log.debug("Selecting created document");
+			selectSaltObject(newDocument, true);
 		}
 
 	}
