@@ -48,3 +48,7 @@ You can move a document from one (sub-) corpus to another by dragging and droppi
 ![Drag document](./corpus-structure-drag.png)
 ![Drop document](./corpus-structure-drop.png)
 ![Drop document result](./corpus-structure-drop-result.png)
+
+It is possible to apply a filter, to only show documents which names contain a certain string.
+
+![Filter by name](./corpus-structure-filter-doc.png)
