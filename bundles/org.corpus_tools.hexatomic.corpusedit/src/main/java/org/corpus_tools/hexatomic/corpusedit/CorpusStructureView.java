@@ -189,7 +189,7 @@ public class CorpusStructureView {
 		treeViewer.setLabelProvider(labelProvider);
 		Transfer[] transferTypes = new Transfer[] {TextTransfer.getInstance()};
 		treeViewer.addDragSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDragSource(treeViewer));
-		treeViewer.addDropSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDropTarget(treeViewer));
+		treeViewer.addDropSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDropTarget(this, treeViewer));
 		
 
 		TreeViewerEditor.create(treeViewer, new ColumnViewerEditorActivationStrategy(treeViewer) {
@@ -393,7 +393,7 @@ public class CorpusStructureView {
 		tltmDelete.setText("Delete");
 	}
 
-	private void selectSaltObject(SNamedElement object, boolean reveal) {
+	public void selectSaltObject(SNamedElement object, boolean reveal) {
 		if (object instanceof SGraph) {
 			// graphs are top-level, just select the matching root element
 			treeViewer.setSelection(new StructuredSelection(object), reveal);
