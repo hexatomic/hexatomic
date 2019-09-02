@@ -260,7 +260,7 @@ public class CorpusStructureView {
 		MenuItem addCorpus = new MenuItem(addMenu, SWT.NONE);
 		addCorpus.setText("(Sub-) Corpus");
 		addCorpus.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
-				"icons/fontawesome/box-open-solid.png"));
+				"icons/fontawesome/folder-regular.png"));
 		addCorpus.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

@@ -30,7 +30,7 @@ public class CorpusLabelProvider extends LabelProvider {
 					"icons/fontawesome/project-diagram-solid.png");
 		} else if (element instanceof SCorpus) {
 			return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
-					"icons/fontawesome/box-open-solid.png");
+					"icons/fontawesome/folder-regular.png");
 		} else {
 		}
 		return super.getImage(element);
