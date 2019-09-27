@@ -57,8 +57,8 @@ To contribute new functionality to Hexatomic, create a feature branch which is b
 
 1. Download the `develop` branch from your fork repository:  
 ```bash
-# Download the contents of the remote `develop` branch to your local repository
-git checkout origin/develop
+# Download the contents of the remote `develop` branch (and others) to your local repository
+git fetch
 # Switch to the local branch `develop`
 git checkout develop 
 ```
