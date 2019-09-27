@@ -1,0 +1,8 @@
+[book]
+authors = ["Stephan Druskat"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Hexatomic Developer & Maintainer Documentation"
+
+[preprocessor.index]

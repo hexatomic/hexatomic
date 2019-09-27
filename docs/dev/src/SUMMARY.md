@@ -1,0 +1,16 @@
+# Summary
+
+- [Introduction](./introduction.md)
+- [Development](./development/README.md)
+    - [Development setup](./development/setup.md)
+        - [Getting the source code](./development/getting-the-source-code.md)
+	- [Workflow](./development/workflow/README.md)
+        - [Repositories](./development/workflow/repositories.md)
+	    - [Project setup](./development/workflow/setup.md)
+- [Maintenance](./maintenance/README.md)
+	- [Pull requests](./maintenance/pull-requests/README.md)
+		- [Checklist](./maintenance/pull-requests/checklist.md)
+	- [Releases](./maintenance/releases/README.md)
+		- [Checklist](./maintenance/releases/checklist.md)
+- [Governance](./governance.md)
+- [License](./LICENSE.md)
