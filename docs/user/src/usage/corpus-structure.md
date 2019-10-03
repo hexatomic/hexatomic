@@ -41,7 +41,8 @@ You can edit the name of a corpus by double-clicking on its entry and pressing e
 
 ## Documents
 
-When a corpus is selected, the default action for the “Add” button is to a a new document.
+When a corpus is selected, the default action for the "Add" button is to add a new document.
+When a document is selected, the "Add" button will create a new sibling document in the same parent corpus.
 Documents must have a corpus as a parent and contain the base text and linguistic annotations.
 You can move a document from one (sub-) corpus to another by dragging and dropping it.
 
