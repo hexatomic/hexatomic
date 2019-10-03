@@ -33,7 +33,7 @@ If you delete a corpus graph, all of its documents and corpora will also be dele
 ## Corpora and sub-corpora
 
 Inside a corpus graph, the different corpora and sub-corpora are organized as a hierarchy.
-A corpus graph should only contain one toplevel corpus which name is often used as corpus name when exporting the corpus to a different format.
+A corpus graph should only contain one top-level corpus, whose name is often used as corpus name when exporting the corpus to a different format.
 To add a sub-corpus, select the parent corpus, click on the arrow on the right side of the “Add” button and choose “(Sub-) Corpus”.
 You can edit the name of a corpus by double-clicking on its entry and pressing enter when finished.
 
