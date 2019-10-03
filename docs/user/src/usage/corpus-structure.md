@@ -42,7 +42,7 @@ You can edit the name of a corpus by double-clicking on its entry and pressing e
 ## Documents
 
 When a corpus is selected, the default action for the “Add” button is to a a new document.
-Documents must have a corpus as a parent and contain the linguistic annotations.
+Documents must have a corpus as a parent and contain the base text and linguistic annotations.
 You can move a document from one (sub-) corpus to another by dragging and dropping it.
 
 ![Drag document](./corpus-structure-drag.png)
