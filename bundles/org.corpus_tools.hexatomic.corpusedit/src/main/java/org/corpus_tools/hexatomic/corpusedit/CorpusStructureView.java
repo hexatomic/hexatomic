@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.corpusedit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
+import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -310,7 +312,8 @@ public class CorpusStructureView {
 		} else {
 			ErrorDialog.openError(shell, "Error when adding (sub-) corpus",
 					"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
-					new Status(Status.ERROR, "unknown", "Constraint in the Salt data model.")); // TODO Externalize string
+					new Status(Status.ERROR, "unknown", "Constraint in the Salt data model.")); // TODO Externalize
+																								// string
 			return;
 		}
 
@@ -355,8 +358,8 @@ public class CorpusStructureView {
 	}
 
 	private void createDeleteMenu(ToolBar toolBar) {
-		ToolItem tltmDelete = new ToolItem(toolBar, SWT.NONE);
-		tltmDelete.addSelectionListener(new SelectionAdapter() {
+		ToolItem deleteToolItem = new ToolItem(toolBar, SWT.NONE);
+		deleteToolItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
@@ -368,6 +371,16 @@ public class CorpusStructureView {
 						treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 					} else if (selection.getFirstElement() instanceof SCorpus) {
 						SCorpus n = (SCorpus) selection.getFirstElement();
+
+						boolean hasChildren = n.getOutRelations().stream().filter(
+								(rel) -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation)
+								.findAny().isPresent();
+						if (hasChildren) {
+							ErrorDialog.openError(toolBar.getShell(), "Error when deleting (sub-) corpus",
+									"Before deleting a (sub-) corpus, first delete all its child elements.",
+									new Status(Status.ERROR, "unknown", "The selected (sub-) corpus has child elements"));
+							return;
+						}
 
 						Optional<SNode> parent = n.getInRelations().stream()
 								.filter((rel) -> rel instanceof SCorpusRelation).findFirst()
@@ -403,9 +416,9 @@ public class CorpusStructureView {
 				}
 			}
 		});
-		tltmDelete.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+		deleteToolItem.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
 				"icons/fontawesome/trash-alt-regular.png"));
-		tltmDelete.setText("Delete");
+		deleteToolItem.setText("Delete");
 	}
 
 	public void selectSaltObject(SNamedElement object, boolean reveal) {
