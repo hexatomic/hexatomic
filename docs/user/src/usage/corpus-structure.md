@@ -23,7 +23,7 @@ In an empty project, just click on the “Add“ button to add a new corpus stru
 
 ![Add button for default action](./corpus-structure-add-default.png)
 
-Just using the default “Add“ button is context sensitive depending on which element is selected in the corpus structure.
+The default “Add“ button is context-sensitive, and will add elements "intelligently", depending on which type of element is currently selected in the corpus structure.
 To explicitly choose the element to add, click on the small arrow on the right side of the button and a drop-down menu with the different options will appear.
 
 ![Add button for specific action](./corpus-structure-add-specific.png)
