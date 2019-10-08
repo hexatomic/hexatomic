@@ -40,7 +40,7 @@ public class ProjectManager {
 	}
 	
 	@PostConstruct
-	public void postConstruct() {
+	private void postConstruct() {
 		log.debug("Starting Project Manager");
 		
 		// Create an empty project		
