@@ -33,6 +33,9 @@ public class ProjectManager {
 	@Inject
 	private IEventBroker events;
 	
+	@Inject
+	private ProjectChangeListener changeListener;
+	
 	private SaltNotificationFactory notificationFactory;
 	
 	public ProjectManager() {
@@ -49,7 +52,7 @@ public class ProjectManager {
 		// Allow to register a change listener with Salt		
 		notificationFactory = new SaltNotificationFactory();
 		SaltFactory.setFactory(notificationFactory);
-		// TODO: add change listener for undo/redo here
+		notificationFactory.addListener(changeListener);
 		
 	}
 	
