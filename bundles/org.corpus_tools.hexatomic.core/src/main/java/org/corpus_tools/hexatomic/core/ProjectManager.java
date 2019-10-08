@@ -93,7 +93,9 @@ public class ProjectManager {
 	 */
 	public void open(URI path) {
 		project = SaltFactory.createSaltProject();
-		// TODO error handling
+		// TODO Implement a user-visible error handling. 
+		// There should be a generic way of displaying exceptions to the user (a dialog and some kind of log)
+		// in the core bundle, so we can use this functionality here to show any unhandled exception.
 		project.loadCorpusStructure(path);
 		
 		events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
