@@ -215,17 +215,17 @@ public class CorpusStructureView {
 	}
 
 	private void createAddMenu(ToolBar toolBar) {
-		ToolItem tltmAdd = new ToolItem(toolBar, SWT.DROP_DOWN);
-		tltmAdd.setImage(
+		ToolItem addToolItem = new ToolItem(toolBar, SWT.DROP_DOWN);
+		addToolItem.setImage(
 				ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/plus-solid.png"));
-		tltmAdd.setText("Add");
-		Menu addMenu = new Menu(tltmAdd.getParent().getShell());
-		tltmAdd.addSelectionListener(new SelectionAdapter() {
+		addToolItem.setText("Add");
+		Menu addMenu = new Menu(addToolItem.getParent().getShell());
+		addToolItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.detail == SWT.ARROW) {
-					Rectangle rect = tltmAdd.getBounds();
-					Point pt = tltmAdd.getParent().toDisplay(new Point(rect.x, rect.y));
+					Rectangle rect = addToolItem.getBounds();
+					Point pt = addToolItem.getParent().toDisplay(new Point(rect.x, rect.y));
 					addMenu.setLocation(pt);
 					addMenu.setVisible(true);
 				} else {
