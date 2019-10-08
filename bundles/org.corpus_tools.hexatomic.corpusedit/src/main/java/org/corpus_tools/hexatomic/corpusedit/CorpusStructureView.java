@@ -310,7 +310,7 @@ public class CorpusStructureView {
 		} else {
 			ErrorDialog.openError(shell, "Error when adding (sub-) corpus",
 					"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
-					new Status(Status.ERROR, "unknown", null));
+					new Status(Status.ERROR, "unknown", "Constraint in the Salt data model.")); // TODO Externalize string
 			return;
 		}
 
