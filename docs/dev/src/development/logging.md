@@ -20,6 +20,6 @@ To implement the API, we use the [Logback library](https://logback.qos.ch/) in t
 For testing and debugging purposes, there is a `logback-test.xml` file in the root of the logging bundle. 
 This configuration file is loaded whenever Hexatomic is started from Eclipse using the Debug/Run configuration and will output messages on the `debug` level.
 When compiling the Hexatomic product, the file `logback.xml` is copied to the product root directory and loaded from there.
-This allows a user/developer to customize the logging on its own, even when using a published binary artifact instead of debugging directly from the Eclipse IDE.
+This allows a user/developer to customize the logging on their own, even when using a published binary artifact instead of debugging directly from the Eclipse IDE.
 Per default, only messages from the `info` level and above are printed to the command line.
 See the [Logback documentation](https://logback.qos.ch/manual/configuration.html) how to write or adapt this file.
