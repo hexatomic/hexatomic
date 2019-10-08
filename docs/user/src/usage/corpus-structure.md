@@ -15,7 +15,7 @@ In Hexatomic, the corpus structure is always visible in the special “Corpus St
 
 ## Corpus graphs
 
-Corpora, sub-corpora and documents are organized in hierarchies, the so-called corpus graphs.
+Corpora, sub-corpora and documents are organized in a hierarchical structure, the so-called corpus graph.
 A project in Hexatomic *can* have more than one corpus-graphs, but for most projects a single corpus graph is sufficient.
 In the special case where you import different corpora from different annotation formats into the same Hexatomic project for merging them, you will need more than one corpus graph.
 
