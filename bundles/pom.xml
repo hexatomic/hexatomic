@@ -12,7 +12,6 @@
 	<modules>
 		<module>org.corpus_tools.hexatomic.core</module>
 		<module>org.corpus_tools.hexatomic.corpusedit</module>
-		<module>org.corpus_tools.hexatomic.logging</module>
 	</modules>
 
 	<build>

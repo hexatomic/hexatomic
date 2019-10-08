@@ -67,7 +67,7 @@ import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
-	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.ChildNameFilter.class);
+	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
 	private final class ChildNameFilter extends ViewerFilter {
 		@Override

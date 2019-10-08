@@ -15,7 +15,14 @@
 
    <windowImages/>
 
-   <launcher name="hexatomic"/>
+   <launcher name="hexatomic">
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
 
    <plugins>
       <plugin id="com.ibm.icu"/>
@@ -104,6 +111,14 @@
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <property name="lifeCycleURI" value="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.ApplicationLifecycle" />
    </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
 
 </product>

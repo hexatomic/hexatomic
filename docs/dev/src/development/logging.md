@@ -16,11 +16,10 @@ log.debug("Selecting created document {}.", 101);
 
 See the [SLF4J manual](https://www.slf4j.org/manual.html) for more information on the API.
 
-To implement the API, we use the [Logback library](https://logback.qos.ch/) in the `org.corpus_tools.hexatomic.logging` bundle.
-You don't need this bundle as a dependency and it is possible we might use a different implementation later on.
+To implement the API, we use the [Logback library](https://logback.qos.ch/) in the `org.corpus_tools.hexatomic.core` bundle.
 For testing and debugging purposes, there is a `logback-test.xml` file in the root of the logging bundle. 
 This configuration file is loaded whenever Hexatomic is started from Eclipse using the Debug/Run configuration and will output messages on the `debug` level.
-In production mode the file `logback.xml` is copied to the product root directory and loaded from there.
-This allows a user/developer to customize the logging on its own, even in production.
+When compiling the Hexatomic product, the file `logback.xml` is copied to the product root directory and loaded from there.
+This allows a user/developer to customize the logging on its own, even when using a published binary artifact instead of debugging directly from the Eclipse IDE.
 Per default, only messages from the `info` level and above are printed to the command line.
 See the [Logback documentation](https://logback.qos.ch/manual/configuration.html) how to write or adapt this file.
