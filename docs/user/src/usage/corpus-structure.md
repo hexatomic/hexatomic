@@ -29,6 +29,7 @@ To explicitly choose the element to add, click on the small arrow on the right s
 ![Add button for specific action](./corpus-structure-add-specific.png)
 
 If you delete a corpus graph, all of its documents and corpora will also be deleted.
+When a (sub-) corpus is deleted, the documents are moved to the parent element.
 
 
 ## Corpora and sub-corpora
