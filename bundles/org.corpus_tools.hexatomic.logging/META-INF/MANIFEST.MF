@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.corpus_tools.hexatomic.logging
-Bundle-Version: 0.0.0.qualifier
+Bundle-Version: 0.1.0.qualifier
 Automatic-Module-Name: org.corpus_tools.hexatomic.logging
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: ch.qos.logback.classic;bundle-version="1.1.2",
