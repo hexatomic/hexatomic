@@ -40,6 +40,18 @@ or a `hotfix` branch (for bug fixes) with `mvn gitflow:hotfix-start`.
     - If your contribution is new functionality, create it against `hexatomic:develop`.
     - If your contribution is a bug fix, create it against `hexatomic:master`.
 
+### Code review schedules
+
+We perform reviews of all changes to Hexatomic, be they in code, documentation, configuration, etc.
+We have therefore set up regular time slots, in which maintainers perform (code) reviews.
+Currently, we aim to review pull requests at the following times:
+- Wednesday mornings
+- Thursday mornings
+- Thursday afternoons
+- Friday mornings
+  
+All times are in Central European (Summer) Time and are meant for orientation. Note that we may sometimes not be able to perform reviews in these time slots due to illness, holidays, etc.
+
 ## License
 
 By contributing code to Hexatomic, you agree that your contributions will be licensed under its [Apache License, Version 2.0](LICENSE).  
