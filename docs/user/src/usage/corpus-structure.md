@@ -6,7 +6,8 @@ Each corpus project can consist of multiple documents which are organized into
 - corpora, and
 - sub-corpora.
 
-Even in simple projects with only one document, all this corpus structure exists and can be used to extend or re-organize existing corpora.
+Even in simple projects with only one document, this corpus structure exists and can be used to extend or re-organize existing corpora.
+The minimal structure for a corpus with one document is therefore: One corpus graph containing one corpus containing one document.
 
 In Hexatomic, the corpus structure is always visible in the special “Corpus Structure” editor.
 
