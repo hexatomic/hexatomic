@@ -84,7 +84,8 @@ public class ProjectManager {
 		return project;
 	}
 	
-	/** Opens a salt projects from a given location on disk.
+	/** 
+	 * Opens a salt projects from a given location on disk.
 	 * 
 	 * Only the corpus graph is loaded to avoid over-using the main memory.
 	 * 
