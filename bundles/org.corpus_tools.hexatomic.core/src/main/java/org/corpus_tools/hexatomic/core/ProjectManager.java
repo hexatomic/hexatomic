@@ -92,8 +92,6 @@ public class ProjectManager {
 	 */
 	public void open(URI path) {
 		project = SaltFactory.createSaltProject();
-		// Only load the corpus structure, single documents need to be retrieved later on demand
-		// to save main memory.
 		// TODO error handling
 		project.loadCorpusStructure(path);
 		
