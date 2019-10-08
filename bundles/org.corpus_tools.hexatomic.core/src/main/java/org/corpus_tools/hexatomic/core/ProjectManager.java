@@ -77,7 +77,8 @@ public class ProjectManager {
 	 * Note that it is only guaranteed that the corpus graph is loaded.
 	 * The single {@link SDocumentGraph} objects connected to the {@link SDocument} objects
 	 * of the graph might need to be loaded manually.
-	 * @return
+	 * 
+	 * @return The current Salt project instance.
 	 */
 	public SaltProject getProject() {
 		return project;
