@@ -33,9 +33,6 @@ public class ProjectManager {
 	@Inject
 	private IEventBroker events;
 	
-	@Inject
-	private ProjectChangeListener changeListener;
-
 	private SaltNotificationFactory notificationFactory;
 	
 	public ProjectManager() {
@@ -46,13 +43,13 @@ public class ProjectManager {
 	public void postConstruct() {
 		log.debug("Starting Project Manager");
 		
-		// create an empty project		
+		// Create an empty project		
 		this.project = SaltFactory.createSaltProject();
 		
-		// register the change listener with Salt		
+		// Allow to register a change listener with Salt		
 		notificationFactory = new SaltNotificationFactory();
 		SaltFactory.setFactory(notificationFactory);
-		notificationFactory.addListener(changeListener);
+		// TODO: add change listener for undo/redo here
 		
 	}
 	
