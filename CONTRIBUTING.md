@@ -50,7 +50,7 @@ Currently, we aim to review pull requests at the following times:
 - Thursday afternoons
 - Friday mornings
   
-All times are in Central European (Summer) Time and are meant for orientation, but because of illness or holidays can't be guaranteed.
+All times are in Central European (Summer) Time and are meant for orientation. Note that we may sometimes not be able to perform reviews in these time slots due to illness, holidays, etc.
 
 ## License
 
