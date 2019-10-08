@@ -42,7 +42,8 @@ or a `hotfix` branch (for bug fixes) with `mvn gitflow:hotfix-start`.
 
 ### Code review schedules
 
-We have regular time slots when the maintainers perform code reviews.
+We perform reviews of all changes to Hexatomic, be they in code, documentation, configuration, etc.
+We have therefore set up regular time slots, in which maintainers perform (code) reviews.
 Currently, we try to review pull requests at the following times:
 - Wednesday mornings
 - Thursday mornings
