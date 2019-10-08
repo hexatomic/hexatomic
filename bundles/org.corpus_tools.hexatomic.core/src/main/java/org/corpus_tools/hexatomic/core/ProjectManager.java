@@ -15,7 +15,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 
 /**
- * Manages creating, opening and saving projects.
+ * Manages creating and opening Salt projects.
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
