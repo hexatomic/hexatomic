@@ -3,7 +3,6 @@ package org.corpus_tools.hexatomic.corpusedit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
-import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -27,6 +25,11 @@ import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.services.EMenuService;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
@@ -127,7 +130,7 @@ public class CorpusStructureView {
 	TreeViewer treeViewer;
 
 	@PostConstruct
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent, EMenuService menuService) {
 		parent.setLayout(new GridLayout(1, false));
 
 		Composite compositeFilter = new Composite(parent, SWT.NONE);
@@ -188,6 +191,9 @@ public class CorpusStructureView {
 			}
 		});
 		tree.setLinesVisible(true);
+		menuService.registerContextMenu(treeViewer.getControl(),
+				"org.corpus_tools.hexatomic.corpusedit.popupmenu.documentactions");
+
 		treeViewer.setLabelProvider(labelProvider);
 		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
 		treeViewer.addDragSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDragSource(treeViewer));
@@ -377,8 +383,8 @@ public class CorpusStructureView {
 								.findAny().isPresent();
 						if (hasChildren) {
 							ErrorDialog.openError(toolBar.getShell(), "Error when deleting (sub-) corpus",
-									"Before deleting a (sub-) corpus, first delete all its child elements.",
-									new Status(Status.ERROR, "unknown", "The selected (sub-) corpus has child elements"));
+									"Before deleting a (sub-) corpus, first delete all its child elements.", new Status(
+											Status.ERROR, "unknown", "The selected (sub-) corpus has child elements"));
 							return;
 						}
 
