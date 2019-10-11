@@ -4,6 +4,7 @@ package org.corpus_tools.hexatomic.textviewer;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -16,6 +17,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Implements a simple viewer for textual datasources of a Salt document graph.
+ * @author Thomas Krause
+ *
+ */
 public class TextViewer {
 
 
@@ -28,14 +34,17 @@ public class TextViewer {
 	}
 	
 
+	/**
+	 * Creates a new text viewer.
+	 * @param parent
+	 * @param part
+	 */
 	@PostConstruct
 	public void postConstruct(Composite parent, MPart part) {
 		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		// Get the document graph for this editor
-		String documentID = part.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
-		Optional<SDocument> document = projectManager.getDocument(documentID);
-		
+		Optional<SDocument> document = getDocument(part);
 		if(document.isPresent()) {
 			SDocumentGraph graph = document.get().getDocumentGraph();
 			for(STextualDS text : graph.getTextualDSs()) {
@@ -44,6 +53,26 @@ public class TextViewer {
 			}
 		}
 
+	}
+	
+	/**
+	 * Unloads the document graph.
+	 */
+	@PreDestroy
+	public void cleanup(MPart part) {
+		Optional<SDocument> document = getDocument(part);
+		if(document.isPresent()) {
+			document.get().setDocumentGraph(null);
+		}
+	}
+	
+	/**
+	 * Retrieve the edited document from the global and the internal persisted state.
+	 * @return
+	 */
+	private Optional<SDocument> getDocument(MPart part) {
+		String documentID = part.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+		return projectManager.getDocument(documentID);
 	}
 
 }
