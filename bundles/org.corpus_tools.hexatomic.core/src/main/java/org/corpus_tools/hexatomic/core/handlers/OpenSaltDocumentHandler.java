@@ -26,8 +26,13 @@ public class OpenSaltDocumentHandler {
 			SDocument document = (SDocument) selection;
 	
 			if(document.getDocumentGraph() == null) {
-				// TODO: show progress indicator
-				document.loadDocumentGraph();
+				if(document.getDocumentGraphLocation() == null) {
+					// create a new document graph, because no one exists yet
+					document.createDocumentGraph();
+				} else {
+					// TODO: show progress indicator
+					document.loadDocumentGraph();
+				}
 			}
 
 			// Create a new part from an editor part descriptor
