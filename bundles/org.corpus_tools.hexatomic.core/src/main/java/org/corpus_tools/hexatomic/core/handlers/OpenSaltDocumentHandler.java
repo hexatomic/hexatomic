@@ -13,10 +13,23 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 
+/**
+ * Handler to open a document with a specific editor.
+ * @author Thomas Krause
+ *
+ */
 public class OpenSaltDocumentHandler {
 
 	public static final String DOCUMENT_ID = "org.corpus_tools.hexatomic.document-id";
 
+	/**
+	 * Opens the currently selected document with the given editor.
+	 * @param projectManager
+	 * @param modelService
+	 * @param partService
+	 * @param selectionService
+	 * @param editorID The model ID of the editor PartDescription to use a template
+	 */
 	@Execute
 	public static void execute(ProjectManager projectManager, EModelService modelService,
 			EPartService partService, ESelectionService selectionService,
@@ -48,6 +61,11 @@ public class OpenSaltDocumentHandler {
 		}
 	}
 	
+	/**
+	 * Checks whether the currently selected object is a document that can be opened.
+	 * @param selectionService
+	 * @return
+	 */
 	@CanExecute
 	public static boolean canExecute(ESelectionService selectionService) {
 		return selectionService.getSelection() instanceof SDocument;
