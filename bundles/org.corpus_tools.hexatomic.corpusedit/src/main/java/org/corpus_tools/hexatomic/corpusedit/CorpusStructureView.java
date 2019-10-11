@@ -26,10 +26,7 @@ import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.services.EMenuService;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
@@ -37,6 +34,9 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreePath;
@@ -130,7 +130,8 @@ public class CorpusStructureView {
 	TreeViewer treeViewer;
 
 	@PostConstruct
-	public void createPartControl(Composite parent, EMenuService menuService) {
+	public void createPartControl(Composite parent, EMenuService menuService, 
+			ESelectionService selectionService) {
 		parent.setLayout(new GridLayout(1, false));
 
 		Composite compositeFilter = new Composite(parent, SWT.NONE);
@@ -217,8 +218,16 @@ public class CorpusStructureView {
 
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		treeViewer.setFilters(new ChildNameFilter());
-
 		treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+		
+		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = treeViewer.getStructuredSelection();
+				selectionService.setSelection(selection.getFirstElement());
+			}
+		});
 
 	}
 
