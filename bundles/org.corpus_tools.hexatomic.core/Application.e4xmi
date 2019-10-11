@@ -3,7 +3,9 @@
   <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.window.main" label="Hexatomic" iconURI="" width="800" height="600">
     <children xsi:type="basic:PartSashContainer" xmi:id="_GasGEMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.partsashcontainer.0" horizontal="true">
       <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left"/>
-      <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main"/>
+      <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main">
+        <tags>editors</tags>
+      </children>
     </children>
     <mainMenu xmi:id="_tiknoMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.0">
       <children xsi:type="menu:Menu" xmi:id="_ufSukMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.file" label="File">

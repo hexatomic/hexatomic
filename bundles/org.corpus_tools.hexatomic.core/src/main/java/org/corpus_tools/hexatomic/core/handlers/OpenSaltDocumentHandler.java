@@ -42,7 +42,7 @@ public class OpenSaltDocumentHandler {
 			MPart editorPart = partService.createPart(editorID);
 			editorPart.setLabel(document.getName());
 			editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID, document.getId());
-
+			
 			partService.showPart(editorPart, PartState.ACTIVATE);
 
 		}
