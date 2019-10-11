@@ -32,7 +32,7 @@ public class ProjectChangeListener implements Listener {
 	public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue, Object newValue,
 			Object container) {
 
-		log.debug("Project update: type={} attribute={} oldValue={} newValue={} container={} containerType={}", type,
+		log.trace("Project update: type={} attribute={} oldValue={} newValue={} container={} containerType={}", type,
 				attribute, oldValue, newValue, container,
 				container == null ? "null" : container.getClass().getSimpleName());
 
