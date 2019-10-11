@@ -1,6 +1,8 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
+import javax.inject.Named;
+
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
 import org.eclipse.e4.core.di.annotations.CanExecute;
@@ -17,7 +19,8 @@ public class OpenSaltDocumentHandler {
 
 	@Execute
 	public static void execute(ProjectManager projectManager, EModelService modelService,
-			EPartService partService, ESelectionService selectionService) {
+			EPartService partService, ESelectionService selectionService,
+			@Named("org.corpus_tools.hexatomic.core.commandparameter.editor-id") String editorID) {
 		
 		// get currently selected document
 		Object selection = selectionService.getSelection();
@@ -36,8 +39,7 @@ public class OpenSaltDocumentHandler {
 			}
 
 			// Create a new part from an editor part descriptor
-			// TODO: choose which part to use from a parameter
-			MPart editorPart = partService.createPart("org.corpus_tools.hexatomic.textviewer");
+			MPart editorPart = partService.createPart(editorID);
 			editorPart.setLabel(document.getName());
 			editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID, document.getId());
 

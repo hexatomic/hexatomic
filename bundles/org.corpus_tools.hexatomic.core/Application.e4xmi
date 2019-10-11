@@ -18,7 +18,9 @@
     <children xmi:id="_c3AF28jYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
   <commands xmi:id="_pA7BYMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.command.open_salt_project" commandName="Open Salt Project"/>
-  <commands xmi:id="_y5imoOwYEemI78FuTOEWVg" elementId="org.corpus_tools.hexatomic.core.command.open_salt_document" commandName="Open Document"/>
+  <commands xmi:id="_y5imoOwYEemI78FuTOEWVg" elementId="org.corpus_tools.hexatomic.core.command.open_salt_document" commandName="Open Document">
+    <parameters xmi:id="_eEaNAOwnEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.core.commandparameter.editor-id" name="Editor ID"/>
+  </commands>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
