@@ -11,6 +11,7 @@
     - [Data model](./development/data-model/README.md)
 	- [Logging and error handling](./development/logging-error-handling.md)    
 - [Maintenance](./maintenance/README.md)
+    - [Licensing](./maintenance/licensing/README.md)
 	- [Pull requests](./maintenance/pull-requests/README.md)
 		- [Checklist](./maintenance/pull-requests/checklist.md)
 	- [Releases](./maintenance/releases/README.md)
