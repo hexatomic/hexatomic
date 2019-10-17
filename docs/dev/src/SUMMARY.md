@@ -9,6 +9,7 @@
         - [Project setup](./development/workflow/setup.md)
 	- [Logging](./development/logging.md)    
 - [Maintenance](./maintenance/README.md)
+    - [Licensing](./maintenance/licensing/README.md)
 	- [Pull requests](./maintenance/pull-requests/README.md)
 		- [Checklist](./maintenance/pull-requests/checklist.md)
 	- [Releases](./maintenance/releases/README.md)
