@@ -29,6 +29,7 @@ Here are links to some resources that can help you get started:
 - [Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial](http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html) by 
 Lars Vogel and Simon Scholz
 - [Version Control with Git - Software Carpentry lesson](https://swcarpentry.github.io/git-novice/) by Daisie Huang and Ivan Gonzalez[^git-cite]
+- [Standard Widget Toolkit (SWT)](https://www.eclipse.org/swt/) for developing the user interface
 
 ## License 
 
