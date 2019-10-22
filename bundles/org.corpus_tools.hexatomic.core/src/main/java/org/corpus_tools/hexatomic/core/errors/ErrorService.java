@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.slf4j.Logger;
@@ -36,16 +37,39 @@ public class ErrorService {
 	 * 
 	 * @param message A message to the user what went wrong.
 	 * @param ex      The exception that occurred.
-	 * @param context The class in which the error occured. This is used to extract
-	 *                the bundle ID.
+	 * @param context The class in which the error occurred. This is used to extract
+	 *                the bundle ID and to get the correct logger when logging the
+	 *                error to the console/log-file.
 	 */
 	public void handleException(String message, Throwable ex, Class<?> context) {
-		// log error so whatever happens, it is visible in the logfile/console
+		// log error so whatever happens, it is visible in the log-file/console
 		Logger log = getLogger(context);
 		log.error("Exception occured: {}", message, ex);
 
 		String bundleID = getBundleID(context);
 		ErrorDialog.openError(null, ERROR_OCCURED_MSG, message, createStatusFromException(message, bundleID, ex));
+	}
+
+	/**
+	 * Show an error message to the user
+	 * 
+	 * @param title   The title, can be null to show a default title
+	 * @param message The error message to show.
+	 * @param reason  An additional reason for the error.
+	 * @param context The class in which the error occurred. This is used to get the
+	 *                correct logger when logging the error to the console/log-file.
+	 */
+	public void showError(String title, String message, Class<?> context) {
+
+		if (title == null) {
+			title = ERROR_OCCURED_MSG;
+		}
+
+		// log error so whatever happens, it is visible in the log-file/console
+		Logger log = getLogger(context);
+		log.error("{}: {}", title, message);
+
+		MessageDialog.openError(null, title, message);
 	}
 
 	/**
@@ -80,9 +104,9 @@ public class ErrorService {
 	 * Create a status from an exception.
 	 * 
 	 * @param message  The additional message to use.
-	 * @param bundleID The bundle ID of the orignating error.
-	 * @param ex The exception to create the status from.
-	 * @return A status with the stacktrace and the message.
+	 * @param bundleID The bundle ID of the originating error.
+	 * @param ex       The exception to create the status from.
+	 * @return A status with the stack-trace and the message.
 	 */
 	private MultiStatus createStatusFromException(String message, String bundleID, Throwable ex) {
 		List<Status> children = new ArrayList<>();
