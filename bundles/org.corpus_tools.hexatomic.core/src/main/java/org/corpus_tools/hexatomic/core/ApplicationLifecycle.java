@@ -2,11 +2,18 @@ package org.corpus_tools.hexatomic.core;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
+import org.eclipse.e4.ui.model.application.ui.MContext;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -25,14 +32,22 @@ import ch.qos.logback.core.joran.spi.JoranException;
  *
  */
 public class ApplicationLifecycle {
-	
+
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
+
+	public static final String EDITOR_TAG = "org.corpus_tools.hexatomic.editor";
 
 	/**
 	 * Called when the model is loaded and initializes the logging.
 	 */
 	@ProcessAdditions
-	private void processAdditions() {
+	private void processAdditions(EModelService modelService, MApplication application) {
+
+		initLogging();
+		registerEditors(modelService, application);
+	}
+
+	private void initLogging() {
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 		JoranConfigurator jc = new JoranConfigurator();
 		jc.setContext(context);
@@ -54,9 +69,23 @@ public class ApplicationLifecycle {
 					log.info("Logging configured from internal configuration");
 				}
 			}
-		} catch(JoranException ex) {
+		} catch (JoranException ex) {
 			log.error("Could not configure logging", ex);
 		}
+
+	}
+
+	private void registerEditors(EModelService modelService, MApplication application) {
+		// Find all descriptors with the correct tag
+		List<MPartDescriptor> editorParts = application.getDescriptors().stream()
+				.filter((p) -> p.getTags().contains(EDITOR_TAG)).collect(Collectors.toList());
+		
+		for(MPartDescriptor desc : editorParts) {
+			// Create a menu item for this editor
+			MHandledMenuItem menuItem = modelService.createModelElement(MHandledMenuItem.class);
+			// TODO: set menu item command and at it to the menu containing all editors
+		}
+
 	}
 
 }

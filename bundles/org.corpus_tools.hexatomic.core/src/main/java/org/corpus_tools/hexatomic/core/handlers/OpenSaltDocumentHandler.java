@@ -26,8 +26,6 @@ public class OpenSaltDocumentHandler {
 
 	public static final String COMMAND_PARAM_EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
 	public static final String DOCUMENT_ID = "org.corpus_tools.hexatomic.document-id";
-	public static final String EDITOR_TAG = "org.corpus_tools.hexatomic.editor";
-
 	/**
 	 * Opens the currently selected document with the given editor.
 	 * 
