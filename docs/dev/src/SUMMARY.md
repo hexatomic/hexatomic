@@ -10,6 +10,7 @@
         - [Project setup](./development/workflow/setup.md)
     - [Data model](./development/data-model/README.md)
 	- [Logging](./development/logging.md)    
+	- [Adding a new editor](./development/add-new-editor.md)
 - [Maintenance](./maintenance/README.md)
 	- [Pull requests](./maintenance/pull-requests/README.md)
 		- [Checklist](./maintenance/pull-requests/checklist.md)
