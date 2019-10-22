@@ -4,7 +4,7 @@
   <imports xsi:type="commands:CommandParameter" xmi:id="_m1zKIOwnEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.core.commandparameter.editor-id"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_zxiZoMpuEemUdItNeSusZw" featurename="children" parentElementId="org.corpus_tools.hexatomic.core.left">
     <elements xsi:type="basic:Part" xmi:id="_0_aiAMpuEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.corpusedit.part.corpusstructure" contributionURI="bundleclass://org.corpus_tools.hexatomic.corpusstructureeditor/org.corpus_tools.hexatomic.corpusedit.CorpusStructureView" label="Corpus Structure">
-      <menus xsi:type="menu:PopupMenu" xmi:id="_X1zH8OwiEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.corpusedit.popupmenu.documentations" label="Document Actions">
+      <menus xsi:type="menu:PopupMenu" xmi:id="_X1zH8OwiEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.corpusedit.popupmenu.documents" label="Document Actions">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_cd6ikOwiEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.corpusedit.handledmenuitem.showtext" label="Show Text" command="_I8qUAOwjEemCosF9W_Kdxg">
           <parameters xmi:id="_11PaYOwmEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.corpusedit.parameter.editor-id" name="org.corpus_tools.hexatomic.core.commandparameter.editor-id" value="org.corpus_tools.hexatomic.textviewer"/>
         </children>
