@@ -25,7 +25,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
  *
  */
 public class ApplicationLifecycle {
-
+	
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
 
 	/**
@@ -33,11 +33,6 @@ public class ApplicationLifecycle {
 	 */
 	@ProcessAdditions
 	private void processAdditions() {
-
-		initLogging();
-	}
-
-	private void initLogging() {
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 		JoranConfigurator jc = new JoranConfigurator();
 		jc.setContext(context);
@@ -59,10 +54,9 @@ public class ApplicationLifecycle {
 					log.info("Logging configured from internal configuration");
 				}
 			}
-		} catch (JoranException ex) {
+		} catch(JoranException ex) {
 			log.error("Could not configure logging", ex);
 		}
-
 	}
 
 }
