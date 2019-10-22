@@ -193,7 +193,7 @@ public class CorpusStructureView {
 		});
 		tree.setLinesVisible(true);
 		menuService.registerContextMenu(treeViewer.getControl(),
-				"org.corpus_tools.hexatomic.corpusedit.popupmenu.documentactions");
+				"org.corpus_tools.hexatomic.corpusedit.popupmenu.documentations");
 
 		treeViewer.setLabelProvider(labelProvider);
 		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
