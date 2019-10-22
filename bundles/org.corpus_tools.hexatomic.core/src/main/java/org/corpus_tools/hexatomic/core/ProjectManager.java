@@ -4,10 +4,12 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.exceptions.SaltException;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -24,6 +26,8 @@ import org.eclipse.emf.common.util.URI;
 @Singleton
 public class ProjectManager {
 	
+	private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
+
 	public static final String TOPIC_CORPUS_STRUCTURE_CHANGED = "TOPIC_CORPUS_STRUCTURE_CHANGED";
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
@@ -35,6 +39,9 @@ public class ProjectManager {
 	
 	@Inject
 	private ProjectChangeListener changeListener;
+	
+	@Inject
+	private ErrorService errorService;
 	
 	private SaltNotificationFactory notificationFactory;
 	
@@ -95,14 +102,14 @@ public class ProjectManager {
 	 * @param path
 	 */
 	public void open(URI path) {
-		project = SaltFactory.createSaltProject();
-		// TODO Implement a user-visible error handling. 
-		// There should be a generic way of displaying exceptions to the user (a dialog and some kind of log)
-		// in the core bundle, so we can use this functionality here to show any unhandled exception.
-		project.loadCorpusStructure(path);
 		
-		events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
-
+		project = SaltFactory.createSaltProject();
+		try {
+			project.loadCorpusStructure(path);
+			events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
+		} catch (SaltException ex) {
+			errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
+		}			
 	}
 	
 	
