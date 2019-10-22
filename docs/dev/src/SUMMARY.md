@@ -7,6 +7,7 @@
 	- [Workflow](./development/workflow/README.md)
         - [Repositories](./development/workflow/repositories.md)
         - [Project setup](./development/workflow/setup.md)
+    - [Data model](./development/data-model/README.md)
 	- [Logging](./development/logging.md)    
 - [Maintenance](./maintenance/README.md)
 	- [Pull requests](./maintenance/pull-requests/README.md)
