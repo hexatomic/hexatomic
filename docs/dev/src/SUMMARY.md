@@ -8,7 +8,7 @@
         - [Repositories](./development/workflow/repositories.md)
         - [Project setup](./development/workflow/setup.md)
     - [Data model](./development/data-model/README.md)
-	- [Logging](./development/logging.md)    
+	- [Logging and error handling](./development/logging.md)    
 - [Maintenance](./maintenance/README.md)
 	- [Pull requests](./maintenance/pull-requests/README.md)
 		- [Checklist](./maintenance/pull-requests/checklist.md)
