@@ -4,7 +4,6 @@
 - [Development](./development/README.md)
     - [Development setup](./development/setup.md)
         - [Getting the source code](./development/getting-the-source-code.md)
-        - [Debug with Eclipse](./development/debug-with-eclipse.md)
 	- [Workflow](./development/workflow/README.md)
         - [Repositories](./development/workflow/repositories.md)
         - [Project setup](./development/workflow/setup.md)
