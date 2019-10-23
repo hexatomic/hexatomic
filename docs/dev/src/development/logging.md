@@ -2,7 +2,7 @@
 
 ## Logging
 
-We use the slf4j logging API in our code.
+Hexatomic uses the SLF4J logging API to log messages.
 To enable a logger for a specific class, create a static final variable which holds the class-specific logging object.
 
 ```java
