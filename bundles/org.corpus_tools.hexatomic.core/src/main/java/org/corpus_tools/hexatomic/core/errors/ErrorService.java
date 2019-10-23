@@ -76,7 +76,7 @@ public class ErrorService {
 	 * Get the logger for the given class or the logger of <em>this</em> class if
 	 * null.
 	 * 
-	 * @param context The class get the logger for.
+	 * @param context The class to get the logger for.
 	 * @return A logger
 	 */
 	private Logger getLogger(Class<?> context) {
