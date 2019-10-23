@@ -23,6 +23,7 @@ Require-Bundle: javax.inject;bundle-version="0.0.0",
  org.slf4j.api;bundle-version="1.7.10"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.annotation;version="0.0.0",
+ javax.inject;version="1.0.0",
  org.slf4j;version="1.7.10"
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
 Export-Package: org.corpus_tools.hexatomic.core,
