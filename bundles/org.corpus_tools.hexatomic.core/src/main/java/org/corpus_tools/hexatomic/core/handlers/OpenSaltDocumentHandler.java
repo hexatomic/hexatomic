@@ -59,7 +59,7 @@ public class OpenSaltDocumentHandler {
 
 				} catch (SaltResourceException ex) {
 					// TODO: display error to the user in a dialog
-					log.error("Could not load document graph (the actual annotations for document {}", document.getId(),
+					log.error("Could not load document graph (the actual annotations for document {}).", document.getId(),
 							ex);
 				}
 			}
