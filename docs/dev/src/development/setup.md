@@ -18,7 +18,7 @@ You need to have a copy of the **Java Development Kit (JDK), Version 1.8** (some
 It shouldn't make any difference whether you use the open *OpenJDK* implementation of Java, or an *Oracle JDK*.
 We suggest that you use **OpenJDK** in its latest build (which was `1.8u232` at the time of writing).
 See the [OpenJDK 8 Updates site](https://wiki.openjdk.java.net/display/jdk8u/Main) to find out what the currently latest build is.
-OpenJDK is included in most Linux distributions as package.
+OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
 For stand-alone packages, you use the installers distributed by the [AdoptJDK project](https://adoptopenjdk.net).
 AdoptJDK packages are are available for Windows, MacOS and Linux.
 
