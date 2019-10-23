@@ -59,7 +59,7 @@ org.corpus_tools.salt.exceptions.SaltResourceException: Can not load SaltProject
 ## Showing error messages
 
 If an error does not originate from an exception, you can use the `showError(...)` function of the error service to display a dialog.
-This function takes the an optional dialog title, the error message an the class of the caller as argument like in the following example
+This function takes an optional dialog title, the error message, and the class of the caller as arguments, as shown in the following example.
 ```java
 if (hasChildren) {
 	errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
