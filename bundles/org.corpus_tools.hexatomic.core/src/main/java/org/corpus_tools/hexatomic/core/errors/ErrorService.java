@@ -33,7 +33,7 @@ public class ErrorService {
 	private static final org.slf4j.Logger errorServiceLog = org.slf4j.LoggerFactory.getLogger(ErrorService.class);
 
 	/**
-	 * Display an (runtime-) exception to the user and add it to the log.
+	 * Display a (runtime) exception to the user and add it to the log.
 	 * 
 	 * @param message A message to the user what went wrong.
 	 * @param ex      The exception that occurred.
