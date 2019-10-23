@@ -40,7 +40,8 @@ try {
 	errorService.handleException("Cannot load project from " + path.toString(), ex, ProjectManager.class);
 }
 ```
-This will produce the following exception dialog, which includes the error message an a stack-trace the user can inspect when selecting "Details" (but is hidden otherwise).
+This will produce the exception dialog shown below.
+It includes the error message, and a stack trace which the user can inspect by expanding "Details" (which is initially hidden).
 
 ![An example for an exception dialog](./exception-dialog.png)
 
