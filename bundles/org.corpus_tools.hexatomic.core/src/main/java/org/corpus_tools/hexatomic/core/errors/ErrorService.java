@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 @Creatable
 public class ErrorService {
 
-	private static final String ERROR_OCCURED_MSG = "Error occured";
+	private static final String ERROR_OCCURED_MSG = "An error occured";
 	private static final org.slf4j.Logger errorServiceLog = org.slf4j.LoggerFactory.getLogger(ErrorService.class);
 
 	/**
