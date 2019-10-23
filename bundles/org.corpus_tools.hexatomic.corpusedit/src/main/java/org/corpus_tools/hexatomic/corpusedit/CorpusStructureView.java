@@ -83,6 +83,10 @@ import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
+	private static final String OPEN_WITH_PREFIX = "Open with \"";
+	private static final String OPEN_WITH_SUFFIX = "\" editor";
+	
+
 	private static final String OPEN_DOCUMENT_POPUP_MENU_ID = "org.corpus_tools.hexatomic.corpusedit.popupmenu.documents";
 
 	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
@@ -525,7 +529,7 @@ public class CorpusStructureView {
 			menuItem.getParameters().add(paramEditorID);
 
 			// Use the part descriptor name as title for the menu entry
-			menuItem.setLabel("Open as \"" + desc.getLabel() + "\"");
+			menuItem.setLabel(OPEN_WITH_PREFIX + desc.getLabel() + OPEN_WITH_SUFFIX);
 			
 			// Add the new menu item to the popup menu
 			for(MMenu menu : thisPart.getMenus()) {
