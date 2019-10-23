@@ -4,8 +4,7 @@ matrix:
 
       sudo: false
 
-      jdk:
-        - openjdk8
+      jdk: openjdk8
 
     - language: rust
       sudo: false
@@ -13,8 +12,7 @@ matrix:
       cache:
         - cargo
 
-      rust:
-        - stable
+      rust: stable
 
       before_script:
         # Set an env variable for the currently tagged version
@@ -37,6 +35,19 @@ matrix:
         - $HOME/.mdbook/mdbook build --dest-dir book/dev/${SHORT_VERSION} docs/dev/
 
       deploy:
+        - provider: releases
+          api_key:
+             secure: $GITHUB_TOKEN
+          on:
+             repo: hexatomic/hexatomic
+             branch: master
+             tags: true
+             condition: $TRAVIS_OS_NAME = linux
+          skip_cleanup: true
+          draft: true
+          file_glob: true
+          file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
+          tag_name: $TRAVIS_TAG
         - provider: script
           script: bash $TRAVIS_BUILD_DIR/releng/sh/deploy-docs.sh
           on:
