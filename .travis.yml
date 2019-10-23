@@ -4,6 +4,24 @@ jobs:
     - language: java
 
       jdk: openjdk8
+      
+      before_deploy:
+         - mvn clean verify
+      
+      deploy:
+        - provider: releases
+          token:
+             secure: $GITHUB_TOKEN
+          on:
+             repo: hexatomic/hexatomic
+             branch: master
+             tags: true
+             condition: $TRAVIS_OS_NAME = linux
+          skip_cleanup: true
+          draft: true
+          file_glob: true
+          file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
+          tag_name: $TRAVIS_TAG
 
     - language: rust
      
@@ -33,19 +51,6 @@ jobs:
         - $HOME/.mdbook/mdbook build --dest-dir book/dev/${SHORT_VERSION} docs/dev/
 
       deploy:
-        - provider: releases
-          token:
-             secure: $GITHUB_TOKEN
-          on:
-             repo: hexatomic/hexatomic
-             branch: master
-             tags: true
-             condition: $TRAVIS_OS_NAME = linux
-          skip_cleanup: true
-          draft: true
-          file_glob: true
-          file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
-          tag_name: $TRAVIS_TAG
         - provider: script
           script: bash $TRAVIS_BUILD_DIR/releng/sh/deploy-docs.sh
           on:
@@ -53,4 +58,4 @@ jobs:
             branch: master
             tags: true
             condition: $TRAVIS_OS_NAME = linux
-          skip-cleanup: true
+          skip_cleanup: true
