@@ -5,6 +5,7 @@ import javax.inject.Named;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
+import org.corpus_tools.salt.exceptions.SaltResourceException;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -20,6 +21,8 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
  *
  */
 public class OpenSaltDocumentHandler {
+
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OpenSaltDocumentHandler.class);
 
 	public static final String COMMAND_PARAM_EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
 	public static final String DOCUMENT_ID = "org.corpus_tools.hexatomic.document-id";
@@ -50,7 +53,13 @@ public class OpenSaltDocumentHandler {
 					document.createDocumentGraph();
 				} else {
 					// TODO: show progress indicator
-					document.loadDocumentGraph();
+					try {
+						document.loadDocumentGraph();
+					} catch (SaltResourceException ex) {
+						// TODO: display error to the user in a dialog
+						log.error("Could not load document graph (the actual annotations for document {}",
+								document.getId(), ex);
+					}
 				}
 			}
 
