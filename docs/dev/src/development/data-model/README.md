@@ -37,6 +37,7 @@ public class MyClass {
 }
 ```
 
-You can register for any changes on the Salt project (e.g. added annotations to a document), by adding a [Salt notification listener](https://korpling.github.io/salt/doc/notification.html) to the project manager using its `addListener(...)` function.
+You can register for any changes on the Salt project (e.g., added annotations to a document), by adding a *Salt notification listener* to the project manager using its `addListener(Listener listener)` function.
+For more information on Salt notification listener's, see the [Salt notification documentation](https://korpling.github.io/salt/doc/notification.html).
 After registering your listener, you will receive *all* updates for all documents all changes to the project structure.
 You have to decide if you need to handle an update on you own, e.g. because it is related to document you are editing and where the event should trigger a redraw.
