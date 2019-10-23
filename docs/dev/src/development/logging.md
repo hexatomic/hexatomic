@@ -67,7 +67,7 @@ if (hasChildren) {
 	return;
 }
 ```
-This produces both an error dialog and a logging output (without stack-trace).
+This produces both an error dialog and a logging output (without stack trace).
 
 ![An example for an error dialog](./error-dialog.png)
 
