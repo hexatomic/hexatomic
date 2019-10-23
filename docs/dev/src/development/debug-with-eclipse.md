@@ -4,7 +4,7 @@ Hexatomic is a modular project, and while it is possible to debug a user-defined
 it may be more useful to debug the complete application.
 
 To run or debug Hexatomic from within the Eclipse IDE, with all the features and bundles, you have to open the  `org.corpus_tools.hexatomic.product` project which contains the Hexatomic product definition.
-In this project open the `org.corpus_tools.hexatomic.product` file in Eclipse.
+In this project, open the `org.corpus_tools.hexatomic.product` file in Eclipse.
 
 ![Location of the product definition file in the Project Explorer](./product-file-location.png)
 
