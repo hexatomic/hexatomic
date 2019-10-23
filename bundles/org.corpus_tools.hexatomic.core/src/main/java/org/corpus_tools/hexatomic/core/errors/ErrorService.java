@@ -39,7 +39,7 @@ public class ErrorService {
 	 * @param ex      The exception that occurred.
 	 * @param context The class in which the error occurred. This is used to extract
 	 *                the bundle ID and to get the correct logger when logging the
-	 *                error to the console/log-file.
+	 *                error to the console/log file.
 	 */
 	public void handleException(String message, Throwable ex, Class<?> context) {
 		// log error so whatever happens, it is visible in the log-file/console
