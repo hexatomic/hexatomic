@@ -15,7 +15,7 @@ Salt is very powerful in that it is theory-neutral and tagset-independent, and c
 
 To find out more about the Salt meta model for linguistic data and its Java API, please refer to the [Salt homepage](https://corpus-tools.org/salt), and the [Salt documentation](https://korpling.github.io/salt/doc/).
 
-## Access the data model
+## Accessing the data model
 
 A running Hexatomic instance operates on a Salt project.
 The currently opened Salt project is part of the global state of the application an can be accessed by [injecting](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse) an instance of the `ProjectManager` singleton into your code.
