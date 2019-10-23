@@ -18,7 +18,8 @@ To find out more about the Salt meta model for linguistic data and its Java API,
 ## Accessing the data model
 
 During runtime, Hexatomic operates on a single Salt project at any one time.
-The currently opened Salt project is part of the global state of the application an can be accessed by [injecting](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse) an instance of the `ProjectManager` singleton into your code.
+The currently opened Salt project is part of the global state of the application, and can be accessed by injecting an instance of the `ProjectManager` singleton into your code.
+For an overview of how dependency injection works in Eclipse-based applications such as Hexatomic, see Lars Vogel's tutorial ["Dependency injection and Eclipse"](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse).
 
 ```java
 import javax.inject.Inject;
