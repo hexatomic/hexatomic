@@ -63,7 +63,7 @@ This function takes an optional dialog title, the error message, and the class o
 ```java
 if (hasChildren) {
 	errorService.showError("Error when deleting (sub-) corpus",
-			ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
+			"Before deleting a (sub-) corpus, first delete all its child elements.", this.getClass());
 	return;
 }
 ```
