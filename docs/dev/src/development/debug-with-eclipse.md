@@ -1,4 +1,4 @@
-# Debug with Eclipse
+# Running and debugging Hexatomic in Eclipse
 
 Hexatomic is a modular project and while it is possible to debug a user-defined sub-set of the bundles,
 in most cases debugging the complete application is more useful.
