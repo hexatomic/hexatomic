@@ -1,6 +1,6 @@
 # Running and debugging Hexatomic in Eclipse
 
-Hexatomic is a modular project and while it is possible to debug a user-defined sub-set of the bundles,
+Hexatomic is a modular project, and while it is possible to debug a user-defined subset of its bundles,
 in most cases debugging the complete application is more useful.
 
 To debug or start Hexatomic with all the features and bundles, you have to open the  `org.corpus_tools.hexatomic.product` project which contains the Hexatomic product definition.
