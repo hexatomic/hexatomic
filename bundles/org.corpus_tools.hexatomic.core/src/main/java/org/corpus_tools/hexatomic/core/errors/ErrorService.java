@@ -42,7 +42,7 @@ public class ErrorService {
 	 *                error to the console/log file.
 	 */
 	public void handleException(String message, Throwable ex, Class<?> context) {
-		// log error so whatever happens, it is visible in the log-file/console
+		// log error so whatever happens, it is visible in the log file/console
 		Logger log = getLogger(context);
 		log.error("Exception occured: {}", message, ex);
 
