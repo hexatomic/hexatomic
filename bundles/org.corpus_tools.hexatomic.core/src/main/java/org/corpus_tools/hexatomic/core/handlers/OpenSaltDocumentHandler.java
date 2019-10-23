@@ -68,7 +68,11 @@ public class OpenSaltDocumentHandler {
 
 			// Create a new part from an editor part descriptor
 			MPart editorPart = partService.createPart(editorID);
-			editorPart.setLabel(document.getName());
+			String title = document.getName();
+			if(editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
+				title = title + " (" + editorPart.getLabel() + ")";
+			}
+			editorPart.setLabel(title);
 			editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID, document.getId());
 
 			partService.showPart(editorPart, PartState.ACTIVATE);
