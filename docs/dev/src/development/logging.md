@@ -45,7 +45,7 @@ This will produce the following exception dialog, which includes the error messa
 ![An example for an exception dialog](./exception-dialog.png)
 
 In addition to the dialog, a log entry is added.
-This log entry uses the logger for the given class of the caller.
+This log entry uses the logger for the caller class which has been passed to the `handleException(...)` method.
 ```plain
 18:52:54.324 [main] ERROR o.c.h.c.ProjectManager - Exception occured: Could not load salt project from file:/tmp
 org.corpus_tools.salt.exceptions.SaltResourceException: Can not load SaltProject, because path '/tmp/saltProject.salt' does not exist. 
