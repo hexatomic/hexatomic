@@ -65,7 +65,7 @@ public class OpenSaltDocumentHandler {
 	}
 
 	/**
-	 * Checks whether the currently selected object is a document that can be
+	 * Checks whether the currently selected object is a document.
 	 * opened.
 	 * 
 	 * @param selectionService
