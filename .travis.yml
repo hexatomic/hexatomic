@@ -1,14 +1,12 @@
-matrix:
+os: linux
+jobs:
   include:
     - language: java
-
-      sudo: false
 
       jdk: openjdk8
 
     - language: rust
-      sudo: false
-
+     
       cache:
         - cargo
 
@@ -36,7 +34,7 @@ matrix:
 
       deploy:
         - provider: releases
-          api_key:
+          token:
              secure: $GITHUB_TOKEN
           on:
              repo: hexatomic/hexatomic
