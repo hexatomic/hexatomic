@@ -35,7 +35,7 @@ public class ErrorService {
 	/**
 	 * Display a (runtime) exception to the user and add it to the log.
 	 * 
-	 * @param message A message to the user what went wrong.
+	 * @param message A message to the user explaining what went wrong.
 	 * @param ex      The exception that occurred.
 	 * @param context The class in which the error occurred. This is used to extract
 	 *                the bundle ID and to get the correct logger when logging the
