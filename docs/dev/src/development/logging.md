@@ -37,7 +37,7 @@ project = SaltFactory.createSaltProject();
 try {
 	project.loadCorpusStructure(path);
 } catch (SaltException ex) {
-	errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
+	errorService.handleException("Cannot load project from " + path.toString(), ex, ProjectManager.class);
 }
 ```
 This will produce the following exception dialog, which includes the error message an a stack-trace the user can inspect when selecting "Details" (but is hidden otherwise).
