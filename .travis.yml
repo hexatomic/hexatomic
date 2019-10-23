@@ -4,8 +4,7 @@ matrix:
 
       sudo: false
 
-      jdks:
-        - oraclejdk8
+      jdk:
         - openjdk8
 
     - language: rust
