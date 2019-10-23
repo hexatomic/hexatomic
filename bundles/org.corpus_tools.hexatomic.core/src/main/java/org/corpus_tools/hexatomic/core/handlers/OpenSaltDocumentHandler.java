@@ -48,18 +48,19 @@ public class OpenSaltDocumentHandler {
 			SDocument document = (SDocument) selection;
 
 			if (document.getDocumentGraph() == null) {
-				if (document.getDocumentGraphLocation() == null) {
-					// create a new document graph, because no one exists yet
-					document.createDocumentGraph();
-				} else {
-					// TODO: show progress indicator
-					try {
+				try {
+					if (document.getDocumentGraphLocation() == null) {
+						// create a new document graph, because no one exists yet
+						document.createDocumentGraph();
+					} else {
+						// TODO: show progress indicator
 						document.loadDocumentGraph();
-					} catch (SaltResourceException ex) {
-						// TODO: display error to the user in a dialog
-						log.error("Could not load document graph (the actual annotations for document {}",
-								document.getId(), ex);
 					}
+
+				} catch (SaltResourceException ex) {
+					// TODO: display error to the user in a dialog
+					log.error("Could not load document graph (the actual annotations for document {}", document.getId(),
+							ex);
 				}
 			}
 
