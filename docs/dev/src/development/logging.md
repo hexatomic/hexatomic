@@ -62,7 +62,7 @@ If an error does not originate from an exception, you can use the `showError(...
 This function takes an optional dialog title, the error message, and the class of the caller as arguments, as shown in the following example.
 ```java
 if (hasChildren) {
-	errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
+	errorService.showError("Error when deleting (sub-) corpus",
 			ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
 	return;
 }
