@@ -10,7 +10,7 @@ jobs:
       
       deploy:
         - provider: releases
-          token:
+          api_key:
              secure: $GITHUB_TOKEN
           on:
              repo: hexatomic/hexatomic
@@ -56,7 +56,8 @@ jobs:
           script: bash $TRAVIS_BUILD_DIR/releng/sh/deploy-docs.sh
           on:
             repo: hexatomic/hexatomic
-            branch: master
+            # FIXME: this must be "master" again after the test
+            branch: feature/deploy-binaries
             tags: true
             condition: $TRAVIS_OS_NAME = linux
           skip_cleanup: true
