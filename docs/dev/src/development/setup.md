@@ -16,7 +16,11 @@ The documentation is written in Markdown and generated with **mdbook**.
 
 You need to have a copy of the **Java Development Kit (JDK), Version 1.8** (sometimes referred to as *Java 8*) installed on your computer.
 It shouldn't make any difference whether you use the open *OpenJDK* implementation of Java, or an *Oracle JDK*.
-We suggest that you use **OpenJDK** in its latest build, `1.8u222`. To find out how to install OpenJDK on your system, please see the [OpenJDK website](https://openjdk.java.net/).
+We suggest that you use **OpenJDK** in its latest build (which was `1.8u232` at the time of writing).
+See the [OpenJDK 8 Updates site](https://wiki.openjdk.java.net/display/jdk8u/Main) to find out what the currently latest build is.
+OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
+For stand-alone packages, you can use the installers distributed by the [AdoptOpenJDK project](https://adoptopenjdk.net).
+AdoptOpenJDK packages are are available for Windows, MacOS, and Linux.
 
 You can check which version of Java you have installed by typing the following command into the terminal of your computer:
 

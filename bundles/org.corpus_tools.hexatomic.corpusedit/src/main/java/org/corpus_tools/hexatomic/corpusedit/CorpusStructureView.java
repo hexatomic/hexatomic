@@ -3,7 +3,6 @@ package org.corpus_tools.hexatomic.corpusedit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -11,9 +10,9 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
-import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -25,15 +24,18 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.ui.di.UIEventTopic;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.e4.ui.services.EMenuService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreePath;
@@ -68,6 +70,13 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
+
+	private static final String ERROR_WHEN_DELETING_SUB_CORPUS_TITLE = "Error when deleting (sub-) corpus";
+	private static final String ERROR_WHEN_DELETING_SUB_CORPUS_MSG = "Before deleting a (sub-) corpus, first delete all its child elements.";
+	private static final String ERROR_WHEN_ADDING_DOCUMENT_TITLE = "Error when adding document";
+	private static final String ERROR_WHEN_ADDING_DOCUMENT_MSG = "You can only create a document when a corpus or a sibling document is selected.";
+	private static final String ERROR_WHEN_ADDING_SUBCORPUS_TITLE = "Error when adding (sub-) corpus";
+	private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG = "You can only create a (sub-) corpus when a corpus graph or another corpus is selected.";
 
 	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
@@ -124,10 +133,14 @@ public class CorpusStructureView {
 	@Inject
 	private ProjectManager projectManager;
 
+	@Inject
+	private ErrorService errorService;
+
 	TreeViewer treeViewer;
 
 	@PostConstruct
-	public void createPartControl(Composite parent) {
+	public void createPartControl(Composite parent, EMenuService menuService, 
+			ESelectionService selectionService) {
 		parent.setLayout(new GridLayout(1, false));
 
 		Composite compositeFilter = new Composite(parent, SWT.NONE);
@@ -188,6 +201,9 @@ public class CorpusStructureView {
 			}
 		});
 		tree.setLinesVisible(true);
+		menuService.registerContextMenu(treeViewer.getControl(),
+				"org.corpus_tools.hexatomic.corpusedit.popupmenu.documentactions");
+
 		treeViewer.setLabelProvider(labelProvider);
 		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
 		treeViewer.addDragSupport(DND.DROP_MOVE, transferTypes, new SaltObjectTreeDragSource(treeViewer));
@@ -211,8 +227,16 @@ public class CorpusStructureView {
 
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		treeViewer.setFilters(new ChildNameFilter());
-
 		treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+		
+		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection selection = treeViewer.getStructuredSelection();
+				selectionService.setSelection(selection.getFirstElement());
+			}
+		});
 
 	}
 
@@ -310,10 +334,7 @@ public class CorpusStructureView {
 			g = parent.getGraph();
 
 		} else {
-			ErrorDialog.openError(shell, "Error when adding (sub-) corpus",
-					"You can only create a (sub-) corpus when a corpus graph or another corpus is selected",
-					new Status(Status.ERROR, "unknown", "Constraint in the Salt data model.")); // TODO Externalize
-																								// string
+			errorService.showError(ERROR_WHEN_ADDING_SUBCORPUS_TITLE, ERROR_WHEN_ADDING_SUBCORPUS_MSG, this.getClass());
 			return;
 		}
 
@@ -342,9 +363,7 @@ public class CorpusStructureView {
 			SDocument sibling = (SDocument) selection.getFirstElement();
 			parent = sibling.getGraph().getCorpus(sibling);
 		} else {
-			ErrorDialog.openError(shell, "Error when adding document",
-					"You can only create a document when a corpus or a sibling document is selected",
-					new Status(Status.ERROR, "unknown", null));
+			errorService.showError(ERROR_WHEN_ADDING_DOCUMENT_TITLE, ERROR_WHEN_ADDING_DOCUMENT_MSG, this.getClass());
 			return;
 		}
 
@@ -376,9 +395,8 @@ public class CorpusStructureView {
 								(rel) -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation)
 								.findAny().isPresent();
 						if (hasChildren) {
-							ErrorDialog.openError(toolBar.getShell(), "Error when deleting (sub-) corpus",
-									"Before deleting a (sub-) corpus, first delete all its child elements.",
-									new Status(Status.ERROR, "unknown", "The selected (sub-) corpus has child elements"));
+							errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
+									ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
 							return;
 						}
 
