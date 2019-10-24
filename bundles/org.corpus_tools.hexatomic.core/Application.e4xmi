@@ -3,7 +3,9 @@
   <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.window.main" label="Hexatomic" iconURI="" width="800" height="600">
     <children xsi:type="basic:PartSashContainer" xmi:id="_GasGEMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.partsashcontainer.0" horizontal="true">
       <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left"/>
-      <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main"/>
+      <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main">
+        <tags>editors</tags>
+      </children>
     </children>
     <mainMenu xmi:id="_tiknoMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.0">
       <children xsi:type="menu:Menu" xmi:id="_ufSukMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.file" label="File">
@@ -11,12 +13,16 @@
       </children>
     </mainMenu>
   </children>
-  <handlers xmi:id="_oYTiMMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handler.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler" command="_pA7BYMsLEemUdItNeSusZw"/>
+  <handlers xmi:id="_oYTiMMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handler.open_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler" command="_pA7BYMsLEemUdItNeSusZw"/>
+  <handlers xmi:id="_q1G2IOwYEemI78FuTOEWVg" elementId="org.corpus_tools.hexatomic.core.handler.open_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler" command="_y5imoOwYEemI78FuTOEWVg"/>
   <rootContext xmi:id="_c3AF2cjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
     <children xmi:id="_c3AF2sjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_c3AF28jYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
   <commands xmi:id="_pA7BYMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.command.open_salt_project" commandName="Open Salt Project"/>
+  <commands xmi:id="_y5imoOwYEemI78FuTOEWVg" elementId="org.corpus_tools.hexatomic.core.command.open_salt_document" commandName="Open Document">
+    <parameters xmi:id="_eEaNAOwnEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.core.commandparameter.editor-id" name="Editor ID"/>
+  </commands>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
