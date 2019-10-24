@@ -14,7 +14,8 @@ jobs:
              secure: $GITHUB_TOKEN
           on:
              repo: hexatomic/hexatomic
-             branch: master
+             # FIXME: this must be must again after the test
+             branch: feature/deploy-binaries
              tags: true
              condition: $TRAVIS_OS_NAME = linux
           skip_cleanup: true
