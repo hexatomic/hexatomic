@@ -76,7 +76,7 @@ public class CorpusStructureView {
 	private static final String ERROR_WHEN_ADDING_DOCUMENT_TITLE = "Error when adding document";
 	private static final String ERROR_WHEN_ADDING_DOCUMENT_MSG = "You can only create a document when a corpus or a sibling document is selected.";
 	private static final String ERROR_WHEN_ADDING_SUBCORPUS_TITLE = "Error when adding (sub-) corpus";
-	private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG = "You can only create a (sub-) corpus when a corpus graph or another corpus is selected";
+	private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG = "You can only create a (sub-) corpus when a corpus graph or another corpus is selected.";
 
 	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
