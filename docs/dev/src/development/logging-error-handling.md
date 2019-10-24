@@ -37,7 +37,9 @@ project = SaltFactory.createSaltProject();
 try {
 	project.loadCorpusStructure(path);
 } catch (SaltException ex) {
-	errorService.handleException("Cannot load project from " + path.toString(), ex, ProjectManager.class);
+	// In this example the calling function is part of the ProjectManager class.
+	errorService.handleException("Cannot load project from " + path.toString(), ex, 
+		ProjectManager.class);
 }
 ```
 This will produce the exception dialog shown below.
