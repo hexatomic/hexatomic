@@ -12,6 +12,7 @@
 	- [Logging and error handling](./development/logging-error-handling.md)   
 	- [Adding a new editor](./development/add-new-editor.md)
 - [Maintenance](./maintenance/README.md)
+    - [Versioning](./maintenance/versioning/README.md)
 	- [Pull requests](./maintenance/pull-requests/README.md)
 		- [Checklist](./maintenance/pull-requests/checklist.md)
 	- [Releases](./maintenance/releases/README.md)
