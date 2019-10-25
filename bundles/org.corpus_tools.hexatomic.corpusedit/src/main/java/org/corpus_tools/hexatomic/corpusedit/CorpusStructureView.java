@@ -83,7 +83,6 @@ import org.eclipse.wb.swt.ResourceManager;
 public class CorpusStructureView {
 
 	private static final String OPEN_WITH_PREFIX = "Open with \"";
-	private static final String OPEN_WITH_SUFFIX = "\" editor";
 	
 
 	private static final String OPEN_DOCUMENT_POPUP_MENU_ID = "org.corpus_tools.hexatomic.corpusedit.popupmenu.documents";
