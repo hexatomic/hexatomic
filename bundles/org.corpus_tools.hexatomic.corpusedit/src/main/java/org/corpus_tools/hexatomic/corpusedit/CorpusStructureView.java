@@ -530,7 +530,7 @@ public class CorpusStructureView {
 			menuItem.getParameters().add(paramEditorID);
 
 			// Use the part descriptor name as title for the menu entry
-			menuItem.setLabel(OPEN_WITH_PREFIX + desc.getLabel() + OPEN_WITH_SUFFIX);
+			menuItem.setLabel(OPEN_WITH_PREFIX + desc.getLabel());
 			
 			// Add the new menu item to the popup menu
 			for(MMenu menu : thisPart.getMenus()) {
