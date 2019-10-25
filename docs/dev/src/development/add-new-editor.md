@@ -1,6 +1,6 @@
 # Adding a new editor
 
-Editors should be part of bundles in the `bundles` directory of the project.
+Following the principle of "[separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns)", editors should generally be developed in separate, dedicated bundles in the `bundles` directory of the project.
 You can either create a new bundle or add an editor to an existing bundle project.
 In Eclipse 4, additions to the user interface are organized in so-called [Parts](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#parts).
 A part consists of two components:
