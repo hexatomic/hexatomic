@@ -4,7 +4,7 @@
     <children xsi:type="basic:PartSashContainer" xmi:id="_GasGEMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.partsashcontainer.0" horizontal="true">
       <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left"/>
       <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main">
-        <tags>org.corpus_tools.hexatomic.editor</tags>
+        <tags>org.corpus_tools.hexatomic.tag.editor</tags>
       </children>
     </children>
     <mainMenu xmi:id="_tiknoMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.0">
