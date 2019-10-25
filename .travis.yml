@@ -1,21 +1,34 @@
-matrix:
+os: linux
+jobs:
   include:
     - language: java
 
-      sudo: false
-
-      jdks:
-        - oraclejdk8
-        - openjdk8
+      jdk: openjdk8
+      
+      before_deploy:
+         - mvn clean verify
+      
+      deploy:
+        - provider: releases
+          api_key:
+             secure: $GITHUB_TOKEN
+          on:
+             repo: hexatomic/hexatomic
+             branch: master
+             tags: true
+             condition: $TRAVIS_OS_NAME = linux
+          skip_cleanup: true
+          draft: true
+          file_glob: true
+          file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
+          tag_name: $TRAVIS_TAG
 
     - language: rust
-      sudo: false
-
+     
       cache:
         - cargo
 
-      rust:
-        - stable
+      rust: stable
 
       before_script:
         # Set an env variable for the currently tagged version
@@ -45,4 +58,4 @@ matrix:
             branch: master
             tags: true
             condition: $TRAVIS_OS_NAME = linux
-          skip-cleanup: true
+          skip_cleanup: true
