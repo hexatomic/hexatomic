@@ -50,7 +50,7 @@ Then, add a new part descriptor with the `Add` button (2).
 
 ![Edit model fragment properties](./add-model-fragment-descriptor.png)
 
-Select the new part descriptor in the model fragment editor and you can edit several properties, like the caption of the part or an icon.
+Select the new part descriptor in the model fragment editor and you can edit several properties, such as the caption of the part, or an icon.
 Make sure to set the "Class URI" field to the newly created editor class.
 You can use the "Find" button to navigate the workspace and insert the proper value.
 Also, the "Category" should be set to `org.corpus_tools.hexatomic.tag.editor` to mark that this part is an Hexatomic editor. 
