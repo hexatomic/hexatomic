@@ -26,7 +26,9 @@ public class OpenSaltDocumentHandler {
 
 	public static final String COMMAND_PARAM_EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
 	public static final String DOCUMENT_ID = "org.corpus_tools.hexatomic.document-id";
-
+	public static final String COMMAND_OPEN_DOCUMENT_ID = "org.corpus_tools.hexatomic.core.command.open_salt_document";
+	public static final String EDITOR_TAG = "org.corpus_tools.hexatomic.tag.editor";
+	
 	/**
 	 * Opens the currently selected document with the given editor.
 	 * 
@@ -66,7 +68,11 @@ public class OpenSaltDocumentHandler {
 
 			// Create a new part from an editor part descriptor
 			MPart editorPart = partService.createPart(editorID);
-			editorPart.setLabel(document.getName());
+			String title = document.getName();
+			if(editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
+				title = title + " (" + editorPart.getLabel() + ")";
+			}
+			editorPart.setLabel(title);
 			editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID, document.getId());
 
 			partService.showPart(editorPart, PartState.ACTIVATE);

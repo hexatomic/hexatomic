@@ -28,6 +28,7 @@ Here are links to some resources that can help you get started:
 - [Eclipse RCP (Rich Client Platform) - Tutorial](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html) by Lars Vogel
 - [Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial](http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html) by 
 Lars Vogel and Simon Scholz
+- [Standard Widget Toolkit (SWT)](https://www.eclipse.org/swt/) for developing user interfaces in Eclipse-based applications
 - [Version Control with Git - Software Carpentry lesson](https://swcarpentry.github.io/git-novice/) by Daisie Huang and Ivan Gonzalez[^git-cite]
 
 ## License 
