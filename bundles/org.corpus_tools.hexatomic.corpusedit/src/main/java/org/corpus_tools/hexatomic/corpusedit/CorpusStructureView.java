@@ -511,9 +511,9 @@ public class CorpusStructureView {
 	}
 
 	private void registerEditors(EModelService modelService, MApplication application, MPart thisPart) {
-		// Find all descriptors with the correct tag
+		// Find all descriptors with the correct category
 		List<MPartDescriptor> editorParts = application.getDescriptors().stream()
-				.filter((p) -> p.getTags().contains(OpenSaltDocumentHandler.EDITOR_TAG)).collect(Collectors.toList());
+				.filter((p) -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory())).collect(Collectors.toList());
 
 		for (MPartDescriptor desc : editorParts) {
 			// Create a menu item for this editor
