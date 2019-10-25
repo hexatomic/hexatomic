@@ -54,7 +54,7 @@ Select the new part descriptor in the model fragment editor and you can edit sev
 Make sure to set the "Class URI" field to the newly created editor class.
 You can use the "Find" button to navigate the workspace and insert the proper value.
 Also, the "Category" must be set to `org.corpus_tools.hexatomic.tag.editor` to mark that this part is an Hexatomic editor. 
-The `Label`field will be used as a name for the editor, e.g. when the user has a selection of editors to choose from for opening a document.
+The `Label` field will be used as a name for the editor, for example in a menu from which the user will choose one of the editors available to open a document with.
 
 ![Part descriptor general properties](./part-descriptor-class.png)
 
