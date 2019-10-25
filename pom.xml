@@ -116,14 +116,6 @@
 
 		</plugins>
 	</build>
-	<reporting>
-	   <plugins>
-	       <plugin>
-	           <groupId>org.apache.maven.plugins</groupId>
-	           <artifactId>maven-checkstyle-plugin</artifactId>
-	       </plugin>
-	   </plugins>
-	</reporting>
 	<!-- JAVADOC REPORTING -->
 	<!--<reporting> <excludeDefaults>true</excludeDefaults> <plugins> <plugin> 
 		<groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
