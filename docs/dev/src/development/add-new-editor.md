@@ -44,14 +44,11 @@ Then, add a new part descriptor with the `Add` button (2).
 Select the new part descriptor in the model fragment editor and you can edit several properties, like the caption of the part or an icon.
 Make sure to set the "Class URI" field to the newly created editor class.
 You can use the "Find" button to navigate the workspace and insert the proper value.
-Also, the "Category" should be set to "editors" so that the part will be created in the correct user interface area of Hexatomic. 
+Also, the "Category" should be set to `org.corpus_tools.hexatomic.editor` to mark that this part is an Hexatomic editor. 
 The `Label`field will be used as a name for the editor, e.g. when the user has a selection of editors to choose from for opening a document.
 
 ![Part descriptor general properties](./part-descriptor-class.png)
 
-On the "Supplementary" tab of the model fragment editor, add the special tag `org.corpus_tools.hexatomic.editor` to mark that this part is an Hexatomic editor.
-
-![Adding the tag to part](./part-descriptor-supplementary.png)
 
 ## Get the associated Salt document to display
 
