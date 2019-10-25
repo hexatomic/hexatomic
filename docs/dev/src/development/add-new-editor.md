@@ -33,7 +33,7 @@ The `projectManager` is an Hexatomic specific service that provides access to th
 
 Note that you can directly add the SWT instructions to define your user interface in the code, or use the [Eclipse Window Builder](https://www.eclipse.org/windowbuilder/), which is a graphical editor for user interfaces based on SWT (and other technologies).
 
-## Add part to application model
+## Adding a part to the application model
 
 To add the newly created class to the Eclipse RCP 4 application model, open the `fragment.e4xmi` file of the existing bundle or create a new one with `File -> New -> Other` menu and choosing "New Model Fragment".
 
