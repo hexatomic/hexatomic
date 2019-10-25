@@ -30,7 +30,6 @@ Here are links to some resources that can help you get started:
 Lars Vogel and Simon Scholz
 - [Standard Widget Toolkit (SWT)](https://www.eclipse.org/swt/) for developing user interfaces in Eclipse-based applications
 - [Version Control with Git - Software Carpentry lesson](https://swcarpentry.github.io/git-novice/) by Daisie Huang and Ivan Gonzalez[^git-cite]
-- [Standard Widget Toolkit (SWT)](https://www.eclipse.org/swt/) for developing the user interface
 
 ## License 
 
