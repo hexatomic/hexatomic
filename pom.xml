@@ -96,17 +96,16 @@
 				<version>3.1.0</version>
 				<configuration>
 				    <!-- This is a default configuration available on the classpath of the checkstyle plugin -->
-				    <configLocation>google_checks.xml</configLocation>
+				    <configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
 				    <encoding>UTF-8</encoding>
-				    <consoleOutput>true</consoleOutput>
-				    <linkXRref>false</linkXRref>
+				    <violationSeverity>warning</violationSeverity>
 				    <!--  TODO: set this to true when all source files have been updated -->
-				    <failsOnError>true</failsOnError>
+				    <failOnViolation>false</failOnViolation>
 				</configuration>
 				<executions>
 				    <execution>
-				        <id>validate</id>
-				        <phase>validate</phase>
+				        <id>verify</id>
+				        <phase>verify</phase>
 				        <goals>
 				            <goal>check</goal>
 				        </goals>

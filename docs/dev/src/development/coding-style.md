@@ -8,7 +8,7 @@ In addition to the original style guide, the following rules apply:
 
 Some aspects of the coding style will be automatically enforced and checked by the continuous integration using the
 [Maven Checkstyle plugin](https://maven.apache.org/plugins/maven-checkstyle-plugin/).
-Validation of the coding style is also performed whenever you build the project using Maven (`mvn verify`).
+Validation of the coding style is also performed whenever you build the project using Maven (e.g. `mvn install`).
 
 ## Configuring the Eclipse code formatting
 
