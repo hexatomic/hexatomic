@@ -3,14 +3,17 @@ package org.corpus_tools.hexatomic.corpusedit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
 import org.corpus_tools.salt.common.SCorpus;
@@ -25,7 +28,15 @@ import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.commands.MCommand;
+import org.eclipse.e4.ui.model.application.commands.MParameter;
+import org.eclipse.e4.ui.model.application.descriptor.basic.MPartDescriptor;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.model.application.ui.menu.MMenu;
 import org.eclipse.e4.ui.services.EMenuService;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
@@ -71,6 +82,10 @@ import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
+	private static final String OPEN_WITH_PREFIX = "Open with ";
+	
+
+	private static final String OPEN_DOCUMENT_POPUP_MENU_ID = "org.corpus_tools.hexatomic.corpusedit.popupmenu.documents";
 	private static final String ERROR_WHEN_DELETING_SUB_CORPUS_TITLE = "Error when deleting (sub-) corpus";
 	private static final String ERROR_WHEN_DELETING_SUB_CORPUS_MSG = "Before deleting a (sub-) corpus, first delete all its child elements.";
 	private static final String ERROR_WHEN_ADDING_DOCUMENT_TITLE = "Error when adding document";
@@ -139,8 +154,8 @@ public class CorpusStructureView {
 	TreeViewer treeViewer;
 
 	@PostConstruct
-	public void createPartControl(Composite parent, EMenuService menuService, 
-			ESelectionService selectionService) {
+	public void createPartControl(Composite parent, EMenuService menuService, ESelectionService selectionService,
+			EModelService modelService, MApplication application, MPart thisPart) {
 		parent.setLayout(new GridLayout(1, false));
 
 		Composite compositeFilter = new Composite(parent, SWT.NONE);
@@ -201,8 +216,7 @@ public class CorpusStructureView {
 			}
 		});
 		tree.setLinesVisible(true);
-		menuService.registerContextMenu(treeViewer.getControl(),
-				"org.corpus_tools.hexatomic.corpusedit.popupmenu.documentactions");
+		menuService.registerContextMenu(treeViewer.getControl(), OPEN_DOCUMENT_POPUP_MENU_ID);
 
 		treeViewer.setLabelProvider(labelProvider);
 		Transfer[] transferTypes = new Transfer[] { TextTransfer.getInstance() };
@@ -228,15 +242,17 @@ public class CorpusStructureView {
 		treeViewer.setContentProvider(new CorpusTreeProvider());
 		treeViewer.setFilters(new ChildNameFilter());
 		treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
-		
+
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = treeViewer.getStructuredSelection();
 				selectionService.setSelection(selection.getFirstElement());
 			}
 		});
+
+		registerEditors(modelService, application, thisPart);
 
 	}
 
@@ -491,5 +507,37 @@ public class CorpusStructureView {
 			log.debug("Corpus Structure Viewer udpated");
 		}
 
+	}
+
+	private void registerEditors(EModelService modelService, MApplication application, MPart thisPart) {
+		// Find all descriptors with the correct category
+		List<MPartDescriptor> editorParts = application.getDescriptors().stream()
+				.filter((p) -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory())).collect(Collectors.toList());
+
+		for (MPartDescriptor desc : editorParts) {
+			// Create a menu item for this editor
+			MHandledMenuItem menuItem = modelService.createModelElement(MHandledMenuItem.class);
+
+			// Set menu item command to the general one to open any editor
+			MCommand newCommand = modelService.createModelElement(MCommand.class);
+			newCommand.setElementId(OpenSaltDocumentHandler.COMMAND_OPEN_DOCUMENT_ID);
+			menuItem.setCommand(newCommand);
+
+			// Set the correct editor ID as parameter
+			MParameter paramEditorID = modelService.createModelElement(MParameter.class);
+			paramEditorID.setName(OpenSaltDocumentHandler.COMMAND_PARAM_EDITOR_ID);
+			paramEditorID.setValue(desc.getElementId());
+			menuItem.getParameters().add(paramEditorID);
+
+			// Use the part descriptor name as title for the menu entry
+			menuItem.setLabel(OPEN_WITH_PREFIX + desc.getLabel());
+			
+			// Add the new menu item to the popup menu
+			for(MMenu menu : thisPart.getMenus()) {
+				if(menu.getElementId().equals(OPEN_DOCUMENT_POPUP_MENU_ID)) {
+					menu.getChildren().add(menuItem);
+				}
+			}
+		}
 	}
 }
