@@ -13,7 +13,7 @@ A part consists of two components:
 
 ## Adding a minimal Java class
 
-Add a Java class to your bundle-project.
+Add a Java class to your bundle project.
 This class does not need to inherit any interface, but should have a method with the `@PostConstruct` annotation.
 ```java
 public class TextViewer {
