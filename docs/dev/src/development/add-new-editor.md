@@ -9,7 +9,7 @@ In Eclipse 4, additions to the user interface are organized in so-called [Parts]
 A part consists of two components:
 
 - a `PartDescriptor` entry in the `fragment.e4xmi` file of the bundle containing the new editor, and 
-- the actual Java class implementing the behavior
+- the actual Java class implementing the behavior.
 
 ## Adding a minimal Java class
 
