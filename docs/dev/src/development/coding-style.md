@@ -21,8 +21,8 @@ You can configure Eclipse to format your source code according to the Google Jav
 ![Importing the Google Style formatting configuration file](./import-code-formatter.png) 
 5. Open the settings page `Java -> Code Style -> Organize Imports`
 6. Select all packages in the list and remove them. 
-This configure Eclipse to order all imported packages in alphabetical order.
-![XXX](./configure-import-order.png)
+This configures Eclipse to order all imported packages in alphabetical order.
+![Configure the package import order](./configure-import-order.png)
 
 You can use the keyboard shortcut <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> to format a single source code file.
 <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>O</kbd> will organize the imports.
