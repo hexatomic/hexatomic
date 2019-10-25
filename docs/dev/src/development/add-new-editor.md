@@ -19,7 +19,7 @@ This class does not need to inherit any interface, but should have a method with
 public class TextViewer {
 	@PostConstruct
 	public void postConstruct(Composite parent, MPart part, ProjectManager projectManager) { 
-		// TODO: add actual implementation
+		// TODO: add actual editor implementation
 	}
 }
 ```
