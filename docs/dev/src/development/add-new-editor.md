@@ -60,7 +60,7 @@ When an editor part is created, it is initialized with a state.
 This state can hold internal configurations, but also contains the ID of the Salt document that this editor should edit.
 The actual ID is set to the editor part's state in the class handling user actions to open a Salt document, `org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler`.
 <!-- TODO Add link to API docs for this class on GitHub Pages once they exist. -->
-It is stored in the setting with the name `org.corpus_tools.hexatomic.document-id`.
+It is stored in the part state in a setting with the name `org.corpus_tools.hexatomic.document-id`.
 The injected `ProjectManager` can then be used to get the actual document.
 
 ```java
