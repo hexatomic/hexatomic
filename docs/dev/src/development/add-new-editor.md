@@ -35,7 +35,7 @@ Note that you can directly add the SWT instructions to define your user interfac
 
 ## Adding a part to the application model
 
-To add the newly created class to the Eclipse RCP 4 application model, open the `fragment.e4xmi` file of the existing bundle or create a new one with `File -> New -> Other` menu and choosing "New Model Fragment".
+To add the newly created class to the Eclipse RCP 4 application model, open the `fragment.e4xmi` file of the existing bundle, or create a new one via the `File -> New -> Other` menu and choose "New Model Fragment".
 
 ![Adding a new fragment model file](./new-model-fragment-file.png)
 
