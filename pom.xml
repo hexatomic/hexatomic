@@ -89,8 +89,41 @@
 				</executions>
 			</plugin>
 
+			<!-- Check coding style with checkstyle plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+				    <!-- This is a default configuration available on the classpath of the checkstyle plugin -->
+				    <configLocation>google_checks.xml</configLocation>
+				    <encoding>UTF-8</encoding>
+				    <consoleOutput>true</consoleOutput>
+				    <linkXRref>false</linkXRref>
+				    <!--  TODO: set this to true when all source files have been updated -->
+				    <failsOnError>true</failsOnError>
+				</configuration>
+				<executions>
+				    <execution>
+				        <id>validate</id>
+				        <phase>validate</phase>
+				        <goals>
+				            <goal>check</goal>
+				        </goals>
+				    </execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
+	<reporting>
+	   <plugins>
+	       <plugin>
+	           <groupId>org.apache.maven.plugins</groupId>
+	           <artifactId>maven-checkstyle-plugin</artifactId>
+	       </plugin>
+	   </plugins>
+	</reporting>
 	<!-- JAVADOC REPORTING -->
 	<!--<reporting> <excludeDefaults>true</excludeDefaults> <plugins> <plugin> 
 		<groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
