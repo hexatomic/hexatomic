@@ -30,7 +30,8 @@ For more information, see the [Eclipse SWT project website](http://web.archive.o
 For information on the application model of Eclipse-based applications, see the [Eclipse Wiki page on the UI model](https://web.archive.org/web/20180128210911/https://wiki.eclipse.org/Eclipse4/RCP/Modeled_UI).
 
 The `projectManager` is an Hexatomic specific service that provides access to the global Salt project which is currently loaded.
-You can directly add the SWT instructions to define your user interface or the the [Eclipse Window Builder](https://www.eclipse.org/windowbuilder/) for a graphical editor.
+
+Note that you can directly add the SWT instructions to define your user interface in the code, or use the [Eclipse Window Builder](https://www.eclipse.org/windowbuilder/), which is a graphical editor for user interfaces based on SWT (and other technologies).
 
 ## Add part to application model
 
