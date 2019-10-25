@@ -62,7 +62,7 @@ The `Label` field will be used as a name for the editor, for example in a menu f
 ## Getting the associated Salt document to display
 
 When an editor part is created, it is initialized with a state. 
-This state can hold internal configurations, but also contains the ID of the Salt document that this editor should edit.
+This state can hold internal configurations, but also contains the ID of the associated Salt document that this editor should edit.
 The actual ID is set to the editor part's state in the class handling user actions to open a Salt document, `org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler`.
 <!-- TODO Add link to API docs for this class on GitHub Pages once they exist. -->
 It is stored in the part state in a setting with the name `org.corpus_tools.hexatomic.document-id`.
