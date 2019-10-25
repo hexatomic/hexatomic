@@ -44,7 +44,7 @@ In the fragment editor, add a new model fragment by selecting "Model fragments" 
 ![Adding a new model fragment in the editor](./new-model-fragment.png)
 
 Edit the model fragment properties by selecting the newly created entry.
-Make sure to the the extended element ID to `xpath:/`and the feature name to `descriptors` (1).
+Make sure to set the extended element ID to `xpath:/`and the feature name to `descriptors` (1).
 This means that the model fragment extends the part descriptors of the application.
 Then, add a new part descriptor with the `Add` button (2). 
 
