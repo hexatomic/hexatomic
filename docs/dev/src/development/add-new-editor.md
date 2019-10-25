@@ -59,7 +59,7 @@ The `Label` field will be used as a name for the editor, for example in a menu f
 ![Part descriptor general properties](./part-descriptor-class.png)
 
 
-## Get the associated Salt document to display
+## Getting the associated Salt document to display
 
 When an editor part is created, it is initialized with a state. 
 This state can hold internal configurations, but also contains the ID of the Salt document that this editor should edit.
