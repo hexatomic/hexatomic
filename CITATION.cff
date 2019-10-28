@@ -1,0 +1,163 @@
+cff-version: 1.0.3
+message: If you use this software, please cite it as below.
+title: org.corpus_tools.hexatomic
+version: 0.1.0-SNAPSHOT
+references:
+- type: software
+  title: ch.qos.logback.classic
+- type: software
+  title: ch.qos.logback.core
+- type: software
+  title: org.slf4j.api
+  license: Apache-2.0
+- type: software
+  title: ch.qos.logback.slf4j
+- type: software
+  title: Woodstox (woodstox-core)
+  license: Apache-2.0
+  authors:
+  - name: Tatu Saloranta
+- type: software
+  title: Stax2 API (stax2-api)
+  license: NOASSERTION
+  authors:
+  - name: Tatu Saloranta
+- type: software
+  title: 'Guava: Google Core Libraries for Java (guava)'
+  license: Apache-2.0
+  authors:
+  - name: Kevin Bourrillion
+- type: software
+  title: com.ibm.icu
+- type: software
+  title: javax.annotation
+- type: software
+  title: org.eclipse.osgi
+- type: software
+  title: Apache Felix Declarative Services (org.apache.felix.scr)
+  license: Apache-2.0
+- type: software
+  title: org.eclipse.osgi.services
+- type: software
+  title: org.eclipse.osgi.util
+- type: software
+  title: org.corpus-tools.salt-api
+  license: Apache-2.0
+  authors:
+  - name: (c) 2005, 2014 jQuery Foundation, Inc.
+  - name: Copyright 2016, Humboldt-Universitat zu Berlin
+  - name: Copyright 2009 Humboldt-Universitat zu Berlin, INRIA.
+  - name: Copyright (c) 2011-2014 Almende B.V, http://almende.com
+- type: software
+  title: Neo Visionaries Internationalization Package (nv-i18n)
+  license: Apache-2.0
+  authors:
+  - name: Takahiko Kawasaki
+- type: software
+  title: Apache Commons Lang (commons-lang3)
+  license: Apache-2.0
+  authors:
+  - name: Daniel Rall
+  - name: Stephen Colebourne
+  - name: Henri Yandell
+  - name: Steven Caswell
+  - name: Robert Burrell Donkin
+  - name: Gary D. Gregory
+  - name: Fredrik Westermarck
+  - name: James Carman
+  - name: Niall Pemberton
+  - name: Matt Benson
+  - name: Joerg Schaible
+  - name: Oliver Heger
+  - name: Paul Benedict
+  - name: Benedikt Ritter
+  - name: Duncan Jones
+- type: software
+  title: org.eclipse.emf.common
+- type: software
+  title: JSON in Java (json)
+  license: NOASSERTION
+  authors:
+  - name: Douglas Crockford
+- type: software
+  title: org.corpus-tools.salt-extensions
+  license: Apache-2.0
+- type: software
+  title: org.corpus_tools.hexatomic.core
+- type: software
+  title: javax.inject
+  license: Apache-2.0
+- type: software
+  title: org.eclipse.core.runtime
+- type: software
+  title: org.eclipse.swt
+- type: software
+  title: org.eclipse.e4.ui.model.workbench
+- type: software
+  title: org.eclipse.jface
+- type: software
+  title: org.eclipse.e4.ui.services
+- type: software
+  title: org.eclipse.e4.ui.workbench
+- type: software
+  title: org.eclipse.e4.core.di
+- type: software
+  title: org.eclipse.e4.ui.di
+- type: software
+  title: org.eclipse.e4.core.contexts
+- type: software
+  title: org.eclipse.e4.core.services
+  license: NOASSERTION
+  authors:
+  - name: Copyright (c) 2010 IBM Corporation and others.
+- type: software
+  title: org.corpus_tools.hexatomic.corpusstructureeditor
+- type: software
+  title: org.eclipse.e4.core.di.annotations
+- type: software
+  title: org.corpus_tools.hexatomic.textviewer
+- type: software
+  title: org.eclipse.core.commands
+  license: NOASSERTION
+  authors:
+  - name: (c) 2008 VeriSign, Inc.
+  - name: Copyright (c) 2004,2005 IBM Corporation and others.
+- type: software
+  title: org.eclipse.equinox.common
+- type: software
+  title: org.eclipse.core.contenttype
+  license: NOASSERTION
+- type: software
+  title: org.eclipse.equinox.preferences
+- type: software
+  title: org.eclipse.equinox.registry
+- type: software
+  title: org.eclipse.core.expressions
+- type: software
+  title: org.eclipse.core.jobs
+- type: software
+  title: org.eclipse.equinox.app
+- type: software
+  title: org.eclipse.e4.core.commands
+- type: software
+  title: org.eclipse.e4.core.di.extensions
+- type: software
+  title: org.eclipse.e4.core.di.extensions.supplier
+- type: software
+  title: org.eclipse.e4.emf.xpath
+- type: software
+  title: org.apache.commons.jxpath
+- type: software
+  title: org.eclipse.emf.ecore
+- type: software
+  title: org.eclipse.equinox.event
+- type: software
+  title: org.eclipse.emf.ecore.xmi
+- type: software
+  title: org.eclipse.emf.ecore.change
+- type: software
+  title: org.eclipse.swt.gtk.linux.x86_64
+- type: software
+  title: org.eclipse.swt.win32.win32.x86_64
+- type: software
+  title: org.eclipse.swt.cocoa.macosx.x86_64
