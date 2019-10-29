@@ -1,6 +1,6 @@
 cff-version: 1.0.3
 message: If you use this software, please cite it as below.
-title: org.corpus_tools.hexatomic
+title: Hexatomic
 version: 0.1.0-SNAPSHOT
 authors:
 -  family-names: Druskat
@@ -73,7 +73,7 @@ references:
 -  type: software
    title: org.eclipse.osgi
    version: 3.14.0.v20190517-1309
-   license: EPL-1.0
+   license: EPL-2.0
    authors:
    -  name: OSGi Alliance
 -  type: software
@@ -85,18 +85,22 @@ references:
 -  type: software
    title: org.eclipse.osgi.services
    version: 3.8.0.v20190206-2147
+   license: EPL-2.0
+   authors:
+   -  name: OSGi Alliance
 -  type: software
    title: org.eclipse.osgi.util
    version: 3.5.200.v20190115-2323
+   license: EPL-2.0
+   authors:
+   - name: OSGi Alliance
 -  type: software
    title: org.corpus-tools.salt-api
    version: 3.3.8.20190808115214
    license: Apache-2.0
    authors:
-   -  name: (c) 2005, 2014 jQuery Foundation, Inc.
-   -  name: Copyright 2016, Humboldt-Universitat zu Berlin
-   -  name: Copyright 2009 Humboldt-Universitat zu Berlin, INRIA.
-   -  name: Copyright (c) 2011-2014 Almende B.V, http://almende.com
+   -  name: Humboldt-Universitat zu Berlin
+   -  name: INRIA
 -  type: software
    title: Neo Visionaries Internationalization Package (nv-i18n)
    version: '1.1'
@@ -126,127 +130,211 @@ references:
 -  type: software
    title: org.eclipse.emf.common
    version: 2.16.0.v20190528-0845
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: JSON in Java (json)
    version: '20160810'
-   license: NOASSERTION
+   license: JSON
    authors:
    -  name: Douglas Crockford
 -  type: software
    title: org.corpus-tools.salt-extensions
    version: 3.3.8.20190808115214
    license: Apache-2.0
--  type: software
-   title: org.corpus_tools.hexatomic.core
-   version: 0.1.0.201910281349
+   authors:
+   -  name: Humboldt-Universitat zu Berlin
+   -  name: INRIA
 -  type: software
    title: javax.inject
    version: 1.0.0.v20091030
-   license: Apache-2.0
+   license: EPL-1.0
+   authors:
+   -  name: atinject project
 -  type: software
    title: org.eclipse.core.runtime
    version: 3.15.300.v20190508-0543
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.swt
    version: 3.111.0.v20190605-1801
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.ui.model.workbench
    version: 2.1.400.v20190513-2118
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.jface
    version: 3.16.0.v20190528-0922
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.ui.services
    version: 1.3.500.v20190513-2118
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.ui.workbench
    version: 1.10.0.v20190529-1505
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.di
    version: 1.7.200.v20190506-1457
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.ui.di
    version: 1.2.600.v20190510-1100
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.contexts
    version: 1.8.100.v20190518-1217
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.services
    version: 2.1.400.v20181215-2145
-   license: NOASSERTION
+   license: EPL-2.0
    authors:
-   -  name: Copyright (c) 2010 IBM Corporation and others.
--  type: software
-   title: org.corpus_tools.hexatomic.corpusstructureeditor
-   version: 0.1.0.201910281349
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.di.annotations
    version: 1.6.400.v20190518-1217
--  type: software
-   title: org.corpus_tools.hexatomic.textviewer
-   version: 0.1.0.201910281349
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.core.commands
    version: 3.9.400.v20190516-1358
-   license: NOASSERTION
+   license: EPL-2.0
    authors:
-   -  name: (c) 2008 VeriSign, Inc.
-   -  name: Copyright (c) 2004,2005 IBM Corporation and others.
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.equinox.common
    version: 3.10.400.v20190516-1504
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.core.contenttype
    version: 3.7.300.v20190215-2048
-   license: NOASSERTION
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.equinox.preferences
    version: 3.7.400.v20190516-1504
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.equinox.registry
    version: 3.8.400.v20190516-1504
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.core.expressions
    version: 3.6.400.v20190518-1240
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.core.jobs
    version: 3.10.400.v20190506-1457
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.equinox.app
    version: 1.4.200.v20190516-1504
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.commands
    version: 0.12.600.v20190510-1100
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.di.extensions
    version: 0.15.300.v20190213-1308
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.core.di.extensions.supplier
    version: 0.15.300.v20190506-1457
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.e4.emf.xpath
    version: 0.2.300.v20190513-2118
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.apache.commons.jxpath
    version: 1.3.0.v200911051830
+   license: EPL-2.0
+   authors:
+   -  name: The Apache Software Foundation
 -  type: software
    title: org.eclipse.emf.ecore
    version: 2.18.0.v20190528-0845
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.equinox.event
    version: 1.5.100.v20190528-1257
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.emf.ecore.xmi
    version: 2.16.0.v20190528-0725
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.emf.ecore.change
    version: 2.14.0.v20190528-0725
+   license: EPL-2.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.swt.gtk.linux.x86_64
-   version: 3.111.0.v20190605-1801
+   version: 3.11.0.v20190605-1801
+   license: EPL-1.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.swt.win32.win32.x86_64
    version: 3.111.0.v20190605-1801
+   license: EPL-1.0
+   authors:
+   -  name: Eclipse Foundation
 -  type: software
    title: org.eclipse.swt.cocoa.macosx.x86_64
    version: 3.111.0.v20190605-1801
+   license: EPL-1.0
+   authors:
+   -  name: Eclipse Foundation
