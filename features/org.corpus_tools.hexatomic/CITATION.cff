@@ -93,7 +93,7 @@ references:
    version: 3.5.200.v20190115-2323
    license: EPL-2.0
    authors:
-   - name: OSGi Alliance
+   -  name: OSGi Alliance
 -  type: software
    title: org.corpus-tools.salt-api
    version: 3.3.8.20190808115214
