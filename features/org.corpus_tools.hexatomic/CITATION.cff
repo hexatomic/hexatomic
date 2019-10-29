@@ -338,3 +338,9 @@ references:
    license: EPL-1.0
    authors:
    -  name: Eclipse Foundation
+-  type: software 
+   title: SWT Resource Manager (org.eclipse.wb.swt)
+   license: EPL-1.0
+   authors:
+   -  name: Google, Inc.
+   
