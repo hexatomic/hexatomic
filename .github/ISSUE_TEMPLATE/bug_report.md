@@ -24,7 +24,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - Operating System: [e.g. iOS]
+ - Operating System: [e.g. Ubuntu 18.04]
  - Hexatomic Version: [e.g. 22]
  - Java Version: [e.g. OpenJDK 8, Oracle JDK 11]
  
