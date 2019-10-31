@@ -132,6 +132,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Update the changelog header during a release -->
+			<plugin>
+				<groupId>co.enear.maven.plugins</groupId>
+				<artifactId>keepachangelog-maven-plugin</artifactId>
+				<version>1.2.3</version>
+				<inherited>false</inherited>
+			</plugin>
 		</plugins>
 	</build>
 	<!-- JAVADOC REPORTING -->
