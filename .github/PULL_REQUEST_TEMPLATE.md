@@ -5,6 +5,7 @@
 Please check if your PR fulfills the following requirements:
 - [ ] Tests for the changes have been added (for bug fixes / features)
 - [ ] Docs have been reviewed and added / updated if needed (for bug fixes / features)
+- [ ] The *Unreleased* section in CHANGELOG.md has been amended to reflect the changes in this PR
 - [ ] Build (`mvn verify`) was run locally and any changes were pushed
 
 
