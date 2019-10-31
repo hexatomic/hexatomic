@@ -64,6 +64,25 @@
           </environments>
         </configuration>
       </plugin>
+      <!-- USE GITFLOW -->
+      <plugin>
+        <groupId>com.amashchenko.maven.plugin</groupId>
+        <artifactId>gitflow-maven-plugin</artifactId>
+        <version>1.12.0</version>
+        <configuration>
+          <tychoBuild>true</tychoBuild>
+          <gpgSignTag>true</gpgSignTag>
+          <gpgSignCommit>true</gpgSignCommit>
+          <verbose>true</verbose>
+          <skipFeatureVersion>true</skipFeatureVersion>
+          <versionDigitToIncrement>1</versionDigitToIncrement>
+          <pushRemote>true</pushRemote>
+          <keepRemote>false</keepRemote>
+          <gitFlowConfig>
+            <versionTagPrefix>v</versionTagPrefix>
+          </gitFlowConfig>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

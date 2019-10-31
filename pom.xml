@@ -96,25 +96,6 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<!-- USE GITFLOW -->
-			<plugin>
-				<groupId>com.amashchenko.maven.plugin</groupId>
-				<artifactId>gitflow-maven-plugin</artifactId>
-				<version>1.12.0</version>
-				<configuration>
-					<tychoBuild>true</tychoBuild>
-					<gpgSignTag>true</gpgSignTag>
-					<gpgSignCommit>true</gpgSignCommit>
-					<verbose>true</verbose>
-					<skipFeatureVersion>true</skipFeatureVersion>
-					<versionDigitToIncrement>1</versionDigitToIncrement>
-					<pushRemote>true</pushRemote>
-					<keepRemote>false</keepRemote>
-					<gitFlowConfig>
-						<versionTagPrefix>v</versionTagPrefix>
-					</gitFlowConfig>
-				</configuration>
-			</plugin>
 			<!-- BUILD JAVADOCS -->
 			<plugin>
 				<!-- Parse version during `validate` phase to create the properties - 
