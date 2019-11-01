@@ -7,8 +7,9 @@ To release a new version of Hexatomic, run the following commands in the reposit
 3. `mvn gitflow:release-start` - Starts the release process.
 4. The Maven GitFlow plugin will then prompt you to enter a version number for the release. Make sure you enter a version identifier according to semantic versioning, in the format `MAJOR.MINOR.PATCH`. Do *not* use a `-SNAPSHOT` suffix!
 5. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
+6. `mvn license:update-files-header` - Updates the file headers in Java files.
 6. `git add .` - Adds the updated changelog to the Git index.
-7. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
+7. `git commit -m "Update changelog and update file headers"` - Commits the updated changelog to version control.
 8. `git push` - Updates the remote release branch.
 9. `mvn gitflow:release-finish` - Finalizes the release process.
 
@@ -19,8 +20,9 @@ git checkout develop && \
 git pull origin develop && \
 mvn gitflow:release-start && \
 mvn keepachangelog:release -N && \
+mvn license:update-files-header && \
 git add . && \
-git commit -m "Update changelog" && \
+git commit -m "Update changelog and update file headers" && \
 git push && \
 mvn gitflow:release-finish
 ```
