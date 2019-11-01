@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Development setup - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../development/setup.html" class="active"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.2.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../development/logging-error-handling.html"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li></ol></li><li><a href="../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><ol class="section"><li><a href="../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.2.1.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.2.1.1.</strong> Checklist</a></li></ol></li><li><a href="../maintenance/releases/index.html"><strong aria-hidden="true">3.2.2.</strong> Releases</a></li><li><ol class="section"><li><a href="../maintenance/releases/checklist.html"><strong aria-hidden="true">3.2.2.1.</strong> Checklist</a></li></ol></li></ol></li></ol></li><li><a href="../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#development-setup" id="development-setup">Development setup</a></h1>
+<h2><a class="header" href="#operating-system-for-development" id="operating-system-for-development">Operating system for development</a></h2>
+<p>You can develop and build Hexatomic on Linux, Mac OS and Windows.
+We suggest that you use <strong>Linux</strong> for development, to avoid non-straightforward install procedures for required technologies as well as potential issues with file encodings, paths, and file permissions.</p>
+<h2><a class="header" href="#required-software" id="required-software">Required software</a></h2>
+<p>Hexatomic is implemented in <strong>Java</strong>, built with <strong>Apache Maven</strong>, and versioned with <strong>Git</strong>.
+You need all three on your computer to contribute code to Hexatomic.</p>
+<p>The documentation is written in Markdown and generated with <strong>mdbook</strong>.</p>
+<h3><a class="header" href="#java-18" id="java-18">Java 1.8</a></h3>
+<p>You need to have a copy of the <strong>Java Development Kit (JDK), Version 1.8</strong> (sometimes referred to as <em>Java 8</em>) installed on your computer.
+It shouldn't make any difference whether you use the open <em>OpenJDK</em> implementation of Java, or an <em>Oracle JDK</em>.
+We suggest that you use <strong>OpenJDK</strong> in its latest build (which was <code>1.8u232</code> at the time of writing).
+See the <a href="https://wiki.openjdk.java.net/display/jdk8u/Main">OpenJDK 8 Updates site</a> to find out what the currently latest build is.
+OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
+For stand-alone packages, you can use the installers distributed by the <a href="https://adoptopenjdk.net">AdoptOpenJDK project</a>.
+AdoptOpenJDK packages are are available for Windows, MacOS, and Linux.</p>
+<p>You can check which version of Java you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">java -version
+</code></pre>
+<p>On Linux, this should produce the following output. The second line may look different, depending on the Linux distribution you use.</p>
+<pre><code class="language-bash">openjdk version &quot;1.8.0_222&quot;
+OpenJDK Runtime Environment (build 1.8.0_222-8u222-b10-1ubuntu1~18.04.1-b10)
+OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+</code></pre>
+<h3><a class="header" href="#apache-maven" id="apache-maven">Apache Maven</a></h3>
+<p>You need to have a copy of <strong>Apache Maven</strong> in <strong>version 3.6.0 or newer</strong> installed on your computer.
+To find out how to install Maven on your system, please see the <a href="https://maven.apache.org/">Apache Maven website</a>.</p>
+<p>You can check which version of Maven you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">mvn -version
+</code></pre>
+<p>On Linux, this should produce the following output. The first line is the important one, the other ones may look different, depending on the Linux distribution you use.</p>
+<pre><code class="language-bash">Apache Maven 3.6.0
+Maven home: /usr/share/maven
+Java version: 1.8.0_222, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: &quot;linux&quot;, version: &quot;5.0.0-23-generic&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;
+</code></pre>
+<h3><a class="header" href="#git" id="git">Git</a></h3>
+<p>You need to have a copy of <strong>Git</strong> in <strong>version 2.17.1 or newer</strong> installed on your computer.
+To find out how to install Git on your system, please see the <a href="https://git-scm.com/">Git website</a>.</p>
+<p>You can check which version of Git you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">git --version
+</code></pre>
+<p>On Linux, this should produce the following output.</p>
+<pre><code class="language-bash">git version 2.17.1
+</code></pre>
+<h3><a class="header" href="#mdbook" id="mdbook">mdbook</a></h3>
+<p><strong>If you want to build the documentation online book locally</strong> to, e.g., see your changes as they will look like online, 
+you need to have a copy of <strong>mdbook, version 0.3.1 or newer</strong> installed on your computer.
+To find out how to install mdbook on your system, please see the <a href="https://github.com/rust-lang-nursery/mdBook">mdbook website</a>.</p>
+<p>You can check which version of mdbook you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">mdbook --version
+</code></pre>
+<p>On Linux, this should produce the following output.</p>
+<pre><code class="language-bash">mdbook v0.3.1
+</code></pre>
+<h2><a class="header" href="#suggested-editor-eclipse-integrated-development-environment-ide" id="suggested-editor-eclipse-integrated-development-environment-ide">Suggested editor: Eclipse Integrated Development Environment (IDE)</a></h2>
+<p>Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
+While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source <strong>Eclipse IDE, version 2019-06 or newer</strong>.</p>
+<p>You can download it from the <a href="https://www.eclipse.org/downloads/">Eclipse download website</a>.</p>
+<h3><a class="header" href="#eclipse-ide-installation" id="eclipse-ide-installation">Eclipse IDE installation</a></h3>
+<p>The download contains an installer which lets you configure the setup of your IDE.
+To develop Hexatomic, you will need to install <a href="https://www.eclipse.org/downloads/packages/release/2019-06/r/eclipse-ide-rcp-and-rap-developers">Eclipse IDE for RCP and RAP Developers</a>:</p>
+<ul>
+<li>Extract the downloaded file.</li>
+<li>Start the Eclipse installer (<code>eclipse-inst</code>).</li>
+<li>From the list of available Eclipse packages, choose <strong>Eclipse IDE for RCP and RAP Developers</strong>.</li>
+</ul>
+<p>During the installation, accept licenses, set directories, etc., as you see fit.</p>
+<p>After you have installed the IDE itself, install the required tool plugins.</p>
+<h3><a class="header" href="#ide-plugin-installation" id="ide-plugin-installation">IDE Plugin installation</a></h3>
+<p>If not noted otherwise, Eclipse plugins are installed as follows:</p>
+<ul>
+<li>Open the <em>Install Wizard</em> via the menu <strong>Help &gt; Install New Software...</strong></li>
+<li>In the <strong>Work with:</strong> field, enter the URL of the Update Site for the plugin, given in brackets below.</li>
+<li>Select the plugins you want to install, and install it with the help of the wizard.</li>
+</ul>
+<h3><a class="header" href="#list-of-eclipse-ide-plugins-required-for-hexatomic-development" id="list-of-eclipse-ide-plugins-required-for-hexatomic-development">List of Eclipse IDE plugins required for Hexatomic development</a></h3>
+<ul>
+<li><a href="https://github.com/eclipse-cbi/targetplatform-dsl"><strong>Target Platform Definition DSL and Generator</strong></a>, <strong>version 3.0.0-SNAPSHOT or newer</strong><br />
+(Update Site: <a href="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/">http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/</a>)</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../development/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../development/getting-the-source-code.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../development/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../development/getting-the-source-code.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

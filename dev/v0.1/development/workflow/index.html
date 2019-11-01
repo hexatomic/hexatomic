@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Workflow - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.2.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html" class="active"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.2.1.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.2.1.1.</strong> Checklist</a></li></ol></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.2.2.</strong> Releases</a></li><li><ol class="section"><li><a href="../../maintenance/releases/checklist.html"><strong aria-hidden="true">3.2.2.1.</strong> Checklist</a></li></ol></li></ol></li></ol></li><li><a href="../../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#development-workflow" id="development-workflow">Development workflow</a></h1>
+<blockquote>
+<p><strong>Summary</strong></p>
+<ul>
+<li>We use <a href="http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> for developing Hexatomic,
+with the <a href="https://github.com/aleksandr-m/gitflow-maven-plugin">Maven plugin for Gitflow</a>.</li>
+<li>To contribute <strong>new functionality</strong>, create a feature branch by running <code>mvn gitflow:feature-start</code> in the repository root, and create a <a href="http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/"><em>draft pull request</em></a> against <strong><code>develop</code></strong> on <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</li>
+<li>To contribute a <strong>bug fix, add to documentation, change relesae engineering</strong>, create a hotfix branch by running <code>mvn gitflow:hotfix-start</code> in the repository root, and create a <a href="http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/"><em>draft pull request</em></a> against <strong><code>master</code></strong> on <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</li>
+<li>Describe your changes in the pull request title and complete the pull request form.</li>
+<li>When you think that your contribution is good to be merged into the main repository, change the pull request status to <strong>Ready for review</strong>.</li>
+<li>Collaborate with the maintainer to fulfill any missing requirements and to merge your changes into the main repository.</li>
+</ul>
+</blockquote>
+<p>Hexatomic follows a common development workflow: Gitflow. It is a development workflow that works with a specific Git branch structure, and is actually quite simple to understand and follow, and based on just a few rules.
+Also, Hexatomic actually uses a <a href="#maven-plugin-for-gitflow">Maven plugin for Gitflow</a>, which makes it really easy to work with Gitflow.</p>
+<p>If you are interested in learning more about Gitflow, read the <a href="http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/">original blog post describing it</a>. The figure below gives an overview of the complete Gitflow workflow.</p>
+<hr />
+<p><a href="http://web.archive.org/web/20190821195236/https://nvie.com/files/Git-branching-model.pdf"><img src="gitflow.png" alt="" /></a><br />
+<em><strong>Figure:</strong></em> <strong>Git branching model overview.</strong> Graphic by Vincent Driessen from the original blog post <a href="http://nvie.com/archives/323">&quot;A successful Git branching model&quot;</a>. Licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA license</a>. <img src="https://img.shields.io/badge/CC-BY%20SA-yellowgreen?logo=creative-commons" alt="" /></p>
+<hr />
+<h2><a class="header" href="#the-gitflow-branching-model" id="the-gitflow-branching-model">The Gitflow branching model</a></h2>
+<p>Gitflow assumes that there is a single, central &quot;repository of truth&quot;.
+In our case, this is the main repository at <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</p>
+<h3><a class="header" href="#main-branches" id="main-branches">Main branches</a></h3>
+<p>In the repository, there are two <strong>main branches</strong> that <em>always</em> exist and have an <em>infinite lifetime</em>:</p>
+<ul>
+<li><strong><code>master</code></strong></li>
+<li><strong><code>develop</code></strong></li>
+</ul>
+<p>The <code>master</code> branch always reflects the <strong>production-ready</strong> state.
+In other words, <code>master</code> will always contain the <em>releases</em> of Hexatomic,
+and any changes that are merged into <code>master</code> are releases.</p>
+<p>The <code>develop</code> branch always contains the latest <strong>finished development changes</strong>.
+That means, whenever a feature is ready to be released, it is merged into <code>develop</code>
+to wait for the next release (which will then contain the new feature).</p>
+<h3><a class="header" href="#branches-you-do-your-work-in" id="branches-you-do-your-work-in">Branches you do your work in</a></h3>
+<p>In Gitflow, there are two types of branches where the actual work is happening:</p>
+<ul>
+<li><strong><code>feature</code> branches</strong> are used for developing new functionality.</li>
+<li><strong><code>hotfix</code> branches</strong> are used to fix bugs in releases, and to fix documentation and release engineering for releases without actually changing functionality.</li>
+</ul>
+<p><strong>This is an important distinction</strong>, because depending on what type of contribution you want to make, it means that you have to start your work by running different commands.</p>
+<h4><a class="header" href="#contribute-new-functionality-feature" id="contribute-new-functionality-feature">Contribute new functionality (<em>feature</em>)</a></h4>
+<p>To contribute new functionality to Hexatomic, create a feature branch which is based on the <code>develop</code> branch.</p>
+<ol>
+<li>Download the <code>develop</code> branch from your fork repository:</li>
+</ol>
+<pre><code class="language-bash"># Download the contents of the remote `develop` branch (and others) to your local repository
+git fetch
+# Switch to the local branch `develop`
+git checkout develop 
+</code></pre>
+<ol start="2">
+<li>Create the new feature branch:</li>
+</ol>
+<pre><code class="language-bash">mvn gitflow:feature-start
+</code></pre>
+<ol start="3">
+<li>Give the feature branch a name as prompted by the Maven Gitflow plugin.</li>
+<li><a href="#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>develop</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
+</ol>
+<h4><a class="header" href="#contribute-a-bug-documentation-or-release-engineering-fix-for-a-released-version-hotfix" id="contribute-a-bug-documentation-or-release-engineering-fix-for-a-released-version-hotfix">Contribute a bug, documentation, or release engineering fix for a released version (<em>hotfix</em>)</a></h4>
+<p>To contribute new a bug, documentation, or release engineering fix to Hexatomic, create a hotfix branch which is based on the <code>master</code> branch.</p>
+<ol>
+<li>Create the new feature branch:</li>
+</ol>
+<pre><code class="language-bash">mvn gitflow:hotfix-start
+</code></pre>
+<ol start="2">
+<li>Give the hotfix branch a name as prompted by the Maven Gitflow plugin.</li>
+<li><a href="#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>master</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
+</ol>
+<h2><a class="header" href="#create-a-pull-request-for-your-contribution-before-you-start-working" id="create-a-pull-request-for-your-contribution-before-you-start-working">Create a pull request for your contribution before you start working</a></h2>
+<p>Once you are ready to start working on your contribution, it's time to let the Hexatomic maintainer know about it, so that they can discuss the new changes and provide comments and support while you work.
+The way to do this is via a <a href="https://help.github.com/en/articles/about-pull-requests">pull request on GitHub</a>.
+Pull requests (<em>PR</em>s) aren't part of Git as such, but a feature of the GitHub platform.</p>
+<p>This is how you start a <a href="http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/">draft pull request</a>:</p>
+<ol>
+<li>Go to <a href="https://github.com">https://github.com</a> and log in.</li>
+<li>In your fork of the Hexatomic main repository (<code>github.com/&lt;your-user-name&gt;/hexatomic</code>), select the branch you have been working on via the <strong>Branches</strong> tab or the <strong>Branch</strong> dropdown menu.</li>
+<li>Click the button <strong>New pull request</strong>. It's next to the <em>Branch</em> dropdown menu.</li>
+<li><strong>Set the correct target of the pull request</strong>:
+<ul>
+<li>For <em>features</em>, the base repository is <code>hexatomic/hexatomic</code> and the <strong>base branch is <code>develop</code></strong>, the <em>compare</em> branch is your feature branch.</li>
+<li>For <em>hotfixes</em>, the base repository is <code>hexatomic/hexatomic</code> and the <strong>base branch is <code>master</code></strong>, the <em>compare</em> branch is your hotfix branch.</li>
+</ul>
+</li>
+<li>Click the <strong>Create pull request</strong> button.</li>
+<li>Give your pull request a <strong>meaningful title</strong> describing your changes.</li>
+<li><strong>Complete the pull request form</strong> in the editor window.</li>
+<li>From the green dropdown menu below the editor, select <strong>Draft pull request</strong>.</li>
+<li>Make sure that <strong>Allow edits from maintainers</strong> is activated.</li>
+<li>Click the <strong>Draft pull request</strong> button to create your pull request.</li>
+</ol>
+<p>Now, anytime you push a new commit to your feature branch, it will also show up in the pull request located in the Hexatomic main repository.
+This way, the Hexatomic maintainer can track progress, review changes as soon as they come in, and discuss changes with you.</p>
+<hr />
+<h2><a class="header" href="#naming-conventions" id="naming-conventions">Naming conventions</a></h2>
+<p><code>TODO FIXME BELOW</code></p>
+<ul>
+<li>Plugin projects are called <code>org.corpus_tools.hexatomic.&lt;plugin-name&gt;</code> and are stored in <code>/bundles/org.corpus_tools.hexatomic.&lt;plugin-name&gt;</code>.</li>
+<li>Feature projects are called <code>org.corpus_tools.hexatomic.&lt;feature-name&gt;.feature</code> with an identifier of <code>org.corpus_tools.hexatomic.&lt;feature-name&gt;</code>, and 
+are stored in <code>features/org.corpus_tools.hexatomic.&lt;feature-name&gt;</code>.</li>
+</ul>
+<h2><a class="header" href="#checklist-for-pull-requests" id="checklist-for-pull-requests">Checklist for pull requests</a></h2>
+<h2><a class="header" href="#when-to-release-a-hotfix-and-when-to-release-a-feature" id="when-to-release-a-hotfix-and-when-to-release-a-feature">When to release a hotfix, and when to release a feature</a></h2>
+<p><code>TODO FIXME BELOW</code></p>
+<ul>
+<li>All bug fixes <em>on a released version</em> are hotfixes, as the bugs appear in master</li>
+<li>develop is always right</li>
+<li>develop collects features</li>
+<li>JGitFlow: ALWAYS start hotfixes from <code>master</code>!!!</li>
+</ul>
+<p><code>TODO FIXME ABOVE</code></p>
+<p>Within the Hexatomic project, <em>hotfixes</em> are changes that are made to a deployed major or minor release. 
+These obviously include functional changes (i.e., bug fixes), but also non-functional changes to Hexatomic, such as updating the documentation to reflect the latest released version, updating the release workflow, etc.</p>
+<p><em>Features</em> are changes that introduce new functionality to the software, while the existing functionality keeps working.</p>
+<p>The following table gives some examples.</p>
+<table><thead><tr><th>Feature</th><th>Hotfix</th></tr></thead><tbody>
+<tr><td>Add a new editor</td><td>Fix a bug in an existing editor</td></tr>
+<tr><td>Add new functionality to an editor</td><td>Fix unwanted behaviour in the release workflow</td></tr>
+<tr><td>Add other functionality</td><td>Update the documentation to reflect the last release</td></tr>
+<tr><td></td><td>Update documentation to reflect changes in the development workflow</td></tr>
+</tbody></table>
+<p>It is important to note that <strong>all bug fixes that are made <em>on a released version</em> are hotfixes</strong>, 
+and that <strong>the <code>develop</code> branch always contains the truth</strong>, i.e., always holds the stage of development against which all features must be developed.
+Implementation of new functionality must <strong>always</strong> start with a branch from <code>develop</code> via <code>mvn gitflow:feature-start</code>!
+Do not base your work on any other <code>feature/...</code> or other branches.
+Finished features are collected in <code>develop</code> before release.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../development/running-debugging-with-eclipse.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../development/workflow/repositories.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../development/running-debugging-with-eclipse.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../development/workflow/repositories.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
