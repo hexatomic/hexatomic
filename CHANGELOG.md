@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Renaming documents and other items in the corpus structure editor did not work
+
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
