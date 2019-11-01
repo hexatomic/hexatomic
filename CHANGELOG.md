@@ -6,4 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This is the first public preview release of the Hexatomic developer platform.
+## [0.1.0] - 2019-11-01
+
+- This is the first public preview release of the Hexatomic developer platform.
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.1.0...HEAD
