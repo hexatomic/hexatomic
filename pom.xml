@@ -4,6 +4,10 @@
 	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<!-- SCM -->
+	<scm>
+		<connection>scm:git:https://github.com/hexatomic/hexatomic.git</connection>
+	</scm>
 	<!-- PROPERTIES -->
 	<properties>
 		<license-maven-plugin.version>2.0.0</license-maven-plugin.version>
