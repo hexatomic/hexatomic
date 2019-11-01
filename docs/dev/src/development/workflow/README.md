@@ -78,7 +78,7 @@ mvn gitflow:feature-start
 
 To contribute new a bug, documentation, or release engineering fix to Hexatomic, create a hotfix branch which is based on the `master` branch.
 
-1. Create the new feature branch:  
+1. Create the new hotfix branch:  
 ```bash
 mvn gitflow:hotfix-start
 ```
