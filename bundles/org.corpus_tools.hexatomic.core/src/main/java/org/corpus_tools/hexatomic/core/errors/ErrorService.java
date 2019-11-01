@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
  * log them in the log files and a special view.
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
 @Singleton

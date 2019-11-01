@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.URI;
  * Manages creating and opening Salt projects.
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
 @Creatable

@@ -18,6 +18,7 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
  * Handler to open a document with a specific editor.
  * 
  * @author Thomas Krause
+ * @author Stephan Druskat
  *
  */
 public class OpenSaltDocumentHandler {
