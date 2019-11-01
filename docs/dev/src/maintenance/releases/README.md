@@ -4,7 +4,7 @@ To release a new version of Hexatomic, run the following commands in the reposit
 
 1. `git checkout develop` - Checks out the *develop* branch.
 2. `git pull origin develop` - Updates the local *develop* branch.
-6. `mvn license:update-file-header` - Updates the file headers in Java files.
+6. `mvn process-sources` - Updates the file headers in Java files.
 6. `git add .` - Adds the updated files to the Git index.
 7. `git commit -m "Update file headers"` - Commits the updates to version control.
 8. `git push` - Updates the remote develop branch.
@@ -21,7 +21,7 @@ You can try to copy, paste and run the following snippet directly in your (Linux
 ```bash
 git checkout develop && \
 git pull origin develop && \
-mvn license:update-file-header && \
+mvn process-sources && \
 git add . && \
 git commit -m "Update file headers" && \
 git push && \
