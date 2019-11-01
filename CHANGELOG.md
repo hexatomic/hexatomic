@@ -6,4 +6,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-This is the first public preview release of the Hexatomic developer platform.
+- This is the first public preview release of the Hexatomic developer platform.
