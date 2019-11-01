@@ -71,7 +71,7 @@ mvn gitflow:feature-start
 5. Once you've finished your work, run `mvn clean verify` to make sure that the project builds correctly.
 6. If any files were changed during `mvn clean verify` - e.g., license headers have been added automatically - make sure to commit and push these changes.
 7. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your feature branch.
-8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer and clicking `Ready to review` in the pull request page on GitHub.
+8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
 
 
 #### Contribute a bug, documentation, or release engineering fix for a released version (*hotfix*)
@@ -87,7 +87,7 @@ mvn gitflow:hotfix-start
 5. Once you've finished your work, run `mvn clean verify` to make sure that the project builds correctly.
 6. If any files were changed during `mvn clean verify` - e.g., license headers have been added automatically - make sure to commit and push these changes.
 7. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your hotfix branch.
-8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer and clicking `Ready to review` in the pull request page on GitHub.
+8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
 
 ## Create a pull request for your contribution before you start working
 
