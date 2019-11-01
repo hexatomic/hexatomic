@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.2.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.2.1.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.2.1.1.</strong> Checklist</a></li></ol></li><li><a href="../../maintenance/releases/index.html" class="active"><strong aria-hidden="true">3.2.2.</strong> Releases</a></li><li><ol class="section"><li><a href="../../maintenance/releases/checklist.html"><strong aria-hidden="true">3.2.2.1.</strong> Checklist</a></li></ol></li></ol></li></ol></li><li><a href="../../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.2.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><a href="../../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.3.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.3.1.</strong> Checklist</a></li></ol></li><li><a href="../../maintenance/releases/index.html" class="active"><strong aria-hidden="true">3.4.</strong> Releases</a></li><li><ol class="section"><li><a href="../../maintenance/releases/checklist.html"><strong aria-hidden="true">3.4.1.</strong> Checklist</a></li></ol></li></ol></li><li><a href="../../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -146,43 +146,53 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#releases" id="releases">Releases</a></h1>
-<p>To release a new version of Hexatomic, run the following commands in the repository root directory.</p>
+<h2><a class="header" href="#feature-releases" id="feature-releases">Feature releases</a></h2>
+<p>To release a new <em>feature</em> (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.</p>
 <ol>
-<li><code>git checkout develop</code> - Checks out the <em>develop</em> branch.</li>
+<li><code>git checkout develop</code> - Checks out the <em>develop</em> branch (feature releases are always based on <code>develop</code>).</li>
 <li><code>git pull origin develop</code> - Updates the local <em>develop</em> branch.</li>
-<li><code>mvn process-sources</code> - Updates the file headers in Java files.</li>
-<li><code>git add .</code> - Adds the updated files to the Git index.</li>
+<li><code>mvn clean verify</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
+<li><code>git add .</code> - Adds the updated files - if any - to the Git index.</li>
 <li><code>git commit -m &quot;Update file headers&quot;</code> - Commits the updates to version control.</li>
-<li><code>git push</code> - Updates the remote develop branch.</li>
+<li><code>git push</code> - Updates the remote <em>develop</em> branch.</li>
 <li><code>mvn gitflow:release-start</code> - Starts the release process.</li>
 <li>The Maven GitFlow plugin will then prompt you to enter a version number for the release. Make sure you enter a version identifier according to semantic versioning, in the format <code>MAJOR.MINOR.PATCH</code>. Do <em>not</em> use a <code>-SNAPSHOT</code> suffix!</li>
+<li>Check if the <code>[Unreleased]</code> changelog section in <code>CHANGELOG.md</code> is complete and up-to-date. Make changes, commit and push if necessary.</li>
 <li><code>mvn keepachangelog:release -N</code> - Updates the changelog in the release branch.</li>
 <li><code>git add .</code> - Adds the updated changelog to the Git index.</li>
 <li><code>git commit -m &quot;Update changelog&quot;</code> - Commits the updated changelog to version control.</li>
 <li><code>git push</code> - Updates the remote release branch.</li>
 <li><code>mvn gitflow:release-finish</code> - Finalizes the release process.</li>
 </ol>
-<p>You can try to copy, paste and run the following snippet directly in your (Linux) terminal.</p>
-<pre><code class="language-bash">git checkout develop &amp;&amp; \
-git pull origin develop &amp;&amp; \
-mvn process-sources &amp;&amp; \
-git add . &amp;&amp; \
-git commit -m &quot;Update file headers&quot; &amp;&amp; \
-git push &amp;&amp; \
-mvn gitflow:release-start &amp;&amp; \
-mvn keepachangelog:release -N &amp;&amp; \
-git add . &amp;&amp; \
-git commit -m &quot;Update changelog&quot; &amp;&amp; \
-git push &amp;&amp; \
-mvn gitflow:release-finish
-</code></pre>
+<h2><a class="header" href="#hotfix-releases" id="hotfix-releases">Hotfix releases</a></h2>
+<p>Hotfixes come into the project via pull requests of a <em>hotfix branch</em> against <code>master</code>.
+<strong>Important</strong>: Do <strong>not</strong> merge pull requests from hotfix branches into master!</p>
+<p>Instead, checkout the hotfix branch locally, and start the merge and release process with the Maven GitFlow plugin:</p>
+<ol>
+<li><code>git checkout hotfix/{hotfix version}</code> - Checks out the respective hotfix branch.</li>
+<li><code>git pull origin hotfix/{hotfix version}</code> - Checks for any remote changes to the branch.</li>
+<li><code>mvn clean verify</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
+<li><code>git add .</code> - Adds the updated files - if any - to the Git index.</li>
+<li><code>git commit -m &quot;Update file headers&quot;</code> - Commits the updates to version control.</li>
+<li><code>git push</code> - Updates the remote <em>develop</em> branch.</li>
+<li>Check if the <code>[Unreleased]</code> changelog section in <code>CHANGELOG.md</code> is complete and up-to-date. Make changes, commit and push if necessary.</li>
+<li><code>mvn keepachangelog:release -N</code> - Updates the changelog in the release branch.</li>
+<li><code>git add .</code> - Adds the updated changelog to the Git index.</li>
+<li><code>git commit -m &quot;Update changelog&quot;</code> - Commits the updated changelog to version control.</li>
+<li><code>git push</code> - Updates the remote release branch.</li>
+<li><code>mvn gitflow:hotfix-finish</code> - Finalizes the hotfix and finishes the merge and release procedure.</li>
+</ol>
 <h2><a class="header" href="#what-to-do-when-releases-go-wrong" id="what-to-do-when-releases-go-wrong">What to do when releases go wrong?</a></h2>
-<p>When a release doesn't work as expected, simply</p>
+<p>When a feature release doesn't work as expected, simply</p>
 <ol>
 <li>Checkout the <code>develop</code> branch (<code>git checkout develop</code>).</li>
 <li>Delete the release branch for the version you wanted to release (<code>git branch -d release/{version}</code>).</li>
 <li>Delete the same branch on GitHub (via the web interface).</li>
 <li>Restart the release process from the top.</li>
+</ol>
+<p>When a hotfix release doesn't work as expected, simply</p>
+<ol>
+<li>Make the necessary changes in the hotfix branch, then continue with the merge and release process.</li>
 </ol>
 
                     </main>

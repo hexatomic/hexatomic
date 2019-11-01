@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.2.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html" class="active"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.2.1.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.2.1.1.</strong> Checklist</a></li></ol></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.2.2.</strong> Releases</a></li><li><ol class="section"><li><a href="../../maintenance/releases/checklist.html"><strong aria-hidden="true">3.2.2.1.</strong> Checklist</a></li></ol></li></ol></li></ol></li><li><a href="../../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.2.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html" class="active"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><a href="../../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.3.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.3.1.</strong> Checklist</a></li></ol></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.4.</strong> Releases</a></li><li><ol class="section"><li><a href="../../maintenance/releases/checklist.html"><strong aria-hidden="true">3.4.1.</strong> Checklist</a></li></ol></li></ol></li><li><a href="../../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -205,17 +205,25 @@ git checkout develop
 <ol start="3">
 <li>Give the feature branch a name as prompted by the Maven Gitflow plugin.</li>
 <li><a href="#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>develop</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
+<li>Once you've finished your work, run <code>mvn clean verify</code> to make sure that the project builds correctly.</li>
+<li>If any files were changed during <code>mvn clean verify</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
+<li>Make sure that you have documented your changes in the changelog (<code>CHANGELOG.md</code>) in the <code>[Unreleased]</code> section, and that the updated changelog is pushed to your feature branch.</li>
+<li>Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the <em>Reviewers</em> settings for the pull request) and clicking <code>Ready to review</code> in the pull request page on GitHub.</li>
 </ol>
 <h4><a class="header" href="#contribute-a-bug-documentation-or-release-engineering-fix-for-a-released-version-hotfix" id="contribute-a-bug-documentation-or-release-engineering-fix-for-a-released-version-hotfix">Contribute a bug, documentation, or release engineering fix for a released version (<em>hotfix</em>)</a></h4>
 <p>To contribute new a bug, documentation, or release engineering fix to Hexatomic, create a hotfix branch which is based on the <code>master</code> branch.</p>
 <ol>
-<li>Create the new feature branch:</li>
+<li>Create the new hotfix branch:</li>
 </ol>
 <pre><code class="language-bash">mvn gitflow:hotfix-start
 </code></pre>
 <ol start="2">
 <li>Give the hotfix branch a name as prompted by the Maven Gitflow plugin.</li>
 <li><a href="#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>master</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
+<li>Once you've finished your work, run <code>mvn clean verify</code> to make sure that the project builds correctly.</li>
+<li>If any files were changed during <code>mvn clean verify</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
+<li>Make sure that you have documented your changes in the changelog (<code>CHANGELOG.md</code>) in the <code>[Unreleased]</code> section, and that the updated changelog is pushed to your hotfix branch.</li>
+<li>Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the <em>Reviewers</em> settings for the pull request) and clicking <code>Ready to review</code> in the pull request page on GitHub.</li>
 </ol>
 <h2><a class="header" href="#create-a-pull-request-for-your-contribution-before-you-start-working" id="create-a-pull-request-for-your-contribution-before-you-start-working">Create a pull request for your contribution before you start working</a></h2>
 <p>Once you are ready to start working on your contribution, it's time to let the Hexatomic maintainer know about it, so that they can discuss the new changes and provide comments and support while you work.
@@ -250,15 +258,7 @@ This way, the Hexatomic maintainer can track progress, review changes as soon as
 are stored in <code>features/org.corpus_tools.hexatomic.&lt;feature-name&gt;</code>.</li>
 </ul>
 <h2><a class="header" href="#checklist-for-pull-requests" id="checklist-for-pull-requests">Checklist for pull requests</a></h2>
-<h2><a class="header" href="#when-to-release-a-hotfix-and-when-to-release-a-feature" id="when-to-release-a-hotfix-and-when-to-release-a-feature">When to release a hotfix, and when to release a feature</a></h2>
-<p><code>TODO FIXME BELOW</code></p>
-<ul>
-<li>All bug fixes <em>on a released version</em> are hotfixes, as the bugs appear in master</li>
-<li>develop is always right</li>
-<li>develop collects features</li>
-<li>JGitFlow: ALWAYS start hotfixes from <code>master</code>!!!</li>
-</ul>
-<p><code>TODO FIXME ABOVE</code></p>
+<h2><a class="header" href="#what-is-a-feature-contribution-what-is-a-hotfix" id="what-is-a-feature-contribution-what-is-a-hotfix">What is a feature contribution, what is a hotfix?</a></h2>
 <p>Within the Hexatomic project, <em>hotfixes</em> are changes that are made to a deployed major or minor release. 
 These obviously include functional changes (i.e., bug fixes), but also non-functional changes to Hexatomic, such as updating the documentation to reflect the latest released version, updating the release workflow, etc.</p>
 <p><em>Features</em> are changes that introduce new functionality to the software, while the existing functionality keeps working.</p>
