@@ -27,6 +27,8 @@ import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.Label;
+import org.corpus_tools.salt.graph.LabelableElement;
+import org.corpus_tools.salt.graph.Node;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
@@ -64,8 +66,13 @@ public class ProjectChangeListener implements Listener {
 			// get the object the label belongs to
 			modifiedObject = ((Label) container).getContainer();
 		}
-
-		if (modifiedObject instanceof SCorpusGraph || modifiedObject instanceof SCorpus
+		
+		if(modifiedObject instanceof Node) {
+		  Node n = (Node) modifiedObject;
+		  if(n.getGraph() instanceof SCorpusGraph) {
+		    events.send(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, null);
+		  }
+		} else if (modifiedObject instanceof SCorpusGraph || modifiedObject instanceof SCorpus
 				|| modifiedObject instanceof SDocument) {
 			events.send(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, null);
 		}
