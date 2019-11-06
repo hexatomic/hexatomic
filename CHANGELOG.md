@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix #75: Subdirectory compilation did not work unless the product has been installed once with `mvn install`
+
 ## [0.1.2] - 2019-11-06
 
 ### Fixed
