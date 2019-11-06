@@ -106,7 +106,7 @@ For development, we recommend that you use the tooling provided by the
 Go to the repository root on your computer, and run the following command to verify that the project builds.
 
 ```bash
-mvn clean verify
+mvn clean install
 ```
 
 
