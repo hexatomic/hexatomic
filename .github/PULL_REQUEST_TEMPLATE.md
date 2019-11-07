@@ -48,3 +48,12 @@ Issue Number: N/A
 ## Other information
 
 <!-- Any other information that is important to this PR such as screenshots of how the component looks before and after the change. -->
+
+---
+
+# Checklist for maintainers
+
+## Releases
+
+- [ ] Do **NOT** push the green merge button on GitHub.  
+Follow the latest version of the [developer/maintainer docs](https://hexatomic.github.io/hexatomic/dev/) for making releases.
