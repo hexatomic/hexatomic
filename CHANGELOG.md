@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2019-11-07
+
 ### Fixed
 
 - Fix #75: Subdirectory compilation did not work unless the product has been installed once with `mvn install`
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/hexatomic/hexatomic/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hexatomic/hexatomic/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hexatomic/hexatomic/compare/v0.1.0...v0.1.1
