@@ -151,7 +151,7 @@
 <ol>
 <li><code>git checkout develop</code> - Checks out the <em>develop</em> branch (feature releases are always based on <code>develop</code>).</li>
 <li><code>git pull origin develop</code> - Updates the local <em>develop</em> branch.</li>
-<li><code>mvn clean verify</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
+<li><code>mvn clean install</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
 <li><code>git add .</code> - Adds the updated files - if any - to the Git index.</li>
 <li><code>git commit -m &quot;Update file headers&quot;</code> - Commits the updates to version control.</li>
 <li><code>git push</code> - Updates the remote <em>develop</em> branch.</li>
@@ -171,7 +171,7 @@
 <ol>
 <li><code>git checkout hotfix/{hotfix version}</code> - Checks out the respective hotfix branch.</li>
 <li><code>git pull origin hotfix/{hotfix version}</code> - Checks for any remote changes to the branch.</li>
-<li><code>mvn clean verify</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
+<li><code>mvn clean install</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
 <li><code>git add .</code> - Adds the updated files - if any - to the Git index.</li>
 <li><code>git commit -m &quot;Update file headers&quot;</code> - Commits the updates to version control.</li>
 <li><code>git push</code> - Updates the remote <em>develop</em> branch.</li>

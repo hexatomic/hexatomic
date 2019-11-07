@@ -198,6 +198,11 @@ git fetch
 git checkout develop 
 </code></pre>
 <ol start="2">
+<li>Install the project as is to prepare your development work:</li>
+</ol>
+<pre><code class="language-bash">mvn clean install
+</code></pre>
+<ol start="2">
 <li>Create the new feature branch:</li>
 </ol>
 <pre><code class="language-bash">mvn gitflow:feature-start
@@ -205,8 +210,8 @@ git checkout develop
 <ol start="3">
 <li>Give the feature branch a name as prompted by the Maven Gitflow plugin.</li>
 <li><a href="#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>develop</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
-<li>Once you've finished your work, run <code>mvn clean verify</code> to make sure that the project builds correctly.</li>
-<li>If any files were changed during <code>mvn clean verify</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
+<li>Once you've finished your work, run <code>mvn clean install</code> to make sure that the project builds correctly.</li>
+<li>If any files were changed during <code>mvn clean install</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
 <li>Make sure that you have documented your changes in the changelog (<code>CHANGELOG.md</code>) in the <code>[Unreleased]</code> section, and that the updated changelog is pushed to your feature branch.</li>
 <li>Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the <em>Reviewers</em> settings for the pull request) and clicking <code>Ready to review</code> in the pull request page on GitHub.</li>
 </ol>
@@ -220,8 +225,8 @@ git checkout develop
 <ol start="2">
 <li>Give the hotfix branch a name as prompted by the Maven Gitflow plugin.</li>
 <li><a href="#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>master</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
-<li>Once you've finished your work, run <code>mvn clean verify</code> to make sure that the project builds correctly.</li>
-<li>If any files were changed during <code>mvn clean verify</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
+<li>Once you've finished your work, run <code>mvn clean install</code> to make sure that the project builds correctly.</li>
+<li>If any files were changed during <code>mvn clean install</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
 <li>Make sure that you have documented your changes in the changelog (<code>CHANGELOG.md</code>) in the <code>[Unreleased]</code> section, and that the updated changelog is pushed to your hotfix branch.</li>
 <li>Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the <em>Reviewers</em> settings for the pull request) and clicking <code>Ready to review</code> in the pull request page on GitHub.</li>
 </ol>
