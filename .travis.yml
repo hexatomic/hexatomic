@@ -5,6 +5,9 @@ jobs:
 
       jdk: openjdk8
       
+      script:
+        - mvn integration-test
+      
       before_deploy:
          - mvn clean verify
       
