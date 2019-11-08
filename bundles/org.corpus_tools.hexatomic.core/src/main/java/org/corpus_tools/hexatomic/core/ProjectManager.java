@@ -57,13 +57,13 @@ public class ProjectManager {
 	private SaltProject project;
 
 	@Inject
-	private IEventBroker events;
+	IEventBroker events;
 
 	@Inject
-	private ProjectChangeListener changeListener;
+	ProjectChangeListener changeListener;
 
 	@Inject
-	private ErrorService errorService;
+	ErrorService errorService;
 
 	private SaltNotificationFactory notificationFactory;
 
@@ -139,7 +139,9 @@ public class ProjectManager {
 		project = SaltFactory.createSaltProject();
 		try {
 			project.loadCorpusStructure(path);
-			events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
+			if(events != null) {
+				events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
+			}
 		} catch (SaltException ex) {
 			errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
 		}
