@@ -1,7 +1,5 @@
 package org.corpus_tools.hexatomic.core.tests;
 
-import static org.junit.Assert.*;
-
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,10 +18,5 @@ public class TestProjectManager {
 		projectManager.open(null);
 	}
 	
-	@Test
-	public void testOpen() {
-		projectManager.open(null);
-		assertNotEquals(projectManager.getProject(), null);
-	}
 
 }
