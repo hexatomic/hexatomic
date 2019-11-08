@@ -6,7 +6,7 @@ To release a new *feature* (i.e., minor) version of Hexatomic, run the following
 
 1. `git checkout develop` - Checks out the *develop* branch (feature releases are always based on `develop`).
 2. `git pull origin develop` - Updates the local *develop* branch.
-6. `mvn clean verify` - Builds the project, runs tests, and may update the file headers in Java files.
+6. `mvn clean install` - Builds the project, runs tests, and may update the file headers in Java files.
 6. `git add .` - Adds the updated files - if any - to the Git index.
 7. `git commit -m "Update file headers"` - Commits the updates to version control.
 8. `git push` - Updates the remote *develop* branch.
@@ -28,7 +28,7 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 
 1. `git checkout hotfix/{hotfix version}` - Checks out the respective hotfix branch.
 2. `git pull origin hotfix/{hotfix version}` - Checks for any remote changes to the branch.
-6. `mvn clean verify` - Builds the project, runs tests, and may update the file headers in Java files.
+6. `mvn clean install` - Builds the project, runs tests, and may update the file headers in Java files.
 6. `git add .` - Adds the updated files - if any - to the Git index.
 7. `git commit -m "Update file headers"` - Commits the updates to version control.
 8. `git push` - Updates the remote *develop* branch.

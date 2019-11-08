@@ -62,14 +62,18 @@ git fetch
 # Switch to the local branch `develop`
 git checkout develop 
 ```
+2. Install the project as is to prepare your development work:  
+```bash
+mvn clean install
+```
 2. Create the new feature branch:  
 ```bash
 mvn gitflow:feature-start
 ```
 3. Give the feature branch a name as prompted by the Maven Gitflow plugin.
 4. [Create a draft pull request](#create-a-pull-request-for-your-contribution-before-you-start-working) against the `develop` branch of <https://github.com/hexatomic/hexatomic> and start working.
-5. Once you've finished your work, run `mvn clean verify` to make sure that the project builds correctly.
-6. If any files were changed during `mvn clean verify` - e.g., license headers have been added automatically - make sure to commit and push these changes.
+5. Once you've finished your work, run `mvn clean install` to make sure that the project builds correctly.
+6. If any files were changed during `mvn clean install` - e.g., license headers have been added automatically - make sure to commit and push these changes.
 7. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your feature branch.
 8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
 
@@ -84,8 +88,8 @@ mvn gitflow:hotfix-start
 ```
 2. Give the hotfix branch a name as prompted by the Maven Gitflow plugin.
 3. [Create a draft pull request](#create-a-pull-request-for-your-contribution-before-you-start-working) against the `master` branch of <https://github.com/hexatomic/hexatomic> and start working.
-5. Once you've finished your work, run `mvn clean verify` to make sure that the project builds correctly.
-6. If any files were changed during `mvn clean verify` - e.g., license headers have been added automatically - make sure to commit and push these changes.
+5. Once you've finished your work, run `mvn clean install` to make sure that the project builds correctly.
+6. If any files were changed during `mvn clean install` - e.g., license headers have been added automatically - make sure to commit and push these changes.
 7. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your hotfix branch.
 8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer by requesting a review from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
 
