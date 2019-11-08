@@ -72,7 +72,7 @@ public class ProjectManager {
 	}
 
 	@PostConstruct
-	private void postConstruct() {
+	void postConstruct() {
 		log.debug("Starting Project Manager");
 
 		// Create an empty project
@@ -139,9 +139,7 @@ public class ProjectManager {
 		project = SaltFactory.createSaltProject();
 		try {
 			project.loadCorpusStructure(path);
-			if(events != null) {
-				events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
-			}
+			events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
 		} catch (SaltException ex) {
 			errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
 		}
