@@ -28,7 +28,7 @@ class TestProjectManager {
     exampleProjectURI = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
     events = mock(IEventBroker.class);
-    errorService = new ErrorService();
+    errorService = mock(ErrorService.class);
 
     projectManager = new ProjectManager();
     projectManager.events = events;
@@ -41,7 +41,8 @@ class TestProjectManager {
   @Test
   public void testOpenInvalid() {
 
-//    projectManager.open(URI.createFileURI("nonExistingPath"));
+    projectManager.open(URI.createFileURI("nonExistingPath"));
+    verify(errorService).handleException(any(), any(), any());
 
     assertThrows(NullPointerException.class, () -> projectManager.open(URI.createFileURI(null)));
 
@@ -66,10 +67,9 @@ class TestProjectManager {
 
   @Test
   public void testEventOnOpen() {
-    
+
     projectManager.open(exampleProjectURI);
-    // Verify that the message was send with the correct parameter
-    verify(events).send(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, exampleProjectURI.toFileString());
+    verify(events).send(eq(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED), anyString());
 
   }
 
