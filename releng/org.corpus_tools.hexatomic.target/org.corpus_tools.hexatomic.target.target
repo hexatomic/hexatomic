@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1573467268">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1573486135">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
@@ -13,6 +13,9 @@
       <unit id="org.junit.jupiter.engine" version="5.4.0.v20190212-2109"/>
       <unit id="org.junit.platform.engine" version="1.4.0.v20190212-2109"/>
       <unit id="org.junit.vintage.engine" version="5.4.0.v20190212-2109"/>
+      <unit id="org.eclipse.swtbot.e4.finder" version="2.8.0.201906121535"/>
+      <unit id="org.eclipse.swtbot.generator" version="2.8.0.201906121535"/>
+      <unit id="org.eclipse.swtbot.go" version="2.8.0.201906121535"/>
       <repository location="http://download.eclipse.org/releases/2019-06/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">

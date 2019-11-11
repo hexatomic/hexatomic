@@ -12,6 +12,9 @@ location 'http://download.eclipse.org/releases/2019-06/' {
 	org.junit.jupiter.engine
     org.junit.platform.engine
 	org.junit.vintage.engine
+	org.eclipse.swtbot.e4.finder
+	org.eclipse.swtbot.generator
+	org.eclipse.swtbot.go
 }
 
 location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
