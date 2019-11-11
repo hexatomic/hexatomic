@@ -1,8 +1,10 @@
 package org.corpus_tools.hexatomic.core;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import java.io.File;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +15,7 @@ class TestProjectManager {
 
   private URI exampleProjectURI;
 
-  private MockEventBroker events;
+  private IEventBroker events;
 
   private ErrorService errorService;
 
@@ -25,7 +27,7 @@ class TestProjectManager {
 
     exampleProjectURI = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
-    events = new MockEventBroker();
+    events = mock(IEventBroker.class);
     errorService = new ErrorService();
 
     projectManager = new ProjectManager();
@@ -64,10 +66,10 @@ class TestProjectManager {
 
   @Test
   public void testEventOnOpen() {
-
-    assertNull(events.lastTopic);
+    
     projectManager.open(exampleProjectURI);
-    assertEquals(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, events.lastTopic);
+    // Verify that the message was send with the correct parameter
+    verify(events).send(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, exampleProjectURI.toFileString());
 
   }
 

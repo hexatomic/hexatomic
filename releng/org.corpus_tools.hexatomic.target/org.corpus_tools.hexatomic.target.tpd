@@ -19,6 +19,8 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R201906022121
 	org.slf4j.api [1.7.10,2.0.0)
 	ch.qos.logback.slf4j [1.1.2,2.0.0)
 	ch.qos.logback.classic [1.1.2,2.0.0)
+	org.mockito
+	org.hamcrest
 	
 }
 
