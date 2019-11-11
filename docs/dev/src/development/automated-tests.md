@@ -13,7 +13,7 @@ E.g. tests for classes of the `org.corpus_tools.hexatomic.core` bundle should be
 `org.corpus_tools.hexatomic.core.tests` bundle.
 If add a new bundle, always also create a corresponding test bundle.
 
-### Adding a test bundle
+### Adding a test bundle project
 
 To create a new test bundle, select `File -> New -> Other` in the Eclipse menu.
 In the list of wizard, select `Plug-in Development -> Fragment Project` and click "Next".
@@ -37,4 +37,17 @@ Click in "Finish" to create the new project.
 
 ![Basic fragment project properties](new-fragment-project-host.png)
 
+###  Adding a test case class
+
+If you have an existing test bundle project, you can add a new JUnit Test Case by clicking right on the `src/test/java` folder
+in the project explorer and selecting `New -> Other` in the context menu.
+In the wizard, select `Java -> JUnit -> JUnit Test Case` and click on "Next".
+
+![New Wizard for creating a new JUnit Test Case](new-junit-testcase-wizard.png)
+
+In the properties of the test case, make sure to seelct "New JUNIT Jupiter test" to create a JUnit5 test.
+Also, select the class you want to test in the `Class under test` field.
+Click "Finish" to create the empty class or "Next" if you want to add tests for specific functions of the tested class.
+
+![New JUnit Test Case properties](new-junit-testcase-properties.png)
 
