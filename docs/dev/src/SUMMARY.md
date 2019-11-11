@@ -15,6 +15,7 @@
 	   - [Adding a test bundle](./development/automated-tests/adding-test-bundle.md)
 	   - [Adding a test case](./development/automated-tests/adding-test-case.md)
 	   - [Mocking injected dependencies](./development/automated-tests/mocking-injected-dependencies.md)
+	   - [UI integration tests](./development/automated-tests/ui-integration-tests.md)
 - [Maintenance](./maintenance/README.md)
   - [Versioning](./maintenance/versioning/README.md)
   - [Licensing](./maintenance/licensing/README.md)

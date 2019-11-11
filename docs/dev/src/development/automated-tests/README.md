@@ -11,6 +11,9 @@ E.g. tests for classes of the `org.corpus_tools.hexatomic.core` bundle should be
 `org.corpus_tools.hexatomic.core.tests` bundle.
 If add a new bundle, always also create a corresponding test bundle.
 
+The special bundle `org.corpus_tools.hexatomic.it.tests` is used for integration tests on the whole application.
+
+
 ## Execute tests with Maven
 
 We are using the [Tycho Surefire Plugin](https://www.eclipse.org/tycho/sitedocs/tycho-surefire/tycho-surefire-plugin/) 
@@ -30,5 +33,12 @@ This will open a new panel with the results of the tests once finished.
 You can select to re-execute a single test by clicking on it and choosing "Run" or "Debug".
 
 ![Eclipse JUnit test results](junit-eclipse-dialog.png)
+
+To run the user interface integration test in the `org.corpus_tools.hexatomic.it.tests` bundle, select the project and
+choose `Run -> Run Configurations...` in the main menu.
+An "UI Integration Test" configuration should be available under the category "JUnit Plug-in Test".
+Click on "Run" to execute the user interface integration tests.
+
+![Run UI tests configuration](launch-ui-tests.png)
 
 
