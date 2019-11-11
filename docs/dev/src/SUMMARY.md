@@ -11,6 +11,7 @@
     - [Data model](./development/data-model/README.md)
 	- [Logging and error handling](./development/logging-error-handling.md)   
 	- [Adding a new editor](./development/add-new-editor.md)
+	- [Automated tests](./development/automated-tests.md)
 - [Maintenance](./maintenance/README.md)
   - [Versioning](./maintenance/versioning/README.md)
   - [Licensing](./maintenance/licensing/README.md)
