@@ -4,6 +4,8 @@ jobs:
     - language: java
 
       jdk: openjdk8
+
+      env: DISPLAY=:99.0
       
       addons:
         apt:
