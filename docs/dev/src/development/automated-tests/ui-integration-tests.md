@@ -8,7 +8,7 @@ SWTBot needs an instance of the class `org.eclipse.swtbot.e4.finder.widgets.SWTW
 automatically from the test case.
 Make sure you use the version from the `org.eclipse.swtbot.e4.finder.widgets` package, which is the only one working
 with Eclipse RCP 4.
-Creating an instance of a `SWTWorkbenchBot` needs an Eclipse context, which can be accuired with the helper class 
+Creating an instance of a `SWTWorkbenchBot` needs an Eclipse context, which can be acquired with the helper class 
 `org.corpus_tools.hexatomic.it.tests.ContextHelper`.
 
 ```java
@@ -53,8 +53,8 @@ class TestCorpusStructure {
 }
 
 ```
-In order to test whether a an action was successul, you can't access the internal data model of the application.
-Thus, you have to check the effects on the user interface (like the result of a renaming is a new tree item with the 
+To test whether an action was successful, you can't access the internal data model of the application.
+Thus, you have to check the effects on the user interface (like the result of renaming is a new tree item with the 
 new name).
 To test internal states, use unit tests for the controllers of the bundle instead.
 
