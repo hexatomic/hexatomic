@@ -58,6 +58,10 @@ Thus, you have to check the effects on the user interface (like the result of re
 new name).
 To test internal states, use unit tests for the controllers of the bundle instead.
 
+When your test case has more than one test, all tests are executed in the same environment.
+Thus, previous executed tests will influence the next ones.
+You can set the execution order a test explicitly: <https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order>.
+
 If you add an integration to a new bundle, that was not tested before, you have to add the bundle manually to the 
 dependencies of `org.corpus_tools.hexatomic.it.tests`.
 Adding it to the feature or product is not enough.
