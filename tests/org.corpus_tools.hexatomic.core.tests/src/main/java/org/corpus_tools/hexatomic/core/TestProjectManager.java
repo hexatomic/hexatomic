@@ -22,7 +22,7 @@ class TestProjectManager {
   @BeforeEach
   public void setUp() throws Exception {
     File exampleProjectDirectory =
-        new File("src/test/resources/org/corpus_tools/hexatomic/core/example-corpus/");
+        new File("src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
 
     exampleProjectURI = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
