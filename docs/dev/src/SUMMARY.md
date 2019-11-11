@@ -14,6 +14,7 @@
 	- [Automated tests](./development/automated-tests/README.md)
 	   - [Adding a test bundle](./development/automated-tests/adding-test-bundle.md)
 	   - [Adding a test case](./development/automated-tests/adding-test-case.md)
+	   - [Mocking injected dependencies](./development/automated-tests/mocking-injected-dependencies.md)
 - [Maintenance](./maintenance/README.md)
   - [Versioning](./maintenance/versioning/README.md)
   - [Licensing](./maintenance/licensing/README.md)
