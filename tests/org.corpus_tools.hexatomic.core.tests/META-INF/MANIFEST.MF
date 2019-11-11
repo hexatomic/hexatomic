@@ -7,4 +7,6 @@ Fragment-Host: org.corpus_tools.hexatomic.core;bundle-version="0.2.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.core.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit,
- org.eclipse.osgi.services
+ org.eclipse.osgi.services,
+ org.junit,
+ org.junit.jupiter.api
