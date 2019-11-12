@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_q_wZUAVmEeq-VbIAME6r6w">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rwtVIAVmEeq-VbIAME6r6w" featurename="descriptors" parentElementId="xpath:/">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_t8GOoAVmEeq-VbIAME6r6w" elementId="org.corpus_tools.hexatomic.graph.partdescriptor.0" label="Graph Editor" iconURI="" allowMultiple="true" category="org.corpus_tools.hexatomic.tag.editor" closeable="true" contributionURI="bundleclass://org.corpus_tools.hexatomic.graph/org.corpus_tools.hexatomic.graph.SaltGraphViewer"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_I2dmgAVrEeqTCY6RgGdhtg" featurename="menuContributions" parentElementId="xpath:/">
+    <elements xsi:type="menu:MenuContribution" xmi:id="_VowNQAVrEeqTCY6RgGdhtg" elementId="org.corpus_tools.hexatomic.graph.menucontribution.0">
+      <children xsi:type="menu:Menu" xmi:id="_WdgrAAVrEeqTCY6RgGdhtg" elementId="org.corpus_tools.hexatomic.graph.menu.test" label="Test">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_aRqSEAVrEeqTCY6RgGdhtg" elementId="org.corpus_tools.hexatomic.graph.handledmenuitem.abc" label="ABC"/>
+      </children>
+    </elements>
+  </fragments>
+</fragment:ModelFragments>
