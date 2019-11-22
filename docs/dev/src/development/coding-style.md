@@ -15,7 +15,7 @@ Validation of the coding style is also performed whenever you build the project 
 You can configure Eclipse to format your source code according to the Hexatomic Java style.
 
 1. Choose `Window -> Preferences` from the main Eclipse menu.
-2. Open the settings page `Java -> Code Style -> Formatting`
+2. Open the settings page `Java -> Code Style -> Formatter`
 3. Select "Import..." and choose the file `releng/ide/eclipse-java-hexatomic-style.xml` in the Hexatomic repository
 4. Switch to "Hexatomic Style" as the active profile.
 ![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png) 
