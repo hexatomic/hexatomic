@@ -6,7 +6,7 @@ In addition to the original style guide, the following rules apply:
 - An HTML rendered JavaDoc API page must include all the context necessary to understand all the contents of the page.
 - Some Eclipse RCP-specific knowledge should be assumed, e.g., what the `@PreConstruct`/`@PostConstruct` annotations mean.
 
-Some aspects of the coding style will be automatically enforced and checked by the continuous integration using the
+Some aspects of the coding style will be automatically enforced and checked during continuous integration using the
 [Maven Checkstyle plugin](https://maven.apache.org/plugins/maven-checkstyle-plugin/).
 Validation of the coding style is also performed whenever you build the project using Maven (e.g. `mvn install`).
 
