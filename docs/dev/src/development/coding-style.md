@@ -14,12 +14,12 @@ Validation of the coding style is also performed whenever you build the project 
 
 You can configure Eclipse to format your source code according to the Hexatomic Java style.
 
-1. Choose `Window -> Preferences` from the main Eclipse menu.
-2. Open the settings page `Java -> Code Style -> Formatter`
+1. Choose **Window** > **Preferences** from the main Eclipse menu.
+2. Open the settings page **Java** > **Code Style** > **Formatter**
 3. Select "Import..." and choose the file `releng/ide/eclipse-java-hexatomic-style.xml` in the Hexatomic repository
 4. Switch to "Hexatomic Style" as the active profile.
 ![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png) 
-5. Open the settings page `Java -> Code Style -> Organize Imports`
+5. Open the settings page **Java** > **Code Style** > **Organize Imports**
 6. Select all packages in the list and remove them. 
 This configures Eclipse to order all imported packages in alphabetical order.
 ![Configure the package import order](./configure-import-order.png)
@@ -31,6 +31,6 @@ You can use the keyboard shortcut <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>F</k
 
 ## Checking for issues in Eclipse
 
-To check for issues with the coding style in Eclipse, select the source code package in the Project Explorer, click right with the mouse and select `Checkstyle -> Check Code with Checkstyle`. 
+To check for issues with the coding style in Eclipse, select the source code package in the Project Explorer, click right with the mouse and select **Checkstyle** > **Check Code with Checkstyle**. 
 This will add warnings to the `Problems` view of Eclipse and add yellow annotations to the source code files.
-To remove these annotations again, select the source code package, click right with the mouse and select `Checkstyle -> Clear Checkstyle violations`.
+To remove these annotations again, select the source code package, click right with the mouse and select **Checkstyle** > **Clear Checkstyle violations**.
