@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Add target platform section to developer/maintainer documentation
 - Improve formatting of developer/maintainer documentation
 
 ## [0.1.3] - 2019-11-07
