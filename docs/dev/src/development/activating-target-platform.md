@@ -32,4 +32,4 @@ Wait until this has finished, then click the **Set as Active Target Platform** l
 
 Any errors related to unresolvable imports should now be gone after Eclipse has automatically built the projects in the workspace.
 
-
+To learn more about target platforms in Eclipse, read the [Eclipse Target Platform Tutorial](http://web.archive.org/web/20191128121621/https://www.vogella.com/tutorials/EclipseTargetPlatform/article.html) by Lars Vogel.
