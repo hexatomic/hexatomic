@@ -8,7 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add maintainer section to pull request template outlining release procedure to follow.
+- Add maintainer section to pull request template outlining release procedure to follow
+
+### Changed
+
+- Improve formatting of developer/maintainer documentation
 
 ## [0.1.3] - 2019-11-07
 
