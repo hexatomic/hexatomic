@@ -1,8 +1,8 @@
 # Use interface integration tests
 
 To add user interface integration tests add new test cases to the special bundle `org.corpus_tools.hexatomic.it.tests`.
-The tests will be executed with SWTBot, for which you can find a general tutorial 
-[here](https://www.vogella.com/tutorials/SWTBot/article.html).
+The tests are executed with SWTBot, a testing tool for user interfaces.
+To learn how to use SWTBot, you can read the documentation on the [SWTBot homepage](http://web.archive.org/web/20191129101118/https://www.eclipse.org/swtbot/), or Lars Vogel's [SWTBot tutorial](http://web.archive.org/web/20191129101301/https://www.vogella.com/tutorials/SWTBot/article.html).
 
 SWTBot needs an instance of the class `org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot` to execute user interactions
 automatically from the test case.
@@ -16,7 +16,7 @@ SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 ```
 
 Otherwise, these tests are normal JUnit5 test cases and have the same annotations and structure.
-E.g. a complete example, that tests if renaming a document in the corpus structure editor works, would look like this:
+Below is a complete example, which tests if renaming a document in the corpus structure editor works.
 
 ```java
 package org.corpus_tools.hexatomic.it.tests;
