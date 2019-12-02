@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core.errors;
 
 import java.util.ArrayList;
@@ -36,8 +37,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Hexatomic error handling service.
  * 
+ * <p>
  * This service allows you to display errors (e.g. exceptions) to the users and log them in the log
  * files and a special view.
+ * </p>
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
@@ -70,11 +73,10 @@ public class ErrorService {
   }
 
   /**
-   * Show an error message to the user
+   * Show an error message to the user.
    * 
    * @param title The title, can be null to show a default title
    * @param message The error message to show.
-   * @param reason An additional reason for the error.
    * @param context The class in which the error occurred. This is used to get the correct logger
    *        when logging the error to the console/log-file.
    */

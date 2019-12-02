@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -36,7 +37,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Class that hooks into the application lifecycle and configures logging.
  * 
+ * <p>
  * Also see https://wiki.eclipse.org/Eclipse4/RCP/Lifecycle
+ * </p>
  * 
  * @author Thomas Krause
  *

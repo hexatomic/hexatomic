@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core;
 
 import javax.inject.Inject;
@@ -54,7 +55,8 @@ public class ProjectChangeListener implements Listener {
       Object newValue, Object container) {
 
     log.trace(
-        "Project update: type={} attribute={} oldValue={} newValue={} container={} containerType={}",
+        "Project update: type={} attribute={} oldValue={} newValue={} container={} "
+        + "containerType={}",
         type, attribute, oldValue, newValue, container,
         container == null ? "null" : container.getClass().getSimpleName());
 

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core.handlers;
 
 import javax.inject.Inject;
@@ -33,6 +34,10 @@ public class OpenSaltProjectHandler {
 
   private String lastPath;
 
+  /**
+   * Show a file choose to open Salt project.
+   * @param shell The user interface shell
+   */
   @Execute
   public void execute(Shell shell) {
     DirectoryDialog dialog = new DirectoryDialog(shell);

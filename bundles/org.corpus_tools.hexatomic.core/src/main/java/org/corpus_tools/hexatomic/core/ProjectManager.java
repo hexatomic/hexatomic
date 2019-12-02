@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core;
 
 import java.util.Optional;
@@ -87,7 +88,7 @@ public class ProjectManager {
   /**
    * Adds a Salt notification listener for all updates on the Salt project.
    * 
-   * @param listener
+   * @param listener The listener to add
    */
   public void addListener(Listener listener) {
     notificationFactory.addListener(listener);
@@ -96,7 +97,7 @@ public class ProjectManager {
   /**
    * Removes a Salt notification listener.
    * 
-   * @param listener
+   * @param listener The listener to remove
    */
   public void removeListener(Listener listener) {
     notificationFactory.removeListener(listener);
@@ -105,9 +106,11 @@ public class ProjectManager {
   /**
    * Retrieves the current single instance of a {@link SaltProject}.
    * 
+   * <p>
    * Note that it is only guaranteed that the corpus graph is loaded. The single
    * {@link SDocumentGraph} objects connected to the {@link SDocument} objects of the graph might
    * need to be loaded manually.
+   * </p>
    * 
    * @return The current Salt project instance.
    */
@@ -129,9 +132,11 @@ public class ProjectManager {
   /**
    * Opens a salt projects from a given location on disk.
    * 
+   * <p>
    * Only the corpus graph is loaded to avoid over-using the main memory.
+   * </p>
    * 
-   * @param path
+   * @param path The path top open
    */
   public void open(URI path) {
 

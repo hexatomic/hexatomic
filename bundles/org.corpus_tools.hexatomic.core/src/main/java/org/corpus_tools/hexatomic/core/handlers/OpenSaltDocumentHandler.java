@@ -27,7 +27,6 @@ import org.corpus_tools.salt.exceptions.SaltResourceException;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -54,16 +53,15 @@ public class OpenSaltDocumentHandler {
   /**
    * Opens the currently selected document with the given editor.
    * 
-   * @param projectManager
-   * @param modelService
-   * @param partService
-   * @param selectionService
+   * @param projectManager An instance of the project manager that holds the document
+   * @param partService An instance of the part service which is used to create a new editor
+   * @param selectionService An instance of the selection service used to get the currently selected
+   *        document
    * @param editorID The model ID of the editor PartDescription to use a template
    */
   @Execute
-  public static void execute(ProjectManager projectManager, EModelService modelService,
-      EPartService partService, ESelectionService selectionService,
-      @Named(COMMAND_PARAM_EDITOR_ID) String editorID) {
+  public static void execute(ProjectManager projectManager, EPartService partService,
+      ESelectionService selectionService, @Named(COMMAND_PARAM_EDITOR_ID) String editorID) {
 
     // get currently selected document
     Object selection = selectionService.getSelection();
@@ -105,7 +103,7 @@ public class OpenSaltDocumentHandler {
   /**
    * Checks whether the currently selected object is a document.
    * 
-   * @param selectionService
+   * @param selectionService An instance of the selection service
    * @return
    */
   @CanExecute
