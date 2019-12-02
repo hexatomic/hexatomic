@@ -25,7 +25,7 @@ due to how Tycho Surefire is configured).
 ## Execute tests in Eclipse
 
 Open the corresponding test bundle project for the bundle you want to test.
-Select the project in the "Project Explorer", right-click on it and choose `Run As -> JUnit  Plug-in Test".
+Select the project in the "Project Explorer", right-click on it and choose **Run As** > **JUnit  Plug-in Test**.
 
 ![Run JUnit test in Eclipse](run-test-eclipse.png)
 
