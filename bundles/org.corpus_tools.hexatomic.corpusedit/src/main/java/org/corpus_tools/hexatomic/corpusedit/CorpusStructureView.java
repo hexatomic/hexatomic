@@ -1,6 +1,5 @@
 /*-
  * #%L
-
  * org.corpus_tools.hexatomic.corpusstructureeditor
  * %%
  * Copyright (C) 2018 - 2019 Stephan Druskat, Thomas Krause
@@ -18,7 +17,6 @@
  * limitations under the License.
  * #L%
  */
-
 package org.corpus_tools.hexatomic.corpusedit;
 
 import java.util.Arrays;
@@ -28,8 +26,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -100,6 +100,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
+
+  private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
   private static final String OPEN_WITH_PREFIX = "Open with ";
 
@@ -179,7 +181,7 @@ public class CorpusStructureView {
   TreeViewer treeViewer;
 
   @PostConstruct
-  private void createPartControl(Composite parent, EMenuService menuService,
+  public void createPartControl(Composite parent, EMenuService menuService,
       ESelectionService selectionService, EModelService modelService, MApplication application,
       MPart thisPart) {
     parent.setLayout(new GridLayout(1, false));
@@ -192,6 +194,8 @@ public class CorpusStructureView {
     lblNewLabel.setText("Filter:");
 
     txtFilter = new Text(compositeFilter, SWT.BORDER);
+    // Assign an ID to the text field
+    txtFilter.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, "filter");
     txtFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     txtFilter.setToolTipText("Type to filter for corpus/document name");
 
@@ -205,19 +209,18 @@ public class CorpusStructureView {
     });
 
     Composite composite = new Composite(parent, SWT.NONE);
-    GridData gridDataComposite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-    gridDataComposite.minimumWidth = 300;
-    gridDataComposite.minimumHeight = 200;
-    composite.setLayoutData(gridDataComposite);
+    GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+    gd_composite.minimumWidth = 300;
+    gd_composite.minimumHeight = 200;
+    composite.setLayoutData(gd_composite);
     composite.setLayout(new TreeColumnLayout());
 
+    CorpusLabelProvider labelProvider = new CorpusLabelProvider();
 
     treeViewer = new TreeViewer(composite, SWT.BORDER);
     Tree tree = treeViewer.getTree();
     treeViewer.setColumnProperties(new String[] {"name"});
     treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree)});
-
-    CorpusLabelProvider labelProvider = new CorpusLabelProvider();
     treeViewer.setCellModifier(new ICellModifier() {
 
       @Override
@@ -259,11 +262,11 @@ public class CorpusStructureView {
       }
     }, ColumnViewerEditor.DEFAULT);
 
-    Composite compositeTools = new Composite(parent, SWT.NONE);
-    compositeTools.setLayout(new RowLayout(SWT.HORIZONTAL));
-    compositeTools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+    Composite composite_tools = new Composite(parent, SWT.NONE);
+    composite_tools.setLayout(new RowLayout(SWT.HORIZONTAL));
+    composite_tools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 
-    ToolBar toolBar = new ToolBar(compositeTools, SWT.FLAT | SWT.RIGHT);
+    ToolBar toolBar = new ToolBar(composite_tools, SWT.FLAT | SWT.RIGHT);
 
     createAddMenu(toolBar);
     createDeleteMenu(toolBar);
@@ -488,11 +491,6 @@ public class CorpusStructureView {
     deleteToolItem.setText("Delete");
   }
 
-  /**
-   * Selects a Salt object (like document, sub-corpus, etc.) in the overview.
-   * @param object The object to select
-   * @param reveal If true, make sure the object is visible by revealing it
-   */
   public void selectSaltObject(SNamedElement object, boolean reveal) {
     if (object instanceof SGraph) {
       // graphs are top-level, just select the matching root element

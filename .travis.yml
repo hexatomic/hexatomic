@@ -4,6 +4,18 @@ jobs:
     - language: java
 
       jdk: openjdk8
+
+      # enable a window manager to execute UI integration tests
+      addons:
+        apt:
+          packages:
+          - metacity
+      services:
+        - xvfb
+        - metacity
+      
+      script:
+        - mvn integration-test
       
       script: mvn verify -B
       

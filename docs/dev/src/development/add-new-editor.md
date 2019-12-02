@@ -35,7 +35,7 @@ Note that you can directly add the SWT instructions to define your user interfac
 
 ## Adding a part to the application model
 
-To add the newly created class to the Eclipse RCP 4 application model, open the `fragment.e4xmi` file of the existing bundle, or create a new one via the `File -> New -> Other` menu and choose "New Model Fragment".
+To add the newly created class to the Eclipse RCP 4 application model, open the `fragment.e4xmi` file of the existing bundle, or create a new one via the **File** > **New** > **Other** menu and choose **New Model Fragment**.
 
 ![Adding a new fragment model file](./new-model-fragment-file.png)
 
@@ -46,14 +46,14 @@ In the fragment editor, add a new model fragment by selecting "Model fragments" 
 Edit the model fragment properties by selecting the newly created entry.
 Make sure to set the extended element ID to `xpath:/`and the feature name to `descriptors` (1).
 This means that the model fragment extends the part descriptors of the application.
-Then, add a new part descriptor with the `Add` button (2). 
+Then, add a new part descriptor with the **Add** button (2). 
 
 ![Edit model fragment properties](./add-model-fragment-descriptor.png)
 
 Select the new part descriptor in the model fragment editor and you can edit several properties, such as the caption of the part, or an icon.
-Make sure to set the "Class URI" field to the newly created editor class.
-You can use the "Find" button to navigate the workspace and insert the proper value.
-Also, the "Category" must be set to `org.corpus_tools.hexatomic.tag.editor` to mark that this part is an Hexatomic editor. 
+Make sure to set the `Class URI` field to the newly created editor class.
+You can use the **Find** button to navigate the workspace and insert the proper value.
+Also, the `Category` must be set to `org.corpus_tools.hexatomic.tag.editor` to mark that this part is an Hexatomic editor. 
 The `Label` field will be used as a name for the editor, for example in a menu from which the user will choose one of the editors available to open a document with.
 
 ![Part descriptor general properties](./part-descriptor-class.png)

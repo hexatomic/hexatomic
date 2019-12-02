@@ -17,13 +17,14 @@
  * limitations under the License.
  * #L%
  */
-
 package org.corpus_tools.hexatomic.core;
 
 import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
@@ -47,106 +48,101 @@ import org.eclipse.emf.common.util.URI;
 @Singleton
 public class ProjectManager {
 
-  private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
+	private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
 
-  public static final String TOPIC_CORPUS_STRUCTURE_CHANGED = "TOPIC_CORPUS_STRUCTURE_CHANGED";
+	public static final String TOPIC_CORPUS_STRUCTURE_CHANGED = "TOPIC_CORPUS_STRUCTURE_CHANGED";
 
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
 
-  private SaltProject project;
+	private SaltProject project;
 
-  @Inject
-  private IEventBroker events;
+	@Inject
+	IEventBroker events;
 
-  @Inject
-  private ProjectChangeListener changeListener;
+	@Inject
+	ProjectChangeListener changeListener;
 
-  @Inject
-  private ErrorService errorService;
+	@Inject
+	ErrorService errorService;
 
-  private SaltNotificationFactory notificationFactory;
+	private SaltNotificationFactory notificationFactory;
 
-  public ProjectManager() {
+	public ProjectManager() {
 
-  }
+	}
 
-  @PostConstruct
-  private void postConstruct() {
-    log.debug("Starting Project Manager");
+	@PostConstruct
+	void postConstruct() {
+		log.debug("Starting Project Manager");
 
-    // Create an empty project
-    this.project = SaltFactory.createSaltProject();
+		// Create an empty project
+		this.project = SaltFactory.createSaltProject();
 
-    // Allow to register a change listener with Salt
-    notificationFactory = new SaltNotificationFactory();
-    SaltFactory.setFactory(notificationFactory);
-    notificationFactory.addListener(changeListener);
+		// Allow to register a change listener with Salt
+		notificationFactory = new SaltNotificationFactory();
+		SaltFactory.setFactory(notificationFactory);
+		notificationFactory.addListener(changeListener);
 
-  }
+	}
 
-  /**
-   * Adds a Salt notification listener for all updates on the Salt project.
-   * 
-   * @param listener The listener to add
-   */
-  public void addListener(Listener listener) {
-    notificationFactory.addListener(listener);
-  }
+	/**
+	 * Adds a Salt notification listener for all updates on the Salt project.
+	 * 
+	 * @param listener
+	 */
+	public void addListener(Listener listener) {
+		notificationFactory.addListener(listener);
+	}
 
-  /**
-   * Removes a Salt notification listener.
-   * 
-   * @param listener The listener to remove
-   */
-  public void removeListener(Listener listener) {
-    notificationFactory.removeListener(listener);
-  }
+	/**
+	 * Removes a Salt notification listener.
+	 * 
+	 * @param listener
+	 */
+	public void removeListener(Listener listener) {
+		notificationFactory.removeListener(listener);
+	}
 
-  /**
-   * Retrieves the current single instance of a {@link SaltProject}.
-   * 
-   * <p>
-   * Note that it is only guaranteed that the corpus graph is loaded. The single
-   * {@link SDocumentGraph} objects connected to the {@link SDocument} objects of the graph might
-   * need to be loaded manually.
-   * </p>
-   * 
-   * @return The current Salt project instance.
-   */
-  public SaltProject getProject() {
-    return project;
-  }
+	/**
+	 * Retrieves the current single instance of a {@link SaltProject}.
+	 * 
+	 * Note that it is only guaranteed that the corpus graph is loaded. The single
+	 * {@link SDocumentGraph} objects connected to the {@link SDocument} objects of
+	 * the graph might need to be loaded manually.
+	 * 
+	 * @return The current Salt project instance.
+	 */
+	public SaltProject getProject() {
+		return project;
+	}
 
-  /**
-   * Return a document by its ID.
-   * 
-   * @param documentID The Salt ID
-   * @return An optional document.
-   */
-  public Optional<SDocument> getDocument(String documentID) {
-    return this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
-        .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
-  }
+	/**
+	 * Return a document by its ID.
+	 * 
+	 * @param documentID The Salt ID
+	 * @return An optional document.
+	 */
+	public Optional<SDocument> getDocument(String documentID) {
+		return this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
+				.filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
+	}
 
-  /**
-   * Opens a salt projects from a given location on disk.
-   * 
-   * <p>
-   * Only the corpus graph is loaded to avoid over-using the main memory.
-   * </p>
-   * 
-   * @param path The path top open
-   */
-  public void open(URI path) {
+	/**
+	 * Opens a salt projects from a given location on disk.
+	 * 
+	 * Only the corpus graph is loaded to avoid over-using the main memory.
+	 * 
+	 * @param path
+	 */
+	public void open(URI path) {
 
-    project = SaltFactory.createSaltProject();
-    try {
-      project.loadCorpusStructure(path);
-      events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
-    } catch (SaltException ex) {
-      errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
-    }
-  }
+		project = SaltFactory.createSaltProject();
+		try {
+			project.loadCorpusStructure(path);
+			events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
+		} catch (SaltException ex) {
+			errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
+		}
+	}
 
 }
