@@ -18,6 +18,6 @@ When you configured the basic project properties, click on **Next**.
 Since this is a fragment project, select the "Plug-in ID" of the "Host Plug-in" that is tested in the next step of the wizard.
 You should make sure the "ID" and "Version" of the test are set to the correct values. 
 The version should always be the same as the tested bundle.
-Click in "Finish" to create the new project.
+Click **Finish** to create the new project.
 
 ![Basic fragment project properties](new-fragment-project-host.png)
