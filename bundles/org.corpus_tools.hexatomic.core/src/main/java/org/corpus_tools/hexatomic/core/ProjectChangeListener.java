@@ -56,7 +56,7 @@ public class ProjectChangeListener implements Listener {
 
     log.trace(
         "Project update: type={} attribute={} oldValue={} newValue={} container={} "
-        + "containerType={}",
+            + "containerType={}",
         type, attribute, oldValue, newValue, container,
         container == null ? "null" : container.getClass().getSimpleName());
 

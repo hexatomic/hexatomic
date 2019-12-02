@@ -36,6 +36,7 @@ public class OpenSaltProjectHandler {
 
   /**
    * Show a file choose to open Salt project.
+   * 
    * @param shell The user interface shell
    */
   @Execute
