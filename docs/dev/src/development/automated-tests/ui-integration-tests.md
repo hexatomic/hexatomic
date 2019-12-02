@@ -62,6 +62,6 @@ When your test case has more than one test, all tests are executed in the same e
 Thus, previously executed tests will influence subsequent ones.
 You can set the execution order within a test class explicitly with the `@Order(int)` annotation: <https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order>.
 
-If you add an integration to a new bundle, that was not tested before, you have to add the bundle manually to the 
+If you integrate a new bundle that has not been tested before, you have to add the bundle manually to the 
 dependencies of `org.corpus_tools.hexatomic.it.tests`.
 Adding it to the feature or product is not enough.
