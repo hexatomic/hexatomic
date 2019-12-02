@@ -20,7 +20,10 @@ We are using the [Tycho Surefire Plugin](https://www.eclipse.org/tycho/sitedocs/
 to execute the tests.
 Tests are executed when building the project with `mvn install`.
 To specifically run the tests and not install the artifacts, use `mvn integration-tests` instead.
-due to how Tycho Surefire is configured).
+Unlike unit tests, `mvn test` will not work for integration tests, as the Tycho Surefire Plugin requires
+the bundles to be packaged, which happens in Maven's `package` phase, which comes after `test` and before `integration-test`.
+
+To learn more about the Maven build lifecycle, read the [Maven Lifecycles Reference](http://web.archive.org/web/20191128092924/https://maven.apache.org/ref/3.6.2/maven-core/lifecycles.html).
 
 ## Execute tests in Eclipse
 
