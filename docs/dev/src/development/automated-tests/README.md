@@ -45,5 +45,5 @@ Click on **Run** to execute the user interface integration tests.
 ![Run UI tests configuration](launch-ui-tests.png)
 
 This will open an actual Hexatomic window where the user interactions are executed automatically.
-During the tests, don't interact with your computer (switching windows, moving the mouse, etc.) on your own to avoid
+During the tests, don't interact with your computer (switching windows, moving the mouse, etc.) to avoid
 any interference with the automatic tests.
