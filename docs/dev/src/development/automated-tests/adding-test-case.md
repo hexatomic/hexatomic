@@ -2,7 +2,7 @@
 
 If you have an existing test bundle project, you can add a new JUnit Test Case by clicking right on the `src/main/java` folder
 in the project explorer and selecting **New** > **Other** in the context menu.
-In the wizard, select `Java -> JUnit -> JUnit Test Case` and click on "Next".
+In the wizard, select **Java** > **JUnit** > **JUnit Test Case** and click on **Next**.
 
 ![New Wizard for creating a new JUnit Test Case](new-junit-testcase-wizard.png)
 
