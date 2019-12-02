@@ -6,7 +6,7 @@ bundle which is tested.
 In Hexatomic, all test bundles should be located in the `tests/` folder.
 
 Unit tests test the behavior of a specific class of a bundle.
-They should be part of a test bundle with the same name as the original one, but with the string `.test` appended.
+They should be part of a test bundle with the same name as the original one, but with the string `.tests` appended.
 E.g. tests for classes of the `org.corpus_tools.hexatomic.core` bundle should be part of the 
 `org.corpus_tools.hexatomic.core.tests` bundle.
 If you add a new bundle, always also create a corresponding test bundle.
@@ -44,4 +44,3 @@ Click on "Run" to execute the user interface integration tests.
 This will open an actual Hexatomic window where the user interactions are executed automatically.
 During the tests, don't interact with your computer (switching windows, moving the mouse, etc.) on your own to avoid
 any interference with the automatic tests.
-
