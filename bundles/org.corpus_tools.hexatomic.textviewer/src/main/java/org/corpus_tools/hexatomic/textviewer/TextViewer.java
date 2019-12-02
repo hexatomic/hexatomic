@@ -55,8 +55,8 @@ public class TextViewer {
   /**
    * Creates a new text viewer.
    * 
-   * @param parent
-   * @param part
+   * @param parent The parent SWT object
+   * @param part Part this text viewer is part of
    */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
