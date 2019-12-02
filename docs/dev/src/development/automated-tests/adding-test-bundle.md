@@ -2,7 +2,7 @@
 
 To create a new test bundle, select **File** > **New** > **Other** in the Eclipse menu.
 In the list of wizards, select **Plug-in Development** > **Fragment Project** and click **Next**.
-Fragment plugins are similar to normal ones, but they extend an existing plugin (the one that is tested) and have access
+Fragment bundles are similar to normal ones, but they extend an existing bundle (the one that is tested) and have access
 to all the internal classes and functions of the existing host plugin.
 
 ![New fragment project wizard selection](new-fragment-project-wizard.png)
