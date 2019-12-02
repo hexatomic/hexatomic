@@ -4,6 +4,8 @@
 - [Development](./development/README.md)
     - [Development setup](./development/setup.md)
         - [Getting the source code](./development/getting-the-source-code.md)
+        - [Coding style and formatting](./development/coding-style.md)
+        - [Creating and activating the target platform](./development/activating-target-platform.md)
         - [Running and debugging Hexatomic in Eclipse](./development/running-debugging-with-eclipse.md)
 	- [Workflow](./development/workflow/README.md)
         - [Repositories](./development/workflow/repositories.md)

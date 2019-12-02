@@ -17,6 +17,8 @@ jobs:
       script:
         - mvn integration-test
       
+      script: mvn verify -B
+      
       before_deploy:
          - mvn clean verify
       

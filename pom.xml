@@ -188,6 +188,31 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Check coding style with checkstyle plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+				    <!-- This is a default configuration available on the classpath of the checkstyle plugin -->
+				    <configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
+				    <encoding>UTF-8</encoding>
+				    <violationSeverity>warning</violationSeverity>
+				    <!--  TODO: set this to true when all source files have been updated -->
+				    <failOnViolation>false</failOnViolation>
+				</configuration>
+				<executions>
+				    <execution>
+				        <id>verify</id>
+				        <phase>verify</phase>
+				        <goals>
+				            <goal>check</goal>
+				        </goals>
+				    </execution>
+				</executions>
+			</plugin>
+      
 			<!-- Update the changelog header during a release -->
 			<plugin>
 				<groupId>co.enear.maven.plugins</groupId>
