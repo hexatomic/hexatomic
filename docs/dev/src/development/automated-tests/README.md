@@ -11,7 +11,7 @@ E.g. tests for classes of the `org.corpus_tools.hexatomic.core` bundle should be
 `org.corpus_tools.hexatomic.core.tests` bundle.
 If you add a new bundle, always also create a corresponding test bundle.
 
-The special bundle `org.corpus_tools.hexatomic.it.tests` is used for integration tests on the whole application.
+The special bundle `org.corpus_tools.hexatomic.it.tests` is used for [integration tests](http://web.archive.org/web/20190928235028/https://en.wikipedia.org/wiki/Integration_testing) on the whole application.
 
 
 ## Execute tests with Maven
