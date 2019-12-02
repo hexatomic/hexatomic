@@ -3,9 +3,10 @@
 In Eclipse RCP 4 applications such as Hexatomic, dependency injection is used extensively.
 To restrict the scope of unit tests to the actual code that is being tested, rather than extending it to include any classes or interfaces from injected dependencies that the code under test may use, you can mock these classes or interfaces.
 To mock dependencies, we use the [Mockito framework](https://site.mockito.org/).
-In the following example, the `IEventBroker` is not implemented but mocked with Mockitos `mock()` method.
-It can then be used normally by the class under test, in this case, the `ProjectManager` which has a field `events` of the 
-type `IEventBroker`.
+In the following example, the `IEventBroker` is not implemented but mocked with Mockito's `mock()` method.
+The mock can then be used by the class under test in the same way the real implementation would be used; in this case, the class `ProjectManager` has a field `events` of the 
+type `IEventBroker`, which is mocked for the test.
+Therefore, the behavior of the actual `IEventBroker` implementation isn't tested, only the `ProjectManager` code is.
 
 ```java
 package org.corpus_tools.hexatomic.core;
