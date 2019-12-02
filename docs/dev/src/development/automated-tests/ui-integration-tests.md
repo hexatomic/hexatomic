@@ -60,7 +60,7 @@ To test internal states, use unit tests for the controllers of the bundle instea
 
 When your test case has more than one test, all tests are executed in the same environment.
 Thus, previously executed tests will influence subsequent ones.
-You can set the execution order a test explicitly: <https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order>.
+You can set the execution order within a test class explicitly with the `@Order(int)` annotation: <https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order>.
 
 If you add an integration to a new bundle, that was not tested before, you have to add the bundle manually to the 
 dependencies of `org.corpus_tools.hexatomic.it.tests`.
