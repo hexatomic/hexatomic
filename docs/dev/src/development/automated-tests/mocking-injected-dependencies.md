@@ -1,7 +1,8 @@
 # Mocking injected dependencies
 
 In Eclipse RCP 4 applications such as Hexatomic, dependency injection is used extensively.
-Testing such classes is much easier by using the [Mockito framework](https://site.mockito.org/) to mock classes or interfaces.
+To restrict the scope of unit tests to the actual code that is being tested, rather than extending it to include any classes or interfaces from injected dependencies that the code under test may use, you can mock these classes or interfaces.
+To mock dependencies, we use the [Mockito framework](https://site.mockito.org/).
 In the following example, the `IEventBroker` is not implemented but mocked with Mockitos `mock()` method.
 It can then be used normally by the class under test, in this case, the `ProjectManager` which has a field `events` of the 
 type `IEventBroker`.
