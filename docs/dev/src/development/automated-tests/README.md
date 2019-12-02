@@ -38,7 +38,7 @@ You can select to re-execute a single test by clicking on it and choosing **Run*
 ![Eclipse JUnit test results](junit-eclipse-dialog.png)
 
 To run the user interface integration test in the `org.corpus_tools.hexatomic.it.tests` bundle, select the project and
-choose `Run -> Run Configurations...` in the main menu.
+choose **Run** > **Run Configurations...** in the main menu.
 A "UI Integration Test" configuration should be available under the category "JUnit Plug-in Test".
 Click on "Run" to execute the user interface integration tests.
 
