@@ -1,7 +1,7 @@
 # Automated tests
 
 We use the [JUnit5](https://junit.org/junit5/) testing framework to automate tests.
-As per convention in Eclipse RCP applications, tests are located in separated test bundles and not part of the original
+As per convention in Eclipse RCP applications, tests are located in separate test bundles and not part of the original
 bundle which is tested.
 In Hexatomic, all test bundles should be located in the `tests/` folder.
 
@@ -44,5 +44,4 @@ Click on "Run" to execute the user interface integration tests.
 This will open an actual Hexatomic window where the user interactions are executed automatically.
 During the tests, don't interact with your computer (switching windows, moving the mouse, etc.) on your own to avoid
 any interference with the automatic tests.
-
 
