@@ -54,7 +54,7 @@ class TestCorpusStructure {
 
 ```
 To test whether an action was successful, you can't access the internal data model of the application.
-Thus, you have to check the effects on the user interface (like the result of renaming is a new tree item with the 
+Instead, they check the effects on the user interface (for example, the result of a renaming action is a new tree item with the 
 new name).
 To test internal states, use unit tests for the controllers of the bundle instead.
 
