@@ -199,7 +199,6 @@
                     <configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <violationSeverity>warning</violationSeverity>
-                    <!-- TODO: set this to true when all source files have been updated -->
                     <failOnViolation>true</failOnViolation>
                 </configuration>
                 <executions>
