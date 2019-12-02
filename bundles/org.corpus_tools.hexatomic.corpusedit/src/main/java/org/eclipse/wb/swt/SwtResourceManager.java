@@ -2,9 +2,9 @@
  * Copyright (c) 2011 Google, Inc. All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0 which accompanies this
  * distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
- *
  * Contributors: Google, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.wb.swt;
 
 import java.io.FileInputStream;
@@ -27,18 +27,21 @@ import org.eclipse.swt.widgets.Display;
 /**
  * Utility class for managing OS resources associated with SWT controls such as colors, fonts,
  * images, etc.
+ * 
  * <p>
  * !!! IMPORTANT !!! Application code must explicitly invoke the <code>dispose()</code> method to
  * release the operating system resources managed by cached objects when those objects and OS
  * resources are no longer needed (e.g. on application shutdown)
+ * </p>
+ * 
  * <p>
  * This class may be freely distributed as part of any application or plugin.
- * <p>
+ * </p>
  * 
  * @author scheglov_ke
  * @author Dan Rubel
  */
-public class SWTResourceManager {
+public class SwtResourceManager {
   ////////////////////////////////////////////////////////////////////////////
   //
   // Color
@@ -169,7 +172,7 @@ public class SWTResourceManager {
 
   private static final int MISSING_IMAGE_SIZE = 10;
 
-  /**
+  /** Returns default placeholde missing image.
    * @return the small {@link Image} that can be used as placeholder for missing image.
    */
   private static Image getMissingImage() {
@@ -340,14 +343,17 @@ public class SWTResourceManager {
       FontData fontData = new FontData(name, size, style);
       if (strikeout || underline) {
         try {
-          Class<?> logFontClass = Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
+          Class<?> logFontClass = 
+              Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
           Object logFont = FontData.class.getField("data").get(fontData); //$NON-NLS-1$
           if (logFont != null && logFontClass != null) {
             if (strikeout) {
-              logFontClass.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
+              logFontClass.getField("lfStrikeOut").set(logFont, 
+                  Byte.valueOf((byte) 1)); //$NON-NLS-1$
             }
             if (underline) {
-              logFontClass.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
+              logFontClass.getField("lfUnderline").set(logFont, 
+                  Byte.valueOf((byte) 1)); //$NON-NLS-1$
             }
           }
         } catch (Throwable e) {
@@ -370,7 +376,7 @@ public class SWTResourceManager {
   public static Font getBoldFont(Font baseFont) {
     Font font = m_fontToBoldFontMap.get(baseFont);
     if (font == null) {
-      FontData fontDatas[] = baseFont.getFontData();
+      FontData[] fontDatas = baseFont.getFontData();
       FontData data = fontDatas[0];
       font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
       m_fontToBoldFontMap.put(baseFont, font);

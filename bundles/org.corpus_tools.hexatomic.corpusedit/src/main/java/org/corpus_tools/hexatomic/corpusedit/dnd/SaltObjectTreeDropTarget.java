@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.corpusedit.dnd;
 
 import org.corpus_tools.hexatomic.corpusedit.CorpusStructureView;

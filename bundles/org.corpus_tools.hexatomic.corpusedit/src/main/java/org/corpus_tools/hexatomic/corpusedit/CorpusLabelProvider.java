@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.corpusedit;
 
 import java.net.URL;
@@ -50,8 +51,8 @@ public class CorpusLabelProvider extends LabelProvider {
       return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
           "icons/fontawesome/folder-regular.png");
     } else {
+      return super.getImage(element);
     }
-    return super.getImage(element);
   }
 
   @Override

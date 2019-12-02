@@ -1,11 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011 Google, Inc. and others All rights reserved. This program and the accompanying
  * materials are made available under the terms of the Eclipse Public License v1.0 which accompanies
- * this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors: Google, Inc. - initial API and implementation Wim Jongman - 1.8 and higher
- * compliance
+ * this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html Contributors:
+ * Google, Inc. - initial API and implementation Wim Jongman - 1.8 and higher compliance
  *******************************************************************************/
+
 package org.eclipse.wb.swt;
 
 import java.io.File;
@@ -31,25 +30,32 @@ import org.osgi.framework.Bundle;
  * Utility class for managing OS resources associated with SWT/JFace controls such as colors, fonts,
  * images, etc.
  * 
+ * <p>
  * This class is created automatically when you fiddle around with images and colors in WB. You
  * might want to prevent your application from using this class and provide your own more effective
  * means of resource caching.
+ * </p>
  * 
+ * <p>
  * Even though this class can be used to manage these resources, if they are here for the duration
  * of the application and not used then you still have an effective resource leak.
+ * </p>
  * 
+ * <p>
  * Application code must explicitly invoke the <code>dispose()</code> method to release the
  * operating system resources managed by cached objects when those objects and OS resources are no
  * longer needed.
+ * </p>
  * 
- * This class may be freely distributed as part of any application or plugin.
  * <p>
+ * This class may be freely distributed as part of any application or plugin.
+ * </p>
  * 
  * @author scheglov_ke
  * @author Dan Rubel
  * @author Wim Jongman
  */
-public class ResourceManager extends SWTResourceManager {
+public class ResourceManager extends SwtResourceManager {
 
   /**
    * The map where we store our images.
@@ -186,11 +192,12 @@ public class ResourceManager extends SWTResourceManager {
    * Dispose all of the cached images.
    */
   public static void disposeImages() {
-    SWTResourceManager.disposeImages();
+    SwtResourceManager.disposeImages();
     // dispose ImageDescriptor images
     {
-      for (Iterator<Image> I = m_descriptorImageMap.values().iterator(); I.hasNext();) {
-        I.next().dispose();
+      for (Iterator<Image> imageIterator = m_descriptorImageMap.values().iterator(); 
+          imageIterator.hasNext();) {
+        imageIterator.next().dispose();
       }
       m_descriptorImageMap.clear();
     }
@@ -209,8 +216,9 @@ public class ResourceManager extends SWTResourceManager {
     }
     // dispose plugin images
     {
-      for (Iterator<Image> I = m_URLImageMap.values().iterator(); I.hasNext();) {
-        I.next().dispose();
+      for (Iterator<Image> imageIterator = m_URLImageMap.values().iterator(); 
+          imageIterator.hasNext();) {
+        imageIterator.next().dispose();
       }
       m_URLImageMap.clear();
     }
@@ -250,7 +258,7 @@ public class ResourceManager extends SWTResourceManager {
   @Deprecated
   public static Image getPluginImage(Object plugin, String name) {
     try {
-      URL url = getPluginImageURL(plugin, name);
+      URL url = getPluginImageUrl(plugin, name);
       if (url != null) {
         return getPluginImageFromUrl(url);
       }
@@ -269,7 +277,7 @@ public class ResourceManager extends SWTResourceManager {
    */
   public static Image getPluginImage(String symbolicName, String path) {
     try {
-      URL url = getPluginImageURL(symbolicName, path);
+      URL url = getPluginImageUrl(symbolicName, path);
       if (url != null) {
         return getPluginImageFromUrl(url);
       }
@@ -319,7 +327,7 @@ public class ResourceManager extends SWTResourceManager {
   public static ImageDescriptor getPluginImageDescriptor(Object plugin, String name) {
     try {
       try {
-        URL url = getPluginImageURL(plugin, name);
+        URL url = getPluginImageUrl(plugin, name);
         return ImageDescriptor.createFromURL(url);
       } catch (Throwable e) {
         // Ignore any exceptions
@@ -339,7 +347,7 @@ public class ResourceManager extends SWTResourceManager {
    */
   public static ImageDescriptor getPluginImageDescriptor(String symbolicName, String path) {
     try {
-      URL url = getPluginImageURL(symbolicName, path);
+      URL url = getPluginImageUrl(symbolicName, path);
       if (url != null) {
         return ImageDescriptor.createFromURL(url);
       }
@@ -352,7 +360,7 @@ public class ResourceManager extends SWTResourceManager {
   /**
    * Returns an {@link URL} based on a {@link Bundle} and resource entry path.
    */
-  private static URL getPluginImageURL(String symbolicName, String path) {
+  private static URL getPluginImageUrl(String symbolicName, String path) {
     // try runtime plugins
     {
       Bundle bundle = Platform.getBundle(symbolicName);
@@ -374,24 +382,26 @@ public class ResourceManager extends SWTResourceManager {
    * @param plugin the plugin {@link Object} containing the file path.
    * @param name the file path.
    * @return the {@link URL} representing the file at the specified path.
-   * @throws Exception
+   * @throws Exception Throws an exception if Eclipse Core Plugins can't be found.
    */
-  private static URL getPluginImageURL(Object plugin, String name) throws Exception {
+  private static URL getPluginImageUrl(Object plugin, String name) throws Exception {
     // try to work with 'plugin' as with OSGI BundleContext
     try {
-      Class<?> BundleClass = Class.forName("org.osgi.framework.Bundle"); //$NON-NLS-1$
-      Class<?> BundleContextClass = Class.forName("org.osgi.framework.BundleContext"); //$NON-NLS-1$
-      if (BundleContextClass.isAssignableFrom(plugin.getClass())) {
-        Method getBundleMethod = BundleContextClass.getMethod("getBundle", new Class[0]); //$NON-NLS-1$
+      Class<?> bundleClass = Class.forName("org.osgi.framework.Bundle"); //$NON-NLS-1$
+      Class<?> bundleContextClass = Class.forName("org.osgi.framework.BundleContext"); //$NON-NLS-1$
+      if (bundleContextClass.isAssignableFrom(plugin.getClass())) {
+        Method getBundleMethod = bundleContextClass.getMethod("getBundle", 
+            new Class[0]); //$NON-NLS-1$
         Object bundle = getBundleMethod.invoke(plugin, new Object[0]);
         //
-        Class<?> PathClass = Class.forName("org.eclipse.core.runtime.Path"); //$NON-NLS-1$
-        Constructor<?> pathConstructor = PathClass.getConstructor(new Class[] {String.class});
+        Class<?> pathClass = Class.forName("org.eclipse.core.runtime.Path"); //$NON-NLS-1$
+        Constructor<?> pathConstructor = pathClass.getConstructor(new Class[] {String.class});
         Object path = pathConstructor.newInstance(new Object[] {name});
         //
-        Class<?> IPathClass = Class.forName("org.eclipse.core.runtime.IPath"); //$NON-NLS-1$
-        Class<?> PlatformClass = Class.forName("org.eclipse.core.runtime.Platform"); //$NON-NLS-1$
-        Method findMethod = PlatformClass.getMethod("find", new Class[] {BundleClass, IPathClass}); //$NON-NLS-1$
+        Class<?> interfacePathClass = Class.forName("org.eclipse.core.runtime.IPath"); //$NON-NLS-1$
+        Class<?> platformClass = Class.forName("org.eclipse.core.runtime.Platform"); //$NON-NLS-1$
+        Method findMethod = platformClass.getMethod("find", 
+            new Class[] {bundleClass, interfacePathClass}); //$NON-NLS-1$
         return (URL) findMethod.invoke(null, new Object[] {bundle, path});
       }
     } catch (Throwable e) {
@@ -399,15 +409,16 @@ public class ResourceManager extends SWTResourceManager {
     }
     // else work with 'plugin' as with usual Eclipse plugin
     {
-      Class<?> PluginClass = Class.forName("org.eclipse.core.runtime.Plugin"); //$NON-NLS-1$
-      if (PluginClass.isAssignableFrom(plugin.getClass())) {
+      Class<?> pluginClass = Class.forName("org.eclipse.core.runtime.Plugin"); //$NON-NLS-1$
+      if (pluginClass.isAssignableFrom(plugin.getClass())) {
         //
-        Class<?> PathClass = Class.forName("org.eclipse.core.runtime.Path"); //$NON-NLS-1$
-        Constructor<?> pathConstructor = PathClass.getConstructor(new Class[] {String.class});
+        Class<?> pathClass = Class.forName("org.eclipse.core.runtime.Path"); //$NON-NLS-1$
+        Constructor<?> pathConstructor = pathClass.getConstructor(new Class[] {String.class});
         Object path = pathConstructor.newInstance(new Object[] {name});
         //
-        Class<?> IPathClass = Class.forName("org.eclipse.core.runtime.IPath"); //$NON-NLS-1$
-        Method findMethod = PluginClass.getMethod("find", new Class[] {IPathClass}); //$NON-NLS-1$
+        Class<?> interfacePathClass = Class.forName("org.eclipse.core.runtime.IPath"); //$NON-NLS-1$
+        Method findMethod = pluginClass.getMethod("find", 
+            new Class[] {interfacePathClass}); //$NON-NLS-1$
         return (URL) findMethod.invoke(plugin, new Object[] {path});
       }
     }

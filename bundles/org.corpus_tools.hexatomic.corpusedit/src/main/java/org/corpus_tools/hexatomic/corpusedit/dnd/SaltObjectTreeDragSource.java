@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.corpusedit.dnd;
 
 import org.corpus_tools.salt.common.SDocument;
@@ -27,18 +28,13 @@ import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 
 public class SaltObjectTreeDragSource extends DragSourceAdapter {
-  /**
-   * 
-   */
+
   private final TreeViewer treeViewer;
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(SaltObjectTreeDragSource.class);
 
 
-  /**
-   * @param corpusStructureView
-   */
   public SaltObjectTreeDragSource(TreeViewer treeViewer) {
     this.treeViewer = treeViewer;
   }
