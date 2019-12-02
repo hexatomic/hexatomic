@@ -19,7 +19,7 @@ The special bundle `org.corpus_tools.hexatomic.it.tests` is used for [integratio
 We are using the [Tycho Surefire Plugin](https://www.eclipse.org/tycho/sitedocs/tycho-surefire/tycho-surefire-plugin/) 
 to execute the tests.
 Tests are executed when building the project with `mvn install`.
-To specifically run the tests and not install the artifacts, use `mvn integration-tests` instead (`mvn test` will not work
+To specifically run the tests and not install the artifacts, use `mvn integration-tests` instead.
 due to how Tycho Surefire is configured).
 
 ## Execute tests in Eclipse
