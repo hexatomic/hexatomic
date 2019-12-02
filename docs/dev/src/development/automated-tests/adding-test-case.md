@@ -9,7 +9,7 @@ In the wizard, select **Java** > **JUnit** > **JUnit Test Case** and click on **
 In the properties of the test case, make sure to select "New JUnit Jupiter test" to create a JUnit5 test.
 Also, select the class you want to test in the "Class under test" field.
 The "Name" of the test should start with `Test` so that the test executor of the build system (the Tycho Surefire Plugin) can identify it as a test.
-Click "Finish" to create the empty class or "Next" if you want to add tests for specific functions of the tested class.
+Click **Finish** to create the empty class or **Next** if you want to add tests for specific functions of the tested class.
 
 ![New JUnit Test Case properties](new-junit-testcase-properties.png)
 
