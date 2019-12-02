@@ -72,7 +72,7 @@ class TestCorpusStructure {
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("def").select();
     bot.toolbarDropDownButton(0).click();
     bot.toolbarDropDownButton(0).click();
-    
+
 
     List<String> children = bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes();
     assertEquals(4, children.size());
