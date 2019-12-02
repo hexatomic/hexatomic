@@ -8,7 +8,7 @@ to all the internal classes and functions of the existing host bundle.
 ![New fragment project wizard selection](new-fragment-project-wizard.png)
 
 The wizard will now ask for some basic properties of the new project.
-Use the bundle name with `.test` appended as project name and make sure not to use the default location, but a folder
+Use the bundle name with `.tests` appended as project name and make sure not to use the default location, but a folder
 with the project name under the `tests` folder in your Hexatomic source code folder.
 Also, set the "Source folder" to `src/main/java` and the "Output folder" to `target/classes`.
 When you configured the basic project properties, click on "Next".
