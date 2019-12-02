@@ -33,7 +33,7 @@ Select the project in the "Project Explorer", right-click on it and choose **Run
 ![Run JUnit test in Eclipse](run-test-eclipse.png)
 
 This will open a new panel with the results of the tests once finished.
-You can select to re-execute a single test by clicking on it and choosing "Run" or "Debug".
+You can select to re-execute a single test by clicking on it and choosing **Run** or **Debug**.
 
 ![Eclipse JUnit test results](junit-eclipse-dialog.png)
 
