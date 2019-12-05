@@ -1,0 +1,8 @@
+type: software
+title: '{{artifactId}}'
+version: '{{version}}'
+license: EPL-1.0
+institutions:
+-  name: QOS.ch
+   website: http://logback.qos.ch
+authors: []
