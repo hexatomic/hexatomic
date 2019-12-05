@@ -33,7 +33,7 @@ To import the Hexatomic into your Eclipse IDE, do the following:
 
 1. Start Eclipse
 2. Open the **Import** window via the menu **File** > **Import**
-3. Select the import wizard **Existing Projects into Workspace** and click **Next >**
+3. Select the import wizard **General** > **Existing Projects into Workspace** and click **Next >**
 4. In **Select root directory**, select the directory where you have downloaded the Hexatomic source code to (the Git *root*)
 5. In the **Options** section of the window, activate **Search for nested projects**
 6. Click **Finish**

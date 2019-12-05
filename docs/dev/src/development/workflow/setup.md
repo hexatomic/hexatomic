@@ -40,7 +40,7 @@ This means that
 
 ### Project parent / root POM
 
-Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/master/pom.xml), i.e., to build the entire project, a single Maven command, e.g., `mvn clean verify`, in the root folder is enough.
+Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/master/pom.xml), i.e., to build the entire project, a single Maven command, e.g., `mvn clean install`, in the root folder is enough.
 
 ### Target platform
 
