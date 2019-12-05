@@ -102,13 +102,13 @@ references:
   version: 3.3.8.20191112125145
 - type: software
   title: org.corpus_tools.hexatomic.core
-  version: 0.2.0.201912052005
+  version: 0.2.0.201912052026
 - type: software
   title: org.corpus_tools.hexatomic.corpusstructureeditor
-  version: 0.2.0.201912052005
+  version: 0.2.0.201912052026
 - type: software
   title: org.corpus_tools.hexatomic.textviewer
-  version: 0.2.0.201912052005
+  version: 0.2.0.201912052026
 - type: software
   title: org.eclipse.core.commands
   version: 3.9.400.v20190516-1358
@@ -120,6 +120,7 @@ references:
   title: org.eclipse.core.contenttype
   version: 3.7.300.v20190215-2048
   license: NOASSERTION
+  authors: []
 - type: software
   title: org.eclipse.core.expressions
   version: 3.6.400.v20190518-1240
@@ -223,3 +224,4 @@ references:
   title: org.slf4j.api
   version: 1.7.10.v20170428-1633
   license: Apache-2.0
+  authors: []
