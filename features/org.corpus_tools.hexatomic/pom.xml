@@ -23,6 +23,7 @@
                     <input>${maven.multiModuleProjectDirectory}/releng/templates/CITATION.cff</input>
                     <output>${maven.multiModuleProjectDirectory}/CITATION.cff</output>
                     <thirdPartyFolder>${maven.multiModuleProjectDirectory}/THIRD-PARTY</thirdPartyFolder>
+                    <p2ReconstructGroupId>true</p2ReconstructGroupId>
                 </configuration>
             </plugin>
         </plugins>
