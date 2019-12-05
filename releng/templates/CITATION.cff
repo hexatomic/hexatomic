@@ -8,4 +8,9 @@ authors:
 -  family-names: Krause
    given-names: Thomas
    orcid: https://orcid.org/0000-0003-3731-2422
-   
+references:
+-  type: software 
+   title: SWT Resource Manager
+   license: EPL-1.0
+   authors:
+   -  name: Google, Inc.
