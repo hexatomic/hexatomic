@@ -17,7 +17,7 @@
             <plugin>
                 <groupId>org.corpus-tools</groupId>
                 <artifactId>cff-maven-plugin</artifactId>
-                <version>0.2.4</version>
+                <version>0.2.5</version>
                 <configuration>
                     <includeEmail>false</includeEmail>
                     <input>${maven.multiModuleProjectDirectory}/releng/templates/CITATION.cff</input>
