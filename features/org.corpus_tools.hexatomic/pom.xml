@@ -1,0 +1,32 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.corpus_tools.hexatomic</artifactId>
+    <packaging>eclipse-feature</packaging>
+    <parent>
+        <groupId>org.corpus_tools</groupId>
+        <artifactId>org.corpus_tools.hexatomic.features</artifactId>
+        <version>0.2.0-SNAPSHOT</version>
+    </parent>
+
+    <build>
+        <plugins>
+            <!-- Generate a CITATION.cff file automatically -->
+            <plugin>
+                <groupId>org.corpus-tools</groupId>
+                <artifactId>cff-maven-plugin</artifactId>
+                <version>0.2.4</version>
+                <configuration>
+                    <includeEmail>false</includeEmail>
+                    <input>${maven.multiModuleProjectDirectory}/releng/templates/CITATION.cff</input>
+                    <output>${maven.multiModuleProjectDirectory}/CITATION.cff</output>
+                    <thirdPartyFolder>${maven.multiModuleProjectDirectory}/THIRD-PARTY</thirdPartyFolder>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+

@@ -1,0 +1,225 @@
+cff-version: 1.1.0
+message: If you use this software, please cite it as below.
+title: Hexatomic
+authors:
+- family-names: Druskat
+  given-names: Stephan
+  orcid: https://orcid.org/0000-0003-4925-7248
+- family-names: Krause
+  given-names: Thomas
+  orcid: https://orcid.org/0000-0003-3731-2422
+version: 0.2.0-SNAPSHOT
+date-released: 2019-12-05
+references:
+- type: software
+  title: Apache Commons Lang
+  version: '3.4'
+  abbreviation: org.apache.commons:commons-lang3
+  license: Apache-2.0
+  authors:
+  - name: Daniel Rall
+  - name: Stephen Colebourne
+  - name: Henri Yandell
+  - name: Steven Caswell
+  - name: Robert Burrell Donkin
+  - name: Gary D. Gregory
+  - name: Fredrik Westermarck
+  - name: James Carman
+  - name: Niall Pemberton
+  - name: Matt Benson
+  - name: Joerg Schaible
+  - name: Oliver Heger
+  - name: Paul Benedict
+  - name: Benedikt Ritter
+  - name: Duncan Jones
+- type: software
+  title: Apache Felix Declarative Services
+  version: 2.1.14
+  abbreviation: org.apache.felix:org.apache.felix.scr
+  license: Apache-2.0
+  authors: []
+- type: software
+  title: 'Guava: Google Core Libraries for Java'
+  version: '19.0'
+  abbreviation: com.google.guava:guava
+  license: Apache-2.0
+  authors:
+  - name: Kevin Bourrillion
+- type: software
+  title: JSON in Java
+  version: '20160810'
+  abbreviation: org.json:json
+  license: JSON
+  authors:
+  - name: Douglas Crockford
+- type: software
+  title: Neo Visionaries Internationalization Package
+  version: '1.1'
+  abbreviation: com.neovisionaries:nv-i18n
+  license: Apache-2.0
+  authors:
+  - name: Takahiko Kawasaki
+- type: software
+  title: Stax2 API
+  version: 3.1.4
+  abbreviation: org.codehaus.woodstox:stax2-api
+  license: BSD-2-Clause
+  authors:
+  - name: Tatu Saloranta
+- type: software
+  title: Woodstox
+  version: 5.0.3
+  abbreviation: com.fasterxml.woodstox:woodstox-core
+  license: Apache-2.0
+  authors:
+  - name: Tatu Saloranta
+- type: software
+  title: ch.qos.logback.classic
+  version: 1.1.2.v20171220-1825
+- type: software
+  title: ch.qos.logback.core
+  version: 1.1.2.v20160208-0839
+- type: software
+  title: ch.qos.logback.slf4j
+  version: 1.1.2.v20160301-0943
+- type: software
+  title: com.ibm.icu
+  version: 64.2.0.v20190507-1337
+- type: software
+  title: javax.annotation
+  version: 1.2.0.v201602091430
+- type: software
+  title: javax.inject
+  version: 1.0.0.v20091030
+- type: software
+  title: org.apache.commons.jxpath
+  version: 1.3.0.v200911051830
+- type: software
+  title: org.corpus-tools.salt-api
+  version: 3.3.8.20191112125145
+- type: software
+  title: org.corpus-tools.salt-extensions
+  version: 3.3.8.20191112125145
+- type: software
+  title: org.corpus_tools.hexatomic.core
+  version: 0.2.0.201912052005
+- type: software
+  title: org.corpus_tools.hexatomic.corpusstructureeditor
+  version: 0.2.0.201912052005
+- type: software
+  title: org.corpus_tools.hexatomic.textviewer
+  version: 0.2.0.201912052005
+- type: software
+  title: org.eclipse.core.commands
+  version: 3.9.400.v20190516-1358
+  license: NOASSERTION
+  authors:
+  - name: (c) 2008 VeriSign, Inc.
+  - name: Copyright (c) 2004,2005 IBM Corporation and others.
+- type: software
+  title: org.eclipse.core.contenttype
+  version: 3.7.300.v20190215-2048
+  license: NOASSERTION
+- type: software
+  title: org.eclipse.core.expressions
+  version: 3.6.400.v20190518-1240
+- type: software
+  title: org.eclipse.core.jobs
+  version: 3.10.400.v20190506-1457
+- type: software
+  title: org.eclipse.core.runtime
+  version: 3.15.300.v20190508-0543
+- type: software
+  title: org.eclipse.e4.core.commands
+  version: 0.12.600.v20190510-1100
+- type: software
+  title: org.eclipse.e4.core.contexts
+  version: 1.8.100.v20190518-1217
+- type: software
+  title: org.eclipse.e4.core.di
+  version: 1.7.200.v20190506-1457
+- type: software
+  title: org.eclipse.e4.core.di.annotations
+  version: 1.6.400.v20190518-1217
+- type: software
+  title: org.eclipse.e4.core.di.extensions
+  version: 0.15.300.v20190213-1308
+- type: software
+  title: org.eclipse.e4.core.di.extensions.supplier
+  version: 0.15.300.v20190506-1457
+- type: software
+  title: org.eclipse.e4.core.services
+  version: 2.1.400.v20181215-2145
+  license: NOASSERTION
+  authors:
+  - name: Copyright (c) 2010 IBM Corporation and others.
+- type: software
+  title: org.eclipse.e4.emf.xpath
+  version: 0.2.300.v20190513-2118
+- type: software
+  title: org.eclipse.e4.ui.di
+  version: 1.2.600.v20190510-1100
+- type: software
+  title: org.eclipse.e4.ui.model.workbench
+  version: 2.1.400.v20190513-2118
+- type: software
+  title: org.eclipse.e4.ui.services
+  version: 1.3.500.v20190513-2118
+- type: software
+  title: org.eclipse.e4.ui.workbench
+  version: 1.10.0.v20190529-1505
+- type: software
+  title: org.eclipse.emf.common
+  version: 2.16.0.v20190528-0845
+- type: software
+  title: org.eclipse.emf.ecore
+  version: 2.18.0.v20190528-0845
+- type: software
+  title: org.eclipse.emf.ecore.change
+  version: 2.14.0.v20190528-0725
+- type: software
+  title: org.eclipse.emf.ecore.xmi
+  version: 2.16.0.v20190528-0725
+- type: software
+  title: org.eclipse.equinox.app
+  version: 1.4.200.v20190516-1504
+- type: software
+  title: org.eclipse.equinox.common
+  version: 3.10.400.v20190516-1504
+- type: software
+  title: org.eclipse.equinox.event
+  version: 1.5.100.v20190528-1257
+- type: software
+  title: org.eclipse.equinox.preferences
+  version: 3.7.400.v20190516-1504
+- type: software
+  title: org.eclipse.equinox.registry
+  version: 3.8.400.v20190516-1504
+- type: software
+  title: org.eclipse.jface
+  version: 3.16.0.v20190528-0922
+- type: software
+  title: org.eclipse.osgi
+  version: 3.14.0.v20190517-1309
+- type: software
+  title: org.eclipse.osgi.services
+  version: 3.8.0.v20190206-2147
+- type: software
+  title: org.eclipse.osgi.util
+  version: 3.5.200.v20190115-2323
+- type: software
+  title: org.eclipse.swt
+  version: 3.111.0.v20190605-1801
+- type: software
+  title: org.eclipse.swt.cocoa.macosx.x86_64
+  version: 3.111.0.v20190605-1801
+- type: software
+  title: org.eclipse.swt.gtk.linux.x86_64
+  version: 3.111.0.v20190605-1801
+- type: software
+  title: org.eclipse.swt.win32.win32.x86_64
+  version: 3.111.0.v20190605-1801
+- type: software
+  title: org.slf4j.api
+  version: 1.7.10.v20170428-1633
+  license: Apache-2.0
