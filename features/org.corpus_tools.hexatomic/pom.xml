@@ -49,6 +49,10 @@
                             <pattern>.*:org\.slf4j\.api:.*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/slf4j.yml</template>
                         </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>p2\.eclipse-plugin:org\.corpus-tools\.salt-api:jar:lib/textcat-.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/textcat.yml</template>
+                        </referenceTemplate>
                         <!-- List the EPL 1.0 dependencies of the Eclipse 
                             project first -->
                         <referenceTemplate>
@@ -62,7 +66,7 @@
                         </referenceTemplate>
                     </referenceTemplates>
                     <ignoredArtifacts>
-                        <ignoredArtifact>p2.eclipse-plugin:org\.corpus_tools\.hexatomic\..*</ignoredArtifact>
+                        <ignoredArtifact>p2\.eclipse-plugin:org\.corpus_tools\.hexatomic\..*</ignoredArtifact>
                     </ignoredArtifacts>
                 </configuration>
             </plugin>

@@ -75,6 +75,16 @@ references:
   - name: Douglas Crockford
   repository-code: https://github.com/douglascrockford/JSON-java.git
 - type: software
+  title: Java Text Categorizing Library
+  abbreviation: textcat
+  version: 3.3.8
+  license: LGPL-3.0-or-later
+  license-url: http://www.gnu.org/licenses/lgpl.txt
+  repository-code: https://sourceforge.net/p/textcat/code/
+  authors:
+  - family-names: Hammerl
+    given-names: Thomas
+- type: software
   title: Neo Visionaries Internationalization Package
   version: '1.1'
   abbreviation: com.neovisionaries:nv-i18n
@@ -161,10 +171,6 @@ references:
   - name: The Apache Software Foundationn
   notes: More license information can be found in the THIRD-PARTY/org.apache.commons.jxpath
     directory.
-- type: software
-  title: org.corpus-tools.salt-api
-  version: 3.3.8
-  authors: []
 - type: software
   title: org.eclipse.core.commands
   version: 3.9.400.v20190516-1358
