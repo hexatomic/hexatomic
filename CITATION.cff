@@ -84,6 +84,15 @@ references:
   authors:
   - name: Takahiko Kawasaki
 - type: software
+  title: Simple Logging Facade for Java
+  abbreviation: SLF4J
+  version: 1.7.10.v20170428-1633
+  license: MIT
+  authors:
+  - name: QOS.ch
+    website: http://www.slf4j.org
+  notes: More license information can be found in the THIRD-PARTY/org.slf4j.api directory.
+- type: software
   title: Stax2 API
   version: 3.1.4
   abbreviation: org.codehaus.woodstox:stax2-api
@@ -474,11 +483,6 @@ references:
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.swt.win32.win32.x86_64
     directory.
-- type: software
-  title: org.slf4j.api
-  version: 1.7.10.v20170428-1633
-  license: Apache-2.0
-  authors: []
 - type: software
   title: salt-api
   version: 3.3.8
