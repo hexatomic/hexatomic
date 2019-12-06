@@ -15,7 +15,7 @@ See the [License page](../../LICENSE.html) for more information.
 In order to make it easier to maintain the licenses for Hexatomic and its dependencies, 
 we automate the fulfillment of license requirements.
 
-## Source files
+### Source files
 
 Hexatomic includes the Maven License Plugin from MojoHaus in the build.
 This plug-in handles the license information of the source files included in this repository.
