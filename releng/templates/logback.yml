@@ -2,8 +2,7 @@ type: software
 title: '{{artifactId}}'
 version: '{{version}}'
 license: EPL-1.0
-institutions:
+authors:
 -  name: QOS.ch
    website: http://logback.qos.ch
-authors: []
 notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'
