@@ -45,6 +45,10 @@
                             <pattern>.*:org\.apache\.commons\.jxpath:.*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/jxpath.yml</template>
                         </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.slf4j\.api:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/slf4j.yml</template>
+                        </referenceTemplate>
                         <!-- List the EPL 1.0 dependencies of the Eclipse 
                             project first -->
                         <referenceTemplate>
