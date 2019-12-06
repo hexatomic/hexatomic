@@ -1,0 +1,8 @@
+type: software
+title: javax.annotation
+version: '{{version}}'
+license: EPL-1.0
+authors:
+-  name: Sun
+-  name: Glassfish project
+notes: 'More license information can be found in the THIRD-PARTY/javax.annotation directory.'
