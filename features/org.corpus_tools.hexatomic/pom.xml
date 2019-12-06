@@ -29,9 +29,15 @@
                             <pattern>.*:ch\.qos\.logback\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/logback.yml</template>
                         </referenceTemplate>
+                        <!-- List the EPL 1.0 dependencies of the Eclipse project first -->
                         <referenceTemplate>
                             <pattern>.*:org\.eclipse\.swt\.(cocoa|linux|win32).*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <!-- All other Eclipse project dependencies are EPL-2.0 -->
+                        <referenceTemplate>
+                            <pattern>.*:org\.eclipse\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl2.yml</template>
                         </referenceTemplate>
                     </referenceTemplates>
                 </configuration>
