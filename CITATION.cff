@@ -19,6 +19,8 @@ references:
   version: '3.4'
   abbreviation: org.apache.commons:commons-lang3
   license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Apache_Commons_Lang
+    directory.
   authors:
   - name: Daniel Rall
   - name: Stephen Colebourne
@@ -35,47 +37,63 @@ references:
   - name: Paul Benedict
   - name: Benedikt Ritter
   - name: Duncan Jones
+  repository-code: http://svn.apache.org/viewvc/commons/proper/lang/tags/LANG_3_4
 - type: software
   title: Apache Felix Declarative Services
   version: 2.1.14
   abbreviation: org.apache.felix:org.apache.felix.scr
   license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Apache_Felix_Declarative_Services
+    directory.
   authors: []
+  repository-code: scm:svn:https://svn.apache.org/repos/asf/felix/releases/org.apache.felix.scr-2.1.14
 - type: software
   title: 'Guava: Google Core Libraries for Java'
   version: '19.0'
   abbreviation: com.google.guava:guava
   license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Guava_Google_Core_Libraries_for_Java
+    directory.
   authors:
   - name: Kevin Bourrillion
+  repository-code: https://github.com/google/guava/guava
 - type: software
   title: JSON in Java
   version: '20160810'
   abbreviation: org.json:json
   license: JSON
+  notes: More license information can be found in the THIRD-PARTY/JSON_in_Java directory.
   authors:
   - name: Douglas Crockford
+  repository-code: https://github.com/douglascrockford/JSON-java.git
 - type: software
   title: Neo Visionaries Internationalization Package
   version: '1.1'
   abbreviation: com.neovisionaries:nv-i18n
   license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Neo_Visionaries_Internationalization_Package
+    directory.
   authors:
   - name: Takahiko Kawasaki
+  repository-code: git@github.com:TakahikoKawasaki/nv-i18n.git
 - type: software
   title: Stax2 API
   version: 3.1.4
   abbreviation: org.codehaus.woodstox:stax2-api
   license: BSD-2-Clause
+  notes: More license information can be found in the THIRD-PARTY/Stax2_API directory.
   authors:
   - name: Tatu Saloranta
+  repository-code: http://github.com/FasterXML/stax2-api
 - type: software
   title: Woodstox
   version: 5.0.3
   abbreviation: com.fasterxml.woodstox:woodstox-core
   license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Woodstox directory.
   authors:
   - name: Tatu Saloranta
+  repository-code: https://github.com/FasterXML/woodstox
 - type: software
   title: ch.qos.logback.classic
   version: 1.1.2.v20171220-1825
@@ -254,4 +272,4 @@ references:
   license: Apache-2.0
   authors: []
 version: 0.2.0-SNAPSHOT
-date-released: 2019-12-05
+date-released: 2019-12-06
