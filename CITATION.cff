@@ -8,6 +8,8 @@ authors:
 - family-names: Krause
   given-names: Thomas
   orcid: https://orcid.org/0000-0003-3731-2422
+version: 0.2.0-SNAPSHOT
+date-released: 2019-12-06
 references:
 - type: software
   title: SWT Resource Manager
@@ -506,5 +508,3 @@ references:
   version: 1.7.10.v20170428-1633
   license: Apache-2.0
   authors: []
-version: 0.2.0-SNAPSHOT
-date-released: 2019-12-06
