@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a unit test bundle for "core" and integration test bundle that uses SWTBot.
 - Add maintainer section to pull request template outlining release procedure to follow
 - Add target platform section to developer/maintainer documentation
+- Add third party license information and a CITATION.cff file 
 
 ### Changed
 
