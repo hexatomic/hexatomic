@@ -166,18 +166,6 @@ references:
   version: 3.3.8
   authors: []
 - type: software
-  title: org.corpus_tools.hexatomic.core
-  version: 0.2.0.201912061354
-  authors: []
-- type: software
-  title: org.corpus_tools.hexatomic.corpusstructureeditor
-  version: 0.2.0.201912061354
-  authors: []
-- type: software
-  title: org.corpus_tools.hexatomic.textviewer
-  version: 0.2.0.201912061354
-  authors: []
-- type: software
   title: org.eclipse.core.commands
   version: 3.9.400.v20190516-1358
   license: EPL-2.0
