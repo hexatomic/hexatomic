@@ -2,8 +2,7 @@ type: software
 title: '{{artifactId}}'
 version: '{{version}}'
 license: EPL-1.0
-institutions:
+authors:
 -  name: The Eclipse Foundation
    website: https://www.eclipse.org/
-authors: []
 notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'
