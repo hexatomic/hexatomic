@@ -3,7 +3,7 @@ title: '{{artifactId}}'
 version: '{{version}}'
 license: EPL-1.0
 institutions:
--  name: QOS.ch
-   website: http://logback.qos.ch
+-  name: The Eclipse Foundation
+   website: https://www.eclipse.org/
 authors: []
 notes: More license information can be found in the corresponding THIRD-PARTY sub-directory

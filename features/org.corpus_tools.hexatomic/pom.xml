@@ -29,6 +29,10 @@
                             <pattern>.*:ch\.qos\.logback\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/logback.yml</template>
                         </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.eclipse\.swt\.(cocoa|linux|win32).*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
                     </referenceTemplates>
                 </configuration>
             </plugin>
