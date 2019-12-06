@@ -60,6 +60,13 @@ references:
   - name: Kevin Bourrillion
   repository-code: https://github.com/google/guava/guava
 - type: software
+  title: ICU4J
+  version: 64.2.0.v20190507-1337
+  license: EPL-1.0
+  authors:
+  - name: ICU4J project
+  notes: More license information can be found in the THIRD-PARTY/com.ibm.icu directory.
+- type: software
   title: JSON in Java
   version: '20160810'
   abbreviation: org.json:json
@@ -126,9 +133,6 @@ references:
   authors: []
   notes: More license information can be found in the THIRD-PARTY/ch.qos.logback.slf4j
     directory.
-- type: software
-  title: com.ibm.icu
-  version: 64.2.0.v20190507-1337
 - type: software
   title: javax.annotation
   version: 1.2.0.v201602091430
