@@ -1,0 +1,7 @@
+type: software
+title: org.apache.commons.jxpath
+version: '{{version}}'
+license: EPL-2.0
+authors:
+-  name: The Apache Software Foundationn
+notes: 'More license information can be found in the THIRD-PARTY/org.apache.commons.jxpath directory.'

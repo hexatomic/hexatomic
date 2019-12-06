@@ -131,15 +131,27 @@ references:
 - type: software
   title: javax.annotation
   version: 1.2.0.v201602091430
-  authors: []
+  license: EPL-1.0
+  authors:
+  - name: Sun
+  - name: Glassfish project
+  notes: More license information can be found in the THIRD-PARTY/javax.annotation
+    directory.
 - type: software
   title: javax.inject
   version: 1.0.0.v20091030
-  authors: []
+  license: EPL-1.0
+  authors:
+  - name: atinject project
+  notes: More license information can be found in the THIRD-PARTY/javax.inject directory.
 - type: software
   title: org.apache.commons.jxpath
   version: 1.3.0.v200911051830
-  authors: []
+  license: EPL-2.0
+  authors:
+  - name: The Apache Software Foundationn
+  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.jxpath
+    directory.
 - type: software
   title: org.corpus-tools.salt-api
   version: 3.3.8

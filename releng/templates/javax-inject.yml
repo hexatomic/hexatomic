@@ -1,0 +1,7 @@
+type: software
+title: javax.inject
+version: '{{version}}'
+license: EPL-1.0
+authors:
+-  name: atinject project
+notes: 'More license information can be found in the THIRD-PARTY/javax.inject directory.'

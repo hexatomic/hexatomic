@@ -33,6 +33,18 @@
                             <pattern>.*:com\.ibm\.icu.*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/icu.yml</template>
                         </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:javax\.inject:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/javax-inject.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:javax\.annotation:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/javax-annotation.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.apache\.commons\.jxpath:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/jxpath.yml</template>
+                        </referenceTemplate>
                         <!-- List the EPL 1.0 dependencies of the Eclipse 
                             project first -->
                         <referenceTemplate>
