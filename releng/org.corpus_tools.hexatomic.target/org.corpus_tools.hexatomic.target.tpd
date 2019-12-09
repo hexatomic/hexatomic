@@ -9,6 +9,14 @@ location 'http://download.eclipse.org/releases/2019-06/' {
 	org.eclipse.e4.core.services
 	org.eclipse.zest.core
 	org.eclipse.zest.layouts
+	org.eclipse.jdt.junit5.runtime
+	org.junit.jupiter.api
+	org.junit.jupiter.engine
+    org.junit.platform.engine
+	org.junit.vintage.engine
+	org.eclipse.swtbot.e4.finder
+	org.eclipse.swtbot.generator
+	org.eclipse.swtbot.go
 }
 
 location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
@@ -16,10 +24,12 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R201906022121
 	org.slf4j.api [1.7.10,2.0.0)
 	ch.qos.logback.slf4j [1.1.2,2.0.0)
 	ch.qos.logback.classic [1.1.2,2.0.0)
+	org.mockito
+	org.hamcrest
 	
 }
 
-location 'https://korpling.github.io/salt/p2/develop/' {
+location 'https://korpling.github.io/salt/p2/salt-3.3/' {
 	org.corpus-tools.salt-api [3.3.8,3.4.0)
 	org.corpus-tools.salt-extensions [3.3.8,3.4.0)
 	

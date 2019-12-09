@@ -57,13 +57,13 @@ public class ProjectManager {
 	private SaltProject project;
 
 	@Inject
-	private IEventBroker events;
+	IEventBroker events;
 
 	@Inject
-	private ProjectChangeListener changeListener;
+	ProjectChangeListener changeListener;
 
 	@Inject
-	private ErrorService errorService;
+	ErrorService errorService;
 
 	private SaltNotificationFactory notificationFactory;
 
@@ -72,7 +72,7 @@ public class ProjectManager {
 	}
 
 	@PostConstruct
-	private void postConstruct() {
+	void postConstruct() {
 		log.debug("Starting Project Manager");
 
 		// Create an empty project
