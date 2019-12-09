@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
@@ -13,7 +12,9 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
 public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
 
-  private double averageNodeWidth;
+  private double averageTokenNodeWidth;
+  private double averageTokenNodeHeight;
+  private double maxExistingY;
 
   public TokenLayoutAlgorithm(int styles) {
     super(styles);
@@ -36,7 +37,7 @@ public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
   protected void applyLayoutInternal(InternalNode[] entitiesToLayout,
       InternalRelationship[] relationshipsToConsider, double boundsX, double boundsY,
       double boundsWidth, double boundsHeight) {
-    double x = 0.0;
+    double x = boundsX;
 
     // Sort tokens
     HashMap<SToken, InternalNode> tokens = new HashMap<SToken, InternalNode>();
@@ -54,8 +55,8 @@ public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
       for (SToken t : sortedTokens) {
         InternalNode n = tokens.get(t);
         if (n != null) {
-          n.setInternalLocation(x, boundsY + 600);
-          x += this.averageNodeWidth / 2.0;
+          n.setInternalLocation(x, boundsY + this.maxExistingY + (this.averageTokenNodeHeight));
+          x += this.averageTokenNodeWidth / 10.0;
           x += n.getLayoutEntity().getWidthInLayout();
 
           fireProgressEvent(progress++, entitiesToLayout.length);
@@ -71,13 +72,28 @@ public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
   protected void preLayoutAlgorithm(InternalNode[] entitiesToLayout,
       InternalRelationship[] relationshipsToConsider, double x, double y, double width,
       double height) {
-    double sum = 0.0;
+
+    this.maxExistingY = 0;
+    // Calculate the average width and height to get a good distance between the tokens
+    double sumWidth = 0.0;
+    double sumHeight = 0.0;
+    int tokenCount = 0;
     for (int index = 0; index < entitiesToLayout.length; index++) {
       InternalNode n = entitiesToLayout[index++];
-      sum += n.getLayoutEntity().getWidthInLayout();
+      IdentifiableElement element = SaltGraphContentProvider.getData(n);
+      if (element instanceof SToken) {
+        sumWidth += n.getLayoutEntity().getWidthInLayout();
+        sumHeight += n.getLayoutEntity().getHeightInLayout();
+        tokenCount++;
+      } else {
+        // Find the maximum existing Y: all tokens should be located at the bottom of the graph
+        this.maxExistingY = Math.max(this.maxExistingY,
+            n.getLayoutEntity().getYInLayout() + n.getLayoutEntity().getHeightInLayout());
+      }
     }
 
-    this.averageNodeWidth = sum / (double) entitiesToLayout.length;
+    this.averageTokenNodeWidth = sumWidth / (double) tokenCount;
+    this.averageTokenNodeHeight = sumHeight / (double) tokenCount;
 
   }
 

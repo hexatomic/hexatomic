@@ -339,22 +339,7 @@ public class SaltGraphViewer {
     TreeLayoutAlgorithm otherLayout =
         new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
     
-    // Each layout is responsible for different parts of the graph and has its own filter.
-    tokenLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
-
-      @Override
-      public boolean isObjectFiltered(LayoutItem object) {
-        IdentifiableElement data = SaltGraphContentProvider.getData(object);
-        if (data instanceof SToken) {
-          return false;
-        } else {
-          return true;
-        }
-      }
-
-    });
-
-    otherLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
+    org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
@@ -369,11 +354,16 @@ public class SaltGraphViewer {
         }
         return true;
       }
-    });
+    };
+    
+    tokenLayout.setFilter(hierarchyFilter);
+    otherLayout.setFilter(hierarchyFilter);
 
     LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {otherLayout, tokenLayout};
     return new CompositeLayoutAlgorithm(layouts);
   }
+  
+  
 
   private class RootFilter extends ViewerFilter {
 
