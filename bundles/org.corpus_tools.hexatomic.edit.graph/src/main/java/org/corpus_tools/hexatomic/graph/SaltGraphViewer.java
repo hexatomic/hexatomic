@@ -73,11 +73,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.internal.ZoomManager;
+import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 public class SaltGraphViewer {
@@ -127,7 +127,9 @@ public class SaltGraphViewer {
     viewer.setContentProvider(new SaltGraphContentProvider());
     viewer.setLabelProvider(new SaltLabelProvider());
     viewer.setLayoutAlgorithm(createLayout());
-
+    viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
+    
+    
     zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
         viewer.getGraphControl().getViewport());
 
@@ -339,6 +341,7 @@ public class SaltGraphViewer {
     TreeLayoutAlgorithm otherLayout =
         new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
     
+    
     org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
 
       @Override
@@ -347,7 +350,7 @@ public class SaltGraphViewer {
         if (data instanceof SStructuredNode || data instanceof SToken) {
           return false;
         } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
-          SDominanceRelation rel = (SDominanceRelation) data;
+          SRelation<?, ?> rel = (SRelation<?, ?>) data;
           if (rel.getTarget() instanceof SStructuredNode) {
             return false;
           }

@@ -23,14 +23,21 @@ import com.google.common.base.Joiner;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+import org.corpus_tools.salt.common.SDominanceRelation;
+import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.util.SaltUtil;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
+import org.eclipse.zest.core.viewers.ISelfStyleProvider;
+import org.eclipse.zest.core.widgets.GraphConnection;
+import org.eclipse.zest.core.widgets.GraphNode;
 
-public class SaltLabelProvider extends LabelProvider {
+public class SaltLabelProvider extends LabelProvider implements ISelfStyleProvider {
   @Override
   public String getText(Object element) {
 
@@ -38,17 +45,26 @@ public class SaltLabelProvider extends LabelProvider {
       LabelableElement node = (LabelableElement) element;
       TreeMap<String, String> labelsByQName = new TreeMap<>();
       for (Label l : node.getLabels()) {
-        String qname = SaltUtil.createQName(l.getNamespace(), l.getName());
-        labelsByQName.put(qname, qname + "=" + l.getValue());
+        boolean include = true;
+        if(element instanceof SRelation<?, ?> && "salt".equals(l.getNamespace())) {
+          include = false;
+        }
+        if("salt".equals(l.getNamespace()) && "id".equals(l.getName())) {
+          include = false;
+        }
+        if (include) {
+          String qname = SaltUtil.createQName(l.getNamespace(), l.getName());
+          labelsByQName.put(qname, qname + "=" + l.getValue());
+        }
       }
       List<String> labels = new LinkedList<>(labelsByQName.values());
-      
-      if(element instanceof SToken) {
+
+      if (element instanceof SToken) {
         SToken token = (SToken) element;
         String coveredText = token.getGraph().getText(token);
         labels.add(0, coveredText);
       }
-      
+
       return Joiner.on('\n').join(labels);
     }
     if (element instanceof EntityConnectionData) {
@@ -57,4 +73,20 @@ public class SaltLabelProvider extends LabelProvider {
     throw new IllegalArgumentException("Object of type LabelableElement expectected, but got "
         + element.getClass().getSimpleName());
   }
+
+  @Override
+  public void selfStyleConnection(Object element, GraphConnection connection) {
+    if (element instanceof SPointingRelation) {
+      connection.changeLineColor(ColorConstants.blue);
+    } else if (element instanceof SDominanceRelation) {
+      connection.changeLineColor(ColorConstants.red);
+    }
+  }
+
+  @Override
+  public void selfStyleNode(Object element, GraphNode node) {
+
+
+  }
+
 }
