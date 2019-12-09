@@ -39,14 +39,17 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SSpanningRelation;
+import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
-import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -70,15 +73,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.internal.ZoomManager;
-import org.eclipse.zest.layouts.Filter;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.HorizontalLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 public class SaltGraphViewer {
 
@@ -292,7 +291,7 @@ public class SaltGraphViewer {
       textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
     }
 
-    viewer.setFilters(new Filter(), new TokenFilter());
+    viewer.setFilters(new Filter());
     viewer.applyLayout();
   }
 
@@ -336,36 +335,42 @@ public class SaltGraphViewer {
   private LayoutAlgorithm createLayout() {
 
     TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
-    TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NONE);
+    DirectedGraphLayoutAlgorithm otherLayout =
+        new DirectedGraphLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
 
     // Each layout is responsible for different parts of the graph and has its own filter.
     tokenLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
-        SNamedElement data = SaltGraphContentProvider.getData(object);
+        IdentifiableElement data = SaltGraphContentProvider.getData(object);
         if (data instanceof SToken) {
           return false;
-        } else if (data instanceof SRelation<?, ?>) {
-          SRelation<?, ?> rel = (SRelation<?, ?>) data;
-          return rel.getSource() instanceof SToken && rel.getTarget() instanceof SToken;
         } else {
           return true;
         }
       }
 
     });
-  
+
     otherLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
-        SNamedElement data = SaltGraphContentProvider.getData(object);
-        return false;
+        IdentifiableElement data = SaltGraphContentProvider.getData(object);
+        if (data instanceof SStructuredNode || data instanceof SToken) {
+          return false;
+        } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
+          SDominanceRelation rel = (SDominanceRelation) data;
+          if (rel.getTarget() instanceof SStructuredNode) {
+            return false;
+          }
+        }
+        return true;
       }
     });
 
-    LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {tokenLayout};
+    LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {otherLayout, tokenLayout};
     return new CompositeLayoutAlgorithm(layouts);
   }
 
@@ -481,22 +486,22 @@ public class SaltGraphViewer {
     }
 
   }
-  
+
   private class TokenFilter extends ViewerFilter {
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-      if(element instanceof SToken) {
+      if (element instanceof SToken) {
         return true;
-      } else if(element instanceof SRelation<?, ?>) {
+      } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
-        if(rel.getSource() instanceof SToken && rel.getTarget() instanceof SToken) {
+        if (rel.getSource() instanceof SToken && rel.getTarget() instanceof SToken) {
           return true;
         }
       }
       return false;
     }
-    
+
   }
 
 

@@ -19,18 +19,25 @@
  */
 package org.corpus_tools.hexatomic.graph;
 
+import java.net.IDN;
 import java.util.List;
-import java.util.stream.Collectors;
+import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.core.SGraph;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.graph.IdentifiableElement;
+import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.Node;
-import org.eclipse.zest.core.viewers.IGraphEntityContentProvider;
+import org.eclipse.zest.core.viewers.IGraphEntityRelationshipContentProvider;
+import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
+import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
-public class SaltGraphContentProvider implements IGraphEntityContentProvider {
+public class SaltGraphContentProvider
+    implements IGraphEntityRelationshipContentProvider {
 
   @Override
   public Object[] getElements(Object inputElement) {
@@ -40,33 +47,54 @@ public class SaltGraphContentProvider implements IGraphEntityContentProvider {
     }
     throw new IllegalArgumentException("Object of type SGraph expectected");
   }
+  
 
   @Override
-  public Object[] getConnectedTo(Object entity) {
-    if (entity instanceof Node) {
-      SNode node = (SNode) entity;
-      List<Node> connected = node.getOutRelations().stream().map((rel) -> rel.getTarget())
-          .collect(Collectors.toList());
-      return connected.toArray();
+  public Object[] getRelationships(Object source, Object dest) {
+    if (source instanceof SNode && dest instanceof SNode) {
+      SNode sourceNode = (SNode) source;
+      SNode targetNode = (SNode) dest;
+
+      if (sourceNode.getGraph() instanceof SDocumentGraph
+          && sourceNode.getGraph() == targetNode.getGraph()) {
+        // get all outgoing relations between the source and destination node
+        SDocumentGraph docGraph = (SDocumentGraph) sourceNode.getGraph();
+        List<SRelation<SNode, SNode>> allRelations =
+            docGraph.getRelations(sourceNode.getId(), targetNode.getId());
+        if (allRelations != null) {
+          return allRelations.toArray();
+        }
+      }
+
     }
-    throw new IllegalArgumentException("Object of type SNode expectected");
+    return null;
   }
 
-  public static SNamedElement getData(LayoutItem object) {
-  
-    while(object instanceof InternalNode) {
+
+  public static IdentifiableElement getData(LayoutItem object) {
+
+    // unwrap nested internal layout node and relationship classes
+    while (object instanceof InternalNode) {
       object = ((InternalNode) object).getLayoutEntity();
     }
+    while (object instanceof InternalRelationship) {
+      object = ((InternalRelationship) object).getLayoutRelationship();
+    }
+    // unwrap the last layer of the Zest node/relationship class
     Object result = object.getGraphData();
     if (result instanceof GraphNode) {
       result = ((GraphNode) result).getData();
+    } else if (result instanceof GraphConnection) {
+      result = ((GraphConnection) result).getData();
     }
     
-    if(result instanceof SNamedElement) {
-      return (SNamedElement) result;
+    // check for delegates
+    if(result instanceof IdentifiableElement) {
+      return (IdentifiableElement) result;
+      
     } else {
       return null;
     }
+    
   }
-
 }

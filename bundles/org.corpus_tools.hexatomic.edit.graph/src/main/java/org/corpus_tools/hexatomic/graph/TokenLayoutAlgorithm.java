@@ -6,6 +6,7 @@ import java.util.List;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNamedElement;
+import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
@@ -40,7 +41,7 @@ public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
     // Sort tokens
     HashMap<SToken, InternalNode> tokens = new HashMap<SToken, InternalNode>();
     for (InternalNode n : entitiesToLayout) {
-      SNamedElement element = SaltGraphContentProvider.getData(n);
+      IdentifiableElement element = SaltGraphContentProvider.getData(n);
       if (element instanceof SToken) {
         tokens.put((SToken) element, n);
       }
@@ -53,7 +54,7 @@ public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
       for (SToken t : sortedTokens) {
         InternalNode n = tokens.get(t);
         if (n != null) {
-          n.setInternalLocation(x, boundsY);
+          n.setInternalLocation(x, boundsY + 600);
           x += this.averageNodeWidth / 2.0;
           x += n.getLayoutEntity().getWidthInLayout();
 
@@ -61,7 +62,7 @@ public class TokenLayoutAlgorithm extends AbstractLayoutAlgorithm {
         }
       }
     }
-    updateLayoutLocations(entitiesToLayout);
+    updateLayoutLocations(tokens.values().toArray(new InternalNode[0]));
     fireProgressEvent(entitiesToLayout.length, entitiesToLayout.length);
 
   }
