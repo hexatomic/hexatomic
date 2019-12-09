@@ -269,8 +269,8 @@ public class SaltGraphViewer {
       textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
     }
 
-    viewer.resetFilters();
     viewer.setFilters(new Filter());
+    viewer.applyLayout();
   }
 
   private void calculateSegments(SDocumentGraph graph) {
