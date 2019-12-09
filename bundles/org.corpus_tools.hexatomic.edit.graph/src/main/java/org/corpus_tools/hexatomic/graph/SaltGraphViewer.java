@@ -4,7 +4,6 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import com.google.common.collect.TreeMultimap;
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.xml.stream.XMLStreamException;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
@@ -29,11 +27,7 @@ import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.exceptions.SaltException;
 import org.corpus_tools.salt.util.DataSourceSequence;
-import org.corpus_tools.salt.util.ExportFilter;
-import org.eclipse.core.runtime.ICoreRunnable;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.viewers.Viewer;
@@ -56,6 +50,14 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.internal.ZoomManager;
+import org.eclipse.zest.layouts.Filter;
+import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutItem;
+import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.HorizontalLayoutAlgorithm;
 
 public class SaltGraphViewer {
 
@@ -103,7 +105,7 @@ public class SaltGraphViewer {
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
     viewer.setLabelProvider(new SaltLabelProvider());
-    viewer.setLayoutAlgorithm(new SaltLayout());
+    viewer.setLayoutAlgorithm(createLayout());
 
     zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
         viewer.getGraphControl().getViewport());
@@ -308,6 +310,53 @@ public class SaltGraphViewer {
       item.setData("range", e.getValue());
       item.setData("text", e.getKey());
     }
+  }
+
+  private LayoutAlgorithm createLayout() {
+
+    HorizontalLayoutAlgorithm tokenLayout = new HorizontalLayoutAlgorithm();
+    GridLayoutAlgorithm spanLayout = new GridLayoutAlgorithm();
+    DirectedGraphLayoutAlgorithm otherLayout = new DirectedGraphLayoutAlgorithm(LayoutStyles.NONE);
+
+    // Each layout is responsible for different parts of the graph and has its own filter.
+    tokenLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
+
+      @Override
+      public boolean isObjectFiltered(LayoutItem object) {
+        if (object.getGraphData() instanceof SToken) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+
+    });
+    spanLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
+
+      @Override
+      public boolean isObjectFiltered(LayoutItem object) {
+        if (object.getGraphData() instanceof SSpan) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    });
+
+    otherLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
+
+      @Override
+      public boolean isObjectFiltered(LayoutItem object) {
+        if (object.getGraphData() instanceof SSpan || object.getGraphData() instanceof SToken) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    });
+
+    LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {tokenLayout, spanLayout, otherLayout};
+    return new CompositeLayoutAlgorithm(layouts);
   }
 
   private class RootFilter extends ViewerFilter {
