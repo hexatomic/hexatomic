@@ -78,6 +78,7 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 public class SaltGraphViewer {
 
@@ -335,9 +336,9 @@ public class SaltGraphViewer {
   private LayoutAlgorithm createLayout() {
 
     TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
-    DirectedGraphLayoutAlgorithm otherLayout =
-        new DirectedGraphLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-
+    TreeLayoutAlgorithm otherLayout =
+        new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
+    
     // Each layout is responsible for different parts of the graph and has its own filter.
     tokenLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
 
