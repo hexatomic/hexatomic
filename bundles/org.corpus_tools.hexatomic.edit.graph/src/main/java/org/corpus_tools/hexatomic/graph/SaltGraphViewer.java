@@ -349,7 +349,7 @@ public class SaltGraphViewer {
 
   private LayoutAlgorithm createLayout() {
 
-    HorizontalLayoutAlgorithm tokenLayout = new HorizontalLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
+    TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
     GridLayoutAlgorithm spanLayout = new GridLayoutAlgorithm();
     TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NONE);
 
