@@ -85,7 +85,9 @@ public class SaltLabelProvider extends LabelProvider implements ISelfStyleProvid
 
   @Override
   public void selfStyleNode(Object element, GraphNode node) {
-
+    if(element instanceof SToken) {
+      node.setBackgroundColor(ColorConstants.lightGreen);
+    }
 
   }
 
