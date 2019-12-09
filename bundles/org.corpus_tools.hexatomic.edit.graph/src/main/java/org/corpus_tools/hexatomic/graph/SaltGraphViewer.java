@@ -44,6 +44,7 @@ import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.util.DataSourceSequence;
@@ -69,7 +70,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.internal.ZoomManager;
-import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.layouts.Filter;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
@@ -79,7 +79,6 @@ import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.HorizontalLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
-import org.eclipse.zest.layouts.dataStructures.InternalNode;
 
 public class SaltGraphViewer {
 
@@ -334,23 +333,9 @@ public class SaltGraphViewer {
     }
   }
 
-  private static Object getData(LayoutItem object) {
-
-    if (object instanceof InternalNode) {
-      object = ((InternalNode) object).getLayoutEntity();
-    }
-    Object result = object.getGraphData();
-    if (result instanceof GraphNode) {
-      return ((GraphNode) result).getData();
-    } else {
-      return result;
-    }
-  }
-
   private LayoutAlgorithm createLayout() {
 
     TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
-    GridLayoutAlgorithm spanLayout = new GridLayoutAlgorithm();
     TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NONE);
 
     // Each layout is responsible for different parts of the graph and has its own filter.
@@ -358,7 +343,7 @@ public class SaltGraphViewer {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
-        Object data = getData(object);
+        SNamedElement data = SaltGraphContentProvider.getData(object);
         if (data instanceof SToken) {
           return false;
         } else if (data instanceof SRelation<?, ?>) {
@@ -370,26 +355,12 @@ public class SaltGraphViewer {
       }
 
     });
-    spanLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
-
-      @Override
-      public boolean isObjectFiltered(LayoutItem object) {
-        Object data = getData(object);
-        if (data instanceof SToken || data instanceof SSpan) {
-          return false;
-        } else if(data instanceof SRelation<?, ?>) {
-          SRelation<?, ?> rel = (SRelation<?, ?>) data;
-          return rel.getSource() instanceof SSpan;          
-        } else {
-          return true;
-        }
-      }
-    });
-
+  
     otherLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
+        SNamedElement data = SaltGraphContentProvider.getData(object);
         return false;
       }
     });

@@ -22,9 +22,13 @@ package org.corpus_tools.hexatomic.graph;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.corpus_tools.salt.core.SGraph;
+import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.graph.Node;
 import org.eclipse.zest.core.viewers.IGraphEntityContentProvider;
+import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.zest.layouts.LayoutItem;
+import org.eclipse.zest.layouts.dataStructures.InternalNode;
 
 public class SaltGraphContentProvider implements IGraphEntityContentProvider {
 
@@ -46,6 +50,23 @@ public class SaltGraphContentProvider implements IGraphEntityContentProvider {
       return connected.toArray();
     }
     throw new IllegalArgumentException("Object of type SNode expectected");
+  }
+
+  public static SNamedElement getData(LayoutItem object) {
+  
+    while(object instanceof InternalNode) {
+      object = ((InternalNode) object).getLayoutEntity();
+    }
+    Object result = object.getGraphData();
+    if (result instanceof GraphNode) {
+      result = ((GraphNode) result).getData();
+    }
+    
+    if(result instanceof SNamedElement) {
+      return (SNamedElement) result;
+    } else {
+      return null;
+    }
   }
 
 }
