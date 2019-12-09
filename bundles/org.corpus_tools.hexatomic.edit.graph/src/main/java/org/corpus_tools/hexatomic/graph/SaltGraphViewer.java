@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.internal.ZoomManager;
+import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.layouts.Filter;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
@@ -77,6 +78,8 @@ import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.HorizontalLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
+import org.eclipse.zest.layouts.dataStructures.InternalNode;
 
 public class SaltGraphViewer {
 
@@ -290,7 +293,7 @@ public class SaltGraphViewer {
       textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
     }
 
-    viewer.setFilters(new Filter());
+    viewer.setFilters(new Filter(), new TokenFilter());
     viewer.applyLayout();
   }
 
@@ -331,19 +334,36 @@ public class SaltGraphViewer {
     }
   }
 
+  private static Object getData(LayoutItem object) {
+
+    if (object instanceof InternalNode) {
+      object = ((InternalNode) object).getLayoutEntity();
+    }
+    Object result = object.getGraphData();
+    if (result instanceof GraphNode) {
+      return ((GraphNode) result).getData();
+    } else {
+      return result;
+    }
+  }
+
   private LayoutAlgorithm createLayout() {
 
-    HorizontalLayoutAlgorithm tokenLayout = new HorizontalLayoutAlgorithm();
+    HorizontalLayoutAlgorithm tokenLayout = new HorizontalLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
     GridLayoutAlgorithm spanLayout = new GridLayoutAlgorithm();
-    DirectedGraphLayoutAlgorithm otherLayout = new DirectedGraphLayoutAlgorithm(LayoutStyles.NONE);
+    TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NONE);
 
     // Each layout is responsible for different parts of the graph and has its own filter.
     tokenLayout.setFilter(new org.eclipse.zest.layouts.Filter() {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
-        if (object.getGraphData() instanceof SToken) {
+        Object data = getData(object);
+        if (data instanceof SToken) {
           return false;
+        } else if (data instanceof SRelation<?, ?>) {
+          SRelation<?, ?> rel = (SRelation<?, ?>) data;
+          return rel.getSource() instanceof SToken && rel.getTarget() instanceof SToken;
         } else {
           return true;
         }
@@ -354,8 +374,12 @@ public class SaltGraphViewer {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
-        if (object.getGraphData() instanceof SSpan) {
+        Object data = getData(object);
+        if (data instanceof SToken || data instanceof SSpan) {
           return false;
+        } else if(data instanceof SRelation<?, ?>) {
+          SRelation<?, ?> rel = (SRelation<?, ?>) data;
+          return rel.getSource() instanceof SSpan;          
         } else {
           return true;
         }
@@ -366,15 +390,11 @@ public class SaltGraphViewer {
 
       @Override
       public boolean isObjectFiltered(LayoutItem object) {
-        if (object.getGraphData() instanceof SSpan || object.getGraphData() instanceof SToken) {
-          return true;
-        } else {
-          return false;
-        }
+        return false;
       }
     });
 
-    LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {tokenLayout, spanLayout, otherLayout};
+    LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {tokenLayout};
     return new CompositeLayoutAlgorithm(layouts);
   }
 
@@ -489,6 +509,23 @@ public class SaltGraphViewer {
       }
     }
 
+  }
+  
+  private class TokenFilter extends ViewerFilter {
+
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+      if(element instanceof SToken) {
+        return true;
+      } else if(element instanceof SRelation<?, ?>) {
+        SRelation<?, ?> rel = (SRelation<?, ?>) element;
+        if(rel.getSource() instanceof SToken && rel.getTarget() instanceof SToken) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
   }
 
 
