@@ -6,7 +6,9 @@
  *
  * <p>
  * Contributors:
- * Google, Inc. - initial API and implementation Wim Jongman - 1.8 and higher compliance
+ * Google, Inc. - initial API and implementation 
+ * Wim Jongman - 1.8 and higher compliance
+ * </p>
  *******************************************************************************/
 
 package org.eclipse.wb.swt;
