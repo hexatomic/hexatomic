@@ -4,6 +4,26 @@ jobs:
     - language: java
 
       jdk: openjdk8
+
+      # enable a window manager to execute UI integration tests
+      addons:
+        apt:
+          packages:
+          - metacity
+      services:
+        - xvfb
+        - metacity
+
+      # Enforce Maven version to fix regression with version 3.6.2, used by Travis as of 2019-12-11
+      # Cf. https://issues.apache.org/jira/browse/MNG-6765
+      before_install:
+        - wget https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
+        - unzip -qq apache-maven-3.6.3-bin.zip
+        - export M2_HOME=$PWD/apache-maven-3.6.3
+        - export PATH=$M2_HOME/bin:$PATH
+      
+      script:
+        - mvn integration-test
       
       script: mvn verify -B
       
