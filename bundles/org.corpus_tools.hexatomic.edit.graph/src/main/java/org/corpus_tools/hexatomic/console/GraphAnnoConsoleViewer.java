@@ -35,6 +35,8 @@ public class GraphAnnoConsoleViewer extends SourceViewer {
     StyledText styledText = getTextWidget();
     styledText.setDoubleClickEnabled(true);
     styledText.setEditable(true);
+    
+    
   }
 
 }

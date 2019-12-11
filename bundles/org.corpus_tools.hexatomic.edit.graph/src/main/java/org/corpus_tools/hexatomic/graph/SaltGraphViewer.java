@@ -55,9 +55,11 @@ import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -81,9 +83,6 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.swt.custom.StyledText;
 
 public class SaltGraphViewer {
 
@@ -237,8 +236,10 @@ public class SaltGraphViewer {
 
     viewer.getControl().forceFocus();
     
-    GraphAnnoConsole console = new GraphAnnoConsole();
+    Document consoleDocument = new Document();
+    GraphAnnoConsole console = new GraphAnnoConsole(consoleDocument, sync);
     GraphAnnoConsoleViewer consoleViewer = new GraphAnnoConsoleViewer(parent, console);
+    consoleViewer.setDocument(consoleDocument);
     StyledText styledText = consoleViewer.getTextWidget();
     styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
    

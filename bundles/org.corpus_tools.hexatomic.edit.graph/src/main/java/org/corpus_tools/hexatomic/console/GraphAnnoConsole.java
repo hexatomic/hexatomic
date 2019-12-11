@@ -19,6 +19,48 @@
  */
 package org.corpus_tools.hexatomic.console;
 
-public class GraphAnnoConsole {
-  
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.jface.text.IDocument;
+
+public class GraphAnnoConsole implements Runnable {
+
+
+  private ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(GraphAnnoConsole.class);
+
+  private final IDocument document;
+
+  private final UISynchronize sync;
+
+  public GraphAnnoConsole(IDocument document, UISynchronize sync) {
+    this.document = document;
+    this.sync = sync;
+    Thread t = new Thread(this);
+    t.start();
+  }
+
+  @Override
+  public void run() {
+    writeLine("To display a list of available commands, type \"help\".\n");
+
+  }
+
+  private void writeLine(String str) {
+    try {
+      out.write(str.getBytes(StandardCharsets.UTF_8));
+      out.write('\n');
+
+      sync.asyncExec(() -> document.set(new String(out.toByteArray(), StandardCharsets.UTF_8)));
+
+
+    } catch (IOException e) {
+      log.error("Could not write to console output", e);
+    }
+  }
+
 }
