@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.console.GraphAnnoConsole;
+import org.corpus_tools.hexatomic.console.GraphAnnoConsoleViewer;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
@@ -79,6 +81,9 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
+import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.swt.custom.StyledText;
 
 public class SaltGraphViewer {
 
@@ -231,7 +236,12 @@ public class SaltGraphViewer {
     updateView(true);
 
     viewer.getControl().forceFocus();
-
+    
+    GraphAnnoConsole console = new GraphAnnoConsole();
+    GraphAnnoConsoleViewer consoleViewer = new GraphAnnoConsoleViewer(parent, console);
+    StyledText styledText = consoleViewer.getTextWidget();
+    styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+   
   }
 
   private List<Integer> getSegmentIdxSortedByLength() {
