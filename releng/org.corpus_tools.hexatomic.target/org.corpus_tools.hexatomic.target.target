@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1576069285">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Hexatomic Target Platform Definition" sequenceNumber="1576070671">
   <locations>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
       <unit id="org.eclipse.equinox.sdk.feature.group" version="3.18.0.v20190528-1257"/>
       <unit id="org.eclipse.emf.common" version="2.16.0.v20190528-0845"/>
@@ -22,15 +21,16 @@
       <unit id="org.eclipse.jface.text" version="3.15.200.v20190519-2344"/>
       <repository location="http://download.eclipse.org/releases/2019-06/"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
       <unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
       <unit id="ch.qos.logback.classic" version="1.1.2.v20171220-1825"/>
       <unit id="org.mockito" version="2.23.0.v20190527-1420"/>
       <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+      <unit id="org.antlr.runtime" version="4.7.1.v20181120-0808"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/"/>
     </location>
-    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.corpus-tools.salt-api" version="3.3.8"/>
       <unit id="org.corpus-tools.salt-extensions" version="3.3.8"/>
       <repository location="https://korpling.github.io/salt/p2/salt-3.3/"/>
