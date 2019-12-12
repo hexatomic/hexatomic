@@ -1,5 +1,6 @@
 /*-
  * #%L
+
  * org.corpus_tools.hexatomic.graph
  * %%
  * Copyright (C) 2018 - 2019 Stephan Druskat, Thomas Krause
@@ -17,6 +18,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.graph;
 
 import java.util.List;
@@ -32,8 +34,7 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
-public class SaltGraphContentProvider
-    implements IGraphEntityRelationshipContentProvider {
+public class SaltGraphContentProvider implements IGraphEntityRelationshipContentProvider {
 
   @Override
   public Object[] getElements(Object inputElement) {
@@ -43,7 +44,7 @@ public class SaltGraphContentProvider
     }
     throw new IllegalArgumentException("Object of type SGraph expectected");
   }
-  
+
 
   @Override
   public Object[] getRelationships(Object source, Object dest) {
@@ -67,6 +68,11 @@ public class SaltGraphContentProvider
   }
 
 
+  /**
+   * Get the actual data which is connected to the layout item.
+   * @param object The object which.
+   * @return Null if no data can be found or has the wrong type.s
+   */
   public static IdentifiableElement getData(LayoutItem object) {
 
     // unwrap nested internal layout node and relationship classes
@@ -83,14 +89,14 @@ public class SaltGraphContentProvider
     } else if (result instanceof GraphConnection) {
       result = ((GraphConnection) result).getData();
     }
-    
+
     // check for delegates
-    if(result instanceof IdentifiableElement) {
+    if (result instanceof IdentifiableElement) {
       return (IdentifiableElement) result;
-      
+
     } else {
       return null;
     }
-    
+
   }
 }

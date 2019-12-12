@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.graph;
 
 import com.google.common.collect.ComparisonChain;
@@ -84,6 +85,7 @@ import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
+@SuppressWarnings("restriction")
 public class SaltGraphViewer {
 
 
@@ -94,7 +96,9 @@ public class SaltGraphViewer {
   private MPart thisPart;
 
   @Inject
-  public SaltGraphViewer() {}
+  public SaltGraphViewer() {
+
+  }
 
 
   private Button btnIncludeSpans;
@@ -122,6 +126,11 @@ public class SaltGraphViewer {
   }
 
 
+  /**
+   * Create a new graph viewer.
+   * @param parent The parent SWT composite.
+   * @param part The part this viewer belongs to.
+   */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
     parent.setLayout(new GridLayout(2, false));
@@ -132,8 +141,8 @@ public class SaltGraphViewer {
     viewer.setLabelProvider(new SaltLabelProvider());
     viewer.setLayoutAlgorithm(createLayout());
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
-    
-    
+
+
     zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
         viewer.getGraphControl().getViewport());
 
@@ -235,14 +244,14 @@ public class SaltGraphViewer {
     updateView(true);
 
     viewer.getControl().forceFocus();
-    
+
     Document consoleDocument = new Document();
     GraphAnnoConsole console = new GraphAnnoConsole(consoleDocument, sync);
     GraphAnnoConsoleViewer consoleViewer = new GraphAnnoConsoleViewer(parent, console);
     consoleViewer.setDocument(consoleDocument);
     StyledText styledText = consoleViewer.getTextWidget();
     styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-   
+
   }
 
   private List<Integer> getSegmentIdxSortedByLength() {
@@ -250,21 +259,26 @@ public class SaltGraphViewer {
         IntStream.range(0, textRangeTable.getItemCount()).boxed().collect(Collectors.toList());
 
     result.sort(new Comparator<Integer>() {
+      @SuppressWarnings("unchecked")
       @Override
       public int compare(Integer o1, Integer o2) {
 
         // get both ranges from the container
-        Range<Long> r1 = (Range<Long>) textRangeTable.getItem(o1).getData("range");
-        Range<Long> r2 = (Range<Long>) textRangeTable.getItem(o2).getData("range");
+        Object r1Raw = textRangeTable.getItem(o1).getData("range");
+        Object r2Raw = textRangeTable.getItem(o2).getData("range");
 
+        Range<Long> r1 = (Range<Long>) r1Raw;
+        Range<Long> r2 = (Range<Long>) r2Raw;
         return ComparisonChain.start().compare(r1.upperEndpoint() - r1.lowerEndpoint(),
             r2.upperEndpoint() - r2.lowerEndpoint()).result();
+
       }
     });
 
     return result;
   }
 
+  @SuppressWarnings("unchecked")
   private void updateView(boolean recalculateSegments) {
 
     if (recalculateSegments) {
@@ -315,17 +329,18 @@ public class SaltGraphViewer {
     ViewerFilter currentFilter = new RootFilter();
 
     Multimap<STextualDS, Range<Long>> sortedDS =
-        TreeMultimap.create(new STextualDSComparator(), new RangeStartComparator<>());
+        TreeMultimap.create(new STextualDataSourceComparator(), new RangeStartComparator<>());
 
     List<SNode> roots = graph.getRoots();
     if (roots != null) {
       for (SNode r : roots) {
 
         if (currentFilter.select(viewer, null, r)) {
+          @SuppressWarnings("rawtypes")
           List<DataSourceSequence> overlappedDS =
               graph.getOverlappedDataSourceSequence(r, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
           if (overlappedDS != null) {
-            for (DataSourceSequence seq : overlappedDS) {
+            for (DataSourceSequence<?> seq : overlappedDS) {
               if (seq.getDataSource() instanceof STextualDS) {
                 sortedDS.put((STextualDS) seq.getDataSource(),
                     Range.closedOpen(seq.getStart().longValue(), seq.getEnd().longValue()));
@@ -349,10 +364,9 @@ public class SaltGraphViewer {
   private LayoutAlgorithm createLayout() {
 
     TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
-    TreeLayoutAlgorithm otherLayout =
-        new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-    
-    
+    TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
+
+
     org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
 
       @Override
@@ -369,15 +383,15 @@ public class SaltGraphViewer {
         return true;
       }
     };
-    
+
     tokenLayout.setFilter(hierarchyFilter);
     otherLayout.setFilter(hierarchyFilter);
 
     LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {otherLayout, tokenLayout};
     return new CompositeLayoutAlgorithm(layouts);
   }
-  
-  
+
+
 
   private class RootFilter extends ViewerFilter {
 
@@ -425,6 +439,7 @@ public class SaltGraphViewer {
       Set<SToken> coveredTokens = new HashSet<>();
       for (TableItem item : textRangeTable.getSelection()) {
 
+        @SuppressWarnings("unchecked")
         Range<Long> itemRange = (Range<Long>) item.getData("range");
         STextualDS itemText = (STextualDS) item.getData("text");
 
@@ -492,25 +507,7 @@ public class SaltGraphViewer {
 
   }
 
-  private class TokenFilter extends ViewerFilter {
-
-    @Override
-    public boolean select(Viewer viewer, Object parentElement, Object element) {
-      if (element instanceof SToken) {
-        return true;
-      } else if (element instanceof SRelation<?, ?>) {
-        SRelation<?, ?> rel = (SRelation<?, ?>) element;
-        if (rel.getSource() instanceof SToken && rel.getTarget() instanceof SToken) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-  }
-
-
-  private static class STextualDSComparator implements Comparator<STextualDS> {
+  private static class STextualDataSourceComparator implements Comparator<STextualDS> {
 
     @Override
     public int compare(STextualDS o1, STextualDS o2) {
@@ -518,7 +515,8 @@ public class SaltGraphViewer {
     }
   }
 
-  private static class RangeStartComparator<C extends Comparable> implements Comparator<Range<C>> {
+  private static class RangeStartComparator<C extends Comparable<?>>
+      implements Comparator<Range<C>> {
 
     @Override
     public int compare(Range<C> o1, Range<C> o2) {

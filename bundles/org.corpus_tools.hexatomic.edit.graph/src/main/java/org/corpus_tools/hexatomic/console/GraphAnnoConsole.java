@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.console;
 
 import java.io.ByteArrayOutputStream;
@@ -41,6 +42,12 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
 
   private final UISynchronize sync;
 
+  /**
+   * Constructs a new console.
+   * 
+   * @param document The document that holds the content and history.
+   * @param sync An Eclipse synchronization object.
+   */
   public GraphAnnoConsole(IDocument document, UISynchronize sync) {
     this.document = document;
     this.sync = sync;
@@ -73,7 +80,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
 
   @Override
   public void documentChanged(DocumentEvent event) {
-    
+
   }
 
   @Override
@@ -82,7 +89,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
       int nrLines = event.getDocument().getNumberOfLines();
       try {
         if (nrLines >= 1) {
-          IRegion lineRegion = document.getLineInformation(nrLines-1);
+          IRegion lineRegion = document.getLineInformation(nrLines - 1);
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
           log.info("Before input line: {}", lastLine);
         }

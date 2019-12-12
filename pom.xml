@@ -63,6 +63,7 @@
                     <version>${license-maven-plugin.version}</version>
                     <configuration>
                         <verbose>false</verbose>
+                        <licensesOutputFileEol>AUTODETECT</licensesOutputFileEol>
                     </configuration>
                     <executions>
                         <execution>

@@ -17,6 +17,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.graph;
 
 import com.google.common.base.Joiner;
@@ -46,10 +47,10 @@ public class SaltLabelProvider extends LabelProvider implements ISelfStyleProvid
       TreeMap<String, String> labelsByQName = new TreeMap<>();
       for (Label l : node.getLabels()) {
         boolean include = true;
-        if(element instanceof SRelation<?, ?> && "salt".equals(l.getNamespace())) {
+        if (element instanceof SRelation<?, ?> && "salt".equals(l.getNamespace())) {
           include = false;
         }
-        if("salt".equals(l.getNamespace()) && "id".equals(l.getName())) {
+        if ("salt".equals(l.getNamespace()) && "id".equals(l.getName())) {
           include = false;
         }
         if (include) {
@@ -85,7 +86,7 @@ public class SaltLabelProvider extends LabelProvider implements ISelfStyleProvid
 
   @Override
   public void selfStyleNode(Object element, GraphNode node) {
-    if(element instanceof SToken) {
+    if (element instanceof SToken) {
       node.setBackgroundColor(ColorConstants.lightGreen);
     }
 
