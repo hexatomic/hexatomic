@@ -9,7 +9,6 @@
         - [Running and debugging Hexatomic in Eclipse](./development/running-debugging-with-eclipse.md)
 	- [Workflow](./development/workflow/README.md)
         - [Repositories](./development/workflow/repositories.md)
-        - [Project setup](./development/workflow/setup.md)
     - [Data model](./development/data-model/README.md)
 	- [Logging and error handling](./development/logging-error-handling.md)   
 	- [Adding a new editor](./development/add-new-editor.md)
