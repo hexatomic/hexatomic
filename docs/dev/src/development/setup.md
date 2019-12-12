@@ -28,7 +28,7 @@ You can check which version of Java you have installed by typing the following c
 java -version
 ```
 
-On Linux, this should produce the following output. The second line may look different, depending on the Linux distribution you use.
+On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.
 
 ```bash
 openjdk version "1.8.0_222"
@@ -38,7 +38,7 @@ OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
 
 ### Apache Maven
 
-You need to have a copy of **Apache Maven** in **version 3.6.0 or newer** installed on your computer.
+You need to have a copy of **Apache Maven** in **version 3.6.3 or newer** installed on your computer.
 To find out how to install Maven on your system, please see the [Apache Maven website](https://maven.apache.org/).
 
 You can check which version of Maven you have installed by typing the following command into the terminal of your computer:
@@ -47,15 +47,21 @@ You can check which version of Maven you have installed by typing the following 
 mvn -version
 ```
 
-On Linux, this should produce the following output. The first line is the important one, the other ones may look different, depending on the Linux distribution you use.
+On Linux, this should produce the following output, or something similar. The first line is the important one, the other ones may look different, depending on the Linux distribution you use.
 
 ```bash
-Apache Maven 3.6.0
+Apache Maven 3.6.3
 Maven home: /usr/share/maven
 Java version: 1.8.0_222, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
 Default locale: en_US, platform encoding: UTF-8
 OS name: "linux", version: "5.0.0-23-generic", arch: "amd64", family: "unix"
 ```
+
+> <i class="fa fa-bug"></i> **Known bug in Maven version 3.6.2**
+>
+> If `mvn -version` returns Maven version *3.6.2*, you will have to install version 3.6.3 or newer instead,
+> as version 3.6.2 contains a bug that will break the Hexatomic build. 
+> You can learn more about this in the respective [bug report](https://issues.apache.org/jira/browse/MNG-6765).
 
 ### Git
 
