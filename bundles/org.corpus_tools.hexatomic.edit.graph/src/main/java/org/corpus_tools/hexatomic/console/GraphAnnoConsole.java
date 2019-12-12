@@ -23,6 +23,11 @@ package org.corpus_tools.hexatomic.console;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.CommandContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StartContext;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -91,6 +96,17 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
         if (nrLines >= 1) {
           IRegion lineRegion = document.getLineInformation(nrLines - 1);
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
+          
+          // parse the line
+          ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(lastLine));
+          CommonTokenStream tokens = new CommonTokenStream(lexer);
+          ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
+         
+          ParseTreeWalker walker = new ParseTreeWalker();
+          CommandTreeListener listener = new CommandTreeListener();
+          walker.walk(listener, parser.start());
+         
+          
           log.info("Before input line: {}", lastLine);
         }
       } catch (BadLocationException e) {
@@ -98,6 +114,10 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
       }
     }
 
+  }
+  
+  private class CommandTreeListener extends ConsoleCommandBaseListener  {
+    
   }
 
 }
