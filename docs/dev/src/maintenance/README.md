@@ -1,17 +1,27 @@
 # Maintenance
 
+This section contains the documentation for Hexatomic maintenance work.
+
+<!--
+
+TODOs
+
 ## GitFlow
 
-<!-- TODO -->
+Link to dev docs section on GitFlow.
 
 ## Continuous integration
 
-<!-- TODO -->
+Add section about working with Travis
 
 ## Pull Requests
 
-<!-- TODO -->
+Add section about working with PRs, 
+more how to communicate with PR creators,
+and technicalities for getting PRs into develop.
 
-## Releases
+## Code reviews
 
-<!-- TODO -->
+Document code reviews
+
+-->
