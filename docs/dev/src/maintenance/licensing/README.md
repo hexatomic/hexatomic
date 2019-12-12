@@ -23,21 +23,21 @@ You can read about the plug-in on the [Maven License Plugin website](http://www.
 
 ### Dependencies
 
-We use the [Citation File Format Maven plugin](https://github.com/hexatomic/cff-maven-plugin) for
-documenting the licensing of dependencies.
+We use the [Citation File Format Maven plugin](https://github.com/hexatomic/cff-maven-plugin) to
+document Hexatomic's dependencies, their licenses, and their citation information.
 This plug-in provides two goals, which can be executed to update the third-party dependency information.
 Since our external dependencies are currently collected by the `org.corpus_tools.hexatomic` feature,
 you have to execute the following Maven commands in the `features/org.corpus_tools.hexatomic` folder.
-The created files and folders will be located at the root folder of the project
+The created files and folders will be located in the root folder of this project.
 
 `mvn cff:create` creates a new `CITATION.cff` file in the [Citation File Format (CFF)](https://citation-file-format.github.io/).
-This file does not only include basic information about the authorship of the Hexatomic project but also lists dependencies.
+This file does not only include basic information about the authorship of the Hexatomic project but also lists dependencies, for citation purposes.
+You can learn more about `CITATION.cff` files one the [Citation File Format website](https://citation-file-format.github.io/).
 
-`mvn cff:third-party-folder` re-recreates the `THIRD-PARTY` folder.
+`mvn cff:third-party-folder` re-creates the `THIRD-PARTY` folder.
 It includes the license itself and additional license files like `NOTICE` (used by projects under the Apache License Version 2.0) or `about.html` (used by Eclipse P2 repositories). 
 
 You can configure the behavior of the CFF plug-in by editing the `features/org.corpus_tools.hexatomic/pom.xml`.
 Several templates for curated license information are located in the `releng/templates` folder.
-This includes the `releng/templates/CITATION.cff` file, which is a template for the non-reference
-information (e.g. the list of authors).
-
+This includes the `releng/templates/CITATION.cff` file, which is a template for citation information - e.g., the curated list of authors - for the software itself (here: Hexatomic),
+but it can also be used to provide citation metadata for references, which shouldn't be overwritten during auto-generation.
