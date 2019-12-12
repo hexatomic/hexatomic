@@ -21,8 +21,6 @@
   - [Versioning](./maintenance/versioning/README.md)
   - [Licensing](./maintenance/licensing/README.md)
   - [Pull requests](./maintenance/pull-requests/README.md)
-    - [Checklist](./maintenance/pull-requests/checklist.md)
   - [Releases](./maintenance/releases/README.md)
-    - [Checklist](./maintenance/releases/checklist.md)
 - [Governance](./governance.md)
 - [License](./LICENSE.md)
