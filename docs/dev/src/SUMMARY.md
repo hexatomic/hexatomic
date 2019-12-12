@@ -19,7 +19,7 @@
 	   - [UI integration tests](./development/automated-tests/ui-integration-tests.md)
 - [Maintenance](./maintenance/README.md)
   - [Versioning](./maintenance/versioning/README.md)
-  - [Licensing](./maintenance/licensing/README.md)
+  - [Licensing and citation](./maintenance/licensing/README.md)
   - [Pull requests](./maintenance/pull-requests/README.md)
   - [Releases](./maintenance/releases/README.md)
 - [Governance](./governance.md)
