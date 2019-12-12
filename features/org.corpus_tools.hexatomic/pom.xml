@@ -1,0 +1,77 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.corpus_tools.hexatomic</artifactId>
+    <packaging>eclipse-feature</packaging>
+    <parent>
+        <groupId>org.corpus_tools</groupId>
+        <artifactId>org.corpus_tools.hexatomic.features</artifactId>
+        <version>0.2.0</version>
+    </parent>
+
+    <build>
+        <plugins>
+            <!-- Generate a CITATION.cff file automatically -->
+            <plugin>
+                <groupId>org.corpus-tools</groupId>
+                <artifactId>cff-maven-plugin</artifactId>
+                <version>0.4.0</version>
+                <configuration>
+                    <includeEmail>false</includeEmail>
+                    <input>${maven.multiModuleProjectDirectory}/releng/templates/CITATION.cff</input>
+                    <output>${maven.multiModuleProjectDirectory}/CITATION.cff</output>
+                    <thirdPartyFolder>${maven.multiModuleProjectDirectory}/THIRD-PARTY</thirdPartyFolder>
+                    <p2ReconstructGroupId>false</p2ReconstructGroupId>
+                    <referenceTemplates>
+                        <referenceTemplate>
+                            <pattern>.*:ch\.qos\.logback\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/logback.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:com\.ibm\.icu.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/icu.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:javax\.inject:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/javax-inject.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:javax\.annotation:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/javax-annotation.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.apache\.commons\.jxpath:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/jxpath.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.slf4j\.api:.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/slf4j.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>p2\.eclipse-plugin:org\.corpus-tools\.salt-api:jar:lib/textcat-.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/textcat.yml</template>
+                        </referenceTemplate>
+                        <!-- List the EPL 1.0 dependencies of the Eclipse 
+                            project first -->
+                        <referenceTemplate>
+                            <pattern>.*:org\.eclipse\.swt\.(cocoa|linux|win32).*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <!-- All other Eclipse project dependencies are EPL-2.0 -->
+                        <referenceTemplate>
+                            <pattern>.*:org\.eclipse\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl2.yml</template>
+                        </referenceTemplate>
+                    </referenceTemplates>
+                    <ignoredArtifacts>
+                        <ignoredArtifact>p2\.eclipse-plugin:org\.corpus_tools\.hexatomic\..*</ignoredArtifact>
+                    </ignoredArtifacts>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+

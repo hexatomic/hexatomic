@@ -1,0 +1,9 @@
+type: software
+title: Simple Logging Facade for Java
+abbreviation: SLF4J
+version: '{{version}}'
+license: MIT
+authors:
+-  name: QOS.ch
+   website: http://www.slf4j.org
+notes: 'More license information can be found in the THIRD-PARTY/org.slf4j.api directory.'

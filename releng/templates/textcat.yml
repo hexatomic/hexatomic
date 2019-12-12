@@ -1,0 +1,10 @@
+type: software
+title: Java Text Categorizing Library
+abbreviation: textcat
+version: '{{version}}'
+license: LGPL-3.0-or-later
+license-url: http://www.gnu.org/licenses/lgpl.txt
+repository-code: https://sourceforge.net/p/textcat/code/
+authors:
+-  family-names: Hammerl
+   given-names: Thomas
