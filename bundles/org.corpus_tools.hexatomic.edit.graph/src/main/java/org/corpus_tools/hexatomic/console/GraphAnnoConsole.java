@@ -26,8 +26,9 @@ import java.nio.charset.StandardCharsets;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.CommandContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StartContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SStructure;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -47,15 +48,19 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
 
   private final UISynchronize sync;
 
+  private final SDocumentGraph graph;
+
   /**
    * Constructs a new console.
    * 
    * @param document The document that holds the content and history.
    * @param sync An Eclipse synchronization object.
+   * @param graph The Salt graph to edit.
    */
-  public GraphAnnoConsole(IDocument document, UISynchronize sync) {
+  public GraphAnnoConsole(IDocument document, UISynchronize sync, SDocumentGraph graph) {
     this.document = document;
     this.sync = sync;
+    this.graph = graph;
 
     this.document.addDocumentListener(this);
 
@@ -96,18 +101,15 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
         if (nrLines >= 1) {
           IRegion lineRegion = document.getLineInformation(nrLines - 1);
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
-          
+
           // parse the line
           ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(lastLine));
           CommonTokenStream tokens = new CommonTokenStream(lexer);
           ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
-         
+
           ParseTreeWalker walker = new ParseTreeWalker();
           CommandTreeListener listener = new CommandTreeListener();
           walker.walk(listener, parser.start());
-         
-          
-          log.info("Before input line: {}", lastLine);
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);
@@ -115,9 +117,20 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
     }
 
   }
-  
-  private class CommandTreeListener extends ConsoleCommandBaseListener  {
-    
+
+  private class CommandTreeListener extends ConsoleCommandBaseListener {
+
+    @Override
+    public void exitNewNode(NewNodeContext ctx) {
+
+      if (graph == null) {
+        return;
+      }
+      SStructure n = graph.createStructure();
+      if (n != null) {
+        log.debug("Created new structure node {}", n.getId());
+      }
+    }
   }
 
 }

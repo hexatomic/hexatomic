@@ -246,7 +246,7 @@ public class SaltGraphViewer {
     viewer.getControl().forceFocus();
 
     Document consoleDocument = new Document();
-    GraphAnnoConsole console = new GraphAnnoConsole(consoleDocument, sync);
+    GraphAnnoConsole console = new GraphAnnoConsole(consoleDocument, sync, getGraph());
     GraphAnnoConsoleViewer consoleViewer = new GraphAnnoConsoleViewer(parent, console);
     consoleViewer.setDocument(consoleDocument);
     StyledText styledText = consoleViewer.getTextWidget();
