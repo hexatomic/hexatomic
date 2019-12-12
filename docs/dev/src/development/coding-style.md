@@ -1,6 +1,6 @@
 # Coding style and formatting
 
-We are using a derivative of the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
+We are using a derivative of the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) to uniformly format the Hexatomic source code.
 In addition to the original style guide, the following rules apply:
 - Package names are allowed to have underscores, e.g. `org.corpus_tools.hexatomic` .
 - An HTML rendered JavaDoc API page must include all the context necessary to understand all the contents of the page.
@@ -8,7 +8,7 @@ In addition to the original style guide, the following rules apply:
 
 Some aspects of the coding style will be automatically enforced and checked during continuous integration using the
 [Maven Checkstyle plugin](https://maven.apache.org/plugins/maven-checkstyle-plugin/).
-Validation of the coding style is also performed whenever you build the project using Maven (e.g. `mvn install`).
+Validation of the coding style is also performed whenever you build the project using Maven (e.g., `mvn install`).
 
 ## Configuring the Eclipse code formatting
 
@@ -17,11 +17,11 @@ You can configure Eclipse to format your source code according to the Hexatomic 
 1. Choose **Window** > **Preferences** from the main Eclipse menu.
 2. Open the settings page **Java** > **Code Style** > **Formatter**
 3. Select "Import..." and choose the file `releng/ide/eclipse-java-hexatomic-style.xml` in the Hexatomic repository
-4. Switch to "Hexatomic Style" as the active profile.
-![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png) 
+4. Switch to "Hexatomic Style" as the active profile.<br/><br/>
+![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png)<br/><br/>
 5. Open the settings page **Java** > **Code Style** > **Organize Imports**
 6. Select all packages in the list and remove them. 
-This configures Eclipse to order all imported packages in alphabetical order.
+This configures Eclipse to order all imported packages in alphabetical order.<br/><br/>
 ![Configure the package import order](./configure-import-order.png)
 
 You can use the keyboard shortcut <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> to format a single source code file.
