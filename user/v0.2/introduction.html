@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Introduction - Hexatomic User Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="introduction.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="usage/index.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/projects.html"><strong aria-hidden="true">3.1.</strong> Working with projects</a></li><li><a href="usage/corpus-structure.html"><strong aria-hidden="true">3.2.</strong> Editing the corpus structure</a></li><li><a href="usage/open-editor.html"><strong aria-hidden="true">3.3.</strong> Opening an editor</a></li></ol></li><li><a href="troubleshooting.html"><strong aria-hidden="true">4.</strong> Troubleshooting &amp; getting help</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic User Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#welcome-to-hexatomic" id="welcome-to-hexatomic">Welcome to Hexatomic!</a></h1>
+<p>You are reading the user documentation for <a href="https://corpus-tools.org/hexatomic">Hexatomic</a>.</p>
+<h2><a class="header" href="#what-is-hexatomic" id="what-is-hexatomic">What is Hexatomic?</a></h2>
+<p>Hexatomic is an extensible OS-independent platform for deep multi-layer linguistic corpus annotation.</p>
+<p>Research projects want to answer very specific research questions.
+When they use corpora, they may have to use specific software that can</p>
+<ul>
+<li>handle the format their corpus data is available in, or</li>
+<li>provide annotation functionality for the annotation types they want to use.</li>
+</ul>
+<p>Projects may also need additional software to search their data.
+If they have corpora in more than one format, they may have to duplicate the number of software tools they have to use in order to answer their research question. And if this software doesn't exist yet, they have to implement a new tool from scratch.</p>
+<p>Hexatomic aims to alleviate this situation, and reduce the number of tools a project will have to use (and install, and maintain, and learn) to 1.</p>
+<h5><a class="header" href="#how-does-it-do-that" id="how-does-it-do-that">How does it do that?</a></h5>
+<ol>
+<li>It works with a generic graph-based data model, that can handle many different types of annotations.</li>
+<li>It includes a converter framework, which allows the import of a multitude of different corpus formats, provides them in the generic graph-based model
+for manipulation (corpus-building, annotation, cleaning, etc.), and can export the corpus data to yet another multitude of corpus and other data formats.</li>
+<li>It includes powerful corpus search functionality, that offers the usual free text- and regex-based search, but can also search across linguistic
+structures and build complex queries across layers.</li>
+</ol>
+<h5><a class="header" href="#what-if-hexatomic-cannot-handle-my-specific-annotation-typeuse-case" id="what-if-hexatomic-cannot-handle-my-specific-annotation-typeuse-case">What if Hexatomic cannot handle my specific annotation type/use case?</a></h5>
+<p>Hexatomic is built to be extensible through plugins.
+If it doesn't offer what you are looking for, you don't have to implement a new tool from scratch, 
+but can instead build a plugin that does what you need.
+On top, the existing functionality, the data model, import and export functionality, and search come for free with that.</p>
+<h5><a class="header" href="#what-kind-of-software-is-hexatomic" id="what-kind-of-software-is-hexatomic">What kind of software is Hexatomic?</a></h5>
+<p>Hexatomic is software for the desktop.
+You download it to your computer.
+It does not need an internet connection to run, and therefore you can also use it in the field, or on the train en route to a conference.</p>
+<p>Specifically, it is an Eclipse e4 application implemented in Java.</p>
+<p>Hexatomic is <i class="fa fa-heart"></i> free and open source under the <a href="https://github.com/hexatomic/hexatomic/tree/master/LICENSE">Apache License, Version 2.0</a>.</p>
+<h2><a class="header" href="#how-can-hexatomic-be-used" id="how-can-hexatomic-be-used">How can Hexatomic be used?</a></h2>
+<p>You can use Hexatomic to do, for example, any or all of the following:</p>
+<p><i class="fa fa-wrench"></i> Build a corpus from scratch</p>
+<p><i class="fa fa-object-group"></i> Merge different corpora into a new one</p>
+<p><i class="fa fa-pencil"></i> Annotate an existing corpus</p>
+<p><i class="fa fa-bug"></i> Error correct a corpus</p>
+<p><i class="fa fa-search"></i> Search a corpus</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+                            <a rel="next" href="installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+                    <a href="installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

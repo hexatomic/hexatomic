@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Logging and error handling - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li><li><a href="../development/workflow/setup.html"><strong aria-hidden="true">2.2.2.</strong> Project setup</a></li></ol></li><li><a href="../development/data-model/index.html"><strong aria-hidden="true">2.3.</strong> Data model</a></li><li><a href="../development/logging-error-handling.html" class="active"><strong aria-hidden="true">2.4.</strong> Logging and error handling</a></li><li><a href="../development/add-new-editor.html"><strong aria-hidden="true">2.5.</strong> Adding a new editor</a></li><li><a href="../development/automated-tests/index.html"><strong aria-hidden="true">2.6.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.6.1.</strong> Adding a test bundle</a></li><li><a href="../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.6.2.</strong> Adding a test case</a></li><li><a href="../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.6.3.</strong> Mocking injected dependencies</a></li><li><a href="../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.6.4.</strong> UI integration tests</a></li></ol></li></ol></li><li><a href="../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../maintenance/versioning/index.html"><strong aria-hidden="true">3.1.</strong> Versioning</a></li><li><a href="../maintenance/licensing/index.html"><strong aria-hidden="true">3.2.</strong> Licensing</a></li><li><a href="../maintenance/pull-requests/index.html"><strong aria-hidden="true">3.3.</strong> Pull requests</a></li><li><ol class="section"><li><a href="../maintenance/pull-requests/checklist.html"><strong aria-hidden="true">3.3.1.</strong> Checklist</a></li></ol></li><li><a href="../maintenance/releases/index.html"><strong aria-hidden="true">3.4.</strong> Releases</a></li><li><ol class="section"><li><a href="../maintenance/releases/checklist.html"><strong aria-hidden="true">3.4.1.</strong> Checklist</a></li></ol></li></ol></li><li><a href="../governance.html"><strong aria-hidden="true">4.</strong> Governance</a></li><li><a href="../LICENSE.html"><strong aria-hidden="true">5.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#logging-and-error-handling" id="logging-and-error-handling">Logging and error handling</a></h1>
+<h2><a class="header" href="#logging" id="logging">Logging</a></h2>
+<p>Hexatomic uses the SLF4J logging API to log messages.
+To enable a logger for a specific class, create a static final variable which holds the class-specific logging object.</p>
+<pre><code class="language-java">private static final org.slf4j.Logger log = 
+	org.slf4j.LoggerFactory.getLogger(MyClass.class);
+</code></pre>
+<p>You can use this <code>log</code> object everwhere in the code to output debug, info, warning or error messages to the console or to the log files. </p>
+<pre><code class="language-java">int counter = 101;
+log.debug(&quot;Selecting created document {}.&quot;, 101);
+</code></pre>
+<p>See the <a href="https://www.slf4j.org/manual.html">SLF4J manual</a> for more information on the API.</p>
+<p>To implement the API, we use the <a href="https://logback.qos.ch/">Logback library</a> in the <code>org.corpus_tools.hexatomic.core</code> bundle.
+For testing and debugging purposes, there is a <code>logback-test.xml</code> file in the root of the logging bundle. 
+This configuration file is loaded whenever Hexatomic is started from Eclipse using the Debug/Run configuration and will output messages on the <code>debug</code> level.
+When compiling the Hexatomic product, the file <code>logback.xml</code> is copied to the product root directory and loaded from there.
+This allows a user/developer to customize the logging on their own, even when using a published binary artifact instead of debugging directly from the Eclipse IDE.
+Per default, only messages from the <code>info</code> level and above are printed to the command line.
+See the <a href="https://logback.qos.ch/manual/configuration.html">Logback documentation</a> how to write or adapt this file.</p>
+<h2><a class="header" href="#handling-exceptions" id="handling-exceptions">Handling exceptions</a></h2>
+<p>The core bundle exports the special <code>org.corpus_tools.hexatomic.core.errors.ErrorService</code> service which should be used to display error messages to the user.</p>
+<p>To report an exception, simply call the <code>handleException(...)</code> function of the service with an error message, the exception object, and the class of the caller, i.e., the class in which you catch the exception.</p>
+<pre><code class="language-java">project = SaltFactory.createSaltProject();
+try {
+	project.loadCorpusStructure(path);
+} catch (SaltException ex) {
+	// In this example the calling function is part of the ProjectManager class.
+	errorService.handleException(&quot;Cannot load project from &quot; + path.toString(), ex, 
+		ProjectManager.class);
+}
+</code></pre>
+<p>This will produce the exception dialog shown below.
+It includes the error message, and a stack trace which the user can inspect by expanding &quot;Details&quot; (which is initially hidden).</p>
+<p><img src="./exception-dialog.png" alt="An example for an exception dialog" /></p>
+<p>In addition to the dialog, a log entry is added.
+This log entry uses the logger for the caller class which has been passed to the <code>handleException(...)</code> method.</p>
+<pre><code class="language-plain">18:52:54.324 [main] ERROR o.c.h.c.ProjectManager - Exception occured: Could not load salt project from file:/tmp
+org.corpus_tools.salt.exceptions.SaltResourceException: Can not load SaltProject, because path '/tmp/saltProject.salt' does not exist. 
+	at org.corpus_tools.salt.util.SaltUtil.loadSaltProject(SaltUtil.java:835) ~[org.corpus-tools.salt-api_3.3.8.20190808115214.jar:na]
+	at org.corpus_tools.salt.common.impl.SaltProjectImpl.loadCorpusStructure(SaltProjectImpl.java:148) ~[org.corpus-tools.salt-api_3.3.8.20190808115214.jar:na]
+	at org.corpus_tools.hexatomic.core.ProjectManager.open(ProjectManager.java:108) ~[org.corpus_tools.hexatomic.core/:na]
+	at org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler.execute(OpenSaltProjectHandler.java:26) [org.corpus_tools.hexatomic.core/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_232-ea]
+</code></pre>
+<h2><a class="header" href="#showing-error-messages" id="showing-error-messages">Showing error messages</a></h2>
+<p>If an error does not originate from an exception, you can use the <code>showError(...)</code> function of the error service to display a dialog.
+This function takes an optional dialog title, the error message, and the class of the caller as arguments, as shown in the following example.</p>
+<pre><code class="language-java">if (hasChildren) {
+	errorService.showError(&quot;Error when deleting (sub-) corpus&quot;,
+			&quot;Before deleting a (sub-) corpus, first delete all its child elements.&quot;, this.getClass());
+	return;
+}
+</code></pre>
+<p>This produces both an error dialog and a logging output (without stack trace).</p>
+<p><img src="./error-dialog.png" alt="An example for an error dialog" /></p>
+<pre><code class="language-plain">19:03:26.013 [main] ERROR o.c.h.c.CorpusStructureView$8 - Error when deleting (sub-) corpus: Before deleting a (sub-) corpus, first delete all its child elements.
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../development/data-model/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../development/add-new-editor.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../development/data-model/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../development/add-new-editor.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
