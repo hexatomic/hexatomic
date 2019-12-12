@@ -23,9 +23,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IRegion;
 
-public class GraphAnnoConsole implements Runnable {
+public class GraphAnnoConsole implements Runnable, IDocumentListener {
 
 
   private ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -40,6 +44,9 @@ public class GraphAnnoConsole implements Runnable {
   public GraphAnnoConsole(IDocument document, UISynchronize sync) {
     this.document = document;
     this.sync = sync;
+
+    this.document.addDocumentListener(this);
+
     Thread t = new Thread(this);
     t.start();
   }
@@ -49,6 +56,7 @@ public class GraphAnnoConsole implements Runnable {
     writeLine("To display a list of available commands, type \"help\".\n");
 
   }
+
 
   private void writeLine(String str) {
     try {
@@ -61,6 +69,28 @@ public class GraphAnnoConsole implements Runnable {
     } catch (IOException e) {
       log.error("Could not write to console output", e);
     }
+  }
+
+  @Override
+  public void documentChanged(DocumentEvent event) {
+    
+  }
+
+  @Override
+  public void documentAboutToBeChanged(DocumentEvent event) {
+    if (event.getText().endsWith("\n")) {
+      int nrLines = event.getDocument().getNumberOfLines();
+      try {
+        if (nrLines >= 1) {
+          IRegion lineRegion = document.getLineInformation(nrLines-1);
+          String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
+          log.info("Before input line: {}", lastLine);
+        }
+      } catch (BadLocationException e) {
+        log.error("Bad location in console, no last line", e);
+      }
+    }
+
   }
 
 }
