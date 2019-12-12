@@ -1,7 +1,14 @@
 package org.corpus_tools.hexatomic.core;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import java.io.File;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -13,7 +20,7 @@ class TestProjectManager {
 
   private ProjectManager projectManager;
 
-  private URI exampleProjectURI;
+  private URI exampleProjectUri;
 
   private IEventBroker events;
 
@@ -25,7 +32,7 @@ class TestProjectManager {
         new File("src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
 
-    exampleProjectURI = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
+    exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
     events = mock(IEventBroker.class);
     errorService = mock(ErrorService.class);
@@ -53,7 +60,7 @@ class TestProjectManager {
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
 
-    projectManager.open(exampleProjectURI);
+    projectManager.open(exampleProjectUri);
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
 
@@ -68,7 +75,7 @@ class TestProjectManager {
   @Test
   public void testEventOnOpen() {
 
-    projectManager.open(exampleProjectURI);
+    projectManager.open(exampleProjectUri);
     verify(events).send(eq(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED), anyString());
 
   }

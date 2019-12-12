@@ -2,14 +2,14 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -72,7 +72,7 @@ class TestCorpusStructure {
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("def").select();
     bot.toolbarDropDownButton(0).click();
     bot.toolbarDropDownButton(0).click();
-    
+
 
     List<String> children = bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes();
     assertEquals(4, children.size());
