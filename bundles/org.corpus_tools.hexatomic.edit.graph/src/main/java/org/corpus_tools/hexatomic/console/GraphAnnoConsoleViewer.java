@@ -23,6 +23,8 @@ package org.corpus_tools.hexatomic.console;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 
 public class GraphAnnoConsoleViewer extends SourceViewer {
@@ -42,8 +44,10 @@ public class GraphAnnoConsoleViewer extends SourceViewer {
     StyledText styledText = getTextWidget();
     styledText.setDoubleClickEnabled(true);
     styledText.setEditable(true);
-
+    styledText.addVerifyListener(this.console);
+    
 
   }
+
 
 }

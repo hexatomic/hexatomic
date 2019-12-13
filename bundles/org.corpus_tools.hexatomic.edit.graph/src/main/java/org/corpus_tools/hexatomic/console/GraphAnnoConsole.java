@@ -47,8 +47,10 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 
-public class GraphAnnoConsole implements Runnable, IDocumentListener {
+public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyListener {
 
 
   private ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -75,7 +77,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
     this.graph = graph;
 
     this.document.addDocumentListener(this);
-
+    
     Thread t = new Thread(this);
     t.start();
   }
@@ -138,6 +140,25 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
   @Override
   public void documentAboutToBeChanged(DocumentEvent event) {
 
+
+  }
+
+  @Override
+  public void verifyText(VerifyEvent e) {
+    // get the line this event belongs to
+    try {
+      int lineNr = document.getLineOfOffset(e.start);
+
+      if (lineNr < document.getNumberOfLines()-1) {
+        e.doit = false;
+      } else {
+        e.doit = true;
+      }
+
+    } catch (BadLocationException ex) {
+      log.error("Could not get line location for offset", ex);
+      e.doit = false;
+    }
 
   }
 
