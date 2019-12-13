@@ -58,213 +58,226 @@ import org.eclipse.swt.widgets.Display;
 
 public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyListener {
 
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(GraphAnnoConsole.class);
+	private static final int MAX_HISTORY_LENGTH = 1000;
 
-  private final IDocument document;
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphAnnoConsole.class);
 
-  private final UISynchronize sync;
+	private final IDocument document;
 
-  private final SDocumentGraph graph;
+	private final UISynchronize sync;
 
-  private final SourceViewer view;
+	private final SDocumentGraph graph;
 
-  private String prompt;
+	private final SourceViewer view;
 
-  /**
-   * Constructs a new console.
-   * 
-   * @param view The view widget the console view is using
-   * @param sync An Eclipse synchronization object.
-   * @param graph The Salt graph to edit.
-   */
-  public GraphAnnoConsole(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
-    this.document = view.getDocument();
-    this.sync = sync;
-    this.graph = graph;
-    this.view = view;
-    this.prompt = "> ";
+	private String prompt;
 
-    this.document.addDocumentListener(this);
+	private final LinkedList<String> commandHistory = new LinkedList<>();
 
-    StyledText styledText = view.getTextWidget();
-    styledText.setDoubleClickEnabled(true);
-    styledText.setEditable(true);
-    styledText.addVerifyListener(this);
-    styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+	/**
+	 * Constructs a new console.
+	 * 
+	 * @param view  The view widget the console view is using
+	 * @param sync  An Eclipse synchronization object.
+	 * @param graph The Salt graph to edit.
+	 */
+	public GraphAnnoConsole(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
+		this.document = view.getDocument();
+		this.sync = sync;
+		this.graph = graph;
+		this.view = view;
+		this.prompt = "> ";
 
-    styledText.addKeyListener(new KeyListener() {
+		this.document.addDocumentListener(this);
 
-      @Override
-      public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
+		StyledText styledText = view.getTextWidget();
+		styledText.setDoubleClickEnabled(true);
+		styledText.setEditable(true);
+		styledText.addVerifyListener(this);
+		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 
-      }
+		styledText.addKeyListener(new KeyListener() {
 
-      @Override
-      public void keyPressed(KeyEvent e) {
+			@Override
+			public void keyReleased(KeyEvent e) {
 
-        if (e.character == '+' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
-          FontData[] fd = styledText.getFont().getFontData();
+			}
 
-          fd[0].setHeight(fd[0].getHeight() + 1);
-          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
-        
-        } else if (e.character == '-' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
-          FontData[] fd = styledText.getFont().getFontData();
+			@Override
+			public void keyPressed(KeyEvent e) {
 
-          if (fd[0].getHeight() > 6) {
-            fd[0].setHeight(fd[0].getHeight() - 1);
-          }
-          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
-        }
+				if (e.character == '+' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
+					FontData[] fd = styledText.getFont().getFontData();
 
-      }
-    });
+					fd[0].setHeight(fd[0].getHeight() + 1);
+					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
 
-    Thread t = new Thread(this);
-    t.start();
-  }
+				} else if (e.character == '-' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
+					FontData[] fd = styledText.getFont().getFontData();
 
-  @Override
-  public void run() {
-    writeLine("To display a list of available commands, type \"help\".\n");
-    writePrompt();
+					if (fd[0].getHeight() > 6) {
+						fd[0].setHeight(fd[0].getHeight() - 1);
+					}
+					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+				}
 
-  }
+			}
+		});
 
+		Thread t = new Thread(this);
+		t.start();
+	}
 
-  private void writeLine(String str) {
-    sync.asyncExec(() -> {
-      document.set(document.get() + str + "\n");
-      view.getTextWidget().setCaretOffset(document.getLength());
-      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
-    });
-  }
+	@Override
+	public void run() {
+		writeLine("To display a list of available commands, type \"help\".\n");
+		writePrompt();
 
-  private void writePrompt() {
-    sync.asyncExec(() -> {
-      document.set(document.get() + this.prompt);
-      view.getTextWidget().setCaretOffset(document.getLength());
-      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
-    });
-  }
+	}
 
-  @Override
-  public void documentChanged(DocumentEvent event) {
-    if (event.getOffset() > 0 && event.getText().endsWith("\n")) {
-      int nrLines = event.getDocument().getNumberOfLines();
-      try {
-        if (nrLines >= 2) {
-          IRegion lineRegion = document.getLineInformation(nrLines - 2);
-          String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
-              .substring(prompt.length());
+	private void writeLine(String str) {
+		sync.asyncExec(() -> {
+			document.set(document.get() + str + "\n");
+			view.getTextWidget().setCaretOffset(document.getLength());
+			view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+		});
+	}
 
-          // parse the line
-          ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(lastLine));
-          CommonTokenStream tokens = new CommonTokenStream(lexer);
-          ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
+	private void writePrompt() {
+		sync.asyncExec(() -> {
+			document.set(document.get() + this.prompt);
+			view.getTextWidget().setCaretOffset(document.getLength());
+			view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+		});
+	}
 
-          ErrorListener errors = new ErrorListener();
-          parser.removeErrorListeners();
-          parser.addErrorListener(errors);
+	@Override
+	public void documentChanged(DocumentEvent event) {
+		if (event.getOffset() > 0 && event.getText().endsWith("\n")) {
+			int nrLines = event.getDocument().getNumberOfLines();
+			try {
+				if (nrLines >= 2) {
+					IRegion lineRegion = document.getLineInformation(nrLines - 2);
+					String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
+							.substring(prompt.length());
 
-          StartContext startCtx = parser.start();
+					executeCommand(lastLine);
 
-          if (errors.errors.isEmpty()) {
-            ParseTreeWalker walker = new ParseTreeWalker();
-            CommandTreeListener listener = new CommandTreeListener();
-            walker.walk(listener, startCtx);
-          } else {
-            for (String e : errors.errors) {
-              writeLine(e);
-            }
-          }
-        }
-      } catch (BadLocationException e) {
-        log.error("Bad location in console, no last line", e);
-      }
-      writePrompt();
-    }
-  }
+				}
+			} catch (BadLocationException e) {
+				log.error("Bad location in console, no last line", e);
+			}
+			writePrompt();
+		}
+	}
 
-  @Override
-  public void documentAboutToBeChanged(DocumentEvent event) {
+	private void executeCommand(String cmd) {
+		
+		// add to history
+		commandHistory.add(cmd);
+		if(commandHistory.size() > MAX_HISTORY_LENGTH) {
+			commandHistory.removeFirst();
+		}
+		
+		// parse the line
+		ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(cmd));
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
 
+		ErrorListener errors = new ErrorListener();
+		parser.removeErrorListeners();
+		parser.addErrorListener(errors);
 
-  }
+		StartContext startCtx = parser.start();
 
-  @Override
-  public void verifyText(VerifyEvent e) {
-    // get the line this event belongs to
-    try {
-      int lineNr = document.getLineOfOffset(e.start);
+		if (errors.errors.isEmpty()) {
+			// Collect the relevant elements of the AST and execute the command
+			ParseTreeWalker walker = new ParseTreeWalker();
+			CommandTreeListener listener = new CommandTreeListener();
+			walker.walk(listener, startCtx);
+		} else {
+			// Output the errors
+			for (String e : errors.errors) {
+				writeLine(e);
+			}
+		}
+	}
 
-      if (lineNr < document.getNumberOfLines() - 1) {
-        e.doit = false;
-      } else {
-        // check if the position is right of the prompt
-        if (e.start >= document.getLineOffset(lineNr) + prompt.length()) {
-          e.doit = true;
-        } else {
-          e.doit = false;
-        }
-      }
+	@Override
+	public void documentAboutToBeChanged(DocumentEvent event) {
 
-    } catch (BadLocationException ex) {
-      log.error("Could not get line location for offset", ex);
-      e.doit = false;
-    }
+	}
 
-  }
+	@Override
+	public void verifyText(VerifyEvent e) {
+		// get the line this event belongs to
+		try {
+			int lineNr = document.getLineOfOffset(e.start);
 
-  private class ErrorListener extends BaseErrorListener {
+			if (lineNr < document.getNumberOfLines() - 1) {
+				e.doit = false;
+			} else {
+				// check if the position is right of the prompt
+				if (e.start >= document.getLineOffset(lineNr) + prompt.length()) {
+					e.doit = true;
+				} else {
+					e.doit = false;
+				}
+			}
 
-    final List<String> errors = new LinkedList<>();
+		} catch (BadLocationException ex) {
+			log.error("Could not get line location for offset", ex);
+			e.doit = false;
+		}
 
-    @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-        int charPositionInLine, String msg, RecognitionException e) {
+	}
 
-      StringBuilder errorMsg = new StringBuilder();
+	private class ErrorListener extends BaseErrorListener {
 
-      // add a marker to the above line
-      for (int i = 0; i < charPositionInLine + prompt.length(); i++) {
-        errorMsg.append(' ');
-      }
-      errorMsg.append("^");
-      errorMsg.append("\n");
-      errorMsg.append(msg);
+		final List<String> errors = new LinkedList<>();
 
-      errors.add(errorMsg.toString());
-    }
-  }
+		@Override
+		public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
+				String msg, RecognitionException e) {
 
-  private class CommandTreeListener extends ConsoleCommandBaseListener {
+			StringBuilder errorMsg = new StringBuilder();
 
-    private Set<SToken> tokenReferences = new LinkedHashSet<SToken>();
+			// add a marker to the above line
+			for (int i = 0; i < charPositionInLine + prompt.length(); i++) {
+				errorMsg.append(' ');
+			}
+			errorMsg.append("^");
+			errorMsg.append("\n");
+			errorMsg.append(msg);
 
-    @Override
-    public void enterToken_node_reference(Token_node_referenceContext ctx) {
-      List<SNode> matchedNodes = graph.getNodesByName(ctx.name.getText());
-      if (matchedNodes != null) {
-        for (SNode n : matchedNodes) {
-          if (n instanceof SToken) {
-            tokenReferences.add((SToken) n);
-          }
-        }
-      }
-    }
+			errors.add(errorMsg.toString());
+		}
+	}
 
-    @Override
-    public void exitNewNode(NewNodeContext ctx) {
+	private class CommandTreeListener extends ConsoleCommandBaseListener {
 
-      SStructure n = graph
-          .createStructure(tokenReferences.toArray(new SStructuredNode[tokenReferences.size()]));
-      if (n != null) {
-        writeLine("Created new structure node " + n.getId());
-      }
-    }
-  }
+		private Set<SToken> tokenReferences = new LinkedHashSet<SToken>();
+
+		@Override
+		public void enterToken_node_reference(Token_node_referenceContext ctx) {
+			List<SNode> matchedNodes = graph.getNodesByName(ctx.name.getText());
+			if (matchedNodes != null) {
+				for (SNode n : matchedNodes) {
+					if (n instanceof SToken) {
+						tokenReferences.add((SToken) n);
+					}
+				}
+			}
+		}
+
+		@Override
+		public void exitNewNode(NewNodeContext ctx) {
+
+			SStructure n = graph.createStructure(tokenReferences.toArray(new SStructuredNode[tokenReferences.size()]));
+			if (n != null) {
+				writeLine("Created new structure node " + n.getId());
+			}
+		}
+	}
 
 }
