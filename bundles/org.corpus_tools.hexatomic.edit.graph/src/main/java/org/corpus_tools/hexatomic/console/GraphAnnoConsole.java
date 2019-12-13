@@ -62,6 +62,8 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 
   private final SourceViewer view;
 
+  private String prompt;
+
   /**
    * Constructs a new console.
    * 
@@ -74,6 +76,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
     this.sync = sync;
     this.graph = graph;
     this.view = view;
+    this.prompt = "> ";
 
     this.document.addDocumentListener(this);
 
@@ -89,6 +92,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
   @Override
   public void run() {
     writeLine("To display a list of available commands, type \"help\".\n");
+    writePrompt();
 
   }
 
@@ -101,6 +105,14 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
     });
   }
 
+  private void writePrompt() {
+    sync.asyncExec(() -> {
+      document.set(document.get() + this.prompt);
+      view.getTextWidget().setCaretOffset(document.getLength());
+      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+    });
+  }
+
   @Override
   public void documentChanged(DocumentEvent event) {
     if (event.getOffset() > 0 && event.getText().endsWith("\n")) {
@@ -108,7 +120,8 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
       try {
         if (nrLines >= 2) {
           IRegion lineRegion = document.getLineInformation(nrLines - 2);
-          String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
+          String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
+              .substring(prompt.length());
 
           // parse the line
           ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(lastLine));
@@ -133,6 +146,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);
       }
+      writePrompt();
     }
   }
 
@@ -151,7 +165,12 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
       if (lineNr < document.getNumberOfLines() - 1) {
         e.doit = false;
       } else {
-        e.doit = true;
+        // check if the position is right of the prompt
+        if (e.start >= document.getLineOffset(lineNr) + prompt.length()) {
+          e.doit = true;
+        } else {
+          e.doit = false;
+        }
       }
 
     } catch (BadLocationException ex) {
@@ -172,7 +191,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
       StringBuilder errorMsg = new StringBuilder();
 
       // add a marker to the above line
-      for (int i = 0; i < charPositionInLine; i++) {
+      for (int i = prompt.length(); i < charPositionInLine; i++) {
         errorMsg.append(' ');
       }
       errorMsg.append("^");
