@@ -36,7 +36,6 @@ import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.GraphAnnoConsole;
-import org.corpus_tools.hexatomic.console.GraphAnnoConsoleViewer;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
@@ -57,6 +56,7 @@ import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -128,6 +128,7 @@ public class SaltGraphViewer {
 
   /**
    * Create a new graph viewer.
+   * 
    * @param parent The parent SWT composite.
    * @param part The part this viewer belongs to.
    */
@@ -246,9 +247,10 @@ public class SaltGraphViewer {
     viewer.getControl().forceFocus();
 
     Document consoleDocument = new Document();
-    GraphAnnoConsole console = new GraphAnnoConsole(consoleDocument, sync, getGraph());
-    GraphAnnoConsoleViewer consoleViewer = new GraphAnnoConsoleViewer(parent, console);
+    SourceViewer consoleViewer = new SourceViewer(parent, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
+    
+    new GraphAnnoConsole(consoleViewer, sync, getGraph());
     StyledText styledText = consoleViewer.getTextWidget();
     styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
