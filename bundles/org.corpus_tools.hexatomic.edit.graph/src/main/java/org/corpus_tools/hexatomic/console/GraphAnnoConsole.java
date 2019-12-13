@@ -39,6 +39,7 @@ import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -84,6 +85,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
     styledText.setDoubleClickEnabled(true);
     styledText.setEditable(true);
     styledText.addVerifyListener(this);
+    styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 
     Thread t = new Thread(this);
     t.start();
@@ -129,6 +131,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
           ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
 
           ErrorListener errors = new ErrorListener();
+          parser.removeErrorListeners();
           parser.addErrorListener(errors);
 
           StartContext startCtx = parser.start();
@@ -191,7 +194,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
       StringBuilder errorMsg = new StringBuilder();
 
       // add a marker to the above line
-      for (int i = prompt.length(); i < charPositionInLine; i++) {
+      for (int i = 0; i < charPositionInLine + prompt.length(); i++) {
         errorMsg.append(' ');
       }
       errorMsg.append("^");
