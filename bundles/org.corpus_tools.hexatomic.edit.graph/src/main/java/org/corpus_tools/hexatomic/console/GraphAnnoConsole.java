@@ -46,9 +46,15 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 
 public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyListener {
 
@@ -86,6 +92,35 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
     styledText.setEditable(true);
     styledText.addVerifyListener(this);
     styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+
+    styledText.addKeyListener(new KeyListener() {
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void keyPressed(KeyEvent e) {
+
+        if (e.character == '+' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
+          FontData[] fd = styledText.getFont().getFontData();
+
+          fd[0].setHeight(fd[0].getHeight() + 1);
+          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+        
+        } else if (e.character == '-' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
+          FontData[] fd = styledText.getFont().getFontData();
+
+          if (fd[0].getHeight() > 6) {
+            fd[0].setHeight(fd[0].getHeight() - 1);
+          }
+          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+        }
+
+      }
+    });
 
     Thread t = new Thread(this);
     t.start();
