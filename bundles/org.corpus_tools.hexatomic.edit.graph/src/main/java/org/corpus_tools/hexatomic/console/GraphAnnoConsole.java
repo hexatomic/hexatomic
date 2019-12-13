@@ -23,12 +23,24 @@ package org.corpus_tools.hexatomic.console;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StartContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Token_node_referenceContext;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructure;
+import org.corpus_tools.salt.common.SStructuredNode;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -61,7 +73,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
     this.document = document;
     this.sync = sync;
     this.graph = graph;
-
+    
     this.document.addDocumentListener(this);
 
     Thread t = new Thread(this);
@@ -107,9 +119,20 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
           CommonTokenStream tokens = new CommonTokenStream(lexer);
           ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
 
-          ParseTreeWalker walker = new ParseTreeWalker();
-          CommandTreeListener listener = new CommandTreeListener();
-          walker.walk(listener, parser.start());
+          ErrorListener errors = new ErrorListener();
+          parser.addErrorListener(errors);
+
+          StartContext startCtx = parser.start();
+
+          if (errors.errors.isEmpty()) {
+            ParseTreeWalker walker = new ParseTreeWalker();
+            CommandTreeListener listener = new CommandTreeListener();
+            walker.walk(listener, startCtx);
+          } else {
+            for (String e : errors.errors) {
+              writeLine(e);
+            }
+          }
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);
@@ -118,15 +141,38 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
 
   }
 
+  private class ErrorListener extends BaseErrorListener {
+
+    final List<String> errors = new LinkedList<>();
+
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+        int charPositionInLine, String msg, RecognitionException e) {
+      errors.add(charPositionInLine + " " + msg);
+    }
+  }
+
   private class CommandTreeListener extends ConsoleCommandBaseListener {
+
+    private Set<SToken> tokenReferences = new LinkedHashSet<SToken>();
+
+    @Override
+    public void enterToken_node_reference(Token_node_referenceContext ctx) {
+      List<SNode> matchedNodes = graph.getNodesByName(ctx.name.getText());
+      if (matchedNodes != null) {
+        for (SNode n : matchedNodes) {
+          if (n instanceof SToken) {
+            tokenReferences.add((SToken) n);
+          }
+        }
+      }
+    }
 
     @Override
     public void exitNewNode(NewNodeContext ctx) {
 
-      if (graph == null) {
-        return;
-      }
-      SStructure n = graph.createStructure();
+      SStructure n = graph
+          .createStructure(tokenReferences.toArray(new SStructuredNode[tokenReferences.size()]));
       if (n != null) {
         log.debug("Created new structure node {}", n.getId());
       }
