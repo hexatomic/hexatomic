@@ -73,7 +73,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
     this.document = document;
     this.sync = sync;
     this.graph = graph;
-    
+
     this.document.addDocumentListener(this);
 
     Thread t = new Thread(this);
@@ -102,16 +102,11 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
 
   @Override
   public void documentChanged(DocumentEvent event) {
-
-  }
-
-  @Override
-  public void documentAboutToBeChanged(DocumentEvent event) {
-    if (event.getText().endsWith("\n")) {
+    if (event.getOffset() > 0 && event.getText().endsWith("\n")) {
       int nrLines = event.getDocument().getNumberOfLines();
       try {
-        if (nrLines >= 1) {
-          IRegion lineRegion = document.getLineInformation(nrLines - 1);
+        if (nrLines >= 2) {
+          IRegion lineRegion = document.getLineInformation(nrLines - 2);
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength());
 
           // parse the line
@@ -138,6 +133,11 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener {
         log.error("Bad location in console, no last line", e);
       }
     }
+  }
+
+  @Override
+  public void documentAboutToBeChanged(DocumentEvent event) {
+
 
   }
 
