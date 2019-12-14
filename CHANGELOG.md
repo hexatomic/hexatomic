@@ -6,16 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0] - 2019-12-12
-
-### Added
-
-- Add maintainer section to pull request template outlining release procedure to follow.
-- Add a unit test bundle for "core" and integration test bundle that uses SWTBot.
-- Add maintainer section to pull request template outlining release procedure to follow
-- Add target platform section to developer/maintainer documentation
-- Add third party license information and a CITATION.cff file 
-
 ### Changed
 
 - Improve formatting of developer/maintainer documentation
@@ -25,6 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Resolve TODOs in developer/maintainer documentation
 - Improve developer/maintainer documentation towards current state
+
+## [0.2.0] - 2019-12-12
+
+### Added
+
+- Add maintainer section to pull request template outlining release procedure to follow.
+- Add a unit test bundle for "core" and integration test bundle that uses SWTBot.
+- Add maintainer section to pull request template outlining release procedure to follow
+- Add target platform section to developer/maintainer documentation
+- Add third party license information and a CITATION.cff file 
 
 ## [0.1.3] - 2019-11-07
 
