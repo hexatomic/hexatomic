@@ -18,7 +18,7 @@ Please check the type of change your PR introduces:
 - [ ] Bugfix
 - [ ] Feature
 - [ ] Code style update (formatting, renaming)
-- [ ] Refactoring (no functional changes, no api changes)
+- [ ] Refactoring (no functional changes, no API changes)
 - [ ] Build related changes
 - [ ] Documentation content changes
 - [ ] Other (please describe): 
@@ -44,6 +44,14 @@ Issue Number: N/A
 
 <!-- If this introduces a breaking change, please describe the impact and migration path for existing applications below. -->
 
+## Does this introduce new dependencies?
+
+- [ ] Yes
+- [ ] No
+
+If this introduces new dependencies:
+
+- [ ] [Dependencies and citation templates](https://github.com/hexatomic/hexatomic/tree/develop/releng/templates) have been updated where necessary
 
 ## Other information
 
@@ -57,3 +65,4 @@ Issue Number: N/A
 
 - [ ] Do **NOT** push the green merge button on GitHub.  
 Follow the latest version of the [developer/maintainer docs](https://hexatomic.github.io/hexatomic/dev/) for making releases.
+- [ ] License and citation information for dependencies are complete (each dependency has a folder in `/THIRD-PARTY/`).
