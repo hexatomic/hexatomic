@@ -1,6 +1,6 @@
 # Coding style and formatting
 
-We are using a derivative of the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) to uniformly format the Hexatomic source code.
+We are using a derivative of the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html), which regulates formatting, naming conventions, Javadoc and other stylistic rules for the Hexatomic source code.
 In addition to the original style guide, the following rules apply:
 - Package names are allowed to have underscores, e.g. `org.corpus_tools.hexatomic` .
 - An HTML rendered JavaDoc API page must include all the context necessary to understand all the contents of the page.
