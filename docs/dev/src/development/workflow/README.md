@@ -81,12 +81,12 @@ mvn clean install
 mvn gitflow:feature-start
 ```
 4. Give the feature branch a name as prompted by the Maven Gitflow plugin.
-4. [Create a draft pull request](#create-a-pull-request-for-your-contribution-before-you-start-working) against the `develop` branch of <https://github.com/hexatomic/hexatomic> and start working.
-4. Make, commit, and push your changes to this branch.
-5. Once you've finished your work, run `mvn clean install` to make sure that the project builds correctly.
-6. If any files were changed during `mvn clean install` - e.g., license headers have been added automatically - make sure to commit and push these changes.
-7. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your feature branch.
-8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
+5. [Create a draft pull request](#create-a-pull-request-for-your-contribution-before-you-start-working) against the `develop` branch of <https://github.com/hexatomic/hexatomic> and start working.
+6. Make, commit, and push your changes to this branch.
+7. Once you've finished your work, run `mvn clean install` to make sure that the project builds correctly.
+8. If any files were changed during `mvn clean install` - e.g., license headers have been added automatically - make sure to commit and push these changes.
+9. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your feature branch.
+10. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
 
 
 #### Contribute critical bug fixes, or urgent documentation, or release engineering fixes for a released version (*hotfix*)
