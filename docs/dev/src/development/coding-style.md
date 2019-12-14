@@ -21,7 +21,8 @@ You can configure Eclipse to format your source code according to the Hexatomic 
 ![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png)<br/><br/>
 5. Open the settings page **Java** > **Code Style** > **Organize Imports**
 6. Select all packages in the list and remove them. 
-This configures Eclipse to order all imported packages in alphabetical order.<br/><br/>
+This configures Eclipse to order all imported packages in alphabetical order.\
+\
 ![Configure the package import order](./configure-import-order.png)
 
 You can use the keyboard shortcut <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> to format a single source code file.
