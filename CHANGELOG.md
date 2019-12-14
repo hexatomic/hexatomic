@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improve formatting of developer/maintainer documentation
+- Add dependencies and templates checks to PR template
+
+### Fixed
+
+- Resolve TODOs in developer/maintainer documentation
+- Improve developer/maintainer documentation towards current state
 
 ## [0.1.3] - 2019-11-07
 
