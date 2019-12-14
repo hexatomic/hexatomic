@@ -17,8 +17,11 @@ You can configure Eclipse to format your source code according to the Hexatomic 
 1. Choose **Window** > **Preferences** from the main Eclipse menu.
 2. Open the settings page **Java** > **Code Style** > **Formatter**
 3. Select "Import..." and choose the file `releng/ide/eclipse-java-hexatomic-style.xml` in the Hexatomic repository
-4. Switch to "Hexatomic Style" as the active profile.<br/><br/>
-![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png)<br/><br/>
+4. Switch to "Hexatomic Style" as the active profile.\
+\
+![Importing the Hexatomic Style formatting configuration file](./import-code-formatter.png)\
+\
+\
 5. Open the settings page **Java** > **Code Style** > **Organize Imports**
 6. Select all packages in the list and remove them. 
 This configures Eclipse to order all imported packages in alphabetical order.\
