@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.corpus_tools.hexatomic.textviewer
 Bundle-SymbolicName: org.corpus_tools.hexatomic.textviewer;singleton:=true
-Bundle-Version: 0.3.0
+Bundle-Version: 0.4.0.qualifier
 Require-Bundle: javax.inject,
  org.eclipse.osgi,
  org.eclipse.jface,
