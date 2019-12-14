@@ -60,7 +60,7 @@ More details about target platforms can be found in the section [*Creating and a
 #### Documentation
 
 Both the user documentation and the documentation for developers and maintainers are kept in the [`/docs/` folder](https://github.com/hexatomic/hexatomic/tree/develop/docs), in a subfolder for each documentation type.
-Documentation is written in Markdown from which websites are generated for the end user with *mdbook* (see section [*Development setup*](setup.html#mdbook)).
+Documentation is written in Markdown from which websites are generated for the end user with *mdbook* (see section [*Development setup*](../setup.html#mdbook)).
 The actual sources for the documentation can be found in the respective `/src/` subfolders.
 
 #### README files
