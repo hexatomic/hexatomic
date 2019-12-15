@@ -28,7 +28,7 @@ jobs:
       script: mvn verify -B
       
       before_deploy:
-         - mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create
+         - mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && mvn clean verify
       
       deploy:
         - provider: releases
