@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Include CITATION.cff in product builds
+- Automatically update CITATION.cff on tags in Travis pre-deploy
+
 ## [0.3.0] - 2019-12-14
 
 ### Changed
