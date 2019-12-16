@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.corpus_tools.hexatomic.console.GraphAnnoConsole;
+import org.corpus_tools.hexatomic.console.AtomicalConsole;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
@@ -185,6 +185,7 @@ public class GraphEditor {
     TableColumn tblclmnFilterBySegment = new TableColumn(textRangeTable, SWT.NONE);
     tblclmnFilterBySegment.setWidth(100);
     tblclmnFilterBySegment.setText("Filter by segment");
+    graphSash.setWeights(new int[] {300, 100});
 
     textRangeTable.addSelectionListener(new SelectionListener() {
 
@@ -254,7 +255,8 @@ public class GraphEditor {
     Document consoleDocument = new Document();
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
-    new GraphAnnoConsole(consoleViewer, sync, getGraph());
+    new AtomicalConsole(consoleViewer, sync, getGraph());
+    mainSash.setWeights(new int[] {200, 100});
 
     updateView(true);
 
