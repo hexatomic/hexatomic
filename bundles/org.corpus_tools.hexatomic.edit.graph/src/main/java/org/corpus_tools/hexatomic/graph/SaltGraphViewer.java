@@ -60,15 +60,15 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -84,6 +84,8 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridLayout;
 
 @SuppressWarnings("restriction")
 public class SaltGraphViewer {
@@ -134,9 +136,15 @@ public class SaltGraphViewer {
    */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
-    parent.setLayout(new GridLayout(2, false));
 
-    viewer = new GraphViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+
+    parent.setLayout(new FillLayout(SWT.VERTICAL));
+
+    SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
+
+    SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
+
+    viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
     viewer.setLabelProvider(new SaltLabelProvider());
@@ -144,80 +152,32 @@ public class SaltGraphViewer {
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
 
 
-    zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
-        viewer.getGraphControl().getViewport());
+    Composite filterComposite = new Composite(graphSash, SWT.NONE);
+    GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
+    gridLayoutFilterComposite.marginWidth = 0;
+    filterComposite.setLayout(gridLayoutFilterComposite);
 
-    viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
 
-      @Override
-      public void mouseScrolled(MouseEvent e) {
-        if (e.count < 0) {
-          zoomManager.zoomOut();
-        } else {
-          zoomManager.zoomIn();
-        }
-
-      }
-    });
-
-    viewer.setInput(getGraph());
-
-    Composite composite = new Composite(parent, SWT.NONE);
-    composite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1));
-    composite.setLayout(new GridLayout(1, false));
-
-    Label lblFilterByAnnotation = new Label(composite, SWT.NONE);
+    Label lblFilterByAnnotation = new Label(filterComposite, SWT.NONE);
+    lblFilterByAnnotation.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
     lblFilterByAnnotation.setText("Filter by annotation type");
 
-    btnIncludeSpans = new Button(composite, SWT.CHECK);
+    btnIncludeSpans = new Button(filterComposite, SWT.CHECK);
+    btnIncludeSpans.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
     btnIncludeSpans.setSelection(false);
     btnIncludeSpans.setText("Include Spans");
-    btnIncludeSpans.addSelectionListener(new SelectionListener() {
 
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        updateView(true);
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-
-      }
-    });
-
-    btnIncludePointingRelations = new Button(composite, SWT.CHECK);
+    btnIncludePointingRelations = new Button(filterComposite, SWT.CHECK);
+    btnIncludePointingRelations.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
     btnIncludePointingRelations.setSelection(true);
     btnIncludePointingRelations.setText("Include pointing relations");
-    btnIncludePointingRelations.addSelectionListener(new SelectionListener() {
 
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        updateView(true);
+    txtSegmentFilter = new Text(filterComposite, SWT.BORDER);
+    txtSegmentFilter.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
 
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-        // TODO Auto-generated method stub
-
-      }
-    });
-
-    txtSegmentFilter = new Text(composite, SWT.BORDER);
-    txtSegmentFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-    txtSegmentFilter.addModifyListener(new ModifyListener() {
-
-      @Override
-      public void modifyText(ModifyEvent e) {
-        updateView(true);
-      }
-    });
-
-    Label seperator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
-    seperator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-
-    textRangeTable = new Table(composite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
-    textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+    textRangeTable =
+        new Table(filterComposite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
+    textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
     textRangeTable.setHeaderVisible(true);
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
@@ -241,18 +201,64 @@ public class SaltGraphViewer {
 
       }
     });
+    txtSegmentFilter.addModifyListener(new ModifyListener() {
 
-    updateView(true);
+      @Override
+      public void modifyText(ModifyEvent e) {
+        updateView(true);
+      }
+    });
+    btnIncludePointingRelations.addSelectionListener(new SelectionListener() {
 
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        updateView(true);
+
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+
+      }
+    });
+    btnIncludeSpans.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        updateView(true);
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+
+      }
+    });
+
+    zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
+        viewer.getGraphControl().getViewport());
+
+    viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
+
+      @Override
+      public void mouseScrolled(MouseEvent e) {
+        if (e.count < 0) {
+          zoomManager.zoomOut();
+        } else {
+          zoomManager.zoomIn();
+        }
+
+      }
+    });
+    viewer.setInput(getGraph());
     viewer.getControl().forceFocus();
 
     Document consoleDocument = new Document();
-    SourceViewer consoleViewer = new SourceViewer(parent, null, SWT.V_SCROLL | SWT.H_SCROLL);
+    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
-    
     new GraphAnnoConsole(consoleViewer, sync, getGraph());
-    StyledText styledText = consoleViewer.getTextWidget();
-    styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+    updateView(true);
+
 
   }
 
