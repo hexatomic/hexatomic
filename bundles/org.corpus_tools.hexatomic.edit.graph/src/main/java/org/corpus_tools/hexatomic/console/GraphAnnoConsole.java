@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.console;
 
+import com.google.common.collect.Range;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,15 +52,11 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
-
-import com.google.common.collect.Range;
 
 public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyListener {
 
