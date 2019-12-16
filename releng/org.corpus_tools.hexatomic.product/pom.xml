@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.corpus_tools</groupId>
     <artifactId>org.corpus_tools.hexatomic.releng</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
   </parent>
   <artifactId>org.corpus_tools.hexatomic.product</artifactId>
   <packaging>eclipse-repository</packaging>
