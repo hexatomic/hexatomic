@@ -88,7 +88,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.GridLayout;
 
 @SuppressWarnings("restriction")
-public class SaltGraphViewer {
+public class GraphEditor {
 
 
   @Inject
@@ -98,7 +98,7 @@ public class SaltGraphViewer {
   private MPart thisPart;
 
   @Inject
-  public SaltGraphViewer() {
+  public GraphEditor() {
 
   }
 
