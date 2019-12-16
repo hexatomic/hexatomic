@@ -22,3 +22,5 @@ Require-Bundle: javax.inject,
  org.antlr.runtime
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.corpus_tools.hexatomic.console,
+ org.corpus_tools.hexatomic.graph
