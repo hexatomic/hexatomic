@@ -20,22 +20,21 @@
 
 package org.corpus_tools.hexatomic.graph;
 
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Range;
-import com.google.common.collect.TreeMultimap;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+
 import org.corpus_tools.hexatomic.console.AtomicalConsole;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
@@ -88,6 +87,9 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
+
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Range;
 
 @SuppressWarnings("restriction")
 public class GraphEditor {
@@ -268,7 +270,7 @@ public class GraphEditor {
     updateView(true);
 
   }
-  
+
   @PreDestroy
   void preDestroy() {
     projectManager.removeListener(projectChangeListener);
@@ -355,37 +357,69 @@ public class GraphEditor {
 
     ViewerFilter currentFilter = new RootFilter();
 
-    Multimap<STextualDS, Range<Long>> sortedDS =
-        TreeMultimap.create(new STextualDataSourceComparator(), new RangeStartComparator<>());
-
     List<SNode> roots = graph.getRoots();
-    if (roots != null) {
+
+    List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
+    allTexts.sort(new STextualDataSourceComparator());
+
+    for (STextualDS ds : graph.getTextualDSs()) {
+      boolean hasNonTokenRoot = false;
+      TreeSet<Range<Long>> sortedRanges = new TreeSet<Range<Long>>(new RangeStartComparator<>());
       for (SNode r : roots) {
 
         if (currentFilter.select(viewer, null, r)) {
+
+          if (!(r instanceof SToken)) {
+            hasNonTokenRoot = true;
+          }
+
           @SuppressWarnings("rawtypes")
           List<DataSourceSequence> overlappedDS =
               graph.getOverlappedDataSourceSequence(r, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
           if (overlappedDS != null) {
-            for (DataSourceSequence<?> seq : overlappedDS) {
-              if (seq.getDataSource() instanceof STextualDS) {
-                sortedDS.put((STextualDS) seq.getDataSource(),
-                    Range.closedOpen(seq.getStart().longValue(), seq.getEnd().longValue()));
 
+            for (DataSourceSequence<?> seq : overlappedDS) {
+              if (seq.getDataSource() instanceof STextualDS && seq.getDataSource() == ds) {
+
+                long start = 0;
+                long end = 0;
+                if (seq.getStart() != null) {
+                  start = seq.getStart().longValue();
+                }
+                if (seq.getEnd() != null) {
+                  end = seq.getEnd().longValue();
+                }
+                sortedRanges.add(Range.closedOpen(start, end));
               }
             }
           }
         }
       }
+
+      if (hasNonTokenRoot) {
+        for (Range<Long> range : sortedRanges) {
+
+          TableItem item = new TableItem(textRangeTable, SWT.NONE);
+          item.setText(
+              range.lowerEndpoint() + ".." + range.upperEndpoint() + " (" + (ds.getName() + ")"));
+          item.setData("range", range);
+          item.setData("text", ds);
+        }
+      } else {
+        // add the whole text as a sequence
+        TableItem item = new TableItem(textRangeTable, SWT.NONE);
+        String text = ds.getText();
+        long textLength = 0;
+        if (text != null) {
+          textLength = text.length();
+        }
+        item.setText(0 + ".." + textLength + " (" + (ds.getName() + ")"));
+        item.setData("range", Range.closedOpen(0L, textLength));
+        item.setData("text", ds);
+      }
+
     }
 
-    for (Map.Entry<STextualDS, Range<Long>> e : sortedDS.entries()) {
-      TableItem item = new TableItem(textRangeTable, SWT.NONE);
-      item.setText(e.getValue().lowerEndpoint() + ".." + e.getValue().upperEndpoint() + " ("
-          + (e.getKey().getName() + ")"));
-      item.setData("range", e.getValue());
-      item.setData("text", e.getKey());
-    }
   }
 
   private LayoutAlgorithm createLayout() {
@@ -424,7 +458,7 @@ public class GraphEditor {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
-      sync.syncExec(() -> updateView(false));
+      sync.syncExec(() -> updateView(true));
     }
   }
 
