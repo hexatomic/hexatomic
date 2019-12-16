@@ -63,282 +63,285 @@ import com.google.common.collect.Range;
 
 public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyListener {
 
-	private static final int MAX_HISTORY_LENGTH = 1000;
+  private static final int MAX_HISTORY_LENGTH = 1000;
 
-	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphAnnoConsole.class);
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(GraphAnnoConsole.class);
 
-	private final IDocument document;
+  private final IDocument document;
 
-	private final UISynchronize sync;
+  private final UISynchronize sync;
 
-	private final SDocumentGraph graph;
+  private final SDocumentGraph graph;
 
-	private final SourceViewer view;
+  private final SourceViewer view;
 
-	private String prompt;
+  private String prompt;
 
-	private final LinkedList<String> commandHistory = new LinkedList<>();
-	private ListIterator<String> itCommandHistory;
+  private final LinkedList<String> commandHistory = new LinkedList<>();
+  private ListIterator<String> itCommandHistory;
 
-	/**
-	 * Constructs a new console.
-	 * 
-	 * @param view  The view widget the console view is using
-	 * @param sync  An Eclipse synchronization object.
-	 * @param graph The Salt graph to edit.
-	 */
-	public GraphAnnoConsole(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
-		this.document = view.getDocument();
-		this.sync = sync;
-		this.graph = graph;
-		this.view = view;
-		this.prompt = "> ";
+  /**
+   * Constructs a new console.
+   * 
+   * @param view The view widget the console view is using
+   * @param sync An Eclipse synchronization object.
+   * @param graph The Salt graph to edit.
+   */
+  public GraphAnnoConsole(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
+    this.document = view.getDocument();
+    this.sync = sync;
+    this.graph = graph;
+    this.view = view;
+    this.prompt = "> ";
 
-		this.document.addDocumentListener(this);
+    this.document.addDocumentListener(this);
 
-		StyledText styledText = view.getTextWidget();
-		styledText.setDoubleClickEnabled(true);
-		styledText.setEditable(true);
-		styledText.addVerifyListener(this);
-		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
+    StyledText styledText = view.getTextWidget();
+    styledText.setDoubleClickEnabled(true);
+    styledText.setEditable(true);
+    styledText.addVerifyListener(this);
+    styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 
-		styledText.addVerifyKeyListener(new ActionKeyListener(styledText));
+    styledText.addVerifyKeyListener(new ActionKeyListener(styledText));
 
-		Thread t = new Thread(this);
-		t.start();
-	}
+    Thread t = new Thread(this);
+    t.start();
+  }
 
-	@Override
-	public void run() {
-		writeLine("To display a list of available commands, type \"help\".\n");
-		writePrompt();
+  @Override
+  public void run() {
+    writeLine("To display a list of available commands, type \"help\".\n");
+    writePrompt();
 
-	}
+  }
 
-	private void writeLine(String str) {
-		sync.asyncExec(() -> {
-			document.set(document.get() + str + "\n");
-			view.getTextWidget().setCaretOffset(document.getLength());
-			view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
-		});
-	}
+  private void writeLine(String str) {
+    sync.asyncExec(() -> {
+      document.set(document.get() + str + "\n");
+      view.getTextWidget().setCaretOffset(document.getLength());
+      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+    });
+  }
 
-	private void writePrompt() {
-		sync.asyncExec(() -> {
-			document.set(document.get() + this.prompt);
-			view.getTextWidget().setCaretOffset(document.getLength());
-			view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
-		});
-	}
+  private void writePrompt() {
+    sync.asyncExec(() -> {
+      document.set(document.get() + this.prompt);
+      view.getTextWidget().setCaretOffset(document.getLength());
+      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+    });
+  }
 
-	@Override
-	public void documentChanged(DocumentEvent event) {
-		if (event.getDocument() == document && event.getOffset() > 0 && event.getText().endsWith("\n")) {
-			int nrLines = event.getDocument().getNumberOfLines();
-			try {
-				if (nrLines >= 2) {
-					IRegion lineRegion = document.getLineInformation(nrLines - 2);
-					String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
-							.substring(prompt.length());
+  @Override
+  public void documentChanged(DocumentEvent event) {
+    if (event.getDocument() == document && event.getOffset() > 0
+        && event.getText().endsWith("\n")) {
+      int nrLines = event.getDocument().getNumberOfLines();
+      try {
+        if (nrLines >= 2) {
+          IRegion lineRegion = document.getLineInformation(nrLines - 2);
+          String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
+              .substring(prompt.length());
 
-					executeCommand(lastLine);
+          executeCommand(lastLine);
 
-				}
-			} catch (BadLocationException e) {
-				log.error("Bad location in console, no last line", e);
-			}
-			writePrompt();
-		}
-	}
+        }
+      } catch (BadLocationException e) {
+        log.error("Bad location in console, no last line", e);
+      }
+      writePrompt();
+    }
+  }
 
-	private Optional<Range<Integer>> getPromptRange() {
-		int numberOfLines = document.getNumberOfLines();
-		if (numberOfLines > 0) {
-			try {
-				IRegion lineRegion = document.getLineInformation(numberOfLines - 1);
-				Range<Integer> promptRange = Range.closed(lineRegion.getOffset() + prompt.length(),
-						lineRegion.getOffset() + lineRegion.getLength());
-				return Optional.of(promptRange);
-			} catch (BadLocationException e) {
-				log.error("Something went wrong when getting the last line of the document", e);
-			}
-		}
-		return Optional.empty();
-	}
+  private Optional<Range<Integer>> getPromptRange() {
+    int numberOfLines = document.getNumberOfLines();
+    if (numberOfLines > 0) {
+      try {
+        IRegion lineRegion = document.getLineInformation(numberOfLines - 1);
+        Range<Integer> promptRange = Range.closed(lineRegion.getOffset() + prompt.length(),
+            lineRegion.getOffset() + lineRegion.getLength());
+        return Optional.of(promptRange);
+      } catch (BadLocationException e) {
+        log.error("Something went wrong when getting the last line of the document", e);
+      }
+    }
+    return Optional.empty();
+  }
 
-	private void executeCommand(String cmd) {
+  private void executeCommand(String cmd) {
 
-		// add to history
-		if(!cmd.isEmpty()) {
-			commandHistory.push(cmd);
-			itCommandHistory = commandHistory.listIterator();
-			if (commandHistory.size() > MAX_HISTORY_LENGTH) {
-				commandHistory.removeLast();
-			}
-		}
+    // add to history
+    if (!cmd.isEmpty()) {
+      commandHistory.push(cmd);
+      itCommandHistory = commandHistory.listIterator();
+      if (commandHistory.size() > MAX_HISTORY_LENGTH) {
+        commandHistory.removeLast();
+      }
+    }
 
-		// parse the line
-		ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(cmd));
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
+    // parse the line
+    ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(cmd));
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
 
-		ErrorListener errors = new ErrorListener();
-		parser.removeErrorListeners();
-		parser.addErrorListener(errors);
+    ErrorListener errors = new ErrorListener();
+    parser.removeErrorListeners();
+    parser.addErrorListener(errors);
 
-		StartContext startCtx = parser.start();
+    StartContext startCtx = parser.start();
 
-		if (errors.errors.isEmpty()) {
-			// Collect the relevant elements of the AST and execute the command
-			ParseTreeWalker walker = new ParseTreeWalker();
-			CommandTreeListener listener = new CommandTreeListener();
-			walker.walk(listener, startCtx);
-		} else {
-			// Output the errors
-			for (String e : errors.errors) {
-				writeLine(e);
-			}
-		}
-	}
+    if (errors.errors.isEmpty()) {
+      // Collect the relevant elements of the AST and execute the command
+      ParseTreeWalker walker = new ParseTreeWalker();
+      CommandTreeListener listener = new CommandTreeListener();
+      walker.walk(listener, startCtx);
+    } else {
+      // Output the errors
+      for (String e : errors.errors) {
+        writeLine(e);
+      }
+    }
+  }
 
-	private void setCommand(String cmd) {
-		if (cmd == null) {
-			return;
-		}
-		cmd = cmd.trim();
+  private void setCommand(String cmd) {
+    if (cmd == null) {
+      return;
+    }
+    cmd = cmd.trim();
 
-		// get the current command as text ran
-		Optional<Range<Integer>> promptRange = getPromptRange();
-		if (promptRange.isPresent()) {
-			try {
-				document.replace(promptRange.get().lowerEndpoint(),
-						promptRange.get().upperEndpoint() - promptRange.get().lowerEndpoint(), cmd);
-				view.getTextWidget().setCaretOffset(document.getLength());
-			} catch (BadLocationException ex) {
-				log.error("Something went wrong when setting the history entry", ex);
-			}
-		}
+    // get the current command as text ran
+    Optional<Range<Integer>> promptRange = getPromptRange();
+    if (promptRange.isPresent()) {
+      try {
+        document.replace(promptRange.get().lowerEndpoint(),
+            promptRange.get().upperEndpoint() - promptRange.get().lowerEndpoint(), cmd);
+        view.getTextWidget().setCaretOffset(document.getLength());
+      } catch (BadLocationException ex) {
+        log.error("Something went wrong when setting the history entry", ex);
+      }
+    }
 
-	}
+  }
 
-	@Override
-	public void documentAboutToBeChanged(DocumentEvent event) {
+  @Override
+  public void documentAboutToBeChanged(DocumentEvent event) {
 
-	}
+  }
 
-	@Override
-	public void verifyText(VerifyEvent e) {
-		e.doit = isOffsetPartOfCmd(e.start);
-	}
+  @Override
+  public void verifyText(VerifyEvent e) {
+    e.doit = isOffsetPartOfCmd(e.start);
+  }
 
-	private boolean isOffsetPartOfCmd(int offset) {
-		Optional<Range<Integer>> promptOffset = getPromptRange();
-		if (promptOffset.isPresent()) {
-			boolean result = promptOffset.get().contains(offset);
-			return result;
-		}
-		return false;
-	}
+  private boolean isOffsetPartOfCmd(int offset) {
+    Optional<Range<Integer>> promptOffset = getPromptRange();
+    if (promptOffset.isPresent()) {
+      boolean result = promptOffset.get().contains(offset);
+      return result;
+    }
+    return false;
+  }
 
-	private final class ActionKeyListener implements VerifyKeyListener {
-		private final StyledText styledText;
+  private final class ActionKeyListener implements VerifyKeyListener {
+    private final StyledText styledText;
 
-		private ActionKeyListener(StyledText styledText) {
-			this.styledText = styledText;
-		}
+    private ActionKeyListener(StyledText styledText) {
+      this.styledText = styledText;
+    }
 
-		@Override
-		public void verifyKey(VerifyEvent e) {
-			boolean ctrlActive = (e.stateMask & SWT.CTRL) == SWT.CTRL;
+    @Override
+    public void verifyKey(VerifyEvent e) {
+      boolean ctrlActive = (e.stateMask & SWT.CTRL) == SWT.CTRL;
 
-			if (ctrlActive) {
-				if (e.character == '+') {
-					e.doit = false;
-					FontData[] fd = styledText.getFont().getFontData();
+      if (ctrlActive) {
+        if (e.character == '+') {
+          e.doit = false;
+          FontData[] fd = styledText.getFont().getFontData();
 
-					fd[0].setHeight(fd[0].getHeight() + 1);
-					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+          fd[0].setHeight(fd[0].getHeight() + 1);
+          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
 
-				} else if (e.character == '-') {
-					e.doit = false;
-					FontData[] fd = styledText.getFont().getFontData();
+        } else if (e.character == '-') {
+          e.doit = false;
+          FontData[] fd = styledText.getFont().getFontData();
 
-					if (fd[0].getHeight() > 6) {
-						fd[0].setHeight(fd[0].getHeight() - 1);
-					}
-					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
-				}
-			} else if (e.keyCode == SWT.ARROW_UP) {
-				if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
-					e.doit = false;
-					if (itCommandHistory != null && itCommandHistory.hasNext()) {
-						String oldCommand = itCommandHistory.next();
-						if (oldCommand != null) {
-							setCommand(oldCommand);
-						}
-					}
-				}
-			} else if (e.keyCode == SWT.ARROW_DOWN) {
-				if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
-					e.doit = false;
-					if (itCommandHistory != null && itCommandHistory.hasPrevious()) {
-						String oldCommand = itCommandHistory.previous();
-						if (oldCommand != null) {
-							setCommand(oldCommand);
-						}
-					}
-				}
-			}
+          if (fd[0].getHeight() > 6) {
+            fd[0].setHeight(fd[0].getHeight() - 1);
+          }
+          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+        }
+      } else if (e.keyCode == SWT.ARROW_UP) {
+        if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
+          e.doit = false;
+          if (itCommandHistory != null && itCommandHistory.hasNext()) {
+            String oldCommand = itCommandHistory.next();
+            if (oldCommand != null) {
+              setCommand(oldCommand);
+            }
+          }
+        }
+      } else if (e.keyCode == SWT.ARROW_DOWN) {
+        if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
+          e.doit = false;
+          if (itCommandHistory != null && itCommandHistory.hasPrevious()) {
+            String oldCommand = itCommandHistory.previous();
+            if (oldCommand != null) {
+              setCommand(oldCommand);
+            }
+          }
+        }
+      }
 
-		}
-	}
+    }
+  }
 
-	private final class ErrorListener extends BaseErrorListener {
+  private final class ErrorListener extends BaseErrorListener {
 
-		final List<String> errors = new LinkedList<>();
+    final List<String> errors = new LinkedList<>();
 
-		@Override
-		public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
-				String msg, RecognitionException e) {
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+        int charPositionInLine, String msg, RecognitionException e) {
 
-			StringBuilder errorMsg = new StringBuilder();
+      StringBuilder errorMsg = new StringBuilder();
 
-			// add a marker to the above line
-			for (int i = 0; i < charPositionInLine + prompt.length(); i++) {
-				errorMsg.append(' ');
-			}
-			errorMsg.append("^");
-			errorMsg.append("\n");
-			errorMsg.append(msg);
+      // add a marker to the above line
+      for (int i = 0; i < charPositionInLine + prompt.length(); i++) {
+        errorMsg.append(' ');
+      }
+      errorMsg.append("^");
+      errorMsg.append("\n");
+      errorMsg.append(msg);
 
-			errors.add(errorMsg.toString());
-		}
-	}
+      errors.add(errorMsg.toString());
+    }
+  }
 
-	private final class CommandTreeListener extends ConsoleCommandBaseListener {
+  private final class CommandTreeListener extends ConsoleCommandBaseListener {
 
-		private Set<SToken> tokenReferences = new LinkedHashSet<SToken>();
+    private Set<SToken> tokenReferences = new LinkedHashSet<SToken>();
 
-		@Override
-		public void enterToken_node_reference(Token_node_referenceContext ctx) {
-			List<SNode> matchedNodes = graph.getNodesByName(ctx.name.getText());
-			if (matchedNodes != null) {
-				for (SNode n : matchedNodes) {
-					if (n instanceof SToken) {
-						tokenReferences.add((SToken) n);
-					}
-				}
-			}
-		}
+    @Override
+    public void enterToken_node_reference(Token_node_referenceContext ctx) {
+      List<SNode> matchedNodes = graph.getNodesByName(ctx.name.getText());
+      if (matchedNodes != null) {
+        for (SNode n : matchedNodes) {
+          if (n instanceof SToken) {
+            tokenReferences.add((SToken) n);
+          }
+        }
+      }
+    }
 
-		@Override
-		public void exitNewNode(NewNodeContext ctx) {
+    @Override
+    public void exitNewNode(NewNodeContext ctx) {
 
-			SStructure n = graph.createStructure(tokenReferences.toArray(new SStructuredNode[tokenReferences.size()]));
-			if (n != null) {
-				writeLine("Created new structure node " + n.getId());
-			}
-		}
-	}
+      SStructure n = graph
+          .createStructure(tokenReferences.toArray(new SStructuredNode[tokenReferences.size()]));
+      if (n != null) {
+        writeLine("Created new structure node " + n.getId());
+      }
+    }
+  }
 
 }
