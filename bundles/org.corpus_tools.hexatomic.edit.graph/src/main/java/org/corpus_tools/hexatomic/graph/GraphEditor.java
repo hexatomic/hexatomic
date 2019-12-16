@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.AtomicalConsole;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -119,6 +120,8 @@ public class GraphEditor {
   @Inject
   ErrorService errors;
 
+  private ListenerImplementation projectChangeListener;
+
   private SDocumentGraph getGraph() {
     String documentID = thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
     Optional<SDocument> doc = projectManager.getDocument(documentID);
@@ -138,15 +141,8 @@ public class GraphEditor {
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
 
-    projectManager.addListener(new Listener() {
-
-      @Override
-      public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-          Object newValue, Object container) {
-        sync.asyncExec(() -> updateView(false));
-      }
-
-    });
+    projectChangeListener = new ListenerImplementation();
+    projectManager.addListener(projectChangeListener);
 
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
@@ -271,6 +267,11 @@ public class GraphEditor {
 
     updateView(true);
 
+  }
+  
+  @PreDestroy
+  void preDestroy() {
+    projectManager.removeListener(projectChangeListener);
   }
 
   private List<Integer> getSegmentIdxSortedByLength() {
@@ -418,6 +419,14 @@ public class GraphEditor {
   }
 
 
+
+  private final class ListenerImplementation implements Listener {
+    @Override
+    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
+        Object newValue, Object container) {
+      sync.syncExec(() -> updateView(false));
+    }
+  }
 
   private class RootFilter extends ViewerFilter {
 
