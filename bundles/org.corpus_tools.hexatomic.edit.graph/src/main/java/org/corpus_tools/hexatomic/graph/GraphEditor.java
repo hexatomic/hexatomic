@@ -260,7 +260,6 @@ public class GraphEditor {
 
       }
     });
-    viewer.setInput(getGraph());
     viewer.getControl().forceFocus();
 
     Document consoleDocument = new Document();
@@ -269,8 +268,8 @@ public class GraphEditor {
     new AtomicalConsole(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
-    updateView(true);
 
+    updateView(true);
 
   }
 
@@ -301,6 +300,8 @@ public class GraphEditor {
   @SuppressWarnings("unchecked")
   private void updateView(boolean recalculateSegments) {
 
+    SDocumentGraph graph = getGraph();
+
     if (recalculateSegments) {
       // store the old segment selection
       List<Range<Long>> oldSelectedRanges = new LinkedList<>();
@@ -308,7 +309,7 @@ public class GraphEditor {
         oldSelectedRanges.add((Range<Long>) item.getData("range"));
       }
 
-      calculateSegments(getGraph());
+      calculateSegments(graph);
 
       textRangeTable.deselectAll();
 
@@ -340,6 +341,11 @@ public class GraphEditor {
     }
 
     viewer.setFilters(new Filter());
+
+    if (viewer.getInput() != graph) {
+      viewer.setInput(graph);
+    }
+
     viewer.applyLayout();
   }
 
