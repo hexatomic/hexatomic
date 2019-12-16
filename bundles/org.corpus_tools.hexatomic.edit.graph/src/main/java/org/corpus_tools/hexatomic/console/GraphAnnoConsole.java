@@ -23,6 +23,8 @@ package org.corpus_tools.hexatomic.console;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Optional;
 import java.util.Set;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
@@ -48,6 +50,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.VerifyEvent;
@@ -55,6 +58,8 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
+
+import com.google.common.collect.Range;
 
 public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyListener {
 
@@ -73,6 +78,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 	private String prompt;
 
 	private final LinkedList<String> commandHistory = new LinkedList<>();
+	private ListIterator<String> itCommandHistory;
 
 	/**
 	 * Constructs a new console.
@@ -96,33 +102,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 		styledText.addVerifyListener(this);
 		styledText.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
 
-		styledText.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				if (e.character == '+' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
-					FontData[] fd = styledText.getFont().getFontData();
-
-					fd[0].setHeight(fd[0].getHeight() + 1);
-					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
-
-				} else if (e.character == '-' && ((e.stateMask & SWT.CTRL) == SWT.CTRL)) {
-					FontData[] fd = styledText.getFont().getFontData();
-
-					if (fd[0].getHeight() > 6) {
-						fd[0].setHeight(fd[0].getHeight() - 1);
-					}
-					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
-				}
-
-			}
-		});
+		styledText.addVerifyKeyListener(new ActionKeyListener(styledText));
 
 		Thread t = new Thread(this);
 		t.start();
@@ -153,7 +133,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 
 	@Override
 	public void documentChanged(DocumentEvent event) {
-		if (event.getOffset() > 0 && event.getText().endsWith("\n")) {
+		if (event.getDocument() == document && event.getOffset() > 0 && event.getText().endsWith("\n")) {
 			int nrLines = event.getDocument().getNumberOfLines();
 			try {
 				if (nrLines >= 2) {
@@ -171,14 +151,32 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 		}
 	}
 
-	private void executeCommand(String cmd) {
-		
-		// add to history
-		commandHistory.add(cmd);
-		if(commandHistory.size() > MAX_HISTORY_LENGTH) {
-			commandHistory.removeFirst();
+	private Optional<Range<Integer>> getPromptRange() {
+		int numberOfLines = document.getNumberOfLines();
+		if (numberOfLines > 0) {
+			try {
+				IRegion lineRegion = document.getLineInformation(numberOfLines - 1);
+				Range<Integer> promptRange = Range.closed(lineRegion.getOffset() + prompt.length(),
+						lineRegion.getOffset() + lineRegion.getLength());
+				return Optional.of(promptRange);
+			} catch (BadLocationException e) {
+				log.error("Something went wrong when getting the last line of the document", e);
+			}
 		}
-		
+		return Optional.empty();
+	}
+
+	private void executeCommand(String cmd) {
+
+		// add to history
+		if(!cmd.isEmpty()) {
+			commandHistory.push(cmd);
+			itCommandHistory = commandHistory.listIterator();
+			if (commandHistory.size() > MAX_HISTORY_LENGTH) {
+				commandHistory.removeLast();
+			}
+		}
+
 		// parse the line
 		ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(cmd));
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -203,6 +201,26 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 		}
 	}
 
+	private void setCommand(String cmd) {
+		if (cmd == null) {
+			return;
+		}
+		cmd = cmd.trim();
+
+		// get the current command as text ran
+		Optional<Range<Integer>> promptRange = getPromptRange();
+		if (promptRange.isPresent()) {
+			try {
+				document.replace(promptRange.get().lowerEndpoint(),
+						promptRange.get().upperEndpoint() - promptRange.get().lowerEndpoint(), cmd);
+				view.getTextWidget().setCaretOffset(document.getLength());
+			} catch (BadLocationException ex) {
+				log.error("Something went wrong when setting the history entry", ex);
+			}
+		}
+
+	}
+
 	@Override
 	public void documentAboutToBeChanged(DocumentEvent event) {
 
@@ -210,29 +228,72 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 
 	@Override
 	public void verifyText(VerifyEvent e) {
-		// get the line this event belongs to
-		try {
-			int lineNr = document.getLineOfOffset(e.start);
+		e.doit = isOffsetPartOfCmd(e.start);
+	}
 
-			if (lineNr < document.getNumberOfLines() - 1) {
-				e.doit = false;
-			} else {
-				// check if the position is right of the prompt
-				if (e.start >= document.getLineOffset(lineNr) + prompt.length()) {
-					e.doit = true;
-				} else {
+	private boolean isOffsetPartOfCmd(int offset) {
+		Optional<Range<Integer>> promptOffset = getPromptRange();
+		if (promptOffset.isPresent()) {
+			boolean result = promptOffset.get().contains(offset);
+			return result;
+		}
+		return false;
+	}
+
+	private final class ActionKeyListener implements VerifyKeyListener {
+		private final StyledText styledText;
+
+		private ActionKeyListener(StyledText styledText) {
+			this.styledText = styledText;
+		}
+
+		@Override
+		public void verifyKey(VerifyEvent e) {
+			boolean ctrlActive = (e.stateMask & SWT.CTRL) == SWT.CTRL;
+
+			if (ctrlActive) {
+				if (e.character == '+') {
 					e.doit = false;
+					FontData[] fd = styledText.getFont().getFontData();
+
+					fd[0].setHeight(fd[0].getHeight() + 1);
+					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+
+				} else if (e.character == '-') {
+					e.doit = false;
+					FontData[] fd = styledText.getFont().getFontData();
+
+					if (fd[0].getHeight() > 6) {
+						fd[0].setHeight(fd[0].getHeight() - 1);
+					}
+					styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+				}
+			} else if (e.keyCode == SWT.ARROW_UP) {
+				if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
+					e.doit = false;
+					if (itCommandHistory != null && itCommandHistory.hasNext()) {
+						String oldCommand = itCommandHistory.next();
+						if (oldCommand != null) {
+							setCommand(oldCommand);
+						}
+					}
+				}
+			} else if (e.keyCode == SWT.ARROW_DOWN) {
+				if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
+					e.doit = false;
+					if (itCommandHistory != null && itCommandHistory.hasPrevious()) {
+						String oldCommand = itCommandHistory.previous();
+						if (oldCommand != null) {
+							setCommand(oldCommand);
+						}
+					}
 				}
 			}
 
-		} catch (BadLocationException ex) {
-			log.error("Could not get line location for offset", ex);
-			e.doit = false;
 		}
-
 	}
 
-	private class ErrorListener extends BaseErrorListener {
+	private final class ErrorListener extends BaseErrorListener {
 
 		final List<String> errors = new LinkedList<>();
 
@@ -254,7 +315,7 @@ public class GraphAnnoConsole implements Runnable, IDocumentListener, VerifyList
 		}
 	}
 
-	private class CommandTreeListener extends ConsoleCommandBaseListener {
+	private final class CommandTreeListener extends ConsoleCommandBaseListener {
 
 		private Set<SToken> tokenReferences = new LinkedHashSet<SToken>();
 
