@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.graph;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -346,61 +347,77 @@ public class GraphEditor {
     viewer.applyLayout();
   }
 
+
+  private static Range<Long> getRangeForToken(SToken tok) {
+    @SuppressWarnings("rawtypes")
+    List<DataSourceSequence> overlappedDS =
+        tok.getGraph().getOverlappedDataSourceSequence(tok, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+    if (overlappedDS != null && !overlappedDS.isEmpty()) {
+      return Range.closedOpen(overlappedDS.get(0).getStart().longValue(),
+          overlappedDS.get(0).getEnd().longValue());
+    }
+    return null;
+  }
+
   private static Multimap<STextualDS, Range<Long>> calculateSegments(SDocumentGraph graph,
       ViewerFilter filter) {
-    List<SNode> roots = graph.getRoots();
     List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
     allTexts.sort(new STextualDataSourceComparator());
 
     LinkedHashMultimap<STextualDS, Range<Long>> result = LinkedHashMultimap.create();
 
     for (STextualDS ds : graph.getTextualDSs()) {
-      boolean hasNonTokenRoot = false;
+      
+      if(ds.getText() == null) {
+        continue;
+      }
+      
       TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
 
-      for (SNode r : roots) {
 
-        if (filter.select(null, null, r)) {
+      DataSourceSequence<Integer> textSeq = new DataSourceSequence<Integer>();
+      textSeq.setDataSource(ds);
+      textSeq.setStart(ds.getStart());
+      textSeq.setEnd(ds.getEnd());
 
-          if (!(r instanceof SToken)) {
-            hasNonTokenRoot = true;
+      List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
+     
+
+      Optional<Long> rangeStart = Optional.empty();
+      Optional<Long> rangeEnd = Optional.empty();
+      SNode lastRoot = null;
+      for (SToken t : token) {
+        SNode currentRoot = RootTraverser.getRoot(t, filter);
+        Range<Long> tokenRange = getRangeForToken(t);
+        if (Objects.equal(lastRoot, currentRoot)) {
+          // extend range
+          if (!rangeStart.isPresent()) {
+            rangeStart = Optional.of(tokenRange.lowerEndpoint());
+          }
+          if(!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
+            rangeEnd = Optional.of(tokenRange.upperEndpoint());
+          }
+        } else {
+
+          // add the completed range
+          if (rangeStart.isPresent() && rangeEnd.isPresent()) {
+            sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
           }
 
-          @SuppressWarnings("rawtypes")
-          List<DataSourceSequence> overlappedDS =
-              graph.getOverlappedDataSourceSequence(r, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
-          if (overlappedDS != null) {
-
-            for (DataSourceSequence<?> seq : overlappedDS) {
-              if (seq.getDataSource() instanceof STextualDS && seq.getDataSource() == ds) {
-
-                long start = 0;
-                long end = 0;
-                if (seq.getStart() != null) {
-                  start = seq.getStart().longValue();
-                }
-                if (seq.getEnd() != null) {
-                  end = seq.getEnd().longValue();
-                }
-                sortedRangesForDS.add(Range.closedOpen(start, end));
-              }
-            }
-          }
+          // begin new range
+          rangeStart = Optional.of(tokenRange.lowerEndpoint());
+          rangeEnd = Optional.of(tokenRange.upperEndpoint());
         }
+
+        lastRoot = currentRoot;
+      }
+      // add the last range
+      if (rangeStart.isPresent() && rangeEnd.isPresent()) {
+        sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
       }
 
-      if (hasNonTokenRoot) {
 
-        result.putAll(ds, sortedRangesForDS);
-      } else {
-        // add the whole text as a sequence
-        long textLength = 0L;
-        if (ds.getText() != null) {
-          textLength = ds.getText().length();
-        }
-        result.put(ds, Range.closed(0L, textLength));
-      }
-
+      result.putAll(ds, sortedRangesForDS);
     }
 
     return result;
