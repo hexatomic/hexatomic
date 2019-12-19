@@ -361,17 +361,23 @@ public class GraphEditor {
 
   private static Multimap<STextualDS, Range<Long>> calculateSegments(SDocumentGraph graph,
       ViewerFilter filter) {
-    List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
-    allTexts.sort(new STextualDataSourceComparator());
 
     LinkedHashMultimap<STextualDS, Range<Long>> result = LinkedHashMultimap.create();
 
+    if (graph == null) {
+      return result;
+    }
+
+    List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
+    allTexts.sort(new STextualDataSourceComparator());
+
+
     for (STextualDS ds : graph.getTextualDSs()) {
-      
-      if(ds.getText() == null) {
+
+      if (ds.getText() == null) {
         continue;
       }
-      
+
       TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
 
 
@@ -381,7 +387,7 @@ public class GraphEditor {
       textSeq.setEnd(ds.getEnd());
 
       List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
-     
+
 
       Optional<Long> rangeStart = Optional.empty();
       Optional<Long> rangeEnd = Optional.empty();
@@ -394,7 +400,7 @@ public class GraphEditor {
           if (!rangeStart.isPresent()) {
             rangeStart = Optional.of(tokenRange.lowerEndpoint());
           }
-          if(!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
+          if (!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
             rangeEnd = Optional.of(tokenRange.upperEndpoint());
           }
         } else {
@@ -546,12 +552,17 @@ public class GraphEditor {
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
 
+      SDocumentGraph graph = getGraph();
+      if (graph == null) {
+        return false;
+      }
+
       if (element instanceof SNode) {
         SNode node = (SNode) element;
         boolean include = false;
 
         // check if the node covers a currently selected range
-        List<SToken> overlappedTokens = getGraph().getOverlappedTokens(node);
+        List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
         for (SToken t : overlappedTokens) {
           if (coveredTokenIDs.contains(t.getId())) {
             include = true;
