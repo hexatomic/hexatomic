@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -89,11 +90,12 @@ import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 
 @SuppressWarnings("restriction")
 public class GraphEditor {
-
 
   @Inject
   private ProjectManager projectManager;
@@ -105,7 +107,6 @@ public class GraphEditor {
   public GraphEditor() {
 
   }
-
 
   private Button btnIncludeSpans;
   private Table textRangeTable;
@@ -133,7 +134,6 @@ public class GraphEditor {
     return null;
   }
 
-
   /**
    * Create a new graph viewer.
    * 
@@ -159,12 +159,10 @@ public class GraphEditor {
     viewer.setLayoutAlgorithm(createLayout());
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
 
-
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
     GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
     gridLayoutFilterComposite.marginWidth = 0;
     filterComposite.setLayout(gridLayoutFilterComposite);
-
 
     Label lblFilterByAnnotation = new Label(filterComposite, SWT.NONE);
     lblFilterByAnnotation.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -266,7 +264,6 @@ public class GraphEditor {
     new AtomicalConsole(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
-
     updateView(true);
 
   }
@@ -312,7 +309,7 @@ public class GraphEditor {
         oldSelectedRanges.add((Range<Long>) item.getData("range"));
       }
 
-      calculateSegments(graph);
+      updateSegments(graph);
 
       textRangeTable.deselectAll();
 
@@ -352,22 +349,21 @@ public class GraphEditor {
     viewer.applyLayout();
   }
 
-  private void calculateSegments(SDocumentGraph graph) {
-    textRangeTable.removeAll();
-
-    ViewerFilter currentFilter = new RootFilter();
-
+  private static Multimap<STextualDS, Range<Long>> calculateSegments(SDocumentGraph graph,
+      ViewerFilter filter) {
     List<SNode> roots = graph.getRoots();
-
     List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
     allTexts.sort(new STextualDataSourceComparator());
 
+    LinkedHashMultimap<STextualDS, Range<Long>> result = LinkedHashMultimap.create();
+
     for (STextualDS ds : graph.getTextualDSs()) {
       boolean hasNonTokenRoot = false;
-      TreeSet<Range<Long>> sortedRanges = new TreeSet<Range<Long>>(new RangeStartComparator<>());
+      TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
+
       for (SNode r : roots) {
 
-        if (currentFilter.select(viewer, null, r)) {
+        if (filter.select(null, null, r)) {
 
           if (!(r instanceof SToken)) {
             hasNonTokenRoot = true;
@@ -389,7 +385,7 @@ public class GraphEditor {
                 if (seq.getEnd() != null) {
                   end = seq.getEnd().longValue();
                 }
-                sortedRanges.add(Range.closedOpen(start, end));
+                sortedRangesForDS.add(Range.closedOpen(start, end));
               }
             }
           }
@@ -397,27 +393,36 @@ public class GraphEditor {
       }
 
       if (hasNonTokenRoot) {
-        for (Range<Long> range : sortedRanges) {
 
-          TableItem item = new TableItem(textRangeTable, SWT.NONE);
-          item.setText(
-              range.lowerEndpoint() + ".." + range.upperEndpoint() + " (" + (ds.getName() + ")"));
-          item.setData("range", range);
-          item.setData("text", ds);
-        }
+        result.putAll(ds, sortedRangesForDS);
       } else {
         // add the whole text as a sequence
-        TableItem item = new TableItem(textRangeTable, SWT.NONE);
-        String text = ds.getText();
-        long textLength = 0;
-        if (text != null) {
-          textLength = text.length();
+        long textLength = 0L;
+        if (ds.getText() != null) {
+          textLength = ds.getText().length();
         }
-        item.setText(0 + ".." + textLength + " (" + (ds.getName() + ")"));
-        item.setData("range", Range.closedOpen(0L, textLength));
-        item.setData("text", ds);
+        result.put(ds, Range.closed(0L, textLength));
       }
 
+    }
+
+    return result;
+  }
+
+  private void updateSegments(SDocumentGraph graph) {
+    textRangeTable.removeAll();
+
+    ViewerFilter currentFilter = new RootFilter();
+
+    Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
+
+    for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
+      TableItem item = new TableItem(textRangeTable, SWT.NONE);
+
+      item.setText(e.getValue().lowerEndpoint() + ".." + e.getValue().upperEndpoint() + " ("
+          + (e.getKey().getName() + ")"));
+      item.setData("range", e.getValue());
+      item.setData("text", e.getKey());
     }
 
   }
@@ -426,7 +431,6 @@ public class GraphEditor {
 
     TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
     TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-
 
     org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
 
@@ -451,8 +455,6 @@ public class GraphEditor {
     LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {otherLayout, tokenLayout};
     return new CompositeLayoutAlgorithm(layouts);
   }
-
-
 
   private final class ListenerImplementation implements Listener {
     @Override
