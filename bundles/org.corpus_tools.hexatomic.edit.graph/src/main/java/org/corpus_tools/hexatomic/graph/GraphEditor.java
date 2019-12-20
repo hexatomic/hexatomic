@@ -181,7 +181,7 @@ public class GraphEditor {
 
     textRangeTable =
         new Table(filterComposite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
-    textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+    textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     textRangeTable.setHeaderVisible(true);
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
