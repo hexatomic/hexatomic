@@ -154,7 +154,7 @@ public class GraphEditor {
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
     viewer.setLabelProvider(new SaltLabelProvider());
-    viewer.setLayoutAlgorithm(createLayout());
+    viewer.setLayoutAlgorithm(createLegacyLayout());
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
 
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
@@ -448,6 +448,33 @@ public class GraphEditor {
   }
 
   private LayoutAlgorithm createLayout() {
+
+    SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
+
+    org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
+
+      @Override
+      public boolean isObjectFiltered(LayoutItem object) {
+        IdentifiableElement data = SaltGraphContentProvider.getData(object);
+        if (data instanceof SStructuredNode || data instanceof SToken) {
+          return false;
+        } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
+          SRelation<?, ?> rel = (SRelation<?, ?>) data;
+          if (rel.getTarget() instanceof SStructuredNode) {
+            return false;
+          }
+        }
+        return true;
+      }
+    };
+
+    layout.setFilter(hierarchyFilter);
+
+    return layout;
+  }
+  
+
+  private LayoutAlgorithm createLegacyLayout() {
 
     TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
     TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
