@@ -99,6 +99,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
 
     // TODO: assign position based on rank and the covered tokens
+    for (Map.Entry<InternalNode, Integer> e : ranks.entrySet()) {
+      int rank = e.getValue();
+      InternalNode n = e.getKey();
+      n.setInternalLocation(0, boundsY + (rank * this.maxNodeHeight));
+    }
 
     updateLayoutLocations(entitiesToLayout);
     fireProgressEvent(entitiesToLayout.length, entitiesToLayout.length);
@@ -111,10 +116,14 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       return maxRank;
     }
 
+    SNode saltNode = this.nodes.get(node);
+    if (saltNode == null || saltNode instanceof SToken) {
+      return maxRank;
+    }
+
     int newRank = maxRank + 1;
     ranks.putIfAbsent(node, newRank);
 
-    SNode saltNode = this.nodes.get(node);
     for (SRelation<?, ?> rel : saltNode.getOutRelations()) {
       if (this.relations.values().contains(rel)) {
         InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
@@ -123,6 +132,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         }
       }
     }
+
 
     return newRank;
 

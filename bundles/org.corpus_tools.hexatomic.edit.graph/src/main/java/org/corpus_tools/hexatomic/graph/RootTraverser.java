@@ -24,7 +24,7 @@ public class RootTraverser implements GraphTraverseHandler {
   @Override
   public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
       SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-    if(!(currNode instanceof SToken)) {
+    if (!(currNode instanceof SToken)) {
       root = currNode;
     }
   }
@@ -42,6 +42,13 @@ public class RootTraverser implements GraphTraverseHandler {
         || relation instanceof SDominanceRelation || relation instanceof SSpanningRelation);
   }
 
+  /**
+   * Return a root node for the given token.
+   * 
+   * @param tok The token to get the root node for
+   * @param filter A filter which is used to select the subgraph
+   * @return The root node or null if not found
+   */
   public static SNode getRoot(SToken tok, ViewerFilter filter) {
     RootTraverser traverser = new RootTraverser(filter);
     tok.getGraph().traverse(Arrays.asList(tok), GRAPH_TRAVERSE_TYPE.BOTTOM_UP_DEPTH_FIRST,
