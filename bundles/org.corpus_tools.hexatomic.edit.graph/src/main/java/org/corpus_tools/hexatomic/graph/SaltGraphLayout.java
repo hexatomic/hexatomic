@@ -114,8 +114,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     int newRank = maxRank + 1;
     ranks.putIfAbsent(node, newRank);
 
-    SNode sNode = this.nodes.get(node);
-    for (SRelation<?, ?> rel : sNode.getOutRelations()) {
+    SNode saltNode = this.nodes.get(node);
+    for (SRelation<?, ?> rel : saltNode.getOutRelations()) {
       if (this.relations.values().contains(rel)) {
         InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
         if (outNode != null) {
