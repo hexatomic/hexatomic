@@ -17,5 +17,3 @@ Require-Bundle: javax.inject,
  org.eclipse.emf.common;bundle-version="2.16.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.textview
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: javax.annotation;version="1.0.0";resolution:=optional,
- javax.inject;version="1.0.0"

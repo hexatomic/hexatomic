@@ -35,7 +35,6 @@
       <import plugin="ch.qos.logback.classic" version="1.1.2" match="greaterOrEqual"/>
       <import plugin="ch.qos.logback.core" version="1.1.2" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.10" match="greaterOrEqual"/>
-      <import plugin="javax.annotation"/>
       <import plugin="org.slf4j.api" version="1.7.10" match="equivalent"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
