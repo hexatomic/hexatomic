@@ -116,7 +116,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         if (range.hasLowerBound()) {
           if (range.hasUpperBound()) {
             // position at the center
-            x = (range.upperEndpoint() - range.lowerEndpoint()) / 2.0;
+            x = range.lowerEndpoint() + (range.upperEndpoint() - range.lowerEndpoint()) / 2.0;
           } else {
             // position left-aligned
             x = range.lowerEndpoint();
@@ -149,9 +149,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         }
 
         if (maxX.isPresent()) {
-          maxX = Optional.of(Math.max(internalTokenNode.getInternalX(), maxX.get()));
+          maxX = Optional.of(Math.max(
+              internalTokenNode.getInternalX() + internalTokenNode.getInternalWidth(), maxX.get()));
         } else {
-          maxX = Optional.of(internalTokenNode.getInternalX());
+          maxX =
+              Optional.of(internalTokenNode.getInternalX() + internalTokenNode.getInternalWidth());
         }
       }
     }

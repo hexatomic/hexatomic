@@ -154,7 +154,7 @@ public class GraphEditor {
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
     viewer.setLabelProvider(new SaltLabelProvider());
-    viewer.setLayoutAlgorithm(createLegacyLayout());
+    viewer.setLayoutAlgorithm(createLayout());
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
 
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
