@@ -22,11 +22,14 @@ package org.corpus_tools.hexatomic.graph;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Range;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
@@ -101,13 +104,67 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     // TODO: assign position based on rank and the covered tokens
     for (Map.Entry<InternalNode, Integer> e : ranks.entrySet()) {
       int rank = e.getValue();
-      InternalNode n = e.getKey();
-      n.setInternalLocation(0, boundsY + (rank * this.maxNodeHeight));
+      InternalNode node = e.getKey();
+      SNode saltNode = this.nodes.get(node);
+      // Get covered tokens to get the x position
+      if (saltNode.getGraph() instanceof SDocumentGraph) {
+        SDocumentGraph graph = (SDocumentGraph) saltNode.getGraph();
+        List<SToken> overlappedTokens = graph.getOverlappedTokens(saltNode);
+        Range<Double> range = getTokenRange(overlappedTokens);
+
+        double x = 0.0;
+        if (range.hasLowerBound()) {
+          if (range.hasUpperBound()) {
+            // position at the center
+            x = (range.upperEndpoint() - range.lowerEndpoint()) / 2.0;
+          } else {
+            // position left-aligned
+            x = range.lowerEndpoint();
+          }
+        }
+        node.setInternalLocation(x, boundsY + (rank * this.maxNodeHeight));
+
+      }
+
+
     }
 
     updateLayoutLocations(entitiesToLayout);
     fireProgressEvent(entitiesToLayout.length, entitiesToLayout.length);
 
+  }
+
+  private Range<Double> getTokenRange(List<SToken> tokens) {
+
+    Optional<Double> minX = Optional.empty();
+    Optional<Double> maxX = Optional.empty();
+
+    for (SToken t : tokens) {
+      InternalNode internalTokenNode = this.nodes.inverse().get(t);
+      if (internalTokenNode != null) {
+        if (minX.isPresent()) {
+          minX = Optional.of(Math.min(internalTokenNode.getInternalX(), minX.get()));
+        } else {
+          minX = Optional.of(internalTokenNode.getInternalX());
+        }
+
+        if (maxX.isPresent()) {
+          maxX = Optional.of(Math.max(internalTokenNode.getInternalX(), maxX.get()));
+        } else {
+          maxX = Optional.of(internalTokenNode.getInternalX());
+        }
+      }
+    }
+
+
+    if (!minX.isPresent()) {
+      minX = Optional.of(0.0);
+    }
+    if (maxX.isPresent()) {
+      return Range.closed(minX.get(), maxX.get());
+    } else {
+      return Range.atLeast(minX.get());
+    }
   }
 
   private int assignRankRecursivly(InternalNode node, Map<InternalNode, Integer> ranks,
