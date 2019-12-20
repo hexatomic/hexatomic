@@ -62,7 +62,6 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
   @Override
   protected boolean isValidConfiguration(boolean asynchronous, boolean continuous) {
-    // TODO Auto-generated method stub
     return true;
   }
 
@@ -101,7 +100,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     // TODO: Check if we can merge nodes to the same rank if they don't cover the same token
 
 
-    // TODO: assign position based on rank and the covered tokens
+    // assign position based on rank and the covered tokens
     for (Map.Entry<InternalNode, Integer> e : ranks.entrySet()) {
       int rank = e.getValue();
       InternalNode node = e.getKey();
@@ -268,19 +267,16 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
   @Override
   protected void postLayoutAlgorithm(InternalNode[] entitiesToLayout,
       InternalRelationship[] relationshipsToConsider) {
-    // TODO Auto-generated method stub
 
   }
 
   @Override
   protected int getTotalNumberOfLayoutSteps() {
-    // TODO Auto-generated method stub
     return 0;
   }
 
   @Override
   protected int getCurrentLayoutStep() {
-    // TODO Auto-generated method stub
     return 0;
   }
 
