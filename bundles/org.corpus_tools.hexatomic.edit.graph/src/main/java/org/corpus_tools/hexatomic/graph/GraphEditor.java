@@ -258,31 +258,21 @@ public class GraphEditor {
         } else {
           zoomManager.zoomIn();
         }
+
+        centerViewportToClicked(e);
       }
     });
     viewer.getGraphControl().addMouseListener(new MouseListener() {
 
       @Override
-      public void mouseUp(MouseEvent e) {
-      }
+      public void mouseUp(MouseEvent e) {}
 
       @Override
-      public void mouseDown(MouseEvent e) {
-      }
+      public void mouseDown(MouseEvent e) {}
 
       @Override
       public void mouseDoubleClick(MouseEvent e) {
-        // Center the view around at the mouse cursor by getting the difference from
-        // the viewport center and the mouse click position.
-        // This difference is added to the viewport location.
-        Viewport viewPort = viewer.getGraphControl().getViewport();
-
-        Point viewPortCenter =
-            new Point(viewPort.getSize().width(), viewPort.getSize().height()).getScaled(0.5);
-        Point clickedInViewport = new Point(e.x, e.y);
-        Dimension diff = clickedInViewport.getDifference(viewPortCenter);
-
-        viewPort.setViewLocation(viewPort.getViewLocation().getTranslated(diff));
+        centerViewportToClicked(e);
       }
     });
     viewer.getControl().forceFocus();
@@ -295,6 +285,23 @@ public class GraphEditor {
 
     updateView(true);
 
+  }
+
+  /**
+   * Center the view around at the mouse cursor by getting the difference from the viewport center
+   * and the mouse click position. This difference is added to the viewport location.
+   * 
+   * @param e The mouse click event.
+   */
+  private void centerViewportToClicked(MouseEvent e) {
+    Viewport viewPort = viewer.getGraphControl().getViewport();
+
+    Point viewPortCenter =
+        new Point(viewPort.getSize().width(), viewPort.getSize().height()).getScaled(0.5);
+    Point clickedInViewport = new Point(e.x, e.y);
+    Dimension diff = clickedInViewport.getDifference(viewPortCenter);
+
+    viewPort.setViewLocation(viewPort.getViewLocation().getTranslated(diff));
   }
 
   @PreDestroy
