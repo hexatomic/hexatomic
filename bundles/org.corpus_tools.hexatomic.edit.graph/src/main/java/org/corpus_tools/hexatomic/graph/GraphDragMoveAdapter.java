@@ -1,19 +1,21 @@
 package org.corpus_tools.hexatomic.graph;
 
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.zest.core.widgets.Graph;
 
 /**
- * Allow to move a viewport by dragging with the mouse.
+ * Allow to move a graph by dragging with the mouse.
  * 
  * @author Thomas Krause
  *
  */
-public class ViewportDragMoveAdapter implements MouseMotionListener, MouseListener {
+public class GraphDragMoveAdapter implements MouseMotionListener, MouseListener {
 
   private final Viewport viewport;
 
@@ -23,19 +25,19 @@ public class ViewportDragMoveAdapter implements MouseMotionListener, MouseListen
   /**
    * Creates a new instance of this class and registers the required listeners.
    * 
-   * @param viewport The viewport on which to enable dragging.
+   * @param graph The graph on which to enable dragging.
    */
-  public static ViewportDragMoveAdapter register(Viewport viewport) {
-    ViewportDragMoveAdapter adapter = new ViewportDragMoveAdapter(viewport);
+  public static GraphDragMoveAdapter register(Graph graph) {
+    GraphDragMoveAdapter adapter = new GraphDragMoveAdapter(graph.getViewport());
 
 
-    viewport.addMouseListener(adapter);
-    viewport.addMouseMotionListener(adapter);
+    graph.getLightweightSystem().getRootFigure().addMouseListener(adapter);
+    graph.getLightweightSystem().getRootFigure().addMouseMotionListener(adapter);
 
     return adapter;
   }
 
-  private ViewportDragMoveAdapter(Viewport viewport) {
+  private GraphDragMoveAdapter(Viewport viewport) {
     this.viewport = viewport;
 
 
@@ -46,6 +48,7 @@ public class ViewportDragMoveAdapter implements MouseMotionListener, MouseListen
     if (this.start == null) {
       return;
     }
+
     Point loc = this.viewport.getViewLocation();
 
     Dimension diffDim = me.getLocation().getDifference(start);
@@ -55,17 +58,17 @@ public class ViewportDragMoveAdapter implements MouseMotionListener, MouseListen
 
     this.viewport.setViewLocation(loc);
     me.consume();
+
   }
 
   @Override
   public void mouseEntered(MouseEvent me) {
-    this.start = me.getLocation();
-    this.viewport.translateFromParent(this.start);
+
   }
 
   @Override
   public void mouseExited(MouseEvent me) {
-    this.start = null;
+ 
   }
 
   @Override
@@ -80,8 +83,11 @@ public class ViewportDragMoveAdapter implements MouseMotionListener, MouseListen
 
   @Override
   public void mousePressed(MouseEvent me) {
-    this.start = me.getLocation();
-    this.viewport.translateFromParent(this.start);
+    IFigure selectedFigure = this.viewport.findFigureAt(me.getLocation());
+    if (selectedFigure == this.viewport) {
+      this.start = me.getLocation();
+      this.viewport.translateFromParent(this.start);
+    }
   }
 
   @Override

@@ -306,7 +306,7 @@ public class GraphEditor {
 
       }
     });
-    ViewportDragMoveAdapter.register(viewer.getGraphControl().getViewport());
+    GraphDragMoveAdapter.register(viewer.getGraphControl());
 
     viewer.getControl().forceFocus();
 
