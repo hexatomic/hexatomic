@@ -59,6 +59,9 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.text.Document;
@@ -70,6 +73,7 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -248,11 +252,37 @@ public class GraphEditor {
 
       @Override
       public void mouseScrolled(MouseEvent e) {
+
         if (e.count < 0) {
           zoomManager.zoomOut();
         } else {
           zoomManager.zoomIn();
         }
+      }
+    });
+    viewer.getGraphControl().addMouseListener(new MouseListener() {
+
+      @Override
+      public void mouseUp(MouseEvent e) {
+      }
+
+      @Override
+      public void mouseDown(MouseEvent e) {
+      }
+
+      @Override
+      public void mouseDoubleClick(MouseEvent e) {
+        // Center the view around at the mouse cursor by getting the difference from
+        // the viewport center and the mouse click position.
+        // This difference is added to the viewport location.
+        Viewport viewPort = viewer.getGraphControl().getViewport();
+
+        Point viewPortCenter =
+            new Point(viewPort.getSize().width(), viewPort.getSize().height()).getScaled(0.5);
+        Point clickedInViewport = new Point(e.x, e.y);
+        Dimension diff = clickedInViewport.getDifference(viewPortCenter);
+
+        viewPort.setViewLocation(viewPort.getViewLocation().getTranslated(diff));
       }
     });
     viewer.getControl().forceFocus();
