@@ -89,6 +89,7 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 @SuppressWarnings("restriction")
 public class GraphEditor {
@@ -153,6 +154,7 @@ public class GraphEditor {
     viewer.setContentProvider(new SaltGraphContentProvider());
     viewer.setLabelProvider(new SaltLabelProvider());
     viewer.setLayoutAlgorithm(createLayout());
+    viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
 
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
@@ -467,10 +469,10 @@ public class GraphEditor {
     };
 
     layout.setFilter(hierarchyFilter);
-
+    
     return layout;
   }
-  
+
   private final class ListenerImplementation implements Listener {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
