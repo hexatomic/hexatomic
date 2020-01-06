@@ -3,17 +3,17 @@
 Hexatomic is a modular project, and while it is possible to debug a user-defined subset of its bundles,
 it may be more useful to debug the complete application.
 
-To run or debug Hexatomic from within the Eclipse IDE, with all the features and bundles, you have to open the  `org.corpus_tools.hexatomic.product` project which contains the Hexatomic product definition.
-In this project, open the `org.corpus_tools.hexatomic.product` file in Eclipse.
+To run or debug Hexatomic from within the Eclipse IDE, with all the features and bundles, you have to launch the
+**org.corpus_tools.hexatomic.product** launch configuration, which is included in the project. 
+Choose the debug icon in the toolbar and select **Debug Configurations...**
 
-![Location of the product definition file in the Project Explorer](./product-file-location.png)
+![Open debug configurations](./debug-configurations.png)
 
-To debug Hexatomic, click on the **Launch an Eclipse application in Debug mode** link in the overview tab of the Product Configuration Editor.
-To run the product without debugging, click **Launch an Eclipse application** on the same page.
-If you don't see the Product Configuration Editor, you may have opened the file with a different editor instead.
-In this case, right-click on the `org.corpus_tools.hexatomic.product` file, and choose **Open With** > **Product Configuration Editor**.
+The launch configuration is shown in the **Eclipse Application** category and you can use it to run Hexatomic in debug mode by clicking on the
+**Debug** button.
 
-![Product configuration file editor with launch links](./product-launch.png)
+![Product launch configuration](./product-debug.png)
 
-
-
+This launch configuration is based on features.
+To add new features, select the **Plug-ins** tab, and activate the features you need.
+Changing the product configuration will change the file `releng/ide/org.corpus_tools.hexatomic.product.launch`, which is part of the Git repository.

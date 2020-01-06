@@ -45,10 +45,10 @@ or a `hotfix` branch (for bug fixes) with `mvn gitflow:hotfix-start`.
 We perform reviews of all changes to Hexatomic, be they in code, documentation, configuration, etc.
 We have therefore set up regular time slots, in which maintainers perform (code) reviews.
 Currently, we aim to review pull requests at the following times:
-- Wednesday mornings
+- Wednesday afternoons
 - Thursday mornings
-- Thursday afternoons
 - Friday mornings
+- Friday afternoons
   
 All times are in Central European (Summer) Time and are meant for orientation. Note that we may sometimes not be able to perform reviews in these time slots due to illness, holidays, etc.
 

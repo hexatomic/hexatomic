@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Core Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.core.tests
-Bundle-Version: 0.2.0.qualifier
+Bundle-Version: 0.4.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.core;bundle-version="0.2.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.core.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

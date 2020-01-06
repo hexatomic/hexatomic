@@ -1,0 +1,7 @@
+type: software
+title: ICU4J
+version: '{{version}}'
+license: EPL-1.0
+authors:
+-  name: ICU4J project
+notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'
