@@ -70,6 +70,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -275,6 +277,34 @@ public class GraphEditor {
         centerViewportToClicked(e);
       }
     });
+    viewer.getGraphControl().addKeyListener(new KeyListener() {
+
+      @Override
+      public void keyReleased(KeyEvent e) {}
+
+      @Override
+      public void keyPressed(KeyEvent e) {
+        int diff = 25;
+        if ((e.stateMask & SWT.SHIFT) != 0) {
+          diff = 250;
+        }
+        Viewport viewPort = viewer.getGraphControl().getViewport();
+        Point loc = viewPort.getViewLocation();
+
+        if (e.keyCode == SWT.ARROW_LEFT) {
+          loc.translate(-diff, 0);
+        } else if (e.keyCode == SWT.ARROW_RIGHT) {
+          loc.translate(+diff, 0);
+        } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
+          loc.translate(0, +diff);
+        } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
+          loc.translate(0, -diff);
+        }
+        viewPort.setViewLocation(loc);
+
+      }
+    });
+
     viewer.getControl().forceFocus();
 
     Document consoleDocument = new Document();
