@@ -89,7 +89,6 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
-import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 @SuppressWarnings("restriction")
 public class GraphEditor {
@@ -242,6 +241,9 @@ public class GraphEditor {
     zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
         viewer.getGraphControl().getViewport());
 
+    zoomManager.setZoomLevels(
+        new double[] {0.0625, 0.125, 0.25, .5, .75, 1.0, 1.5, 2.0, 2.5, 3, 4, 5, 6, 7, 8, 9, 10});
+
     viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
 
       @Override
@@ -251,7 +253,6 @@ public class GraphEditor {
         } else {
           zoomManager.zoomIn();
         }
-
       }
     });
     viewer.getControl().forceFocus();
@@ -469,7 +470,7 @@ public class GraphEditor {
     };
 
     layout.setFilter(hierarchyFilter);
-    
+
     return layout;
   }
 
