@@ -158,7 +158,8 @@ public class GraphEditor {
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
-    viewer.setLabelProvider(new SaltLabelProvider());
+    viewer.setLabelProvider(
+        new SaltLabelProvider(viewer.getGraphControl().getLightweightSystem().getRootFigure()));
     viewer.setLayoutAlgorithm(createLayout());
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
