@@ -89,8 +89,6 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
-import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
 @SuppressWarnings("restriction")
 public class GraphEditor {
@@ -473,36 +471,6 @@ public class GraphEditor {
     return layout;
   }
   
-
-  private LayoutAlgorithm createLegacyLayout() {
-
-    TokenLayoutAlgorithm tokenLayout = new TokenLayoutAlgorithm(LayoutStyles.NONE);
-    TreeLayoutAlgorithm otherLayout = new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-
-    org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
-
-      @Override
-      public boolean isObjectFiltered(LayoutItem object) {
-        IdentifiableElement data = SaltGraphContentProvider.getData(object);
-        if (data instanceof SStructuredNode || data instanceof SToken) {
-          return false;
-        } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
-          SRelation<?, ?> rel = (SRelation<?, ?>) data;
-          if (rel.getTarget() instanceof SStructuredNode) {
-            return false;
-          }
-        }
-        return true;
-      }
-    };
-
-    tokenLayout.setFilter(hierarchyFilter);
-    otherLayout.setFilter(hierarchyFilter);
-
-    LayoutAlgorithm[] layouts = new LayoutAlgorithm[] {otherLayout, tokenLayout};
-    return new CompositeLayoutAlgorithm(layouts);
-  }
-
   private final class ListenerImplementation implements Listener {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
