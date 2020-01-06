@@ -59,6 +59,7 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
+import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -161,6 +162,7 @@ public class GraphEditor {
     viewer.setLayoutAlgorithm(createLayout());
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
+    viewer.getGraphControl().setDragDetect(true);
 
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
     GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
@@ -304,6 +306,7 @@ public class GraphEditor {
 
       }
     });
+    ViewportDragMoveAdapter.register(viewer.getGraphControl().getViewport());
 
     viewer.getControl().forceFocus();
 
