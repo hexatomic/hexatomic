@@ -90,6 +90,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -250,6 +251,17 @@ public class GraphEditor {
       }
     });
 
+    // Disable the original scroll event when the mouse wheel is activated
+    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
+        new org.eclipse.swt.widgets.Listener() {
+
+          @Override
+          public void handleEvent(Event event) {
+            event.doit = false;
+          }
+        });
+    
+    // Add a mouse wheel listener that zooms instead of scrolling
     viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
 
       @Override
@@ -265,15 +277,15 @@ public class GraphEditor {
         }
 
         if (newScale.isPresent()) {
-          double clippedScale = Math.max(0.0625, Math.min(20.0, newScale.get()));
+          double clippedScale = Math.max(0.0625, Math.min(2.0, newScale.get()));
 
           if (clippedScale != oldScale) {
 
             Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
-          
+
             figure.setScale(clippedScale);
             viewer.getGraphControl().getViewport().validate();
-            
+
             viewer.getGraphControl().getViewport()
                 .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
             viewer.getGraphControl().getViewport().validate();
