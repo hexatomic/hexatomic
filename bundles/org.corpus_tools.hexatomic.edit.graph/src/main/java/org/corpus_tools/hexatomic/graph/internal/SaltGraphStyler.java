@@ -35,12 +35,15 @@ import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.Bendpoint;
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.MidpointLocator;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
+import org.eclipse.zest.core.viewers.IFigureProvider;
 import org.eclipse.zest.core.viewers.ISelfStyleProvider;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
@@ -121,7 +124,18 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       connection.changeLineColor(ColorConstants.blue);
       connection.getConnectionFigure().setConnectionRouter(pointingConnectionRouter);
 
-
+      // The default midpoint locator always uses the first segment of the edge as location for the
+      // label.
+      // Find the label of the connection figure and add a new locator constraint, that places
+      // the label in the middle of the second edge segment.
+      Connection connFigure = connection.getConnectionFigure();
+      for (Object c : connFigure.getChildren()) {
+        if (c instanceof org.eclipse.draw2d.Label) {
+          org.eclipse.draw2d.Label connLabel = (org.eclipse.draw2d.Label) c;
+          connFigure.getLayoutManager().setConstraint(connLabel,
+              new MidpointLocator(connFigure, 1));
+        }
+      }
 
     } else if (element instanceof SDominanceRelation) {
       connection.changeLineColor(ColorConstants.red);
