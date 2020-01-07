@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.graph.internal;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MouseEvent;

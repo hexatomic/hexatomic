@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.graph.internal;
 
 import java.util.List;
 import org.corpus_tools.salt.common.SDocumentGraph;

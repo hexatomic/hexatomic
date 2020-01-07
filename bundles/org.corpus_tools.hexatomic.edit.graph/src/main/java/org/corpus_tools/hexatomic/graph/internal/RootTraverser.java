@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.graph.internal;
 
 import java.util.Arrays;
 

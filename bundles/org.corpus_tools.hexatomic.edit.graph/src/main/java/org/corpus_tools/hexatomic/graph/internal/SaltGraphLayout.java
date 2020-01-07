@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.graph.internal;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ComparisonChain;

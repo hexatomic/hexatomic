@@ -18,13 +18,12 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.graph.internal;
 
 import com.google.common.base.Joiner;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.TreeMap;
 import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -46,11 +45,11 @@ import org.eclipse.zest.core.viewers.ISelfStyleProvider;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
+public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
 
   private final ShortestPathConnectionRouter pointingConnectionRouter;
 
-  SaltGraphStyler(IFigure figure) {
+  public SaltGraphStyler(IFigure figure) {
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
   }
 
@@ -96,8 +95,6 @@ class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
 
       SPointingRelation pointing = (SPointingRelation) element;
 
-      final Random rand = new Random();
-
       SStructuredNode saltSource = pointing.getSource();
       SStructuredNode saltTarget = pointing.getTarget();
 
@@ -107,7 +104,7 @@ class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
         final GraphNode source = connection.getSource();
         final GraphNode target = connection.getDestination();
 
-        // Make sure the pointing relation is routed above the tokens with two bendpoints
+        // Make sure the pointing relation is routed above the tokens with two bend points
         Bendpoint bpSource = new Bendpoint() {
 
           @Override
