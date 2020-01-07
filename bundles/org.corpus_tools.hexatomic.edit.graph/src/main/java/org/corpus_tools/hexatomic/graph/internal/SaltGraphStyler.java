@@ -48,8 +48,10 @@ import org.eclipse.zest.core.widgets.GraphNode;
 public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
 
   private final ShortestPathConnectionRouter pointingConnectionRouter;
+  private final IFigure figure;
 
   public SaltGraphStyler(IFigure figure) {
+    this.figure = figure;
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
   }
 
@@ -99,59 +101,17 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       SStructuredNode saltTarget = pointing.getTarget();
 
       if (saltSource instanceof SToken && saltTarget instanceof SToken) {
-
-
-        final GraphNode source = connection.getSource();
-        final GraphNode target = connection.getDestination();
-
         // Make sure the pointing relation is routed above the tokens with two bend points
         Bendpoint bpSource = new Bendpoint() {
-
           @Override
           public Point getLocation() {
-            // Calculate a bend point that lies between the two connected nodes
-            Point sourceLoc =
-                source.getLocation().getTranslated(new Dimension(source.getSize().width / 2, 0));
-            Point targetLoc = connection.getDestination().getLocation()
-                .getTranslated(new Dimension(target.getSize().width / 2, 0));
-
-
-            // make the height dependent on the distance
-            Dimension distance = targetLoc.getDifference(sourceLoc);
-            int height = (int) (10.0 + 50 * Math.log10(Math.abs((double) distance.width)));
-
-            if (sourceLoc.x < targetLoc.x) {
-              // source -> target
-              return new Point(sourceLoc.x + 10, sourceLoc.y - height);
-            } else {
-              // target <- source
-              return new Point(sourceLoc.x - 10, sourceLoc.y - height);
-            }
+            return getBendpointLocation(connection, false);
           }
         };
         Bendpoint bpTarget = new Bendpoint() {
-
           @Override
           public Point getLocation() {
-            // Calculate a bend point that lies between the two connected nodes
-            Point sourceLoc =
-                source.getLocation().getTranslated(new Dimension(source.getSize().width / 2, 0));
-            Point targetLoc = connection.getDestination().getLocation()
-                .getTranslated(new Dimension(target.getSize().width / 2, 0));
-
-            // make the height dependent on the distance
-            Dimension distance = targetLoc.getDifference(sourceLoc);
-            int height = (int) (10.0 + 50 * Math.log10(Math.abs((double) distance.width)));
-
-
-            if (sourceLoc.x < targetLoc.x) {
-              // source -> target
-              return new Point(targetLoc.x - 10, sourceLoc.y - height);
-            } else {
-              // target <- source
-              return new Point(targetLoc.x + 10, sourceLoc.y - height);
-            }
-
+            return getBendpointLocation(connection, true);
           }
         };
         this.pointingConnectionRouter.setConstraint(connection.getConnectionFigure(),
@@ -162,8 +122,56 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       connection.getConnectionFigure().setConnectionRouter(pointingConnectionRouter);
 
 
+
     } else if (element instanceof SDominanceRelation) {
       connection.changeLineColor(ColorConstants.red);
+    }
+  }
+
+  /**
+   * Calculate a bend point that lies between the two connected nodes.
+   * 
+   * @param connection The connection to calculate the bend point for.
+   * @param forDestination If true the bend point is calculated for the target node
+   * @return A bend point
+   */
+  private Point getBendpointLocation(GraphConnection connection, boolean forDestination) {
+    GraphNode source = connection.getSource();
+    GraphNode target = connection.getDestination();
+
+    int sourceWidth = source.getSize().width;
+    int targetWidth = target.getSize().width;
+
+    Point sourceLoc = source.getLocation().getTranslated(new Dimension(sourceWidth / 2, 0));
+    Point targetLoc =
+        connection.getDestination().getLocation().getTranslated(new Dimension(targetWidth / 2, 0));
+
+    // make the height dependent on the distance
+    double nodeHeight = Math.max(source.getSize().height, target.getSize().height);
+    double distance = Math.abs(targetLoc.getDifference(sourceLoc).preciseWidth());
+    if (distance == 0) {
+      distance = 0.001;
+    }
+    double factor = Math.min(1.0, Math.abs(distance / figure.getSize().preciseWidth()));
+    int height = (int) (10.0 + nodeHeight * factor);
+
+    if (forDestination) {
+
+      if (sourceLoc.x < targetLoc.x) {
+        // source -> target
+        return new Point(targetLoc.x - (targetWidth / 2), sourceLoc.y - height);
+      } else {
+        // target <- source
+        return new Point(targetLoc.x + (targetWidth / 2), sourceLoc.y - height);
+      }
+    } else {
+      if (sourceLoc.x < targetLoc.x) {
+        // source -> target
+        return new Point(sourceLoc.x + (sourceWidth / 2), sourceLoc.y - height);
+      } else {
+        // target <- source
+        return new Point(sourceLoc.x - (sourceWidth / 2), sourceLoc.y - height);
+      }
     }
   }
 
