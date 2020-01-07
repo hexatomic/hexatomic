@@ -30,7 +30,6 @@ import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
@@ -47,11 +46,11 @@ import org.eclipse.zest.core.viewers.ISelfStyleProvider;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-class SaltLabelProvider extends LabelProvider implements ISelfStyleProvider {
+class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
 
   private final ShortestPathConnectionRouter pointingConnectionRouter;
 
-  SaltLabelProvider(IFigure figure) {
+  SaltGraphStyler(IFigure figure) {
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
   }
 
