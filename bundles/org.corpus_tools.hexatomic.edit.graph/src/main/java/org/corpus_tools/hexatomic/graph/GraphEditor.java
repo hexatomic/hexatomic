@@ -64,6 +64,7 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
+import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -95,7 +96,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
-import org.eclipse.zest.core.viewers.internal.ZoomManager;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
@@ -122,7 +122,6 @@ public class GraphEditor {
 
   private GraphViewer viewer;
 
-  private ZoomManager zoomManager;
 
   @Inject
   UISynchronize sync;
@@ -251,24 +250,40 @@ public class GraphEditor {
       }
     });
 
-    zoomManager = new ZoomManager(viewer.getGraphControl().getRootLayer(),
-        viewer.getGraphControl().getViewport());
-
-    zoomManager.setZoomLevels(
-        new double[] {0.0625, 0.125, 0.25, .5, .75, 1.0, 1.5, 2.0, 2.5, 3, 4, 5, 6, 7, 8, 9, 10});
-
     viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
 
       @Override
       public void mouseScrolled(MouseEvent e) {
 
+        ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+        double oldScale = figure.getScale();
+        Optional<Double> newScale = Optional.empty();
         if (e.count < 0) {
-          zoomManager.zoomOut();
+          newScale = Optional.of(oldScale * 0.75);
         } else {
-          zoomManager.zoomIn();
+          newScale = Optional.of(oldScale * 1.25);
         }
 
-        centerViewportToClicked(e);
+        if (newScale.isPresent()) {
+          double clippedScale = Math.max(0.0625, Math.min(20.0, newScale.get()));
+
+          if (clippedScale != oldScale) {
+
+            Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
+          
+            figure.setScale(clippedScale);
+            viewer.getGraphControl().getViewport().validate();
+            
+            viewer.getGraphControl().getViewport()
+                .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
+            viewer.getGraphControl().getViewport().validate();
+
+            Point originallyClicked = new Point(e.x, e.y);
+            Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
+            centerViewportToPoint(scaledClicked);
+          }
+        }
+
       }
     });
     viewer.getGraphControl().addMouseListener(new MouseListener() {
@@ -283,7 +298,8 @@ public class GraphEditor {
 
       @Override
       public void mouseDoubleClick(MouseEvent e) {
-        centerViewportToClicked(e);
+        Point clickedInViewport = new Point(e.x, e.y);
+        centerViewportToPoint(clickedInViewport);
       }
     });
     viewer.getGraphControl().addKeyListener(new KeyListener() {
@@ -332,14 +348,13 @@ public class GraphEditor {
    * Center the view around at the mouse cursor by getting the difference from the viewport center
    * and the mouse click position. This difference is added to the viewport location.
    * 
-   * @param e The mouse click event.
+   * @param clickedInViewport The point where the mouse was clicked.
    */
-  private void centerViewportToClicked(MouseEvent e) {
+  private void centerViewportToPoint(Point clickedInViewport) {
     Viewport viewPort = viewer.getGraphControl().getViewport();
 
     Point viewPortCenter =
         new Point(viewPort.getSize().width(), viewPort.getSize().height()).getScaled(0.5);
-    Point clickedInViewport = new Point(e.x, e.y);
     Dimension diff = clickedInViewport.getDifference(viewPortCenter);
 
     viewPort.setViewLocation(viewPort.getViewLocation().getTranslated(diff));
@@ -378,6 +393,8 @@ public class GraphEditor {
   private void updateView(boolean recalculateSegments) {
 
     SDocumentGraph graph = getGraph();
+
+    TableItem[] oldSelection = textRangeTable.getSelection();
 
     if (recalculateSegments) {
       // store the old segment selection
