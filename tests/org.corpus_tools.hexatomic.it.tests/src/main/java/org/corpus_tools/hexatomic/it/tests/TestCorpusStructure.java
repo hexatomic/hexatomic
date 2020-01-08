@@ -83,5 +83,7 @@ class TestCorpusStructure {
     assertEquals(1, children.size());
     assertEquals("document_3", children.get(0));
 
+    bot.textWithId(SWTBotPreferences.DEFAULT_KEY, "filter").setText("");
+    
   }
 }
