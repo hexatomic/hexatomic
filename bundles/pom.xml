@@ -12,6 +12,7 @@
 		<module>org.corpus_tools.hexatomic.corpusedit</module>
 		<module>org.corpus_tools.hexatomic.textviewer</module>
 		<module>org.corpus_tools.hexatomic.graph</module>
+		<module>org.corpus_tools.hexatomic.edit.grid</module>
 	</modules>
 	<build>
 		<plugins>
