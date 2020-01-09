@@ -19,7 +19,6 @@ location 'http://download.eclipse.org/releases/2019-06/' {
 	org.eclipse.swtbot.go
 	org.eclipse.swtbot.swt.finder
 	org.eclipse.jface
-	org.eclipse.jface.text
 }
 
 location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
