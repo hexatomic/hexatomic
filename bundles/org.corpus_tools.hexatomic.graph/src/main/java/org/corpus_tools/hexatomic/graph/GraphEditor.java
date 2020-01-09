@@ -198,52 +198,10 @@ public class GraphEditor {
     tblclmnFilterBySegment.setText("Filter by segment");
     graphSash.setWeights(new int[] {300, 100});
 
-    textRangeTable.addSelectionListener(new SelectionListener() {
-
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        updateView(false);
-
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-        updateView(false);
-
-      }
-    });
-    txtSegmentFilter.addModifyListener(new ModifyListener() {
-
-      @Override
-      public void modifyText(ModifyEvent e) {
-        updateView(true);
-      }
-    });
-    btnIncludePointingRelations.addSelectionListener(new SelectionListener() {
-
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        updateView(true);
-
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-
-      }
-    });
-    btnIncludeSpans.addSelectionListener(new SelectionListener() {
-
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        updateView(true);
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-
-      }
-    });
+    textRangeTable.addSelectionListener(new UpdateViewListener(false));
+    txtSegmentFilter.addModifyListener(new UpdateViewListener(true));
+    btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
+    btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
 
     // Disable the original scroll event when the mouse wheel is activated
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
@@ -254,7 +212,7 @@ public class GraphEditor {
             event.doit = false;
           }
         });
-    
+
     // Add a mouse wheel listener that zooms instead of scrolling
     viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
 
@@ -702,6 +660,7 @@ public class GraphEditor {
     }
   }
 
+
   private static class RangeStartComparator<C extends Comparable<?>>
       implements Comparator<Range<C>> {
 
@@ -713,4 +672,30 @@ public class GraphEditor {
     }
   }
 
+  private class UpdateViewListener implements SelectionListener, ModifyListener {
+
+    private final boolean recalculateSegments;
+
+    public UpdateViewListener(boolean recalculateSegments) {
+      this.recalculateSegments = recalculateSegments;
+    }
+
+    @Override
+    public void widgetSelected(SelectionEvent e) {
+      updateView(recalculateSegments);
+    }
+
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {
+      updateView(recalculateSegments);
+    }
+
+    @Override
+    public void modifyText(ModifyEvent e) {
+      updateView(recalculateSegments);
+    }
+  }
+
 }
+
+
