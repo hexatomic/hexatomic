@@ -43,8 +43,8 @@ class TestGraphEditor {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
-    File exampleProjectDirectory =
-        new File("src/main/resources/org/corpus_tools/hexatomic/example-corpus/");
+    File exampleProjectDirectory = new File(
+        "../org.corpus_tools.hexatomic.core.tests/src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
