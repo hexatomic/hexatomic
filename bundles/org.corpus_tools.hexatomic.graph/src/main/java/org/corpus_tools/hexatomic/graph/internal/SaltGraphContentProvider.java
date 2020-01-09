@@ -34,6 +34,11 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
+/**
+ * Provides the Salt nodes and relations to the Zest API.
+ * @author Thomas Krause
+ *
+ */
 public class SaltGraphContentProvider implements IGraphEntityRelationshipContentProvider {
 
   @Override

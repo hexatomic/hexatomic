@@ -47,6 +47,14 @@ import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
+/**
+ * Hierarchical custom layout for Salt graphs.
+ * This will place dominance nodes in a hierarchy and all tokens as ordered leaves.
+ * Dominance nodes are put on different ranks if they overlap the same token range.
+ * 
+ * @author Thomas Krause
+ *
+ */
 public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
   private static class RankSubrank implements Comparable<RankSubrank> {
@@ -119,13 +127,13 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
   protected void applyLayoutInternal(InternalNode[] entitiesToLayout,
       InternalRelationship[] relationshipsToConsider, double boundsX, double boundsY,
       double boundsWidth, double boundsHeight) {
-    
+
     fireProgressStarted(4);
-    
+
     List<SToken> tokens = new LinkedList<>();
 
     fireProgressEvent(0, 4);
-    
+
     // 1. Assign an initial rank to each non-token
     Map<InternalNode, Integer> rankForNode = new HashMap<>();
 
@@ -151,7 +159,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (Map.Entry<InternalNode, Integer> entry : rankForNode.entrySet()) {
       nodesByRank.put(entry.getValue(), entry.getKey());
     }
-    
+
     fireProgressEvent(1, 4);
 
     // 2. Check if we can merge nodes to the same rank if they don't cover the same token
@@ -236,7 +244,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
       previousRank = currentRank;
     }
-    
+
     fireProgressEvent(2, 4);
 
     // 3. layout tokens and put them one rank below the number of ranks
@@ -270,7 +278,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
       }
     }
-    
+
     updateLayoutLocations(entitiesToLayout);
     fireProgressEnded(4);
 

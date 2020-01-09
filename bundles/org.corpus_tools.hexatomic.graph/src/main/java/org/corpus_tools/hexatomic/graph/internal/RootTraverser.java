@@ -33,6 +33,11 @@ import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+/**
+ * Traverses the graph and finds the root node.
+ * @author Thomas Krause
+ *
+ */
 public class RootTraverser implements GraphTraverseHandler {
 
   private SNode root = null;

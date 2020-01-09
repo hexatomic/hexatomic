@@ -47,6 +47,11 @@ import org.eclipse.zest.core.viewers.ISelfStyleProvider;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
+/**
+ * Defines colors and other styles for Salt graph elements.
+ * @author Thomas Krause
+ *
+ */
 public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider {
 
   private final ShortestPathConnectionRouter pointingConnectionRouter;
