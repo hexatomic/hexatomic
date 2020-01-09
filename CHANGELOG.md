@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Viewer for the Salt annotation graph based on Zest
+
 ## [0.3.1] - 2019-12-16
 
 ### Fixed
