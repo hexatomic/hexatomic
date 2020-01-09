@@ -203,6 +203,19 @@ public class GraphEditor {
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
     btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
 
+    registerGraphControlListeners();
+
+    viewer.getControl().forceFocus();
+
+    updateView(true);
+
+  }
+
+  private void registerGraphControlListeners() {
+
+    // Allow to drag the background area with the mouse
+    GraphDragMoveAdapter.register(viewer.getGraphControl());
+    
     // Disable the original scroll event when the mouse wheel is activated
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
         new org.eclipse.swt.widgets.Listener() {
@@ -250,6 +263,7 @@ public class GraphEditor {
 
       }
     });
+    // Center the view on the mouse cursor when it was double clicked
     viewer.getGraphControl().addMouseListener(new MouseListener() {
 
       @Override
@@ -266,6 +280,8 @@ public class GraphEditor {
         centerViewportToPoint(clickedInViewport);
       }
     });
+
+    // React to arrow keys to move the displayed graph
     viewer.getGraphControl().addKeyListener(new KeyListener() {
 
       @Override
@@ -294,11 +310,7 @@ public class GraphEditor {
 
       }
     });
-    GraphDragMoveAdapter.register(viewer.getGraphControl());
 
-    viewer.getControl().forceFocus();
-
-    updateView(true);
 
   }
 
