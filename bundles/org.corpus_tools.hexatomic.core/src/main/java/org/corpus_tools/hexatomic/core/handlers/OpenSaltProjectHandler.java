@@ -32,38 +32,39 @@ import org.eclipse.swt.widgets.Shell;
 
 public class OpenSaltProjectHandler {
 
-	public static final String COMMAND_PARAM_LOCATION_ID = "org.corpus_tools.hexatomic.core.commandparameter.location";
+  public static final String COMMAND_PARAM_LOCATION_ID =
+      "org.corpus_tools.hexatomic.core.commandparameter.location";
 
-	@Inject
-	private ProjectManager projectManager;
+  @Inject
+  private ProjectManager projectManager;
 
-	private String lastPath;
+  private String lastPath;
 
-	/**
-	 * Show a file choose to open Salt project.
-	 * 
-	 * @param shell The user interface shell
-	 * @param location An optional predefined location. 
-	 * If null, the use is asked to select a location with a file chooser.
-	 */
-	@Execute
-	public void execute(Shell shell, @Optional @Named(COMMAND_PARAM_LOCATION_ID) String location) {
-		String resultPath;
-		if (location == null) {
-			DirectoryDialog dialog = new DirectoryDialog(shell);
-			if (lastPath != null) {
-				dialog.setFilterPath(lastPath);
-			}
-			// Ask the user to choose a path
-			resultPath = dialog.open();
-		} else {
-			// Use the command argument as location
-			resultPath = location;
-		}
+  /**
+   * Show a file choose to open Salt project.
+   * 
+   * @param shell The user interface shell
+   * @param location An optional predefined location. If null, the use is asked to select a location
+   *        with a file chooser.
+   */
+  @Execute
+  public void execute(Shell shell, @Optional @Named(COMMAND_PARAM_LOCATION_ID) String location) {
+    String resultPath;
+    if (location == null) {
+      DirectoryDialog dialog = new DirectoryDialog(shell);
+      if (lastPath != null) {
+        dialog.setFilterPath(lastPath);
+      }
+      // Ask the user to choose a path
+      resultPath = dialog.open();
+    } else {
+      // Use the command argument as location
+      resultPath = location;
+    }
 
-		if (resultPath != null) {
-			projectManager.open(URI.createFileURI(resultPath));
-			lastPath = resultPath;
-		}
-	}
+    if (resultPath != null) {
+      projectManager.open(URI.createFileURI(resultPath));
+      lastPath = resultPath;
+    }
+  }
 }
