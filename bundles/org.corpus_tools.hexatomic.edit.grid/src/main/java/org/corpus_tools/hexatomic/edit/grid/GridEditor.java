@@ -21,15 +21,31 @@
 
 package org.corpus_tools.hexatomic.edit.grid;
 
-import java.util.Optional;
+import java.util.Optional; 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.edit.grid.data.access.TokenColumnAccessor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SToken;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.data.IColumnAccessor;
+import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
+import org.eclipse.nebula.widgets.nattable.data.ListDataProvider;
+import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * Part providing a grid editor for {@link SDocument}s.
+ * 
+ * @author Stephan Druskat <mail@sdruskat.net>
+ *
+ */
 public class GridEditor {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
@@ -48,6 +64,20 @@ public class GridEditor {
   @PostConstruct
   public void postConstruct(Composite parent) {
     log.debug("Starting Grid Editor for document '{}'.", getGraph().getDocument().getName());
+
+    parent.setLayout(new GridLayout());
+
+    // Create data provider & layer, data layer needs to be most bottom layer in the stack!
+    IColumnAccessor<SToken> columnPropertyAccessor = new TokenColumnAccessor<SToken>();
+    IDataProvider bodyDataProvider =
+        new ListDataProvider<SToken>(getGraph().getSortedTokenByText(), columnPropertyAccessor);
+    final DataLayer bodyDataLayer = new DataLayer(bodyDataProvider);
+
+    // Create and configure NatTable
+    final NatTable natTable = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
+
+    // Configure grid layout generically
+    GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
   }
 
   private SDocumentGraph getGraph() {
