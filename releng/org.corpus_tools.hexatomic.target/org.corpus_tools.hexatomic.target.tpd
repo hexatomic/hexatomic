@@ -36,3 +36,8 @@ location 'https://korpling.github.io/salt/p2/salt-3.3/' {
 	org.corpus-tools.salt-extensions [3.3.10,3.4.0)
 	
 }
+
+// NatTable (Eclipse Nebula table widget)
+location 'http://download.eclipse.org/nattable/releases/1.6.0/repository/' {
+	org.eclipse.nebula.widgets.nattable.core [1.6.0, 2.0.0)
+}
