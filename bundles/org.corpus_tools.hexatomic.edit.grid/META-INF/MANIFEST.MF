@@ -9,6 +9,7 @@ Require-Bundle: javax.inject,
  org.slf4j.api,
  org.eclipse.jface,
  org.corpus-tools.salt-api,
- org.eclipse.e4.ui.model.workbench
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.nebula.widgets.nattable.core
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
