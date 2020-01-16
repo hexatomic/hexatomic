@@ -35,6 +35,7 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -73,6 +74,10 @@ public class GridEditor {
      * FIXME Add dropdown for text selection. Redo grid once text is selected. TODO REMOVE: One grid
      * per text, i.e., grids only ever work on one text!
      */
+    Combo dropdown = new Combo(parent, SWT.NONE);
+    dropdown.add("Select data source ...");
+    dropdown.select(0);
+
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
     IDataProvider bodyDataProvider = new GraphDataProvider(getGraph());
