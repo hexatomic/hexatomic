@@ -89,6 +89,7 @@
                                 </excludes>
                                 <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
                                 <addSvnKeyWords>false</addSvnKeyWords>
+                                <emptyLineAfterHeader>true</emptyLineAfterHeader>
                             </configuration>
                         </execution>
                         <execution>
