@@ -26,13 +26,11 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.edit.grid.data.GraphDataProvider;
-import org.corpus_tools.hexatomic.edit.grid.data.access.GraphColumnAccessor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.data.IColumnAccessor;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.swt.SWT;
@@ -72,10 +70,7 @@ public class GridEditor {
     parent.setLayout(new GridLayout());
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    IColumnAccessor<SDocumentGraph> columnPropertyAccessor =
-        new GraphColumnAccessor<SDocumentGraph>(getGraph());
-    IDataProvider bodyDataProvider =
-        new GraphDataProvider<SDocumentGraph>(getGraph(), columnPropertyAccessor);
+    IDataProvider bodyDataProvider = new GraphDataProvider(getGraph());
     final DataLayer bodyDataLayer = new DataLayer(bodyDataProvider);
 
     // Create and configure NatTable
