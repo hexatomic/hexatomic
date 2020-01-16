@@ -21,7 +21,10 @@
 
 package org.corpus_tools.hexatomic.edit.grid.data;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SToken;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
@@ -38,6 +41,7 @@ public class GraphDataProvider implements IDataProvider {
 
 
   private final SDocumentGraph graph;
+  private int columnCount = 1;
 
   /**
    * Initializes the graph to grid resolution.
@@ -51,13 +55,20 @@ public class GraphDataProvider implements IDataProvider {
 
   private void resolveGraph() {
     log.debug("Starting to resolve SDocumentGraph of {}.", graph.getDocument());
-    // TODO Auto-generated method stub
+    // Count token annotations and add to column count
+    Set<String> tokenAnnotations = new HashSet<>();
+    for (SToken token : graph.getTokens()) {
+
+    }
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
 
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
-    // TODO Auto-generated method stub
+    if (columnIndex == 0) {
+      // Token text
+      return graph.getText(graph.getSortedTokenByText().get(rowIndex));
+    }
     return null;
   }
 
@@ -69,14 +80,12 @@ public class GraphDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
-    // TODO Auto-generated method stub
-    return 0;
+    return columnCount;
   }
 
   @Override
   public int getRowCount() {
-    // TODO Auto-generated method stub
-    return 0;
+    return graph.getTokens().size();
   }
 
 
