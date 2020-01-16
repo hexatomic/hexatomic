@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -64,32 +65,27 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Starting to resolve SDocumentGraph of {}.", graph.getDocument());
 
     // Count token annotations and add to column count
-    Set<String> tokenAnnotationQNames = new TreeSet<>();
-    for (SToken token : graph.getTokens()) {
-      Set<SAnnotation> tokAnnos = token.getAnnotations();
-      for (SAnnotation anno : tokAnnos) {
-        tokenAnnotationQNames.add(anno.getQName());
-      }
-    }
-    columnCount += tokenAnnotationQNames.size();
-    // Add in alphabetical order the newly added qualified annotation names.
-    columnHeaderLabels.addAll(tokenAnnotationQNames);
-    log.debug("Resolved token annotations for {}.", graph.getDocument());
+    resolveAnnotations(new ArrayList<SStructuredNode>(graph.getTokens()));
 
     // Count span annotations and add to column count
-    Set<String> spanAnnotationQNames = new TreeSet<>();
-    for (SSpan span : graph.getSpans()) {
-      Set<SAnnotation> spanAnnos = span.getAnnotations();
-      for (SAnnotation anno : spanAnnos) {
-        spanAnnotationQNames.add(anno.getQName());
-      }
-    }
-    columnCount += spanAnnotationQNames.size();
-    // Add in alphabetical order the newly added qualified annotation names.
-    columnHeaderLabels.addAll(spanAnnotationQNames);
-    log.debug("Resolved span annotations for {}.", graph.getDocument());
+    resolveAnnotations(new ArrayList<SStructuredNode>(graph.getSpans()));
 
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
+  }
+
+  private void resolveAnnotations(List<SStructuredNode> nodes) {
+    Set<String> annotationQNames = new TreeSet<>();
+    for (SStructuredNode node : nodes) {
+      Set<SAnnotation> annos = node.getAnnotations();
+      for (SAnnotation anno : annos) {
+        annotationQNames.add(anno.getQName());
+      }
+    }
+    columnCount += annotationQNames.size();
+    // Add in alphabetical order the newly added qualified annotation names.
+    columnHeaderLabels.addAll(annotationQNames);
+    log.debug("Resolved annotations for tokens/spans in {}.", graph.getDocument());
+
   }
 
   @Override
