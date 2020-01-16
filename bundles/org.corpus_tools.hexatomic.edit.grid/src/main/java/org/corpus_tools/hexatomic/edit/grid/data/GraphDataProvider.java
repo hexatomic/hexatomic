@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -75,6 +76,19 @@ public class GraphDataProvider implements IDataProvider {
     columnHeaderLabels.addAll(tokenAnnotationQNames);
     log.debug("Resolved token annotations for {}.", graph.getDocument());
 
+    // Count span annotations and add to column count
+    Set<String> spanAnnotationQNames = new TreeSet<>();
+    for (SSpan span : graph.getSpans()) {
+      Set<SAnnotation> spanAnnos = span.getAnnotations();
+      for (SAnnotation anno : spanAnnos) {
+        spanAnnotationQNames.add(anno.getQName());
+      }
+    }
+    columnCount += spanAnnotationQNames.size();
+    // Add in alphabetical order the newly added qualified annotation names.
+    columnHeaderLabels.addAll(spanAnnotationQNames);
+    log.debug("Resolved span annotations for {}.", graph.getDocument());
+
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
 
@@ -84,16 +98,25 @@ public class GraphDataProvider implements IDataProvider {
       // Token text
       return graph.getText(graph.getSortedTokenByText().get(rowIndex));
     } else {
+      String annotationQName = columnHeaderLabels.get(columnIndex);
       SAnnotation anno = null;
 
       // Get token and see if it has such an annotation
       SToken tok = graph.getSortedTokenByText().get(rowIndex);
-      anno = tok.getAnnotation(columnHeaderLabels.get(columnIndex));
+      anno = tok.getAnnotation(annotationQName);
       if (anno != null) {
         return anno.getValue_STEXT();
       }
 
       // TODO No token annotation found, so check span annotations
+      for (SSpan span : graph.getSpans()) {
+        if (graph.getOverlappedTokens(span).contains(tok)) {
+          anno = span.getAnnotation(annotationQName);
+        }
+      }
+      if (anno != null) {
+        return anno.getValue_STEXT();
+      }
 
     }
     return null;
