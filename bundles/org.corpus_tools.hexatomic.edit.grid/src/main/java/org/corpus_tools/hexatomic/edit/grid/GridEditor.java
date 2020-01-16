@@ -69,6 +69,11 @@ public class GridEditor {
 
     parent.setLayout(new GridLayout());
 
+    /*
+     * FIXME Add dropdown for text selection. Redo grid once text is selected. TODO REMOVE: One grid
+     * per text, i.e., grids only ever work on one text!
+     */
+
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
     IDataProvider bodyDataProvider = new GraphDataProvider(getGraph());
     final DataLayer bodyDataLayer = new DataLayer(bodyDataProvider);
