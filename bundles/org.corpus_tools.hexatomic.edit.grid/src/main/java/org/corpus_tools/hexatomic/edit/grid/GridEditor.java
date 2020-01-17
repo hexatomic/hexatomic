@@ -117,7 +117,9 @@ public class GridEditor {
    * {@link ESelectionService}, so that other parts can consume the selection. This part also
    * consumes the selection, in {@link #setSelection(STextualDS)}.
    * 
-   * THe following example shows how other parts can consume the selection.
+   * <p>
+   * The following example shows how other parts can consume the selection.
+   * </p>
    * 
    * <pre>
    * {@code
