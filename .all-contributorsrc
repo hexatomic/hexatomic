@@ -1,0 +1,33 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "thomaskrause",
+      "name": "Thomas Krause",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2168104?v=4",
+      "profile": "http://u.hu-berlin.de/korpling-thomaskrause",
+      "contributions": [
+        "code",
+        "content",
+        "doc",
+        "fundingFinding",
+        "ideas",
+        "infra",
+        "question",
+        "review",
+        "test",
+        "talk"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "hexatomic",
+  "projectOwner": "hexatomic",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
