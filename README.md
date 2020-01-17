@@ -244,7 +244,7 @@ We would like to thank the following people for contributing to Hexatomic!
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="http://sdruskat.net"><img src="https://avatars0.githubusercontent.com/u/3007126?v=4" width="100px;" alt=""/><br /><sub><b>Stephan Druskat</b></sub></a><br /><a href="#maintenance-sdruskat" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://sdruskat.net"><img src="https://avatars0.githubusercontent.com/u/3007126?v=4" width="100px;" alt=""/><br /><sub><b>Stephan Druskat</b></sub></a><br /><a href="#maintenance-sdruskat" title="Maintenance">🚧</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Code">💻</a> <a href="#content-sdruskat" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Documentation">📖</a> <a href="#fundingFinding-sdruskat" title="Funding Finding">🔍</a> <a href="#ideas-sdruskat" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-sdruskat" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-sdruskat" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Asdruskat" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Tests">⚠️</a> <a href="#talk-sdruskat" title="Talks">📢</a></td>
   </tr>
 </table>
 
