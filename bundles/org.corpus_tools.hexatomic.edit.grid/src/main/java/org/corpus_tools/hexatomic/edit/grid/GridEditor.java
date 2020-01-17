@@ -46,6 +46,7 @@ import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * Part providing a grid editor for {@link SDocument}s.
@@ -112,7 +113,7 @@ public class GridEditor {
   }
 
   /**
-   * Creates a dropdown presenting the available {@link STextualDS}s from the
+   * Creates a dropdown (with label) presenting the available {@link STextualDS}s from the
    * {@link SDocumentGraph}. When a text is selected, the selection is forwarded to the injectable
    * {@link ESelectionService}, so that other parts can consume the selection. This part also
    * consumes the selection, in {@link #setSelection(STextualDS)}.
@@ -136,7 +137,13 @@ public class GridEditor {
    * @param parent The parent composite
    */
   private void addTextSelectionDropdown(Composite parent) {
-    final ComboViewer viewer = new ComboViewer(parent, SWT.READ_ONLY);
+    Composite dropdownGroup = new Composite(parent, SWT.NONE);
+    dropdownGroup.setLayout(new GridLayout(2, false));
+
+    Label label = new Label(dropdownGroup, SWT.NONE);
+    label.setText("Select data source: ");
+
+    final ComboViewer viewer = new ComboViewer(dropdownGroup, SWT.READ_ONLY);
     viewer.setContentProvider(ArrayContentProvider.getInstance());
     viewer.setLabelProvider(new LabelProvider() {
       @Override
