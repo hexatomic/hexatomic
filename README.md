@@ -1,7 +1,4 @@
 <!-- PROJECT SHIELDS -->
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
@@ -10,11 +7,13 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [![Build Status][travis-master-shield]][travis-master-url]  
-[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![Apache License, Version 2.0][license-shield]][license-url]
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
 
@@ -45,10 +44,13 @@
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
-- [About the Project](#about-the-project)
+- [Table of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
   - [Technologies](#technologies)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
+  - [Build](#build)
+- [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Key documents](#key-documents)
@@ -56,6 +58,10 @@
 - [License](#license)
 - [Contact](#contact)
 - [Team](#team)
+  - [Maintainer](#maintainer)
+  - [Core contributors](#core-contributors)
+  - [Principal investigators](#principal-investigators)
+  - [Contributors](#contributors)
 <!--- [Acknowledgements](#acknowledgements)-->
 
 
@@ -228,9 +234,10 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [project]: https://hexatomic.github.io
 [changelog]: ./CHANGELOG.md
 
-## Contributors ✨
+### Contributors
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+We would like to thank the following people for contributing to Hexatomic!  
+([Overview of roles as represented by emojis](https://allcontributors.org/docs/en/emoji-key))
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
