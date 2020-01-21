@@ -41,7 +41,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -67,6 +66,8 @@ public class GridEditor {
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
+      bodyDataProvider.setDs(ds);
+      // table.refresh(); TODO Check if this is needed.
     } else {
       // Do nothing
     }
@@ -82,6 +83,10 @@ public class GridEditor {
   private MPart thisPart;
 
   private SDocumentGraph graph;
+
+  private GraphDataProvider bodyDataProvider;
+
+  private NatTable table;
 
   /**
    * Creates the grid that contains the data of the {@link SDocumentGraph}.
@@ -102,14 +107,14 @@ public class GridEditor {
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    IDataProvider bodyDataProvider = new GraphDataProvider(graph);
+    bodyDataProvider = new GraphDataProvider(graph);
     final DataLayer bodyDataLayer = new DataLayer(bodyDataProvider);
 
     // Create and configure NatTable
-    final NatTable natTable = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
+    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
 
     // Configure grid layout generically
-    GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
+    GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
   }
 
   /**
