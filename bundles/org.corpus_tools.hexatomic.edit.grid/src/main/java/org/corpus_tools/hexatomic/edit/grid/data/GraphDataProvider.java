@@ -91,8 +91,9 @@ public class GraphDataProvider implements IDataProvider {
       List<DataSourceSequence> overlappedSequences =
           graph.getOverlappedDataSourceSequence(span, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       for (DataSourceSequence seq : overlappedSequences) {
-        if (seq.getDataSource() == ds)
+        if (seq.getDataSource() == ds) {
           dsSpans.add(span);
+        }
       }
     }
 
@@ -176,6 +177,8 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   /**
+   * Sets the data source field.
+   * 
    * @param ds the ds to set
    */
   public void setDs(STextualDS ds) {
