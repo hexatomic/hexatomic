@@ -1,4 +1,7 @@
 <!-- PROJECT SHIELDS -->
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
@@ -7,11 +10,13 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [![Build Status][travis-master-shield]][travis-master-url]  
-[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![Apache License, Version 2.0][license-shield]][license-url]
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
 
@@ -42,10 +47,13 @@
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
-- [About the Project](#about-the-project)
+- [Table of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
   - [Technologies](#technologies)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
+  - [Build](#build)
+- [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Key documents](#key-documents)
@@ -53,6 +61,10 @@
 - [License](#license)
 - [Contact](#contact)
 - [Team](#team)
+  - [Maintainer](#maintainer)
+  - [Core contributors](#core-contributors)
+  - [Principal investigators](#principal-investigators)
+  - [Contributors](#contributors)
 <!--- [Acknowledgements](#acknowledgements)-->
 
 
@@ -224,3 +236,24 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [cc0]: https://creativecommons.org/publicdomain/zero/1.0/legalcode
 [project]: https://hexatomic.github.io
 [changelog]: ./CHANGELOG.md
+
+### Contributors
+
+We would like to thank the following people for contributing to Hexatomic!  
+([Overview of roles as represented by emojis](https://allcontributors.org/docs/en/emoji-key))
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://u.hu-berlin.de/korpling-thomaskrause"><img src="https://avatars3.githubusercontent.com/u/2168104?v=4" width="100px;" alt=""/><br /><sub><b>Thomas Krause</b></sub></a><br /><a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Code">💻</a> <a href="#content-thomaskrause" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Documentation">📖</a> <a href="#fundingFinding-thomaskrause" title="Funding Finding">🔍</a> <a href="#ideas-thomaskrause" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-thomaskrause" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-thomaskrause" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Athomaskrause" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Tests">⚠️</a> <a href="#talk-thomaskrause" title="Talks">📢</a></td>
+    <td align="center"><a href="http://sdruskat.net"><img src="https://avatars0.githubusercontent.com/u/3007126?v=4" width="100px;" alt=""/><br /><sub><b>Stephan Druskat</b></sub></a><br /><a href="#maintenance-sdruskat" title="Maintenance">🚧</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Code">💻</a> <a href="#content-sdruskat" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Documentation">📖</a> <a href="#fundingFinding-sdruskat" title="Funding Finding">🔍</a> <a href="#ideas-sdruskat" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-sdruskat" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-sdruskat" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Asdruskat" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Tests">⚠️</a> <a href="#talk-sdruskat" title="Talks">📢</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
