@@ -21,6 +21,25 @@
         "review",
         "test",
         "talk"
+       ]
+    },
+    {
+      "login": "sdruskat",
+      "name": "Stephan Druskat",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3007126?v=4",
+      "profile": "http://sdruskat.net",
+      "contributions": [
+        "maintenance",  
+        "code",
+        "content",
+        "doc",
+        "fundingFinding",
+        "ideas",
+        "infra",
+        "question",
+        "review",
+        "test",
+        "talk"
       ]
     }
   ],
