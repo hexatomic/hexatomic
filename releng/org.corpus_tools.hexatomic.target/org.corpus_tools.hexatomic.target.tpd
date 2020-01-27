@@ -28,6 +28,7 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R201906022121
 	ch.qos.logback.classic [1.1.2,2.0.0)
 	org.mockito
 	org.hamcrest
+	org.antlr.runtime
 }
 
 location 'https://korpling.github.io/salt/p2/salt-3.3/' {

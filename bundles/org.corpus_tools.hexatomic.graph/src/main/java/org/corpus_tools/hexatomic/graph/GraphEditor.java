@@ -39,6 +39,7 @@ import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.console.AtomicalConsole;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
@@ -69,6 +70,8 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -151,7 +154,9 @@ public class GraphEditor {
 
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
-    SashForm graphSash = new SashForm(parent, SWT.HORIZONTAL);
+    SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
+
+    SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
 
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -206,6 +211,12 @@ public class GraphEditor {
     registerGraphControlListeners();
 
     viewer.getControl().forceFocus();
+    
+    Document consoleDocument = new Document();
+    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
+    consoleViewer.setDocument(consoleDocument);
+    new AtomicalConsole(consoleViewer, sync, getGraph());
+    mainSash.setWeights(new int[] {200, 100});
 
     updateView(true);
 
@@ -310,8 +321,6 @@ public class GraphEditor {
 
       }
     });
-
-
   }
 
   /**
