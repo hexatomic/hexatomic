@@ -20,13 +20,13 @@ Hexatomics command line syntax is similar to the one of [GraphAnno](https://gith
 
 Currently, the following commands are supported.
 
-### New node `n`
+### New node: `n`
 
 The command `n` will create a new node.
 It is followed by the attributes the new node should have.
 Each attribute has the form `name:value` or `namespace:name:value`.
 A node should cover existing tokens or other nodes.
-The covered nodes are given as argument, with nodes referenced as `n nodeName` and tokens as `t index`.
+The covered nodes are given as argument, with nodes referenced as `n nodeName` and tokens as `t` followed by the index of the token.
 Optionally, a layer can be assigned to the node by adding a layer name as an argument.
 
 The ID of the newly created node is returned if creating the node was successful.
@@ -47,6 +47,17 @@ n tiger:pos:NN n otherNode1
 Adds a new node, spanning over the node with name "otherNode1", and with an annotation named "pos" and the annotation value "NN".
 The namespace of the annotation is "tiger".
 
-### Delete node `d`
+### Delete node: `d`
 
-### Tokenize `t`
+Deletes any node or edge of the graph.
+Give the entities to delete as argument.
+
+### Tokenize: `t`
+
+Tokenize the given argument string and add the tokens to the annotation graph.
+
+#### Examples
+
+```
+t This is an example
+```
