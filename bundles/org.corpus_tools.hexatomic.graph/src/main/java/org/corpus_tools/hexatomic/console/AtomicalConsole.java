@@ -102,7 +102,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
 
   @Override
   public void run() {
-    writeLine("To display a list of available commands, type \"help\".\n");
+    writeLine("See the Hexatomic User guide (https://hexatomic.github.io/hexatomic/user/) for help  .\n");
     writePrompt();
 
   }

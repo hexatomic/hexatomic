@@ -29,7 +29,7 @@ d_attribute
     ;
     
 attribute
-    : (namespace=IDENTIFIER ':')? name=string value=string
+    : (namespace=IDENTIFIER ':')? name=string  ':' value=string
     ;
 
 annotation_shortcut
