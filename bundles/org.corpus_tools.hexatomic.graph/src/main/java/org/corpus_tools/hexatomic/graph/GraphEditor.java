@@ -155,7 +155,7 @@ public class GraphEditor {
 
     projectChangeListener = new ListenerImplementation();
     projectManager.addListener(projectChangeListener);
-
+    
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
     SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
@@ -551,7 +551,6 @@ public class GraphEditor {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
-      log.debug("Document graph {} was changed", GraphEditor.this.getGraph().getId());
       sync.syncExec(() -> updateView(true));
     }
   }
