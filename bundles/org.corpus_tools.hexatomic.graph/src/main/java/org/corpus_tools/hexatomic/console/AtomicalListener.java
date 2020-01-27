@@ -110,7 +110,9 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   @Override
   public void enterClear(ClearContext ctx) {
 
-    graphAnnoConsole.graph.removeRelations();
+    for (SRelation<?, ?> r : new LinkedList<>(graphAnnoConsole.graph.getRelations())) {
+      graphAnnoConsole.graph.removeRelation(r);
+    }
     for (SNode n : new LinkedList<>(graphAnnoConsole.graph.getNodes())) {
       graphAnnoConsole.graph.removeNode(n);
     }
