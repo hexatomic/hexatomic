@@ -20,12 +20,12 @@
 
 package org.corpus_tools.hexatomic.core;
 
+import java.util.LinkedHashSet;
 import java.util.Optional;
-
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
@@ -34,6 +34,7 @@ import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.exceptions.SaltException;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
+import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
@@ -69,6 +70,8 @@ public class ProjectManager {
 
   private SaltNotificationFactory notificationFactory;
 
+  private final Set<Listener> allListeners = new LinkedHashSet<>();
+
   public ProjectManager() {
 
   }
@@ -84,6 +87,7 @@ public class ProjectManager {
     notificationFactory = new SaltNotificationFactory();
     SaltFactory.setFactory(notificationFactory);
     notificationFactory.addListener(changeListener);
+    notificationFactory.addListener(new ProxyListener());
 
   }
 
@@ -93,7 +97,7 @@ public class ProjectManager {
    * @param listener The listener to add
    */
   public void addListener(Listener listener) {
-    notificationFactory.addListener(listener);
+    allListeners.add(listener);
   }
 
   /**
@@ -102,7 +106,9 @@ public class ProjectManager {
    * @param listener The listener to remove
    */
   public void removeListener(Listener listener) {
-    notificationFactory.removeListener(listener);
+    if (listener != null) {
+      allListeners.remove(listener);
+    }
   }
 
   /**
@@ -149,6 +155,23 @@ public class ProjectManager {
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
+  }
+
+  /**
+   * We can't add listeners to existing objects in the corpus grap, so iterate over the internal
+   * list of all registered listeners and notify them.
+   *
+   */
+  private final class ProxyListener implements Listener {
+
+    @Override
+    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
+        Object newValue, Object container) {
+      for (Listener l : allListeners) {
+        l.notify(type, attribute, oldValue, newValue, container);
+      }
+    }
+
   }
 
 }
