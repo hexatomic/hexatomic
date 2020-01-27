@@ -15,6 +15,7 @@ command
     : 'n' n_attribute* # NewNode
     | 'd' d_attribute+ # Delete
     | 't' string+ # Tokenize
+    | 'clear' # Clear
     ;
 
 n_attribute

@@ -49,6 +49,7 @@ import org.eclipse.zest.core.widgets.GraphNode;
 
 /**
  * Defines colors and other styles for Salt graph elements.
+ * 
  * @author Thomas Krause
  *
  */
@@ -85,8 +86,10 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
       if (element instanceof SToken) {
         SToken token = (SToken) element;
-        String coveredText = token.getGraph().getText(token);
-        labels.add(0, coveredText);
+        if (token.getGraph() != null) {
+          String coveredText = token.getGraph().getText(token);
+          labels.add(0, coveredText);
+        }
       }
 
       return Joiner.on('\n').join(labels);

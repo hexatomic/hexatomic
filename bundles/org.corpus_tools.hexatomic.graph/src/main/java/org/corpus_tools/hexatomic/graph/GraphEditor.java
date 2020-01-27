@@ -104,6 +104,10 @@ import org.eclipse.zest.layouts.LayoutStyles;
 
 public class GraphEditor {
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
+
+
+
   @Inject
   private ProjectManager projectManager;
 
@@ -211,7 +215,7 @@ public class GraphEditor {
     registerGraphControlListeners();
 
     viewer.getControl().forceFocus();
-    
+
     Document consoleDocument = new Document();
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
@@ -226,7 +230,7 @@ public class GraphEditor {
 
     // Allow to drag the background area with the mouse
     GraphDragMoveAdapter.register(viewer.getGraphControl());
-    
+
     // Disable the original scroll event when the mouse wheel is activated
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
         new org.eclipse.swt.widgets.Listener() {
@@ -278,12 +282,10 @@ public class GraphEditor {
     viewer.getGraphControl().addMouseListener(new MouseListener() {
 
       @Override
-      public void mouseUp(MouseEvent e) {
-      }
+      public void mouseUp(MouseEvent e) {}
 
       @Override
-      public void mouseDown(MouseEvent e) {
-      }
+      public void mouseDown(MouseEvent e) {}
 
       @Override
       public void mouseDoubleClick(MouseEvent e) {
@@ -296,8 +298,7 @@ public class GraphEditor {
     viewer.getGraphControl().addKeyListener(new KeyListener() {
 
       @Override
-      public void keyReleased(KeyEvent e) {
-      }
+      public void keyReleased(KeyEvent e) {}
 
       @Override
       public void keyPressed(KeyEvent e) {
@@ -550,6 +551,7 @@ public class GraphEditor {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
+      log.debug("Document graph {} was changed", GraphEditor.this.getGraph().getId());
       sync.syncExec(() -> updateView(true));
     }
   }
@@ -604,13 +606,16 @@ public class GraphEditor {
         Range<Long> itemRange = (Range<Long>) item.getData("range");
         STextualDS itemText = (STextualDS) item.getData("text");
 
-        DataSourceSequence<Number> seq = new DataSourceSequence<>();
-        seq.setStart(itemRange.lowerEndpoint());
-        seq.setEnd(itemRange.upperEndpoint());
-        seq.setDataSource(itemText);
-        List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
-        if (t != null) {
-          coveredTokens.addAll(t);
+        if (itemText.getGraph() != null) {
+
+          DataSourceSequence<Number> seq = new DataSourceSequence<>();
+          seq.setStart(itemRange.lowerEndpoint());
+          seq.setEnd(itemRange.upperEndpoint());
+          seq.setDataSource(itemText);
+          List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
+          if (t != null) {
+            coveredTokens.addAll(t);
+          }
         }
       }
       coveredTokenIDs = new HashSet<>();

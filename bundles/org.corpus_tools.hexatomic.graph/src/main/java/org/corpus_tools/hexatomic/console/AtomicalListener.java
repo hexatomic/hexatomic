@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
-
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Edge_referenceContext;
@@ -51,7 +51,6 @@ import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.graph.Label;
 
 final class AtomicalListener extends ConsoleCommandBaseListener {
 
@@ -106,6 +105,18 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       }
     }
     return result;
+  }
+
+  @Override
+  public void enterClear(ClearContext ctx) {
+
+    graphAnnoConsole.graph.removeRelations();
+    for (SNode n : new LinkedList<>(graphAnnoConsole.graph.getNodes())) {
+      graphAnnoConsole.graph.removeNode(n);
+    }
+    for (SLayer layer : new LinkedList<>(graphAnnoConsole.graph.getLayers())) {
+      graphAnnoConsole.graph.removeLayer(layer);
+    }
   }
 
   @Override
