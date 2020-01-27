@@ -48,9 +48,9 @@ import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
 /**
- * Hierarchical custom layout for Salt graphs.
- * This will place dominance nodes in a hierarchy and all tokens as ordered leaves.
- * Dominance nodes are put on different ranks if they overlap the same token range.
+ * Hierarchical custom layout for Salt graphs. This will place dominance nodes in a hierarchy and
+ * all tokens as ordered leaves. Dominance nodes are put on different ranks if they overlap the same
+ * token range.
  * 
  * @author Thomas Krause
  *
@@ -141,12 +141,16 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (SNode n : this.nodes.values()) {
       if (n instanceof SToken) {
         tokens.add((SToken) n);
-      } else {
+      } else if (n != null) {
         boolean isRoot = true;
-        for (SRelation<?, ?> rel : n.getInRelations()) {
-          if (this.relations.containsValue(rel)) {
-            isRoot = false;
-            continue;
+        @SuppressWarnings("rawtypes")
+        List<SRelation> inRelations = n.getInRelations();
+        if (inRelations != null) {
+          for (SRelation<?, ?> rel : inRelations) {
+            if (this.relations.containsValue(rel)) {
+              isRoot = false;
+              continue;
+            }
           }
         }
         if (isRoot) {
@@ -331,11 +335,15 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
     ranks.putIfAbsent(node, rank);
 
-    for (SRelation<?, ?> rel : saltNode.getOutRelations()) {
-      if (this.relations.values().contains(rel)) {
-        InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
-        if (outNode != null) {
-          assignRankRecursivly(outNode, ranks, rank + 1);
+    @SuppressWarnings("rawtypes")
+    List<SRelation> outRelations = saltNode.getOutRelations();
+    if (outRelations != null) {
+      for (SRelation<?, ?> rel : outRelations) {
+        if (this.relations.values().contains(rel)) {
+          InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
+          if (outNode != null) {
+            assignRankRecursivly(outNode, ranks, rank + 1);
+          }
         }
       }
     }
