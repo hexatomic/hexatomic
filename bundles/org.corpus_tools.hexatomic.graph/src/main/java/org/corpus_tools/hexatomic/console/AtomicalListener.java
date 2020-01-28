@@ -334,6 +334,20 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       for (SAnnotation anno : this.attributes) {
         rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
       }
+
+      if (layer.isPresent()) {
+        List<SLayer> matchingLayers = this.graphAnnoConsole.graph.getLayerByName(layer.get());
+        if (matchingLayers == null || matchingLayers.isEmpty()) {
+          matchingLayers = new LinkedList<SLayer>();
+          matchingLayers.add(SaltFactory.createSLayer());
+          matchingLayers.get(0).setName(layer.get());
+          this.graphAnnoConsole.graph.addLayer(matchingLayers.get(0));
+        }
+
+        for (SLayer l : matchingLayers) {
+          l.addRelation(rel);
+        }
+      }
     }
   }
 }
