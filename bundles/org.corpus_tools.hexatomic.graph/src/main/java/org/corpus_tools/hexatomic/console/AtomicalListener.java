@@ -31,7 +31,7 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Edge_referenceContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.GeneralNodeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NamedNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeLayerContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeReferenceContext;
@@ -39,14 +39,12 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceCon
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenIndexNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
-import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
@@ -81,10 +79,11 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   private Set<SStructuredNode> getReferencedNodes(Node_referenceContext ctx) {
 
     Set<SStructuredNode> result = new LinkedHashSet<>();
-    if (ctx instanceof GeneralNodeReferenceContext) {
-      GeneralNodeReferenceContext generalCtx = (GeneralNodeReferenceContext) ctx;
+    if (ctx instanceof NamedNodeReferenceContext) {
+      NamedNodeReferenceContext generalCtx = (NamedNodeReferenceContext) ctx;
+      String nodeName = generalCtx.name.getText().substring(1);
       List<SNode> matchedNodes =
-          this.graphAnnoConsole.graph.getNodesByName(generalCtx.name.getText());
+          this.graphAnnoConsole.graph.getNodesByName(nodeName);
       if (matchedNodes != null) {
         for (SNode n : matchedNodes) {
           if (n instanceof SStructuredNode) {
@@ -93,16 +92,6 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         }
       }
 
-    } else if (ctx instanceof TokenIndexNodeReferenceContext) {
-      TokenIndexNodeReferenceContext tokenCtx = (TokenIndexNodeReferenceContext) ctx;
-
-      int tokenIndex = Integer.parseInt(tokenCtx.idx.getText());
-      List<SToken> sortedTokens = this.graphAnnoConsole.graph.getSortedTokenByText();
-      if (tokenIndex < 0 || tokenIndex >= sortedTokens.size()) {
-        graphAnnoConsole.writeLine("Invalid token index " + tokenIndex);
-      } else {
-        result.add(sortedTokens.get(tokenIndex));
-      }
     }
     return result;
   }
@@ -177,7 +166,9 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     SStructure newNode = this.graphAnnoConsole.graph
         .createStructure(referencedNodes.toArray(new SStructuredNode[referencedNodes.size()]));
 
-    if (newNode != null) {
+    if (newNode == null) {
+      this.graphAnnoConsole.writeLine("Error: could not create the new node.");
+    } else {
       // Add all annotations
       for (SAnnotation anno : attributes) {
         newNode.addAnnotation(anno);
@@ -198,7 +189,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         }
       }
 
-      this.graphAnnoConsole.writeLine("Created new structure node " + newNode.getId() + ".");
+      this.graphAnnoConsole.writeLine("Created new structure node #" + newNode.getName() + ".");
       for (SAnnotation anno : newNode.getAnnotations()) {
         this.graphAnnoConsole.writeLine(anno.toString());
       }

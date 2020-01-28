@@ -22,26 +22,24 @@ Currently, the following commands are supported.
 
 ### New node: `n`
 
-The command `n` will create a new node.
-It is followed by the attributes the new node should have.
-Each attribute has the form `name:value` or `namespace:name:value`.
-A node should cover existing tokens or other nodes.
-The covered nodes are given as argument, with nodes referenced as `n nodeName` and tokens as `t` followed by the index of the token.
+The command `n` will create a new node and optionally add annotations and dominance relations to existing nodes.
+Each of its new annotation arguments has the form `name:value` or `namespace:name:value`.
+Arguments starting with `#` refer to the node names to which dominance edges are added (e.g. `#someNodeName`).
 Optionally, a layer can be assigned to the node by adding a layer name as an argument.
 
-The ID of the newly created node is returned if creating the node was successful.
+The name of the newly created node is returned if creating the node was successful.
 
 #### Examples
 
 ```
-n pos:NN lemma:house t 1 t 2
+n pos:NN lemma:house #sTok1 #sTok2
 ```
 
-Adds a new node with two annotations spanning over the first two tokens of the text.
-One annotation is named "NN" and has the value "NN", the other one has the name"lemma" and has the value "house".
+Adds a new node dominating the two given tokens.
+The new node carries two annotations: one is named "NN" and has the value "NN", the other one has the name"lemma" and has the value "house".
 
 ```
-n tiger:pos:NN n otherNode1
+n tiger:pos:NN #otherNode1
 ```
 
 Adds a new node, spanning over the node with name "otherNode1", and with an annotation named "pos" and the annotation value "NN".

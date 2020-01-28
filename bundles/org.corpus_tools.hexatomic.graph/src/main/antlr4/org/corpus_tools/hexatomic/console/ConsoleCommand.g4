@@ -38,8 +38,7 @@ annotation_shortcut
     ;
     
 node_reference
-    : 'n' name=IDENTIFIER # GeneralNodeReference
-    | 't' idx=NUMBER # TokenIndexNodeReference
+    : name=NODE_REF # NamedNodeReference
     ;
     
 edge_reference
@@ -53,6 +52,7 @@ string
     ;
 
 NUMBER: [0-9]+;
+NODE_REF: '#'[a-zA-Z0-9_]+;
 IDENTIFIER: [a-zA-Z0-9_]+;
 TYPE_STR : ('-d' | '-p' | '-r' | '-o') ;
 QUOTED_STRING: '"' ~('"' | '\\')* (.~('"'|'\\'))* '"';
