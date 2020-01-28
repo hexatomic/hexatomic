@@ -357,6 +357,7 @@ public class GraphEditor {
       updateSegments(graph);
 
       textRangeTable.deselectAll();
+      textRangeTable.getColumn(0).pack();
 
       boolean selectedSomeOld = false;
       for (Range<Long> oldRange : oldSelectedRanges) {
@@ -479,9 +480,13 @@ public class GraphEditor {
 
     for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
       TableItem item = new TableItem(textRangeTable, SWT.NONE);
+      
+      long rangeStart = e.getValue().lowerEndpoint();
+      long rangeEnd = e.getValue().upperEndpoint();
+      
+      String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
 
-      item.setText(e.getValue().lowerEndpoint() + ".." + e.getValue().upperEndpoint() + " ("
-          + (e.getKey().getName() + ")"));
+      item.setText(coveredText);
       item.setData("range", e.getValue());
       item.setData("text", e.getKey());
     }
