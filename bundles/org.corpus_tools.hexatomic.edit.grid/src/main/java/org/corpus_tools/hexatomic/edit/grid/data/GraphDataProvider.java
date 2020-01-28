@@ -130,8 +130,7 @@ public class GraphDataProvider implements IDataProvider {
     } else {
       if (columnIndex == 0) {
         // Token text
-        // FIXME Change to select based on ds!
-        return graph.getText(graph.getSortedTokenByText().get(rowIndex));
+        return graph.getText(graph.getSortedTokenByText(dsTokens).get(rowIndex));
       }
       String annotationQName = columnHeaderLabels.get(columnIndex);
       SAnnotation anno = null;
@@ -182,6 +181,7 @@ public class GraphDataProvider implements IDataProvider {
    * @param ds the ds to set
    */
   public void setDs(STextualDS ds) {
+    log.debug("Setting data source {}.", ds);
     this.ds = ds;
     resolveGraph();
   }
