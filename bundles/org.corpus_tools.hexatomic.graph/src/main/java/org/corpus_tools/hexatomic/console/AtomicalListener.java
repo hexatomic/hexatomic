@@ -45,6 +45,7 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
@@ -82,8 +83,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     if (ctx instanceof NamedNodeReferenceContext) {
       NamedNodeReferenceContext generalCtx = (NamedNodeReferenceContext) ctx;
       String nodeName = generalCtx.name.getText().substring(1);
-      List<SNode> matchedNodes =
-          this.graphAnnoConsole.graph.getNodesByName(nodeName);
+      List<SNode> matchedNodes = this.graphAnnoConsole.graph.getNodesByName(nodeName);
       if (matchedNodes != null) {
         for (SNode n : matchedNodes) {
           if (n instanceof SStructuredNode) {
@@ -169,6 +169,8 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     if (newNode == null) {
       this.graphAnnoConsole.writeLine("Error: could not create the new node.");
     } else {
+      newNode.setName("n" + this.graphAnnoConsole.graph.getStructures().size());
+
       // Add all annotations
       for (SAnnotation anno : attributes) {
         newNode.addAnnotation(anno);
@@ -226,12 +228,14 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         sb.append(' ');
       }
     }
+    int numberOfTokens = graph.getTokens().size();
     ListIterator<StringContext> itWords = ctx.string().listIterator();
     while (itWords.hasNext()) {
       String tokenValue = getString(itWords.next());
       int start = sb.length();
       sb.append(tokenValue);
-      graph.createToken(ds, start, sb.length());
+      SToken t = graph.createToken(ds, start, sb.length());
+      t.setName("t" + numberOfTokens++);
 
       if (itWords.hasNext()) {
         sb.append(' ');
