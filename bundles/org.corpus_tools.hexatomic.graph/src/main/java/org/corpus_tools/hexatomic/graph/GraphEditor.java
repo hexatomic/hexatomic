@@ -155,7 +155,7 @@ public class GraphEditor {
 
     projectChangeListener = new ListenerImplementation();
     projectManager.addListener(projectChangeListener);
-    
+
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
     SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
@@ -282,10 +282,12 @@ public class GraphEditor {
     viewer.getGraphControl().addMouseListener(new MouseListener() {
 
       @Override
-      public void mouseUp(MouseEvent e) {}
+      public void mouseUp(MouseEvent e) {
+      }
 
       @Override
-      public void mouseDown(MouseEvent e) {}
+      public void mouseDown(MouseEvent e) {
+      }
 
       @Override
       public void mouseDoubleClick(MouseEvent e) {
@@ -298,7 +300,8 @@ public class GraphEditor {
     viewer.getGraphControl().addKeyListener(new KeyListener() {
 
       @Override
-      public void keyReleased(KeyEvent e) {}
+      public void keyReleased(KeyEvent e) {
+      }
 
       @Override
       public void keyPressed(KeyEvent e) {
