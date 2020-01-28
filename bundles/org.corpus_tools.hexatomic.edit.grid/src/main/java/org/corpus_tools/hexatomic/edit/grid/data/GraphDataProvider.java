@@ -72,11 +72,13 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private void resolveGraph() {
+    // Reset data
     dsTokens.clear();
     dsSpans.clear();
+    columnCount = 1;
+
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
         ds);
-
     // Resolve which tokens should be taken into account based on ds and save to dsTokens.
     for (SRelation<?, ?> inRel : ds.getInRelations()) {
       if (inRel instanceof STextualRelation) {
@@ -112,6 +114,8 @@ public class GraphDataProvider implements IDataProvider {
       Set<SAnnotation> annos = node.getAnnotations();
       for (SAnnotation anno : annos) {
         annotationQNames.add(anno.getQName());
+        log.debug("Adding annotation >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}.",
+            anno.getQName());
       }
     }
     columnCount += annotationQNames.size();
@@ -136,7 +140,7 @@ public class GraphDataProvider implements IDataProvider {
       SAnnotation anno = null;
 
       // Get token and see if it has such an annotation
-      SToken tok = graph.getSortedTokenByText().get(rowIndex);
+      SToken tok = graph.getSortedTokenByText(dsTokens).get(rowIndex);
       anno = tok.getAnnotation(annotationQName);
       if (anno != null) {
         return anno.getValue_STEXT();
