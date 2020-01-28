@@ -32,7 +32,7 @@ The name of the newly created node is returned if creating the node was successf
 #### Examples
 
 ```
-n pos:NN lemma:house #sTok1 #sTok2
+n pos:NN lemma:house #t1 #t2
 ```
 
 Adds a new node dominating the two given tokens.
@@ -45,6 +45,18 @@ n tiger:pos:NN #otherNode1
 Adds a new node, spanning over the node with name "otherNode1", and with an annotation named "pos" and the annotation value "NN".
 The namespace of the annotation is "tiger".
 
+### Annotate: `a`
+
+Adds or updates annotations to existing nodes.
+Give the referenced nodes (with the `#nodeName` syntax) and the attributes are arguments.
+
+#### Example
+
+```
+a pos:NN #t1 #t2
+```
+Sets the annotation "pos" to the value "NN" for both nodes "t1" and "t2".
+
 ### Delete node: `d`
 
 Deletes any node or edge of the graph.
@@ -53,9 +65,10 @@ Give the entities to delete as argument.
 ### Tokenize: `t`
 
 Tokenize the given argument string and add the tokens to the annotation graph.
+String values can be enclosed in quotes, e.g., for punctuation and for tokens that include whitespace.
 
-#### Examples
+#### Example
 
 ```
-t This is an example
+t This is an example "."
 ```

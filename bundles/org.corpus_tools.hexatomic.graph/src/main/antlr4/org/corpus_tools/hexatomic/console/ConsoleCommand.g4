@@ -13,6 +13,7 @@ start
 
 command
     : 'n' n_attribute* # NewNode
+    | 'a' a_attribute* # Annotate
     | 'd' d_attribute+ # Delete
     | 't' string+ # Tokenize
     | 'clear' # Clear
@@ -22,6 +23,12 @@ n_attribute
     : attribute # NewNodeAttribute
     | node_reference # NewNodeReference
     | IDENTIFIER # NewNodeLayer    
+    ;
+    
+a_attribute
+    : attribute # AnnotateAttribute
+    | node_reference # AnnotateNodeReference
+    | edge_reference # AnnotateEdgeReference
     ;
 
 d_attribute
@@ -42,7 +49,8 @@ node_reference
     ;
     
 edge_reference
-    : 'e' source=node_reference target=node_reference
+    : source=node_reference '->' target=node_reference #PointingEdgeReference
+    | source=node_reference '>' target=node_reference #DominanceEdgeReference
     ;
     
 

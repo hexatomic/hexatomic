@@ -27,15 +27,21 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateEdgeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteNodeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DominanceEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Edge_referenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NamedNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeLayerContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PointingEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
@@ -124,11 +130,26 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     }
   }
 
+  @Override
+  public void enterAnnotateNodeReference(AnnotateNodeReferenceContext ctx) {
+    for (SStructuredNode ref : getReferencedNodes(ctx.node_reference())) {
+      referencedNodes.add(ref);
+    }
+  }
 
   @Override
-  public void enterEdge_reference(Edge_referenceContext ctx) {
-    Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
-    Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
+  public void enterDeleteEdgeReference(DeleteEdgeReferenceContext ctx) {
+
+    Set<SStructuredNode> sources = new LinkedHashSet<>();
+    Set<SStructuredNode> targets = new LinkedHashSet<>();
+    if (ctx.edge_reference() instanceof DominanceEdgeReferenceContext) {
+      sources = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).source);
+      targets = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).target);
+    } else if (ctx.edge_reference() instanceof PointingEdgeReferenceContext) {
+      sources = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).source);
+      targets = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).target);
+    }
+
     for (SStructuredNode s : sources) {
       for (SStructuredNode t : targets) {
         for (SRelation<SNode, SNode> rel : this.graphAnnoConsole.graph.getRelations(s.getId(),
@@ -138,6 +159,29 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       }
     }
   }
+
+  @Override
+  public void enterAnnotateEdgeReference(AnnotateEdgeReferenceContext ctx) {
+    Set<SStructuredNode> sources = new LinkedHashSet<>();
+    Set<SStructuredNode> targets = new LinkedHashSet<>();
+    if (ctx.edge_reference() instanceof DominanceEdgeReferenceContext) {
+      sources = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).source);
+      targets = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).target);
+    } else if (ctx.edge_reference() instanceof PointingEdgeReferenceContext) {
+      sources = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).source);
+      targets = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).target);
+    }
+
+    for (SStructuredNode s : sources) {
+      for (SStructuredNode t : targets) {
+        for (SRelation<SNode, SNode> rel : this.graphAnnoConsole.graph.getRelations(s.getId(),
+            t.getId())) {
+          referencedEdges.add(rel);
+        }
+      }
+    }
+  }
+
 
   @Override
   public void enterAttribute(
@@ -254,5 +298,23 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
 
     ds.setText(sb.toString());
 
+  }
+
+  @Override
+  public void exitAnnotate(AnnotateContext ctx) {
+    for (SAnnotation anno : this.attributes) {
+      for (SStructuredNode n : this.referencedNodes) {
+        if (n.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
+          n.removeLabel(anno.getNamespace(), anno.getName());
+        }
+        n.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+      }
+      for (SRelation<?, ?> rel : this.referencedEdges) {
+        if (rel.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
+          rel.removeLabel(anno.getNamespace(), anno.getName());
+        }
+        rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+      }
+    }
   }
 }
