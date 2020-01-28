@@ -28,18 +28,14 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateEdgeReferenceContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteEdgeReferenceContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DominanceEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.EmptyAttributeContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.LayerReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NamedNodeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewEdgeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeLayerContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NonEmptyAttributeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PointingEdgeReferenceContext;
@@ -49,6 +45,8 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SDominanceRelation;
+import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
@@ -118,66 +116,64 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   }
 
   @Override
-  public void enterNewNodeReference(NewNodeReferenceContext ctx) {
-    for (SStructuredNode ref : getReferencedNodes(ctx.node_reference())) {
+  public void enterNamedNodeReference(NamedNodeReferenceContext ctx) {
+    for (SStructuredNode ref : getReferencedNodes(ctx)) {
       referencedNodes.add(ref);
     }
   }
 
-  @Override
-  public void enterDeleteNodeReference(DeleteNodeReferenceContext ctx) {
-    for (SStructuredNode ref : getReferencedNodes(ctx.node_reference())) {
-      referencedNodes.add(ref);
-    }
-  }
 
   @Override
-  public void enterAnnotateNodeReference(AnnotateNodeReferenceContext ctx) {
-    for (SStructuredNode ref : getReferencedNodes(ctx.node_reference())) {
-      referencedNodes.add(ref);
-    }
-  }
-
-  @Override
-  public void enterDeleteEdgeReference(DeleteEdgeReferenceContext ctx) {
-
-    Set<SStructuredNode> sources = new LinkedHashSet<>();
-    Set<SStructuredNode> targets = new LinkedHashSet<>();
-    if (ctx.edge_reference() instanceof DominanceEdgeReferenceContext) {
-      sources = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).source);
-      targets = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).target);
-    } else if (ctx.edge_reference() instanceof PointingEdgeReferenceContext) {
-      sources = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).source);
-      targets = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).target);
-    }
+  public void enterPointingEdgeReference(PointingEdgeReferenceContext ctx) {
+    Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
+    Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
 
     for (SStructuredNode s : sources) {
       for (SStructuredNode t : targets) {
-        for (SRelation<SNode, SNode> rel : this.graphAnnoConsole.graph.getRelations(s.getId(),
-            t.getId())) {
-          referencedEdges.add(rel);
+        List<SPointingRelation> existing = new LinkedList<>();
+        for (SRelation<?, ?> rel : this.graphAnnoConsole.graph.getRelations(s.getId(), t.getId())) {
+          if (rel instanceof SPointingRelation) {
+            existing.add((SPointingRelation) rel);
+          }
+        }
+        // create a new temporary edge if does not exist in the graph yet
+        if (existing.isEmpty()) {
+          SPointingRelation rel = SaltFactory.createSPointingRelation();
+          rel.setSource(s);
+          rel.setTarget(t);
+          this.referencedEdges.add(rel);
+        } else {
+          this.referencedEdges.addAll(existing);
         }
       }
     }
   }
 
   @Override
-  public void enterAnnotateEdgeReference(AnnotateEdgeReferenceContext ctx) {
-    Set<SStructuredNode> sources = new LinkedHashSet<>();
-    Set<SStructuredNode> targets = new LinkedHashSet<>();
-    if (ctx.edge_reference() instanceof DominanceEdgeReferenceContext) {
-      sources = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).source);
-      targets = getReferencedNodes(((DominanceEdgeReferenceContext) ctx.edge_reference()).target);
-    } else if (ctx.edge_reference() instanceof PointingEdgeReferenceContext) {
-      sources = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).source);
-      targets = getReferencedNodes(((PointingEdgeReferenceContext) ctx.edge_reference()).target);
-    }
+  public void enterDominanceEdgeReference(DominanceEdgeReferenceContext ctx) {
+    Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
+    Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
 
-    for (SStructuredNode s : sources) {
-      for (SStructuredNode t : targets) {
-        for (SRelation<SNode, SNode> rel : this.graphAnnoConsole.graph.getRelations(s.getId(),
-            t.getId())) {
-          referencedEdges.add(rel);
+    for (SStructuredNode sourceNodeRaw : sources) {
+      if (sourceNodeRaw instanceof SStructure) {
+        SStructure s = (SStructure) sourceNodeRaw;
+        for (SStructuredNode t : targets) {
+          List<SDominanceRelation> existing = new LinkedList<>();
+          for (SRelation<?, ?> rel : this.graphAnnoConsole.graph.getRelations(s.getId(),
+              t.getId())) {
+            if (rel instanceof SDominanceRelation) {
+              existing.add((SDominanceRelation) rel);
+            }
+          }
+          // create a new temporary edge if does not exist in the graph yet
+          if (existing.isEmpty()) {
+            SDominanceRelation rel = SaltFactory.createSDominanceRelation();
+            rel.setSource(s);
+            rel.setTarget(t);
+            this.referencedEdges.add(rel);
+          } else {
+            this.referencedEdges.addAll(existing);
+          }
         }
       }
     }
@@ -206,7 +202,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   }
 
   @Override
-  public void enterNewNodeLayer(NewNodeLayerContext ctx) {
+  public void enterLayerReference(LayerReferenceContext ctx) {
     layer = Optional.of(ctx.getText());
   }
 
@@ -327,6 +323,16 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         if (anno.getValue() != null) {
           rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
         }
+      }
+    }
+  }
+
+  @Override
+  public void exitNewEdge(NewEdgeContext ctx) {
+    for (SRelation<?, ?> rel : this.referencedEdges) {
+      graphAnnoConsole.graph.addRelation(rel);
+      for (SAnnotation anno : this.attributes) {
+        rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
       }
     }
   }

@@ -35,15 +35,31 @@ The name of the newly created node is returned if creating the node was successf
 n pos:NN lemma:house #t1 #t2
 ```
 
-Adds a new node dominating the two given tokens.
+Adds a new node, which dominates the two given tokens.
 The new node carries two annotations: one is named "NN" and has the value "NN", the other one has the name"lemma" and has the value "house".
 
 ```
 n tiger:pos:NN #otherNode1
 ```
 
-Adds a new node, spanning over the node with name "otherNode1", and with an annotation named "pos" and the annotation value "NN".
+Adds a new node, spanning over the node with the name "otherNode1", and with an annotation named "pos" and the annotation value "NN."
 The namespace of the annotation is "tiger".
+
+### New edge: `e`
+
+You can add two types of edges: dominance relations (e.g. for syntax trees) and more general pointing relations.
+Dominance edges are created with the syntax `e #source > #target` where `#source` is a node reference to the source node and `#target` a node reference to the target node.
+For pointing relations, use `->` instead of `>`.
+This syntax is used to reference edges in general, e.g., when annotating or deleting them.
+As with the new nodes, initial annotations can be added as arguments.
+
+### Example
+
+```
+e #t1 -> #t2 func:adj
+```
+
+Adds a pointing relation between `#t1` and `#t2` with an annotation named "func" and the value "adj."
 
 ### Annotate: `a`
 
@@ -67,7 +83,7 @@ Deletes the "pos" annotation for the "t1" node.
 ### Delete node: `d`
 
 Deletes any node or edge of the graph.
-Give the entities to delete as argument.
+Give the entities to delete as an argument.
 
 ### Tokenize: `t`
 
