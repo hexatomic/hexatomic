@@ -385,7 +385,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    this.maxNodeHeight = 0;
+    this.maxNodeHeight = 50;
     // Calculate the average width and height to get a good distance between the tokens
     double sumWidth = 0.0;
     int tokenCount = 0;
