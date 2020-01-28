@@ -400,7 +400,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     double sumWidth = 0.0;
     int tokenCount = 0;
     for (int index = 0; index < entitiesToLayout.length; index++) {
-      InternalNode n = entitiesToLayout[index++];
+      InternalNode n = entitiesToLayout[index];
       IdentifiableElement element = SaltGraphContentProvider.getData(n);
       if (element instanceof SToken) {
         sumWidth += n.getLayoutEntity().getWidthInLayout();
