@@ -157,6 +157,16 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     layer = Optional.of(ctx.getText());
   }
 
+  private String getUnusedName(String prefix, int start) {
+    int idx = start;
+    List<SNode> existing = this.graphAnnoConsole.graph.getNodesByName(prefix + idx);
+    while (existing != null && !existing.isEmpty()) {
+      idx++;
+      existing = this.graphAnnoConsole.graph.getNodesByName(prefix + idx);
+    }
+
+    return prefix + idx;
+  }
 
 
   @Override
@@ -169,7 +179,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     if (newNode == null) {
       this.graphAnnoConsole.writeLine("Error: could not create the new node.");
     } else {
-      newNode.setName("n" + this.graphAnnoConsole.graph.getStructures().size());
+      newNode.setName(getUnusedName("n", this.graphAnnoConsole.graph.getStructures().size()));
 
       // Add all annotations
       for (SAnnotation anno : attributes) {
@@ -235,7 +245,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       int start = sb.length();
       sb.append(tokenValue);
       SToken t = graph.createToken(ds, start, sb.length());
-      t.setName("t" + (++numberOfTokens));
+      t.setName(getUnusedName("t", ++numberOfTokens));
 
       if (itWords.hasNext()) {
         sb.append(' ');
