@@ -35,12 +35,13 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DominanceEdgeReferenceContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Edge_referenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.EmptyAttributeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NamedNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeLayerContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NonEmptyAttributeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PointingEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
@@ -182,14 +183,22 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     }
   }
 
-
   @Override
-  public void enterAttribute(
-      org.corpus_tools.hexatomic.console.ConsoleCommandParser.AttributeContext ctx) {
-
+  public void enterNonEmptyAttribute(NonEmptyAttributeContext ctx) {
     SAnnotation anno = SaltFactory.createSAnnotation();
     anno.setName(getString(ctx.name));
     anno.setValue(getString(ctx.value));
+    if (ctx.namespace != null) {
+      anno.setNamespace(ctx.namespace.getText());
+    }
+    attributes.add(anno);
+  }
+
+  @Override
+  public void enterEmptyAttribute(EmptyAttributeContext ctx) {
+    SAnnotation anno = SaltFactory.createSAnnotation();
+    anno.setName(getString(ctx.name));
+    anno.setValue(null);
     if (ctx.namespace != null) {
       anno.setNamespace(ctx.namespace.getText());
     }
@@ -307,13 +316,17 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         if (n.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
           n.removeLabel(anno.getNamespace(), anno.getName());
         }
-        n.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+        if (anno.getValue() != null) {
+          n.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+        }
       }
       for (SRelation<?, ?> rel : this.referencedEdges) {
         if (rel.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
           rel.removeLabel(anno.getNamespace(), anno.getName());
         }
-        rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+        if (anno.getValue() != null) {
+          rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+        }
       }
     }
   }

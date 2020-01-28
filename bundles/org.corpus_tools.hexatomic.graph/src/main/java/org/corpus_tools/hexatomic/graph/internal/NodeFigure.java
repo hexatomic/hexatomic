@@ -7,14 +7,9 @@ import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
-import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.GroupBoxBorder;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 public class NodeFigure extends Figure {

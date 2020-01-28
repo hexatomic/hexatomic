@@ -48,14 +48,21 @@ The namespace of the annotation is "tiger".
 ### Annotate: `a`
 
 Adds or updates annotations to existing nodes.
-Give the referenced nodes (with the `#nodeName` syntax) and the attributes are arguments.
+Give the referenced nodes (with the `#nodeName` syntax), and the attributes are arguments.
+You can delete existing annotations by leaving the value in the attribute empty.
 
-#### Example
+#### Examples
 
 ```
 a pos:NN #t1 #t2
 ```
 Sets the annotation "pos" to the value "NN" for both nodes "t1" and "t2".
+
+```
+a pos: #t1
+```
+Deletes the "pos" annotation for the "t1" node.
+
 
 ### Delete node: `d`
 
