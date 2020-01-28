@@ -34,8 +34,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -103,10 +101,6 @@ import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 
 public class GraphEditor {
-
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
-
-
 
   @Inject
   private ProjectManager projectManager;
@@ -348,30 +342,6 @@ public class GraphEditor {
     projectManager.removeListener(projectChangeListener);
   }
 
-  private List<Integer> getSegmentIdxSortedByLength() {
-    List<Integer> result =
-        IntStream.range(0, textRangeTable.getItemCount()).boxed().collect(Collectors.toList());
-
-    result.sort(new Comparator<Integer>() {
-      @SuppressWarnings("unchecked")
-      @Override
-      public int compare(Integer o1, Integer o2) {
-
-        // get both ranges from the container
-        Object r1Raw = textRangeTable.getItem(o1).getData("range");
-        Object r2Raw = textRangeTable.getItem(o2).getData("range");
-
-        Range<Long> r1 = (Range<Long>) r1Raw;
-        Range<Long> r2 = (Range<Long>) r2Raw;
-        return ComparisonChain.start().compare(r1.upperEndpoint() - r1.lowerEndpoint(),
-            r2.upperEndpoint() - r2.lowerEndpoint()).result();
-
-      }
-    });
-
-    return result;
-  }
-
   @SuppressWarnings("unchecked")
   private void updateView(boolean recalculateSegments) {
 
@@ -388,26 +358,20 @@ public class GraphEditor {
 
       textRangeTable.deselectAll();
 
-      // sort the segments by their length
-      List<Integer> sortedIdx = getSegmentIdxSortedByLength();
-
-      // for each old segment select the first (and thus smallest) segment in the new
-      // list
       boolean selectedSomeOld = false;
       for (Range<Long> oldRange : oldSelectedRanges) {
-        for (int idx : sortedIdx) {
+        for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
           Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
-          if (itemRange.encloses(oldRange)) {
+          if (itemRange.isConnected(oldRange)) {
             textRangeTable.select(idx);
             selectedSomeOld = true;
-            // only select the first one
-            break;
           }
         }
       }
       if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
         textRangeTable.setSelection(0);
       }
+
     }
 
     // update the status check for each item
