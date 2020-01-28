@@ -235,7 +235,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       int start = sb.length();
       sb.append(tokenValue);
       SToken t = graph.createToken(ds, start, sb.length());
-      t.setName("t" + numberOfTokens++);
+      t.setName("t" + (++numberOfTokens));
 
       if (itWords.hasNext()) {
         sb.append(' ');
