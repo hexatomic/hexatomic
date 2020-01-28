@@ -35,8 +35,8 @@ layer_reference
 	;
     
 edge_reference
-    : source=node_reference '->' target=node_reference #PointingEdgeReference
-    | source=node_reference '>' target=node_reference #DominanceEdgeReference
+    : source=NODE_REF '->' target=NODE_REF #PointingEdgeReference
+    | source=NODE_REF '>' target=NODE_REF #DominanceEdgeReference
     ;
     
 

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
+import org.antlr.v4.runtime.Token;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
@@ -98,6 +99,23 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       }
 
     }
+    return result;
+  }
+
+  private Set<SStructuredNode> getReferencedNodes(Token t) {
+
+    Set<SStructuredNode> result = new LinkedHashSet<>();
+    String nodeName = t.getText().substring(1);
+    List<SNode> matchedNodes = this.graphAnnoConsole.graph.getNodesByName(nodeName);
+    if (matchedNodes != null) {
+      for (SNode n : matchedNodes) {
+        if (n instanceof SStructuredNode) {
+          result.add((SStructuredNode) n);
+        }
+      }
+    }
+
+
     return result;
   }
 
@@ -308,6 +326,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   @Override
   public void exitAnnotate(AnnotateContext ctx) {
     for (SAnnotation anno : this.attributes) {
+
       for (SStructuredNode n : this.referencedNodes) {
         if (n.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
           n.removeLabel(anno.getNamespace(), anno.getName());
