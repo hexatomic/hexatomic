@@ -59,6 +59,8 @@ import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.extensions.notification.Listener;
+import org.corpus_tools.salt.extensions.notification.Listener.NOTIFICATION_TYPE;
+import org.corpus_tools.salt.extensions.notification.graph.impl.NodeNotifierImpl;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
@@ -68,6 +70,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -526,11 +529,66 @@ public class GraphEditor {
     return layout;
   }
 
+  private static boolean isStructuralUpdate(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute,
+      Object oldValue, Object newValue, Object container) {
+
+    // Get the node for a label
+    if (container instanceof org.corpus_tools.salt.graph.Label) {
+      org.corpus_tools.salt.graph.Label lbl = (org.corpus_tools.salt.graph.Label) container;
+      container = lbl.getContainer();
+    }
+    // Get the real node instance via the ID
+    if (container instanceof NodeNotifierImpl) {
+      NodeNotifierImpl n = (NodeNotifierImpl) container;
+      if (n.getGraph() != null) {
+        container = n.getGraph().getNode(n.getId());
+      }
+    }
+
+
+    if (container instanceof STextualDS) {
+      // A new text might have been set
+      return true;
+    } else if (type == NOTIFICATION_TYPE.ADD || type == NOTIFICATION_TYPE.REMOVE
+        || type == NOTIFICATION_TYPE.REMOVE_ALL) {
+      if (attribute == GRAPH_ATTRIBUTES.GRAPH_NODES
+          || attribute == GRAPH_ATTRIBUTES.GRAPH_RELATIONS) {
+        return true;
+      }
+    }
+
+
+    return false;
+  }
+
+
   private final class ListenerImplementation implements Listener {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
-      sync.syncExec(() -> updateView(true));
+
+      // Check if the ID of the changed object points to the same document as our annotation graph
+      IdentifiableElement element = null;
+      if (container instanceof IdentifiableElement) {
+        element = (IdentifiableElement) container;
+      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
+        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
+      }
+      if (element == null || element.getId() == null) {
+        return;
+      } else {
+        URI elementUri = URI.createURI(element.getId());
+        SDocumentGraph graph = getGraph();
+        if (!elementUri.path().equals(graph.getPath().path())) {
+          return;
+        }
+      }
+
+      // Only recalculate segments when the structure of the graph is changed
+      final boolean recalculateSegments =
+          isStructuralUpdate(type, attribute, oldValue, newValue, container);
+
+      sync.syncExec(() -> updateView(recalculateSegments));
     }
   }
 

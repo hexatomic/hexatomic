@@ -44,7 +44,10 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PunctuationContex
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeAfterContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeBeforeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
+import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SDominanceRelation;
@@ -57,6 +60,7 @@ import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.util.DataSourceSequence;
 
 final class AtomicalListener extends ConsoleCommandBaseListener {
 
@@ -327,6 +331,74 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   }
 
   @Override
+  public void exitTokenizeAfter(TokenizeAfterContext ctx) {
+    SDocumentGraph graph = this.graphAnnoConsole.graph;
+    SStructuredNode n = referencedNodes.iterator().next();
+    if (n instanceof SToken) {
+      SToken referencedToken = (SToken) n;
+
+      @SuppressWarnings("rawtypes")
+      List<DataSourceSequence> allSequences = graph.getOverlappedDataSourceSequence(referencedToken,
+          SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      if (allSequences != null && !allSequences.isEmpty()) {
+        DataSourceSequence<?> seq = allSequences.get(0);
+        int offset = seq.getEnd().intValue();
+        if (seq.getDataSource() instanceof STextualDS) {
+          STextualDS ds = (STextualDS) seq.getDataSource();
+          int numberOfTokens = graph.getTokens().size();
+
+          ListIterator<StringContext> itWords = ctx.string().listIterator();
+          List<String> newTokenTexts = new LinkedList<>();
+          while (itWords.hasNext()) {
+            String tokenValue = getString(itWords.next());
+            if (!itWords.hasPrevious() && !ds.getText().isEmpty()) {
+              // prepend a space to the token
+              tokenValue = " " + tokenValue;
+            }
+            newTokenTexts.add(tokenValue);
+          }
+
+          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
+          for (SToken t : newTokens) {
+            t.setName(getUnusedName("t", ++numberOfTokens));
+          }
+        }
+      }
+    } else {
+      graphAnnoConsole.writeLine("Referenced node is not a token.");
+    }
+  }
+
+  @Override
+  public void exitTokenizeBefore(TokenizeBeforeContext ctx) {
+    SDocumentGraph graph = this.graphAnnoConsole.graph;
+    SStructuredNode n = referencedNodes.iterator().next();
+    if (n instanceof SToken) {
+      SToken tok = (SToken) n;
+
+      @SuppressWarnings("rawtypes")
+      List<DataSourceSequence> allSequences =
+          graph.getOverlappedDataSourceSequence(tok, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      if (allSequences != null && !allSequences.isEmpty()) {
+        DataSourceSequence<?> seq = allSequences.get(0);
+        int offset = seq.getStart().intValue();
+        if (seq.getDataSource() instanceof STextualDS) {
+          STextualDS ds = (STextualDS) seq.getDataSource();
+
+          ListIterator<StringContext> itWords = ctx.string().listIterator();
+          while (itWords.hasNext()) {
+            String tokenValue = getString(itWords.next());
+            graph.insertTokenAt(ds, offset, tokenValue, true);
+            offset -= tokenValue.length();
+          }
+        }
+      }
+    } else {
+      graphAnnoConsole.writeLine("Referenced node is not a token.");
+    }
+  }
+
+  @Override
   public void exitAnnotate(AnnotateContext ctx) {
     for (SAnnotation anno : this.attributes) {
 
@@ -372,4 +444,5 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       }
     }
   }
+
 }

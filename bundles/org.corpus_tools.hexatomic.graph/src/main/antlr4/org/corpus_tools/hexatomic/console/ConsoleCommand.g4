@@ -17,6 +17,8 @@ command
     | 'a' (attribute | node_reference | edge_reference)+ # Annotate
     | 'd' (node_reference | edge_reference)+ # Delete
     | 't' string+ # Tokenize
+    | 'ta' node_reference string+ # TokenizeAfter
+    | 'tb' node_reference string+ # TokenizeBefore
     | 'clear' # Clear
     ;
 
