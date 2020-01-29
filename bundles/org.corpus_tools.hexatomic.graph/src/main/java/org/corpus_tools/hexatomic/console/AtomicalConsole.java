@@ -21,12 +21,10 @@
 package org.corpus_tools.hexatomic.console;
 
 import com.google.common.collect.Range;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -172,7 +170,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     }
 
     // parse the line
-    ConsoleCommandLexer lexer = new ConsoleCommandLexer(CharStreams.fromString(cmd));
+    ConsoleLexer lexer = new ConsoleLexer(CharStreams.fromString(cmd));
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
 
@@ -213,6 +211,10 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
       }
     }
 
+  }
+  
+  public SourceViewer getView() {
+    return view;
   }
 
   @Override

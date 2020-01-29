@@ -445,4 +445,10 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     }
   }
 
+  public void enterRefresh(
+      org.corpus_tools.hexatomic.console.ConsoleCommandParser.RefreshContext ctx) {
+    graphAnnoConsole.getView().setInput(graphAnnoConsole.getView().getInput());
+  }
+
+
 }
