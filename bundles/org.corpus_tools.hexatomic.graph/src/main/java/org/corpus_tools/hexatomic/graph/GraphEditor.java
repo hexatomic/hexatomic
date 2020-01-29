@@ -405,8 +405,13 @@ public class GraphEditor {
     List<DataSourceSequence> overlappedDS =
         tok.getGraph().getOverlappedDataSourceSequence(tok, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
     if (overlappedDS != null && !overlappedDS.isEmpty()) {
-      return Range.closedOpen(overlappedDS.get(0).getStart().longValue(),
-          overlappedDS.get(0).getEnd().longValue());
+      long start = overlappedDS.get(0).getStart().longValue();
+      long end = overlappedDS.get(0).getEnd().longValue();
+      if (start <= end) {
+        return Range.closedOpen(start, end);
+      } else {
+        return Range.closedOpen(start, start);
+      }
     }
     return null;
   }
@@ -588,7 +593,7 @@ public class GraphEditor {
       final boolean recalculateSegments =
           isStructuralUpdate(type, attribute, oldValue, newValue, container);
 
-      sync.syncExec(() -> updateView(recalculateSegments));
+      sync.syncExec(() -> updateView(true));
     }
   }
 
