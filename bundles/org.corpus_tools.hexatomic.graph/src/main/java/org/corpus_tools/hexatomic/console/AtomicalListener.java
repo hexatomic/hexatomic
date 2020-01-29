@@ -40,6 +40,7 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NonEmptyAttributeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PointingEdgeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PunctuationContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
@@ -74,7 +75,9 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     if (ctx instanceof RawStringContext) {
       RawStringContext rawStringContext = (RawStringContext) ctx;
       return rawStringContext.getText();
-
+    } else if (ctx instanceof PunctuationContext) {
+      PunctuationContext rawStringContext = (PunctuationContext) ctx;
+      return rawStringContext.getText();
     } else if (ctx instanceof QuotedStringContext) {
       QuotedStringContext escapedStringContext = (QuotedStringContext) ctx;
       String rawText = escapedStringContext.getText();
