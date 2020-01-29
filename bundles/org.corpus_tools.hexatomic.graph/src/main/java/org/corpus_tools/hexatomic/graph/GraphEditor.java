@@ -347,6 +347,13 @@ public class GraphEditor {
 
     SDocumentGraph graph = getGraph();
 
+    if (graph == null) {
+      errors.showError("Unexpected error",
+          "Annotation graph for selected document vanished. Please report this as a bug.",
+          GraphEditor.class);
+      return;
+    }
+
     if (recalculateSegments) {
       // store the old segment selection
       List<Range<Long>> oldSelectedRanges = new LinkedList<>();
@@ -480,10 +487,10 @@ public class GraphEditor {
 
     for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
       TableItem item = new TableItem(textRangeTable, SWT.NONE);
-      
+
       long rangeStart = e.getValue().lowerEndpoint();
       long rangeEnd = e.getValue().upperEndpoint();
-      
+
       String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
 
       item.setText(coveredText);
