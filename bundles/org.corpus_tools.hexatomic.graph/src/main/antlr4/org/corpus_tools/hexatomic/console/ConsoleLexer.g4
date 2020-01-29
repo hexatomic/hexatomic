@@ -8,7 +8,6 @@ TOKENIZE: 't' -> pushMode(ARGUMENTS);
 TOKENIZE_AFTER: 'ta' -> pushMode(ARGUMENTS);
 TOKENIZE_BEFORE: 'tb' -> pushMode(ARGUMENTS);
 CLEAR: 'clear' -> pushMode(ARGUMENTS);
-REFRESH: 'refresh'  -> pushMode(ARGUMENTS);
 
 WS : [ \t\r\n]+ -> skip;
 

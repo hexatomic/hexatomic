@@ -20,7 +20,6 @@ command
     | TOKENIZE_AFTER node_reference string+ # TokenizeAfter
     | TOKENIZE_BEFORE node_reference string+ # TokenizeBefore
     | CLEAR # Clear
-    | REFRESH # Refresh
     ;
 
         
