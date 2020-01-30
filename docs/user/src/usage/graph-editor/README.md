@@ -20,30 +20,83 @@ Hexatomics command line syntax is similar to the one of [GraphAnno](https://gith
 
 Currently, the following commands are supported.
 
+### Tokenize: `t`
+
+Tokenize the given argument string and add the tokens to the annotation graph.
+String values can be enclosed in quotes, e.g., for punctuation and for tokens that include whitespace.
+
+#### Examples
+
+```
+t This is an example "."
+```
+
+This command will result in 5 tokens: `[This] [is] [an] [example] [.]`.
+
+![The resulting tokens after the command](tokenize-example.png)
+
+If you call `t` again, the new token will be appended to the end.
+E.g. calling `t Not .` will result in 7 tokens in total: `[This] [is] [an] [example] [.] [Not] [.]`.
+Note that the dot is not escaped in this example.
+
+
+
+### Tokenize before (`tb`) and after (`ta`)
+
+Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.
+
+#### Examples
+
+Starting with an initial text with the two tokens `[This] [text]` (first one is called "t1" and the second one "t2"),
+executing
+
+```
+tb #t2 very simple
+```
+
+will append the two new tokens *before* the second token: `[This] [very] [simple] [text]`.
+Given the new tokens, calling
+```
+ta #t1 is a
+```
+will insert the two new tokens *after* the first token: `[This] [is] [a] [very] [simple] [text]`.
+
+
 ### New node: `n`
 
 The command `n` will create a new node and optionally add annotations and dominance relations to existing nodes.
 Each of its new annotation arguments has the form `name:value` or `namespace:name:value`.
 Arguments starting with `#` refer to the node names to which dominance edges are added (e.g. `#someNodeName`).
-Optionally, a layer can be assigned to the node by adding a layer name as an argument.
 
 The name of the newly created node is returned if creating the node was successful.
 
 #### Examples
 
+Starting with the tokens `[This] [is] [an] [example] [.]`, the following command will group "an example" to a node
+with the label "cat=NP".
+
+```
+n cat:NP #t3 #t4
+```
+
+![Output after adding an NP node](newnode-example-1.png)
 ```
 n pos:NN lemma:house #t1 #t2
 ```
 
-Adds a new node, which dominates the two given tokens.
-The new node carries two annotations: one is named "NN" and has the value "NN", the other one has the name"lemma" and has the value "house".
-
+This following command creates a new node using the namespace "tiger" for the annotation.
 ```
-n tiger:pos:NN #otherNode1
+n tiger:cat:NP #t1
 ```
+![Output after adding an NP and a namespace](newnode-example-2.png)
 
-Adds a new node, spanning over the node with the name "otherNode1", and with an annotation named "pos" and the annotation value "NN."
-The namespace of the annotation is "tiger".
+You can mix general dominance nodes and tokens in the command.
+Also, the number of dominated nodes is not restricted
+```
+n cat:VP #t2 #n1
+n cat:S #n2 #n3 #t5
+```
+![Complete syntax annotation](newnode-example-3.png)
 
 ### New edge: `e`
 
@@ -85,41 +138,3 @@ Deletes the "pos" annotation for the "t1" node.
 Deletes any node or edge of the graph.
 Give the entities to delete as an argument.
 
-### Tokenize: `t`
-
-Tokenize the given argument string and add the tokens to the annotation graph.
-String values can be enclosed in quotes, e.g., for punctuation and for tokens that include whitespace.
-
-#### Examples
-
-```
-t This is an example "."
-```
-
-This command will result in 5 tokens: `[This] [is] [an] [example] [.]`).
-If you call `t` again, the new token will be appended to the end.
-
-E.g. calling `t Not .` will result in 7 tokens in total: `[This] [is] [an] [example] [.] [Not] [.]`.
-Note that the dot is not escaped in this example.
-
-
-
-### Tokenize before (`tb`) and after (`ta`)
-
-Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.
-
-#### Examples
-
-Starting with an initial text with the two tokens `[This] [text]` (first one is called "t1" and the second one "t2"),
-executing
-
-```
-tb #t2 very simple
-```
-
-will append the two new tokens *before* the second token: `[This] [very] [simple] [text]`.
-Given the new tokens, calling
-```
-ta #t1 is a
-```
-will insert the two new tokens *after* the first token: `[This] [is] [a] [very] [simple] [text]`.

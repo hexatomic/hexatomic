@@ -41,6 +41,16 @@ class TestAtomicalConsole {
 
     console = new AtomicalConsole(view, sync, graph);
   }
+  
+  @Test
+  void testNewNode() {
+    // Add initial tokens
+    console.executeCommand("t This is an example \".\"");
+    graph.sortTokenByText();
+    
+    // Add some annnotated nodes
+    
+  }
 
   @Test
   void testTokenize() {
