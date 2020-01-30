@@ -60,11 +60,12 @@ class TestAtomicalConsole {
     
     // Append two tokens
     console.executeCommand("t Not .");
+    
+    assertEquals("This is an example . Not .", graph.getTextualDSs().get(0).getText());
     graph.sortTokenByText();
     tokens = graph.getTokens();
     assertEquals(7, tokens.size());
     assertEquals(1, graph.getTextualDSs().size());
-    assertEquals("This is an example . Not .", graph.getTextualDSs().get(0).getText());
     assertEquals("This", graph.getText(tokens.get(0)));
     assertEquals("is", graph.getText(tokens.get(1)));
     assertEquals("an", graph.getText(tokens.get(2)));
@@ -73,6 +74,40 @@ class TestAtomicalConsole {
     assertEquals("Not", graph.getText(tokens.get(5)));
     assertEquals(".", graph.getText(tokens.get(6)));
     
+  }
+  
+  @Test
+  void testTokenizeAfterBefore() {
+    // Add initial tokens
+    console.executeCommand("t This text");
+    
+    // Add tokens before and after
+    console.executeCommand("tb #t2 very simple");
+    // Check the result
+    graph.sortTokenByText();
+    assertEquals("This very simple text", graph.getTextualDSs().get(0).getText());
+    List<SToken> tokens = graph.getTokens();
+    assertEquals(4, tokens.size());
+    assertEquals(1, graph.getTextualDSs().size());
+    assertEquals("This", graph.getText(tokens.get(0)));
+    assertEquals("very", graph.getText(tokens.get(1)));
+    assertEquals("simple", graph.getText(tokens.get(2)));
+    assertEquals("text", graph.getText(tokens.get(3)));
+    
+    console.executeCommand("ta #t1 is a");
+    
+    // Check the result
+    graph.sortTokenByText();
+    assertEquals("This is a very simple text", graph.getTextualDSs().get(0).getText());
+    tokens = graph.getTokens();
+    assertEquals(6, tokens.size());
+    assertEquals(1, graph.getTextualDSs().size());
+    assertEquals("This", graph.getText(tokens.get(0)));
+    assertEquals("is", graph.getText(tokens.get(1)));
+    assertEquals("a", graph.getText(tokens.get(2)));
+    assertEquals("very", graph.getText(tokens.get(3)));
+    assertEquals("simple", graph.getText(tokens.get(4)));
+    assertEquals("text", graph.getText(tokens.get(5)));
   }
 
 }

@@ -343,6 +343,11 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
         int offset = seq.getEnd().intValue();
+        STextualDS textDS = (STextualDS) seq.getDataSource();
+        if (offset < textDS.getText().length() - 1 && textDS.getText().charAt(offset) == ' ') {
+          // Insert after the space character and not directly after the token
+          offset += 1;
+        }
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
           int numberOfTokens = graph.getTokens().size();
@@ -350,13 +355,9 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
           ListIterator<StringContext> itWords = ctx.string().listIterator();
           List<String> newTokenTexts = new LinkedList<>();
           while (itWords.hasNext()) {
-            boolean first = !itWords.hasPrevious();
             String tokenValue = getString(itWords.next());
-            if (first && !ds.getText().isEmpty()) {
-              // prepend a space to the token
-              tokenValue = " " + tokenValue;
-            }
             newTokenTexts.add(tokenValue);
+
           }
 
           List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
@@ -382,7 +383,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
           SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
-        int offset = seq.getStart().intValue();
+        int offset = seq.getStart().intValue();      
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
           int numberOfTokens = graph.getTokens().size();
@@ -390,12 +391,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
           ListIterator<StringContext> itWords = ctx.string().listIterator();
           List<String> newTokenTexts = new LinkedList<>();
           while (itWords.hasNext()) {
-            boolean first = !itWords.hasPrevious();
             String tokenValue = getString(itWords.next());
-            if (first && !ds.getText().isEmpty()) {
-              // prepend a space to the token
-              tokenValue = " " + tokenValue;
-            }
             newTokenTexts.add(tokenValue);
           }
 
