@@ -90,11 +90,19 @@ Give the entities to delete as an argument.
 Tokenize the given argument string and add the tokens to the annotation graph.
 String values can be enclosed in quotes, e.g., for punctuation and for tokens that include whitespace.
 
-#### Example
+#### Examples
 
 ```
 t This is an example "."
 ```
+
+This command will result in 5 tokens: `[This] [is] [an] [example] [.]`).
+If you call `t` again, the new token will be appended to the end.
+
+E.g. calling `t Not .` will result in 7 tokens in total: `[This] [is] [an] [example] [.] [Not] [.]`.
+Note that the dot is not escaped in this example.
+
+
 
 ### Tokenize before (`tb`) and after (`ta`)
 
@@ -102,14 +110,16 @@ Tokenize the given argument string and add the tokens to the annotation graph be
 
 #### Examples
 
-```
-ta #t4 for an example
-```
-
-Appends "for an example" after the token "t4".
+Starting with an initial text with the two tokens `[This] [text]` (first one is called "t1" and the second one "t2"),
+executing
 
 ```
-tb #t5 for an example
+tb #t2 very simple
 ```
 
-Appends "for an example" before the token "t5".
+will append the two new tokens *before* the second token: `[This] [very] [simple] [text]`.
+Given the new tokens, calling
+```
+ta #t1 is a
+```
+will insert the two new tokens *after* the first token: `[This] [is] [a] [very] [simple] [text]`.
