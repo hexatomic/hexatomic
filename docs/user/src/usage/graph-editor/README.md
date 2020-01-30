@@ -129,9 +129,11 @@ You can delete existing annotations by leaving the value in the attribute empty.
 #### Examples
 
 ```
-a pos:NN #t1 #t2
+a pos:DT #t1 #t3
 ```
-Sets the annotation "pos" to the value "NN" for both nodes "t1" and "t2".
+Sets the annotation "pos" to the value "DT" for both nodes "t1" and "t3".
+
+![Annotated tokens](set-annotation-dt.png)
 
 ```
 a pos: #t1

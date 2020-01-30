@@ -123,6 +123,26 @@ class TestAtomicalConsole {
   }
 
   @Test
+  void testExampleAnnotate() {
+    // Add initial tokens
+    console.executeCommand("t This is an example \".\"");
+    graph.sortTokenByText();
+    
+
+    // Add token annotation
+    console.executeCommand("a pos:DT #t1 #t3");
+    
+    assertEquals("DT", graph.getTokens().get(0).getAnnotation("pos").getValue());
+    assertEquals("DT", graph.getTokens().get(2).getAnnotation("pos").getValue());
+    
+    // Delete existing annotation
+    console.executeCommand("a pos: #t1");
+    assertEquals(null, graph.getTokens().get(0).getAnnotation("pos"));
+    assertEquals("DT", graph.getTokens().get(2).getAnnotation("pos").getValue());
+    
+  }
+
+  @Test
   void testExampleTokenize() {
 
     // Add initial tokens
@@ -155,6 +175,7 @@ class TestAtomicalConsole {
     assertEquals(".", graph.getText(tokens.get(6)));
 
   }
+
 
   @Test
   void testExampleTokenizeAfterBefore() {
