@@ -21,17 +21,8 @@
 package org.corpus_tools.hexatomic.console;
 
 import com.google.common.collect.Range;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StartContext;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.resource.JFaceResources;
@@ -52,8 +43,7 @@ import org.eclipse.swt.widgets.Display;
 
 public class ConsoleView implements Runnable, IDocumentListener, VerifyListener {
 
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(ConsoleView.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConsoleView.class);
 
   private final IDocument document;
 
@@ -145,8 +135,9 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
     if (numberOfLines > 0) {
       try {
         IRegion lineRegion = document.getLineInformation(numberOfLines - 1);
-        Range<Integer> promptRange = Range.closed(lineRegion.getOffset() + evaluator.getPrompt().length(),
-            lineRegion.getOffset() + lineRegion.getLength());
+        Range<Integer> promptRange =
+            Range.closed(lineRegion.getOffset() + evaluator.getPrompt().length(),
+                lineRegion.getOffset() + lineRegion.getLength());
         return Optional.of(promptRange);
       } catch (BadLocationException e) {
         log.error("Something went wrong when getting the last line of the document", e);

@@ -1,8 +1,6 @@
 package org.corpus_tools.hexatomic.console;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,10 +10,6 @@ import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.swt.custom.StyledText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
