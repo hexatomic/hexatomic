@@ -27,7 +27,7 @@ String values can be enclosed in quotes, e.g., for punctuation and for tokens th
 
 #### Examples
 
-```
+```text
 t This is an example "."
 ```
 
@@ -50,14 +50,14 @@ Tokenize the given argument string and add the tokens to the annotation graph be
 Starting with an initial text with the two tokens `[This] [text]` (first one is called "t1" and the second one "t2"),
 executing
 
-```
+```text
 tb #t2 very simple
 ```
 
 will append the two new tokens *before* the second token: `[This] [very] [simple] [text]`.
 Given the new tokens, calling
 
-```
+```text
 ta #t1 is a
 ```
 
@@ -77,7 +77,7 @@ The name of the newly created node is returned if creating the node was successf
 Starting with the tokens `[This] [is] [an] [example] [.]`, the following command will group "an example" to a node
 with the label "cat=NP".
 
-```
+```text
 n cat:NP #t3 #t4
 ```
 
@@ -85,7 +85,7 @@ n cat:NP #t3 #t4
 
 This following command creates a new node using the namespace "tiger" for the annotation.
 
-```
+```text
 n tiger:cat:NP #t1
 ```
 
@@ -94,7 +94,7 @@ n tiger:cat:NP #t1
 You can mix general dominance nodes and tokens in the command.
 Also, the number of dominated nodes is not restricted
 
-```
+```text
 n cat:VP #t2 #n1
 n cat:S #n2 #n3
 ```
@@ -110,7 +110,7 @@ As with the new nodes, initial annotations can be added as arguments.
 
 ### Example
 
-```
+```text
 e #t2 -> #t1 func:nsubj
 ```
 
@@ -118,7 +118,7 @@ Adds a pointing relation between `#t2` and `#t1` with an annotation named "func"
 
 ![Added pointing relation](addedge-pointing.png)
 
-```
+```text
 e #n4 > #t5
 ```
 This example adds a dominance relation between the existing nodes.
@@ -133,7 +133,7 @@ You can delete existing annotations by leaving the value in the attribute empty.
 
 #### Examples
 
-```
+```text
 a pos:DT #t1 #t3
 ```
 
@@ -141,7 +141,7 @@ Sets the annotation "pos" to the value "DT" for both nodes "t1" and "t3".
 
 ![Annotated tokens](set-annotation-dt.png)
 
-```
+```text
 a pos: #t1
 ```
 
