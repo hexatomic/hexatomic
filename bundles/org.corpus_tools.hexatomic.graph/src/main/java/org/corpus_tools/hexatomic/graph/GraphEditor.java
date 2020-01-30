@@ -37,7 +37,7 @@ import java.util.TreeSet;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
-import org.corpus_tools.hexatomic.console.AtomicalConsole;
+import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
@@ -214,7 +214,7 @@ public class GraphEditor {
     Document consoleDocument = new Document();
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
-    new AtomicalConsole(consoleViewer, sync, getGraph());
+    new ConsoleView(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
     updateView(true);

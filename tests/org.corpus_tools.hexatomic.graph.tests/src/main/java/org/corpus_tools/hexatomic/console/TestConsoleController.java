@@ -19,30 +19,17 @@ import org.eclipse.swt.custom.StyledText;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TestAtomicalConsole {
+class TestConsoleController {
 
-  private AtomicalConsole console;
+  private ConsoleController console;
   private SDocumentGraph graph;
-
-  private UISynchronize sync;
-  private SourceViewer view;
 
 
   @BeforeEach
   void setUp() throws Exception {
 
-    sync = mock(UISynchronize.class);
-    view = mock(SourceViewer.class);
-
-    IDocument document = mock(IDocument.class);
-    StyledText styledText = mock(StyledText.class);
-
-    when(view.getDocument()).thenReturn(document);
-    when(view.getTextWidget()).thenReturn(styledText);
-
     graph = SaltFactory.createSDocumentGraph();
-
-    console = new AtomicalConsole(view, sync, graph);
+    console = new ConsoleController(graph);
   }
 
   @Test
@@ -123,19 +110,19 @@ class TestAtomicalConsole {
     // Add initial tokens
     console.executeCommand("t This is an example \".\"");
     graph.sortTokenByText();
-    
+
 
     // Add token annotation
     console.executeCommand("a pos:DT #t1 #t3");
-    
+
     assertEquals("DT", graph.getTokens().get(0).getAnnotation("pos").getValue());
     assertEquals("DT", graph.getTokens().get(2).getAnnotation("pos").getValue());
-    
+
     // Delete existing annotation
     console.executeCommand("a pos: #t1");
     assertEquals(null, graph.getTokens().get(0).getAnnotation("pos"));
     assertEquals("DT", graph.getTokens().get(2).getAnnotation("pos").getValue());
-    
+
   }
 
   @Test

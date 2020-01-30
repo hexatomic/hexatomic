@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.console;
+package org.corpus_tools.hexatomic.console.internal;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -28,6 +28,7 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 import org.antlr.v4.runtime.Token;
+import org.corpus_tools.hexatomic.console.ConsoleCommandBaseListener;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
@@ -62,16 +63,32 @@ import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.util.DataSourceSequence;
 
-final class AtomicalListener extends ConsoleCommandBaseListener {
+/**
+ * An ANTLR listener to modify an annotation graph.
+ * 
+ * @author Thomas Krathomasuse
+ *
+ */
+public class SyntaxListener extends ConsoleCommandBaseListener {
 
-  private final AtomicalConsole graphAnnoConsole;
+  private final SDocumentGraph graph;
   private final Set<SStructuredNode> referencedNodes = new LinkedHashSet<>();
   private final Set<SRelation<?, ?>> referencedEdges = new LinkedHashSet<>();
   private final Set<SAnnotation> attributes = new LinkedHashSet<>();
   private Optional<String> layer = Optional.empty();
+  private final List<String> outputLines = new LinkedList<String>();
 
-  AtomicalListener(AtomicalConsole graphAnnoConsole) {
-    this.graphAnnoConsole = graphAnnoConsole;
+  /**
+   * Creates a new ANTLR listener.
+   * 
+   * @param graph The document graph to manipulate.
+   */
+  public SyntaxListener(SDocumentGraph graph) {
+    this.graph = graph;
+  }
+
+  public List<String> getOutputLines() {
+    return outputLines;
   }
 
 
@@ -96,7 +113,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     if (ctx instanceof NamedNodeReferenceContext) {
       NamedNodeReferenceContext generalCtx = (NamedNodeReferenceContext) ctx;
       String nodeName = generalCtx.name.getText().substring(1);
-      List<SNode> matchedNodes = this.graphAnnoConsole.graph.getNodesByName(nodeName);
+      List<SNode> matchedNodes = this.graph.getNodesByName(nodeName);
       if (matchedNodes != null) {
         for (SNode n : matchedNodes) {
           if (n instanceof SStructuredNode) {
@@ -113,7 +130,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
 
     Set<SStructuredNode> result = new LinkedHashSet<>();
     String nodeName = t.getText().substring(1);
-    List<SNode> matchedNodes = this.graphAnnoConsole.graph.getNodesByName(nodeName);
+    List<SNode> matchedNodes = this.graph.getNodesByName(nodeName);
     if (matchedNodes != null) {
       for (SNode n : matchedNodes) {
         if (n instanceof SStructuredNode) {
@@ -129,14 +146,14 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   @Override
   public void enterClear(ClearContext ctx) {
 
-    for (SRelation<?, ?> r : new LinkedList<>(graphAnnoConsole.graph.getRelations())) {
-      graphAnnoConsole.graph.removeRelation(r);
+    for (SRelation<?, ?> r : new LinkedList<>(graph.getRelations())) {
+      graph.removeRelation(r);
     }
-    for (SNode n : new LinkedList<>(graphAnnoConsole.graph.getNodes())) {
-      graphAnnoConsole.graph.removeNode(n);
+    for (SNode n : new LinkedList<>(graph.getNodes())) {
+      graph.removeNode(n);
     }
-    for (SLayer layer : new LinkedList<>(graphAnnoConsole.graph.getLayers())) {
-      graphAnnoConsole.graph.removeLayer(layer);
+    for (SLayer layer : new LinkedList<>(graph.getLayers())) {
+      graph.removeLayer(layer);
     }
   }
 
@@ -156,7 +173,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     for (SStructuredNode s : sources) {
       for (SStructuredNode t : targets) {
         List<SPointingRelation> existing = new LinkedList<>();
-        for (SRelation<?, ?> rel : this.graphAnnoConsole.graph.getRelations(s.getId(), t.getId())) {
+        for (SRelation<?, ?> rel : this.graph.getRelations(s.getId(), t.getId())) {
           if (rel instanceof SPointingRelation) {
             existing.add((SPointingRelation) rel);
           }
@@ -184,8 +201,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         SStructure s = (SStructure) sourceNodeRaw;
         for (SStructuredNode t : targets) {
           List<SDominanceRelation> existing = new LinkedList<>();
-          for (SRelation<?, ?> rel : this.graphAnnoConsole.graph.getRelations(s.getId(),
-              t.getId())) {
+          for (SRelation<?, ?> rel : this.graph.getRelations(s.getId(), t.getId())) {
             if (rel instanceof SDominanceRelation) {
               existing.add((SDominanceRelation) rel);
             }
@@ -233,10 +249,10 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
 
   private String getUnusedName(String prefix, int start) {
     int idx = start;
-    List<SNode> existing = this.graphAnnoConsole.graph.getNodesByName(prefix + idx);
+    List<SNode> existing = this.graph.getNodesByName(prefix + idx);
     while (existing != null && !existing.isEmpty()) {
       idx++;
-      existing = this.graphAnnoConsole.graph.getNodesByName(prefix + idx);
+      existing = this.graph.getNodesByName(prefix + idx);
     }
 
     return prefix + idx;
@@ -247,13 +263,13 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   public void exitNewNode(NewNodeContext ctx) {
 
     // Create the node itself
-    SStructure newNode = this.graphAnnoConsole.graph
+    SStructure newNode = this.graph
         .createStructure(referencedNodes.toArray(new SStructuredNode[referencedNodes.size()]));
 
     if (newNode == null) {
-      this.graphAnnoConsole.writeLine("Error: could not create the new node.");
+      this.outputLines.add("Error: could not create the new node.");
     } else {
-      newNode.setName(getUnusedName("n", this.graphAnnoConsole.graph.getStructures().size()));
+      newNode.setName(getUnusedName("n", this.graph.getStructures().size()));
 
       // Add all annotations
       for (SAnnotation anno : attributes) {
@@ -262,12 +278,12 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
 
       // Add or create a layer if given as argument
       if (layer.isPresent()) {
-        List<SLayer> matchingLayers = this.graphAnnoConsole.graph.getLayerByName(layer.get());
+        List<SLayer> matchingLayers = this.graph.getLayerByName(layer.get());
         if (matchingLayers == null || matchingLayers.isEmpty()) {
           matchingLayers = new LinkedList<SLayer>();
           matchingLayers.add(SaltFactory.createSLayer());
           matchingLayers.get(0).setName(layer.get());
-          this.graphAnnoConsole.graph.addLayer(matchingLayers.get(0));
+          this.graph.addLayer(matchingLayers.get(0));
         }
 
         for (SLayer l : matchingLayers) {
@@ -275,9 +291,9 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         }
       }
 
-      this.graphAnnoConsole.writeLine("Created new structure node #" + newNode.getName() + ".");
+      this.outputLines.add("Created new structure node #" + newNode.getName() + ".");
       for (SAnnotation anno : newNode.getAnnotations()) {
-        this.graphAnnoConsole.writeLine(anno.toString());
+        this.outputLines.add(anno.toString());
       }
     }
   }
@@ -285,16 +301,16 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   @Override
   public void exitDelete(DeleteContext ctx) {
     for (SStructuredNode n : referencedNodes) {
-      this.graphAnnoConsole.graph.removeNode(n);
+      this.graph.removeNode(n);
     }
     for (SRelation<?, ?> rel : referencedEdges) {
-      this.graphAnnoConsole.graph.removeRelation(rel);
+      this.graph.removeRelation(rel);
     }
   }
 
   @Override
   public void exitTokenize(TokenizeContext ctx) {
-    SDocumentGraph graph = this.graphAnnoConsole.graph;
+    SDocumentGraph graph = this.graph;
 
     STextualDS ds;
     StringBuilder sb;
@@ -332,7 +348,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
 
   @Override
   public void exitTokenizeAfter(TokenizeAfterContext ctx) {
-    SDocumentGraph graph = this.graphAnnoConsole.graph;
+    SDocumentGraph graph = this.graph;
     SStructuredNode n = referencedNodes.iterator().next();
     if (n instanceof SToken) {
       SToken referencedToken = (SToken) n;
@@ -367,13 +383,13 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      graphAnnoConsole.writeLine("Referenced node is not a token.");
+      this.outputLines.add("Referenced node is not a token.");
     }
   }
 
   @Override
   public void exitTokenizeBefore(TokenizeBeforeContext ctx) {
-    SDocumentGraph graph = this.graphAnnoConsole.graph;
+    SDocumentGraph graph = this.graph;
     SStructuredNode n = referencedNodes.iterator().next();
     if (n instanceof SToken) {
       SToken referencedToken = (SToken) n;
@@ -383,7 +399,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
           SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
-        int offset = seq.getStart().intValue();      
+        int offset = seq.getStart().intValue();
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
           int numberOfTokens = graph.getTokens().size();
@@ -402,7 +418,7 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      graphAnnoConsole.writeLine("Referenced node is not a token.");
+      this.outputLines.add("Referenced node is not a token.");
     }
   }
 
@@ -432,18 +448,18 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
   @Override
   public void exitNewEdge(NewEdgeContext ctx) {
     for (SRelation<?, ?> rel : this.referencedEdges) {
-      graphAnnoConsole.graph.addRelation(rel);
+      graph.addRelation(rel);
       for (SAnnotation anno : this.attributes) {
         rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
       }
 
       if (layer.isPresent()) {
-        List<SLayer> matchingLayers = this.graphAnnoConsole.graph.getLayerByName(layer.get());
+        List<SLayer> matchingLayers = this.graph.getLayerByName(layer.get());
         if (matchingLayers == null || matchingLayers.isEmpty()) {
           matchingLayers = new LinkedList<SLayer>();
           matchingLayers.add(SaltFactory.createSLayer());
           matchingLayers.get(0).setName(layer.get());
-          this.graphAnnoConsole.graph.addLayer(matchingLayers.get(0));
+          this.graph.addLayer(matchingLayers.get(0));
         }
 
         for (SLayer l : matchingLayers) {

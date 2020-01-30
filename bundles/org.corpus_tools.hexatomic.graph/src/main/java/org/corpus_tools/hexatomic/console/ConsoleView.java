@@ -50,25 +50,18 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
-public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListener {
-
-  private static final int MAX_HISTORY_LENGTH = 1000;
+public class ConsoleView implements Runnable, IDocumentListener, VerifyListener {
 
   private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(AtomicalConsole.class);
+      org.slf4j.LoggerFactory.getLogger(ConsoleView.class);
 
   private final IDocument document;
 
   private final UISynchronize sync;
 
-  final SDocumentGraph graph;
+  private final ConsoleController evaluator;
 
   private final SourceViewer view;
-  
-  private String prompt;
-
-  private final LinkedList<String> commandHistory = new LinkedList<>();
-  private ListIterator<String> itCommandHistory;
 
   /**
    * Constructs a new console.
@@ -77,12 +70,11 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
    * @param sync An Eclipse synchronization object.
    * @param graph The Salt graph to edit.
    */
-  public AtomicalConsole(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
+  public ConsoleView(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
     this.document = view.getDocument();
     this.sync = sync;
-    this.graph = graph;
     this.view = view;
-    this.prompt = "> ";
+    this.evaluator = new ConsoleController(graph);
 
     this.document.addDocumentListener(this);
 
@@ -106,7 +98,12 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
 
   }
 
-  void writeLine(String str) {
+  /**
+   * Outputs a string in the console.
+   * 
+   * @param str The string to output (without trailing new line).
+   */
+  public void writeLine(String str) {
     sync.asyncExec(() -> {
       document.set(document.get() + str + "\n");
       view.getTextWidget().setCaretOffset(document.getLength());
@@ -116,7 +113,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
 
   private void writePrompt() {
     sync.asyncExec(() -> {
-      document.set(document.get() + this.prompt);
+      document.set(document.get() + evaluator.getPrompt());
       view.getTextWidget().setCaretOffset(document.getLength());
       view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
     });
@@ -131,9 +128,9 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
         if (nrLines >= 2) {
           IRegion lineRegion = document.getLineInformation(nrLines - 2);
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
-              .substring(prompt.length());
+              .substring(evaluator.getPrompt().length());
 
-          executeCommand(lastLine);
+          evaluator.executeCommand(lastLine);
 
         }
       } catch (BadLocationException e) {
@@ -148,7 +145,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     if (numberOfLines > 0) {
       try {
         IRegion lineRegion = document.getLineInformation(numberOfLines - 1);
-        Range<Integer> promptRange = Range.closed(lineRegion.getOffset() + prompt.length(),
+        Range<Integer> promptRange = Range.closed(lineRegion.getOffset() + evaluator.getPrompt().length(),
             lineRegion.getOffset() + lineRegion.getLength());
         return Optional.of(promptRange);
       } catch (BadLocationException e) {
@@ -158,40 +155,6 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     return Optional.empty();
   }
 
-  protected void executeCommand(String cmd) {
-
-    // add to history
-    if (!cmd.isEmpty()) {
-      commandHistory.push(cmd);
-      itCommandHistory = commandHistory.listIterator();
-      if (commandHistory.size() > MAX_HISTORY_LENGTH) {
-        commandHistory.removeLast();
-      }
-    }
-
-    // parse the line
-    ConsoleLexer lexer = new ConsoleLexer(CharStreams.fromString(cmd));
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-    ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
-
-    ErrorListener errors = new ErrorListener();
-    parser.removeErrorListeners();
-    parser.addErrorListener(errors);
-
-    StartContext startCtx = parser.start();
-
-    if (errors.errors.isEmpty()) {
-      // Collect the relevant elements of the AST and execute the command
-      ParseTreeWalker walker = new ParseTreeWalker();
-      AtomicalListener listener = new AtomicalListener(this);
-      walker.walk(listener, startCtx);
-    } else {
-      // Output the errors
-      for (String e : errors.errors) {
-        writeLine(e);
-      }
-    }
-  }
 
   private void setCommand(String cmd) {
     if (cmd == null) {
@@ -212,7 +175,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     }
 
   }
-  
+
 
   @Override
   public void documentAboutToBeChanged(DocumentEvent event) {
@@ -243,6 +206,8 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     @Override
     public void verifyKey(VerifyEvent e) {
       boolean ctrlActive = (e.stateMask & SWT.CTRL) == SWT.CTRL;
+
+      ListIterator<String> itCommandHistory = evaluator.getCommandHistoryIterator();
 
       if (ctrlActive) {
         if (e.character == '+') {
@@ -289,26 +254,5 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     }
   }
 
-  private final class ErrorListener extends BaseErrorListener {
-
-    final List<String> errors = new LinkedList<>();
-
-    @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-        int charPositionInLine, String msg, RecognitionException e) {
-
-      StringBuilder errorMsg = new StringBuilder();
-
-      // add a marker to the above line
-      for (int i = 0; i < charPositionInLine + prompt.length(); i++) {
-        errorMsg.append(' ');
-      }
-      errorMsg.append("^");
-      errorMsg.append("\n");
-      errorMsg.append(msg);
-
-      errors.add(errorMsg.toString());
-    }
-  }
 
 }
