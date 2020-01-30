@@ -49,7 +49,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   private final UISynchronize sync;
 
-  private final ConsoleController evaluator;
+  private final ConsoleController controller;
 
   private final SourceViewer view;
 
@@ -64,7 +64,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
     this.document = view.getDocument();
     this.sync = sync;
     this.view = view;
-    this.evaluator = new ConsoleController(graph);
+    this.controller = new ConsoleController(graph);
 
     this.document.addDocumentListener(this);
 
@@ -103,7 +103,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   private void writePrompt() {
     sync.asyncExec(() -> {
-      document.set(document.get() + evaluator.getPrompt());
+      document.set(document.get() + controller.getPrompt());
       view.getTextWidget().setCaretOffset(document.getLength());
       view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
     });
@@ -118,9 +118,9 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
         if (nrLines >= 2) {
           IRegion lineRegion = document.getLineInformation(nrLines - 2);
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
-              .substring(evaluator.getPrompt().length());
+              .substring(controller.getPrompt().length());
 
-          evaluator.executeCommand(lastLine);
+          controller.executeCommand(lastLine);
 
         }
       } catch (BadLocationException e) {
@@ -136,7 +136,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
       try {
         IRegion lineRegion = document.getLineInformation(numberOfLines - 1);
         Range<Integer> promptRange =
-            Range.closed(lineRegion.getOffset() + evaluator.getPrompt().length(),
+            Range.closed(lineRegion.getOffset() + controller.getPrompt().length(),
                 lineRegion.getOffset() + lineRegion.getLength());
         return Optional.of(promptRange);
       } catch (BadLocationException e) {
@@ -198,7 +198,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
     public void verifyKey(VerifyEvent e) {
       boolean ctrlActive = (e.stateMask & SWT.CTRL) == SWT.CTRL;
 
-      ListIterator<String> itCommandHistory = evaluator.getCommandHistoryIterator();
+      ListIterator<String> itCommandHistory = controller.getCommandHistoryIterator();
 
       if (ctrlActive) {
         if (e.character == '+') {
