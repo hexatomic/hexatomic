@@ -5,8 +5,8 @@ It is a general visualization that aims to display all possible types of annotat
 
 ![Screenshot of the graph editor](graph-viewer.png)
 
-On the right side of the interface, you can select which span to show.
-Select more than one span by holding the <kbd>Ctrl</kbd> key while clicking on the segment.
+On the right side of the interface, you can select which segment to show.
+Select more than one segment by holding the <kbd>Ctrl</kbd> key while clicking on the segment.
 
 ## Console
 
@@ -80,9 +80,6 @@ n cat:NP #t3 #t4
 ```
 
 ![Output after adding an NP node](newnode-example-1.png)
-```
-n pos:NN lemma:house #t1 #t2
-```
 
 This following command creates a new node using the namespace "tiger" for the annotation.
 ```

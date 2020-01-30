@@ -9,6 +9,7 @@ import java.util.List;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -41,15 +42,48 @@ class TestAtomicalConsole {
 
     console = new AtomicalConsole(view, sync, graph);
   }
-  
+
   @Test
   void testNewNode() {
     // Add initial tokens
     console.executeCommand("t This is an example \".\"");
     graph.sortTokenByText();
-    
+
     // Add some annnotated nodes
+    console.executeCommand("n cat:NP #t3 #t4");
+    console.executeCommand("n tiger:cat:NP #t1");
+    console.executeCommand("n cat:VP #t2 #n1");
+    console.executeCommand("n cat:S #n2 #n3 #t5");
+
+    // Check the created graph
+    graph.getSortedTokenByText();
+    assertEquals(4, graph.getStructures().size());
+    SNode n1 = graph.getNodesByName("n1").get(0);
+    SNode n2 = graph.getNodesByName("n2").get(0);
+    SNode n3 = graph.getNodesByName("n3").get(0);
+    SNode n4 = graph.getNodesByName("n4").get(0);
+
+   
+    assertEquals("NP", n1.getAnnotation("cat").getValue());
+    assertEquals(2, n1.getOutRelations().size());
+    assertEquals(graph.getTokens().get(2), n1.getOutRelations().get(0).getTarget());
+    assertEquals(graph.getTokens().get(3), n1.getOutRelations().get(1).getTarget());
+
     
+    assertEquals("NP", n2.getAnnotation("tiger::cat").getValue());
+    assertEquals(1, n2.getOutRelations().size());
+    assertEquals(graph.getTokens().get(0), n2.getOutRelations().get(0).getTarget());
+    
+    assertEquals("VP", n3.getAnnotation("cat").getValue());
+    assertEquals(2, n3.getOutRelations().size());
+    assertEquals(graph.getTokens().get(1), n3.getOutRelations().get(0).getTarget());
+    assertEquals(n1, n3.getOutRelations().get(1).getTarget());
+    
+    assertEquals("S", n4.getAnnotation("cat").getValue());
+    assertEquals(3, n4.getOutRelations().size());
+    assertEquals(n2, n4.getOutRelations().get(0).getTarget());
+    assertEquals(n3, n4.getOutRelations().get(1).getTarget());
+    assertEquals(graph.getTokens().get(4), n4.getOutRelations().get(2).getTarget());
   }
 
   @Test
@@ -67,10 +101,10 @@ class TestAtomicalConsole {
     assertEquals("an", graph.getText(tokens.get(2)));
     assertEquals("example", graph.getText(tokens.get(3)));
     assertEquals(".", graph.getText(tokens.get(4)));
-    
+
     // Append two tokens
     console.executeCommand("t Not .");
-    
+
     assertEquals("This is an example . Not .", graph.getTextualDSs().get(0).getText());
     graph.sortTokenByText();
     tokens = graph.getTokens();
@@ -83,14 +117,14 @@ class TestAtomicalConsole {
     assertEquals(".", graph.getText(tokens.get(4)));
     assertEquals("Not", graph.getText(tokens.get(5)));
     assertEquals(".", graph.getText(tokens.get(6)));
-    
+
   }
-  
+
   @Test
   void testTokenizeAfterBefore() {
     // Add initial tokens
     console.executeCommand("t This text");
-    
+
     // Add tokens before and after
     console.executeCommand("tb #t2 very simple");
     // Check the result
@@ -103,9 +137,9 @@ class TestAtomicalConsole {
     assertEquals("very", graph.getText(tokens.get(1)));
     assertEquals("simple", graph.getText(tokens.get(2)));
     assertEquals("text", graph.getText(tokens.get(3)));
-    
+
     console.executeCommand("ta #t1 is a");
-    
+
     // Check the result
     graph.sortTokenByText();
     assertEquals("This is a very simple text", graph.getTextualDSs().get(0).getText());
