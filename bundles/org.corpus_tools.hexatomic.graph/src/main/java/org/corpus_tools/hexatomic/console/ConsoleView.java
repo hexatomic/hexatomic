@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.console;
 
 import com.google.common.collect.Range;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -120,7 +121,10 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
               .substring(controller.getPrompt().length());
 
-          controller.executeCommand(lastLine);
+          List<String> output = controller.executeCommand(lastLine);
+          for (String l : output) {
+            writeLine(l);
+          }
 
         }
       } catch (BadLocationException e) {
