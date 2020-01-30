@@ -158,7 +158,7 @@ public class ProjectManager {
   }
 
   /**
-   * We can't add listeners to existing objects in the corpus grap, so iterate over the internal
+   * We can't add listeners to existing objects in the corpus graph, so iterate over the internal
    * list of all registered listeners and notify them.
    *
    */
