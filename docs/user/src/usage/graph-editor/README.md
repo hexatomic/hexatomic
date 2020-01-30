@@ -56,9 +56,11 @@ tb #t2 very simple
 
 will append the two new tokens *before* the second token: `[This] [very] [simple] [text]`.
 Given the new tokens, calling
+
 ```
 ta #t1 is a
 ```
+
 will insert the two new tokens *after* the first token: `[This] [is] [a] [very] [simple] [text]`.
 
 
@@ -82,13 +84,16 @@ n cat:NP #t3 #t4
 ![Output after adding an NP node](newnode-example-1.png)
 
 This following command creates a new node using the namespace "tiger" for the annotation.
+
 ```
 n tiger:cat:NP #t1
 ```
+
 ![Output after adding an NP and a namespace](newnode-example-2.png)
 
 You can mix general dominance nodes and tokens in the command.
 Also, the number of dominated nodes is not restricted
+
 ```
 n cat:VP #t2 #n1
 n cat:S #n2 #n3
@@ -131,6 +136,7 @@ You can delete existing annotations by leaving the value in the attribute empty.
 ```
 a pos:DT #t1 #t3
 ```
+
 Sets the annotation "pos" to the value "DT" for both nodes "t1" and "t3".
 
 ![Annotated tokens](set-annotation-dt.png)
@@ -138,6 +144,7 @@ Sets the annotation "pos" to the value "DT" for both nodes "t1" and "t3".
 ```
 a pos: #t1
 ```
+
 Deletes the "pos" annotation for the "t1" node.
 
 
