@@ -4,12 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.awt.Point;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -44,7 +48,7 @@ class TestAtomicalConsole {
   }
 
   @Test
-  void testNewNode() {
+  void testExampleNewNode() {
     // Add initial tokens
     console.executeCommand("t This is an example \".\"");
     graph.sortTokenByText();
@@ -53,7 +57,7 @@ class TestAtomicalConsole {
     console.executeCommand("n cat:NP #t3 #t4");
     console.executeCommand("n tiger:cat:NP #t1");
     console.executeCommand("n cat:VP #t2 #n1");
-    console.executeCommand("n cat:S #n2 #n3 #t5");
+    console.executeCommand("n cat:S #n2 #n3");
 
     // Check the created graph
     graph.getSortedTokenByText();
@@ -63,31 +67,63 @@ class TestAtomicalConsole {
     SNode n3 = graph.getNodesByName("n3").get(0);
     SNode n4 = graph.getNodesByName("n4").get(0);
 
-   
+
     assertEquals("NP", n1.getAnnotation("cat").getValue());
     assertEquals(2, n1.getOutRelations().size());
     assertEquals(graph.getTokens().get(2), n1.getOutRelations().get(0).getTarget());
     assertEquals(graph.getTokens().get(3), n1.getOutRelations().get(1).getTarget());
 
-    
+
     assertEquals("NP", n2.getAnnotation("tiger::cat").getValue());
     assertEquals(1, n2.getOutRelations().size());
     assertEquals(graph.getTokens().get(0), n2.getOutRelations().get(0).getTarget());
-    
+
     assertEquals("VP", n3.getAnnotation("cat").getValue());
     assertEquals(2, n3.getOutRelations().size());
     assertEquals(graph.getTokens().get(1), n3.getOutRelations().get(0).getTarget());
     assertEquals(n1, n3.getOutRelations().get(1).getTarget());
-    
+
     assertEquals("S", n4.getAnnotation("cat").getValue());
-    assertEquals(3, n4.getOutRelations().size());
+    assertEquals(2, n4.getOutRelations().size());
     assertEquals(n2, n4.getOutRelations().get(0).getTarget());
     assertEquals(n3, n4.getOutRelations().get(1).getTarget());
+  }
+
+  @Test
+  void testExampleAddEdge() {
+    // Add initial tokens
+    console.executeCommand("t This is an example \".\"");
+    graph.sortTokenByText();
+
+    // Add some annnotated nodes
+    console.executeCommand("n cat:NP #t3 #t4");
+    console.executeCommand("n tiger:cat:NP #t1");
+    console.executeCommand("n cat:VP #t2 #n1");
+    console.executeCommand("n cat:S #n2 #n3");
+
+    // Add dependency and dominance edge
+    console.executeCommand("e #t2 -> #t1 func:nsubj");
+    console.executeCommand("e #n4 > #t5");
+
+    // Check the created graph
+    graph.getSortedTokenByText();
+
+    SNode t1 = graph.getNodesByName("t1").get(0);
+    SNode t2 = graph.getNodesByName("t2").get(0);
+    SNode n4 = graph.getNodesByName("n4").get(0);
+
+    List<SRelation<?, ?>> pointing = t2.getOutRelations().stream()
+        .filter((rel) -> rel instanceof SPointingRelation).collect(Collectors.toList());
+    assertEquals(1, pointing.size());
+    assertEquals(t1, pointing.get(0).getTarget());
+    assertEquals("nsubj", pointing.get(0).getAnnotation("func").getValue());
+
+    assertEquals(3, n4.getOutRelations().size());
     assertEquals(graph.getTokens().get(4), n4.getOutRelations().get(2).getTarget());
   }
 
   @Test
-  void testTokenize() {
+  void testExampleTokenize() {
 
     // Add initial tokens
     console.executeCommand("t This is an example \".\"");
@@ -121,7 +157,7 @@ class TestAtomicalConsole {
   }
 
   @Test
-  void testTokenizeAfterBefore() {
+  void testExampleTokenizeAfterBefore() {
     // Add initial tokens
     console.executeCommand("t This text");
 

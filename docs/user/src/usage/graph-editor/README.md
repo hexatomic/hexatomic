@@ -91,7 +91,7 @@ You can mix general dominance nodes and tokens in the command.
 Also, the number of dominated nodes is not restricted
 ```
 n cat:VP #t2 #n1
-n cat:S #n2 #n3 #t5
+n cat:S #n2 #n3
 ```
 ![Complete syntax annotation](newnode-example-3.png)
 
@@ -106,10 +106,19 @@ As with the new nodes, initial annotations can be added as arguments.
 ### Example
 
 ```
-e #t1 -> #t2 func:adj
+e #t2 -> #t1 func:nsubj
 ```
 
-Adds a pointing relation between `#t1` and `#t2` with an annotation named "func" and the value "adj."
+Adds a pointing relation between `#t2` and `#t1` with an annotation named "func" and the value "nsubj."
+
+![Added pointing relation](addedge-pointing.png)
+
+```
+e #n4 > #t5
+```
+This example adds a dominance relation between the existing nodes.
+
+![Added dominance relation](addedge-dominance.png)
 
 ### Annotate: `a`
 
