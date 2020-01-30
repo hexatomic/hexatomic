@@ -22,7 +22,6 @@ package org.corpus_tools.hexatomic.core.handlers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;

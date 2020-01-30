@@ -593,7 +593,7 @@ public class GraphEditor {
       final boolean recalculateSegments =
           isStructuralUpdate(type, attribute, oldValue, newValue, container);
 
-      sync.syncExec(() -> updateView(true));
+      sync.syncExec(() -> updateView(recalculateSegments));
     }
   }
 

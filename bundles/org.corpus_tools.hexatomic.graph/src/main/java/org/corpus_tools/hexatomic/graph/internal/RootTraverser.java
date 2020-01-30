@@ -23,7 +23,6 @@
 package org.corpus_tools.hexatomic.graph.internal;
 
 import java.util.Arrays;
-
 import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SToken;
@@ -35,6 +34,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * Traverses the graph and finds the root node.
+ * 
  * @author Thomas Krause
  *
  */
