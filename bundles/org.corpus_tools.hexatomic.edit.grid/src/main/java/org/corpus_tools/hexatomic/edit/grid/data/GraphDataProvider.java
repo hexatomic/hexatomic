@@ -57,8 +57,7 @@ public class GraphDataProvider implements IDataProvider {
   private int tokenCount = 1;
   private final List<SToken> dsTokens = new ArrayList<SToken>();
   private final List<SSpan> dsSpans = new ArrayList<SSpan>();
-  private List<String> columnHeaderLabels =
-      new ArrayList<String>(Arrays.asList(new String[] {"Token"}));
+  private List<String> columnHeaderLabels = null;
 
 
 
@@ -76,6 +75,7 @@ public class GraphDataProvider implements IDataProvider {
     dsTokens.clear();
     dsSpans.clear();
     columnCount = 1;
+    columnHeaderLabels = new ArrayList<String>(Arrays.asList(new String[] {"Token"}));
 
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
         ds);
@@ -114,8 +114,6 @@ public class GraphDataProvider implements IDataProvider {
       Set<SAnnotation> annos = node.getAnnotations();
       for (SAnnotation anno : annos) {
         annotationQNames.add(anno.getQName());
-        log.debug("Adding annotation >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> {}.",
-            anno.getQName());
       }
     }
     columnCount += annotationQNames.size();
