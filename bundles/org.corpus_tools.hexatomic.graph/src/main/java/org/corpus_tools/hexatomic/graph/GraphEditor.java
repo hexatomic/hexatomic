@@ -534,39 +534,6 @@ public class GraphEditor {
     return layout;
   }
 
-  private static boolean isStructuralUpdate(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute,
-      Object oldValue, Object newValue, Object container) {
-
-    // Get the node for a label
-    if (container instanceof org.corpus_tools.salt.graph.Label) {
-      org.corpus_tools.salt.graph.Label lbl = (org.corpus_tools.salt.graph.Label) container;
-      container = lbl.getContainer();
-    }
-    // Get the real node instance via the ID
-    if (container instanceof NodeNotifierImpl) {
-      NodeNotifierImpl n = (NodeNotifierImpl) container;
-      if (n.getGraph() != null) {
-        container = n.getGraph().getNode(n.getId());
-      }
-    }
-
-
-    if (container instanceof STextualDS) {
-      // A new text might have been set
-      return true;
-    } else if (type == NOTIFICATION_TYPE.ADD || type == NOTIFICATION_TYPE.REMOVE
-        || type == NOTIFICATION_TYPE.REMOVE_ALL) {
-      if (attribute == GRAPH_ATTRIBUTES.GRAPH_NODES
-          || attribute == GRAPH_ATTRIBUTES.GRAPH_RELATIONS) {
-        return true;
-      }
-    }
-
-
-    return false;
-  }
-
-
   private final class ListenerImplementation implements Listener {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
@@ -589,11 +556,7 @@ public class GraphEditor {
         }
       }
 
-      // Only recalculate segments when the structure of the graph is changed
-      final boolean recalculateSegments =
-          isStructuralUpdate(type, attribute, oldValue, newValue, container);
-
-      sync.syncExec(() -> updateView(recalculateSegments));
+      sync.syncExec(() -> updateView(true));
     }
   }
 
@@ -630,7 +593,6 @@ public class GraphEditor {
         return true;
       }
     }
-
   }
 
   private class Filter extends ViewerFilter {

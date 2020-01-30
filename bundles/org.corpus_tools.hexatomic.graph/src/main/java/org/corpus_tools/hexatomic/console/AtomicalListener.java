@@ -350,8 +350,9 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
           ListIterator<StringContext> itWords = ctx.string().listIterator();
           List<String> newTokenTexts = new LinkedList<>();
           while (itWords.hasNext()) {
+            boolean first = !itWords.hasPrevious();
             String tokenValue = getString(itWords.next());
-            if (!itWords.hasPrevious() && !ds.getText().isEmpty()) {
+            if (first && !ds.getText().isEmpty()) {
               // prepend a space to the token
               tokenValue = " " + tokenValue;
             }
@@ -374,22 +375,33 @@ final class AtomicalListener extends ConsoleCommandBaseListener {
     SDocumentGraph graph = this.graphAnnoConsole.graph;
     SStructuredNode n = referencedNodes.iterator().next();
     if (n instanceof SToken) {
-      SToken tok = (SToken) n;
+      SToken referencedToken = (SToken) n;
 
       @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences =
-          graph.getOverlappedDataSourceSequence(tok, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      List<DataSourceSequence> allSequences = graph.getOverlappedDataSourceSequence(referencedToken,
+          SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
         int offset = seq.getStart().intValue();
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
+          int numberOfTokens = graph.getTokens().size();
 
           ListIterator<StringContext> itWords = ctx.string().listIterator();
+          List<String> newTokenTexts = new LinkedList<>();
           while (itWords.hasNext()) {
+            boolean first = !itWords.hasPrevious();
             String tokenValue = getString(itWords.next());
-            graph.insertTokenAt(ds, offset, tokenValue, true);
-            offset -= tokenValue.length();
+            if (first && !ds.getText().isEmpty()) {
+              // prepend a space to the token
+              tokenValue = " " + tokenValue;
+            }
+            newTokenTexts.add(tokenValue);
+          }
+
+          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
+          for (SToken t : newTokens) {
+            t.setName(getUnusedName("t", ++numberOfTokens));
           }
         }
       }

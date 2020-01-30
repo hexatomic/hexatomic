@@ -64,7 +64,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
   final SDocumentGraph graph;
 
   private final SourceViewer view;
-
+  
   private String prompt;
 
   private final LinkedList<String> commandHistory = new LinkedList<>();
@@ -213,9 +213,6 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
 
   }
   
-  public SourceViewer getView() {
-    return view;
-  }
 
   @Override
   public void documentAboutToBeChanged(DocumentEvent event) {
