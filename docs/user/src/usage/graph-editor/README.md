@@ -153,3 +153,14 @@ Deletes the "pos" annotation for the "t1" node.
 Deletes any node or edge of the graph.
 Give the entities to delete as an argument.
 
+```text
+d #t1 #t2
+```
+
+Deletes nodes "t1" and "t2".
+
+```text
+d #t4 -> #t3
+```
+
+Deletes the pointing relation edge between "t4" and "t3".

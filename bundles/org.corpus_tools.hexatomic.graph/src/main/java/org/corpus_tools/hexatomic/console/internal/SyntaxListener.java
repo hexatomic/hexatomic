@@ -66,7 +66,7 @@ import org.corpus_tools.salt.util.DataSourceSequence;
 /**
  * An ANTLR listener to modify an annotation graph.
  * 
- * @author Thomas Krathomasuse
+ * @author Thomas Krause
  *
  */
 public class SyntaxListener extends ConsoleCommandBaseListener {

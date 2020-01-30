@@ -188,4 +188,33 @@ class TestConsoleController {
     assertEquals("text", graph.getText(tokens.get(5)));
   }
 
+  @Test
+  void testExampleDelete() {
+    // Add initial tokens
+    console.executeCommand("t This is an example \".\"");
+    graph.sortTokenByText();
+
+    // Add edges
+    console.executeCommand("e #t4 -> #t3");
+    console.executeCommand("e #t4 -> #t2");
+    console.executeCommand("e #t1 -> #t3");
+    console.executeCommand("e #t4 -> #t5");
+
+    assertEquals(5, graph.getTokens().size());
+    assertEquals(4, graph.getPointingRelations().size());
+
+    // Delete first two tokens, this should delete some of the edges as well
+    console.executeCommand("d #t1 #t2");
+
+    assertEquals(3, graph.getTokens().size());
+    assertEquals(2, graph.getPointingRelations().size());
+
+    // Delete one of the remaining edges
+    console.executeCommand("d #t4 -> #t3");
+
+    assertEquals(3, graph.getTokens().size());
+    assertEquals(1, graph.getPointingRelations().size());
+
+  }
+
 }
