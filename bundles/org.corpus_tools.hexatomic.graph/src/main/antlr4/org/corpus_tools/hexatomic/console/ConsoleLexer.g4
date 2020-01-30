@@ -10,6 +10,7 @@ TOKENIZE_BEFORE: 'tb' -> pushMode(ARGUMENTS);
 CLEAR: 'clear' -> pushMode(ARGUMENTS);
 
 WS : [ \t\r\n]+ -> skip;
+UNKNOWN: .;
 
 
 mode ARGUMENTS;

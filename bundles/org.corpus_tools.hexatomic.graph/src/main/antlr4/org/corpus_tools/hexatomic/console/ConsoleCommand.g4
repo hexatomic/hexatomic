@@ -5,7 +5,6 @@ options
   tokenVocab = ConsoleLexer;
 }
 
-
 start
     : command  # CommandChain
     ;
