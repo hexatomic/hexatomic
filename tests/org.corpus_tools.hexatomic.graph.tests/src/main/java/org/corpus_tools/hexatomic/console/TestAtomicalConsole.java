@@ -4,10 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.awt.Point;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -63,26 +61,24 @@ class TestAtomicalConsole {
     graph.getSortedTokenByText();
     assertEquals(4, graph.getStructures().size());
     SNode n1 = graph.getNodesByName("n1").get(0);
-    SNode n2 = graph.getNodesByName("n2").get(0);
-    SNode n3 = graph.getNodesByName("n3").get(0);
-    SNode n4 = graph.getNodesByName("n4").get(0);
-
-
     assertEquals("NP", n1.getAnnotation("cat").getValue());
     assertEquals(2, n1.getOutRelations().size());
     assertEquals(graph.getTokens().get(2), n1.getOutRelations().get(0).getTarget());
     assertEquals(graph.getTokens().get(3), n1.getOutRelations().get(1).getTarget());
 
 
+    SNode n2 = graph.getNodesByName("n2").get(0);
     assertEquals("NP", n2.getAnnotation("tiger::cat").getValue());
     assertEquals(1, n2.getOutRelations().size());
     assertEquals(graph.getTokens().get(0), n2.getOutRelations().get(0).getTarget());
 
+    SNode n3 = graph.getNodesByName("n3").get(0);
     assertEquals("VP", n3.getAnnotation("cat").getValue());
     assertEquals(2, n3.getOutRelations().size());
     assertEquals(graph.getTokens().get(1), n3.getOutRelations().get(0).getTarget());
     assertEquals(n1, n3.getOutRelations().get(1).getTarget());
 
+    SNode n4 = graph.getNodesByName("n4").get(0);
     assertEquals("S", n4.getAnnotation("cat").getValue());
     assertEquals(2, n4.getOutRelations().size());
     assertEquals(n2, n4.getOutRelations().get(0).getTarget());
@@ -110,7 +106,6 @@ class TestAtomicalConsole {
 
     SNode t1 = graph.getNodesByName("t1").get(0);
     SNode t2 = graph.getNodesByName("t2").get(0);
-    SNode n4 = graph.getNodesByName("n4").get(0);
 
     List<SRelation<?, ?>> pointing = t2.getOutRelations().stream()
         .filter((rel) -> rel instanceof SPointingRelation).collect(Collectors.toList());
@@ -118,6 +113,7 @@ class TestAtomicalConsole {
     assertEquals(t1, pointing.get(0).getTarget());
     assertEquals("nsubj", pointing.get(0).getAnnotation("func").getValue());
 
+    SNode n4 = graph.getNodesByName("n4").get(0);
     assertEquals(3, n4.getOutRelations().size());
     assertEquals(graph.getTokens().get(4), n4.getOutRelations().get(2).getTarget());
   }
