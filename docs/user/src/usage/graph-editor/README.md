@@ -95,3 +95,21 @@ String values can be enclosed in quotes, e.g., for punctuation and for tokens th
 ```
 t This is an example "."
 ```
+
+### Tokenize before (`tb`) and after (`ta`)
+
+Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.
+
+#### Examples
+
+```
+ta #t4 for an example
+```
+
+Appends "for an example" after the token "t4".
+
+```
+tb #t5 for an example
+```
+
+Appends "for an example" before the token "t5".
