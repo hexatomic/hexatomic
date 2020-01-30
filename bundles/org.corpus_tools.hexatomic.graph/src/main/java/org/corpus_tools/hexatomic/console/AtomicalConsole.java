@@ -158,7 +158,7 @@ public class AtomicalConsole implements Runnable, IDocumentListener, VerifyListe
     return Optional.empty();
   }
 
-  private void executeCommand(String cmd) {
+  protected void executeCommand(String cmd) {
 
     // add to history
     if (!cmd.isEmpty()) {
