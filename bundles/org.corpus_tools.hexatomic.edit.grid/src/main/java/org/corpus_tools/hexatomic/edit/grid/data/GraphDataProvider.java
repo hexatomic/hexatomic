@@ -50,7 +50,6 @@ public class GraphDataProvider implements IDataProvider {
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
 
-
   private STextualDS ds = null;
   private final SDocumentGraph graph;
   private int columnCount = 1;
@@ -88,7 +87,7 @@ public class GraphDataProvider implements IDataProvider {
     }
     tokenCount = dsTokens.size();
 
-    // FIXME Resolve which spans should be taken into account based on ds.
+    // Resolve which spans should be taken into account based on ds.
     for (SSpan span : graph.getSpans()) {
       List<DataSourceSequence> overlappedSequences =
           graph.getOverlappedDataSourceSequence(span, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
@@ -144,7 +143,7 @@ public class GraphDataProvider implements IDataProvider {
         return anno.getValue_STEXT();
       }
 
-      // TODO No token annotation found, so check span annotations
+      // No token annotation found, so check span annotations
       for (SSpan span : graph.getSpans()) {
         if (graph.getOverlappedTokens(span).contains(tok)) {
           anno = span.getAnnotation(annotationQName);
@@ -187,6 +186,5 @@ public class GraphDataProvider implements IDataProvider {
     this.ds = ds;
     resolveGraph();
   }
-
 
 }

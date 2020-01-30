@@ -41,7 +41,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
+import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
+import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -67,7 +68,6 @@ public class GridEditor {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
       bodyDataProvider.setDs(ds);
-      // table.refresh(); TODO Check if this is needed.
     } else {
       // Do nothing
     }
@@ -101,14 +101,15 @@ public class GridEditor {
     parent.setLayout(new GridLayout());
 
     /*
-     * FIXME Add dropdown for text selection. Redo grid once text is selected. TODO REMOVE: One grid
-     * per text, i.e., grids only ever work on one text!
+     * Add dropdown for text selection. Redo grid once text is selected.
      */
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
     bodyDataProvider = new GraphDataProvider(graph);
-    final DataLayer bodyDataLayer = new DataLayer(bodyDataProvider);
+    AutomaticSpanningDataProvider spanningDataProvider =
+        new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
+    final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
     // Create and configure NatTable
     table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
