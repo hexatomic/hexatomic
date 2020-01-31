@@ -107,10 +107,6 @@ class TestProjectManager {
     assertNotNull(document.get().getDocumentGraph());
     
     // Mock three open documents: two of them are the same
-    MPart editor1 = mock(MPart.class);
-    MPart editor2 = mock(MPart.class);
-    MPart editor3 = mock(MPart.class);
-    
     Map<String, String> state1 = new HashMap<>();
     state1.put(DOCUMENT_ID, documentID);
     
@@ -119,6 +115,10 @@ class TestProjectManager {
     
     Map<String, String> state3 = new HashMap<>();
     state3.put(DOCUMENT_ID, documentID);
+
+    MPart editor1 = mock(MPart.class);
+    MPart editor2 = mock(MPart.class);
+    MPart editor3 = mock(MPart.class);
     
     when(editor1.getPersistedState()).thenReturn(state1);
     when(editor2.getPersistedState()).thenReturn(state2);

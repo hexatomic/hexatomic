@@ -18,6 +18,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core;
 
 public interface Topics {
