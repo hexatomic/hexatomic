@@ -16,10 +16,6 @@ A part consists of two components:
 Add a Java class to your bundle project.
 This class does not need to inherit any interface, but should have a method with the `@PostConstruct` annotation.
 ```java
-import javax.annotation.PostConstruct;
-
-/* ... */
-
 public class TextViewer {
 	@PostConstruct
 	public void postConstruct(Composite parent, MPart part, ProjectManager projectManager) { 
@@ -76,28 +72,4 @@ The injected `ProjectManager` can then be used to get the actual document.
 String documentID = part.getPersistedState()
 	.get("org.corpus_tools.hexatomic.document-id");
 Optional<SDocument> doc = projectManager.getDocument(documentID);
-```
-
-
-## Cleaning up resources when closed
-
-When the user closes and editor, it should clean up local and global resources.
-E.g., a Salt document might not need to hold the reference to the actual annotation graph when it is not edited anymore.
-You can annotate a method of your editor with the `@PreDestroy` annotation to execute its code whenever the part is closed.
-
-Since several editors can open the same document at the same time, releasing it should not be performed directly, but by signaling an event over the `IEventBroker` of Eclipse RCP.
-When posting an event, you have to use the topic `DOCUMENT_CLOSED` and give the document ID as an argument.
-
-```java
-
-import javax.annotation.PreDestroy;
-import org.corpus_tools.hexatomic.core.Topics;
-
-/* ... */
-
-@PreDestroy
-public void cleanup(MPart part) {
-events.post(Topics.DOCUMENT_CLOSED,
-	part.getPersistedState().get("org.corpus_tools.hexatomic.document-id"));
-}
 ```
