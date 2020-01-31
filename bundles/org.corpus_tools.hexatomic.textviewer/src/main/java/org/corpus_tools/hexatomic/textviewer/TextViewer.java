@@ -81,7 +81,7 @@ public class TextViewer {
   }
 
   @PreDestroy
-  public void cleanup(MPart part) {
+  protected void cleanup(MPart part) {
     events.post(Topics.DOCUMENT_CLOSED,
         part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
