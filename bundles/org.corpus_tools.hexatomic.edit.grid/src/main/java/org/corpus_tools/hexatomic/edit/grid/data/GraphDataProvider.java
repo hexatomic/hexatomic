@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.edit.grid.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -53,7 +54,6 @@ public class GraphDataProvider implements IDataProvider {
   private STextualDS ds = null;
   private final SDocumentGraph graph;
   private int columnCount = 1;
-  private int tokenCount = 1;
   private final List<SToken> dsTokens = new ArrayList<SToken>();
   private final List<SSpan> dsSpans = new ArrayList<SSpan>();
   private List<String> columnHeaderLabels = null;
@@ -79,13 +79,15 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
         ds);
     // Resolve which tokens should be taken into account based on ds and save to dsTokens.
+    List<SToken> unorderedTokens = new ArrayList<SToken>();
     for (SRelation<?, ?> inRel : ds.getInRelations()) {
       if (inRel instanceof STextualRelation) {
         // Source can only be token
-        dsTokens.add((SToken) inRel.getSource());
+        unorderedTokens.add((SToken) inRel.getSource());
       }
     }
-    tokenCount = dsTokens.size();
+    dsTokens.addAll(graph.getSortedTokenByText(unorderedTokens));
+    BitSet tokenBits = new BitSet(dsTokens.size());
 
     // Resolve which spans should be taken into account based on ds.
     for (SSpan span : graph.getSpans()) {
@@ -129,7 +131,9 @@ public class GraphDataProvider implements IDataProvider {
         return "Please select data source!";
       }
     } else {
-      if (columnIndex == 0) {
+      if (dsTokens.size() == 0 && columnIndex == 0) {
+        return "Data source contains no tokens!";
+      } else if (columnIndex == 0) {
         // Token text
         return graph.getText(graph.getSortedTokenByText(dsTokens).get(rowIndex));
       }
@@ -167,13 +171,20 @@ public class GraphDataProvider implements IDataProvider {
   public int getColumnCount() {
     if (ds == null) {
       return 1;
+    } else if (dsTokens.size() == 0) {
+      return 1;
     }
     return columnCount;
   }
 
   @Override
   public int getRowCount() {
-    return tokenCount;
+    if (ds == null) {
+      return 1;
+    } else if (dsTokens.size() == 0) {
+      return 1;
+    }
+    return dsTokens.size();
   }
 
   /**
