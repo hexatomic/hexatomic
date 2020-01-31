@@ -27,6 +27,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -37,6 +38,9 @@ import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 
 /**
@@ -52,8 +56,6 @@ public class ProjectManager {
 
   private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
 
-  public static final String TOPIC_CORPUS_STRUCTURE_CHANGED = "TOPIC_CORPUS_STRUCTURE_CHANGED";
-
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
 
@@ -67,6 +69,9 @@ public class ProjectManager {
 
   @Inject
   ErrorService errorService;
+
+  @Inject
+  EPartService partService;
 
   private SaltNotificationFactory notificationFactory;
 
@@ -151,11 +156,45 @@ public class ProjectManager {
     project = SaltFactory.createSaltProject();
     try {
       project.loadCorpusStructure(path);
-      events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, path.toFileString());
+      events.send(Topics.CORPUS_STRUCTURE_CHANGED, path.toFileString());
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
   }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void unloadDocumentGraphWhenClosed(
+      @UIEventTopic(Topics.DOCUMENT_CLOSED) String documentID) {
+
+    // Check if any other editor is open for this document
+    if (documentID != null) {
+      Optional<SDocument> document = getDocument(documentID);
+      if (document.isPresent()) {
+        int counter = 0;
+        for (MPart part : partService.getParts()) {
+          String otherDocumentID =
+              part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+          if (documentID.equals(otherDocumentID)) {
+            counter++;
+          }
+        }
+
+        if (counter <= 1) {
+          // No other editor found, unload document graph if it can be located on disk
+          // TODO: when saving projects is implemented, check if there are unsaved changess
+          if (document.get().getDocumentGraphLocation() != null
+              && document.get().getDocumentGraph() != null) {
+            log.debug("Unloading document {}", documentID);
+            document.get().setDocumentGraph(null);
+          }
+        }
+      }
+    }
+
+
+  }
+
 
   /**
    * We can't add listeners to existing objects in the corpus graph, so iterate over the internal
