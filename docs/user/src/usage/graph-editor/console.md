@@ -95,7 +95,7 @@ For pointing relations, use `->` instead of `>`.
 This syntax is used to reference edges in general, e.g., when annotating or deleting them.
 As with the new nodes, initial annotations can be added as arguments.
 
-## Examples
+### Examples
 
 ```text
 e #t2 -> #t1 func:nsubj
