@@ -81,7 +81,7 @@ Optional<SDocument> doc = projectManager.getDocument(documentID);
 
 ## Cleaning up resources when closed
 
-When the user closes and editor, it should clean up local and global resources.
+When the user closes an editor, it should clean up local and global resources.
 E.g., a Salt document might not need to hold the reference to the actual annotation graph when it is not edited anymore.
 You can annotate a method of your editor with the `@PreDestroy` annotation to execute its code whenever the part is closed.
 
