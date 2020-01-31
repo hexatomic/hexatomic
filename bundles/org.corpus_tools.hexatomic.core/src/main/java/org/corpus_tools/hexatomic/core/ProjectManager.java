@@ -164,7 +164,7 @@ public class ProjectManager {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  protected void unloadDocumentGraphWhenClosed(
+  private void unloadDocumentGraphWhenClosed(
       @UIEventTopic(Topics.DOCUMENT_CLOSED) String documentID) {
 
     // Check if any other editor is open for this document
