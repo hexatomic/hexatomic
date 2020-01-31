@@ -22,9 +22,9 @@ package org.corpus_tools.hexatomic.textviewer;
 
 import java.util.Optional;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -76,12 +76,23 @@ public class TextViewer {
   }
 
   /**
+   * Unloads the document graph.
+   */
+  @PreDestroy
+  public void cleanup(MPart part) {
+    Optional<SDocument> document = getDocument(part);
+    if (document.isPresent()) {
+      document.get().setDocumentGraph(null);
+    }
+  }
+
+  /**
    * Retrieve the edited document from the global and the internal persisted state.
    * 
    * @return
    */
   private Optional<SDocument> getDocument(MPart part) {
-    String documentID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+    String documentID = part.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
     return projectManager.getDocument(documentID);
   }
 
