@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Viewer for the Salt annotation graph based on Zest
 
+### Fixed
+
+- Fix #127: UI integration tests fail locally due to unreset corpus structure view
+
 ## [0.3.1] - 2019-12-16
 
 ### Fixed
