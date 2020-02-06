@@ -80,7 +80,7 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
     if (element instanceof EntityConnectionData) {
       return "";
     }
-    throw new IllegalArgumentException("Object of type SAnnotationContainer expectected, but got "
+    throw new IllegalArgumentException("Object of type SAnnotationContainer expected, but got "
         + element.getClass().getSimpleName());
   }
 
@@ -161,7 +161,6 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
     int height = (int) (10.0 + nodeHeight * factor);
 
     if (forDestination) {
-
       if (sourceLoc.x < targetLoc.x) {
         // source -> target
         return new Point(targetLoc.x - (targetWidth / 2), sourceLoc.y - height);
