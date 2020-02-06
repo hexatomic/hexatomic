@@ -216,7 +216,7 @@ public class GraphEditor {
 
     // Allow to drag the background area with the mouse
     GraphDragMoveAdapter.register(viewer.getGraphControl());
-    
+
     // Disable the original scroll event when the mouse wheel is activated
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
         new org.eclipse.swt.widgets.Listener() {
@@ -316,8 +316,9 @@ public class GraphEditor {
   }
 
   /**
-   * Center the view around the current position of the mouse cursor by getting the difference from the viewport center
-   * and the mouse click position. This difference is added to the viewport location.
+   * Center the view around the current position of the mouse cursor by getting the difference from
+   * the viewport center and the mouse click position. This difference is added to the viewport
+   * location.
    * 
    * @param clickedInViewport The point where the mouse was clicked.
    */

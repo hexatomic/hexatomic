@@ -48,9 +48,9 @@ import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
 /**
- * Hierarchical custom layout for Salt graphs.
- * This will place dominance and span nodes in a hierarchy and all tokens as ordered leaves.
- * Dominance and span nodes are put on different ranks if they overlap the same token range.
+ * Hierarchical custom layout for Salt graphs. This will place dominance and span nodes in a
+ * hierarchy and all tokens as ordered leaves. Dominance and span nodes are put on different ranks
+ * if they overlap the same token range.
  * 
  * @author Thomas Krause
  *
@@ -238,7 +238,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-fireProgressEvent(4, 4);
+    fireProgressEvent(4, 4);
 
     updateLayoutLocations(entitiesToLayout);
     fireProgressEnded(4);
@@ -280,7 +280,8 @@ fireProgressEvent(4, 4);
     }
   }
 
-  private void assignRankRecursively(InternalNode node, Map<InternalNode, Integer> ranks, int rank) {
+  private void assignRankRecursively(InternalNode node, Map<InternalNode, Integer> ranks,
+      int rank) {
     if (node == null || ranks.containsKey(node)) {
       return;
     }
@@ -385,17 +386,17 @@ fireProgressEvent(4, 4);
   private static class RankSubrank implements Comparable<RankSubrank> {
     private final int rank;
     private final int subrank;
-  
+
     public RankSubrank(int rank, int subrank) {
       this.rank = rank;
       this.subrank = subrank;
     }
-  
+
     @Override
     public int hashCode() {
       return Objects.hash(rank, subrank);
     }
-  
+
     @Override
     public boolean equals(Object obj) {
       if (this == obj) {
@@ -410,13 +411,13 @@ fireProgressEvent(4, 4);
       RankSubrank other = (RankSubrank) obj;
       return rank == other.rank && subrank == other.subrank;
     }
-  
+
     @Override
     public int compareTo(RankSubrank o) {
       return ComparisonChain.start().compare(this.rank, o.rank).compare(this.subrank, o.subrank)
           .result();
     }
-  
+
     @Override
     public String toString() {
       return "" + this.rank + "." + this.subrank;
