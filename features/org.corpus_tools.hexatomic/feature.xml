@@ -41,6 +41,7 @@
       <import plugin="org.eclipse.core.runtime" version="3.15.300" match="greaterOrEqual"/>
       <import plugin="org.corpus_tools.hexatomic.core" version="0.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common" version="2.16.0" match="greaterOrEqual"/>
+      <import plugin="org.corpus_tools.hexatomic.graph"/>
    </requires>
 
    <plugin

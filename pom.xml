@@ -63,6 +63,7 @@
                     <version>${license-maven-plugin.version}</version>
                     <configuration>
                         <verbose>false</verbose>
+                        <licensesOutputFileEol>AUTODETECT</licensesOutputFileEol>
                     </configuration>
                     <executions>
                         <execution>
@@ -179,8 +180,7 @@
             <plugin>
                 <!-- Parse version during `validate` phase to create the 
                     properties - ${parsedVersion.majorVersion} - ${parsedVersion.minorVersion} 
-                    - ${parsedVersion.incrementalVersion}. 
-                    They are used during the aggregation 
+                    - ${parsedVersion.incrementalVersion}. They are used during the aggregation 
                     phase for javadoc by the maven-javadoc-plugin -->
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>

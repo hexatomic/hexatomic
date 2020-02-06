@@ -59,6 +59,21 @@
                             <pattern>.*:org\.eclipse\.swt\.(cocoa|linux|win32).*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
                         </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.eclipse\.(draw2d|zest)\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <!-- While originally Apache licensed, these 
+                                are redistributed by Eclipse -->
+                            <pattern>.*:org\.apache\.(commons\.(io|logging)|xmlgraphics|batik).*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <!-- Redistributed by Eclipse -->
+                            <pattern>.*:org\.w3c\.dom\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
                         <!-- All other Eclipse project dependencies are EPL-2.0 -->
                         <referenceTemplate>
                             <pattern>.*:org\.eclipse\..*</pattern>

@@ -6,4 +6,5 @@
     - [Working with projects](usage/projects.md)
 	- [Editing the corpus structure](usage/corpus-structure.md)
 	- [Opening an editor](usage/open-editor.md)
+		- [Graph Editor](usage/graph-editor.md)
 - [Troubleshooting & getting help](./troubleshooting.md)

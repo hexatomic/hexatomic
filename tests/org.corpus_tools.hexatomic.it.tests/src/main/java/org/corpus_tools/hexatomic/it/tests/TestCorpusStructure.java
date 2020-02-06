@@ -7,16 +7,34 @@ import java.util.List;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 class TestCorpusStructure {
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+
+  /**
+   * Clear the corpus structure view: If it contains any corpus graphs, remove them by iterating
+   * through all root nodes, and deleting them one by one, by clicking on the "Delete" button (the
+   * second toolbar button) for each.
+   */
+  @BeforeAll
+  void resetCorpusStructureView() {
+    for (SWTBotTreeItem item : bot.tree().getAllItems()) {
+      bot.tree().getTreeItem(item.getText()).select();
+      bot.toolbarButton("Delete").click();
+    }
+  }
 
   @BeforeEach
   void setup() {
@@ -82,6 +100,8 @@ class TestCorpusStructure {
     children = bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes();
     assertEquals(1, children.size());
     assertEquals("document_3", children.get(0));
+
+    bot.textWithId(SWTBotPreferences.DEFAULT_KEY, "filter").setText("");
 
   }
 }

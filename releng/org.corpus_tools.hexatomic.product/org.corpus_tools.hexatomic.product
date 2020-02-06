@@ -3,7 +3,6 @@
 
 <product name="org.corpus_tools.hexatomic" uid="org.corpus_tools.hexatomic.product" id="org.corpus_tools.hexatomic.core.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -22,7 +21,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
