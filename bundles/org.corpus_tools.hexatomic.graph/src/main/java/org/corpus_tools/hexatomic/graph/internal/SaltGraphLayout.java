@@ -57,47 +57,6 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
  */
 public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
-  private static class RankSubrank implements Comparable<RankSubrank> {
-    private final int rank;
-    private final int subrank;
-
-    public RankSubrank(int rank, int subrank) {
-      this.rank = rank;
-      this.subrank = subrank;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(rank, subrank);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      RankSubrank other = (RankSubrank) obj;
-      return rank == other.rank && subrank == other.subrank;
-    }
-
-    @Override
-    public int compareTo(RankSubrank o) {
-      return ComparisonChain.start().compare(this.rank, o.rank).compare(this.subrank, o.subrank)
-          .result();
-    }
-
-    @Override
-    public String toString() {
-      return "" + this.rank + "." + this.subrank;
-    }
-  }
-
   private double averageTokenNodeWidth;
   private double maxNodeHeight;
 
@@ -419,6 +378,47 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
   @Override
   protected int getCurrentLayoutStep() {
     return 0;
+  }
+
+  private static class RankSubrank implements Comparable<RankSubrank> {
+    private final int rank;
+    private final int subrank;
+  
+    public RankSubrank(int rank, int subrank) {
+      this.rank = rank;
+      this.subrank = subrank;
+    }
+  
+    @Override
+    public int hashCode() {
+      return Objects.hash(rank, subrank);
+    }
+  
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) {
+        return true;
+      }
+      if (obj == null) {
+        return false;
+      }
+      if (getClass() != obj.getClass()) {
+        return false;
+      }
+      RankSubrank other = (RankSubrank) obj;
+      return rank == other.rank && subrank == other.subrank;
+    }
+  
+    @Override
+    public int compareTo(RankSubrank o) {
+      return ComparisonChain.start().compare(this.rank, o.rank).compare(this.subrank, o.subrank)
+          .result();
+    }
+  
+    @Override
+    public String toString() {
+      return "" + this.rank + "." + this.subrank;
+    }
   }
 
 
