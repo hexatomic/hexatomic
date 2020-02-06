@@ -183,7 +183,8 @@ public class GraphEditor {
     btnIncludePointingRelations.setText("Include pointing relations");
 
     txtSegmentFilter = new Text(filterComposite, SWT.BORDER);
-    txtSegmentFilter.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
+    txtSegmentFilter.setMessage("Filter by node annotation name");
+    txtSegmentFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
     textRangeTable =
         new Table(filterComposite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
@@ -281,7 +282,7 @@ public class GraphEditor {
       }
     });
 
-    // React to arrow keys to move the displayed graph
+    // React to arrow keys to scroll the viewport
     viewer.getGraphControl().addKeyListener(new KeyListener() {
 
       @Override
@@ -315,7 +316,7 @@ public class GraphEditor {
   }
 
   /**
-   * Center the view around at the mouse cursor by getting the difference from the viewport center
+   * Center the view around the current position of the mouse cursor by getting the difference from the viewport center
    * and the mouse click position. This difference is added to the viewport location.
    * 
    * @param clickedInViewport The point where the mouse was clicked.
@@ -709,5 +710,4 @@ public class GraphEditor {
   }
 
 }
-
 

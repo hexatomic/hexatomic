@@ -47,7 +47,7 @@ public class SaltGraphContentProvider implements IGraphEntityRelationshipContent
       SGraph graph = (SGraph) inputElement;
       return graph.getNodes().toArray();
     }
-    throw new IllegalArgumentException("Object of type SGraph expectected");
+    throw new IllegalArgumentException("Object of type SGraph expected");
   }
 
 
