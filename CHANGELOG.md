@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Viewer for the Salt annotation graph based on Zest
 
+### Fixed
+
+- Update views via notification even if the object that changed was created before the view.
+
+
 ## [0.3.1] - 2019-12-16
 
 ### Fixed

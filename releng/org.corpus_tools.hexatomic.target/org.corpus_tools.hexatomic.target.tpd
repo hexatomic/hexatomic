@@ -31,7 +31,7 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R201906022121
 }
 
 location 'https://korpling.github.io/salt/p2/salt-3.3/' {
-	org.corpus-tools.salt-api [3.3.8,3.4.0)
-	org.corpus-tools.salt-extensions [3.3.8,3.4.0)
+	org.corpus-tools.salt-api [3.3.9,3.4.0)
+	org.corpus-tools.salt-extensions [3.3.9,3.4.0)
 	
 }
