@@ -8,3 +8,4 @@ Automatic-Module-Name: org.corpus_tools.hexatomic.graph.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit,
  org.junit.jupiter.api
+Export-Package: org.corpus_tools.hexatomic.console;x-internal:=true
