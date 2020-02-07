@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -41,7 +39,7 @@ class TestCorpusStructure {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-    
+
     // Clear the project programmtically
     Map<String, String> params = new HashMap<>();
     ParameterizedCommand cmd = commandService
@@ -101,10 +99,10 @@ class TestCorpusStructure {
   @Order(2)
   void testFilter() {
     createExampleStructure();
-    
+
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("abc");
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("def");
-    
+
     // The function before already added some documents, add two more
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("def").select();
     bot.toolbarDropDownButton(0).click();
