@@ -1,4 +1,4 @@
-# Manipulating the graph
+# Editing the graph
 
 The graph editor contains a console, which you can use to manipulate the annotation graph.
 You first enter a command by entering it as text behind the so-called prompt `> ` and pressing <kbd>Enter</kbd>.
