@@ -100,12 +100,16 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (SNode n : this.nodes.values()) {
       if (n instanceof SToken) {
         tokens.add((SToken) n);
-      } else {
+      } else if (n != null) {
         boolean isRoot = true;
-        for (SRelation<?, ?> rel : n.getInRelations()) {
-          if (this.relations.containsValue(rel)) {
-            isRoot = false;
-            continue;
+        @SuppressWarnings("rawtypes")
+        List<SRelation> inRelations = n.getInRelations();
+        if (inRelations != null) {
+          for (SRelation<?, ?> rel : inRelations) {
+            if (this.relations.containsValue(rel)) {
+              isRoot = false;
+              continue;
+            }
           }
         }
         if (isRoot) {
@@ -293,11 +297,15 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
     ranks.putIfAbsent(node, rank);
 
-    for (SRelation<?, ?> rel : saltNode.getOutRelations()) {
-      if (this.relations.values().contains(rel)) {
-        InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
-        if (outNode != null) {
-          assignRankRecursively(outNode, ranks, rank + 1);
+    @SuppressWarnings("rawtypes")
+    List<SRelation> outRelations = saltNode.getOutRelations();
+    if (outRelations != null) {
+      for (SRelation<?, ?> rel : outRelations) {
+        if (this.relations.values().contains(rel)) {
+          InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
+          if (outNode != null) {
+            assignRankRecursively(outNode, ranks, rank + 1);
+          }
         }
       }
     }
@@ -313,14 +321,16 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     // Sort tokens
     if (!tokens.isEmpty()) {
       SDocumentGraph docGraph = tokens.iterator().next().getGraph();
-      List<SToken> sortedTokens = docGraph.getSortedTokenByText(new LinkedList<SToken>(tokens));
-      for (SToken t : sortedTokens) {
-        InternalNode n = this.nodes.inverse().get(t);
-        if (n != null) {
-          n.setInternalLocation(x,
-              boundsY + (tokenRank * (this.maxNodeHeight * this.percentInterNodeMargin)));
-          x += this.averageTokenNodeWidth / 10.0;
-          x += n.getLayoutEntity().getWidthInLayout();
+      if (docGraph != null) {
+        List<SToken> sortedTokens = docGraph.getSortedTokenByText(new LinkedList<SToken>(tokens));
+        for (SToken t : sortedTokens) {
+          InternalNode n = this.nodes.inverse().get(t);
+          if (n != null) {
+            n.setInternalLocation(x,
+                boundsY + (tokenRank * (this.maxNodeHeight * this.percentInterNodeMargin)));
+            x += this.averageTokenNodeWidth / 10.0;
+            x += n.getLayoutEntity().getWidthInLayout();
+          }
         }
       }
     }

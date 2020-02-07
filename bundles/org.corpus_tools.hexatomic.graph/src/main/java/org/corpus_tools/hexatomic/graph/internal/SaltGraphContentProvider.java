@@ -36,6 +36,7 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
 
 /**
  * Provides the Salt nodes and relations to the Zest API.
+ * 
  * @author Thomas Krause
  *
  */
@@ -47,7 +48,8 @@ public class SaltGraphContentProvider implements IGraphEntityRelationshipContent
       SGraph graph = (SGraph) inputElement;
       return graph.getNodes().toArray();
     }
-    throw new IllegalArgumentException("Object of type SGraph expected");
+    throw new IllegalArgumentException("Object of type SGraph expected but got "
+        + (inputElement == null ? "null" : inputElement.getClass().getName()));
   }
 
 
@@ -75,6 +77,7 @@ public class SaltGraphContentProvider implements IGraphEntityRelationshipContent
 
   /**
    * Get the actual data which is connected to the layout item.
+   * 
    * @param object The object which.
    * @return Null if no data can be found or has the wrong type.s
    */

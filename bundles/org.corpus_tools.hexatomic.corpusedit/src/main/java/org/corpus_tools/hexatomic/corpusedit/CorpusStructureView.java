@@ -27,10 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;

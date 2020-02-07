@@ -156,6 +156,15 @@ public class ProjectManager {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
   }
+  
+  /**
+   * Closes the current project and creates a new, empty project.
+   */
+  public void close() {    
+    // Create an empty project
+    this.project = SaltFactory.createSaltProject();
+    events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, null);
+  }
 
   /**
    * We can't add listeners to existing objects in the corpus graph, so iterate over the internal

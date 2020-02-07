@@ -34,11 +34,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
@@ -69,6 +68,9 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -151,7 +153,9 @@ public class GraphEditor {
 
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
-    SashForm graphSash = new SashForm(parent, SWT.HORIZONTAL);
+    SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
+
+    SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
 
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -207,6 +211,12 @@ public class GraphEditor {
     registerGraphControlListeners();
 
     viewer.getControl().forceFocus();
+
+    Document consoleDocument = new Document();
+    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
+    consoleViewer.setDocument(consoleDocument);
+    new ConsoleView(consoleViewer, sync, getGraph());
+    mainSash.setWeights(new int[] {200, 100});
 
     updateView(true);
 
@@ -311,8 +321,6 @@ public class GraphEditor {
 
       }
     });
-
-
   }
 
   /**
@@ -337,34 +345,17 @@ public class GraphEditor {
     projectManager.removeListener(projectChangeListener);
   }
 
-  private List<Integer> getSegmentIdxSortedByLength() {
-    List<Integer> result =
-        IntStream.range(0, textRangeTable.getItemCount()).boxed().collect(Collectors.toList());
-
-    result.sort(new Comparator<Integer>() {
-      @SuppressWarnings("unchecked")
-      @Override
-      public int compare(Integer o1, Integer o2) {
-
-        // get both ranges from the container
-        Object r1Raw = textRangeTable.getItem(o1).getData("range");
-        Object r2Raw = textRangeTable.getItem(o2).getData("range");
-
-        Range<Long> r1 = (Range<Long>) r1Raw;
-        Range<Long> r2 = (Range<Long>) r2Raw;
-        return ComparisonChain.start().compare(r1.upperEndpoint() - r1.lowerEndpoint(),
-            r2.upperEndpoint() - r2.lowerEndpoint()).result();
-
-      }
-    });
-
-    return result;
-  }
-
   @SuppressWarnings("unchecked")
   private void updateView(boolean recalculateSegments) {
 
     SDocumentGraph graph = getGraph();
+
+    if (graph == null) {
+      errors.showError("Unexpected error",
+          "Annotation graph for selected document vanished. Please report this as a bug.",
+          GraphEditor.class);
+      return;
+    }
 
     if (recalculateSegments) {
       // store the old segment selection
@@ -376,27 +367,22 @@ public class GraphEditor {
       updateSegments(graph);
 
       textRangeTable.deselectAll();
+      textRangeTable.getColumn(0).pack();
 
-      // sort the segments by their length
-      List<Integer> sortedIdx = getSegmentIdxSortedByLength();
-
-      // for each old segment select the first (and thus smallest) segment in the new
-      // list
       boolean selectedSomeOld = false;
       for (Range<Long> oldRange : oldSelectedRanges) {
-        for (int idx : sortedIdx) {
+        for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
           Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
-          if (itemRange.encloses(oldRange)) {
+          if (itemRange.isConnected(oldRange)) {
             textRangeTable.select(idx);
             selectedSomeOld = true;
-            // only select the first one
-            break;
           }
         }
       }
       if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
         textRangeTable.setSelection(0);
       }
+
     }
 
     // update the status check for each item
@@ -419,8 +405,13 @@ public class GraphEditor {
     List<DataSourceSequence> overlappedDS =
         tok.getGraph().getOverlappedDataSourceSequence(tok, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
     if (overlappedDS != null && !overlappedDS.isEmpty()) {
-      return Range.closedOpen(overlappedDS.get(0).getStart().longValue(),
-          overlappedDS.get(0).getEnd().longValue());
+      long start = overlappedDS.get(0).getStart().longValue();
+      long end = overlappedDS.get(0).getEnd().longValue();
+      if (start <= end) {
+        return Range.closedOpen(start, end);
+      } else {
+        return Range.closedOpen(start, start);
+      }
     }
     return null;
   }
@@ -505,8 +496,12 @@ public class GraphEditor {
     for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
       TableItem item = new TableItem(textRangeTable, SWT.NONE);
 
-      item.setText(e.getValue().lowerEndpoint() + ".." + e.getValue().upperEndpoint() + " ("
-          + (e.getKey().getName() + ")"));
+      long rangeStart = e.getValue().lowerEndpoint();
+      long rangeEnd = e.getValue().upperEndpoint();
+
+      String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
+
+      item.setText(coveredText);
       item.setData("range", e.getValue());
       item.setData("text", e.getKey());
     }
@@ -543,6 +538,24 @@ public class GraphEditor {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
+
+      // Check if the ID of the changed object points to the same document as our annotation graph
+      IdentifiableElement element = null;
+      if (container instanceof IdentifiableElement) {
+        element = (IdentifiableElement) container;
+      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
+        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
+      }
+      if (element == null || element.getId() == null) {
+        return;
+      } else {
+        URI elementUri = URI.createURI(element.getId());
+        SDocumentGraph graph = getGraph();
+        if (!elementUri.path().equals(graph.getPath().path())) {
+          return;
+        }
+      }
+
       sync.syncExec(() -> updateView(true));
     }
   }
@@ -580,7 +593,6 @@ public class GraphEditor {
         return true;
       }
     }
-
   }
 
   private class Filter extends ViewerFilter {
@@ -597,13 +609,16 @@ public class GraphEditor {
         Range<Long> itemRange = (Range<Long>) item.getData("range");
         STextualDS itemText = (STextualDS) item.getData("text");
 
-        DataSourceSequence<Number> seq = new DataSourceSequence<>();
-        seq.setStart(itemRange.lowerEndpoint());
-        seq.setEnd(itemRange.upperEndpoint());
-        seq.setDataSource(itemText);
-        List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
-        if (t != null) {
-          coveredTokens.addAll(t);
+        if (itemText.getGraph() != null) {
+
+          DataSourceSequence<Number> seq = new DataSourceSequence<>();
+          seq.setStart(itemRange.lowerEndpoint());
+          seq.setEnd(itemRange.upperEndpoint());
+          seq.setDataSource(itemText);
+          List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
+          if (t != null) {
+            coveredTokens.addAll(t);
+          }
         }
       }
       coveredTokenIDs = new HashSet<>();

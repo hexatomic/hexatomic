@@ -2,10 +2,10 @@
 <launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
 <setAttribute key="additional_plugins">
 <setEntry value="org.apache.felix.scr:2.1.14.v20190123-1619:default:true:1:true"/>
-<setEntry value="org.eclipse.core.runtime:3.15.300.v20190508-0543:default:true:default:true"/>
-<setEntry value="org.eclipse.equinox.common:3.10.400.v20190516-1504:default:true:2:true"/>
-<setEntry value="org.eclipse.equinox.event:1.5.100.v20190528-1257:default:true:2:true"/>
-<setEntry value="org.eclipse.equinox.simpleconfigurator:1.3.200.v20181101-1115:default:true:1:true"/>
+<setEntry value="org.eclipse.core.runtime:3.17.0.v20191122-2104:default:true:default:true"/>
+<setEntry value="org.eclipse.equinox.common:3.10.600.v20191004-1420:default:true:2:true"/>
+<setEntry value="org.eclipse.equinox.event:1.5.300.v20191001-1333:default:true:2:true"/>
+<setEntry value="org.eclipse.equinox.simpleconfigurator:1.3.400.v20191015-1836:default:true:1:true"/>
 </setAttribute>
 <booleanAttribute key="append.args" value="true"/>
 <stringAttribute key="application" value="org.eclipse.e4.ui.workbench.swt.E4Application"/>

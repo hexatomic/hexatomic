@@ -3,49 +3,54 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 
+@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-@TestInstance(Lifecycle.PER_CLASS)
 class TestCorpusStructure {
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
-  /**
-   * Clear the corpus structure view: If it contains any corpus graphs, remove them by iterating
-   * through all root nodes, and deleting them one by one, by clicking on the "Delete" button (the
-   * second toolbar button) for each.
-   */
-  @BeforeAll
-  void resetCorpusStructureView() {
-    for (SWTBotTreeItem item : bot.tree().getAllItems()) {
-      bot.tree().getTreeItem(item.getText()).select();
-      bot.toolbarButton("Delete").click();
-    }
-  }
+  private ECommandService commandService;
+  private EHandlerService handlerService;
+
 
   @BeforeEach
   void setup() {
+
+    IEclipseContext ctx = ContextHelper.getEclipseContext();
+
+    commandService = ctx.get(ECommandService.class);
+    assertNotNull(commandService);
+
+    handlerService = ctx.get(EHandlerService.class);
+    assertNotNull(handlerService);
+
+    // Clear the project programmtically
+    Map<String, String> params = new HashMap<>();
+    ParameterizedCommand cmd = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.close_salt_project", params);
+    handlerService.executeHandler(cmd);
+
     // Make sure to activate the part to test before selecting SWT components
     bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
   }
 
-  @Test
-  @Order(1)
-  void testRenameDocument() {
-
+  private void createExampleStructure() {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
     bot.toolbarDropDownButton(0).click();
@@ -75,6 +80,13 @@ class TestCorpusStructure {
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2")
         .doubleClick();
     bot.text("document_2").setText("def").pressShortcut(Keystrokes.LF);
+  }
+
+  @Test
+  @Order(1)
+  void testRenameDocument() {
+
+    createExampleStructure();
 
     // make sure that the salt project has been renamed
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("abc");
@@ -86,7 +98,12 @@ class TestCorpusStructure {
   @Test
   @Order(2)
   void testFilter() {
-    // The test before already added some documents, add two more
+    createExampleStructure();
+
+    bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("abc");
+    bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("def");
+
+    // The function before already added some documents, add two more
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("def").select();
     bot.toolbarDropDownButton(0).click();
     bot.toolbarDropDownButton(0).click();

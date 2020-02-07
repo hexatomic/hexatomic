@@ -5,5 +5,6 @@ It is a general visualization that aims to display all possible types of annotat
 
 ![Screenshot of the graph editor](graph-viewer.png)
 
-On the right side of the interface, you can select which span to show.
-Select more than one span by holding the <kbd>Ctrl</kbd> key while clicking on the segment.
+On the right side of the interface, you can select which segment to show.
+Select more than one segment by holding the <kbd>Ctrl</kbd> key while clicking on the segment.
+
