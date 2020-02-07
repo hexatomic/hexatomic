@@ -52,19 +52,21 @@ class TestGraphEditor {
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
   }
-  
+
   @AfterEach
   void cleanup() {
     // Close all editors manually.
     // If the editor is not closed, it might trigger bugs when executing other tests.
-    // For example, notifications about project changes might trigger exception when the document 
+    // For example, notifications about project changes might trigger exception when the document
     // is already gone.
     for (SWTBotView view : bot.parts()) {
-      if(view.getPart().getPersistedState().containsKey("org.corpus_tools.hexatomic.document-id")) {
+      if (view.getPart().getPersistedState()
+          .containsKey("org.corpus_tools.hexatomic.document-id")) {
         view.close();
       }
     }
-    // TODO: when close project is implemented with save functionality, change this to close the project and its editors
+    // TODO: when close project is implemented with save functionality, change this to close the
+    // project and its editors
 
   }
 
