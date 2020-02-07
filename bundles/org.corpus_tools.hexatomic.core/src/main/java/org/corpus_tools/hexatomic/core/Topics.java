@@ -2,7 +2,8 @@
  * #%L
  * org.corpus_tools.hexatomic.core
  * %%
- * Copyright (C) 2018 - 2019 Stephan Druskat, Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat,
+ *                                     Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +19,11 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.core.handlers;
+package org.corpus_tools.hexatomic.core;
 
-import javax.inject.Inject;
-import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.eclipse.e4.core.di.annotations.Execute;
+public interface Topics {
+  
+  public static final String CORPUS_STRUCTURE_CHANGED = "CORPUS_STRUCTURE_CHANGED";
 
-public class CloseSaltProjectHandler {
-
-  @Inject
-  private ProjectManager projectManager;
-
-  /**
-   * Close the current project.
-   * 
-   */
-  @Execute
-  public void execute() {
-    // TODO: when save is implement, check here for any modifications of the graph
-
-    projectManager.close();
-  }
+  public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
 }

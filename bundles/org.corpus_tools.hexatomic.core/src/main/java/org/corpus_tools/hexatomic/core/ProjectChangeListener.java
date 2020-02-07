@@ -74,11 +74,11 @@ public class ProjectChangeListener implements Listener {
     if (modifiedObject instanceof Node) {
       Node n = (Node) modifiedObject;
       if (n.getGraph() instanceof SCorpusGraph) {
-        events.send(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, null);
+        events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
       }
     } else if (modifiedObject instanceof SCorpusGraph || modifiedObject instanceof SCorpus
         || modifiedObject instanceof SDocument) {
-      events.send(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED, null);
+      events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
     }
   }
 

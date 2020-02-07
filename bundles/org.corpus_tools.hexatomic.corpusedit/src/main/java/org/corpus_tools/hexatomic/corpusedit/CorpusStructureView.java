@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
@@ -541,13 +542,12 @@ public class CorpusStructureView {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectChanged(
-      @UIEventTopic(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED) String path) {
+      @UIEventTopic(Topics.CORPUS_STRUCTURE_CHANGED) String path) {
     log.debug("Corpus Structure Viewer received update");
     if (treeViewer != null) {
       treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
       log.debug("Corpus Structure Viewer udpated");
     }
-
   }
 
   private void registerEditors(EModelService modelService, MApplication application,
