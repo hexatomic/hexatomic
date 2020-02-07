@@ -18,6 +18,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -49,6 +50,21 @@ class TestGraphEditor {
     assertTrue(exampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
+
+  }
+  
+  @AfterEach
+  void cleanup() {
+    // Close all editors manually.
+    // If the editor is not closed, it might trigger bugs when executing other tests.
+    // For example, notifications about project changes might trigger exception when the document 
+    // is already gone.
+    for (SWTBotView view : bot.parts()) {
+      if(view.getPart().getPersistedState().containsKey("org.corpus_tools.hexatomic.document-id")) {
+        view.close();
+      }
+    }
+    // TODO: when close project is implemented with save functionality, change this to close the project and its editors
 
   }
 
