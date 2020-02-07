@@ -10,10 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
 
+### Changed
+
+- Don't unload the Salt document graph when text viewer is closed, notify the project manager instead.
+  This will only unload the document graph when no other editor has opened the document.
+
 ### Fixed
 
 - Update views via notification even if the object that changed was created before the view.
-
 
 ## [0.3.1] - 2019-12-16
 
