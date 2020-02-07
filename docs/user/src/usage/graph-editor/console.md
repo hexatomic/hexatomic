@@ -123,7 +123,7 @@ This example adds a dominance relation between the existing nodes.
 ## Annotate: `a`
 
 Adds, updates, or deletes annotations on existing nodes.
-Give the referenced nodes (see [Identifying elements](#identifying-elements)), and the annotations arguments.
+Give the referenced nodes (see [Identifying elements](#identifying-elements)), and the annotation arguments.
 You can delete existing annotations by leaving the value in the annotation attribute empty.
 
 ### Examples
