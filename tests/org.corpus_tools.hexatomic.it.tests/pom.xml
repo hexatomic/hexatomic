@@ -24,6 +24,8 @@
                     <useUIThread>false</useUIThread>
                     <product>org.corpus_tools.hexatomic.core.product</product>
                     <application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
+                    <runOrder>alphabetical</runOrder>
+                    <threadCount>1</threadCount>
                 </configuration>
             </plugin>
         </plugins>
