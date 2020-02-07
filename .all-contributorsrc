@@ -21,7 +21,8 @@
         "question",
         "review",
         "test",
-        "talk"
+        "talk",
+        "bug"
       ]
     },
     {
