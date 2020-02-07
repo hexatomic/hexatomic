@@ -14,3 +14,5 @@ Spans are special nodes to collect a number of tokens and to annotate them all a
 If you want to learn more about spans, please read the [Salt documentation](http://corpus-tools.org/salt/#documentation).
 
 Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox **Include pointing relations**.
+
+And you can filter the segments that include annotations of a specific *name* by using the filter text field above the list of segments.
