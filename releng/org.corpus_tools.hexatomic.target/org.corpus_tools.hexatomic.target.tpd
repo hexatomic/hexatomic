@@ -2,11 +2,13 @@ target 'Hexatomic Target Platform Definition'
 
 with requirements source configurePhase
 
-location 'http://download.eclipse.org/releases/2019-06/' {
+location 'http://download.eclipse.org/releases/2019-12/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.emf.common
 	org.eclipse.e4.core.services
+	org.eclipse.zest.core
+	org.eclipse.zest.layouts
 	org.eclipse.jdt.junit5.runtime
 	org.junit.jupiter.api
 	org.junit.jupiter.engine
@@ -15,6 +17,8 @@ location 'http://download.eclipse.org/releases/2019-06/' {
 	org.eclipse.swtbot.e4.finder
 	org.eclipse.swtbot.generator
 	org.eclipse.swtbot.go
+	org.eclipse.swtbot.swt.finder
+	org.eclipse.jface
 }
 
 location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
@@ -24,7 +28,7 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R201906022121
 	ch.qos.logback.classic [1.1.2,2.0.0)
 	org.mockito
 	org.hamcrest
-	
+	org.antlr.runtime
 }
 
 location 'https://korpling.github.io/salt/p2/salt-3.3/' {

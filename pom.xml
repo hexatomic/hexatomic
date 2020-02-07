@@ -63,6 +63,7 @@
                     <version>${license-maven-plugin.version}</version>
                     <configuration>
                         <verbose>false</verbose>
+                        <licensesOutputFileEol>AUTODETECT</licensesOutputFileEol>
                     </configuration>
                     <executions>
                         <execution>
@@ -97,6 +98,11 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-maven-plugin</artifactId>
+                    <version>4.7.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -179,8 +185,7 @@
             <plugin>
                 <!-- Parse version during `validate` phase to create the 
                     properties - ${parsedVersion.majorVersion} - ${parsedVersion.minorVersion} 
-                    - ${parsedVersion.incrementalVersion}. 
-                    They are used during the aggregation 
+                    - ${parsedVersion.incrementalVersion}. They are used during the aggregation 
                     phase for javadoc by the maven-javadoc-plugin -->
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>

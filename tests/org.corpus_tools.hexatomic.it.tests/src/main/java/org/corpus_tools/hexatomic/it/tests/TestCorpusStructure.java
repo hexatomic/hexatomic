@@ -3,7 +3,13 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
@@ -13,21 +19,38 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestCorpusStructure {
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
+  private ECommandService commandService;
+  private EHandlerService handlerService;
+
+
   @BeforeEach
   void setup() {
+
+    IEclipseContext ctx = ContextHelper.getEclipseContext();
+
+    commandService = ctx.get(ECommandService.class);
+    assertNotNull(commandService);
+
+    handlerService = ctx.get(EHandlerService.class);
+    assertNotNull(handlerService);
+
+    // Clear the project programmtically
+    Map<String, String> params = new HashMap<>();
+    ParameterizedCommand cmd = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.close_salt_project", params);
+    handlerService.executeHandler(cmd);
+
     // Make sure to activate the part to test before selecting SWT components
     bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
   }
 
-  @Test
-  @Order(1)
-  void testRenameDocument() {
-
+  private void createExampleStructure() {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
     bot.toolbarDropDownButton(0).click();
@@ -57,6 +80,13 @@ class TestCorpusStructure {
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2")
         .doubleClick();
     bot.text("document_2").setText("def").pressShortcut(Keystrokes.LF);
+  }
+
+  @Test
+  @Order(1)
+  void testRenameDocument() {
+
+    createExampleStructure();
 
     // make sure that the salt project has been renamed
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("abc");
@@ -68,7 +98,12 @@ class TestCorpusStructure {
   @Test
   @Order(2)
   void testFilter() {
-    // The test before already added some documents, add two more
+    createExampleStructure();
+
+    bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("abc");
+    bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("def");
+
+    // The function before already added some documents, add two more
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("def").select();
     bot.toolbarDropDownButton(0).click();
     bot.toolbarDropDownButton(0).click();
@@ -82,6 +117,8 @@ class TestCorpusStructure {
     children = bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes();
     assertEquals(1, children.size());
     assertEquals("document_3", children.get(0));
+
+    bot.textWithId(SWTBotPreferences.DEFAULT_KEY, "filter").setText("");
 
   }
 }
