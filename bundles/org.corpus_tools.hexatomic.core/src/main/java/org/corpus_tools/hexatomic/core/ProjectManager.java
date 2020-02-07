@@ -161,14 +161,14 @@ public class ProjectManager {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
   }
-  
+
   /**
    * Closes the current project and creates a new, empty project.
    */
-  public void close() {    
+  public void close() {
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
-    events.send(TOPIC_CORPUS_STRUCTURE_CHANGED, null);
+    events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
   }
 
   @Inject
