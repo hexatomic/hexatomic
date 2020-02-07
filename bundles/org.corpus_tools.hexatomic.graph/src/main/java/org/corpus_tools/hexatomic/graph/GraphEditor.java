@@ -179,7 +179,7 @@ public class GraphEditor {
     btnIncludeSpans = new Button(filterComposite, SWT.CHECK);
     btnIncludeSpans.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
     btnIncludeSpans.setSelection(false);
-    btnIncludeSpans.setText("Include Spans");
+    btnIncludeSpans.setText("Include spans");
 
     btnIncludePointingRelations = new Button(filterComposite, SWT.CHECK);
     btnIncludePointingRelations.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
