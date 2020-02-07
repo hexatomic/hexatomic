@@ -27,13 +27,18 @@ This command will result in 5 tokens: `[This] [is] [an] [example] [.]`.
 
 If you call `t` again, the new token will be appended to the end.
 E.g. calling `t Not .` will result in 7 tokens in total: `[This] [is] [an] [example] [.] [Not] [.]`.
-Note that the dot is not escaped in this example.
+Note that the dot is not escaped with `"` quotation marks in this example, and that `t Not.` would also work.
+
+Escaping punctuation with quotation marks is especially important in cases like `t I'm a test.`, which results in the
+creation of 5 tokens: `[I] [m] [a] [test] [.]`. To keep the apostrophe as a separate token, escape it as `t I"'"m ...`.
 
 
 
-## Tokenize before (`tb`) and after (`ta`)
+## Tokenize before (`tb`) and after (`ta`) a given token
 
 Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.
+Read the section [Identifying elements](#identifying-elements) to find out how to pass the command the respective reference token.
+
 
 ### Examples
 
@@ -53,11 +58,14 @@ ta #t1 is a
 
 ## New node: `n`
 
-The command `n` will create a new node and optionally add annotations and dominance relations to existing nodes.
-Each of its new annotation arguments has the form `name:value` or `namespace:name:value`.
+The command `n` will create a new node, and dominance relations between the new node and existing nodes.
+
+Additionally, it can be used to annotate the new node in the same command.
+To find out how to define annotations, read the section [Defining annotation](#defining-annotations).
+
 Arguments starting with `#` refer to the node names to which dominance edges are added (e.g. `#someNodeName`).
 
-The name of the newly created node is returned if creating the node was successful.
+When the creation was successful, the console will print a message giving the name of the new node and its annotations.
 
 ### Examples
 
@@ -70,7 +78,7 @@ n cat:NP #t3 #t4
 
 ![Output after adding an NP node](newnode-example-1.png)
 
-This following command creates a new node using the namespace "tiger" for the annotation.
+The following command creates a new node using the namespace "tiger" for the annotation (see also [Defining annotations](#defining-annotations)).
 
 ```text
 n tiger:cat:NP #t1
@@ -78,8 +86,8 @@ n tiger:cat:NP #t1
 
 ![Output after adding an NP and a namespace](newnode-example-2.png)
 
-You can mix general dominance nodes and tokens in the command.
-Also, the number of dominated nodes is not restricted
+You can mix nodes and tokens in the `n` command.
+Also, the number of dominated nodes is not restricted.
 
 ```text
 n cat:VP #t2 #n1
@@ -89,11 +97,11 @@ n cat:S #n2 #n3
 
 ## New edge: `e`
 
-You can add two types of edges: dominance relations (e.g. for syntax trees) and more general pointing relations.
+You can add two types of edges to the graph: dominance relations (e.g., for syntax trees) and pointing relations (directed edges without a specific semantic).
 Dominance edges are created with the syntax `e #source > #target` where `#source` is a node reference to the source node and `#target` a node reference to the target node.
 For pointing relations, use `->` instead of `>`.
 This syntax is used to reference edges in general, e.g., when annotating or deleting them.
-As with the new nodes, initial annotations can be added as arguments.
+As with new nodes, initial annotations can be added as arguments: `e #source > #target name:value`.
 
 ### Examples
 
@@ -101,7 +109,7 @@ As with the new nodes, initial annotations can be added as arguments.
 e #t2 -> #t1 func:nsubj
 ```
 
-Adds a pointing relation between `#t2` and `#t1` with an annotation named "func" and the value "nsubj."
+This adds a pointing relation between `#t2` and `#t1` with an annotation named "func" and the value "nsubj."
 
 ![Added pointing relation](addedge-pointing.png)
 
@@ -114,9 +122,9 @@ This example adds a dominance relation between the existing nodes.
 
 ## Annotate: `a`
 
-Adds or updates annotations to existing nodes.
-Give the referenced nodes (with the `#nodeName` syntax), and the attributes are arguments.
-You can delete existing annotations by leaving the value in the attribute empty.
+Adds, updates, or deletes annotations on existing nodes.
+Give the referenced nodes (see [Identifying elements](#identifying-elements)), and the annotations arguments.
+You can delete existing annotations by leaving the value in the annotation attribute empty.
 
 ### Examples
 
@@ -135,10 +143,12 @@ a pos: #t1
 Deletes the "pos" annotation for the "t1" node.
 
 
-## Delete node: `d`
+## Delete elements: `d`
 
 Deletes any node or edge of the graph.
-Give the entities to delete as an argument.
+Give the elements to delete as an argument.
+
+See [Identifying elements](#identifying-elements) to learn how to address elements.
 
 ### Examples
 
@@ -152,4 +162,19 @@ Deletes nodes "t1" and "t2".
 d #t4 -> #t3
 ```
 
-Deletes the pointing relation edge between "t4" and "t3".
+Deletes the pointing relation between "t4" and "t3".
+
+## Identifying elements
+
+Elements in the graph are identified by the identifier on the node/edge in the graph. In the example below, the tokens have
+the identifiers `sTok1`, `sTok2`, `sTok3`, and `t28`. Hexatomic uses single character identifier prefixes (here: `t` for "token") and consecutive numbers.
+Elements that have not been created in Hexatomic may have different identifiers. Here, the document has been created outside of Hexatomic, and 
+the token identifier starts with `sTok`. 
+
+![Labelled token nodes](node-labels.png)
+
+## Defining annotations
+
+Annotation arguments have the form `name:value` or `namespace:name:value`.
+
+This is true both for defining new annotations (`namespace` is optional), and for addressing existing annotations (`namespace` is **required**).
