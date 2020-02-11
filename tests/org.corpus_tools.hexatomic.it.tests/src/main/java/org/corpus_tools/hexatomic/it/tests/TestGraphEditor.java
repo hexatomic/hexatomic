@@ -58,7 +58,7 @@ class TestGraphEditor {
 
     // Programmatically open the example corpus
     Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.PARAM_LOCATION_ID, exampleProjectUri.toFileString());
+    params.put(CommandParams.LOCATION, exampleProjectUri.toFileString());
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.open_salt_project", params);
     handlerService.executeHandler(cmd);

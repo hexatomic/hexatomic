@@ -8,9 +8,7 @@ package org.corpus_tools.hexatomic.core;
 public interface CommandParams {
 
   public static String EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
-  public static String OPEN_DOCUMENT_ID =
-      "org.corpus_tools.hexatomic.core.command.open_salt_document";
-  public static String PARAM_LOCATION_ID =
+  public static String LOCATION =
       "org.corpus_tools.hexatomic.core.commandparameter.location";
 
 }

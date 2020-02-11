@@ -46,7 +46,7 @@ public class OpenSaltProjectHandler {
    */
   @Execute
   public void execute(Shell shell,
-      @Optional @Named(CommandParams.PARAM_LOCATION_ID) String location) {
+      @Optional @Named(CommandParams.LOCATION) String location) {
     String resultPath;
     if (location == null) {
       DirectoryDialog dialog = new DirectoryDialog(shell);
