@@ -35,7 +35,13 @@ public class SaveSaltProjectHandler {
     String resultPath;
     if (location == null) {
       DirectoryDialog dialog = new DirectoryDialog(shell);
-      
+
+      if (lastPath == null && projectManager.getLocation().isPresent()) {
+        // The user did not specifically selected a path to save yet, but we can use the original
+        // path from where the corpus was loaded.
+        lastPath = projectManager.getLocation().get().toFileString();
+      }
+
       if (lastPath != null) {
         dialog.setFilterPath(lastPath);
       }

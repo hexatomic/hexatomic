@@ -146,6 +146,14 @@ public class ProjectManager {
     return this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
         .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
   }
+  
+  /**
+   * Get the location of the current salt project if it is set.
+   * @return The optional location as URI on the file system.
+   */
+  public Optional<URI> getLocation() {
+    return location;
+  }
 
   /**
    * Opens a salt projects from a given location on disk.
