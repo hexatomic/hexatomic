@@ -26,6 +26,7 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -44,10 +45,10 @@ public class CloseSaltProjectHandler {
    * @param forceCloseRaw Whether to force closing as raw string (e.g. "true")
    */
   @Execute
-  public void execute(Shell shell, EPartService partService,
+  public void execute(Shell shell, EPartService partService, UISynchronize sync,
       @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
     boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
-    if (!forceClose  && projectManager.isDirty()) {
+    if (!forceClose && projectManager.isDirty()) {
       // Ask user if project should be closed even with unsaved changes
       boolean confirmed = MessageDialog.openConfirm(shell, "Unsaved changes in project",
           "There are unsaved changes in the project that whill be lost if you close it. "
@@ -61,7 +62,7 @@ public class CloseSaltProjectHandler {
     for (MPart part : partService.getParts()) {
       String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
       if (docID != null && !docID.isEmpty()) {
-        partService.hidePart(part);
+        sync.syncExec(() -> partService.hidePart(part));
       }
     }
 
