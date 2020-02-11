@@ -29,6 +29,10 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -40,7 +44,7 @@ public class SaveAsHandler {
 
   @Inject
   ProjectManager projectManager;
-  
+
 
   private String lastPath;
 
@@ -53,7 +57,8 @@ public class SaveAsHandler {
    *        location from where the project was loaded.
    */
   @Execute
-  public void execute(Shell shell, @Optional @Named(CommandParams.LOCATION) String location) {
+  public void execute(Shell shell, EModelService modelService, MApplication app,
+      @Optional @Named(CommandParams.LOCATION) String location) {
 
     String resultPath;
     if (location == null) {
@@ -75,14 +80,17 @@ public class SaveAsHandler {
       resultPath = location;
     }
 
-    if (resultPath == null) {
-      projectManager.save();
-    } else {
+    if (resultPath != null) {
       projectManager.saveTo(URI.createFileURI(resultPath));
+      // Change the title of the application
+      MUIElement mainWindow = modelService.find("org.eclipse.e4.window.main", app);
+      if (mainWindow instanceof MTrimmedWindow) {
+        ((MTrimmedWindow) mainWindow).setLabel("Hexatomic (" + resultPath + ")");
+      }
       lastPath = resultPath;
     }
   }
-  
+
   @CanExecute
   public boolean canExecute() {
     return projectManager.isDirty();

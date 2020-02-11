@@ -27,7 +27,11 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -46,6 +50,7 @@ public class CloseSaltProjectHandler {
    */
   @Execute
   public void execute(Shell shell, EPartService partService, UISynchronize sync,
+      EModelService modelService, MApplication app,
       @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
     boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
     if (!forceClose && projectManager.isDirty()) {
@@ -67,5 +72,11 @@ public class CloseSaltProjectHandler {
     }
 
     projectManager.close();
+
+    // Change the title of the application
+    MUIElement mainWindow = modelService.find("org.eclipse.e4.window.main", app);
+    if (mainWindow instanceof MTrimmedWindow) {
+      ((MTrimmedWindow) mainWindow).setLabel("Hexatomic");
+    }
   }
 }
