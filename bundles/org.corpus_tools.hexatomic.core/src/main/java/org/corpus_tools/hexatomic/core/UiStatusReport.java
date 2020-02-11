@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.core;
 
+import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.eclipse.e4.core.di.annotations.Creatable;
@@ -38,8 +39,10 @@ public class UiStatusReport {
    * @param location The location or null to unset it.
    */
   public void setLocation(String location) {
-    this.location = location;
-    update();
+    if (!Objects.equals(this.location, location)) {
+      this.location = location;
+      update();
+    }
   }
 
   /**
@@ -48,8 +51,10 @@ public class UiStatusReport {
    * @param isDirty True if project changed
    */
   public void setDirty(boolean isDirty) {
-    this.isDirty = isDirty;
-    update();
+    if (this.isDirty != isDirty) {
+      this.isDirty = isDirty;
+      update();
+    }
   }
 
   private void update() {
