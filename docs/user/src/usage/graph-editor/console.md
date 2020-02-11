@@ -36,8 +36,7 @@ If you call `t` again, the new token will be appended to the end.
 E.g. calling `t Not .` will result in 7 tokens in total: `[This] [is] [an] [example] [.] [Not] [.]`.
 Note that the dot is not escaped with `"` quotation marks in this example, and that `t Not.` would also work.
 
-Escaping punctuation with quotation marks is especially important in cases like `t I'm a test.`, which results in the
-creation of 5 tokens: `[I] [m] [a] [test] [.]`. To keep the apostrophe as a separate token, escape it as `t I"'"m ...`.
+Other than that, escaping punctuation with quotation marks is required for all non-alphabetical characters, to ensure correct tokenization, such as in `t I"'"m ...`.
 
 
 
