@@ -25,9 +25,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -45,6 +48,9 @@ public class TextViewer {
 
   @Inject
   private ProjectManager projectManager;
+
+  @Inject
+  private IEventBroker events;
 
   @Inject
   public TextViewer() {
@@ -72,19 +78,14 @@ public class TextViewer {
         textField.setText(text.getText());
       }
     }
-
   }
 
-  /**
-   * Unloads the document graph.
-   */
   @PreDestroy
-  public void cleanup(MPart part) {
-    Optional<SDocument> document = getDocument(part);
-    if (document.isPresent()) {
-      document.get().setDocumentGraph(null);
-    }
+  protected void cleanup(MPart part) {
+    events.post(Topics.DOCUMENT_CLOSED,
+        part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
+
 
   /**
    * Retrieve the edited document from the global and the internal persisted state.
@@ -92,7 +93,7 @@ public class TextViewer {
    * @return
    */
   private Optional<SDocument> getDocument(MPart part) {
-    String documentID = part.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+    String documentID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
     return projectManager.getDocument(documentID);
   }
 
