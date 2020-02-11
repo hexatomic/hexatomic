@@ -20,6 +20,13 @@
 
 package org.corpus_tools.hexatomic.core;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,7 +87,7 @@ public class ProjectManager {
   private SaltNotificationFactory notificationFactory;
 
   private final Set<Listener> allListeners = new LinkedHashSet<>();
-  
+
   private boolean hasUnsavedChanges;
 
   public ProjectManager() {
@@ -149,17 +156,19 @@ public class ProjectManager {
     return this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
         .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
   }
-  
+
   /**
    * Get the location of the current salt project if it is set.
+   * 
    * @return The optional location as URI on the file system.
    */
   public Optional<URI> getLocation() {
     return location;
   }
-  
+
   /**
    * Returns true if there are non-saved changes.
+   * 
    * @return True for "dirty" state.
    */
   public boolean isDirty() {
@@ -203,6 +212,30 @@ public class ProjectManager {
       final List<Listener> previousListeners = new LinkedList<>(this.allListeners);
       this.allListeners.clear();
 
+      // Clear existing files from the folder
+      Path outputDirectory = Paths.get(path.toFileString());
+      try {
+        Files.walkFileTree(outputDirectory, new SimpleFileVisitor<Path>() {
+          public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+              throws IOException {
+            Files.delete(file);
+            return FileVisitResult.CONTINUE;
+          }
+
+          public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            if (!dir.equals(outputDirectory)) {
+              Files.delete(dir);
+            }
+            return FileVisitResult.CONTINUE;
+          }
+
+        });
+      } catch (IOException ex) {
+        log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
+            ex);
+      }
+
+      // Save all files into the now empty folder
       project.saveSaltProject(path);
 
       location = Optional.of(path);
@@ -215,11 +248,10 @@ public class ProjectManager {
           events.send(Topics.DOCUMENT_LOADED, document.get().getId());
         }
       }
-      
+
       // Re-add the listeners
       this.allListeners.addAll(previousListeners);
       hasUnsavedChanges = false;
-      
     }
 
   }
@@ -285,9 +317,9 @@ public class ProjectManager {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
-      
+
       hasUnsavedChanges = true;
-      
+
       for (Listener l : allListeners) {
         l.notify(type, attribute, oldValue, newValue, container);
       }
