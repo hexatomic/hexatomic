@@ -21,8 +21,11 @@
 package org.corpus_tools.hexatomic.core.handlers;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,10 +41,13 @@ public class CloseSaltProjectHandler {
    * Close the current project.
    * 
    * @param shell The user interface shell
+   * @param forceCloseRaw Whether to force closing as raw string (e.g. "true")
    */
   @Execute
-  public void execute(Shell shell, EPartService partService) {
-    if (projectManager.isDirty()) {
+  public void execute(Shell shell, EPartService partService,
+      @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
+    boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
+    if (!forceClose  && projectManager.isDirty()) {
       // Ask user if project should be closed even with unsaved changes
       boolean confirmed = MessageDialog.openConfirm(shell, "Unsaved changes in project",
           "There are unsaved changes in the project that whill be lost if you close it. "

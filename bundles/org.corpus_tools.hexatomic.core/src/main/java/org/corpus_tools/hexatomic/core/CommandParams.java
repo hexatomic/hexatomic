@@ -29,7 +29,7 @@ package org.corpus_tools.hexatomic.core;
 public interface CommandParams {
 
   public static String EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
-  public static String LOCATION =
-      "org.corpus_tools.hexatomic.core.commandparameter.location";
+  public static String LOCATION = "org.corpus_tools.hexatomic.core.commandparameter.location";
+  public static String FORCE_CLOSE = "org.corpus_tools.hexatomic.core.commandparameter.force_close";
 
 }

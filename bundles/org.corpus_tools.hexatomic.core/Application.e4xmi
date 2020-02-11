@@ -35,7 +35,9 @@
   <commands xmi:id="_pA7BYMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.command.open_salt_project" commandName="Open Salt Project">
     <parameters xmi:id="_QNYJ4DGCEeqqrY0g-NJEjw" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>
   </commands>
-  <commands xmi:id="_kj2CcEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.command.close_salt_project" commandName="Close Salt Project"/>
+  <commands xmi:id="_kj2CcEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.command.close_salt_project" commandName="Close Salt Project">
+    <parameters xmi:id="_IdJi0EzhEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_close" name="Force Close"/>
+  </commands>
   <commands xmi:id="_o-7oQEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.command.save_salt_project" commandName="Save Salt Project"/>
   <commands xmi:id="_mqJxIEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.command.save_as_salt_project" commandName="Save Salt Project As">
     <parameters xmi:id="_IV2hoEzZEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>

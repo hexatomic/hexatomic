@@ -18,6 +18,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -49,7 +50,13 @@ class TestGraphEditor {
     assertTrue(exampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
-
+    
+    // Programmatically close the salt project to get a clean state
+    Map<String, String> params = new HashMap<>();
+    params.put(CommandParams.FORCE_CLOSE, "true");
+    ParameterizedCommand cmd = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.close_salt_project", params);
+    handlerService.executeHandler(cmd);
   }
 
   @Test
