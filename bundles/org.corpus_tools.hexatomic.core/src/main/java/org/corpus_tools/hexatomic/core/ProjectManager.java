@@ -104,7 +104,7 @@ public class ProjectManager {
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     this.location = Optional.empty();
-    this.hasUnsavedChanges = true;
+    this.hasUnsavedChanges = false;
 
     // Allow to register a change listener with Salt
     notificationFactory = new SaltNotificationFactory();
@@ -279,9 +279,9 @@ public class ProjectManager {
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
-    hasUnsavedChanges = true;
+    hasUnsavedChanges = false;
     
-    uiStatus.setDirty(true);
+    uiStatus.setDirty(false);
     uiStatus.setLocation(null);
   }
 

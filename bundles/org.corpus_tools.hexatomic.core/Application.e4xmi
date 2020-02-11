@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_c3AF0MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.application" bindingContexts="_c3AF2cjYEeSyMNYR5xypkQ">
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.window.main" label="Hexatomic" iconURI="" width="800" height="600">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.window.main" selectedElement="_470WgASgEeqYQsqyvqiQDg" label="Hexatomic" iconURI="" bindingContexts="_c3AF2cjYEeSyMNYR5xypkQ" width="800" height="600">
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_470WgASgEeqYQsqyvqiQDg" elementId="org.corpus_tools.hexatomic.core.perspectivestack.0">
       <children xsi:type="advanced:Perspective" xmi:id="_67PQkASgEeqYQsqyvqiQDg" elementId="org.corpus_tools.hexatomic.core.perspective.0">
         <children xsi:type="basic:PartSashContainer" xmi:id="_GasGEMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.partsashcontainer.0" horizontal="true">
@@ -14,7 +14,7 @@
     <mainMenu xmi:id="_tiknoMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.0">
       <children xsi:type="menu:Menu" xmi:id="_ufSukMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.file" label="File">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_wCaHIMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.opensaltproject" label="Open Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/folder-open-regular.png" command="_pA7BYMsLEemUdItNeSusZw"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_P-HZsEy8EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_salt_project" label="Save Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" command="_o-7oQEy7EeqppqV5eQIggg"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_P-HZsEy8EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_salt_project" label="Save Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" mnemonics="" command="_o-7oQEy7EeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_xiM4wEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_as_salt_project" label="Save Salt Project As..." iconURI="" command="_mqJxIEzaEeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_8J_rwEy3EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.closeproject" label="Close Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
       </children>
@@ -25,6 +25,20 @@
   <handlers xmi:id="_5u7gIEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.handler.close_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.CloseSaltProjectHandler" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
   <handlers xmi:id="_nNYLEEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveHandler" command="_o-7oQEy7EeqppqV5eQIggg"/>
   <handlers xmi:id="_rG0JsEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_as_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveAsHandler" command="_mqJxIEzaEeqppqV5eQIggg"/>
+  <bindingTables xmi:id="_oI0WcEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.bindingtable.windows" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
+    <bindings xmi:id="_qIQeoEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.0" keySequence="M1+M2+S" command="_mqJxIEzaEeqppqV5eQIggg">
+      <tags>type:user</tags>
+    </bindings>
+    <bindings xmi:id="_VR9IsEz6EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.1" keySequence="M1+W" command="_kj2CcEmZEeqbxMjDv0hhTg">
+      <tags>type:user</tags>
+    </bindings>
+    <bindings xmi:id="_ZdptEEz6EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.2" keySequence="M1+O" command="_pA7BYMsLEemUdItNeSusZw">
+      <tags>type:user</tags>
+    </bindings>
+    <bindings xmi:id="_sS2RcEz6EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.3" keySequence="M1+S" command="_o-7oQEy7EeqppqV5eQIggg">
+      <tags>type:user</tags>
+    </bindings>
+  </bindingTables>
   <rootContext xmi:id="_c3AF2cjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
     <children xmi:id="_c3AF2sjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_c3AF28jYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
