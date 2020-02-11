@@ -83,6 +83,9 @@ public class ProjectManager {
 
   @Inject
   EPartService partService;
+  
+  @Inject
+  UiStatusReport uiStatus;
 
   private SaltNotificationFactory notificationFactory;
 
@@ -195,6 +198,8 @@ public class ProjectManager {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
     hasUnsavedChanges = false;
+    uiStatus.setDirty(false);
+    uiStatus.setLocation(path.toFileString());
   }
 
   /**
@@ -252,6 +257,8 @@ public class ProjectManager {
       // Re-add the listeners
       this.allListeners.addAll(previousListeners);
       hasUnsavedChanges = false;
+      uiStatus.setDirty(false);
+      uiStatus.setLocation(path.toFileString());
     }
 
   }
@@ -273,6 +280,9 @@ public class ProjectManager {
     this.project = SaltFactory.createSaltProject();
     events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
     hasUnsavedChanges = true;
+    
+    uiStatus.setDirty(true);
+    uiStatus.setLocation(null);
   }
 
   @Inject
@@ -319,6 +329,7 @@ public class ProjectManager {
         Object newValue, Object container) {
 
       hasUnsavedChanges = true;
+      uiStatus.setDirty(true);
 
       for (Listener l : allListeners) {
         l.notify(type, attribute, oldValue, newValue, container);

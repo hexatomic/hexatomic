@@ -26,10 +26,6 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -49,8 +45,7 @@ public class OpenSaltProjectHandler {
    *        with a file chooser.
    */
   @Execute
-  public void execute(Shell shell, EModelService modelService, MApplication app,
-      @Optional @Named(CommandParams.LOCATION) String location) {
+  public void execute(Shell shell, @Optional @Named(CommandParams.LOCATION) String location) {
     String resultPath;
     if (location == null) {
       DirectoryDialog dialog = new DirectoryDialog(shell);
@@ -67,12 +62,6 @@ public class OpenSaltProjectHandler {
     if (resultPath != null) {
       projectManager.open(URI.createFileURI(resultPath));
       lastPath = resultPath;
-
-      // Change the title of the application
-      MUIElement mainWindow = modelService.find("org.eclipse.e4.window.main", app);
-      if (mainWindow instanceof MWindow) {
-        ((MWindow) mainWindow).setLabel("Hexatomic - " + resultPath);
-      }
     }
   }
 }
