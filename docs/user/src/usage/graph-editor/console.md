@@ -10,6 +10,12 @@ Hexatomics command line syntax is similar to the one of [GraphAnno](https://gith
 
 Currently, the following commands are supported.
 
+> - [`t`: Tokenize](#tokenize-t)
+> - [`tb`/`ta`: Tokenize before /after a token](`#tokenize-before-tb-and-after-ta-a-given-token`)
+> - [`n`: New node](#new-node-n)
+> - [`e`: New edge](#new-edge-e)
+> - [`a`: Annotate](#annotate-a)
+> - [`d`: Delete elements](#delete-elements-d)
 
 ## Tokenize: `t`
 
