@@ -25,22 +25,31 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 
 public class CloseSaltProjectHandler {
 
   @Inject
   private ProjectManager projectManager;
 
-  @Inject
-  private EPartService partService;
 
   /**
    * Close the current project.
    * 
+   * @param shell The user interface shell
    */
   @Execute
-  public void execute() {
-    // TODO: when save is implemented, check here for any modifications of the graph
+  public void execute(Shell shell, EPartService partService) {
+    if (projectManager.isDirty()) {
+      // Ask user if project should be closed even with unsaved changes
+      boolean confirmed = MessageDialog.openConfirm(shell, "Unsaved changes in project",
+          "There are unsaved changes in the project that whill be lost if you close it. "
+              + "Do you reayll want to close the project?");
+      if (!confirmed) {
+        return;
+      }
+    }
 
     // Close all editors
     for (MPart part : partService.getParts()) {
