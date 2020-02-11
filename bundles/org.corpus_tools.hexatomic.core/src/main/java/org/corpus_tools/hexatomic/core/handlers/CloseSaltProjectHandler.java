@@ -23,11 +23,16 @@ package org.corpus_tools.hexatomic.core.handlers;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 
 public class CloseSaltProjectHandler {
 
   @Inject
   private ProjectManager projectManager;
+
+  @Inject
+  private EPartService partService;
 
   /**
    * Close the current project.
@@ -36,6 +41,16 @@ public class CloseSaltProjectHandler {
   @Execute
   public void execute() {
     // TODO: when save is implemented, check here for any modifications of the graph
+
+    // Close all editors
+    for (MPart part : partService.getParts()) {
+      String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+      if (docID != null && !docID.isEmpty()) {
+        partService.hidePart(part);
+      }
+    }
+
     projectManager.close();
+
   }
 }
