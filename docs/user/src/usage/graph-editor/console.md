@@ -167,9 +167,9 @@ Deletes the pointing relation between "t4" and "t3".
 ## Identifying elements
 
 Elements in the graph are identified by the identifier on the node/edge in the graph. In the example below, the tokens have
-the identifiers `sTok1`, `sTok2`, `sTok3`, and `t28`. Hexatomic uses single character identifier prefixes (here: `t` for "token") and consecutive numbers.
-Elements that have not been created in Hexatomic may have different identifiers. Here, the document has been created outside of Hexatomic, and 
-the token identifier starts with `sTok`. 
+the identifiers `sTok1`, `sTok2`, `sTok3`, and `t28`. 
+
+Note that identifiers for the same type of element may look different within one and the same document (as in `sTok1` and `t28`).
 
 ![Labelled token nodes](node-labels.png)
 
