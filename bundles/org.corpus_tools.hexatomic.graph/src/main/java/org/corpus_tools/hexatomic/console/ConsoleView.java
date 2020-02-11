@@ -90,6 +90,15 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   }
 
   /**
+   * Sets a new Salt annotation graph to edit.
+   * 
+   * @param graph The Salt graph to edit.
+   */
+  public void setGraph(SDocumentGraph graph) {
+    this.controller.setGraph(graph);
+  }
+
+  /**
    * Outputs a string in the console.
    * 
    * @param str The string to output (without trailing new line).

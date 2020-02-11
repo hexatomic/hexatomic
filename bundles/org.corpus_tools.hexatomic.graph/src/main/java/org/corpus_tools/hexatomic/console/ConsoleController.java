@@ -44,7 +44,7 @@ public class ConsoleController {
 
   private static final int MAX_HISTORY_LENGTH = 1000;
 
-  private final SDocumentGraph graph;
+  private SDocumentGraph graph;
 
   private final LinkedList<String> commandHistory = new LinkedList<>();
   private ListIterator<String> itCommandHistory;
@@ -113,6 +113,14 @@ public class ConsoleController {
 
   public ListIterator<String> getCommandHistoryIterator() {
     return itCommandHistory;
+  }
+  
+  public SDocumentGraph getGraph() {
+    return graph;
+  }
+  
+  public void setGraph(SDocumentGraph graph) {
+    this.graph = graph;
   }
 
   private final class ErrorListener extends BaseErrorListener {

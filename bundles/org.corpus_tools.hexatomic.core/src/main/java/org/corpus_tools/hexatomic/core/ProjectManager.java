@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.core;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -174,9 +175,13 @@ public class ProjectManager {
     if (path != null) {
       // Remember all loaded document graphs: saving the project will unlink the connection and we
       // need to restore it later.
-      List<String> loadedDocumentIds = project.getCorpusGraphs().stream()
+      final List<String> loadedDocumentIds = project.getCorpusGraphs().stream()
           .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
           .map(d -> d.getId()).collect(Collectors.toList());
+
+      // Unsubscribe all listeners for the document changes
+      final List<Listener> previousListeners = new LinkedList<>(this.allListeners);
+      this.allListeners.clear();
 
       project.saveSaltProject(path);
 
@@ -187,9 +192,13 @@ public class ProjectManager {
         Optional<SDocument> document = getDocument(documentID);
         if (document.isPresent()) {
           document.get().loadDocumentGraph();
+          events.send(Topics.DOCUMENT_LOADED, document.get().getId());
         }
       }
-      events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
+      
+      // Re-add the listeners
+      this.allListeners.addAll(previousListeners);
+      
     }
 
   }
@@ -199,22 +208,7 @@ public class ProjectManager {
    */
   public void save() {
     if (location.isPresent()) {
-      // Remember all loaded document graphs: saving the project will unlink the connection and we
-      // need to restore it later.
-      List<String> loadedDocumentIds = project.getCorpusGraphs().stream()
-          .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
-          .map(d -> d.getId()).collect(Collectors.toList());
-
-      project.saveSaltProject(location.get());
-
-      // Reload the originally loaded documents
-      for (String documentID : loadedDocumentIds) {
-        Optional<SDocument> document = getDocument(documentID);
-        if (document.isPresent()) {
-          document.get().loadDocumentGraph();
-        }
-      }
-      events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
+      saveTo(location.get());
     }
   }
 
