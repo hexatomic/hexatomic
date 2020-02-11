@@ -220,7 +220,7 @@ public class CorpusStructureView {
     Tree tree = treeViewer.getTree();
     treeViewer.setColumnProperties(new String[] {"name"});
     treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree)});
-    
+
     CorpusLabelProvider labelProvider = new CorpusLabelProvider();
     treeViewer.setCellModifier(new ICellModifier() {
 
@@ -473,7 +473,36 @@ public class CorpusStructureView {
             Optional<SNode> parent =
                 n.getInRelations().stream().filter((rel) -> rel instanceof SCorpusDocumentRelation)
                     .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
+
+            // Attempt to find the previous sibling document of the one that is deleted
+            Optional<SDocument> previousDocument = Optional.empty();
             if (parent.isPresent()) {
+              // Collect all siblings
+              List<SDocument> siblings = parent.get().getOutRelations().stream()
+                  .filter(rel -> rel instanceof SCorpusDocumentRelation)
+                  .map(rel -> ((SCorpusDocumentRelation) rel).getTarget())
+                  .collect(Collectors.toList());
+              if (!siblings.isEmpty()) {
+                // Find the position of the deleted document and use the index
+                // to get the previous document (or select the first other if not found)
+                int indexOfDocument = siblings.indexOf(n);
+                if (indexOfDocument == 0) {
+                  if (siblings.size() > 1) {
+                    // select the next document in the list since we are deleting the first one
+                    previousDocument = Optional.of(siblings.get(1));
+                  }
+                } else if (indexOfDocument > 0) {
+                  previousDocument = Optional.of(siblings.get(indexOfDocument - 1));
+                } else {
+                  previousDocument = Optional.of(siblings.get(0));
+                }
+              }
+            }
+
+            if (previousDocument.isPresent()) {
+              // select the previous corpus
+              selectSaltObject(previousDocument.get(), true);
+            } else if (parent.isPresent()) {
               // select parent corpus
               selectSaltObject(parent.get(), true);
             } else {
@@ -494,6 +523,7 @@ public class CorpusStructureView {
 
   /**
    * Selects a Salt object (like document, sub-corpus, etc.) in the overview.
+   * 
    * @param object The object to select
    * @param reveal If true, make sure the object is visible by revealing it
    */
@@ -542,8 +572,7 @@ public class CorpusStructureView {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(
-      @UIEventTopic(Topics.CORPUS_STRUCTURE_CHANGED) String path) {
+  private void subscribeProjectChanged(@UIEventTopic(Topics.CORPUS_STRUCTURE_CHANGED) String path) {
     if (treeViewer != null) {
       treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
     }
