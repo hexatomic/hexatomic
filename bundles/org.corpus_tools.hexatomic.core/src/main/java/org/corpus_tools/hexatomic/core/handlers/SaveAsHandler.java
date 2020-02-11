@@ -5,19 +5,21 @@ import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class SaveSaltProjectHandler {
+public class SaveAsHandler {
 
   @Inject
   ErrorService errorService;
 
   @Inject
   ProjectManager projectManager;
+  
 
   private String lastPath;
 
