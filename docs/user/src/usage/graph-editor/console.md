@@ -10,6 +10,7 @@ Hexatomics command line syntax is similar to the one of [GraphAnno](https://gith
 
 Currently, the following commands are supported.
 
+
 ## Tokenize: `t`
 
 Tokenize the given argument string and add the tokens to the annotation graph.
@@ -37,8 +38,6 @@ creation of 5 tokens: `[I] [m] [a] [test] [.]`. To keep the apostrophe as a sepa
 ## Tokenize before (`tb`) and after (`ta`) a given token
 
 Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.
-Read the section [Identifying elements](#identifying-elements) to find out how to pass the command the respective reference token.
-
 
 ### Examples
 
@@ -56,12 +55,15 @@ Given the new tokens, calling the following command will insert the two new toke
 ta #t1 is a
 ```
 
+#### See also
+
+- [Identifying elements](#identifying-elements)
+
 ## New node: `n`
 
 The command `n` will create a new node, and dominance relations between the new node and existing nodes.
 
 Additionally, it can be used to annotate the new node in the same command.
-To find out how to define annotations, read the section [Defining annotation](#defining-annotations).
 
 Arguments starting with `#` refer to the node names to which dominance edges are added (e.g. `#someNodeName`).
 
@@ -78,7 +80,7 @@ n cat:NP #t3 #t4
 
 ![Output after adding an NP node](newnode-example-1.png)
 
-The following command creates a new node using the namespace "tiger" for the annotation (see also [Defining annotations](#defining-annotations)).
+The following command creates a new node using the namespace "tiger" for the annotation.
 
 ```text
 n tiger:cat:NP #t1
@@ -94,6 +96,11 @@ n cat:VP #t2 #n1
 n cat:S #n2 #n3
 ```
 ![Complete syntax annotation](newnode-example-3.png)
+
+#### See also
+
+- [Identifying elements](#identifying-elements)
+- [Defining annotations](#defining-annotations)
 
 ## New edge: `e`
 
@@ -120,10 +127,16 @@ This example adds a dominance relation between the existing nodes.
 
 ![Added dominance relation](addedge-dominance.png)
 
+#### See also
+
+- [Identifying elements](#identifying-elements)
+- [Defining annotations](#defining-annotations)
+
+
 ## Annotate: `a`
 
 Adds, updates, or deletes annotations on existing nodes.
-Give the referenced nodes (see [Identifying elements](#identifying-elements)), and the annotation arguments.
+Takes as arguments the nodes which should be annotated, and the annotation to add, change, or delete.
 You can delete existing annotations by leaving the value in the annotation attribute empty.
 
 ### Examples
@@ -142,13 +155,15 @@ a pos: #t1
 
 Deletes the "pos" annotation for the "t1" node.
 
+#### See also
+
+- [Identifying elements](#identifying-elements)
+- [Defining annotations](#defining-annotations)
 
 ## Delete elements: `d`
 
 Deletes any node or edge of the graph.
 Give the elements to delete as an argument.
-
-See [Identifying elements](#identifying-elements) to learn how to address elements.
 
 ### Examples
 
@@ -163,6 +178,11 @@ d #t4 -> #t3
 ```
 
 Deletes the pointing relation between "t4" and "t3".
+
+#### See also
+
+- [Identifying elements](#identifying-elements)
+
 
 ## Identifying elements
 
