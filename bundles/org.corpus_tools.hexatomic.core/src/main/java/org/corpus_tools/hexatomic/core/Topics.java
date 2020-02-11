@@ -21,6 +21,11 @@
 
 package org.corpus_tools.hexatomic.core;
 
+/**
+ * Contains constants for topics use by the core bundle.
+ * 
+ * @author Thomas Krause
+ */
 public interface Topics {
   
   public static final String CORPUS_STRUCTURE_CHANGED = "CORPUS_STRUCTURE_CHANGED";

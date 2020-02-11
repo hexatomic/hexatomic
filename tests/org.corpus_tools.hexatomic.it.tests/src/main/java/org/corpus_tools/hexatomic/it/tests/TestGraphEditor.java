@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -58,7 +58,7 @@ class TestGraphEditor {
 
     // Programmatically open the example corpus
     Map<String, String> params = new HashMap<>();
-    params.put(OpenSaltProjectHandler.COMMAND_PARAM_LOCATION_ID, exampleProjectUri.toFileString());
+    params.put(CommandParams.PARAM_LOCATION_ID, exampleProjectUri.toFileString());
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.open_salt_project", params);
     handlerService.executeHandler(cmd);

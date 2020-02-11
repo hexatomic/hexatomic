@@ -35,8 +35,7 @@ public class CloseSaltProjectHandler {
    */
   @Execute
   public void execute() {
-    // TODO: when save is implement, check here for any modifications of the graph
-
+    // TODO: when save is implemented, check here for any modifications of the graph
     projectManager.close();
   }
 }

@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
@@ -568,7 +569,7 @@ public class CorpusStructureView {
 
       // Set the correct editor ID as parameter
       MParameter paramEditorID = modelService.createModelElement(MParameter.class);
-      paramEditorID.setName(OpenSaltDocumentHandler.COMMAND_PARAM_EDITOR_ID);
+      paramEditorID.setName(CommandParams.EDITOR_ID);
       paramEditorID.setValue(desc.getElementId());
       menuItem.getParameters().add(paramEditorID);
 
