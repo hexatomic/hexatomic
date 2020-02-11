@@ -61,4 +61,9 @@ public class SaveAsHandler {
       lastPath = resultPath;
     }
   }
+  
+  @CanExecute
+  public boolean canExecute() {
+    return projectManager.isDirty();
+  }
 }

@@ -15,8 +15,6 @@ public class SaveHandler {
   @Inject
   ProjectManager projectManager;
 
-
-
   /**
    * Saves the Salt project and all opened documents under its current location.
    * 
@@ -29,6 +27,6 @@ public class SaveHandler {
 
   @CanExecute
   public boolean canExecute() {
-    return projectManager.getLocation().isPresent();
+    return projectManager.getLocation().isPresent() && projectManager.isDirty();
   }
 }

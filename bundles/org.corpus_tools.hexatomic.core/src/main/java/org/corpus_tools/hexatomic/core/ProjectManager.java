@@ -80,6 +80,8 @@ public class ProjectManager {
   private SaltNotificationFactory notificationFactory;
 
   private final Set<Listener> allListeners = new LinkedHashSet<>();
+  
+  private boolean hasUnsavedChanges;
 
   public ProjectManager() {
 
@@ -92,6 +94,7 @@ public class ProjectManager {
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     this.location = Optional.empty();
+    this.hasUnsavedChanges = true;
 
     // Allow to register a change listener with Salt
     notificationFactory = new SaltNotificationFactory();
@@ -154,6 +157,14 @@ public class ProjectManager {
   public Optional<URI> getLocation() {
     return location;
   }
+  
+  /**
+   * Returns true if there are non-saved changes.
+   * @return True for "dirty" state.
+   */
+  public boolean isDirty() {
+    return hasUnsavedChanges;
+  }
 
   /**
    * Opens a salt projects from a given location on disk.
@@ -174,6 +185,7 @@ public class ProjectManager {
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
+    hasUnsavedChanges = false;
   }
 
   /**
@@ -206,6 +218,7 @@ public class ProjectManager {
       
       // Re-add the listeners
       this.allListeners.addAll(previousListeners);
+      hasUnsavedChanges = false;
       
     }
 
@@ -227,6 +240,7 @@ public class ProjectManager {
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
+    hasUnsavedChanges = true;
   }
 
   @Inject
@@ -271,6 +285,9 @@ public class ProjectManager {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
+      
+      hasUnsavedChanges = true;
+      
       for (Listener l : allListeners) {
         l.notify(type, attribute, oldValue, newValue, container);
       }

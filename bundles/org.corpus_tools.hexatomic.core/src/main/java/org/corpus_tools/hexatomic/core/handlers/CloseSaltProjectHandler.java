@@ -51,6 +51,5 @@ public class CloseSaltProjectHandler {
     }
 
     projectManager.close();
-
   }
 }
