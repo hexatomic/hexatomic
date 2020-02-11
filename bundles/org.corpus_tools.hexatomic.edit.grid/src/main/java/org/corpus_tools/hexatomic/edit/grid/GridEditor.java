@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
@@ -172,6 +173,9 @@ public class GridEditor {
       }
     });
     viewer.setInput(graph.getTextualDSs());
+    if (graph.getTextualDSs().size() == 1) {
+      viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
+    }
   }
 
   private SDocumentGraph getGraph() {
