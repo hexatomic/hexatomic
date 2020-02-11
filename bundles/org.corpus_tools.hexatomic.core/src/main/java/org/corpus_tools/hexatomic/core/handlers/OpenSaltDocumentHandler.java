@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.core.handlers;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.exceptions.SaltResourceException;
 import org.eclipse.e4.core.di.annotations.CanExecute;
@@ -41,9 +42,6 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
  */
 public class OpenSaltDocumentHandler {
 
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(OpenSaltDocumentHandler.class);
-
   public static final String DOCUMENT_ID = "org.corpus_tools.hexatomic.document-id";
   public static final String COMMAND_OPEN_DOCUMENT_ID =
       "org.corpus_tools.hexatomic.core.command.open_salt_document";
@@ -60,7 +58,8 @@ public class OpenSaltDocumentHandler {
    */
   @Execute
   public static void execute(ProjectManager projectManager, EPartService partService,
-      ESelectionService selectionService, @Named(CommandParams.EDITOR_ID) String editorID) {
+      ESelectionService selectionService, ErrorService errorService,
+      @Named(CommandParams.EDITOR_ID) String editorID) {
 
     // get currently selected document
     Object selection = selectionService.getSelection();
@@ -79,9 +78,9 @@ public class OpenSaltDocumentHandler {
           }
 
         } catch (SaltResourceException ex) {
-          // TODO: display error to the user in a dialog
-          log.error("Could not load document graph (the actual annotations for document {}).",
-              document.getId(), ex);
+          errorService
+              .handleException("Could not load document graph (the actual annotations for document "
+                  + document.getId() + ").", ex, OpenSaltDocumentHandler.class);
         }
       }
 
