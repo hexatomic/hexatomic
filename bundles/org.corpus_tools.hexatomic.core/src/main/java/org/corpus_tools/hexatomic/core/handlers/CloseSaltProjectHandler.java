@@ -31,6 +31,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -75,8 +76,8 @@ public class CloseSaltProjectHandler {
 
     // Change the title of the application
     MUIElement mainWindow = modelService.find("org.eclipse.e4.window.main", app);
-    if (mainWindow instanceof MTrimmedWindow) {
-      ((MTrimmedWindow) mainWindow).setLabel("Hexatomic");
+    if (mainWindow instanceof MWindow) {
+      ((MWindow) mainWindow).setLabel("Hexatomic");
     }
   }
 }
