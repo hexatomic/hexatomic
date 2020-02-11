@@ -21,8 +21,10 @@
 package org.corpus_tools.hexatomic.core;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,6 +62,7 @@ public class ProjectManager {
       org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
 
   private SaltProject project;
+  private Optional<URI> location = Optional.empty();
 
   @Inject
   IEventBroker events;
@@ -87,6 +90,7 @@ public class ProjectManager {
 
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
+    this.location = Optional.empty();
 
     // Allow to register a change listener with Salt
     notificationFactory = new SaltNotificationFactory();
@@ -154,11 +158,63 @@ public class ProjectManager {
   public void open(URI path) {
 
     project = SaltFactory.createSaltProject();
+    location = Optional.of(path);
     try {
       project.loadCorpusStructure(path);
       events.send(Topics.CORPUS_STRUCTURE_CHANGED, path.toFileString());
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
+    }
+  }
+
+  /**
+   * Saves all documents and the corpus structure as Salt project to a new location.
+   */
+  public void saveTo(URI path) {
+    if (path != null) {
+      // Remember all loaded document graphs: saving the project will unlink the connection and we
+      // need to restore it later.
+      List<String> loadedDocumentIds = project.getCorpusGraphs().stream()
+          .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
+          .map(d -> d.getId()).collect(Collectors.toList());
+
+      project.saveSaltProject(path);
+
+      location = Optional.of(path);
+
+      // Reload the originally loaded documents
+      for (String documentID : loadedDocumentIds) {
+        Optional<SDocument> document = getDocument(documentID);
+        if (document.isPresent()) {
+          document.get().loadDocumentGraph();
+        }
+      }
+      events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
+    }
+
+  }
+
+  /**
+   * Saves all loaded documents and the corpus structure as Salt project.
+   */
+  public void save() {
+    if (location.isPresent()) {
+      // Remember all loaded document graphs: saving the project will unlink the connection and we
+      // need to restore it later.
+      List<String> loadedDocumentIds = project.getCorpusGraphs().stream()
+          .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
+          .map(d -> d.getId()).collect(Collectors.toList());
+
+      project.saveSaltProject(location.get());
+
+      // Reload the originally loaded documents
+      for (String documentID : loadedDocumentIds) {
+        Optional<SDocument> document = getDocument(documentID);
+        if (document.isPresent()) {
+          document.get().loadDocumentGraph();
+        }
+      }
+      events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
     }
   }
 
@@ -191,7 +247,7 @@ public class ProjectManager {
 
         if (counter <= 1) {
           // No other editor found, unload document graph if it can be located on disk
-          // TODO: when saving projects is implemented, check if there are unsaved changess
+          // TODO: when saving projects is implemented, check if there are unsaved changes
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);

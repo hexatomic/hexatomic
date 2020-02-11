@@ -546,11 +546,11 @@ public class GraphEditor {
       } else if (container instanceof org.corpus_tools.salt.graph.Label) {
         element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
       }
-      if (element == null || element.getId() == null) {
+      SDocumentGraph graph = getGraph();
+      if (element == null || element.getId() == null || graph == null) {
         return;
       } else {
         URI elementUri = URI.createURI(element.getId());
-        SDocumentGraph graph = getGraph();
         if (!elementUri.path().equals(graph.getPath().path())) {
           return;
         }
