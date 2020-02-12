@@ -1,5 +1,5 @@
 /*-
- * #%L
+ * #%
  * org.corpus_tools.hexatomic.core
  * %%
  * Copyright (C) 2018 - 2020 Stephan Druskat,
@@ -18,6 +18,7 @@
  * limitations under the License.
  * #L%
  */
+
 package org.corpus_tools.hexatomic.core;
 
 import java.util.Objects;
