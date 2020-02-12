@@ -38,6 +38,8 @@ class TestProjectManager {
   private ErrorService errorService;
 
   private EPartService partService;
+  
+  private UiStatusReport uiStatus;
 
   @BeforeEach
   public void setUp() throws Exception {
@@ -50,11 +52,13 @@ class TestProjectManager {
     events = mock(IEventBroker.class);
     errorService = mock(ErrorService.class);
     partService = mock(EPartService.class);
+    uiStatus = mock(UiStatusReport.class);
 
     projectManager = new ProjectManager();
     projectManager.events = events;
     projectManager.errorService = errorService;
     projectManager.partService = partService;
+    projectManager.uiStatus = uiStatus;
 
     projectManager.postConstruct();
 
