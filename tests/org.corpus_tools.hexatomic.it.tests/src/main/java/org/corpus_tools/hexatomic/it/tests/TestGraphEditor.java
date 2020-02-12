@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -16,6 +18,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,10 +55,7 @@ class TestGraphEditor {
 
   }
 
-  @Test
-  @Order(1)
-  void testShowSaltExample() {
-
+  SWTBotView openDefaultExample() {
     // Programmatically open the example corpus
     Map<String, String> params = new HashMap<>();
     params.put(OpenSaltProjectHandler.COMMAND_PARAM_LOCATION_ID, exampleProjectUri.toFileString());
@@ -77,11 +77,32 @@ class TestGraphEditor {
     SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
     assertNotNull(view);
 
+    return view;
+
+  }
+
+  @Test
+  @Order(1)
+  void testShowSaltExample() {
+   
+    openDefaultExample();
+  
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
 
     // Check all nodes and edges have been created
     assertEquals(23, g.getNodes().size());
     assertEquals(22, g.getConnections().size());
+  }
+
+  @Test
+  @Order(2)
+  void testAddPointingRelation() {
+    
+    openDefaultExample();
+    
+    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
+    console.typeText("e #structure8 -> #structure9\n");
+
   }
 }

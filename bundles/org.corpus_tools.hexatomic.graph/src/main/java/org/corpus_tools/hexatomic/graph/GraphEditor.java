@@ -103,6 +103,9 @@ import org.eclipse.zest.layouts.LayoutStyles;
 
 public class GraphEditor {
 
+  private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
+
+
   @Inject
   private ProjectManager projectManager;
 
@@ -215,6 +218,8 @@ public class GraphEditor {
     Document consoleDocument = new Document();
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
+    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
+        "graph-editor/text-console");
     new ConsoleView(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
