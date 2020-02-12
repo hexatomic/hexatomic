@@ -217,4 +217,14 @@ class TestConsoleController {
 
   }
 
+  @Test
+  void testTokenizeError() {
+    // This command should produce an error message containing of two lines: the position marker
+    // and the actual message.
+    List<String> output = console.executeCommand("t I'm a test");
+    assertEquals(1, output.size());
+    // Check the error position marker and message
+    assertEquals("     ^\ntoken recognition error at: '''", output.get(0));
+  }
+
 }
