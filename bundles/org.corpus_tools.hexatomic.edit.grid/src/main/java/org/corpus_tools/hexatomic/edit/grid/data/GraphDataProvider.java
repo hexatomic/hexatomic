@@ -51,7 +51,6 @@ public class GraphDataProvider implements IDataProvider {
 
   private STextualDS ds = null;
   private final SDocumentGraph graph;
-  // private int columnCount = 1;
   private final List<SToken> orderedDSTokens = new ArrayList<SToken>();
   private final List<SSpan> dsSpans = new ArrayList<SSpan>();
 
@@ -76,6 +75,8 @@ public class GraphDataProvider implements IDataProvider {
     // Reset data
     orderedDSTokens.clear();
     dsSpans.clear();
+    tokenColumns.clear();
+    spanColumns.clear();
     columns.clear();
 
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
@@ -110,16 +111,17 @@ public class GraphDataProvider implements IDataProvider {
     }
     columns.add(tokenColumn);
 
-    // Count token annotations and add to column count
-    // resolveTokenAnnotations(orderedDSTokens);
+    resolveTokenAnnotations(orderedDSTokens);
 
     // Count span annotations and add to column count
     // resolveAnnotations(new ArrayList<SStructuredNode>(dsSpans));
     // resolveSpanAnnotations(dsSpans, orderedDSTokens);
 
-    // Compile columns
+    // Complete the list of columns
+    // Order is kept correctly, because TreeMap.values()' iterator returns the values in
+    // ascending order of the corresponding keys, i.e., the collection of values is sorted.
     columns.addAll(tokenColumns.values());
-    // columns.addAll(1 + tokenColumns.size(), spanColumns.values());
+    columns.addAll(spanColumns.values());
 
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
@@ -142,7 +144,9 @@ public class GraphDataProvider implements IDataProvider {
             // FIXME TODO Spawn new column
           }
         } else {
-          // tokenColumns.put(anno.getQName(), new Column(orderedTokens.indexOf(token), anno));
+          column = new Column();
+          column.setRow(orderedTokens.indexOf(token), anno);
+          tokenColumns.put(anno.getQName(), column);
         }
       }
     }
@@ -181,7 +185,6 @@ public class GraphDataProvider implements IDataProvider {
     } else if (orderedDSTokens.size() == 0) {
       return 1;
     }
-    log.debug("#### COLUMNS SIZE: {}", columns.size());
     return columns.size();
   }
 
