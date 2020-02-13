@@ -3,11 +3,16 @@ package org.corpus_tools.hexatomic.graph.internal;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 
 public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
 
-  public MidpointOfMiddleSegmentLocator(Connection c) {
+  private final int fontHeight;
+
+  public MidpointOfMiddleSegmentLocator(Connection c, int fontHeight) {
     super(c);
+    this.fontHeight = fontHeight;
   }
 
   /**
@@ -21,6 +26,7 @@ public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
     Connection conn = getConnection();
     Point p = Point.SINGLETON;
 
+
     if (conn.getPoints().size() >= 2) {
 
       // Since there are at least two points, nrPoints / 2 is at least "1"
@@ -33,6 +39,9 @@ public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
       conn.translateToAbsolute(p2);
       p.x = (p2.x - p1.x) / 2 + p1.x;
       p.y = (p2.y - p1.y) / 2 + p1.y;
+
+      // Use the text height as offset to draw the label above the line (if it is straight)
+      p.y -= fontHeight / 2;
       return p;
     } else {
       // Return the only point as reference

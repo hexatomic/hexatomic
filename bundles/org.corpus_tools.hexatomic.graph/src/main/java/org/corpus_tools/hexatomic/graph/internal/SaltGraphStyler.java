@@ -42,6 +42,9 @@ import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
 import org.eclipse.zest.core.viewers.IFigureProvider;
 import org.eclipse.zest.core.viewers.ISelfStyleProvider;
@@ -118,12 +121,16 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       //
       // Find the label of the connection figure and add a new locator constraint, that places
       // the label in the midpoint of the middle edge segment.
+      GC gc = new GC(connection.getDisplay());
+      FontMetrics fontMetrics = gc.getFontMetrics();
+      int fontHeight = fontMetrics.getHeight();
+      gc.dispose();
       Connection connFigure = connection.getConnectionFigure();
       for (Object c : connFigure.getChildren()) {
         if (c instanceof org.eclipse.draw2d.Label) {
           org.eclipse.draw2d.Label connLabel = (org.eclipse.draw2d.Label) c;
           connFigure.getLayoutManager().setConstraint(connLabel,
-              new MidpointOfMiddleSegmentLocator(connFigure));
+              new MidpointOfMiddleSegmentLocator(connFigure, fontHeight));
         }
       }
 
