@@ -1,7 +1,7 @@
 package org.corpus_tools.hexatomic.edit.grid.data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -15,7 +15,7 @@ import org.corpus_tools.salt.graph.LabelableElement;
  */
 public class Column {
 
-  private final List<LabelableElement> rowCells = new ArrayList<>();
+  private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
   private String title = null;
 
   // /**
@@ -46,17 +46,24 @@ public class Column {
    * @param rowIndex
    * @param anno
    * @return
+   * @return
    */
-  boolean setRow(int rowIndex, SAnnotation anno) {
-    boolean isNewValue = rowCells.get(rowIndex) == null;
-    if (isNewValue) {
-      rowCells.add(rowIndex, anno);
-    }
-    return isNewValue;
-  }
+  // boolean setRow(int rowIndex, SAnnotation anno) {
+  // boolean isNewValue = rowCells.get(rowIndex) == null;
+  // if (isNewValue) {
+  // rowCells.add(rowIndex, anno);
+  // }
+  // return isNewValue;
+  // }
 
-  public void setRow(int rowIndex, LabelableElement dataObject) {
-    rowCells.add(rowIndex, dataObject);
+  public boolean setRow(int rowIndex, LabelableElement dataObject) {
+    LabelableElement existingDataObject = rowCells.get(rowIndex);
+    if (existingDataObject != null) {
+      return false;
+    } else {
+      rowCells.put(rowIndex, dataObject);
+      return true;
+    }
   }
 
   String getDisplayText(int rowIndex) {
