@@ -115,15 +115,16 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       connection.changeLineColor(ColorConstants.blue);
       connection.getConnectionFigure().setConnectionRouter(pointingConnectionRouter);
 
-      //
+      // The default midpoint locator always uses the first segment of the edge as location for the
+      // label.
       // Find the label of the connection figure and add a new locator constraint, that places
-      // the label in the midpoint of the middle edge segment.
+      // the label in the middle of the second edge segment.
       Connection connFigure = connection.getConnectionFigure();
       for (Object c : connFigure.getChildren()) {
         if (c instanceof org.eclipse.draw2d.Label) {
           org.eclipse.draw2d.Label connLabel = (org.eclipse.draw2d.Label) c;
           connFigure.getLayoutManager().setConstraint(connLabel,
-              new MidpointOfMiddleSegmentLocator(connFigure));
+              new MidpointLocator(connFigure, 1));
         }
       }
 
