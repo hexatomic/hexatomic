@@ -3,8 +3,6 @@ package org.corpus_tools.hexatomic.graph.internal;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
 
 public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
 
