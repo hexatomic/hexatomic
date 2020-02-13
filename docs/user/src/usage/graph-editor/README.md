@@ -25,12 +25,18 @@ The left-hand side of the graph editor is taken up by the graph view, which disp
 
 You can navigate the graph view as follows:
 
-- Zoom in and out by using the mouse wheel.
+- **Zoom in and out** by using the mouse wheel.
   - You will zoom in to where your mouse cursor is.
-- Move the area of the graph that is displayed by using the scrollbars, or keyboard:
+
+- **Move** the area of the graph that is displayed by **using the keyboard**:
   - The <kbd>Arrow keys</kbd> move the area in the respective direction, and <kbd>PgUp</kbd> and <kbd>PgDown</kbd> move it up and down.
   - If you press and hold the <kbd>Shift</kbd> key and then use the arrow or paging keys, you move more quickly.
-- You can center the view around a specific point in the graph by double-clicking that point.
+
+- **Move** the area of the graph that is displayed by **using the mouse wheel and function keys**:
+  - If you hold down <kbd>Shift</kbd> key while moving the mouse wheel, you can scroll *up and down*.
+  - If you hold down <kbd>Ctrl</kbd> key while moving the mouse wheel, you can scroll *left and right*.
+
+- You can **center the view** around a specific point in the graph by double-clicking that point.
 
 If you don't like the layout of the graph, you can change it by simply dragging nodes with your mouse.
 

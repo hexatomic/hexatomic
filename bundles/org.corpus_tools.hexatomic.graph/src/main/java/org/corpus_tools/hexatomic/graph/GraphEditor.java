@@ -243,6 +243,33 @@ public class GraphEditor {
       @Override
       public void mouseScrolled(MouseEvent e) {
 
+        // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
+        if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
+          Viewport viewPort = viewer.getGraphControl().getViewport();
+          Point loc = viewPort.getViewLocation();
+          int diff = 50;
+          if (e.stateMask == SWT.SHIFT) {
+            // Mouse wheel scrolled down
+            if (e.count < 0) {
+              // Scroll down
+              loc.translate(0, +diff);
+            } else {
+              // Scroll up
+              loc.translate(0, -diff);
+            }
+          } else if (e.stateMask == SWT.CTRL) {
+            if (e.count < 0) {
+              // Scroll left
+              loc.translate(+diff, 0);
+            } else {
+              // Scroll right
+              loc.translate(-diff, 0);
+            }
+          }
+          viewPort.setViewLocation(loc);
+          return;
+        }
+
         ScalableFigure figure = viewer.getGraphControl().getRootLayer();
         double oldScale = figure.getScale();
         Optional<Double> newScale = Optional.empty();
@@ -279,10 +306,12 @@ public class GraphEditor {
 
       @Override
       public void mouseUp(MouseEvent e) {
+
       }
 
       @Override
       public void mouseDown(MouseEvent e) {
+
       }
 
       @Override
@@ -297,6 +326,7 @@ public class GraphEditor {
 
       @Override
       public void keyReleased(KeyEvent e) {
+
       }
 
       @Override
