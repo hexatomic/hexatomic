@@ -97,6 +97,9 @@ public class Column {
    * @return
    */
   boolean areRowsEmpty(int from, int to) {
+    // As the token index that is passed should be included in the check, we need to add +1 to the
+    // to-index, as otherwise it is not checked (API's to is exclusive). Cardinality is 'number of
+    // true bits in bit-subset'.
     return bits.get(from, to + 1).cardinality() == 0;
   }
 
