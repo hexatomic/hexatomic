@@ -51,7 +51,7 @@ public class GraphDataProvider implements IDataProvider {
 
   private STextualDS ds = null;
   private final SDocumentGraph graph;
-  private final List<SToken> orderedDSTokens = new ArrayList<SToken>();
+  private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
   private final List<SSpan> dsSpans = new ArrayList<SSpan>();
 
   // Alphabetically ordered maps of column titles to columns for the two annotated types
@@ -73,7 +73,7 @@ public class GraphDataProvider implements IDataProvider {
 
   private void resolveGraph() {
     // Reset data
-    orderedDSTokens.clear();
+    orderedDsTokens.clear();
     dsSpans.clear();
     tokenColumns.clear();
     spanColumns.clear();
@@ -89,7 +89,7 @@ public class GraphDataProvider implements IDataProvider {
         unorderedTokens.add((SToken) inRel.getSource());
       }
     }
-    orderedDSTokens.addAll(graph.getSortedTokenByText(unorderedTokens));
+    orderedDsTokens.addAll(graph.getSortedTokenByText(unorderedTokens));
 
     // Resolve which spans should be taken into account based on ds.
     for (SSpan span : graph.getSpans()) {
@@ -105,30 +105,121 @@ public class GraphDataProvider implements IDataProvider {
     // Add a column for the token text as the first column
     Column tokenColumn = new Column();
     tokenColumn.setTitle("Token");
-    for (int i = 0; i < orderedDSTokens.size(); i++) {
-      SToken token = orderedDSTokens.get(i);
-      tokenColumn.setRow(i, token);
+    for (int i = 0; i < orderedDsTokens.size(); i++) {
+      SToken token = orderedDsTokens.get(i);
+      try {
+        tokenColumn.setRow(i, token);
+      } catch (RuntimeException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
     columns.add(tokenColumn);
 
-    resolveTokenAnnotations(orderedDSTokens);
+    resolveTokenAnnotations(orderedDsTokens);
 
     // Count span annotations and add to column count
     // resolveAnnotations(new ArrayList<SStructuredNode>(dsSpans));
-    // resolveSpanAnnotations(dsSpans, orderedDSTokens);
+    resolveSpanAnnotations(dsSpans, orderedDsTokens);
 
     // Complete the list of columns
     // Order is kept correctly, because TreeMap.values()' iterator returns the values in
     // ascending order of the corresponding keys, i.e., the collection of values is sorted.
     columns.addAll(tokenColumns.values());
     columns.addAll(spanColumns.values());
-
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
 
-  private void resolveSpanAnnotations(List<SSpan> spans, List<SToken> tokens) {
-    // TODO Auto-generated method stub
+  private void resolveSpanAnnotations(List<SSpan> spans, List<SToken> orderedTokens) {
+    // TODO Try both ways: get all spans for token AND get tokens for span
+    for (SSpan span : spans) {
+      List<SToken> overlappedTokens = graph.getOverlappedTokens(span);
+      List<Integer> tokenIndices = new ArrayList<>();
+      // Build token list, i.e., row indices covered by this span
+      for (SToken token : overlappedTokens) {
+        tokenIndices.add(orderedTokens.indexOf(token));
+      }
+      for (SAnnotation annotation : span.getAnnotations()) {
+        Column column = spanColumns.get(annotation.getQName());
+        if (column != null) {
+          boolean allCellsEmpty = true;
+          for (Integer idx : tokenIndices) {
+            if (column.checkRowExists(idx)) {
+              allCellsEmpty = false;
+              break;
+            }
+          }
+          if (allCellsEmpty) {
+            for (Integer idx : tokenIndices) {
+              try {
+                column.setRow(idx, annotation);
+              } catch (RuntimeException e) {
+                // TODO Auto-generated catch block
+                // TODO Bubble?
+                e.printStackTrace();
+              }
+            }
+          } else {
+            // Iterate columnName and continue
+            addSpanRecursively(tokenIndices, annotation, 2);
+          }
+        } else {
+          column = new Column();
+          column.setTitle(annotation.getQName());
+          for (Integer idx : tokenIndices) {
+            try {
+              column.setRow(idx, annotation);
+            } catch (RuntimeException e) {
+              // TODO Auto-generated catch block
+              // TODO Bubble?
+              e.printStackTrace();
+            }
+          }
+          spanColumns.put(annotation.getQName(), column);
+        }
+      }
+    }
 
+  }
+
+  private void addSpanRecursively(List<Integer> tokenIndices, SAnnotation annotation,
+      Integer spanColumnIndex) {
+    String columnName = annotation.getQName() + spanColumnIndex;
+    Column column = spanColumns.get(columnName);
+    if (column != null) {
+      // Try to add, otherwise iterate and re-run
+      boolean allCellsempty = true;
+      for (Integer idx : tokenIndices) {
+        if (column.checkRowExists(idx)) {
+          allCellsempty = false;
+          break;
+        }
+      }
+      if (allCellsempty) {
+        for (Integer idx : tokenIndices) {
+          try {
+            column.setRow(idx, annotation);
+          } catch (RuntimeException e) {
+            // TODO: handle exception
+          }
+        }
+      } else {
+        // Bump counter and re-run
+        spanColumnIndex = spanColumnIndex + 1;
+        addSpanRecursively(tokenIndices, annotation, spanColumnIndex);
+      }
+    } else {
+      column = new Column();
+      column.setTitle(columnName);
+      for (Integer idx : tokenIndices) {
+        try {
+          column.setRow(idx, annotation);
+        } catch (RuntimeException e) {
+          // TODO: handle exception
+        }
+      }
+      spanColumns.put(columnName, column);
+    }
   }
 
   private void resolveTokenAnnotations(List<SToken> orderedTokens) {
@@ -139,13 +230,24 @@ public class GraphDataProvider implements IDataProvider {
         // Check if we already have a column with that key
         Column column = tokenColumns.get(anno.getQName());
         if (column != null) {
-          boolean addedToColumn = column.setRow(orderedTokens.indexOf(token), anno);
-          if (!addedToColumn) {
-            // FIXME TODO Spawn new column
+          if (column.checkRowExists(orderedTokens.indexOf(token))) {
+            // TODO add recursively
+          } else {
+            try {
+              column.setRow(orderedTokens.indexOf(token), anno);
+            } catch (RuntimeException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
           }
         } else {
           column = new Column();
-          column.setRow(orderedTokens.indexOf(token), anno);
+          try {
+            column.setRow(orderedTokens.indexOf(token), anno);
+          } catch (RuntimeException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
           tokenColumns.put(anno.getQName(), column);
         }
       }
@@ -162,7 +264,7 @@ public class GraphDataProvider implements IDataProvider {
         return "Please select data source!";
       }
     } else {
-      if (orderedDSTokens.size() == 0 && columnIndex == 0) {
+      if (orderedDsTokens.size() == 0 && columnIndex == 0) {
         return "Data source contains no tokens!";
       } else {
         Column column = columns.get(columnIndex);
@@ -182,7 +284,7 @@ public class GraphDataProvider implements IDataProvider {
   public int getColumnCount() {
     if (ds == null) {
       return 1;
-    } else if (orderedDSTokens.size() == 0) {
+    } else if (orderedDsTokens.size() == 0) {
       return 1;
     }
     return columns.size();
@@ -192,10 +294,10 @@ public class GraphDataProvider implements IDataProvider {
   public int getRowCount() {
     if (ds == null) {
       return 1;
-    } else if (orderedDSTokens.size() == 0) {
+    } else if (orderedDsTokens.size() == 0) {
       return 1;
     }
-    return orderedDSTokens.size();
+    return orderedDsTokens.size();
   }
 
   /**
