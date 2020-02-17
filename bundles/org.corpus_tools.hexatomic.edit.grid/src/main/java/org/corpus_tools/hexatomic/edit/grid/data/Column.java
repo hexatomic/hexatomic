@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.edit.grid.data;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -38,6 +39,7 @@ public class Column {
 
   private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
   private String title = null;
+  private BitSet bits = new BitSet();
 
   // /**
   // * Package-protected constructor setting the row cells value.
@@ -85,11 +87,17 @@ public class Column {
    * @param rowIndex TODO
    * @return TODO
    */
-  boolean checkRowExists(int rowIndex) {
-    if (rowCells.get(rowIndex) != null) {
-      return true;
-    }
-    return false;
+  boolean isRowEmpty(int rowIndex) {
+    return !bits.get(rowIndex);
+  }
+
+  /**
+   * @param from
+   * @param to
+   * @return
+   */
+  boolean areRowsEmpty(int from, int to) {
+    return bits.get(from, to + 1).cardinality() == 0;
   }
 
   /**
@@ -100,13 +108,12 @@ public class Column {
    * @throws CellExistsException TODO
    */
   void setRow(int rowIndex, LabelableElement dataObject) throws RuntimeException {
-    LabelableElement existingDataObject = rowCells.get(rowIndex);
-    if (existingDataObject != null) {
-      throw new RuntimeException("Row " + rowIndex + " in column " + this.getTitle()
-          + " already holds a data object.\n Tried to add: " + dataObject + "\nAlready held: "
-          + existingDataObject);
-    } else {
+    if (isRowEmpty(rowIndex)) {
       rowCells.put(rowIndex, dataObject);
+      bits.set(rowIndex);
+    } else {
+      throw new RuntimeException("Cannot add " + dataObject + " to " + this.getTitle() + "::"
+          + rowIndex + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
     }
   }
 
@@ -125,7 +132,6 @@ public class Column {
 
   void setTitle(String title) {
     this.title = title;
-
   }
 
   // /**
