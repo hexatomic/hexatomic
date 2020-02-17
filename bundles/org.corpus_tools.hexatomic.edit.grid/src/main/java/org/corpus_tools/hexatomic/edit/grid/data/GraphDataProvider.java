@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -63,17 +62,17 @@ public class GraphDataProvider implements IDataProvider {
   // To be compiled from the two tree sets, tokens first, then spans
   private final List<Column> columns = new ArrayList<>();
 
-  @Inject
-  ErrorService errors;
-
+  private ErrorService errors = null;
 
   /**
    * Initializes the graph to grid resolution.
    * 
    * @param graph The graph data source
    */
-  public GraphDataProvider(SDocumentGraph graph) {
+  public GraphDataProvider(SDocumentGraph graph, ErrorService errors) {
     this.graph = graph;
+    this.errors = errors; // FIXME: Change errors to general "this is a bug" errors including line
+                          // no.s if possible.
   }
 
   private void resolveGraph() {
@@ -154,10 +153,7 @@ public class GraphDataProvider implements IDataProvider {
                 column.setRow(idx, annotation);
               } catch (RuntimeException e) {
                 // TODO Auto-generated catch block
-                // TODO Bubble?
-                log.debug("EXC " + e);
-                log.debug("CL " + GraphDataProvider.class);
-                log.debug("ERROR SERVICE " + errors);
+                // TODO Bubble or call errors here?
                 errors.handleException(e.getMessage(), e, GraphDataProvider.class);
                 e.printStackTrace();
               }

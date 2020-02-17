@@ -25,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.edit.grid.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -75,6 +76,9 @@ public class GridEditor {
   }
 
   @Inject
+  ErrorService errors;
+
+  @Inject
   private ESelectionService selectionService;
 
   @Inject
@@ -107,7 +111,7 @@ public class GridEditor {
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    bodyDataProvider = new GraphDataProvider(graph);
+    bodyDataProvider = new GraphDataProvider(graph, errors);
     AutomaticSpanningDataProvider spanningDataProvider =
         new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
