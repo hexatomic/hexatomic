@@ -22,9 +22,12 @@
 package org.corpus_tools.hexatomic.edit.grid.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
@@ -60,6 +63,8 @@ public class GraphDataProvider implements IDataProvider {
   // To be compiled from the two tree sets, tokens first, then spans
   private final List<Column> columns = new ArrayList<>();
 
+  @Inject
+  ErrorService errors;
 
 
   /**
@@ -110,7 +115,7 @@ public class GraphDataProvider implements IDataProvider {
       try {
         tokenColumn.setRow(i, token);
       } catch (RuntimeException e) {
-        // TODO Auto-generated catch block
+        // errors.handleException(e.getMessage(), e, this.getClass());
         e.printStackTrace();
       }
     }
@@ -139,23 +144,21 @@ public class GraphDataProvider implements IDataProvider {
       for (SToken token : overlappedTokens) {
         tokenIndices.add(orderedTokens.indexOf(token));
       }
+      Collections.sort(tokenIndices);
       for (SAnnotation annotation : span.getAnnotations()) {
         Column column = spanColumns.get(annotation.getQName());
         if (column != null) {
-          boolean allCellsEmpty = true;
-          for (Integer idx : tokenIndices) {
-            if (column.checkRowExists(idx)) {
-              allCellsEmpty = false;
-              break;
-            }
-          }
-          if (allCellsEmpty) {
+          if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
             for (Integer idx : tokenIndices) {
               try {
                 column.setRow(idx, annotation);
               } catch (RuntimeException e) {
                 // TODO Auto-generated catch block
                 // TODO Bubble?
+                log.debug("EXC " + e);
+                log.debug("CL " + GraphDataProvider.class);
+                log.debug("ERROR SERVICE " + errors);
+                errors.handleException(e.getMessage(), e, GraphDataProvider.class);
                 e.printStackTrace();
               }
             }
@@ -172,6 +175,7 @@ public class GraphDataProvider implements IDataProvider {
             } catch (RuntimeException e) {
               // TODO Auto-generated catch block
               // TODO Bubble?
+              // errors.handleException(e.getMessage(), e, this.getClass());
               e.printStackTrace();
             }
           }
@@ -188,14 +192,7 @@ public class GraphDataProvider implements IDataProvider {
     Column column = spanColumns.get(columnName);
     if (column != null) {
       // Try to add, otherwise iterate and re-run
-      boolean allCellsempty = true;
-      for (Integer idx : tokenIndices) {
-        if (column.checkRowExists(idx)) {
-          allCellsempty = false;
-          break;
-        }
-      }
-      if (allCellsempty) {
+      if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
         for (Integer idx : tokenIndices) {
           try {
             column.setRow(idx, annotation);
@@ -215,7 +212,7 @@ public class GraphDataProvider implements IDataProvider {
         try {
           column.setRow(idx, annotation);
         } catch (RuntimeException e) {
-          // TODO: handle exception
+          // errors.handleException(e.getMessage(), e, this.getClass());
         }
       }
       spanColumns.put(columnName, column);
@@ -230,13 +227,14 @@ public class GraphDataProvider implements IDataProvider {
         // Check if we already have a column with that key
         Column column = tokenColumns.get(anno.getQName());
         if (column != null) {
-          if (column.checkRowExists(orderedTokens.indexOf(token))) {
+          if (!column.isRowEmpty(orderedTokens.indexOf(token))) {
             // TODO add recursively
           } else {
             try {
               column.setRow(orderedTokens.indexOf(token), anno);
             } catch (RuntimeException e) {
               // TODO Auto-generated catch block
+              // errors.handleException(e.getMessage(), e, this.getClass());
               e.printStackTrace();
             }
           }
@@ -246,6 +244,7 @@ public class GraphDataProvider implements IDataProvider {
             column.setRow(orderedTokens.indexOf(token), anno);
           } catch (RuntimeException e) {
             // TODO Auto-generated catch block
+            // errors.handleException(e.getMessage(), e, this.getClass());
             e.printStackTrace();
           }
           tokenColumns.put(anno.getQName(), column);
