@@ -115,7 +115,7 @@ public class GraphDataProvider implements IDataProvider {
       try {
         tokenColumn.setRow(i, token);
       } catch (RuntimeException e) {
-        reportBug(e);
+        reportSetRow(e);
       }
     }
     columns.add(tokenColumn);
@@ -131,12 +131,6 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
 
-  private void reportBug(RuntimeException e) {
-    errors.handleException(
-        "This is probably a bug, please create a new issue at https://github.com/hexatomic/hexatomic.",
-        e, this.getClass());
-  }
-
   private void resolveSpanAnnotations(List<SSpan> spans, List<SToken> orderedTokens) {
     for (SSpan span : spans) {
       List<SToken> overlappedTokens = graph.getOverlappedTokens(span);
@@ -147,94 +141,52 @@ public class GraphDataProvider implements IDataProvider {
       }
       Collections.sort(tokenIndices);
       for (SAnnotation annotation : span.getAnnotations()) {
-        Column column = spanColumns.get(annotation.getQName());
-        if (column != null) {
-          if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
-            for (Integer idx : tokenIndices) {
-              try {
-                column.setRow(idx, annotation);
-              } catch (RuntimeException e) {
-                reportBug(e);
-              }
-            }
-          } else {
-            // Iterate columnName and continue
-            addSpanRecursively(tokenIndices, annotation, 2);
-          }
-        } else {
-          column = new Column();
-          column.setTitle(annotation.getQName());
-          for (Integer idx : tokenIndices) {
-            try {
-              column.setRow(idx, annotation);
-            } catch (RuntimeException e) {
-              reportBug(e);
-            }
-          }
-          spanColumns.put(annotation.getQName(), column);
-        }
+        resolveAnnotationRecursively(tokenIndices, annotation, 1);
       }
     }
-
   }
 
-  private void addSpanRecursively(List<Integer> tokenIndices, SAnnotation annotation,
+  private void resolveAnnotationRecursively(List<Integer> tokenIndices, SAnnotation annotation,
       Integer spanColumnIndex) {
-    String columnName = annotation.getQName() + spanColumnIndex;
+    String columnName = null;
+    if (spanColumnIndex == 1) {
+      columnName = annotation.getQName();
+    } else {
+      columnName = annotation.getQName() + spanColumnIndex;
+    }
     Column column = spanColumns.get(columnName);
     if (column != null) {
       // Try to add, otherwise iterate and re-run
       if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
-        for (Integer idx : tokenIndices) {
-          try {
-            column.setRow(idx, annotation);
-          } catch (RuntimeException e) {
-            reportBug(e);
-          }
-        }
+        setRows(tokenIndices, column, annotation);
       } else {
         // Bump counter and re-run
         spanColumnIndex = spanColumnIndex + 1;
-        addSpanRecursively(tokenIndices, annotation, spanColumnIndex);
+        resolveAnnotationRecursively(tokenIndices, annotation, spanColumnIndex);
       }
     } else {
       column = new Column();
-      column.setTitle(columnName);
-      for (Integer idx : tokenIndices) {
-        try {
-          column.setRow(idx, annotation);
-        } catch (RuntimeException e) {
-          reportBug(e);
-        }
-      }
+      column.setTitle(
+          annotation.getQName() + (spanColumnIndex > 1 ? " (" + spanColumnIndex + ")" : ""));
+      setRows(tokenIndices, column, annotation);
       spanColumns.put(columnName, column);
     }
   }
 
   private void resolveTokenAnnotations(List<SToken> orderedTokens) {
-    // There can be no two annotations of the same qname for a single token
     for (SStructuredNode token : orderedTokens) {
       Set<SAnnotation> annos = token.getAnnotations();
       for (SAnnotation anno : annos) {
         // Check if we already have a column with that key
         Column column = tokenColumns.get(anno.getQName());
         if (column != null) {
-          if (!column.isRowEmpty(orderedTokens.indexOf(token))) {
-            // TODO add recursively
-          } else {
-            try {
-              column.setRow(orderedTokens.indexOf(token), anno);
-            } catch (RuntimeException e) {
-              reportBug(e);
-            }
-          }
+          // There can be no two annotations of the same qualified name for a single token, so no
+          // need to check as we do have to for spans.
+          setRow(column, orderedTokens.indexOf(token), anno);
         } else {
           column = new Column();
-          try {
-            column.setRow(orderedTokens.indexOf(token), anno);
-          } catch (RuntimeException e) {
-            reportBug(e);
-          }
+          column.setTitle(anno.getQName());
+          setRow(column, orderedTokens.indexOf(token), anno);
           tokenColumns.put(anno.getQName(), column);
         }
       }
@@ -242,6 +194,26 @@ public class GraphDataProvider implements IDataProvider {
     // Add in alphabetical order the newly added qualified annotation names.
     log.debug("Resolved annotations for tokens/spans in {}.", graph.getDocument());
 
+  }
+
+  private void setRows(List<Integer> tokenIndices, Column column, SAnnotation annotation) {
+    for (Integer idx : tokenIndices) {
+      setRow(column, idx, annotation);
+    }
+  }
+
+  private void setRow(Column column, Integer idx, SAnnotation annotation) {
+    try {
+      column.setRow(idx, annotation);
+    } catch (RuntimeException e) {
+      reportSetRow(e);
+    }
+  }
+
+  private void reportSetRow(RuntimeException e) {
+    errors.handleException(
+        "Encountered a set cell that should be empty. This is a bug, please create a new issue at https://github.com/hexatomic/hexatomic.",
+        e, this.getClass());
   }
 
   @Override
@@ -291,7 +263,7 @@ public class GraphDataProvider implements IDataProvider {
    * 
    * @param ds the ds to set
    */
-  public void setDs(STextualDS ds) {
+  public void setDsAndResolveGraph(STextualDS ds) {
     log.debug("Setting data source {}.", ds);
     this.ds = ds;
     resolveGraph();
