@@ -30,7 +30,9 @@ import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.graph.LabelableElement;
 
 /**
- * Represents a column in the grid.
+ * Represents a column in the grid. A column has a title, and a list of row cells, the values of
+ * which can be {@link LabelableElement}s (the first common superclass of {@link SAnnotation} and
+ * {@link SToken}).
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
@@ -38,88 +40,78 @@ import org.corpus_tools.salt.graph.LabelableElement;
 public class Column {
 
   private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
-  private String title = null;
+  private String header = null;
   private BitSet bits = new BitSet();
 
-  // /**
-  // * Package-protected constructor setting the row cells value.
-  // *
-  // * @param rowIndex The index at which the annotation should be added to the list of row cells
-  // * @param anno The annotation to add to the list of row cells
-  // */
-  // Column(int rowIndex, SAnnotation anno) {
-  // rowCells.add(rowIndex, anno);
-  // }
-  //
-  // Column() {}
-
   /**
-   * TODO.
+   * Returns the data object behind the row cell at the specified index.
    * 
-   * @param rowIndex TODO
-   * @return TODO
+   * @param rowIndex The index of the row cell in this column contains the data object to be
+   *        returned
+   * @return The data object behind the specified row cell in this column
    */
   LabelableElement getDataObject(int rowIndex) {
     return rowCells.get(rowIndex);
   }
 
-  // /**
-  // * TODO.
-  // *
-  // * @param rowIndex
-  // * @param anno
-  // * @return
-  // * @return
-  // * @return
-  // * @throws CellExistsException
-  // */
-  // boolean setRow(int rowIndex, SAnnotation anno) {
-  // boolean isNewValue = rowCells.get(rowIndex) == null;
-  // if (isNewValue) {
-  // rowCells.add(rowIndex, anno);
-  // }
-  // return isNewValue;
-  // }
-
   /**
-   * TODO .
+   * Checks if a row cell is empty, or has a data object set to it.
    * 
-   * @param rowIndex TODO
-   * @return TODO
+   * This works by checking whether the corresponding bit at the specified index in the backing
+   * {@link BitSet} has not been set.
+   * 
+   * @param rowIndex The index of the row cell in this column for which the check should be
+   *        performed
+   * @return whether the row cell at the specified index in this column is unset
    */
   boolean isRowEmpty(int rowIndex) {
     return !bits.get(rowIndex);
   }
 
   /**
-   * @param from
-   * @param to
-   * @return
+   * Checks if a range of row cells is empty, or has at least one data object set to a row cell
+   * within the specified range.
+   * 
+   * This works by checking whether the cardinality of the {@link BitSet} subset containing the bits
+   * at the indices specified in the range equals 0 (i.e., no bits in the subset are set to
+   * <code>true</code>).
+   * 
+   * @param from The inclusive first index of the range of row cells that should be checked
+   * @param to The inclusive last index of the range of row cells that should be checked
+   * @return whether any of the row cells within the specified range are set
    */
   boolean areRowsEmpty(int from, int to) {
     // As the token index that is passed should be included in the check, we need to add +1 to the
-    // to-index, as otherwise it is not checked (API's to is exclusive). Cardinality is 'number of
-    // true bits in bit-subset'.
+    // to-index, as otherwise it is not checked (API's to is exclusive).
     return bits.get(from, to + 1).cardinality() == 0;
   }
 
   /**
-   * TODO .
+   * Sets the specified data object to a row cell at the specified index.
    * 
-   * @param rowIndex TODO
-   * @param dataObject TODO
-   * @throws CellExistsException TODO
+   * Also flips the bit at the specified index in the backing {@link BitSet} to record that the row
+   * cell at the index has been set.
+   * 
+   * @param rowIndex The index of the row cell to set the data object to
+   * @param dataObject The data object to set to the cell
+   * @throws RuntimeException if the row cell to set the data object to is already set
    */
   void setRow(int rowIndex, LabelableElement dataObject) throws RuntimeException {
     if (isRowEmpty(rowIndex)) {
       rowCells.put(rowIndex, dataObject);
       bits.set(rowIndex);
     } else {
-      throw new RuntimeException("Cannot add " + dataObject + " to " + this.getTitle() + "::"
+      throw new RuntimeException("Cannot add " + dataObject + " to " + this.getHeader() + "::"
           + rowIndex + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
     }
   }
 
+  /**
+   * Returns the text to display for the specified row cell.
+   * 
+   * @param rowIndex The index for which to return the display text
+   * @return the text to display
+   */
   String getDisplayText(int rowIndex) {
     LabelableElement dataObject = rowCells.get(rowIndex);
     if (dataObject instanceof SToken) {
@@ -133,29 +125,27 @@ public class Column {
     return null;
   }
 
-  void setTitle(String title) {
-    this.title = title;
+  /**
+   * Sets the column header.
+   * 
+   * @param header The header to set
+   */
+  void setTitle(String header) {
+    this.header = header;
   }
 
-  // /**
-  // * Package-protected constructor setting the row cells value.
-  // *
-  // * @param rowIndex The index at which the annotation should be added to the list of row cells
-  // * @param anno The annotation to add to the list of row cells
-  // */
-  // Column(int rowIndex, SAnnotation anno) {
-  // rowCells.add(rowIndex, anno);
-  // }
-  //
-  // Column() {}
-
-  public String getTitle() {
-    return title;
+  /**
+   * Returns the column header.
+   * 
+   * @return the column header
+   */
+  public String getHeader() {
+    return header;
   }
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder(title == null ? "null" : title);
+    StringBuilder sb = new StringBuilder(header == null ? "null" : header);
     sb.append(":\n");
     for (int i = 0; i < rowCells.size(); i++) {
       String t = getDisplayText(i) == null ? "null" : getDisplayText(i);
@@ -164,6 +154,5 @@ public class Column {
     }
     return sb.toString();
   }
-
 
 }
