@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Grid Editor Tests
+Bundle-Name: Hexatomic Grid Editor Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.grid.tests
 Bundle-Version: 0.4.0.qualifier
 Bundle-Vendor: Hexatomic Research Project
