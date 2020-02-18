@@ -68,13 +68,14 @@ public class GraphDataProvider implements IDataProvider {
    * Initializes the graph to grid resolution.
    * 
    * @param graph The graph data source
+   * @param errors The {@link ErrorService} to use for reporting errors from this class
    */
   public GraphDataProvider(SDocumentGraph graph, ErrorService errors) {
     this.graph = graph;
-    this.errors = errors; // FIXME: Change errors to general "this is a bug" errors including line
-                          // no.s if possible.
+    this.errors = errors;
   }
 
+  @SuppressWarnings("rawtypes")
   private void resolveGraph() {
     // Reset data
     orderedDsTokens.clear();
@@ -85,17 +86,17 @@ public class GraphDataProvider implements IDataProvider {
 
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
         ds);
-    // Resolve which tokens should be taken into account based on ds and save to dsTokens.
+    // Only consider tokens that are based on the selected data source.
     List<SToken> unorderedTokens = new ArrayList<SToken>();
     for (SRelation<?, ?> inRel : ds.getInRelations()) {
       if (inRel instanceof STextualRelation) {
-        // Source can only be token
+        // Source of STextualRelation can only be token
         unorderedTokens.add((SToken) inRel.getSource());
       }
     }
     orderedDsTokens.addAll(graph.getSortedTokenByText(unorderedTokens));
 
-    // Resolve which spans should be taken into account based on ds.
+    // Only consider spans which overlap the selected data source.
     for (SSpan span : graph.getSpans()) {
       List<DataSourceSequence> overlappedSequences =
           graph.getOverlappedDataSourceSequence(span, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
@@ -114,16 +115,12 @@ public class GraphDataProvider implements IDataProvider {
       try {
         tokenColumn.setRow(i, token);
       } catch (RuntimeException e) {
-        // errors.handleException(e.getMessage(), e, this.getClass());
-        e.printStackTrace();
+        reportBug(e);
       }
     }
     columns.add(tokenColumn);
 
     resolveTokenAnnotations(orderedDsTokens);
-
-    // Count span annotations and add to column count
-    // resolveAnnotations(new ArrayList<SStructuredNode>(dsSpans));
     resolveSpanAnnotations(dsSpans, orderedDsTokens);
 
     // Complete the list of columns
@@ -134,12 +131,17 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
 
+  private void reportBug(RuntimeException e) {
+    errors.handleException(
+        "This is probably a bug, please create a new issue at https://github.com/hexatomic/hexatomic.",
+        e, this.getClass());
+  }
+
   private void resolveSpanAnnotations(List<SSpan> spans, List<SToken> orderedTokens) {
-    // TODO Try both ways: get all spans for token AND get tokens for span
     for (SSpan span : spans) {
       List<SToken> overlappedTokens = graph.getOverlappedTokens(span);
       List<Integer> tokenIndices = new ArrayList<>();
-      // Build token list, i.e., row indices covered by this span
+      // Build token index list, i.e., row indices covered by this span
       for (SToken token : overlappedTokens) {
         tokenIndices.add(orderedTokens.indexOf(token));
       }
@@ -152,10 +154,7 @@ public class GraphDataProvider implements IDataProvider {
               try {
                 column.setRow(idx, annotation);
               } catch (RuntimeException e) {
-                // TODO Auto-generated catch block
-                // TODO Bubble or call errors here?
-                errors.handleException(e.getMessage(), e, GraphDataProvider.class);
-                e.printStackTrace();
+                reportBug(e);
               }
             }
           } else {
@@ -169,10 +168,7 @@ public class GraphDataProvider implements IDataProvider {
             try {
               column.setRow(idx, annotation);
             } catch (RuntimeException e) {
-              // TODO Auto-generated catch block
-              // TODO Bubble?
-              // errors.handleException(e.getMessage(), e, this.getClass());
-              e.printStackTrace();
+              reportBug(e);
             }
           }
           spanColumns.put(annotation.getQName(), column);
@@ -193,7 +189,7 @@ public class GraphDataProvider implements IDataProvider {
           try {
             column.setRow(idx, annotation);
           } catch (RuntimeException e) {
-            // TODO: handle exception
+            reportBug(e);
           }
         }
       } else {
@@ -208,7 +204,7 @@ public class GraphDataProvider implements IDataProvider {
         try {
           column.setRow(idx, annotation);
         } catch (RuntimeException e) {
-          // errors.handleException(e.getMessage(), e, this.getClass());
+          reportBug(e);
         }
       }
       spanColumns.put(columnName, column);
@@ -229,9 +225,7 @@ public class GraphDataProvider implements IDataProvider {
             try {
               column.setRow(orderedTokens.indexOf(token), anno);
             } catch (RuntimeException e) {
-              // TODO Auto-generated catch block
-              // errors.handleException(e.getMessage(), e, this.getClass());
-              e.printStackTrace();
+              reportBug(e);
             }
           }
         } else {
@@ -239,9 +233,7 @@ public class GraphDataProvider implements IDataProvider {
           try {
             column.setRow(orderedTokens.indexOf(token), anno);
           } catch (RuntimeException e) {
-            // TODO Auto-generated catch block
-            // errors.handleException(e.getMessage(), e, this.getClass());
-            e.printStackTrace();
+            reportBug(e);
           }
           tokenColumns.put(anno.getQName(), column);
         }
@@ -272,7 +264,6 @@ public class GraphDataProvider implements IDataProvider {
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
