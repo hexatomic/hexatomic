@@ -69,7 +69,7 @@ public class GridEditor {
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
-      bodyDataProvider.setDs(ds);
+      bodyDataProvider.setDsAndResolveGraph(ds);
     } else {
       // Do nothing
     }
