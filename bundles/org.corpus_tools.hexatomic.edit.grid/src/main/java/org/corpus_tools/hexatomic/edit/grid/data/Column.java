@@ -57,8 +57,10 @@ public class Column {
   /**
    * Checks if a row cell is empty, or has a data object set to it.
    * 
+   * <p>
    * This works by checking whether the corresponding bit at the specified index in the backing
    * {@link BitSet} has not been set.
+   * </p>
    * 
    * @param rowIndex The index of the row cell in this column for which the check should be
    *        performed
@@ -72,9 +74,11 @@ public class Column {
    * Checks if a range of row cells is empty, or has at least one data object set to a row cell
    * within the specified range.
    * 
+   * <p>
    * This works by checking whether the cardinality of the {@link BitSet} subset containing the bits
    * at the indices specified in the range equals 0 (i.e., no bits in the subset are set to
    * <code>true</code>).
+   * </p>
    * 
    * @param from The inclusive first index of the range of row cells that should be checked
    * @param to The inclusive last index of the range of row cells that should be checked
@@ -89,8 +93,10 @@ public class Column {
   /**
    * Sets the specified data object to a row cell at the specified index.
    * 
+   * <p>
    * Also flips the bit at the specified index in the backing {@link BitSet} to record that the row
    * cell at the index has been set.
+   * </p>
    * 
    * @param rowIndex The index of the row cell to set the data object to
    * @param dataObject The data object to set to the cell
