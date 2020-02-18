@@ -19,14 +19,14 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.edit.grid;
+package org.corpus_tools.hexatomic.grid;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.edit.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
