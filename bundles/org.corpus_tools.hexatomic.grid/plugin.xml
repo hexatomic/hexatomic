@@ -2,7 +2,7 @@
 <plugin>
 
    <extension
-         id="org.corpus_tools.hexatomic.edit.grid.fragment"
+         id="org.corpus_tools.hexatomic.grid.fragment"
          point="org.eclipse.e4.workbench.model">
       <fragment
             uri="fragment.e4xmi">

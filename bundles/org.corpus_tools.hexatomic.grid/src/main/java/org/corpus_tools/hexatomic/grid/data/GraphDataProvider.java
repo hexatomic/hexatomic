@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.edit.grid.data;
+package org.corpus_tools.hexatomic.grid.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
