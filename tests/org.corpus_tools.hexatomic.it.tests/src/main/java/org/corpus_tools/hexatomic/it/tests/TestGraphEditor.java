@@ -1,6 +1,7 @@
 package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -37,16 +37,21 @@ class TestGraphEditor {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
+  
+  private ErrorService errorService = new ErrorService();
 
   @BeforeEach
   void setup() {
     IEclipseContext ctx = ContextHelper.getEclipseContext();
+    
+    ctx.set(ErrorService.class, errorService);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
+    
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -124,6 +129,9 @@ class TestGraphEditor {
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
     console.insertText("e #structure8 -> #structure9");
     console.typeText("\n");
+    
+    // Check that no exception was thrown
+    assertFalse(errorService.getLastException().isPresent());
 
   }
 }
