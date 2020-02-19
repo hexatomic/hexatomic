@@ -18,6 +18,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
@@ -100,7 +101,7 @@ class TestGraphEditor {
 
     SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
     assertNotNull(view);
-
+    
     return view;
 
   }
@@ -124,13 +125,14 @@ class TestGraphEditor {
   void testAddPointingRelation() {
     
     SWTBotView graphView = openDefaultExample();
+    bot.showPart(graphView.getPart());
     assertTrue(bot.isPartActive(graphView.getPart()));
     
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
-    console.insertText("e #structure8 -> #structure9");
+    console.insertText("e #structure3 -> #structure5");
     console.typeText("\n");
     
-    // Check that no exception was thrown
+    // Check that no exception was thrown/handled by UI
     assertFalse(errorService.getLastException().isPresent());
 
   }

@@ -383,55 +383,60 @@ public class GraphEditor {
   @SuppressWarnings("unchecked")
   private void updateView(boolean recalculateSegments) {
 
-    SDocumentGraph graph = getGraph();
+    try {
+      SDocumentGraph graph = getGraph();
 
-    if (graph == null) {
-      errors.showError("Unexpected error",
-          "Annotation graph for selected document vanished. Please report this as a bug.",
-          GraphEditor.class);
-      return;
-    }
-
-    if (recalculateSegments) {
-      // store the old segment selection
-      List<Range<Long>> oldSelectedRanges = new LinkedList<>();
-      for (TableItem item : textRangeTable.getSelection()) {
-        oldSelectedRanges.add((Range<Long>) item.getData("range"));
+      if (graph == null) {
+        errors.showError("Unexpected error",
+            "Annotation graph for selected document vanished. Please report this as a bug.",
+            GraphEditor.class);
+        return;
       }
 
-      updateSegments(graph);
+      if (recalculateSegments) {
+        // store the old segment selection
+        List<Range<Long>> oldSelectedRanges = new LinkedList<>();
+        for (TableItem item : textRangeTable.getSelection()) {
+          oldSelectedRanges.add((Range<Long>) item.getData("range"));
+        }
 
-      textRangeTable.deselectAll();
-      textRangeTable.getColumn(0).pack();
+        updateSegments(graph);
 
-      boolean selectedSomeOld = false;
-      for (Range<Long> oldRange : oldSelectedRanges) {
-        for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
-          Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
-          if (itemRange.isConnected(oldRange)) {
-            textRangeTable.select(idx);
-            selectedSomeOld = true;
+        textRangeTable.deselectAll();
+        textRangeTable.getColumn(0).pack();
+
+        boolean selectedSomeOld = false;
+        for (Range<Long> oldRange : oldSelectedRanges) {
+          for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
+            Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
+            if (itemRange.isConnected(oldRange)) {
+              textRangeTable.select(idx);
+              selectedSomeOld = true;
+            }
           }
         }
+        if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
+          textRangeTable.setSelection(0);
+        }
+
       }
-      if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
-        textRangeTable.setSelection(0);
+
+      // update the status check for each item
+      for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
+        textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
       }
 
+      viewer.setFilters(new Filter());
+
+      if (viewer.getInput() != graph) {
+        viewer.setInput(graph);
+      }
+
+      viewer.applyLayout();
+    } catch (Throwable ex) {
+      errors.handleException("Unexpected error when updating the graph editor view.", ex,
+          GraphEditor.class);
     }
-
-    // update the status check for each item
-    for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
-      textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
-    }
-
-    viewer.setFilters(new Filter());
-
-    if (viewer.getInput() != graph) {
-      viewer.setInput(graph);
-    }
-
-    viewer.applyLayout();
   }
 
 
