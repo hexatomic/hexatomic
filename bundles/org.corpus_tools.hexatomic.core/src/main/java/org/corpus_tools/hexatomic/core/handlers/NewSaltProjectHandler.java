@@ -57,7 +57,7 @@ public class NewSaltProjectHandler {
       // Ask user if project should be closed even with unsaved changes
       boolean confirmed = MessageDialog.openConfirm(shell, "Unsaved changes in project",
           "There are unsaved changes in the project that whill be lost if you close it. "
-              + "Do you really want to close the project?");
+              + "Do you really want to close the project and open a new, empty one?");
       if (!confirmed) {
         return;
       }
