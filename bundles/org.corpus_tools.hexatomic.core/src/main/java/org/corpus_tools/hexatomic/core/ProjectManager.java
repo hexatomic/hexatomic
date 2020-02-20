@@ -204,6 +204,8 @@ public class ProjectManager {
 
   /**
    * Saves all documents and the corpus structure as Salt project to a new location.
+   * 
+   * @param path The file URI of the new location.
    */
   public void saveTo(URI path) {
     if (path != null) {

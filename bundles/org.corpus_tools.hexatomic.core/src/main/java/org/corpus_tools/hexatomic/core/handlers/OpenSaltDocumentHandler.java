@@ -55,6 +55,7 @@ public class OpenSaltDocumentHandler {
    * @param selectionService An instance of the selection service used to get the currently selected
    *        document
    * @param editorID The model ID of the editor PartDescription to use a template
+   * @param errorService The error service which allows to report errors.
    */
   @Execute
   public static void execute(ProjectManager projectManager, EPartService partService,

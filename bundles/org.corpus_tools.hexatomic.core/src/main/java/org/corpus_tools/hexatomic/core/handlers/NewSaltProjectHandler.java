@@ -49,7 +49,7 @@ public class NewSaltProjectHandler {
    * @param forceCloseRaw Whether to force closing as raw string (e.g. "true")
    */
   @Execute
-  public void execute(Shell shell, EPartService partService, UISynchronize sync,
+  protected void execute(Shell shell, EPartService partService, UISynchronize sync,
       EModelService modelService, MApplication app,
       @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
     boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
