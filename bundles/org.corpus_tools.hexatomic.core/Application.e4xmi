@@ -17,6 +17,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_P-HZsEy8EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_salt_project" label="Save Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" mnemonics="" command="_o-7oQEy7EeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_xiM4wEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_as_salt_project" label="Save Salt Project As..." iconURI="" command="_mqJxIEzaEeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_8J_rwEy3EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.closeproject" label="Close Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit Hexatomic" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
       </children>
     </mainMenu>
   </children>
@@ -25,6 +26,7 @@
   <handlers xmi:id="_5u7gIEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.handler.close_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.CloseSaltProjectHandler" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
   <handlers xmi:id="_nNYLEEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveHandler" command="_o-7oQEy7EeqppqV5eQIggg"/>
   <handlers xmi:id="_rG0JsEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_as_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveAsHandler" command="_mqJxIEzaEeqppqV5eQIggg"/>
+  <handlers xmi:id="_TH7l8FPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handler.exit" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.ExitHandler" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
   <bindingTables xmi:id="_oI0WcEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.bindingtable.windows" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_qIQeoEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.0" keySequence="M1+M2+S" command="_mqJxIEzaEeqppqV5eQIggg">
       <tags>type:user</tags>
@@ -56,6 +58,7 @@
   <commands xmi:id="_mqJxIEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.command.save_as_salt_project" commandName="Save Salt Project As">
     <parameters xmi:id="_IV2hoEzZEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>
   </commands>
+  <commands xmi:id="_HVy0oFPxEeq55bpbFwb6CQ" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
