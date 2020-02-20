@@ -36,14 +36,14 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class CloseSaltProjectHandler {
+public class NewSaltProjectHandler {
 
   @Inject
   private ProjectManager projectManager;
 
 
   /**
-   * Close the current project.
+   * Close the current project if it exists and opens a new, empty projects.
    * 
    * @param shell The user interface shell
    * @param forceCloseRaw Whether to force closing as raw string (e.g. "true")

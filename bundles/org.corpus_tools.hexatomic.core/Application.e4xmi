@@ -13,17 +13,17 @@
     </children>
     <mainMenu xmi:id="_tiknoMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.0">
       <children xsi:type="menu:Menu" xmi:id="_ufSukMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.file" label="File">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_8J_rwEy3EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.newproject" label="New Empty Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/file-regular.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_wCaHIMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.opensaltproject" label="Open Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/folder-open-regular.png" command="_pA7BYMsLEemUdItNeSusZw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_P-HZsEy8EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_salt_project" label="Save Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" mnemonics="" command="_o-7oQEy7EeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_xiM4wEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_as_salt_project" label="Save Salt Project As..." iconURI="" command="_mqJxIEzaEeqppqV5eQIggg"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_8J_rwEy3EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.closeproject" label="Close Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit Hexatomic" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
       </children>
     </mainMenu>
   </children>
   <handlers xmi:id="_oYTiMMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handler.open_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler" command="_pA7BYMsLEemUdItNeSusZw"/>
   <handlers xmi:id="_q1G2IOwYEemI78FuTOEWVg" elementId="org.corpus_tools.hexatomic.core.handler.open_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler" command="_y5imoOwYEemI78FuTOEWVg"/>
-  <handlers xmi:id="_5u7gIEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.handler.close_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.CloseSaltProjectHandler" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
+  <handlers xmi:id="_5u7gIEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.handler.new_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.NewSaltProjectHandler" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
   <handlers xmi:id="_nNYLEEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveHandler" command="_o-7oQEy7EeqppqV5eQIggg"/>
   <handlers xmi:id="_rG0JsEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_as_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveAsHandler" command="_mqJxIEzaEeqppqV5eQIggg"/>
   <handlers xmi:id="_TH7l8FPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handler.exit" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.ExitHandler" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
@@ -51,7 +51,7 @@
   <commands xmi:id="_pA7BYMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.command.open_salt_project" commandName="Open Salt Project">
     <parameters xmi:id="_QNYJ4DGCEeqqrY0g-NJEjw" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>
   </commands>
-  <commands xmi:id="_kj2CcEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.command.close_salt_project" commandName="Close Salt Project">
+  <commands xmi:id="_kj2CcEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.command.new_salt_project" commandName="New Salt Project">
     <parameters xmi:id="_IdJi0EzhEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_close" name="Force Close"/>
   </commands>
   <commands xmi:id="_o-7oQEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.command.save_salt_project" commandName="Save Salt Project"/>

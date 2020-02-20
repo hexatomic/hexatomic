@@ -45,7 +45,7 @@ class TestCorpusStructure {
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.FORCE_CLOSE, "true");
     ParameterizedCommand cmd = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.close_salt_project", params);
+        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
     handlerService.executeHandler(cmd);
 
     // Make sure to activate the part to test before selecting SWT components
