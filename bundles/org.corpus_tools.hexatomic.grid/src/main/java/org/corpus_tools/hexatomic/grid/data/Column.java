@@ -90,11 +90,6 @@ public class Column {
   /**
    * Sets the specified data object to a row cell at the specified index.
    * 
-   * <p>
-   * Also flips the bit at the specified index in the backing {@link BitSet} to record that the row
-   * cell at the index has been set.
-   * </p>
-   * 
    * @param rowIndex The index of the row cell to set the data object to
    * @param dataObject The data object to set to the cell
    * @throws RuntimeException if the row cell to set the data object to is already set
@@ -133,7 +128,7 @@ public class Column {
    * 
    * @param header The header to set
    */
-  void setTitle(String header) {
+  void setHeader(String header) {
     this.header = header;
   }
 

@@ -109,7 +109,7 @@ public class GraphDataProvider implements IDataProvider {
 
     // Add a column for the token text as the first column
     Column tokenColumn = new Column();
-    tokenColumn.setTitle("Token");
+    tokenColumn.setHeader("Token");
     for (int i = 0; i < orderedDsTokens.size(); i++) {
       SToken token = orderedDsTokens.get(i);
       try {
@@ -166,7 +166,7 @@ public class GraphDataProvider implements IDataProvider {
       }
     } else {
       column = new Column();
-      column.setTitle(
+      column.setHeader(
           annotation.getQName() + (spanColumnIndex > 1 ? " (" + spanColumnIndex + ")" : ""));
       setRows(tokenIndices, column, annotation);
       spanColumns.put(columnName, column);
@@ -185,7 +185,7 @@ public class GraphDataProvider implements IDataProvider {
           setRow(column, orderedTokens.indexOf(token), anno);
         } else {
           column = new Column();
-          column.setTitle(anno.getQName());
+          column.setHeader(anno.getQName());
           setRow(column, orderedTokens.indexOf(token), anno);
           tokenColumns.put(anno.getQName(), column);
         }
