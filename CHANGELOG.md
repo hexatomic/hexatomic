@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
+- Salt Projects can be saved now
 
 ### Changed
 
