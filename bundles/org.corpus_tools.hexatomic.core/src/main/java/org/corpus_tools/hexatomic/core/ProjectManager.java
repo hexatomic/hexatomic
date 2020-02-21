@@ -240,7 +240,7 @@ public class ProjectManager {
   public void open(URI path) {
 
     closeOpenEditors();
-    
+
     project = SaltFactory.createSaltProject();
     location = Optional.of(path);
     try {
@@ -253,7 +253,7 @@ public class ProjectManager {
     uiStatus.setDirty(false);
     uiStatus.setLocation(path.toFileString());
   }
-  
+
   /**
    * Close all open editors.
    */
@@ -275,6 +275,14 @@ public class ProjectManager {
   public void saveTo(URI path, Shell shell) {
     if (path != null) {
 
+      // Remember all loaded document graphs: saving the project will unlink the connection and
+      // we need to restore it later.
+      // Only re-load documents with at least one open editor.
+      final Set<String> documentsToReload =
+          project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+              .filter(d -> d.getDocumentGraph() != null).filter(d -> getNumberOfOpenEditors(d) > 0)
+              .map(d -> d.getId()).collect(Collectors.toSet());
+
       IRunnableWithProgress operation = new IRunnableWithProgress() {
 
         @Override
@@ -284,11 +292,7 @@ public class ProjectManager {
           boolean savingToCurrentLocation =
               getLocation().isPresent() && getLocation().get().equals(path);
 
-          // Remember all loaded document graphs: saving the project will unlink the connection and
-          // we need to restore it later.
-          final Set<String> loadedDocumentIds = project.getCorpusGraphs().stream()
-              .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
-              .map(d -> d.getId()).collect(Collectors.toSet());
+
 
           // Collect all documents that need to be saved
           final List<SDocument> documents;
@@ -371,8 +375,8 @@ public class ProjectManager {
 
 
           sync.asyncExec(() -> {
-            // Reload the originally loaded documents
-            for (String documentID : loadedDocumentIds) {
+            // Reload the originally loaded documents when there is an active editor
+            for (String documentID : documentsToReload) {
               Optional<SDocument> document = getDocument(documentID, true);
               if (document.isPresent()) {
                 events.send(Topics.DOCUMENT_LOADED, document.get().getId());
@@ -451,9 +455,9 @@ public class ProjectManager {
    * Closes the current project and creates a new, empty project.
    */
   public void newProject() {
-    
+
     closeOpenEditors();
-    
+
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
@@ -461,6 +465,23 @@ public class ProjectManager {
 
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
+  }
+
+  /**
+   * Check if how many editors are currently open for the given document.
+   * 
+   * @param document The document to check.
+   * @return
+   */
+  private int getNumberOfOpenEditors(SDocument document) {
+    int counter = 0;
+    for (MPart part : partService.getParts()) {
+      String otherDocumentID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+      if (document.getId().equals(otherDocumentID)) {
+        counter++;
+      }
+    }
+    return counter;
   }
 
   @Inject
@@ -472,16 +493,7 @@ public class ProjectManager {
     if (documentID != null) {
       Optional<SDocument> document = getDocument(documentID, false);
       if (document.isPresent()) {
-        int counter = 0;
-        for (MPart part : partService.getParts()) {
-          String otherDocumentID =
-              part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
-          if (documentID.equals(otherDocumentID)) {
-            counter++;
-          }
-        }
-
-        if (counter <= 1) {
+        if (getNumberOfOpenEditors(document.get()) <= 1) {
           // No other editor found, unload document graph if it can be located on disk
           // TODO: when saving projects is implemented, check if there are unsaved changes
           if (document.get().getDocumentGraphLocation() != null

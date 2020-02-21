@@ -41,6 +41,7 @@ import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -67,6 +68,7 @@ import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -129,6 +131,9 @@ public class GraphEditor {
 
   @Inject
   ErrorService errors;
+
+  @Inject
+  private IEventBroker events;
 
   private ListenerImplementation projectChangeListener;
 
@@ -381,9 +386,10 @@ public class GraphEditor {
   @PreDestroy
   void preDestroy() {
     projectManager.removeListener(projectChangeListener);
+
+    events.post(Topics.DOCUMENT_CLOSED,
+        thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
-
-
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
