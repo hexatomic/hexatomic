@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.core;
 
 import static org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler.DOCUMENT_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -88,6 +89,10 @@ class TestProjectManager {
 
     assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc3").isPresent());
     assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc4").isPresent());
+ 
+    verify(uiStatus).setDirty(false);
+    assertFalse(projectManager.isDirty());
+    
 
   }
 

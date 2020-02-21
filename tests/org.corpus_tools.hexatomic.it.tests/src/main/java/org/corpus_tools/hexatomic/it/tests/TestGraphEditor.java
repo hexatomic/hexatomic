@@ -50,7 +50,7 @@ class TestGraphEditor {
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     
-    // Programmatically close the salt project to get a clean state
+    // Programmatically start a new salt project to get a clean state
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.FORCE_CLOSE, "true");
     ParameterizedCommand cmd = commandService
