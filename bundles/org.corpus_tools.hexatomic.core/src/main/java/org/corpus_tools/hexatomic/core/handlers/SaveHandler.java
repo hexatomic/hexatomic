@@ -43,7 +43,7 @@ public class SaveHandler {
    */
   @Execute
   public void execute(Shell shell) {
-    projectManager.save();
+    projectManager.save(shell);
   }
 
   @CanExecute

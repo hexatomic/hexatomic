@@ -59,7 +59,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Manages creating and opening Salt projects.
@@ -217,8 +217,9 @@ public class ProjectManager {
    * Saves all documents and the corpus structure as Salt project to a new location.
    * 
    * @param path The file URI of the new location.
+   * @param shell The SWT shell: needed to display the progress dialog.
    */
-  public void saveTo(URI path) {
+  public void saveTo(URI path, Shell shell) {
     if (path != null) {
 
       IRunnableWithProgress operation = new IRunnableWithProgress() {
@@ -331,9 +332,7 @@ public class ProjectManager {
         }
       };
 
-
-      ProgressMonitorDialog dialog =
-          new ProgressMonitorDialog(Display.getDefault().getActiveShell());
+      ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 
       dialog.setCancelable(true);
       try {
@@ -378,10 +377,12 @@ public class ProjectManager {
 
   /**
    * Saves all loaded documents and the corpus structure as Salt project.
+   * 
+   * @param shell The SWT shell: needed to display the progress dialog.
    */
-  public void save() {
+  public void save(Shell shell) {
     if (location.isPresent()) {
-      saveTo(location.get());
+      saveTo(location.get(), shell);
     }
   }
 

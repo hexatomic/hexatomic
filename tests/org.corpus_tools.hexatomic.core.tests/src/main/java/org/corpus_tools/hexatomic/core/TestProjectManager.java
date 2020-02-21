@@ -125,7 +125,7 @@ class TestProjectManager {
 
     // Save the project to a different location
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
-    projectManager.saveTo(URI.createFileURI(tmpDir.toString()));
+    projectManager.saveTo(URI.createFileURI(tmpDir.toString()), null);
 
     verify(uiStatus, atLeastOnce()).setDirty(false);
     assertFalse(projectManager.isDirty());

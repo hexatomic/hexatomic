@@ -77,7 +77,7 @@ public class SaveAsHandler {
     }
 
     if (resultPath != null) {
-      projectManager.saveTo(URI.createFileURI(resultPath));
+      projectManager.saveTo(URI.createFileURI(resultPath), shell);
       lastPath = resultPath;
     }
   }
