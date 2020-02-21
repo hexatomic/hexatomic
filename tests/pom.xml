@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>org.corpus_tools.hexatomic.core.tests</module>
+		<module>org.corpus_tools.hexatomic.grid.tests</module>
 		<module>org.corpus_tools.hexatomic.it.tests</module>
 	</modules>
 
