@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Hexatomic Grid Editor Tests
-Bundle-SymbolicName: org.corpus_tools.hexatomic.grid.tests
-Bundle-Version: 0.4.0.qualifier
-Bundle-Vendor: Hexatomic Research Project
-Fragment-Host: org.corpus_tools.hexatomic.grid;bundle-version="0.4.0"
-Automatic-Module-Name: org.corpus_tools.hexatomic.grid.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
