@@ -239,6 +239,8 @@ public class ProjectManager {
    */
   public void open(URI path) {
 
+    closeOpenEditors();
+    
     project = SaltFactory.createSaltProject();
     location = Optional.of(path);
     try {
@@ -250,6 +252,18 @@ public class ProjectManager {
     hasUnsavedChanges = false;
     uiStatus.setDirty(false);
     uiStatus.setLocation(path.toFileString());
+  }
+  
+  /**
+   * Close all open editors.
+   */
+  private void closeOpenEditors() {
+    for (MPart part : partService.getParts()) {
+      String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+      if (docID != null && !docID.isEmpty()) {
+        sync.syncExec(() -> partService.hidePart(part));
+      }
+    }
   }
 
   /**
@@ -436,7 +450,10 @@ public class ProjectManager {
   /**
    * Closes the current project and creates a new, empty project.
    */
-  public void close() {
+  public void newProject() {
+    
+    closeOpenEditors();
+    
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);

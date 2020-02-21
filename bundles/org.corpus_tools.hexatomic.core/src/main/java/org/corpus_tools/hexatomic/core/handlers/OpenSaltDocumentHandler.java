@@ -66,7 +66,8 @@ public class OpenSaltDocumentHandler {
     Object selection = selectionService.getSelection();
     if (selection instanceof SDocument) {
 
-      // TODO: show progress indicator
+      // TODO: Show progress indicator. Documents can be large and loading them may take some time.
+      
       Optional<SDocument> document =
           projectManager.getDocument(((SDocument) selection).getId(), true);
 

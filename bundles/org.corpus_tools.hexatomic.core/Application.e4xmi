@@ -50,6 +50,7 @@
   </commands>
   <commands xmi:id="_pA7BYMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.command.open_salt_project" commandName="Open Salt Project">
     <parameters xmi:id="_QNYJ4DGCEeqqrY0g-NJEjw" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>
+    <parameters xmi:id="_Mo80oFTTEeqc8cBoMVb6wA" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_close" name="Force Close"/>
   </commands>
   <commands xmi:id="_kj2CcEmZEeqbxMjDv0hhTg" elementId="org.corpus_tools.hexatomic.core.command.new_salt_project" commandName="New Salt Project">
     <parameters xmi:id="_IdJi0EzhEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_close" name="Force Close"/>

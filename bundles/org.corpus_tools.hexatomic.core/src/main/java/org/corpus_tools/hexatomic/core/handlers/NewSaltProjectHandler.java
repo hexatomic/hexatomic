@@ -29,7 +29,6 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -52,6 +51,7 @@ public class NewSaltProjectHandler {
   protected void execute(Shell shell, EPartService partService, UISynchronize sync,
       EModelService modelService, MApplication app,
       @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
+    
     boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
     if (!forceClose && projectManager.isDirty()) {
       // Ask user if project should be closed even with unsaved changes
@@ -63,16 +63,8 @@ public class NewSaltProjectHandler {
         return;
       }
     }
-
-    // Close all editors
-    for (MPart part : partService.getParts()) {
-      String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
-      if (docID != null && !docID.isEmpty()) {
-        sync.syncExec(() -> partService.hidePart(part));
-      }
-    }
-
-    projectManager.close();
+    
+    projectManager.newProject();
 
     // Change the title of the application
     MUIElement mainWindow = modelService.find("org.eclipse.e4.window.main", app);

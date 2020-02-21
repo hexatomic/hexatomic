@@ -22,7 +22,7 @@
 package org.corpus_tools.hexatomic.core;
 
 /**
- * Contains constants for command paramaters use by the core bundle.
+ * Contains constants for command parameters use by the core bundle.
  * 
  * @author Thomas Krause
  */
