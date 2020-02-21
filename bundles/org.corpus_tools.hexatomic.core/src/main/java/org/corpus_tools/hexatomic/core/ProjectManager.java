@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.core;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +40,6 @@ import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.SaltFactory;
-import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
@@ -49,12 +49,17 @@ import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.corpus_tools.salt.util.internal.persistence.SaltXML10Writer;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Manages creating and opening Salt projects.
@@ -89,6 +94,9 @@ public class ProjectManager {
 
   @Inject
   UiStatusReport uiStatus;
+
+  @Inject
+  UISynchronize sync;
 
   private SaltNotificationFactory notificationFactory;
 
@@ -212,64 +220,127 @@ public class ProjectManager {
    */
   public void saveTo(URI path) {
     if (path != null) {
-      // Remember all loaded document graphs: saving the project will unlink the connection and we
-      // need to restore it later.
-      final Set<String> loadedDocumentIds = project.getCorpusGraphs().stream()
-          .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
-          .map(d -> d.getId()).collect(Collectors.toSet());
 
-      // Unsubscribe all listeners for the document changes
-      final List<Listener> previousListeners = new LinkedList<>(this.allListeners);
-      this.allListeners.clear();
+      IRunnableWithProgress operation = new IRunnableWithProgress() {
 
-      boolean savingToCurrentLocation =
-          getLocation().isPresent() && getLocation().get().equals(path);
+        @Override
+        public void run(IProgressMonitor monitor)
+            throws InvocationTargetException, InterruptedException {
 
-      Path outputDirectory = Paths.get(path.toFileString());
-      if (!savingToCurrentLocation) {
-        // Clear existing files from the folder, which is not the same as the current one
-        clearFolder(outputDirectory);
-      }
+          boolean savingToCurrentLocation =
+              getLocation().isPresent() && getLocation().get().equals(path);
 
-      outputDirectory.toFile().mkdirs();
+          // Remember all loaded document graphs: saving the project will unlink the connection and
+          // we need to restore it later.
+          final Set<String> loadedDocumentIds = project.getCorpusGraphs().stream()
+              .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
+              .map(d -> d.getId()).collect(Collectors.toSet());
 
-      // Save the corpus structure file
-      URI saltProjectFile = path.appendSegment(SaltUtil.FILE_SALT_PROJECT);
-      SaltXML10Writer writer = new SaltXML10Writer(saltProjectFile);
-      writer.writeSaltProject(project);
+          // Collect all documents that need to be saved
+          final List<SDocument> documents;
+          if (savingToCurrentLocation) {
+            // Only the loaded documents need to be saved
+            documents = project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+                .filter(d -> d.getDocumentGraph() != null).collect(Collectors.toList());
+          } else {
+            // All documents need to be saved
+            documents = project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+                .collect(Collectors.toList());
+          }
 
-      // Load each document individually and persist it
-      if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
+          monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
 
-        // Store all documents and load them from the original location if necessary.
-        // When storing the same location, we can assume we did not change the document graph
-        // and can skip loading and saving it.
-        for (SCorpusGraph corpusGraph : project.getCorpusGraphs()) {
-          for (SDocument doc : corpusGraph.getDocuments()) {
-            if (!savingToCurrentLocation && doc.getDocumentGraph() == null
-                && doc.getDocumentGraphLocation() != null) {
-              // Load from original location
-              doc.loadDocumentGraph();
-            }
-            if (doc.getDocumentGraph() != null) {
-              // Save to new location
-              doc.saveDocumentGraph(getOutputPathForDocument(path, doc));
-            }
-            if (!loadedDocumentIds.contains(doc.getId())) {
-              // Unload document again
-              doc.setDocumentGraph(null);
+
+          // Unsubscribe all listeners for the document changes
+          final List<Listener> previousListeners = new LinkedList<>(allListeners);
+          allListeners.clear();
+
+
+          Path outputDirectory = Paths.get(path.toFileString());
+          if (!savingToCurrentLocation) {
+            // Clear existing files from the folder, which is not the same as the current one
+            clearFolder(outputDirectory);
+          }
+
+          outputDirectory.toFile().mkdirs();
+
+          // Save the corpus structure file
+          monitor.subTask("Saving corpus structure");
+          URI saltProjectFile = path.appendSegment(SaltUtil.FILE_SALT_PROJECT);
+          SaltXML10Writer writer = new SaltXML10Writer(saltProjectFile);
+          writer.writeSaltProject(project);
+          monitor.worked(1);
+
+          // Load each document individually and persist it
+          if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
+
+            // Store all documents and load them from the original location if necessary.
+            // When storing the same location, we can assume we did not change the document graph
+            // and can skip loading and saving it.
+            for (SDocument doc : documents) {
+              if (monitor.isCanceled()) {
+                monitor.done();
+                return;
+              }
+
+              monitor.subTask(doc.getPath().toString());
+              if (!savingToCurrentLocation && doc.getDocumentGraph() == null
+                  && doc.getDocumentGraphLocation() != null) {
+                // Load from original location
+                doc.loadDocumentGraph();
+              }
+              if (doc.getDocumentGraph() != null) {
+                // Save to new location
+                doc.saveDocumentGraph(getOutputPathForDocument(path, doc));
+              }
+              if (!loadedDocumentIds.contains(doc.getId())) {
+                // Unload document again
+                doc.setDocumentGraph(null);
+              }
+
+              // Report one finished document
+              monitor.worked(1);
             }
           }
+
+          location = Optional.of(path);
+
+
+          sync.asyncExec(() -> {
+            // Reload the originally loaded documents
+            for (String documentID : loadedDocumentIds) {
+              Optional<SDocument> document = getDocument(documentID);
+              if (document.isPresent()) {
+                document.get().loadDocumentGraph();
+                events.send(Topics.DOCUMENT_LOADED, document.get().getId());
+              }
+            }
+
+            uiStatus.setDirty(false);
+            uiStatus.setLocation(path.toFileString());
+
+            // Re-add the listeners
+            allListeners.addAll(previousListeners);
+            hasUnsavedChanges = false;
+
+          });
+
+
+          monitor.done();
+
         }
+      };
+
+
+      ProgressMonitorDialog dialog =
+          new ProgressMonitorDialog(Display.getDefault().getActiveShell());
+
+      dialog.setCancelable(true);
+      try {
+        dialog.run(true, true, operation);
+      } catch (InvocationTargetException | InterruptedException ex) {
+        errorService.handleException("Could not save project", ex, ProjectManager.class);
       }
-
-      location = Optional.of(path);
-
-      // Re-add the listeners
-      this.allListeners.addAll(previousListeners);
-      hasUnsavedChanges = false;
-      uiStatus.setDirty(false);
-      uiStatus.setLocation(path.toFileString());
     }
   }
 
