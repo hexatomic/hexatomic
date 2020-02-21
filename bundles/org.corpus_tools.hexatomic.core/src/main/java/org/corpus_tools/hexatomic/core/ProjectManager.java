@@ -489,13 +489,17 @@ public class ProjectManager {
   protected void unloadDocumentGraphWhenClosed(
       @UIEventTopic(Topics.DOCUMENT_CLOSED) String documentID) {
 
+    if (isDirty()) {
+      // Do not cleanup if any change has been made to the project
+      return;
+    }
+
     // Check if any other editor is open for this document
     if (documentID != null) {
       Optional<SDocument> document = getDocument(documentID, false);
       if (document.isPresent()) {
         if (getNumberOfOpenEditors(document.get()) <= 1) {
           // No other editor found, unload document graph if it can be located on disk
-          // TODO: when saving projects is implemented, check if there are unsaved changes
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
