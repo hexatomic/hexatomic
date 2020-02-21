@@ -275,9 +275,9 @@ public class ProjectManager {
           // Load each document individually and persist it
           if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
 
-            // Store all documents and load them from the original location if necessary.
+            // Store all documents and copy them from the original location if necessary.
             // When storing the same location, we can assume we did not change the document graph
-            // and can skip loading and saving it.
+            // and can skip copying it.
             for (SDocument doc : documents) {
               if (monitor.isCanceled()) {
                 monitor.done();
@@ -285,18 +285,28 @@ public class ProjectManager {
               }
 
               monitor.subTask(doc.getPath().toString());
-              if (!savingToCurrentLocation && doc.getDocumentGraph() == null
-                  && doc.getDocumentGraphLocation() != null) {
-                // Load from original location
-                doc.loadDocumentGraph();
-              }
-              if (doc.getDocumentGraph() != null) {
-                // Save to new location
-                doc.saveDocumentGraph(getOutputPathForDocument(path, doc));
-              }
-              if (!loadedDocumentIds.contains(doc.getId())) {
-                // Unload document again
-                doc.setDocumentGraph(null);
+
+              URI documentOutputUri = getOutputPathForDocument(path, doc);
+              Path documentOutputPath = Paths.get(documentOutputUri.toFileString());
+              if (savingToCurrentLocation) {
+                if (doc.getDocumentGraph() != null) {
+                  // Save to new location
+                  doc.saveDocumentGraph(documentOutputUri);
+                }
+              } else if (doc.getDocumentGraphLocation() != null) {
+                // Copy the Salt XML file: this is much faster than deserializing and serializing it
+                try {
+                  documentOutputPath.toFile().getParentFile().mkdirs();
+                  Files.copy(Paths.get(doc.getDocumentGraphLocation().toFileString()),
+                      documentOutputPath);
+                } catch (IOException ex) {
+                  monitor.done();
+                  sync.asyncExec(() -> {
+                    errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
+                        ProjectManager.class);
+                  });
+                  return;
+                }
               }
 
               // Report one finished document
@@ -325,7 +335,6 @@ public class ProjectManager {
             hasUnsavedChanges = false;
 
           });
-
 
           monitor.done();
 
@@ -441,7 +450,7 @@ public class ProjectManager {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
-
+      
       hasUnsavedChanges = true;
       uiStatus.setDirty(true);
 
