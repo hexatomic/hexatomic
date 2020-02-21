@@ -74,20 +74,17 @@ public class Column {
    * Checks if a range of row cells is empty, or has at least one data object set to a row cell
    * within the specified range.
    * 
-   * <p>
-   * This works by checking whether the cardinality of the {@link BitSet} subset containing the bits
-   * at the indices specified in the range equals 0 (i.e., no bits in the subset are set to
-   * <code>true</code>).
-   * </p>
-   * 
-   * @param from The inclusive first index of the range of row cells that should be checked
-   * @param to The inclusive last index of the range of row cells that should be checked
+   * @param inclusiveFrom The inclusive first index of the range of row cells that should be checked
+   * @param inclusiveTo The inclusive last index of the range of row cells that should be checked
    * @return whether any of the row cells within the specified range are set
    */
-  boolean areRowsEmpty(int from, int to) {
+  boolean areRowsEmpty(int inclusiveFrom, int inclusiveTo) {
+    // Check whether the cardinality of the BitSet subset containing the bits
+    // at the indices specified in the range equals 0 (i.e., no bits in the subset are set to
+    // true).
     // As the token index that is passed should be included in the check, we need to add +1 to the
-    // to-index, as otherwise it is not checked (API's to is exclusive).
-    return bits.get(from, to + 1).cardinality() == 0;
+    // to-index, as otherwise it is not checked (BitSet#get API's to is exclusive).
+    return bits.get(inclusiveFrom, inclusiveTo + 1).cardinality() == 0;
   }
 
   /**
@@ -149,16 +146,12 @@ public class Column {
     return header;
   }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder(header == null ? "null" : header);
-    sb.append(":\n");
-    for (int i = 0; i < rowCells.size(); i++) {
-      String t = getDisplayText(i) == null ? "null" : getDisplayText(i);
-      Object o = getDataObject(i) == null ? "null" : getDataObject(i).getClass().getSimpleName();
-      sb.append(t + " (" + o + ").");
-    }
-    return sb.toString();
+  BitSet getBits() {
+    return bits;
+  }
+
+  Map<Integer, LabelableElement> getCells() {
+    return rowCells;
   }
 
 }
