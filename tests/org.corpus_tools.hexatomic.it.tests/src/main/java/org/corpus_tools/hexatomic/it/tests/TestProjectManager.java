@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
@@ -44,7 +43,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestProjectManager {
 
   private SWTWorkbenchBot bot;
-  
+
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
@@ -56,7 +55,7 @@ class TestProjectManager {
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 
     bot = new SWTWorkbenchBot(ctx);
-    
+
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
@@ -64,7 +63,6 @@ class TestProjectManager {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -80,12 +78,10 @@ class TestProjectManager {
     handlerService.executeHandler(cmd);
   }
 
-
   @Test
   @Order(1)
   public void testOpenAndSave() throws IOException {
 
-	  
     projectManager.getProject().setName(null);
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
 
@@ -118,9 +114,10 @@ class TestProjectManager {
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
     UIThreadRunnable.syncExec(() -> {
-      projectManager.saveTo(URI.createFileURI(tmpDir.toString()), bot.getDisplay().getActiveShell());
+      projectManager.saveTo(URI.createFileURI(tmpDir.toString()),
+          bot.getDisplay().getActiveShell());
     });
-    
+
     assertFalse(projectManager.isDirty());
 
     // Compare the saved project with the one currently in memory
@@ -133,8 +130,9 @@ class TestProjectManager {
     Set<Difference> docDiff =
         SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
     assertThat(docDiff, is(empty()));
-    
-    // Apply some more changes to the loaded document graph and save to same location
+
+    // Apply some more changes to the loaded document graph and save to same
+    // location
     doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
     doc1Graph = doc1.getDocumentGraph();
     assertNotNull(doc1Graph);
@@ -146,18 +144,16 @@ class TestProjectManager {
     UIThreadRunnable.syncExec(() -> {
       projectManager.save(bot.getDisplay().getActiveShell());
     });
-    
+
     assertFalse(projectManager.isDirty());
-    
-    savedProject =
-        SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+
+    savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
     savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
         .getNode("salt:/rootCorpus/subCorpus1/doc1");
 
-    docDiff =
-        SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+    docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
     assertThat(docDiff, is(empty()));
-  
+
   }
 }
