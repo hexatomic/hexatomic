@@ -92,6 +92,7 @@ class TestProjectManager {
   @Test
   public void testOpenAndSaveExample() throws IOException {
 
+    projectManager.getProject().setName(null);
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
 
     // Open the example project
@@ -99,10 +100,12 @@ class TestProjectManager {
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
 
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").isPresent());
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2").isPresent());
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc3").isPresent());
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc4").isPresent());
+    final String[] docIDs = {"salt:/rootCorpus/subCorpus1/doc1", "salt:/rootCorpus/subCorpus1/doc2",
+        "salt:/rootCorpus/subCorpus2/doc3", "salt:/rootCorpus/subCorpus2/doc4"};
+
+    for (String id : docIDs) {
+      assertTrue(projectManager.getDocument(id).isPresent());
+    }
 
     verify(uiStatus).setDirty(false);
     assertFalse(projectManager.isDirty());
@@ -131,12 +134,12 @@ class TestProjectManager {
     SaltProject savedProject =
         SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
-    SDocument savedDoc1 = (SDocument) savedProject.getCorpusGraphs().get(0)
+    SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
         .getNode("salt:/rootCorpus/subCorpus1/doc1");
-    Set<Difference> doc1Diff =
-        SaltUtil.compare(doc1Graph).with(savedDoc1.getDocumentGraph()).andFindDiffs();
-    assertThat(doc1Diff, is(empty()));
 
+    Set<Difference> docDiff =
+        SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+    assertThat(docDiff, is(empty()));
   }
 
   @Test

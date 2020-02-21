@@ -39,6 +39,7 @@ import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
@@ -46,6 +47,8 @@ import org.corpus_tools.salt.exceptions.SaltException;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
+import org.corpus_tools.salt.util.SaltUtil;
+import org.corpus_tools.salt.util.internal.persistence.SaltXML10Writer;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -83,7 +86,7 @@ public class ProjectManager {
 
   @Inject
   EPartService partService;
-  
+
   @Inject
   UiStatusReport uiStatus;
 
@@ -211,50 +214,56 @@ public class ProjectManager {
     if (path != null) {
       // Remember all loaded document graphs: saving the project will unlink the connection and we
       // need to restore it later.
-      final List<String> loadedDocumentIds = project.getCorpusGraphs().stream()
+      final Set<String> loadedDocumentIds = project.getCorpusGraphs().stream()
           .flatMap(cg -> cg.getDocuments().stream()).filter(d -> d.getDocumentGraph() != null)
-          .map(d -> d.getId()).collect(Collectors.toList());
+          .map(d -> d.getId()).collect(Collectors.toSet());
 
       // Unsubscribe all listeners for the document changes
       final List<Listener> previousListeners = new LinkedList<>(this.allListeners);
       this.allListeners.clear();
 
-      // Clear existing files from the folder
+      boolean savingToCurrentLocation =
+          getLocation().isPresent() && getLocation().get().equals(path);
+
       Path outputDirectory = Paths.get(path.toFileString());
-      try {
-        Files.walkFileTree(outputDirectory, new SimpleFileVisitor<Path>() {
-          public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-              throws IOException {
-            Files.delete(file);
-            return FileVisitResult.CONTINUE;
-          }
-
-          public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-            if (!dir.equals(outputDirectory)) {
-              Files.delete(dir);
-            }
-            return FileVisitResult.CONTINUE;
-          }
-
-        });
-      } catch (IOException ex) {
-        log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
-            ex);
+      if (!savingToCurrentLocation) {
+        // Clear existing files from the folder, which is not the same as the current one
+        clearFolder(outputDirectory);
       }
 
-      // Save all files into the now empty folder
-      project.saveSaltProject(path);
+      outputDirectory.toFile().mkdirs();
 
-      location = Optional.of(path);
+      // Save the corpus structure file
+      URI saltProjectFile = path.appendSegment(SaltUtil.FILE_SALT_PROJECT);
+      SaltXML10Writer writer = new SaltXML10Writer(saltProjectFile);
+      writer.writeSaltProject(project);
 
-      // Reload the originally loaded documents
-      for (String documentID : loadedDocumentIds) {
-        Optional<SDocument> document = getDocument(documentID);
-        if (document.isPresent()) {
-          document.get().loadDocumentGraph();
-          events.send(Topics.DOCUMENT_LOADED, document.get().getId());
+      // Load each document individually and persist it
+      if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
+
+        // Store all documents and load them from the original location if necessary.
+        // When storing the same location, we can assume we did not change the document graph
+        // and can skip loading and saving it.
+        for (SCorpusGraph corpusGraph : project.getCorpusGraphs()) {
+          for (SDocument doc : corpusGraph.getDocuments()) {
+            if (!savingToCurrentLocation && doc.getDocumentGraph() == null
+                && doc.getDocumentGraphLocation() != null) {
+              // Load from original location
+              doc.loadDocumentGraph();
+            }
+            if (doc.getDocumentGraph() != null) {
+              // Save to new location
+              doc.saveDocumentGraph(getOutputPathForDocument(path, doc));
+            }
+            if (!loadedDocumentIds.contains(doc.getId())) {
+              // Unload document again
+              doc.setDocumentGraph(null);
+            }
+          }
         }
       }
+
+      location = Optional.of(path);
 
       // Re-add the listeners
       this.allListeners.addAll(previousListeners);
@@ -262,7 +271,38 @@ public class ProjectManager {
       uiStatus.setDirty(false);
       uiStatus.setLocation(path.toFileString());
     }
+  }
 
+
+  private void clearFolder(Path outputDirectory) {
+    try {
+      Files.walkFileTree(outputDirectory, new SimpleFileVisitor<Path>() {
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+          Files.delete(file);
+          return FileVisitResult.CONTINUE;
+        }
+
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+          if (!dir.equals(outputDirectory)) {
+            Files.delete(dir);
+          }
+          return FileVisitResult.CONTINUE;
+        }
+
+      });
+    } catch (IOException ex) {
+      log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
+          ex);
+    }
+  }
+
+  private URI getOutputPathForDocument(URI saltProjectFolder, SDocument doc) {
+    URI docUri = saltProjectFolder;
+    for (String seg : doc.getPath().segments()) {
+      docUri = docUri.appendSegment(seg);
+    }
+    docUri = docUri.appendFileExtension(SaltUtil.FILE_ENDING_SALT_XML);
+    return docUri;
   }
 
   /**
@@ -282,7 +322,7 @@ public class ProjectManager {
     this.project = SaltFactory.createSaltProject();
     events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
     hasUnsavedChanges = false;
-    
+
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
   }

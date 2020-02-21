@@ -84,6 +84,6 @@ public class SaveAsHandler {
 
   @CanExecute
   public boolean canExecute() {
-    return projectManager.isDirty();
+    return projectManager.isDirty() || projectManager.getLocation().isPresent();
   }
 }
