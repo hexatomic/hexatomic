@@ -292,8 +292,6 @@ public class ProjectManager {
           boolean savingToCurrentLocation =
               getLocation().isPresent() && getLocation().get().equals(path);
 
-
-
           // Collect all documents that need to be saved
           final List<SDocument> documents;
           if (savingToCurrentLocation) {
@@ -308,11 +306,9 @@ public class ProjectManager {
 
           monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
 
-
           // Disable listeners for document changes while performing massive amounts of temporary
           // changes
           listenersActive = false;
-
 
           Path outputDirectory = Paths.get(path.toFileString());
           if (!savingToCurrentLocation) {
@@ -346,23 +342,32 @@ public class ProjectManager {
               URI documentOutputUri = getOutputPathForDocument(path, doc);
               Path documentOutputPath = Paths.get(documentOutputUri.toFileString());
               if (savingToCurrentLocation) {
-                if (doc.getDocumentGraph() != null) {
+                if (doc.getDocumentGraph() == null) {
+                  // No need to save if not changed in memory
+                  log.debug("Save: Skipping unchanged document {} in same directory", doc.getId());
+                } else {
                   // Save to new location
                   doc.saveDocumentGraph(documentOutputUri);
                 }
-              } else if (doc.getDocumentGraphLocation() != null) {
-                // Copy the Salt XML file: this is much faster than deserializing and serializing it
-                try {
-                  documentOutputPath.toFile().getParentFile().mkdirs();
-                  Files.copy(Paths.get(doc.getDocumentGraphLocation().toFileString()),
-                      documentOutputPath);
-                } catch (IOException ex) {
-                  monitor.done();
-                  sync.asyncExec(() -> {
-                    errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
-                        ProjectManager.class);
-                  });
-                  return;
+              } else {
+                if (doc.getDocumentGraph() == null) {
+                  // Copy the unchanged Salt XML file: this is much faster than deserializing and
+                  // serializing it
+                  try {
+                    documentOutputPath.toFile().getParentFile().mkdirs();
+                    Files.copy(Paths.get(doc.getDocumentGraphLocation().toFileString()),
+                        documentOutputPath);
+                  } catch (IOException ex) {
+                    monitor.done();
+                    sync.asyncExec(() -> {
+                      errorService.handleException("Could not copy Salt document " + doc.getId(),
+                          ex, ProjectManager.class);
+                    });
+                    return;
+                  }
+                } else {
+                  // Save to new location
+                  doc.saveDocumentGraph(documentOutputUri);
                 }
               }
 

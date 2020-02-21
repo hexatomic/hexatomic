@@ -1,11 +1,6 @@
 package org.corpus_tools.hexatomic.core;
 
 import static org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler.DOCUMENT_ID;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,26 +10,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
-import org.corpus_tools.salt.common.SDocumentGraph;
-import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.common.SaltProject;
-import org.corpus_tools.salt.util.Difference;
-import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -89,58 +73,6 @@ class TestProjectManager {
 
   }
 
-  @Test
-  public void testOpenAndSaveExample() throws IOException {
-
-    projectManager.getProject().setName(null);
-    assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
-
-    // Open the example project
-    projectManager.open(exampleProjectUri);
-
-    assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
-
-    final String[] docIDs = {"salt:/rootCorpus/subCorpus1/doc1", "salt:/rootCorpus/subCorpus1/doc2",
-        "salt:/rootCorpus/subCorpus2/doc3", "salt:/rootCorpus/subCorpus2/doc4"};
-
-    for (String id : docIDs) {
-      assertTrue(projectManager.getDocument(id).isPresent());
-    }
-
-    verify(uiStatus).setDirty(false);
-    assertFalse(projectManager.isDirty());
-
-    // Load a single document into memory
-    SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
-    doc1.loadDocumentGraph();
-    SDocumentGraph doc1Graph = doc1.getDocumentGraph();
-    assertNotNull(doc1Graph);
-
-    // Apply some changes to the loaded document graph
-    List<SToken> tokens = doc1Graph.getSortedTokenByText();
-    doc1Graph.createSpan(tokens.get(0), tokens.get(1));
-
-    verify(uiStatus, atLeastOnce()).setDirty(true);
-    assertTrue(projectManager.isDirty());
-
-    // Save the project to a different location
-    Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
-    projectManager.saveTo(URI.createFileURI(tmpDir.toString()), null);
-
-    verify(uiStatus, atLeastOnce()).setDirty(false);
-    assertFalse(projectManager.isDirty());
-
-    // Compare the saved project with the one currently in memory
-    SaltProject savedProject =
-        SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
-
-    SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-        .getNode("salt:/rootCorpus/subCorpus1/doc1");
-
-    Set<Difference> docDiff =
-        SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
-    assertThat(docDiff, is(empty()));
-  }
 
   @Test
   public void testEventOnOpen() {
@@ -155,10 +87,9 @@ class TestProjectManager {
     String documentID = "salt:/rootCorpus/subCorpus2/doc3";
 
     // Load document once
-    Optional<SDocument> document = projectManager.getDocument(documentID);
+    Optional<SDocument> document = projectManager.getDocument(documentID, true);
     assertTrue(document.isPresent());
     assertNotNull(document.get().getDocumentGraphLocation());
-    document.get().loadDocumentGraph();
     assertNotNull(document.get().getDocumentGraph());
 
     // Mock three open documents: two of them are the same

@@ -19,7 +19,11 @@ Require-Bundle: org.junit,
  org.eclipse.emf.common,
  org.eclipse.e4.core.commands;bundle-version="0.12.600",
  org.corpus_tools.hexatomic.graph;bundle-version="0.4.0",
- org.eclipse.zest.core
+ org.eclipse.zest.core,
+ org.corpus-tools.salt-api;bundle-version="3.3.11",
+ org.corpus-tools.salt-extensions;bundle-version="3.3.11",
+ org.hamcrest;bundle-version="1.1.0",
+ org.eclipse.e4.core.di;bundle-version="1.7.500"
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Bundle-Activator: org.corpus_tools.hexatomic.it.tests.Activator
 Bundle-ActivationPolicy: lazy
