@@ -79,12 +79,15 @@ public class ConsoleController {
     }
 
     // parse the line
+    ErrorListener errorListener = new ErrorListener();
+
     ConsoleLexer lexer = new ConsoleLexer(CharStreams.fromString(cmd));
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(errorListener);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     ConsoleCommandParser parser = new ConsoleCommandParser(tokens);
 
     parser.removeErrorListeners();
-    ErrorListener errorListener = new ErrorListener();
     parser.addErrorListener(errorListener);
 
     StartContext startCtx = parser.start();
