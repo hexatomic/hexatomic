@@ -19,6 +19,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
@@ -69,6 +70,7 @@ class TestGraphEditor {
 
 
   SWTBotView openDefaultExample() {
+
     // Programmatically open the example corpus
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.LOCATION, exampleProjectUri.toFileString());
@@ -83,9 +85,14 @@ class TestGraphEditor {
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
         .expandNode("subCorpus1").expandNode("doc1");
 
+    // Get the main shell title after loading the corpus
+    String mainTitle = bot.activeShell().getText();
+
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+
+    bot.waitUntil(Conditions.shellIsActive(mainTitle));
 
     SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
     assertNotNull(view);
