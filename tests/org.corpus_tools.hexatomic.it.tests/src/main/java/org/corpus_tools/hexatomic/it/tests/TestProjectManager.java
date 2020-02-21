@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
@@ -82,8 +83,9 @@ class TestProjectManager {
 
   @Test
   @Order(1)
-  public void testOpenAndSaveExample() throws IOException {
+  public void testOpenAndSave() throws IOException {
 
+	  
     projectManager.getProject().setName(null);
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
 
@@ -116,7 +118,7 @@ class TestProjectManager {
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
     UIThreadRunnable.syncExec(() -> {
-      projectManager.saveTo(URI.createFileURI(tmpDir.toString()), bot.activeShell().widget);
+      projectManager.saveTo(URI.createFileURI(tmpDir.toString()), bot.getDisplay().getActiveShell());
     });
     
     assertFalse(projectManager.isDirty());
@@ -129,6 +131,31 @@ class TestProjectManager {
         .getNode("salt:/rootCorpus/subCorpus1/doc1");
 
     Set<Difference> docDiff =
+        SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+    assertThat(docDiff, is(empty()));
+    
+    // Apply some more changes to the loaded document graph and save to same location
+    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
+    doc1Graph = doc1.getDocumentGraph();
+    assertNotNull(doc1Graph);
+    tokens = doc1Graph.getSortedTokenByText();
+    doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+    assertTrue(projectManager.isDirty());
+
+    UIThreadRunnable.syncExec(() -> {
+      projectManager.save(bot.getDisplay().getActiveShell());
+    });
+    
+    assertFalse(projectManager.isDirty());
+    
+    savedProject =
+        SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+
+    savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
+        .getNode("salt:/rootCorpus/subCorpus1/doc1");
+
+    docDiff =
         SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
     assertThat(docDiff, is(empty()));
   
