@@ -22,6 +22,7 @@ package org.corpus_tools.hexatomic.core.errors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.inject.Singleton;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -54,6 +55,8 @@ public class ErrorService {
   private static final org.slf4j.Logger errorServiceLog =
       org.slf4j.LoggerFactory.getLogger(ErrorService.class);
 
+  private Optional<IStatus> lastException = Optional.empty();
+
   /**
    * Display a (runtime) exception to the user and add it to the log.
    * 
@@ -68,8 +71,12 @@ public class ErrorService {
     log.error("Exception occured: {}", message, ex);
 
     String bundleID = getBundleID(context);
-    ErrorDialog.openError(null, ERROR_OCCURED_MSG, message,
-        createStatusFromException(message, bundleID, ex));
+
+
+    IStatus status = createStatusFromException(message, bundleID, ex);
+    lastException = Optional.of(status);
+
+    ErrorDialog.openError(null, ERROR_OCCURED_MSG, message, status);
   }
 
   /**
@@ -118,6 +125,21 @@ public class ErrorService {
       }
     }
     return bundleID;
+  }
+
+  /**
+   * Return the last exception that has been handled with
+   * {@link #handleException(String, Throwable, Class)}. 
+   * 
+   * <p>
+   * This property can be used to check in unit tests if any error has occured and was handled in
+   * the UI.
+   * </p>
+   * 
+   * @return The {@link IStatus} created by from the exception.
+   */
+  public Optional<IStatus> getLastException() {
+    return lastException;
   }
 
   /**
