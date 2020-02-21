@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,6 +43,7 @@ import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.exceptions.SaltException;
+import org.corpus_tools.salt.exceptions.SaltResourceException;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
@@ -101,6 +101,7 @@ public class ProjectManager {
   private SaltNotificationFactory notificationFactory;
 
   private final Set<Listener> allListeners = new LinkedHashSet<>();
+  private boolean listenersActive = true;
 
   private boolean hasUnsavedChanges;
 
@@ -161,14 +162,52 @@ public class ProjectManager {
   }
 
   /**
-   * Return a document by its ID.
+   * Return a document by its ID. The document graph might not be loaded.
    * 
    * @param documentID The Salt ID
    * @return An optional document.
+   * 
+   * @see ProjectManager#getDocument(String, boolean)
    */
   public Optional<SDocument> getDocument(String documentID) {
-    return this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
-        .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
+    return getDocument(documentID, false);
+  }
+
+  /**
+   * Return a document by its ID.
+   * 
+   * @param documentID The Salt ID
+   * @param loadDocumentGraph If true, the corresponding document graph will be loaded.
+   * @return An optional document.
+   */
+  public Optional<SDocument> getDocument(String documentID, boolean loadDocumentGraph) {
+    Optional<SDocument> result =
+        this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
+            .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
+
+    if (loadDocumentGraph && result.isPresent() && result.get().getDocumentGraph() == null) {
+      if (result.get().getDocumentGraphLocation() == null) {
+        // We can't load the non-existing document graph from disk, create a new empty one
+        result.get().createDocumentGraph();
+      } else {
+        // Load the existing document graph from disk
+        try {
+          // Deactivate listeners to avoid partial updates during load
+          listenersActive = false;
+          // Load document
+          result.get().loadDocumentGraph();
+          // Re-enable listeners and notify them of the loaded document
+          listenersActive = true;
+          events.send(Topics.DOCUMENT_LOADED, result.get().getId());
+        } catch (SaltResourceException ex) {
+          errorService
+              .handleException("Could not load document graph (the actual annotations for document "
+                  + documentID + ").", ex, OpenSaltDocumentHandler.class);
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -252,9 +291,9 @@ public class ProjectManager {
           monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
 
 
-          // Unsubscribe all listeners for the document changes
-          final List<Listener> previousListeners = new LinkedList<>(allListeners);
-          allListeners.clear();
+          // Disable listeners for document changes while performing massive amounts of temporary
+          // changes
+          listenersActive = false;
 
 
           Path outputDirectory = Paths.get(path.toFileString());
@@ -320,9 +359,8 @@ public class ProjectManager {
           sync.asyncExec(() -> {
             // Reload the originally loaded documents
             for (String documentID : loadedDocumentIds) {
-              Optional<SDocument> document = getDocument(documentID);
+              Optional<SDocument> document = getDocument(documentID, true);
               if (document.isPresent()) {
-                document.get().loadDocumentGraph();
                 events.send(Topics.DOCUMENT_LOADED, document.get().getId());
               }
             }
@@ -330,8 +368,8 @@ public class ProjectManager {
             uiStatus.setDirty(false);
             uiStatus.setLocation(path.toFileString());
 
-            // Re-add the listeners
-            allListeners.addAll(previousListeners);
+            // Enable the listeners again
+            listenersActive = true;
             hasUnsavedChanges = false;
 
           });
@@ -415,7 +453,7 @@ public class ProjectManager {
 
     // Check if any other editor is open for this document
     if (documentID != null) {
-      Optional<SDocument> document = getDocument(documentID);
+      Optional<SDocument> document = getDocument(documentID, false);
       if (document.isPresent()) {
         int counter = 0;
         for (MPart part : partService.getParts()) {
@@ -450,12 +488,14 @@ public class ProjectManager {
     @Override
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
-      
-      hasUnsavedChanges = true;
-      uiStatus.setDirty(true);
 
-      for (Listener l : allListeners) {
-        l.notify(type, attribute, oldValue, newValue, container);
+      if (listenersActive) {
+        hasUnsavedChanges = true;
+        uiStatus.setDirty(true);
+
+        for (Listener l : allListeners) {
+          l.notify(type, attribute, oldValue, newValue, container);
+        }
       }
     }
 

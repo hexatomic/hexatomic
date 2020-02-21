@@ -20,12 +20,12 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
+import java.util.Optional;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
-import org.corpus_tools.salt.exceptions.SaltResourceException;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -66,35 +66,26 @@ public class OpenSaltDocumentHandler {
     Object selection = selectionService.getSelection();
     if (selection instanceof SDocument) {
 
-      SDocument document = (SDocument) selection;
+      // TODO: show progress indicator
+      Optional<SDocument> document =
+          projectManager.getDocument(((SDocument) selection).getId(), true);
 
-      if (document.getDocumentGraph() == null) {
-        try {
-          if (document.getDocumentGraphLocation() == null) {
-            // create a new document graph, because no one exists yet
-            document.createDocumentGraph();
-          } else {
-            // TODO: show progress indicator
-            document.loadDocumentGraph();
-          }
-
-        } catch (SaltResourceException ex) {
-          errorService
-              .handleException("Could not load document graph (the actual annotations for document "
-                  + document.getId() + ").", ex, OpenSaltDocumentHandler.class);
+      if (document.isPresent()) {
+        // Create a new part from an editor part descriptor
+        MPart editorPart = partService.createPart(editorID);
+        String title = document.get().getName();
+        if (editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
+          title = title + " (" + editorPart.getLabel() + ")";
         }
-      }
+        editorPart.setLabel(title);
+        editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID,
+            document.get().getId());
 
-      // Create a new part from an editor part descriptor
-      MPart editorPart = partService.createPart(editorID);
-      String title = document.getName();
-      if (editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
-        title = title + " (" + editorPart.getLabel() + ")";
+        partService.showPart(editorPart, PartState.ACTIVATE);
+      } else {
+        errorService.showError("Document not found",
+            "The selected document was not found in the project.", OpenSaltDocumentHandler.class);
       }
-      editorPart.setLabel(title);
-      editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID, document.getId());
-
-      partService.showPart(editorPart, PartState.ACTIVATE);
 
     }
   }
