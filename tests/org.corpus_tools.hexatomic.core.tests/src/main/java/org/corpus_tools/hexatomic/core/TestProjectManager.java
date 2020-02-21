@@ -1,6 +1,9 @@
 package org.corpus_tools.hexatomic.core;
 
 import static org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler.DOCUMENT_ID;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,15 +15,26 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.util.Difference;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -39,7 +53,7 @@ class TestProjectManager {
   private ErrorService errorService;
 
   private EPartService partService;
-  
+
   private UiStatusReport uiStatus;
 
   @BeforeEach
@@ -76,23 +90,52 @@ class TestProjectManager {
   }
 
   @Test
-  public void testOpenExample() {
+  public void testOpenAndSaveExample() throws IOException {
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
 
+    // Open the example project
     projectManager.open(exampleProjectUri);
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
 
     assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").isPresent());
     assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2").isPresent());
-
     assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc3").isPresent());
     assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc4").isPresent());
- 
+
     verify(uiStatus).setDirty(false);
     assertFalse(projectManager.isDirty());
-    
+
+    // Load a single document into memory
+    SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
+    doc1.loadDocumentGraph();
+    SDocumentGraph doc1Graph = doc1.getDocumentGraph();
+    assertNotNull(doc1Graph);
+
+    // Apply some changes to the loaded document graph
+    List<SToken> tokens = doc1Graph.getSortedTokenByText();
+    doc1Graph.createSpan(tokens.get(0), tokens.get(1));
+
+    verify(uiStatus, atLeastOnce()).setDirty(true);
+    assertTrue(projectManager.isDirty());
+
+    // Save the project to a different location
+    Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
+    projectManager.saveTo(URI.createFileURI(tmpDir.toString()));
+
+    verify(uiStatus, atLeastOnce()).setDirty(false);
+    assertFalse(projectManager.isDirty());
+
+    // Compare the saved project with the one currently in memory
+    SaltProject savedProject =
+        SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+
+    SDocument savedDoc1 = (SDocument) savedProject.getCorpusGraphs().get(0)
+        .getNode("salt:/rootCorpus/subCorpus1/doc1");
+    Set<Difference> doc1Diff =
+        SaltUtil.compare(doc1Graph).with(savedDoc1.getDocumentGraph()).andFindDiffs();
+    assertThat(doc1Diff, is(empty()));
 
   }
 
@@ -114,32 +157,32 @@ class TestProjectManager {
     assertNotNull(document.get().getDocumentGraphLocation());
     document.get().loadDocumentGraph();
     assertNotNull(document.get().getDocumentGraph());
-    
+
     // Mock three open documents: two of them are the same
     Map<String, String> state1 = new HashMap<>();
     state1.put(DOCUMENT_ID, documentID);
-    
+
     Map<String, String> state2 = new HashMap<>();
     state2.put(DOCUMENT_ID, "salt:/rootCorpus/subCorpus2/doc4");
-    
+
     Map<String, String> state3 = new HashMap<>();
     state3.put(DOCUMENT_ID, documentID);
 
     MPart editor1 = mock(MPart.class);
     MPart editor2 = mock(MPart.class);
     MPart editor3 = mock(MPart.class);
-    
+
     when(editor1.getPersistedState()).thenReturn(state1);
     when(editor2.getPersistedState()).thenReturn(state2);
     when(editor3.getPersistedState()).thenReturn(state3);
-    
+
     when(partService.getParts()).thenReturn(Arrays.asList(editor1, editor2, editor3));
-    
+
     // Notify one of the documents was closed
     projectManager.unloadDocumentGraphWhenClosed(documentID);
     // Document must still be loaded in memory
     assertNotNull(document.get().getDocumentGraph());
-    
+
     // Remove the one of the closed parts
     when(partService.getParts()).thenReturn(Arrays.asList(editor2, editor3));
     // Notify about closing one of the documents again
@@ -147,5 +190,6 @@ class TestProjectManager {
     // Document should have been unloaded from memory
     assertNull(document.get().getDocumentGraph());
   }
+
 
 }
