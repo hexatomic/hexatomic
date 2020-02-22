@@ -16,10 +16,11 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
@@ -33,11 +34,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
-  private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
+  private EPartService partService;
 
   private ErrorService errorService;
 
@@ -54,6 +56,9 @@ class TestGraphEditor {
     assertNotNull(handlerService);
 
 
+    partService = ctx.get(EPartService.class);
+    assertNotNull(partService);
+    
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
@@ -69,7 +74,7 @@ class TestGraphEditor {
   }
 
 
-  SWTBotView openDefaultExample() {
+  void openDefaultExample() {
 
     // Programmatically open the example corpus
     Map<String, String> params = new HashMap<>();
@@ -85,19 +90,23 @@ class TestGraphEditor {
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
         .expandNode("subCorpus1").expandNode("doc1");
 
-    // Get the main shell title after loading the corpus
-    String mainTitle = bot.activeShell().getText();
-
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
-    bot.waitUntil(Conditions.shellIsActive(mainTitle));
-
-    SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
-    assertNotNull(view);
-
-    return view;
+    bot.waitUntil(new DefaultCondition() {
+      
+      @Override
+      public boolean test() throws Exception {
+        SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
+        return view != null;
+      }
+      
+      @Override
+      public String getFailureMessage() {
+        return "Showing the graph editor part took too long";
+      }
+    });
 
   }
 
@@ -119,9 +128,7 @@ class TestGraphEditor {
   @Order(2)
   void testAddPointingRelation() {
 
-    SWTBotView graphView = openDefaultExample();
-    bot.showPart(graphView.getPart());
-    assertTrue(bot.isPartActive(graphView.getPart()));
+    openDefaultExample();
 
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
     console.insertText("e #structure3 -> #structure5");

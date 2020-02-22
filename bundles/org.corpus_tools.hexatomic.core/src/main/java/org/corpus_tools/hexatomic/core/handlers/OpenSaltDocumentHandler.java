@@ -77,7 +77,7 @@ public class OpenSaltDocumentHandler {
         Optional<SDocument> document = projectManager.getDocument(id, true);
 
         
-        sync.asyncExec(() -> {
+        sync.syncExec(() -> {
 
           if (document.isPresent()) {
             // Create a new part from an editor part descriptor
