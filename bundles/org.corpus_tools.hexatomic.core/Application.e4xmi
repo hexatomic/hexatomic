@@ -20,6 +20,11 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit Application" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
       </children>
     </mainMenu>
+    <trimBars xmi:id="_c05WAFVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.trimbar.status" side="Bottom">
+      <children xsi:type="menu:ToolControl" xmi:id="_fZh18FVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.toolcontrol.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.ui.StatusBar">
+        <tags>stretch</tags>
+      </children>
+    </trimBars>
   </children>
   <handlers xmi:id="_oYTiMMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handler.open_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler" command="_pA7BYMsLEemUdItNeSusZw"/>
   <handlers xmi:id="_q1G2IOwYEemI78FuTOEWVg" elementId="org.corpus_tools.hexatomic.core.handler.open_salt_document" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler" command="_y5imoOwYEemI78FuTOEWVg"/>

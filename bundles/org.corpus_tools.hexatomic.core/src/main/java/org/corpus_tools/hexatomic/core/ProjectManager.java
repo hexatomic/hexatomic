@@ -480,11 +480,15 @@ public class ProjectManager {
    */
   private int getNumberOfOpenEditors(SDocument document) {
     int counter = 0;
-    for (MPart part : partService.getParts()) {
-      String otherDocumentID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
-      if (document.getId().equals(otherDocumentID)) {
-        counter++;
+    try {
+      for (MPart part : partService.getParts()) {
+        String otherDocumentID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+        if (document.getId().equals(otherDocumentID)) {
+          counter++;
+        }
       }
+    } catch (IllegalStateException ex) {
+      // Ignore, this can happen when the application is closing    
     }
     return counter;
   }

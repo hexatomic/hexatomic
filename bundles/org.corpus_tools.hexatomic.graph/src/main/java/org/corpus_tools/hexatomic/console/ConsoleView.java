@@ -106,8 +106,10 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   public void writeLine(String str) {
     sync.asyncExec(() -> {
       document.set(document.get() + str + "\n");
-      view.getTextWidget().setCaretOffset(document.getLength());
-      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+      if (view != null && view.getTextWidget() != null) {
+        view.getTextWidget().setCaretOffset(document.getLength());
+        view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+      }
     });
   }
 

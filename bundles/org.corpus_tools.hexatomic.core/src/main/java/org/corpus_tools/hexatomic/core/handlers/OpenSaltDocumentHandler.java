@@ -20,13 +20,13 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -34,7 +34,6 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -72,40 +71,38 @@ public class OpenSaltDocumentHandler {
     Object selection = selectionService.getSelection();
     if (selection instanceof SDocument) {
 
-      ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(parent);
-      try {
-        String id = ((SDocument) selection).getId();
-        progressDialog.run(true, false, (monitor) -> {
-          monitor.setTaskName("Loading document " + id);
+      String id = ((SDocument) selection).getId();
+      Job job = Job.create("Loading document " + id, (monitor) -> {
+        monitor.beginTask("Loading document " + id, 0);
+        Optional<SDocument> document = projectManager.getDocument(id, true);
 
-          Optional<SDocument> document = projectManager.getDocument(id, true);
+        
+        sync.asyncExec(() -> {
 
-          monitor.done();
-          sync.asyncExec(() -> {
-
-            if (document.isPresent()) {
-              // Create a new part from an editor part descriptor
-              MPart editorPart = partService.createPart(editorID);
-              String title = document.get().getName();
-              if (editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
-                title = title + " (" + editorPart.getLabel() + ")";
-              }
-              editorPart.setLabel(title);
-              editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID,
-                  document.get().getId());
-
-              partService.showPart(editorPart, PartState.ACTIVATE);
-            } else {
-              errorService.showError("Document not found",
-                  "The selected document was not found in the project.",
-                  OpenSaltDocumentHandler.class);
+          if (document.isPresent()) {
+            // Create a new part from an editor part descriptor
+            MPart editorPart = partService.createPart(editorID);
+            String title = document.get().getName();
+            if (editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
+              title = title + " (" + editorPart.getLabel() + ")";
             }
-          });
+            editorPart.setLabel(title);
+            editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID,
+                document.get().getId());
+
+            partService.showPart(editorPart, PartState.ACTIVATE);
+          } else {
+            errorService.showError("Document not found",
+                "The selected document was not found in the project.",
+                OpenSaltDocumentHandler.class);
+          }
+          
+          monitor.done();
         });
-      } catch (InvocationTargetException | InterruptedException ex) {
-        errorService.handleException("Could not open Salt document", ex,
-            OpenSaltDocumentHandler.class);
-      }
+      });
+
+      job.schedule();
+
     }
   }
 
