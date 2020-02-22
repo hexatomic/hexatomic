@@ -512,7 +512,9 @@ public class ProjectManager {
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
+            listenersActive = false;
             document.get().setDocumentGraph(null);
+            listenersActive = true;
           }
         }
       }
