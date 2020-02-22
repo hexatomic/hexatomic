@@ -258,11 +258,16 @@ public class ProjectManager {
    * Close all open editors.
    */
   private void closeOpenEditors() {
-    for (MPart part : partService.getParts()) {
-      String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
-      if (docID != null && !docID.isEmpty()) {
-        partService.hidePart(part);
+
+    try {
+      for (MPart part : partService.getParts()) {
+        String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+        if (docID != null && !docID.isEmpty()) {
+          partService.hidePart(part);
+        }
       }
+    } catch (IllegalStateException ex) {
+      // Ignore, this can happen when the application is closing
     }
   }
 
@@ -488,7 +493,7 @@ public class ProjectManager {
         }
       }
     } catch (IllegalStateException ex) {
-      // Ignore, this can happen when the application is closing    
+      // Ignore, this can happen when the application is closing
     }
     return counter;
   }
