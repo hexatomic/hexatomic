@@ -23,10 +23,10 @@ package org.corpus_tools.hexatomic.core.ui;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.UiStatusReport;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.ProgressProvider;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
@@ -40,6 +40,9 @@ public class StatusBar {
 
   @Inject
   UISynchronize sync;
+
+  @Inject
+  UiStatusReport uiStatus;
 
   private ProgressBar progressBarIndeterminate;
 
@@ -70,90 +73,30 @@ public class StatusBar {
 
     progressLayout.topControl = null;
 
-    final ProgressMonitor monitor = new ProgressMonitor();
-    Job.getJobManager().setProgressProvider(new ProgressProvider() {
-      @Override
-      public IProgressMonitor createMonitor(Job job) {
-        return monitor;
-      }
-    });
-
   }
 
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  protected void unloadDocumentGraphWhenClosed(@UIEventTopic(Topics.STATUS_UPDATE) String ignore) {
 
-  private final class ProgressMonitor extends NullProgressMonitor {
+    lblMessage.setText(uiStatus.getExecutedJobStatusMessage());
 
-    private int runningTasksCounter = 0;
-    private boolean unknownTotalWork = false;
-
-
-    @Override
-    public void beginTask(final String name, final int totalWork) {
-      sync.syncExec(new Runnable() {
-
-        @Override
-        public void run() {
-
-          if (totalWork == 0) {
-            unknownTotalWork = true;
-            progressLayout.topControl = progressBarIndeterminate;
-            progressBarIndeterminate.requestLayout();
-            progressBarIndeterminate.setMaximum(1);
-            progressBarIndeterminate.setSelection(0);;
-
-
-          } else if (runningTasksCounter <= 0) {
-            unknownTotalWork = false;
-            progressLayout.topControl = progressBar;
-            progressBar.requestLayout();
-
-            progressBar.setSelection(0);
-            progressBar.setMaximum(totalWork);
-
-
-
-          } else if (!unknownTotalWork) {
-            progressLayout.topControl = progressBar;
-
-            progressBar.setMaximum(progressBar.getMaximum() + totalWork);
-          }
-
-          runningTasksCounter++;
-          if (runningTasksCounter > 1) {
-            lblMessage.setText("Currently running: " + runningTasksCounter + " | " + name);
-          } else {
-            lblMessage.setText(name);
-          }
-        }
-      });
-    }
-
-    @Override
-    public void worked(final int work) {
-      sync.syncExec(new Runnable() {
-
-        @Override
-        public void run() {
-          progressBar.setSelection(progressBar.getSelection() + work);
-        }
-      });
-    }
-
-    @Override
-    public void done() {
-      sync.syncExec(() -> {
-        runningTasksCounter--;
-        if (runningTasksCounter > 0) {
-          lblMessage.setText("Currently running: " + runningTasksCounter);
-        } else {
-          lblMessage.setText("");
-          progressLayout.topControl = null;
-          progressBar.requestLayout();
-          unknownTotalWork = false;
-          runningTasksCounter = 0;
-        }
-      });
+    if (uiStatus.getNumberOfExecutedJobs() == 0) {
+      // Hide progress bar completely
+      progressLayout.topControl = null;
+      progressBar.requestLayout();
+    } else if (uiStatus.hasIndeterminedJobWorkload()) {
+      // Show the indetermined progress bar
+      progressLayout.topControl = progressBarIndeterminate;
+      progressBarIndeterminate.setMaximum(1);
+      progressBarIndeterminate.setSelection(0);
+      progressBarIndeterminate.requestLayout();
+    } else {
+      // Show the progress as total number
+      progressLayout.topControl = progressBar;
+      progressBar.setMaximum(uiStatus.getExecutedJobsWorkload());
+      progressBar.setSelection(uiStatus.getExecutedJobsProgress());
+      progressBar.requestLayout();
     }
   }
-
 }

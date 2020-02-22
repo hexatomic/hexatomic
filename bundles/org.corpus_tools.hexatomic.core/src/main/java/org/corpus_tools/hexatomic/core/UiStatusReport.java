@@ -22,9 +22,16 @@
 package org.corpus_tools.hexatomic.core;
 
 import java.util.Objects;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.ProgressProvider;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
@@ -38,7 +45,7 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
  */
 @Creatable
 @Singleton
-public class UiStatusReport {
+public class UiStatusReport extends NullProgressMonitor {
 
   private static final String MAIN_WINDOW_ID = "org.eclipse.e4.window.main";
 
@@ -48,11 +55,32 @@ public class UiStatusReport {
   EModelService modelService;
 
   @Inject
+  IEventBroker events;
+
+  @Inject
   MApplication app;
+
+  @Inject
+  UISynchronize sync;
 
   private String location;
 
   private boolean isDirty;
+
+  private int runningJobs = 0;
+  private int totalJobsWorkload = 0;
+  private int totalJobProgress = 0;
+  private String lastJobName = "";
+
+  @PostConstruct
+  protected void postConstruct() {
+    Job.getJobManager().setProgressProvider(new ProgressProvider() {
+      @Override
+      public IProgressMonitor createMonitor(Job job) {
+        return UiStatusReport.this;
+      }
+    });
+  }
 
   /**
    * Set a location which will be displayed in the title of the window.
@@ -93,8 +121,102 @@ public class UiStatusReport {
       }
 
       mainWindow.setLabel(sb.toString());
-
     }
+
+    events.send(Topics.STATUS_UPDATE, "");
+  }
+
+  /**
+   * Return an overall string representation of the currently executed jobs.
+   * 
+   * @return The message.
+   */
+  public String getExecutedJobStatusMessage() {
+    if (runningJobs == 0) {
+      return "";
+    } else if (runningJobs > 1) {
+      return "Currently running: " + runningJobs + " | " + lastJobName;
+    } else {
+      return lastJobName;
+    }
+  }
+
+  /**
+   * Get the sum of the progress of all currently executed jobs.
+   * 
+   * @return The progress.
+   */
+  public int getExecutedJobsProgress() {
+    return totalJobProgress;
+  }
+
+  /**
+   * Get the sum of the workload of all currently executed jobs. If any executed job has no given
+   * workload, this returns 0
+   * 
+   * @return Workload or 0 .
+   */
+  public int getExecutedJobsWorkload() {
+    return totalJobsWorkload;
+  }
+
+  /**
+   * Get the number of currently running jobs.
+   * 
+   * @return The positive number.
+   */
+  public int getNumberOfExecutedJobs() {
+    return runningJobs;
+  }
+
+  /**
+   * Returns true when there is at least one job with an indetermined workload.
+   * 
+   * @return
+   */
+  public boolean hasIndeterminedJobWorkload() {
+    return runningJobs > 0 && totalJobsWorkload == 0;
+  }
+
+  @Override
+  public void beginTask(final String name, final int totalWork) {
+    sync.syncExec(() -> {
+      if (totalWork >= 1 && !hasIndeterminedJobWorkload()) {
+        totalJobsWorkload += totalWork;
+      } else {
+        totalJobsWorkload = 0;
+      }
+
+      runningJobs++;
+      lastJobName = name;
+
+      update();
+    });
+  }
+
+
+  @Override
+  public void worked(final int work) {
+    sync.syncExec(() -> {
+      totalJobProgress++;
+
+      update();
+    });
+  }
+
+  @Override
+  public void done() {
+    sync.syncExec(() -> {
+      runningJobs--;
+      if (runningJobs <= 0) {
+        runningJobs = 0;
+        totalJobProgress = 0;
+        totalJobsWorkload = 0;
+        lastJobName = "";
+      }
+
+      update();
+    });
   }
 
 }

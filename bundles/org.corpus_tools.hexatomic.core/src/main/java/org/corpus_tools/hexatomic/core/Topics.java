@@ -33,4 +33,7 @@ public interface Topics {
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
+  
+  public static final String STATUS_UPDATE = "STATUS_UPDATE";
+  
 }
