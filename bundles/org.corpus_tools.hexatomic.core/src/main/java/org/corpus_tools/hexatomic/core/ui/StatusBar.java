@@ -25,7 +25,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.UiStatusReport;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.swt.SWT;
