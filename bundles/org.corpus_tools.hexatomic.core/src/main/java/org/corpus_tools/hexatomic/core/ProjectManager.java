@@ -261,7 +261,7 @@ public class ProjectManager {
     for (MPart part : partService.getParts()) {
       String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
       if (docID != null && !docID.isEmpty()) {
-        sync.syncExec(() -> partService.hidePart(part));
+        partService.hidePart(part);
       }
     }
   }

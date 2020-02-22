@@ -28,8 +28,6 @@ import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.ui.MUIElement;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -51,25 +49,18 @@ public class NewSaltProjectHandler {
   protected void execute(Shell shell, EPartService partService, UISynchronize sync,
       EModelService modelService, MApplication app,
       @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
-    
+
     boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
     if (!forceClose && projectManager.isDirty()) {
       // Ask user if project should be closed even with unsaved changes
-      boolean confirmed = MessageDialog.openConfirm(shell,
-          "Discard unsaved changes?",
+      boolean confirmed = MessageDialog.openConfirm(shell, "Discard unsaved changes?",
           "There are unsaved changes in the project that will be lost if you close it. "
               + "Do you really want to close the project and start a new, empty one?");
       if (!confirmed) {
         return;
       }
     }
-    
-    projectManager.newProject();
 
-    // Change the title of the application
-    MUIElement mainWindow = modelService.find("org.eclipse.e4.window.main", app);
-    if (mainWindow instanceof MWindow) {
-      ((MWindow) mainWindow).setLabel("Hexatomic");
-    }
+    sync.syncExec(() -> projectManager.newProject());
   }
 }
