@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -37,6 +38,7 @@ import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.util.DataSourceSequence;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
@@ -46,13 +48,15 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
+@Creatable
 public class GraphDataProvider implements IDataProvider {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
 
   private STextualDS ds = null;
-  private final SDocumentGraph graph;
+  private SDocumentGraph graph;
+
   private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
   private final List<SSpan> dsSpans = new ArrayList<SSpan>();
 
@@ -62,18 +66,8 @@ public class GraphDataProvider implements IDataProvider {
   // To be compiled from the two tree sets, tokens first, then spans
   private final List<Column> columns = new ArrayList<>();
 
-  private ErrorService errors = null;
-
-  /**
-   * Initializes the graph to grid resolution.
-   * 
-   * @param graph The graph data source
-   * @param errors The {@link ErrorService} to use for reporting errors from this class
-   */
-  public GraphDataProvider(SDocumentGraph graph, ErrorService errors) {
-    this.graph = graph;
-    this.errors = errors;
-  }
+  @Inject
+  ErrorService errors;
 
   @SuppressWarnings("rawtypes")
   private void resolveGraph() {
@@ -223,7 +217,7 @@ public class GraphDataProvider implements IDataProvider {
         return "Please select data source!";
       }
     } else {
-      if (orderedDsTokens.size() == 0 && columnIndex == 0) {
+      if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
         return "Data source contains no tokens!";
       } else {
         Column column = columns.get(columnIndex);
@@ -267,6 +261,13 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Setting data source {}.", ds);
     this.ds = ds;
     resolveGraph();
+  }
+
+  /**
+   * @param graph the graph to set
+   */
+  public final void setGraph(SDocumentGraph graph) {
+    this.graph = graph;
   }
 
 }
