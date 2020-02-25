@@ -217,7 +217,7 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   @Override
-  public Object getDataValue(int columnIndex, int rowIndex) {
+  public String getDataValue(int columnIndex, int rowIndex) {
     if (ds == null) {
       if (columnIndex == 0 && rowIndex == 0) {
         return "Please select data source!";
