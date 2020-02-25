@@ -270,6 +270,8 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   /**
+   * Set the {@link SDocumentGraph} that the data provider operates on.
+   * 
    * @param graph the graph to set
    */
   public final void setGraph(SDocumentGraph graph) {

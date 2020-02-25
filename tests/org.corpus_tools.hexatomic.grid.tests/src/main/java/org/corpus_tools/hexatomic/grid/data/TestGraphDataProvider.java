@@ -35,7 +35,9 @@ class TestGraphDataProvider {
       "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
   /**
-   * @throws java.lang.Exception
+   * Set up the fixture and models for each test.
+   * 
+   * @throws java.lang.Exception Any exception that is thrown during the setup phase.
    */
   @BeforeEach
   void setUp() throws Exception {
