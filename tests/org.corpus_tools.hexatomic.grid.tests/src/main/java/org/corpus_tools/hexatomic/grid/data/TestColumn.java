@@ -12,6 +12,7 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.graph.LabelableElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ class TestColumn {
   /**
    * Sets up the fixture for unit tests.
    * 
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception Any exception during setup
    */
   @BeforeEach
   void setUp() throws Exception {
@@ -51,7 +52,7 @@ class TestColumn {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.Column#setRow(int, org.corpus_tools.salt.graph.LabelableElement)}.
+   * {@link org.corpus_tools.hexatomic.grid.data.Column#setRow(int, LabelableElement)}.
    */
   @Test
   final void testSetRow() {
