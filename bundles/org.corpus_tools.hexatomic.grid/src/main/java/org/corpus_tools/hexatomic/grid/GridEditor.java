@@ -60,6 +60,55 @@ public class GridEditor {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
 
+  @Inject
+  ErrorService errors;
+
+  @Inject
+  private ESelectionService selectionService;
+
+  @Inject
+  private ProjectManager projectManager;
+
+  @Inject
+  private MPart thisPart;
+
+  @Inject
+  private GraphDataProvider bodyDataProvider;
+
+  private SDocumentGraph graph;
+
+  private NatTable table;
+
+  /**
+   * Creates the grid that contains the data of the {@link SDocumentGraph}.
+   * 
+   * @param parent The parent {@link Composite} widget of the part
+   */
+  @PostConstruct
+  public void postConstruct(Composite parent) {
+    this.graph = getGraph();
+    bodyDataProvider.setGraph(graph);
+    log.debug("Starting Grid Editor for document '{}'.", graph.getDocument().getName());
+
+    parent.setLayout(new GridLayout());
+
+    /*
+     * Add dropdown for text selection. Redo grid once text is selected.
+     */
+    addTextSelectionDropdown(parent);
+
+    // Create data provider & layer, data layer needs to be most bottom layer in the stack!
+    AutomaticSpanningDataProvider spanningDataProvider =
+        new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
+    final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
+
+    // Create and configure NatTable
+    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
+
+    // Configure grid layout generically
+    GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
+  }
+
   /**
    * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.
    * 
@@ -73,54 +122,6 @@ public class GridEditor {
     } else {
       // Do nothing
     }
-  }
-
-  @Inject
-  ErrorService errors;
-
-  @Inject
-  private ESelectionService selectionService;
-
-  @Inject
-  private ProjectManager projectManager;
-
-  @Inject
-  private MPart thisPart;
-
-  private SDocumentGraph graph;
-
-  private GraphDataProvider bodyDataProvider;
-
-  private NatTable table;
-
-  /**
-   * Creates the grid that contains the data of the {@link SDocumentGraph}.
-   * 
-   * @param parent The parent {@link Composite} widget of the part
-   */
-  @PostConstruct
-  public void postConstruct(Composite parent) {
-    this.graph = getGraph();
-    log.debug("Starting Grid Editor for document '{}'.", graph.getDocument().getName());
-
-    parent.setLayout(new GridLayout());
-
-    /*
-     * Add dropdown for text selection. Redo grid once text is selected.
-     */
-    addTextSelectionDropdown(parent);
-
-    // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    bodyDataProvider = new GraphDataProvider(graph, errors);
-    AutomaticSpanningDataProvider spanningDataProvider =
-        new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
-    final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
-
-    // Create and configure NatTable
-    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
-
-    // Configure grid layout generically
-    GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
   }
 
   /**
