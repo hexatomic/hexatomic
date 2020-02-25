@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
+ * Unit tests for {@link Column}.
+ * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
@@ -26,6 +28,8 @@ class TestColumn {
   private SAnnotation annotation = null;
 
   /**
+   * Sets up the fixture for unit tests.
+   * 
    * @throws java.lang.Exception
    */
   @BeforeEach
