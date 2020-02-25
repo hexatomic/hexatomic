@@ -1,7 +1,6 @@
 package org.corpus_tools.hexatomic.grid.data;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,6 +26,13 @@ class TestGraphDataProvider {
   private static GraphDataProvider fixture = null;
   private SDocumentGraph exampleGraph;
   private STextualDS exampleText;
+  private SDocumentGraph overlappingExampleGraph;
+  private STextualDS overlappingExampleText;
+
+  private static final String examplePath =
+      "src/main/resources/org/corpus_tools/hexatomic/grid/example-corpus/";
+  private static final String overlappingExamplePath =
+      "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
   /**
    * @throws java.lang.Exception
@@ -34,8 +40,10 @@ class TestGraphDataProvider {
   @BeforeEach
   void setUp() throws Exception {
     fixture = new GraphDataProvider();
-    exampleGraph = buildSimpleGraph();
+    exampleGraph = retrieveGraph(examplePath);
+    overlappingExampleGraph = retrieveGraph(overlappingExamplePath);
     exampleText = getFirstTextFromGraph(exampleGraph);
+    overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
   }
 
   /**
@@ -102,15 +110,66 @@ class TestGraphDataProvider {
     assertEquals("to", fixture.getDataValue(1, 8));
     assertEquals("be", fixture.getDataValue(1, 9));
     assertEquals("?", fixture.getDataValue(1, 10));
+
+    assertEquals("VBZ", fixture.getDataValue(2, 0));
+    assertEquals("DT", fixture.getDataValue(2, 1));
+    assertEquals("NN", fixture.getDataValue(2, 2));
+    assertEquals("RBR", fixture.getDataValue(2, 3));
+    assertEquals("JJ", fixture.getDataValue(2, 4));
+    assertEquals("IN", fixture.getDataValue(2, 5));
+    assertEquals("PRP", fixture.getDataValue(2, 6));
+    assertEquals("VBZ", fixture.getDataValue(2, 7));
+    assertEquals("TO", fixture.getDataValue(2, 8));
+    assertEquals("VB", fixture.getDataValue(2, 9));
+    assertEquals(".", fixture.getDataValue(2, 10));
+
+    assertEquals("contrast-focus", fixture.getDataValue(3, 0));
+    assertEquals("topic", fixture.getDataValue(3, 4));
+    assertEquals("topic", fixture.getDataValue(3, 5));
+    assertEquals("topic", fixture.getDataValue(3, 6));
+    assertEquals("topic", fixture.getDataValue(3, 7));
+    assertEquals("topic", fixture.getDataValue(3, 8));
+    assertEquals("topic", fixture.getDataValue(3, 9));
+    assertEquals("topic", fixture.getDataValue(3, 10));
   }
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#setDataValue(int, int, java.lang.Object)}.
+   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getDataValue(int, int)}.
    */
   @Test
-  final void testSetDataValue() {
-    fail("Not yet implemented"); // TODO
+  final void testGetDataValueOverlappingExample() {
+    fixture.setGraph(overlappingExampleGraph);
+    fixture.setDsAndResolveGraph(overlappingExampleText);
+
+    assertEquals("Overlapping", fixture.getDataValue(0, 0));
+    assertEquals("spans", fixture.getDataValue(0, 1));
+    assertEquals(",", fixture.getDataValue(0, 2));
+    assertEquals("etc", fixture.getDataValue(0, 3));
+    assertEquals(".", fixture.getDataValue(0, 4));
+
+    assertEquals("six_tok_anno_0", fixture.getDataValue(1, 0));
+    assertEquals("six_tok_anno_1", fixture.getDataValue(1, 1));
+    assertEquals("six_tok_anno_2", fixture.getDataValue(1, 2));
+    assertEquals("six_tok_anno_3", fixture.getDataValue(1, 3));
+    assertEquals("six_tok_anno_4", fixture.getDataValue(1, 4));
+
+    assertEquals("val_span_1", fixture.getDataValue(2, 0));
+    assertEquals("val_span_2", fixture.getDataValue(2, 1));
+    assertEquals("val_span_2", fixture.getDataValue(2, 2));
+    assertEquals("val_span_2", fixture.getDataValue(2, 3));
+    assertEquals("val_span_2", fixture.getDataValue(2, 4));
+
+    assertEquals("val_span_3", fixture.getDataValue(3, 0));
+    assertEquals("val_span_3", fixture.getDataValue(3, 1));
+    assertEquals("val_span_4", fixture.getDataValue(3, 2));
+    assertEquals("val_span_5", fixture.getDataValue(3, 3));
+    assertEquals("val_span_5", fixture.getDataValue(3, 4));
+
+    assertEquals("val_span_new1", fixture.getDataValue(4, 1));
+    assertEquals("val_span_new1", fixture.getDataValue(4, 2));
+    assertEquals("val_span_new2", fixture.getDataValue(4, 3));
+    assertEquals("val_span_new2", fixture.getDataValue(4, 4));
   }
 
   /**
@@ -119,7 +178,17 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetColumnCount() {
-    fail("Not yet implemented"); // TODO
+    assertEquals(1, fixture.getColumnCount());
+
+    fixture.setGraph(exampleGraph);
+    assertEquals(1, fixture.getColumnCount());
+
+    fixture.setDsAndResolveGraph(exampleText);
+    assertEquals(4, fixture.getColumnCount());
+
+    fixture.setGraph(overlappingExampleGraph);
+    fixture.setDsAndResolveGraph(overlappingExampleText);
+    assertEquals(5, fixture.getColumnCount());
   }
 
   /**
@@ -127,21 +196,21 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetRowCount() {
-    fail("Not yet implemented"); // TODO
+    assertEquals(1, fixture.getRowCount());
+
+    fixture.setGraph(exampleGraph);
+    assertEquals(1, fixture.getRowCount());
+
+    fixture.setDsAndResolveGraph(exampleText);
+    assertEquals(11, fixture.getRowCount());
+
+    fixture.setGraph(overlappingExampleGraph);
+    fixture.setDsAndResolveGraph(overlappingExampleText);
+    assertEquals(5, fixture.getRowCount());
   }
 
-  /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#setDsAndResolveGraph(org.corpus_tools.salt.common.STextualDS)}.
-   */
-  @Test
-  final void testSetDsAndResolveGraph() {
-    fail("Not yet implemented"); // TODO
-  }
-
-  private SDocumentGraph buildSimpleGraph() {
-    File exampleProjectDirectory =
-        new File("src/main/resources/org/corpus_tools/hexatomic/grid/example-corpus/");
+  private SDocumentGraph retrieveGraph(String path) {
+    File exampleProjectDirectory = new File(path);
     assertTrue(exampleProjectDirectory.isDirectory());
     URI exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     SaltProject project = SaltFactory.createSaltProject();
