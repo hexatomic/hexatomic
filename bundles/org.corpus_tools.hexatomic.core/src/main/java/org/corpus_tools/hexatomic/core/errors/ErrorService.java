@@ -72,7 +72,6 @@ public class ErrorService {
 
     String bundleID = getBundleID(triggeringClass);
 
-
     IStatus status = createStatusFromException(message, bundleID, ex);
     lastException = Optional.of(status);
 
