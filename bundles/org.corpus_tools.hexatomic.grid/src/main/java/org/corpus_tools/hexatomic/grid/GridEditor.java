@@ -172,6 +172,21 @@ public class GridEditor {
   }
 
   /**
+   * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.
+   * 
+   * @param ds The {@link STextualDS} that has been selected via the {@link ESelectionService}.
+   */
+  @Inject
+  void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
+    if (ds != null) {
+      log.debug("The textual data source {} has been selected.", ds.getId());
+      bodyDataProvider.setDsAndResolveGraph(ds);
+    } else {
+      // Do nothing
+    }
+  }
+
+  /**
    * Creates a dropdown (with label) presenting the available {@link STextualDS}s from the
    * {@link SDocumentGraph}. When a text is selected, the selection is forwarded to the injectable
    * {@link ESelectionService}, so that other parts can consume the selection. This part also
