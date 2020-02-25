@@ -220,7 +220,13 @@ public class GraphDataProvider implements IDataProvider {
       if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
         return "Data source contains no tokens!";
       } else {
-        Column column = columns.get(columnIndex);
+        Column column = null;
+        try {
+          column = columns.get(columnIndex);
+        } catch (IndexOutOfBoundsException e) {
+          errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+          return null;
+        }
         return column.getDisplayText(rowIndex);
       }
     }
