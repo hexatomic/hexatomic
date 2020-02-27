@@ -278,4 +278,13 @@ public class GraphDataProvider implements IDataProvider {
     this.graph = graph;
   }
 
+  /**
+   * Returns the list of {@link Column}s for the current model.
+   * 
+   * @return the columns
+   */
+  List<Column> getColumns() {
+    return columns;
+  }
+
 }
