@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -44,7 +45,15 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
+import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
+import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
+import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
+import org.eclipse.nebula.widgets.nattable.layer.CompositeLayer;
+import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
+import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
+import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
+import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -92,9 +101,8 @@ public class GridEditor {
 
     parent.setLayout(new GridLayout());
 
-    /*
-     * Add dropdown for text selection. Redo grid once text is selected.
-     */
+
+    // Add dropdown for text selection. Redo grid once text is selected.
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
@@ -102,8 +110,23 @@ public class GridEditor {
         new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
+    // Create selection and viewport layers
+    final SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
+    final ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
+
+    // Create column headers
+    IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
+    DataLayer columnHeaderDataLayer = new DataLayer(columnHeaderDataProvider);
+    final ILayer columnHeaderLayer =
+        new ColumnHeaderLayer(columnHeaderDataLayer, viewportLayer, selectionLayer);
+
+    // Combine layers in composite layer
+    CompositeLayer compositeLayer = new CompositeLayer(1, 2);
+    compositeLayer.setChildLayer(GridRegion.COLUMN_HEADER, columnHeaderLayer, 0, 0);
+    compositeLayer.setChildLayer(GridRegion.BODY, viewportLayer, 0, 1);
+
     // Create and configure NatTable
-    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, bodyDataLayer);
+    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, compositeLayer);
 
     // Configure grid layout generically
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
