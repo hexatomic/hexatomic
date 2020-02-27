@@ -28,6 +28,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -112,6 +113,7 @@ public class GridEditor {
 
     // Create selection and viewport layers
     final SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
+    selectionLayer.addConfiguration(new SelectionStyleConfiguration());
     final ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
 
     // Create column headers
@@ -130,6 +132,7 @@ public class GridEditor {
 
     // Configure grid layout generically
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
+
   }
 
   /**
