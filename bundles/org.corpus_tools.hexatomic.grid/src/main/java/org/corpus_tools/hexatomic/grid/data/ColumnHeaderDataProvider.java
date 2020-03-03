@@ -31,10 +31,10 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
  */
 public class ColumnHeaderDataProvider implements IDataProvider {
 
-  private GraphDataProvider provider;
+  private final GraphDataProvider provider;
 
-  public ColumnHeaderDataProvider(GraphDataProvider provider) {
-    this.provider = provider;
+  public ColumnHeaderDataProvider(GraphDataProvider bodyDataProvider) {
+    this.provider = bodyDataProvider;
   }
 
   @Override
