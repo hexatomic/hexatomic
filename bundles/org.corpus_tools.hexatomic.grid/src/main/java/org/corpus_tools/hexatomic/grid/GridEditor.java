@@ -128,6 +128,7 @@ public class GridEditor {
     // Create row headers
     IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);
     DataLayer rowHeaderDataLayer = new DataLayer(rowHeaderDataProvider);
+    rowHeaderDataLayer.setDefaultColumnWidth(50);
     final ILayer rowHeaderLayer =
         new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
 
