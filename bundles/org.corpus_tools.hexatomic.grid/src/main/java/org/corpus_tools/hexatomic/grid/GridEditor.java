@@ -28,6 +28,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -48,7 +49,10 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
+import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.layer.CompositeLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
@@ -103,7 +107,7 @@ public class GridEditor {
     parent.setLayout(new GridLayout());
 
 
-    // Add dropdown for text selection. Redo grid once text is selected.
+    // Add dropdown for text selection.
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
@@ -122,10 +126,24 @@ public class GridEditor {
     final ILayer columnHeaderLayer =
         new ColumnHeaderLayer(columnHeaderDataLayer, viewportLayer, selectionLayer);
 
+    // Create row headers
+    IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);
+    DataLayer rowHeaderDataLayer = new DataLayer(rowHeaderDataProvider);
+    final ILayer rowHeaderLayer =
+        new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
+
+    // Create corner layer
+    final ILayer cornerLayer = new CornerLayer(
+        new DataLayer(
+            new DefaultCornerDataProvider(columnHeaderDataProvider, rowHeaderDataProvider)),
+        rowHeaderLayer, columnHeaderLayer);
+
     // Combine layers in composite layer
-    CompositeLayer compositeLayer = new CompositeLayer(1, 2);
-    compositeLayer.setChildLayer(GridRegion.COLUMN_HEADER, columnHeaderLayer, 0, 0);
-    compositeLayer.setChildLayer(GridRegion.BODY, viewportLayer, 0, 1);
+    CompositeLayer compositeLayer = new CompositeLayer(2, 2);
+    compositeLayer.setChildLayer(GridRegion.CORNER, cornerLayer, 0, 0);
+    compositeLayer.setChildLayer(GridRegion.COLUMN_HEADER, columnHeaderLayer, 1, 0);
+    compositeLayer.setChildLayer(GridRegion.ROW_HEADER, rowHeaderLayer, 0, 1);
+    compositeLayer.setChildLayer(GridRegion.BODY, viewportLayer, 1, 1);
 
     // Create and configure NatTable
     table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
