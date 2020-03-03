@@ -43,7 +43,7 @@ import org.eclipse.swt.graphics.FontData;
 public class SelectionStyleConfiguration extends DefaultSelectionStyleConfiguration {
 
   private final Font selectionFont;
-  private final Color selectionBgColor = GUIHelper.COLOR_GRAY;
+  private final Color selectionBgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
   private final Color anchorBgColor = GUIHelper.COLOR_DARK_GRAY;
   private final Color anchorFgColor = GUIHelper.COLOR_WHITE;
 
