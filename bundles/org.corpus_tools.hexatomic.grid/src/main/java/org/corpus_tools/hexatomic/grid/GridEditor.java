@@ -128,7 +128,8 @@ public class GridEditor {
     compositeLayer.setChildLayer(GridRegion.BODY, viewportLayer, 0, 1);
 
     // Create and configure NatTable
-    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER, compositeLayer);
+    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
+        compositeLayer);
 
     // Configure grid layout generically
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
