@@ -106,7 +106,6 @@ public class GridEditor {
 
     parent.setLayout(new GridLayout());
 
-
     // Add dropdown for text selection.
     addTextSelectionDropdown(parent);
 
@@ -196,9 +195,10 @@ public class GridEditor {
   private void addTextSelectionDropdown(Composite parent) {
     Composite dropdownGroup = new Composite(parent, SWT.NONE);
     dropdownGroup.setLayout(new GridLayout(2, false));
+    GridDataFactory.fillDefaults().grab(true, false).applyTo(dropdownGroup);
 
     Label label = new Label(dropdownGroup, SWT.NONE);
-    label.setText("Select data source: ");
+    label.setText("Data source:");
 
     final ComboViewer viewer = new ComboViewer(dropdownGroup, SWT.READ_ONLY);
     viewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -207,7 +207,7 @@ public class GridEditor {
       public String getText(Object element) {
         if (element instanceof STextualDS) {
           STextualDS ds = (STextualDS) element;
-          return ds.getName() + " (" + ds.getId() + ")";
+          return ds.getName();
         }
         return super.getText(element);
       }
