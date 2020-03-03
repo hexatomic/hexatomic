@@ -164,6 +164,8 @@ public class GridEditor {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
       bodyDataProvider.setDsAndResolveGraph(ds);
+      // Refresh all layers
+      table.refresh();
     } else {
       // Do nothing
     }
