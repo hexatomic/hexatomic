@@ -36,18 +36,6 @@ class TestSelectionStyleConfiguration {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#SelectionStyleConfiguration()}.
-   */
-  @Test
-  final void testSelectionStyleConfiguration() {
-    FontData[] fontData = fixture.selectionFont.getFontData();
-    for (FontData fontDate : fontData) {
-      assertEquals(SWT.BOLD, fontDate.getStyle());
-    }
-  }
-
-  /**
-   * Test method for
    * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
    */
   @Test
@@ -56,7 +44,9 @@ class TestSelectionStyleConfiguration {
     fixture.configureSelectionStyle(registry);
 
     IStyle style = registry.getConfigAttribute(CellConfigAttributes.CELL_STYLE, DisplayMode.SELECT);
-    assertEquals(fixture.selectionFont, style.getAttributeValue(CellStyleAttributes.FONT));
+    for (FontData fontDate : style.getAttributeValue(CellStyleAttributes.FONT).getFontData()) {
+      assertEquals(SWT.BOLD, fontDate.getStyle());
+    }
     assertEquals(GUIHelper.COLOR_WIDGET_BACKGROUND,
         style.getAttributeValue(CellStyleAttributes.BACKGROUND_COLOR));
     assertEquals(GUIHelper.COLOR_BLACK,
