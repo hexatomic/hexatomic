@@ -191,11 +191,15 @@ public class TestGridEditor {
     NatTable table = bot.widget(widgetOfType(NatTable.class));
     assertNotNull(table);
 
+    // Need to maximize the window so that all comlumns are displayed,
+    // as NatTable knows only about completely displayed columns in the virtual table
+    bot.activeShell().maximize(true);
+
     // Check number of rows and columns (5 + 1 header row, 5 + 1 header column)
     assertEquals(6, table.getRowCount());
     assertEquals(6, table.getColumnCount());
-
-    // Test headers
+    //
+    // // Test headers
     assertEquals(null, table.getDataValueByPosition(0, 0));
     assertEquals(2, table.getDataValueByPosition(0, 2));
     assertEquals(5, table.getDataValueByPosition(0, 5));
@@ -203,14 +207,17 @@ public class TestGridEditor {
     assertEquals("five::span_1", table.getDataValueByPosition(3, 0));
     assertEquals("five::span_1 (2)", table.getDataValueByPosition(4, 0));
     assertEquals("five::span_2", table.getDataValueByPosition(5, 0));
-
-    // Test cells
+    //
+    // // Test cells
     assertEquals("val_span_1", table.getDataValueByPosition(3, 1));
     assertEquals("val_span_2", table.getDataValueByPosition(3, 2));
     assertEquals("val_span_2", table.getDataValueByPosition(3, 5));
     assertEquals("val_span_3", table.getDataValueByPosition(4, 1));
     assertEquals("val_span_3", table.getDataValueByPosition(4, 2));
     assertEquals(null, table.getDataValueByPosition(5, 1));
+
+    // Un-maximize to reset to original dimensions
+    bot.activeShell().maximize(false);
   }
 
   @Test
