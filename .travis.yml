@@ -21,13 +21,17 @@ jobs:
         - unzip -qq apache-maven-3.6.3-bin.zip
         - export M2_HOME=$PWD/apache-maven-3.6.3
         - export PATH=$M2_HOME/bin:$PATH
+        - export DISPLAY=:99.0
+        - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
+        - sleep 5
+        - metacity --sm-disable --replace 2> metacity.err &
       
       script:
-        - xvfb-run --server-args="-screen 0 1024x768x24" mvn integration-test
-        - xvfb-run --server-args="-screen 0 1024x768x24" mvn verify -B
+        - mvn integration-test
+        - mvn verify -B
       
       before_deploy:
-         - xvfb-run --server-args="-screen 0 1024x768x24" mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && xvfb-run --server-args="-screen 0 1024x768x24" mvn clean verify
+         - mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && mvn clean verify
       
       deploy:
         - provider: releases
