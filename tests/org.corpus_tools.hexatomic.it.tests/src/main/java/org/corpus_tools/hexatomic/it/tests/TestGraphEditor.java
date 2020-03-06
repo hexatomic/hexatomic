@@ -18,7 +18,6 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
@@ -38,13 +37,13 @@ class TestGraphEditor {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  
+
   private ErrorService errorService = new ErrorService();
 
   @BeforeEach
   void setup() {
     IEclipseContext ctx = ContextHelper.getEclipseContext();
-    
+
     ctx.set(ErrorService.class, errorService);
 
     commandService = ctx.get(ECommandService.class);
@@ -52,7 +51,7 @@ class TestGraphEditor {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-    
+
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -101,7 +100,7 @@ class TestGraphEditor {
 
     SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
     assertNotNull(view);
-    
+
     return view;
 
   }
@@ -109,9 +108,9 @@ class TestGraphEditor {
   @Test
   @Order(1)
   void testShowSaltExample() {
-   
+
     openDefaultExample();
-  
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
 
@@ -123,15 +122,15 @@ class TestGraphEditor {
   @Test
   @Order(2)
   void testAddPointingRelation() {
-    
+
     SWTBotView graphView = openDefaultExample();
     bot.showPart(graphView.getPart());
     assertTrue(bot.isPartActive(graphView.getPart()));
-    
+
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
     console.insertText("e #structure3 -> #structure5");
     console.typeText("\n");
-    
+
     // Check that no exception was thrown/handled by UI
     assertFalse(errorService.getLastException().isPresent());
 
