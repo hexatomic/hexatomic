@@ -30,7 +30,8 @@ class TestGraphDataProvider {
   private STextualDS overlappingExampleText;
 
   private static final String examplePath =
-      "src/main/resources/org/corpus_tools/hexatomic/grid/example-corpus/";
+      "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
+          + "org/corpus_tools/hexatomic/core/example-corpus/";
   private static final String overlappingExamplePath =
       "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
