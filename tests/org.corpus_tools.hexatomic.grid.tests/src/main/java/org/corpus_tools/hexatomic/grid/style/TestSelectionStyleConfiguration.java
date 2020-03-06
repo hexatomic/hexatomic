@@ -27,7 +27,9 @@ class TestSelectionStyleConfiguration {
   private static SelectionStyleConfiguration fixture = null;
 
   /**
-   * @throws java.lang.Exception
+   * Sets up the test fixture.
+   * 
+   * @throws java.lang.Exception Any old exception that may be thrown
    */
   @BeforeEach
   void setUp() throws Exception {
@@ -35,8 +37,8 @@ class TestSelectionStyleConfiguration {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
+   * Test method for {@link SelectionStyleConfiguration#configureSelectionStyle(IConfigRegistry)}.
+   * 
    */
   @Test
   final void testConfigureSelectionStyleIConfigRegistry() {
@@ -55,7 +57,7 @@ class TestSelectionStyleConfiguration {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionAnchorStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
+   * {@link SelectionStyleConfiguration#configureSelectionAnchorStyle(IConfigRegistry)}.
    */
   @Test
   final void testConfigureSelectionAnchorStyleIConfigRegistry() {
