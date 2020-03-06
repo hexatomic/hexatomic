@@ -44,7 +44,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    // Not implemented, as header values should not be settable.
+    // Left unimplemented, as header data shouldn't be settable
   }
 
   @Override
