@@ -39,7 +39,7 @@ public class TestGridEditor {
 
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
-  private URI twoDSExampleProjectUri;
+  private URI twoDsExampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
 
@@ -67,14 +67,14 @@ public class TestGridEditor {
         + "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/");
     assertTrue(overlappingExampleProjectDirectory.isDirectory());
 
-    File twoDSExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
+    File twoDsExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/grid/two-ds/");
-    assertTrue(twoDSExampleProjectDirectory.isDirectory());
+    assertTrue(twoDsExampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     overlappingExampleProjectUri =
         URI.createFileURI(overlappingExampleProjectDirectory.getAbsolutePath());
-    twoDSExampleProjectUri = URI.createFileURI(twoDSExampleProjectDirectory.getAbsolutePath());
+    twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
   }
 
   @AfterEach
@@ -128,9 +128,9 @@ public class TestGridEditor {
     return view;
   }
 
-  SWTBotView openTwoDSExample() {
+  SWTBotView openTwoDsExample() {
     // Programmatically open the example corpus
-    openExample(twoDSExampleProjectUri);
+    openExample(twoDsExampleProjectUri);
     // Select the first example document
     SWTBotTreeItem docMenu =
         bot.tree().expandNode("<unknown>").expandNode("corpus").expandNode("doc");
@@ -146,9 +146,9 @@ public class TestGridEditor {
   }
 
 
-  private void openExample(URI exampleURI) {
+  private void openExample(URI exampleUri) {
     Map<String, String> params = new HashMap<>();
-    params.put(OpenSaltProjectHandler.COMMAND_PARAM_LOCATION_ID, exampleURI.toFileString());
+    params.put(OpenSaltProjectHandler.COMMAND_PARAM_LOCATION_ID, exampleUri.toFileString());
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.open_salt_project", params);
     handlerService.executeHandler(cmd);
@@ -221,8 +221,8 @@ public class TestGridEditor {
   }
 
   @Test
-  void testDSSelection() {
-    openTwoDSExample();
+  void testDsSelection() {
+    openTwoDsExample();
 
     SWTBotCombo combo = bot.comboBox();
     assertNotNull(combo);
@@ -270,7 +270,7 @@ public class TestGridEditor {
 
   @Test
   void testDropdownWithTwoTexts() {
-    openTwoDSExample();
+    openTwoDsExample();
 
     SWTBotCombo combo = bot.comboBox();
     assertNotNull(combo);
