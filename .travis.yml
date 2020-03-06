@@ -23,12 +23,11 @@ jobs:
         - export PATH=$M2_HOME/bin:$PATH
       
       script:
-        - mvn integration-test
-      
-      script: mvn verify -B
+        - xvfb-run --server-args="-screen 0 1024x768x24" mvn integration-test
+        - xvfb-run --server-args="-screen 0 1024x768x24" mvn verify -B
       
       before_deploy:
-         - mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && mvn clean verify
+         - xvfb-run --server-args="-screen 0 1024x768x24" mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && xvfb-run --server-args="-screen 0 1024x768x24" mvn clean verify
       
       deploy:
         - provider: releases
