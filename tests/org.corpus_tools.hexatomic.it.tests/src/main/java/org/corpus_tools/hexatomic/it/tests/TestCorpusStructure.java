@@ -13,6 +13,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -70,12 +71,40 @@ class TestCorpusStructure {
 
 
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+
+    bot.waitUntil(new DefaultCondition() {
+      @Override
+      public boolean test() throws Exception {
+        return bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_1")
+            .isVisible();
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Project tree has not expanded in time";
+      }
+    });
+
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_1").select();
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_1")
         .doubleClick();
     bot.text("document_1").setText("abc").pressShortcut(Keystrokes.LF);
 
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_2");
+
+    bot.waitUntil(new DefaultCondition() {
+      @Override
+      public boolean test() throws Exception {
+        return bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2")
+            .isVisible();
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Project tree has not expanded in time";
+      }
+    });
+
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2").select();
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2")
         .doubleClick();
