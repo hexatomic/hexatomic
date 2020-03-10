@@ -58,11 +58,17 @@ To bring up the search window, press <kbd>Ctrl</kbd> + <kbd>F</kbd>.
 
 ![Screenshot of the search window showing examples](search.png)
 
-## Freezing columns or rows
+## Freezing grid sections
 
 You can freeze a section of the grid, so that it it remains visible while you scroll.
 
-To freeze a specific section, select the last row or column that should remain visible, and press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd>.
+To freeze a specific section, select the last cell, row or column that should remain visible, and press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd>.
 To unfreeze the grid, press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> again.
 
+Column and row freezing is also available from a popup menu in row and column headers, where you can (re-) set the row or column freeze, or toggle the general freeze state.
+
+TODO Redo GIF (key-mon --noctrl --nomouse -l --decorated + Peek) with Cell freeze
+
 ![Animated GIF showing the freeze operation using the shortcut Shift + Alt + F](freeze.gif)
+
+TODO Document other menu items
