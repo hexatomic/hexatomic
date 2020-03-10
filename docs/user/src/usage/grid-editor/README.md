@@ -6,7 +6,7 @@ Tokens are the smallest countable units in a data source.
 Spans are units that span tokens.
 To learn more about how Hexatomic's data model - Salt - defines these units, please refer to the [Salt documentation](https://corpus-tools.org/salt/#documentation).
 
-![Screenshot of the graph editor](grid-viewer.png)
+![Screenshot of the grid editor](grid-viewer.png)
 
 ## Data source selection
 
@@ -30,7 +30,7 @@ Instead, the annotation values are spread over more than one adjacent columns, w
 > Obviously, the overlap of both spans (both include the first token) cannot be visualized in a single column.
 > Instead, *S1*'s annotation value `val_span_1` will be displayed in one column with the header **five::span_1**, *S2*'s annotation value `val_span_3` in another column with the header **five::span_1 (2)**.  
 >
-> ![](overlap.png)
+> ![Screenshot of an annotation grid showing overlapping spans](overlap.png)
 
 Adjacent **cells** that have the same value for a qualified annotation are merged.
 
@@ -49,3 +49,20 @@ When you select a cell, press and hold <kbd>Shift</kbd> and click on another cel
 This also works for headers, where all rows or columns between the two selected header cells will be selected.
 
 Selecting non-adjacent cells, rows, or columns works by pressing and holding <kbd>Ctrl</kbd> while clicking the items to select.
+
+## Text search
+
+You can search the grid using free text or regular expressions, with a number of options, e.g., search in columns first.
+
+To bring up the search window, press <kbd>Ctrl</kbd> + <kbd>F</kbd>.
+
+![Screenshot of the search window showing examples](search.png)
+
+## Freezing columns or rows
+
+You can freeze a section of the grid, so that it it remains visible while you scroll.
+
+To freeze a specific section, select the last row or column that should remain visible, and press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd>.
+To unfreeze the grid, press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> again.
+
+![Animated GIF showing the freeze operation using the shortcut Shift + Alt + F](freeze.gif)

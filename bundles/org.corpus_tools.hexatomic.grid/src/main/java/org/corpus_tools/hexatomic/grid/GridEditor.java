@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
@@ -46,19 +47,24 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
-import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
+import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
+import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultColumnHeaderDataLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultRowHeaderDataLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
-import org.eclipse.nebula.widgets.nattable.layer.CompositeLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
+import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
-import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
+import org.eclipse.nebula.widgets.nattable.ui.menu.HeaderMenuConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -114,40 +120,43 @@ public class GridEditor {
         new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
-    // Create selection and viewport layers
-    final SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
+    // Body
+    final DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
+    final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
     selectionLayer.addConfiguration(new SelectionStyleConfiguration());
-    final ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
+    final FreezeLayer freezeLayer = new FreezeLayer(selectionLayer);
+    final CompositeFreezeLayer compositeFreezeLayer =
+        new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
 
-    // Create column headers
-    IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
-    DataLayer columnHeaderDataLayer = new DataLayer(columnHeaderDataProvider);
+    // Column header
+    final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
     final ILayer columnHeaderLayer =
-        new ColumnHeaderLayer(columnHeaderDataLayer, viewportLayer, selectionLayer);
+        new ColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
+            compositeFreezeLayer, selectionLayer);
 
-    // Create row headers
-    IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);
-    DataLayer rowHeaderDataLayer = new DataLayer(rowHeaderDataProvider);
-    rowHeaderDataLayer.setDefaultColumnWidth(50);
-    final ILayer rowHeaderLayer =
-        new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
+    // Row header
+    final IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);
+    final ILayer rowHeaderLayer = new RowHeaderLayer(
+        new DefaultRowHeaderDataLayer(rowHeaderDataProvider), compositeFreezeLayer, selectionLayer);
 
-    // Create corner layer
-    final ILayer cornerLayer = new CornerLayer(
-        new DataLayer(
-            new DefaultCornerDataProvider(columnHeaderDataProvider, rowHeaderDataProvider)),
-        rowHeaderLayer, columnHeaderLayer);
+    // Corner
+    final DefaultCornerDataProvider cornerDataProvider =
+        new DefaultCornerDataProvider(columnHeaderDataProvider, rowHeaderDataProvider);
+    final CornerLayer cornerLayer =
+        new CornerLayer(new DataLayer(cornerDataProvider), rowHeaderLayer, columnHeaderLayer);
 
-    // Combine layers in composite layer
-    CompositeLayer compositeLayer = new CompositeLayer(2, 2);
-    compositeLayer.setChildLayer(GridRegion.CORNER, cornerLayer, 0, 0);
-    compositeLayer.setChildLayer(GridRegion.COLUMN_HEADER, columnHeaderLayer, 1, 0);
-    compositeLayer.setChildLayer(GridRegion.ROW_HEADER, rowHeaderLayer, 0, 1);
-    compositeLayer.setChildLayer(GridRegion.BODY, viewportLayer, 1, 1);
+    // Grid
+    final GridLayer gridLayer =
+        new GridLayer(compositeFreezeLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
 
-    // Create and configure NatTable
-    table = new NatTable(parent, SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
-        compositeLayer);
+    table = new NatTable(parent, gridLayer, false);
+
+    // Configuration
+    table.addConfiguration(new DefaultNatTableStyleConfiguration());
+    table.addConfiguration(new HeaderMenuConfiguration(table));
+    table.addConfiguration(new FreezeGridBindings());
+
+    table.configure();
 
     // Configure grid layout generically
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
