@@ -8,8 +8,8 @@ authors:
 - family-names: Krause
   given-names: Thomas
   orcid: https://orcid.org/0000-0003-3731-2422
-version: 0.2.0-SNAPSHOT
-date-released: 2019-12-06
+version: 0.4.0-SNAPSHOT
+date-released: 2020-03-10
 references:
 - type: software
   title: SWT Resource Manager
@@ -77,7 +77,7 @@ references:
 - type: software
   title: Java Text Categorizing Library
   abbreviation: textcat
-  version: 3.3.8
+  version: 3.3.11
   license: LGPL-3.0-or-later
   license-url: http://www.gnu.org/licenses/lgpl.txt
   repository-code: https://sourceforge.net/p/textcat/code/
@@ -164,6 +164,55 @@ references:
   - name: atinject project
   notes: More license information can be found in the THIRD-PARTY/javax.inject directory.
 - type: software
+  title: org.antlr.runtime
+  version: 4.7.1.v20181120-0808
+  authors: []
+- type: software
+  title: org.apache.batik.constants
+  version: 1.11.0.v20190515-0436
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.batik.constants
+    directory.
+- type: software
+  title: org.apache.batik.css
+  version: 1.11.0.v20190515-0436
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.batik.css
+    directory.
+- type: software
+  title: org.apache.batik.i18n
+  version: 1.11.0.v20190515-0436
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.batik.i18n
+    directory.
+- type: software
+  title: org.apache.batik.util
+  version: 1.11.0.v20190515-0436
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.batik.util
+    directory.
+- type: software
+  title: org.apache.commons.io
+  version: 2.6.0.v20190123-2029
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.io
+    directory.
+- type: software
   title: org.apache.commons.jxpath
   version: 1.3.0.v200911051830
   license: EPL-2.0
@@ -172,8 +221,26 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.apache.commons.jxpath
     directory.
 - type: software
+  title: org.apache.commons.logging
+  version: 1.2.0.v20180409-1502
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.logging
+    directory.
+- type: software
+  title: org.apache.xmlgraphics
+  version: 2.3.0.v20190515-0436
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.apache.xmlgraphics
+    directory.
+- type: software
   title: org.eclipse.core.commands
-  version: 3.9.400.v20190516-1358
+  version: 3.9.600.v20191122-2109
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -182,7 +249,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.contenttype
-  version: 3.7.300.v20190215-2048
+  version: 3.7.500.v20190916-2125
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -190,8 +257,35 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.contenttype
     directory.
 - type: software
+  title: org.eclipse.core.databinding
+  version: 1.7.700.v20191122-2109
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.databinding
+    directory.
+- type: software
+  title: org.eclipse.core.databinding.observable
+  version: 1.8.100.v20191118-0932
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.databinding.observable
+    directory.
+- type: software
+  title: org.eclipse.core.databinding.property
+  version: 1.7.200.v20191105-1311
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.databinding.property
+    directory.
+- type: software
   title: org.eclipse.core.expressions
-  version: 3.6.400.v20190518-1240
+  version: 3.6.600.v20191122-2104
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -200,7 +294,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.jobs
-  version: 3.10.400.v20190506-1457
+  version: 3.10.600.v20191122-2104
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -209,7 +303,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.runtime
-  version: 3.15.300.v20190508-0543
+  version: 3.17.0.v20191122-2104
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -217,8 +311,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.runtime
     directory.
 - type: software
+  title: org.eclipse.draw2d
+  version: 3.10.100.201606061308
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.draw2d
+    directory.
+- type: software
   title: org.eclipse.e4.core.commands
-  version: 0.12.600.v20190510-1100
+  version: 0.12.800.v20190926-0808
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -227,7 +330,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.contexts
-  version: 1.8.100.v20190518-1217
+  version: 1.8.300.v20191017-1404
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -236,7 +339,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di
-  version: 1.7.200.v20190506-1457
+  version: 1.7.500.v20190916-2125
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -245,7 +348,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di.annotations
-  version: 1.6.400.v20190518-1217
+  version: 1.6.500.v20190925-0538
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -254,7 +357,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di.extensions
-  version: 0.15.300.v20190213-1308
+  version: 0.15.400.v20191122-2104
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -263,7 +366,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di.extensions.supplier
-  version: 0.15.300.v20190506-1457
+  version: 0.15.400.v20190709-0707
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -272,7 +375,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.services
-  version: 2.1.400.v20181215-2145
+  version: 2.2.100.v20191122-2104
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -281,7 +384,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.emf.xpath
-  version: 0.2.300.v20190513-2118
+  version: 0.2.500.v20191021-1408
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -289,8 +392,44 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.emf.xpath
     directory.
 - type: software
+  title: org.eclipse.e4.ui.bindings
+  version: 0.12.700.v20191105-1310
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.bindings
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.css.core
+  version: 0.12.900.v20191106-1716
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.css.core
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.css.swt
+  version: 0.13.700.v20191113-1031
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.css.swt
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.css.swt.theme
+  version: 0.12.500.v20191125-1011
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.css.swt.theme
+    directory.
+- type: software
   title: org.eclipse.e4.ui.di
-  version: 1.2.600.v20190510-1100
+  version: 1.2.700.v20191114-0830
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -298,8 +437,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.di
     directory.
 - type: software
+  title: org.eclipse.e4.ui.dialogs
+  version: 1.1.600.v20190814-0636
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.dialogs
+    directory.
+- type: software
   title: org.eclipse.e4.ui.model.workbench
-  version: 2.1.400.v20190513-2118
+  version: 2.1.600.v20191106-1503
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -308,7 +456,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.services
-  version: 1.3.500.v20190513-2118
+  version: 1.3.700.v20190930-1643
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -316,8 +464,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.services
     directory.
 - type: software
+  title: org.eclipse.e4.ui.widgets
+  version: 1.2.600.v20190926-0808
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.widgets
+    directory.
+- type: software
   title: org.eclipse.e4.ui.workbench
-  version: 1.10.0.v20190529-1505
+  version: 1.11.0.v20191120-1917
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -325,8 +482,44 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.workbench
     directory.
 - type: software
+  title: org.eclipse.e4.ui.workbench.addons.swt
+  version: 1.3.700.v20191030-1314
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.workbench.addons.swt
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.workbench.renderers.swt
+  version: 0.14.900.v20191114-0715
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.workbench.renderers.swt
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.workbench.swt
+  version: 0.14.800.v20190930-1643
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.workbench.swt
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.workbench3
+  version: 0.15.300.v20190926-0808
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.workbench3
+    directory.
+- type: software
   title: org.eclipse.emf.common
-  version: 2.16.0.v20190528-0845
+  version: 2.17.0.v20190920-0401
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -335,7 +528,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.emf.ecore
-  version: 2.18.0.v20190528-0845
+  version: 2.20.0.v20190920-0401
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -362,7 +555,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.app
-  version: 1.4.200.v20190516-1504
+  version: 1.4.300.v20190815-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -371,7 +564,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.common
-  version: 3.10.400.v20190516-1504
+  version: 3.10.600.v20191004-1420
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -380,7 +573,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.event
-  version: 1.5.100.v20190528-1257
+  version: 1.5.300.v20191001-1333
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -389,7 +582,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.preferences
-  version: 3.7.400.v20190516-1504
+  version: 3.7.600.v20191017-2055
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -398,7 +591,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.registry
-  version: 3.8.400.v20190516-1504
+  version: 3.8.600.v20191017-2055
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -406,8 +599,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.registry
     directory.
 - type: software
+  title: org.eclipse.help
+  version: 3.8.600.v20191123-0656
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.help
+    directory.
+- type: software
   title: org.eclipse.jface
-  version: 3.16.0.v20190528-0922
+  version: 3.18.0.v20191122-2109
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -415,8 +617,35 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.jface
     directory.
 - type: software
+  title: org.eclipse.jface.databinding
+  version: 1.9.200.v20191113-1050
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.jface.databinding
+    directory.
+- type: software
+  title: org.eclipse.jface.text
+  version: 3.16.100.v20191203-1634
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.jface.text
+    directory.
+- type: software
+  title: org.eclipse.nebula.widgets.nattable.core
+  version: 1.6.0.201909181823
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.nebula.widgets.nattable.core
+    directory.
+- type: software
   title: org.eclipse.osgi
-  version: 3.14.0.v20190517-1309
+  version: 3.15.100.v20191114-1701
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -434,7 +663,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.osgi.util
-  version: 3.5.200.v20190115-2323
+  version: 3.5.300.v20190708-1141
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -443,7 +672,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt
-  version: 3.111.0.v20190605-1801
+  version: 3.113.0.v20191204-0601
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -452,7 +681,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt.cocoa.macosx.x86_64
-  version: 3.111.0.v20190605-1801
+  version: 3.113.0.v20191204-0601
   license: EPL-1.0
   authors:
   - name: The Eclipse Foundation
@@ -461,7 +690,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt.gtk.linux.x86_64
-  version: 3.111.0.v20190605-1801
+  version: 3.113.0.v20191204-0601
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -470,7 +699,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt.win32.win32.x86_64
-  version: 3.111.0.v20190605-1801
+  version: 3.113.0.v20191204-0601
   license: EPL-1.0
   authors:
   - name: The Eclipse Foundation
@@ -478,8 +707,92 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.swt.win32.win32.x86_64
     directory.
 - type: software
+  title: org.eclipse.text
+  version: 3.10.0.v20191122-2108
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.text
+    directory.
+- type: software
+  title: org.eclipse.ui
+  version: 3.115.0.v20191127-1056
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.ui directory.
+- type: software
+  title: org.eclipse.ui.workbench
+  version: 3.117.0.v20191126-1131
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.ui.workbench
+    directory.
+- type: software
+  title: org.eclipse.zest.core
+  version: 1.5.300.201606061308
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.zest.core
+    directory.
+- type: software
+  title: org.eclipse.zest.layouts
+  version: 1.1.300.201606061308
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.zest.layouts
+    directory.
+- type: software
+  title: org.hamcrest.core
+  version: 1.3.0.v20180420-1519
+  authors: []
+- type: software
+  title: org.hamcrest.library
+  version: 1.3.0.v20180524-2246
+  authors: []
+- type: software
+  title: org.w3c.css.sac
+  version: 1.3.1.v200903091627
+  license: NOASSERTION
+  authors: []
+- type: software
+  title: org.w3c.dom.events
+  version: 3.0.0.draft20060413_v201105210656
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.w3c.dom.events
+    directory.
+- type: software
+  title: org.w3c.dom.smil
+  version: 1.0.1.v200903091627
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.w3c.dom.smil
+    directory.
+- type: software
+  title: org.w3c.dom.svg
+  version: 1.1.0.v201011041433
+  license: EPL-1.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.w3c.dom.svg
+    directory.
+- type: software
   title: salt-api
-  version: 3.3.8
+  version: 3.3.11
   abbreviation: org.corpus-tools:salt-api
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/salt_api directory.
@@ -489,7 +802,7 @@ references:
   repository-code: https://github.com/korpling/salt/salt-api
 - type: software
   title: salt-extensions
-  version: 3.3.8
+  version: 3.3.11
   abbreviation: org.corpus-tools:salt-extensions
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/salt_extensions
