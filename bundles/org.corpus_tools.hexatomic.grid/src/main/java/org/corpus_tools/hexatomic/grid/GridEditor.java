@@ -28,6 +28,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.CustomHeaderMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
@@ -147,7 +148,8 @@ public class GridEditor {
 
     // Grid
     final GridLayer gridLayer =
-        new GridLayer(compositeFreezeLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
+        new GridLayer(compositeFreezeLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
+    gridLayer.addConfiguration(new GridLayerConfiguration(gridLayer));
 
     table = new NatTable(parent, gridLayer, false);
 
