@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
@@ -20,6 +21,8 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
+import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.jupiter.api.AfterEach;
@@ -287,5 +290,49 @@ public class TestGridEditor {
     assertEquals("Token annotations only", combo.getText());
   }
 
+  @Test
+  void testColumnPopupMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    List<String> columnItems = table.contextMenu(0, 1).menuItems();
+    assertEquals("Hide column(s)", columnItems.get(0));
+    assertEquals("Show all columns", columnItems.get(1));
+    assertEquals("Auto-resize column(s)", columnItems.get(3));
+    assertEquals("Set column freeze", columnItems.get(5));
+    assertEquals("Toggle freeze", columnItems.get(6));
+  }
+
+  @Test
+  void testRowPopupMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    List<String> columnItems = table.contextMenu(1, 0).menuItems();
+    assertEquals("Auto-resize row(s)", columnItems.get(0));
+    assertEquals("Set row freeze", columnItems.get(2));
+    assertEquals("Toggle freeze", columnItems.get(3));
+  }
+
+  @Test
+  void testHideShowColumns() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+
+    // Hide token column
+    table.contextMenu(0, 1).contextMenu("Hide column(s)").click();
+    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 1));
+
+    // Show columns
+    table.contextMenu(0, 1).contextMenu("Show all columns").click();
+    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+  }
 
 }
