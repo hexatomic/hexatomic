@@ -37,7 +37,8 @@ class TestSelectionStyleConfiguration {
   }
 
   /**
-   * Test method for {@link SelectionStyleConfiguration#configureSelectionStyle(IConfigRegistry)}.
+   * Test method for
+   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
    * 
    */
   @Test
@@ -57,7 +58,7 @@ class TestSelectionStyleConfiguration {
 
   /**
    * Test method for
-   * {@link SelectionStyleConfiguration#configureSelectionAnchorStyle(IConfigRegistry)}.
+   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionAnchorStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
    */
   @Test
   final void testConfigureSelectionAnchorStyleIConfigRegistry() {
