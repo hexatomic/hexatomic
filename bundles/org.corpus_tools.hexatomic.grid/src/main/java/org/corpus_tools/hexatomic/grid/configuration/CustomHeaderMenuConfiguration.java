@@ -59,15 +59,17 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
   @Override
   protected PopupMenuBuilder createColumnHeaderMenu(NatTable natTable) {
     // Restrict to useful menu items
-    return super.createColumnHeaderMenu(natTable).withHideColumnMenuItem()
-        .withShowAllColumnsMenuItem().withSeparator().withAutoResizeSelectedColumnsMenuItem()
-        .withSeparator().withFreezeColumnMenuItem("Set column freeze")
+    return super.createColumnHeaderMenu(natTable).withHideColumnMenuItem("Hide column(s)")
+        .withShowAllColumnsMenuItem().withSeparator()
+        .withAutoResizeSelectedColumnsMenuItem("Auto-resize column(s)").withSeparator()
+        .withFreezeColumnMenuItem("Set column freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN));
   }
 
   @Override
   protected PopupMenuBuilder createRowHeaderMenu(NatTable natTable) {
-    return super.createRowHeaderMenu(natTable).withAutoResizeSelectedRowsMenuItem().withSeparator()
+    return super.createRowHeaderMenu(natTable)
+        .withAutoResizeSelectedRowsMenuItem("Auto-resize row(s)").withSeparator()
         .withFreezeRowMenuItem("Set row freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(ROW));
   }
