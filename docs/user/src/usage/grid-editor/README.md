@@ -71,10 +71,6 @@ To unfreeze the grid, press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> aga
 Column and row freezing is also available from a popup menu in row and column headers, where you can (re-) set the row or column freeze, or toggle the general freeze state.
 The popup menu is opened by right-clicking the row or column header.
 
-TODO Redo GIF (key-mon --noctrl --nomouse -l --decorated + Peek) with Cell freeze
-
-![Animated GIF showing the freeze operation using the shortcut Shift + Alt + F](freeze.gif)
-
 ### Hiding columns
 
 You can hide columns by selecting one or more columns, and clicking **Hide column(s)** in the popup menu, available on right-click in any of the selected column headers.
@@ -84,3 +80,16 @@ To show columns again, click the option **Show all columns** in the same popup m
 
 You can auto-resize rows columns, so that the row is high/column is wide enough to show all cell contents and the header content completely.
 To do so, simply select one or more rows or columns and click **Auto-resize row(s)** or **Auto-resize column(s)** in the popup menu, available on right-click in any of the selected headers.
+
+### Moving columns
+
+You can move columns to another position in the grid by clicking on and holding the header of a column, and dragging it to its new position.
+
+## Export to Excel
+
+If, for whatever reason, you want to export the grid to a file in the Excel `.xls` format, you can do so.
+Press <kbd>Ctrl</kbd> + <kbd>E</kbd>. This brings up a dialog for saving the file.
+
+Note that exporting to an Excel spreadsheet will lose the actual data model.
+Only the string values of annotations, the headers, and the token texts will be exported.
+Additionally, merged cells will be separated.
