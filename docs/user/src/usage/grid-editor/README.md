@@ -58,17 +58,29 @@ To bring up the search window, press <kbd>Ctrl</kbd> + <kbd>F</kbd>.
 
 ![Screenshot of the search window showing examples](search.png)
 
-## Freezing grid sections
+## Display options
+
+### Freezing grid sections
 
 You can freeze a section of the grid, so that it it remains visible while you scroll.
+This comes in handy for example when you have a large grid and want to keep the token column visible at all times.
 
 To freeze a specific section, select the last cell, row or column that should remain visible, and press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd>.
 To unfreeze the grid, press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> again.
 
 Column and row freezing is also available from a popup menu in row and column headers, where you can (re-) set the row or column freeze, or toggle the general freeze state.
+The popup menu is opened by right-clicking the row or column header.
 
 TODO Redo GIF (key-mon --noctrl --nomouse -l --decorated + Peek) with Cell freeze
 
 ![Animated GIF showing the freeze operation using the shortcut Shift + Alt + F](freeze.gif)
 
-TODO Document other menu items
+### Hiding columns
+
+You can hide columns by selecting one or more columns, and clicking **Hide column(s)** in the popup menu, available on right-click in any of the selected column headers.
+To show columns again, click the option **Show all columns** in the same popup menu.
+
+### Auto-resizing rows and columns
+
+You can auto-resize rows columns, so that the row is high/column is wide enough to show all cell contents and the header content completely.
+To do so, simply select one or more rows or columns and click **Auto-resize row(s)** or **Auto-resize column(s)** in the popup menu, available on right-click in any of the selected headers.
