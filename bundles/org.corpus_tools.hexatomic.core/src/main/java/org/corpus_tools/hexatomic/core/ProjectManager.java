@@ -22,12 +22,9 @@ package org.corpus_tools.hexatomic.core;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -190,19 +187,26 @@ public class ProjectManager {
         // We can't load the non-existing document graph from disk, create a new empty one
         result.get().createDocumentGraph();
       } else {
-        // Load the existing document graph from disk
-        try {
-          // Deactivate listeners to avoid partial updates during load
-          listenersActive = false;
-          // Load document
-          result.get().loadDocumentGraph();
-          // Re-enable listeners and notify them of the loaded document
-          listenersActive = true;
-          events.send(Topics.DOCUMENT_LOADED, result.get().getId());
-        } catch (SaltResourceException ex) {
-          errorService
-              .handleException("Could not load document graph (the actual annotations for document "
-                  + documentID + ").", ex, OpenSaltDocumentHandler.class);
+        Path saltFile = Paths.get(result.get().getDocumentGraphLocation().toFileString());
+        if (Files.exists(saltFile)) {
+          // Load the existing document graph from disk
+          try {
+            // Deactivate listeners to avoid partial updates during load
+            listenersActive = false;
+            // Load document
+            result.get().loadDocumentGraph();
+            // Re-enable listeners and notify them of the loaded document
+            listenersActive = true;
+            events.send(Topics.DOCUMENT_LOADED, result.get().getId());
+          } catch (SaltResourceException ex) {
+            errorService.handleException(
+                "Could not load document graph (the actual annotations for document " + documentID
+                    + ").",
+                ex, OpenSaltDocumentHandler.class);
+          }
+        } else {
+          // Create a new empty document graph
+          result.get().createDocumentGraph();
         }
       }
     }
@@ -318,7 +322,7 @@ public class ProjectManager {
           Path outputDirectory = Paths.get(path.toFileString());
           if (!savingToCurrentLocation) {
             // Clear existing files from the folder, which is not the same as the current one
-            clearFolder(outputDirectory);
+            clearSaltProjectFolder(outputDirectory);
           }
 
           outputDirectory.toFile().mkdirs();
@@ -355,13 +359,15 @@ public class ProjectManager {
                   doc.saveDocumentGraph(documentOutputUri);
                 }
               } else {
-                if (doc.getDocumentGraph() == null) {
+                if (doc.getDocumentGraph() == null && doc.getDocumentGraphLocation() != null) {
                   // Copy the unchanged Salt XML file: this is much faster than deserializing and
                   // serializing it
                   try {
                     documentOutputPath.toFile().getParentFile().mkdirs();
-                    Files.copy(Paths.get(doc.getDocumentGraphLocation().toFileString()),
-                        documentOutputPath);
+                    Path sourceFile = Paths.get(doc.getDocumentGraphLocation().toFileString());
+                    if (Files.exists(sourceFile)) {
+                      Files.copy(sourceFile, documentOutputPath);
+                    }
                   } catch (IOException ex) {
                     monitor.done();
                     sync.asyncExec(() -> {
@@ -419,22 +425,27 @@ public class ProjectManager {
   }
 
 
-  private void clearFolder(Path outputDirectory) {
+  private void clearSaltProjectFolder(Path outputDirectory) {
     try {
-      Files.walkFileTree(outputDirectory, new SimpleFileVisitor<Path>() {
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-          Files.delete(file);
-          return FileVisitResult.CONTINUE;
-        }
+      // Parse any existing project file to get all document files that need to be deleted
+      SaltProject existingProject =
+          SaltUtil.loadSaltProject(URI.createFileURI(outputDirectory.toString()));
 
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-          if (!dir.equals(outputDirectory)) {
-            Files.delete(dir);
+      if (existingProject != null) {
+        List<URI> allDocuments =
+            existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+                .filter(d -> d.getDocumentGraphLocation() != null)
+                .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
+        // Delete the Salt XML files belonging to this document
+        for (URI doc : allDocuments) {
+          Path saltFile = Paths.get(doc.toFileString());
+          if (Files.exists(saltFile)) {
+            Files.delete(saltFile);
           }
-          return FileVisitResult.CONTINUE;
         }
-
-      });
+      }
+    } catch (SaltResourceException ex) {
+      // This is not a valid salt project folder, don't delete any files
     } catch (IOException ex) {
       log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
           ex);
