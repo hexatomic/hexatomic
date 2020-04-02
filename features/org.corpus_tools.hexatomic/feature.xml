@@ -28,7 +28,7 @@
       <import plugin="org.eclipse.e4.core.di"/>
       <import plugin="org.eclipse.e4.ui.di"/>
       <import plugin="org.eclipse.e4.core.contexts"/>
-      <import plugin="org.corpus-tools.salt-api" version="3.3.8" match="greaterOrEqual"/>
+      <import plugin="org.corpus-tools.salt-api" version="3.3.12" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.e4.core.services" version="2.1.400" match="greaterOrEqual"/>
       <import plugin="org.corpus-tools.salt-extensions" version="3.3.8" match="greaterOrEqual"/>
