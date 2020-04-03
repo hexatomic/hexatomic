@@ -51,6 +51,8 @@ import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.graph.IdentifiableElement;
+import org.corpus_tools.salt.graph.Node;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -594,11 +596,21 @@ public class CorpusStructureView implements Listener {
   @Override
   public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
       Object newValue, Object container) {
-    if (container instanceof Graph<?, ?, ?>) {
-      log.debug(
-          "Corpus Structure Changed: type={} attribute={} oldValue={} newValue={} container={}",
-          type, attribute, oldValue, newValue, container);
+
+    IdentifiableElement element = null;
+    if (container instanceof IdentifiableElement) {
+      element = (IdentifiableElement) container;
+    } else if (container instanceof org.corpus_tools.salt.graph.Label) {
+      element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
+    }
+
+    if (element instanceof Graph<?, ?, ?>) {
       updateView();
+    } else if (element instanceof Node) {
+      element = ((Node) element).getGraph();
+      if (element instanceof SCorpusGraph) {
+        updateView();
+      }
     }
   }
 

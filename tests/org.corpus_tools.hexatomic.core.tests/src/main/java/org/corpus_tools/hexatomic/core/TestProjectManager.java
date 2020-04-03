@@ -26,7 +26,6 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 class TestProjectManager {
 
@@ -41,7 +40,7 @@ class TestProjectManager {
   private EPartService partService;
 
   private UiStatusReport uiStatus;
-  
+
 
   @BeforeEach
   public void setUp() throws Exception {
@@ -62,15 +61,15 @@ class TestProjectManager {
     projectManager.partService = partService;
     projectManager.uiStatus = uiStatus;
     projectManager.sync = new UISynchronize() {
-      
+
       @Override
       public void syncExec(Runnable runnable) {
         runnable.run();
       }
-      
+
       @Override
       public void asyncExec(Runnable runnable) {
-       runnable.run();
+        runnable.run();
       }
     };
 
