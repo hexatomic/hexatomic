@@ -1,15 +1,20 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.salt.common.SDocument;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -29,11 +34,15 @@ class TestCorpusStructure {
   private ECommandService commandService;
   private EHandlerService handlerService;
 
+  private ProjectManager projectManager;
+
 
   @BeforeEach
   void setup() {
 
     IEclipseContext ctx = ContextHelper.getEclipseContext();
+
+    projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -91,11 +100,21 @@ class TestCorpusStructure {
 
     createExampleStructure();
 
-    // make sure that the salt project has been renamed
+    // make sure that the salt project has been renamed in UI
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("abc");
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("def");
     assertNotNull(bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("abc"));
     assertNotNull(bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("def"));
+
+    // also check the names and IDs of the data model
+    Optional<SDocument> doc1 = projectManager.getDocument("salt:/corpus_1/document_1");
+    Optional<SDocument> doc2 = projectManager.getDocument("salt:/corpus_1/document_2");
+    assertTrue(doc1.isPresent());
+    assertTrue(doc2.isPresent());
+
+    assertEquals("abc", doc1.get().getName());
+    assertEquals("def", doc2.get().getName());
+
   }
 
   @Test
