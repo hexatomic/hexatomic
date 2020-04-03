@@ -476,12 +476,14 @@ public class ProjectManager {
     closeOpenEditors();
 
     // Create an empty project
+    this.location = Optional.empty();
     this.project = SaltFactory.createSaltProject();
-    events.send(Topics.PROJECT_LOADED, null);
     hasUnsavedChanges = false;
 
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
+    
+    events.send(Topics.PROJECT_LOADED, null);
   }
 
   /**
