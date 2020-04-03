@@ -85,13 +85,14 @@ class TestCorpusStructure {
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_1").select();
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_1")
         .doubleClick();
-    bot.text("document_1").setText("abc").pressShortcut(Keystrokes.LF);
+    bot.text("document_1").typeText("abc\n");
+
 
     bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_2");
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2").select();
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode("document_2")
         .doubleClick();
-    bot.text("document_2").setText("def").pressShortcut(Keystrokes.LF);
+    bot.text("document_2").typeText("def\n");
   }
 
   @Test
