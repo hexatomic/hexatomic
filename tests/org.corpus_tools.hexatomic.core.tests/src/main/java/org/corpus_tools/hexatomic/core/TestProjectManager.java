@@ -20,11 +20,13 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 class TestProjectManager {
 
@@ -39,6 +41,7 @@ class TestProjectManager {
   private EPartService partService;
 
   private UiStatusReport uiStatus;
+  
 
   @BeforeEach
   public void setUp() throws Exception {
@@ -58,6 +61,18 @@ class TestProjectManager {
     projectManager.errorService = errorService;
     projectManager.partService = partService;
     projectManager.uiStatus = uiStatus;
+    projectManager.sync = new UISynchronize() {
+      
+      @Override
+      public void syncExec(Runnable runnable) {
+        runnable.run();
+      }
+      
+      @Override
+      public void asyncExec(Runnable runnable) {
+       runnable.run();
+      }
+    };
 
     projectManager.postConstruct();
 
