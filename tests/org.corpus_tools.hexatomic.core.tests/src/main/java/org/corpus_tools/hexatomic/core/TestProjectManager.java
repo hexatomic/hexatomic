@@ -77,7 +77,7 @@ class TestProjectManager {
   @Test
   public void testEventOnOpen() {
     projectManager.open(exampleProjectUri);
-    verify(events).send(eq(Topics.CORPUS_STRUCTURE_CHANGED), anyString());
+    verify(events).send(eq(Topics.PROJECT_LOADED), anyString());
   }
 
   @Test

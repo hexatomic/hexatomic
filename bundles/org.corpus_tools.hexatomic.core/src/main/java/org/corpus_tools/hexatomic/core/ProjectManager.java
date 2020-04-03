@@ -30,9 +30,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.SaltFactory;
@@ -81,9 +83,6 @@ public class ProjectManager {
   IEventBroker events;
 
   @Inject
-  ProjectChangeListener changeListener;
-
-  @Inject
   ErrorService errorService;
 
   @Inject
@@ -118,7 +117,6 @@ public class ProjectManager {
     // Allow to register a change listener with Salt
     notificationFactory = new SaltNotificationFactory();
     SaltFactory.setFactory(notificationFactory);
-    notificationFactory.addListener(changeListener);
     notificationFactory.addListener(new ProxyListener());
 
   }
@@ -249,7 +247,7 @@ public class ProjectManager {
     location = Optional.of(path);
     try {
       project.loadCorpusStructure(path);
-      events.send(Topics.CORPUS_STRUCTURE_CHANGED, path.toFileString());
+      events.send(Topics.PROJECT_LOADED, path.toFileString());
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
     }
@@ -481,7 +479,7 @@ public class ProjectManager {
 
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
-    events.send(Topics.CORPUS_STRUCTURE_CHANGED, null);
+    events.send(Topics.PROJECT_LOADED, null);
     hasUnsavedChanges = false;
 
     uiStatus.setDirty(false);
@@ -549,14 +547,16 @@ public class ProjectManager {
     public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
         Object newValue, Object container) {
 
-      if (listenersActive) {
-        hasUnsavedChanges = true;
-        uiStatus.setDirty(true);
+      sync.syncExec(() -> {
+        if (listenersActive) {
+          hasUnsavedChanges = true;
+          uiStatus.setDirty(true);
 
-        for (Listener l : allListeners) {
-          l.notify(type, attribute, oldValue, newValue, container);
+          for (Listener l : allListeners) {
+            l.notify(type, attribute, oldValue, newValue, container);
+          }
         }
-      }
+      });
     }
 
   }

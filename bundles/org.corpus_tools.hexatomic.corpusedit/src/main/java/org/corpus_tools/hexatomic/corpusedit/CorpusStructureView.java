@@ -36,6 +36,7 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
+import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -47,6 +48,9 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.extensions.notification.Listener;
+import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
+import org.corpus_tools.salt.graph.Graph;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -100,7 +104,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
-public class CorpusStructureView {
+public class CorpusStructureView implements Listener {
 
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
@@ -287,6 +291,7 @@ public class CorpusStructureView {
 
     registerEditors(modelService, application, thisPart);
 
+    projectManager.addListener(this);
   }
 
   private void createAddMenu(ToolBar toolBar) {
@@ -391,7 +396,15 @@ public class CorpusStructureView {
     if (g != null) {
 
       int oldSize = g.getCorpora() == null ? 0 : g.getCorpora().size();
-      SCorpus newCorpus = g.createCorpus(parent, "corpus_" + (oldSize + 1));
+      String newCorpusName = "corpus_" + (oldSize + 1);
+      SCorpus newCorpus;
+      if (parent == null) {
+        newCorpus = SaltFactory.createSCorpus();
+        newCorpus.setName(newCorpusName);
+        g.addNode(newCorpus);
+      } else {
+        newCorpus = g.createCorpus(parent, newCorpusName);
+      }
       if (newCorpus != null) {
         selectSaltObject(newCorpus, true);
       }
@@ -570,12 +583,30 @@ public class CorpusStructureView {
     }
   }
 
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.CORPUS_STRUCTURE_CHANGED) String path) {
+
+  private void updateView() {
     if (treeViewer != null) {
       treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
     }
+  }
+
+
+  @Override
+  public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
+      Object newValue, Object container) {
+    if (container instanceof Graph<?, ?, ?>) {
+      log.debug(
+          "Corpus Structure Changed: type={} attribute={} oldValue={} newValue={} container={}",
+          type, attribute, oldValue, newValue, container);
+      updateView();
+    }
+  }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_LOADED) String path) {
+    updateView();
   }
 
   private void registerEditors(EModelService modelService, MApplication application,
