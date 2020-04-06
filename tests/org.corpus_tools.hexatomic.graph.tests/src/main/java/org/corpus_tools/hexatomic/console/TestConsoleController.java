@@ -227,4 +227,21 @@ class TestConsoleController {
     assertEquals("     ^\ntoken recognition error at: '''", output.get(0));
   }
 
+  /**
+   * Test if inserting the same edge with the annotation is possible. While a single edge can have
+   * only one annotation with the same qualified name, the "e" command should always create a new
+   * edge which can have the same annotations. This is a regression test for
+   * https://github.com/hexatomic/hexatomic/issues/153
+   * 
+   */
+  @Test
+  void testInsertEdgeTwice() {
+    // Add initial tokens
+    console.executeCommand("t This is an example \".\"");
+    // Add first pointing relation
+    console.executeCommand("e #t1 -> #t2 ns:n:a");
+    // Add second pointing relation with the same annotation
+    console.executeCommand("e #t1 -> #t2 ns:n:a");
+  }
+
 }
