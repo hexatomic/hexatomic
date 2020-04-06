@@ -32,7 +32,9 @@ import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.style.EmptyCellLabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -49,7 +51,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
@@ -123,11 +124,17 @@ public class GridEditor {
 
     // Body
     final DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
+
+    // Custom rendering of empty cells
+    bodyDataLayer.setConfigLabelAccumulator(new EmptyCellLabelAccumulator(bodyLayer));
+
+    // Selection
     final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
     selectionLayer.addConfiguration(new SelectionStyleConfiguration());
     final FreezeLayer freezeLayer = new FreezeLayer(selectionLayer);
     final CompositeFreezeLayer compositeFreezeLayer =
         new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
+
 
     // Column header
     final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
@@ -154,7 +161,7 @@ public class GridEditor {
     table = new NatTable(parent, gridLayer, false);
 
     // Configuration
-    table.addConfiguration(new DefaultNatTableStyleConfiguration());
+    table.addConfiguration(new StyleConfiguration());
     table.addConfiguration(new CustomHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
 
