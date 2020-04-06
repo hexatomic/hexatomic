@@ -54,7 +54,7 @@ public class GraphDataProvider implements IDataProvider {
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
 
-  private STextualDS ds = null;
+  private STextualDS dataSource = null;
   private SDocumentGraph graph;
 
   private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
@@ -79,10 +79,10 @@ public class GraphDataProvider implements IDataProvider {
     columns.clear();
 
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
-        ds);
+        dataSource);
     // Only consider tokens that are based on the selected data source.
     List<SToken> unorderedTokens = new ArrayList<SToken>();
-    for (SRelation<?, ?> inRel : ds.getInRelations()) {
+    for (SRelation<?, ?> inRel : dataSource.getInRelations()) {
       if (inRel instanceof STextualRelation) {
         // Source of STextualRelation can only be token
         unorderedTokens.add((SToken) inRel.getSource());
@@ -95,7 +95,7 @@ public class GraphDataProvider implements IDataProvider {
       List<DataSourceSequence> overlappedSequences =
           graph.getOverlappedDataSourceSequence(span, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       for (DataSourceSequence seq : overlappedSequences) {
-        if (seq.getDataSource() == ds) {
+        if (seq.getDataSource() == dataSource) {
           dsSpans.add(span);
         }
       }
@@ -212,7 +212,7 @@ public class GraphDataProvider implements IDataProvider {
 
   @Override
   public String getDataValue(int columnIndex, int rowIndex) {
-    if (ds == null) {
+    if (dataSource == null) {
       if (columnIndex == 0 && rowIndex == 0) {
         return "Please select data source!";
       }
@@ -240,7 +240,7 @@ public class GraphDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
-    if (ds == null) {
+    if (dataSource == null) {
       return 1;
     } else if (orderedDsTokens.size() == 0) {
       return 1;
@@ -250,7 +250,7 @@ public class GraphDataProvider implements IDataProvider {
 
   @Override
   public int getRowCount() {
-    if (ds == null) {
+    if (dataSource == null) {
       return 1;
     } else if (orderedDsTokens.size() == 0) {
       return 1;
@@ -265,7 +265,7 @@ public class GraphDataProvider implements IDataProvider {
    */
   public void setDsAndResolveGraph(STextualDS ds) {
     log.debug("Setting data source {}.", ds);
-    this.ds = ds;
+    this.dataSource = ds;
     resolveGraph();
   }
 
