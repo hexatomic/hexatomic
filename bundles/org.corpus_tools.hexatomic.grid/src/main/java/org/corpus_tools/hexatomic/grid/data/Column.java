@@ -118,7 +118,12 @@ public class Column {
       return graph.getText(token);
     } else if (dataObject instanceof SAnnotation) {
       SAnnotation annotation = (SAnnotation) dataObject;
-      return annotation.getValue_STEXT();
+      Object value = annotation.getValue();
+      if (value == null) {
+        return null;
+      } else {
+        return value.toString();
+      }
     }
     return null;
   }
