@@ -140,8 +140,8 @@ This example adds a dominance relation between the existing nodes.
 
 ## Annotate: `a`
 
-Adds, updates, or deletes annotations on existing nodes.
-Takes as arguments the nodes which should be annotated, and the annotation to add, change, or delete.
+Adds, updates, or deletes annotations on existing nodes or edges.
+Takes as arguments the nodes or edges which should be annotated, and the annotation to add, change, or delete.
 You can delete existing annotations by leaving the value in the annotation attribute empty.
 
 ### Examples
@@ -159,6 +159,13 @@ a pos: #t1
 ```
 
 Deletes the "pos" annotation for the "t1" node.
+
+
+```text
+a func_alt:nominal_subject #t2 -> #t1
+```
+
+Adds the "func_alt" annotation to the existing pointing relation between "t2" and "t1".
 
 #### See also
 
