@@ -9,7 +9,7 @@ authors:
   given-names: Thomas
   orcid: https://orcid.org/0000-0003-3731-2422
 version: 0.4.0-SNAPSHOT
-date-released: 2020-03-11
+date-released: 2020-04-06
 references:
 - type: software
   title: SWT Resource Manager
@@ -17,37 +17,13 @@ references:
   authors:
   - name: Google, Inc.
 - type: software
-  title: Apache Commons Lang
-  version: '3.4'
-  abbreviation: org.apache.commons:commons-lang3
-  license: Apache-2.0
-  notes: More license information can be found in the THIRD-PARTY/Apache_Commons_Lang
-    directory.
+  title: ANTLR 4 Runtime
+  version: 4.7.1.v20181120-0808
+  license: BSD-3-Clause
   authors:
-  - name: Daniel Rall
-  - name: Stephen Colebourne
-  - name: Henri Yandell
-  - name: Steven Caswell
-  - name: Robert Burrell Donkin
-  - name: Gary D. Gregory
-  - name: Fredrik Westermarck
-  - name: James Carman
-  - name: Niall Pemberton
-  - name: Matt Benson
-  - name: Joerg Schaible
-  - name: Oliver Heger
-  - name: Paul Benedict
-  - name: Benedikt Ritter
-  - name: Duncan Jones
-  repository-code: http://svn.apache.org/viewvc/commons/proper/lang/tags/LANG_3_4
-- type: software
-  title: Apache Felix Declarative Services
-  version: 2.1.14
-  abbreviation: org.apache.felix:org.apache.felix.scr
-  license: Apache-2.0
-  notes: More license information can be found in the THIRD-PARTY/Apache_Felix_Declarative_Services
+  - name: The ANTLR Project
+  notes: More license information can be found in the THIRD-PARTY/org.antlr.runtime
     directory.
-  authors: []
 - type: software
   title: 'Guava: Google Core Libraries for Java'
   version: '19.0'
@@ -164,78 +140,83 @@ references:
   - name: atinject project
   notes: More license information can be found in the THIRD-PARTY/javax.inject directory.
 - type: software
-  title: org.antlr.runtime
-  version: 4.7.1.v20181120-0808
-  authors: []
-- type: software
   title: org.apache.batik.constants
   version: 1.11.0.v20190515-0436
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.batik.constants
     directory.
 - type: software
   title: org.apache.batik.css
   version: 1.11.0.v20190515-0436
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.batik.css
     directory.
 - type: software
   title: org.apache.batik.i18n
   version: 1.11.0.v20190515-0436
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.batik.i18n
     directory.
 - type: software
   title: org.apache.batik.util
   version: 1.11.0.v20190515-0436
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.batik.util
     directory.
 - type: software
   title: org.apache.commons.io
   version: 2.6.0.v20190123-2029
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.commons.io
     directory.
 - type: software
   title: org.apache.commons.jxpath
   version: 1.3.0.v200911051830
-  license: EPL-2.0
+  license: Apache-2.0
   authors:
-  - name: The Apache Software Foundationn
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.commons.jxpath
+    directory.
+- type: software
+  title: org.apache.commons.lang3
+  version: 3.4.0
+  license: Apache-2.0
+  authors:
+  - name: Apache Software Foundation
+  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.lang3
     directory.
 - type: software
   title: org.apache.commons.logging
   version: 1.2.0.v20180409-1502
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.commons.logging
+    directory.
+- type: software
+  title: org.apache.felix.scr
+  version: 2.1.14.v20190123-1619
+  license: Apache-2.0
+  authors:
+  - name: Apache Software Foundation
+  notes: More license information can be found in the THIRD-PARTY/org.apache.felix.scr
     directory.
 - type: software
   title: org.apache.xmlgraphics
   version: 2.3.0.v20190515-0436
-  license: EPL-1.0
+  license: Apache-2.0
   authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
+  - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.xmlgraphics
     directory.
 - type: software
@@ -753,11 +734,37 @@ references:
 - type: software
   title: org.hamcrest.core
   version: 1.3.0.v20180420-1519
-  authors: []
+  license: BSD-2-Clause
+  authors:
+  - family-names: Walnes
+    given-names: Joe
+  - family-names: Pryce
+    given-names: Nat
+  - family-names: Freeman
+    given-names: Steve
+  - family-names: Dunn
+    given-names: Neil
+  - family-names: Denley
+    given-names: Tom
+  notes: More license information can be found in the THIRD-PARTY/org.hamcrest.core
+    directory.
 - type: software
   title: org.hamcrest.library
   version: 1.3.0.v20180524-2246
-  authors: []
+  license: BSD-2-Clause
+  authors:
+  - family-names: Walnes
+    given-names: Joe
+  - family-names: Pryce
+    given-names: Nat
+  - family-names: Freeman
+    given-names: Steve
+  - family-names: Dunn
+    given-names: Neil
+  - family-names: Denley
+    given-names: Tom
+  notes: More license information can be found in the THIRD-PARTY/org.hamcrest.library
+    directory.
 - type: software
   title: org.w3c.css.sac
   version: 1.3.1.v200903091627
