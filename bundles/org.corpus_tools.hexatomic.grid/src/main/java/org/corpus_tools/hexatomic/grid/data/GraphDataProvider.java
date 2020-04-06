@@ -162,8 +162,8 @@ public class GraphDataProvider implements IDataProvider {
    * </p>
    * 
    * <p>
-   * The column index is also used to set the header for the column, which will be '<annotation
-   * namespace>:<annotation name>' and additionally ' (<column index>)', iff the column index is >
+   * The column index is also used to set the header for the column, which will be '{annotation
+   * namespace}:{annotation name}' and additionally ' ({column index})', iff the column index is >
    * 1.
    * </p>
    * 
