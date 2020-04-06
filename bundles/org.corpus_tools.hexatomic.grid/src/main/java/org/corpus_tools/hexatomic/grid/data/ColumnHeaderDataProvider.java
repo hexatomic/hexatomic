@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.data;
 
+import java.util.List;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 /**
@@ -39,7 +40,12 @@ public class ColumnHeaderDataProvider implements IDataProvider {
 
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
-    return provider.getColumns().get(columnIndex).getHeader();
+    List<Column> columns = provider.getColumns();
+    if (columnIndex > -1 && columnIndex < (columns.size() - 1)) {
+      return columns.get(columnIndex).getHeader();
+    } else {
+      return null;
+    }
   }
 
   @Override
