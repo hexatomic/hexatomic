@@ -84,7 +84,7 @@ public class Column {
     // true).
     // As the token index that is passed should be included in the check, we need to add +1 to the
     // to-index, as otherwise it is not checked (BitSet#get API's to is exclusive).
-    return bits.get(inclusiveFrom, inclusiveTo + 1).cardinality() == 0;
+    return bits.get(inclusiveFrom, inclusiveTo + 1).isEmpty();
   }
 
   /**
