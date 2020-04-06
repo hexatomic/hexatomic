@@ -104,7 +104,11 @@ class TestConsoleController {
     // Add initial tokens
     console.executeCommand("t This is an example \".\"");
     graph.sortTokenByText();
-
+    
+    // Add initial pointing relation
+    console.executeCommand("e #t2 -> #t1 func:nsubj");
+    assertEquals(1, graph.getPointingRelations().size());
+    assertEquals(1, graph.getPointingRelations().get(0).getAnnotations().size());
 
     // Add token annotation
     console.executeCommand("a pos:DT #t1 #t3");
@@ -116,6 +120,11 @@ class TestConsoleController {
     console.executeCommand("a pos: #t1");
     assertEquals(null, graph.getTokens().get(0).getAnnotation("pos"));
     assertEquals("DT", graph.getTokens().get(2).getAnnotation("pos").getValue());
+    
+    // Add annotation to edge
+    console.executeCommand("a func_alt:nominal_subject #t2 -> #t1");
+    assertEquals(1, graph.getPointingRelations().size());
+    assertEquals(2, graph.getPointingRelations().get(0).getAnnotations().size());
 
   }
 
@@ -236,12 +245,26 @@ class TestConsoleController {
    */
   @Test
   void testInsertEdgeTwice() {
-    // Add initial tokens
+    // Add initial tokens 
     console.executeCommand("t This is an example \".\"");
+    
     // Add first pointing relation
     console.executeCommand("e #t1 -> #t2 ns:n:a");
+    assertEquals(1, graph.getPointingRelations().size());
     // Add second pointing relation with the same annotation
     console.executeCommand("e #t1 -> #t2 ns:n:a");
+    assertEquals(2, graph.getPointingRelations().size());
+    // Check that we can't create a pointing relation when one of the nodes does not exist
+    console.executeCommand("e #t1 -> #n245 ns:n:a");
+    assertEquals(2, graph.getPointingRelations().size());
+    
+    // Repeat the test sequence with dominance relations: create two syntax nodes first
+    console.executeCommand("n cat:X #t1");
+    assertEquals(1, graph.getDominanceRelations().size());
+    console.executeCommand("e #n1 > #t2 ns:n:a");
+    assertEquals(2, graph.getDominanceRelations().size());
+    console.executeCommand("e #n1 > #t2 ns:n:a");
+    assertEquals(3, graph.getDominanceRelations().size()); 
   }
 
 }
