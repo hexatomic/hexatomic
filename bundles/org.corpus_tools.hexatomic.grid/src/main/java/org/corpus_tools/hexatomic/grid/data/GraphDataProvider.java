@@ -140,6 +140,38 @@ public class GraphDataProvider implements IDataProvider {
     }
   }
 
+  /**
+   * Resolves annotations on spans recursively, so that overlapping spans with the same annotation
+   * namespace and name are separated over columns. This is because while these overlaps may exist
+   * in the data, they cannot be displayed within a single column.
+   * 
+   * <p>
+   * This method adds annotation values to columns, and tracks existing columns. If a column for a
+   * combination of annotation namespace and name does not exist yet, it creates a new
+   * {@link Column} and adds the annotation values to the row cells identified by the token indices.
+   * If a column of the combination does exist, it checks whether all row cells that the annotation
+   * value would be written to is empty. If this is the case, it adds the annotation values to the
+   * row cells identified by the token indices.
+   * </p>
+   * 
+   * <p>
+   * If, however, a value already exists in one of the cells that the current value would be written
+   * to, the column index integer is set up by 1 and the method recurses on itself with the new
+   * column index as parameter. As in the following run, no column with the specified column index
+   * can exist, a new column will be created.
+   * </p>
+   * 
+   * <p>
+   * The column index is also used to set the header for the column, which will be '<annotation
+   * namespace>:<annotation name>' and additionally ' (<column index>)', iff the column index is >
+   * 1.
+   * </p>
+   * 
+   * @param tokenIndices The indices of the tokens spanned over by the span carrying the annotation
+   * @param annotation The annotation to resolve
+   * @param spanColumnIndex An integer index tracking how many columns for the same annotation
+   *        namespace-name combination already exist
+   */
   private void resolveAnnotationRecursively(List<Integer> tokenIndices, SAnnotation annotation,
       Integer spanColumnIndex) {
     String columnName = null;
