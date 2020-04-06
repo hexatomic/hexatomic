@@ -41,7 +41,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
     List<Column> columns = provider.getColumns();
-    if (columnIndex > -1 && columnIndex < (columns.size() - 1)) {
+    if (columnIndex > -1 && columnIndex < columns.size()) {
       return columns.get(columnIndex).getHeader();
     } else {
       return null;
