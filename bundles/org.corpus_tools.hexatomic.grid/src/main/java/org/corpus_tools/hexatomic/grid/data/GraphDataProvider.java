@@ -184,7 +184,7 @@ public class GraphDataProvider implements IDataProvider {
     if (column != null) {
       // Try to add, otherwise iterate and re-run
       if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
-        setRows(tokenIndices, column, annotation);
+        setMultipleRows(tokenIndices, column, annotation);
       } else {
         // Bump counter and re-run
         spanColumnIndex = spanColumnIndex + 1;
@@ -194,7 +194,7 @@ public class GraphDataProvider implements IDataProvider {
       column = new Column();
       column.setHeader(
           annotation.getQName() + (spanColumnIndex > 1 ? " (" + spanColumnIndex + ")" : ""));
-      setRows(tokenIndices, column, annotation);
+      setMultipleRows(tokenIndices, column, annotation);
       spanColumns.put(columnName, column);
     }
   }
@@ -208,11 +208,11 @@ public class GraphDataProvider implements IDataProvider {
         if (column != null) {
           // There can be no two annotations of the same qualified name for a single token, so no
           // need to check as we do have to for spans.
-          setRow(column, orderedTokens.indexOf(token), anno);
+          setSingleRow(column, orderedTokens.indexOf(token), anno);
         } else {
           column = new Column();
           column.setHeader(anno.getQName());
-          setRow(column, orderedTokens.indexOf(token), anno);
+          setSingleRow(column, orderedTokens.indexOf(token), anno);
           tokenColumns.put(anno.getQName(), column);
         }
       }
@@ -222,13 +222,13 @@ public class GraphDataProvider implements IDataProvider {
 
   }
 
-  private void setRows(List<Integer> tokenIndices, Column column, SAnnotation annotation) {
+  private void setMultipleRows(List<Integer> tokenIndices, Column column, SAnnotation annotation) {
     for (Integer idx : tokenIndices) {
-      setRow(column, idx, annotation);
+      setSingleRow(column, idx, annotation);
     }
   }
 
-  private void setRow(Column column, Integer idx, SAnnotation annotation) {
+  private void setSingleRow(Column column, Integer idx, SAnnotation annotation) {
     try {
       column.setRow(idx, annotation);
     } catch (RuntimeException e) {
