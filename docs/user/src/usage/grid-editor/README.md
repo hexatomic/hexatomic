@@ -10,7 +10,7 @@ To learn more about how Hexatomic's data model - Salt - defines these units, ple
 
 ## Data source selection
 
-A corpus document may contain more than one data source (text, audio, video), which contains annotations.
+A corpus document may contain more than one data source (text, audio, video), and their corresponding annotations.
 The grid editor displays one of these data sources at a time.
 
 On the upper hand side of the grid editor interface, there is a dropdown menu to select the data source which should be displayed.
