@@ -42,7 +42,7 @@ class TestColumn {
     when(graph.getText(token)).thenReturn("Test");
 
     annotation = mock(SAnnotation.class);
-    when(annotation.getValue_STEXT()).thenReturn("testAnno");
+    when(annotation.getValue()).thenReturn("testAnno");
 
     fixture = new Column();
     fixture.setHeader("Header");
