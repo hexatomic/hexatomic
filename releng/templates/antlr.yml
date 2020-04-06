@@ -1,0 +1,7 @@
+type: software
+title: ANTLR 4 Runtime
+version: '{{version}}'
+license: BSD-3-Clause
+authors:
+- name: 'The ANTLR Project'
+notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'
