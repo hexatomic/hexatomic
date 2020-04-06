@@ -60,7 +60,7 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
   protected PopupMenuBuilder createColumnHeaderMenu(NatTable natTable) {
     // Restrict to useful menu items
     return super.createColumnHeaderMenu(natTable).withHideColumnMenuItem("Hide column(s)")
-        .withShowAllColumnsMenuItem().withSeparator()
+        .withShowAllColumnsMenuItem("Show all columns").withSeparator()
         .withAutoResizeSelectedColumnsMenuItem("Auto-resize column(s)").withSeparator()
         .withFreezeColumnMenuItem("Set column freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN));
