@@ -23,21 +23,22 @@ package org.corpus_tools.hexatomic.grid.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
@@ -58,7 +59,7 @@ public class GraphDataProvider implements IDataProvider {
   private SDocumentGraph graph;
 
   private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
-  private final List<SSpan> dsSpans = new ArrayList<SSpan>();
+  private final LinkedHashMap<SSpan, Set<SToken>> spanTokenMap = new LinkedHashMap<>();
 
   // Alphabetically ordered maps of column titles to columns for the two annotated types
   private final TreeMap<String, Column> tokenColumns = new TreeMap<>();
@@ -69,17 +70,18 @@ public class GraphDataProvider implements IDataProvider {
   @Inject
   ErrorService errors;
 
-  @SuppressWarnings("rawtypes")
   private void resolveGraph() {
     // Reset data
     orderedDsTokens.clear();
-    dsSpans.clear();
     tokenColumns.clear();
     spanColumns.clear();
     columns.clear();
+    spanTokenMap.clear();
+
 
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
         dataSource);
+
     // Only consider tokens that are based on the selected data source.
     List<SToken> unorderedTokens = new ArrayList<SToken>();
     for (SRelation<?, ?> inRel : dataSource.getInRelations()) {
@@ -90,13 +92,11 @@ public class GraphDataProvider implements IDataProvider {
     }
     orderedDsTokens.addAll(graph.getSortedTokenByText(unorderedTokens));
 
-    // Only consider spans which overlap the selected data source.
-    for (SSpan span : graph.getSpans()) {
-      List<DataSourceSequence> overlappedSequences =
-          graph.getOverlappedDataSourceSequence(span, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
-      for (DataSourceSequence seq : overlappedSequences) {
-        if (seq.getDataSource() == dataSource) {
-          dsSpans.add(span);
+    // Only consider spans spanning tokens in the selected data source.
+    for (SToken token : orderedDsTokens) {
+      for (SRelation<?, ?> inRel : token.getInRelations()) {
+        if (inRel instanceof SSpanningRelation) {
+          mapTokenToSpan(((SSpanningRelation) inRel).getSource(), token);
         }
       }
     }
@@ -115,7 +115,7 @@ public class GraphDataProvider implements IDataProvider {
     columns.add(tokenColumn);
 
     resolveTokenAnnotations(orderedDsTokens);
-    resolveSpanAnnotations(dsSpans, orderedDsTokens);
+    resolveSpanAnnotations(orderedDsTokens);
 
     // Complete the list of columns
     // Order is kept correctly, because TreeMap.values()' iterator returns the values in
@@ -125,9 +125,20 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Finished resolving SDocumentGraph of {}.", graph.getDocument());
   }
 
-  private void resolveSpanAnnotations(List<SSpan> spans, List<SToken> orderedTokens) {
-    for (SSpan span : spans) {
-      List<SToken> overlappedTokens = graph.getOverlappedTokens(span);
+  private void mapTokenToSpan(SSpan span, SToken token) {
+    Set<SToken> set = spanTokenMap.get(span);
+    if (set != null) {
+      set.add(token);
+    } else {
+      set = new HashSet<SToken>();
+      set.add(token);
+    }
+    spanTokenMap.put(span, set);
+  }
+
+  private void resolveSpanAnnotations(List<SToken> orderedTokens) {
+    for (SSpan span : spanTokenMap.keySet()) {
+      Set<SToken> overlappedTokens = spanTokenMap.get(span);
       List<Integer> tokenIndices = new ArrayList<>();
       // Build token index list, i.e., row indices covered by this span
       for (SToken token : overlappedTokens) {
