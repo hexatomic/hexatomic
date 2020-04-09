@@ -38,12 +38,13 @@ import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
  */
 public class StyleConfiguration extends DefaultNatTableStyleConfiguration {
 
-  static final String EMPTY_CELL_STYLE = "EMPTY_CELL_STYLE";
+  public static final String EMPTY_CELL_STYLE = "EMPTY_CELL_STYLE";
 
   @Override
   public void configureRegistry(IConfigRegistry configRegistry) {
     // Configure as per defaults
     super.configureRegistry(configRegistry);
+    // Create a new style to apply to empty cells
     Style cellStyle = new Style();
     cellStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
         GUIHelper.getColor(236, 236, 236));
