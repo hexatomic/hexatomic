@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -333,6 +334,19 @@ public class TestGridEditor {
     // Show columns
     table.contextMenu(0, 1).contextMenu("Show all columns").click();
     assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+  }
+
+  @Test
+  void testEmptyCellStyleApplied() {
+    bot.activeShell().maximize(true);
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("", table.getCellDataValueByPosition(1, 5));
+    assertTrue(table.hasConfigLabel(1, 5, StyleConfiguration.EMPTY_CELL_STYLE));
+    bot.activeShell().maximize(false);
   }
 
 }
