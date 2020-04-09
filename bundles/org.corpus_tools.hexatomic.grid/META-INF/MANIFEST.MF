@@ -16,3 +16,4 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.core.di.annotations
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.corpus_tools.hexatomic.grid.style
