@@ -22,9 +22,9 @@
 package org.corpus_tools.hexatomic.grid.style;
 
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
+import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.IConfigLabelAccumulator;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
-import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 
 /**
  * A cell label accumulator which assigns empty cells a custom configuration label.
@@ -34,26 +34,28 @@ import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
  */
 public class EmptyCellLabelAccumulator implements IConfigLabelAccumulator {
 
-  private final DefaultBodyLayerStack bodyLayer;
+  private final SpanningDataLayer bodyDataLayer;
 
   /**
-   * Constructor setting the {@link #bodyLayer} field.
+   * Constructor setting the {@link #bodyDataLayer} field.
    * 
    * <p>
-   * A {@link DefaultBodyLayerStack} is needed to determine properties of cells that should be
-   * assigned custom configuration labels.
+   * The lowermost layer in the layer stack is needed to determine properties of cells that should
+   * be assigned custom configuration labels.
    * </p>
    * 
-   * @param bodyLayer The bodyLayer to set to the {@link #bodyLayer} field
+   * @param bodyDataLayer The {@link SpanningDataLayer} to set to the {@link #bodyDataLayer} field
    */
-  public EmptyCellLabelAccumulator(DefaultBodyLayerStack bodyLayer) {
-    this.bodyLayer = bodyLayer;
+  public EmptyCellLabelAccumulator(SpanningDataLayer bodyDataLayer) {
+    this.bodyDataLayer = bodyDataLayer;
   }
 
   @Override
   public void accumulateConfigLabels(LabelStack configLabels, int columnPosition, int rowPosition) {
-    ILayerCell cell = bodyLayer.getCellByPosition(columnPosition, rowPosition);
-    if (cell.getDataValue() == null) {
+    ILayerCell bodyCell = bodyDataLayer.getCellByPosition(columnPosition, rowPosition);
+
+    // Assign the empty cell style iff the cell in the data body layer is null
+    if (bodyCell.getDataValue() == null) {
       configLabels.addLabel(StyleConfiguration.EMPTY_CELL_STYLE);
     }
   }
