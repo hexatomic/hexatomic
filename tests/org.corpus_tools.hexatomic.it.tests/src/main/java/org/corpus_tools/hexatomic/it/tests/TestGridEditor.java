@@ -53,6 +53,8 @@ public class TestGridEditor {
 
   @BeforeEach
   void setup() {
+    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
+        "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 
     ctx.set(ErrorService.class, errorService);
