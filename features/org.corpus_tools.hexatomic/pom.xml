@@ -26,6 +26,18 @@
                     <p2ReconstructGroupId>false</p2ReconstructGroupId>
                     <referenceTemplates>
                         <referenceTemplate>
+                            <pattern>.*:org\.hamcrest\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/hamcrest.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.apache\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/apache.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.antlr\.runtime.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/antlr.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
                             <pattern>.*:ch\.qos\.logback\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/logback.yml</template>
                         </referenceTemplate>
