@@ -31,6 +31,8 @@ class TestCorpusStructure {
 
   @BeforeEach
   void setup() {
+    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
+        "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
 
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 
