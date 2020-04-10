@@ -10,13 +10,13 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.core.di.annotations,
- org.corpus-tools.salt-api;bundle-version="3.4.0",
+ org.corpus-tools.salt-api,
  org.eclipse.core.runtime;bundle-version="3.15.300",
  org.corpus_tools.hexatomic.core;bundle-version="0.1.0",
  org.slf4j.api,
  org.eclipse.emf.common;bundle-version="2.16.0",
  org.eclipse.e4.ui.workbench;bundle-version="1.10.0",
- org.corpus-tools.salt-extensions;bundle-version="3.4.0"
+ org.corpus-tools.salt-extensions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.corpus_tools.hexatomic.corpusedit
 Bundle-ClassPath: .

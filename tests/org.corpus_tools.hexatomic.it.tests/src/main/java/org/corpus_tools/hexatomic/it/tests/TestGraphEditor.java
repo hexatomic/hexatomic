@@ -58,7 +58,7 @@ class TestGraphEditor {
 
     partService = ctx.get(EPartService.class);
     assertNotNull(partService);
-    
+
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
@@ -95,13 +95,13 @@ class TestGraphEditor {
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
     bot.waitUntil(new DefaultCondition() {
-      
+
       @Override
       public boolean test() throws Exception {
         SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
         return view != null;
       }
-      
+
       @Override
       public String getFailureMessage() {
         return "Showing the graph editor part took too long";

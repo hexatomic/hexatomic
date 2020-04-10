@@ -8,4 +8,5 @@
 	- [Opening an editor](usage/open-editor.md)
 	- [Graph Editor](usage/graph-editor/README.md)
     	- [Editing the graph](usage/graph-editor/console.md)
+  	- [Grid Editor](usage/grid-editor/README.md)
 - [Troubleshooting & getting help](./troubleshooting.md)

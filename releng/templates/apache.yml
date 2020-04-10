@@ -1,0 +1,7 @@
+type: software
+title: {{artifactId}}
+version: '{{version}}'
+license: Apache-2.0
+authors:
+- name: 'Apache Software Foundation'
+notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'

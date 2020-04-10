@@ -1,0 +1,16 @@
+type: software
+title: '{{artifactId}}'
+version: '{{version}}'
+license: BSD-2-Clause
+authors:
+- family-names: Walnes
+  given-names: Joe
+- family-names: Pryce
+  given-names: Nat
+- family-names: Freeman
+  given-names: Steve
+- family-names: Dunn
+  given-names: Neil
+- family-names: Denley
+  given-names: Tom
+notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'
