@@ -1,0 +1,1 @@
+{"version":1,"ops":[{"type":1,"author":{"id":"7fc094c5f01526c965e541ec82007c487f6fa288"},"timestamp":1576839591,"metadata":{"github-id":"MDU6SXNzdWU1NDA5MzYwOTU=","github-url":"https://github.com/hexatomic/hexatomic/issues/106","origin":"github"},"title":"Implement split token","message":"Split tokens, no range changes needed outside of the original range.","files":null}]}
