@@ -1,0 +1,1 @@
+{"version":1,"ops":[{"type":1,"author":{"id":"7fc094c5f01526c965e541ec82007c487f6fa288"},"timestamp":1576839488,"metadata":{"github-id":"MDU6SXNzdWU1NDA5MzUzMTQ=","github-url":"https://github.com/hexatomic/hexatomic/issues/104","origin":"github"},"title":"Implement remove token","message":"Remove tokens, includes similar processing as #103.","files":null}]}
