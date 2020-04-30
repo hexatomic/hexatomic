@@ -23,11 +23,13 @@ package org.corpus_tools.hexatomic.core.errors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.osgi.framework.Bundle;
@@ -57,6 +59,9 @@ public class ErrorService {
 
   private Optional<IStatus> lastException = Optional.empty();
 
+  @Inject
+  UISynchronize sync;
+
   /**
    * Display a (runtime) exception to the user and add it to the log.
    * 
@@ -75,7 +80,11 @@ public class ErrorService {
     IStatus status = createStatusFromException(message, bundleID, ex);
     lastException = Optional.of(status);
 
-    ErrorDialog.openError(null, ERROR_OCCURED_MSG, message, status);
+    sync.syncExec(() -> {
+      ErrorDialog.openError(null, ERROR_OCCURED_MSG, message, status);
+    });
+
+
   }
 
   /**
@@ -128,7 +137,7 @@ public class ErrorService {
 
   /**
    * Return the last exception that has been handled with
-   * {@link #handleException(String, Throwable, Class)}. 
+   * {@link #handleException(String, Throwable, Class)}.
    * 
    * <p>
    * This property can be used to check in unit tests if any error has occured and was handled in

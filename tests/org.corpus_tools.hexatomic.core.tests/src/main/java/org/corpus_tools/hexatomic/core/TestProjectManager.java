@@ -1,7 +1,6 @@
 package org.corpus_tools.hexatomic.core;
 
 import static org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler.DOCUMENT_ID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,6 +20,7 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
@@ -39,6 +39,9 @@ class TestProjectManager {
 
   private EPartService partService;
 
+  private UiStatusReport uiStatus;
+
+
   @BeforeEach
   public void setUp() throws Exception {
     File exampleProjectDirectory =
@@ -50,11 +53,25 @@ class TestProjectManager {
     events = mock(IEventBroker.class);
     errorService = mock(ErrorService.class);
     partService = mock(EPartService.class);
+    uiStatus = mock(UiStatusReport.class);
 
     projectManager = new ProjectManager();
     projectManager.events = events;
     projectManager.errorService = errorService;
     projectManager.partService = partService;
+    projectManager.uiStatus = uiStatus;
+    projectManager.sync = new UISynchronize() {
+
+      @Override
+      public void syncExec(Runnable runnable) {
+        runnable.run();
+      }
+
+      @Override
+      public void asyncExec(Runnable runnable) {
+        runnable.run();
+      }
+    };
 
     projectManager.postConstruct();
 
@@ -70,27 +87,11 @@ class TestProjectManager {
 
   }
 
-  @Test
-  public void testOpenExample() {
-
-    assertEquals(projectManager.getProject().getCorpusGraphs().size(), 0);
-
-    projectManager.open(exampleProjectUri);
-
-    assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
-
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").isPresent());
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2").isPresent());
-
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc3").isPresent());
-    assertTrue(projectManager.getDocument("salt:/rootCorpus/subCorpus2/doc4").isPresent());
-
-  }
 
   @Test
   public void testEventOnOpen() {
     projectManager.open(exampleProjectUri);
-    verify(events).send(eq(Topics.CORPUS_STRUCTURE_CHANGED), anyString());
+    verify(events).send(eq(Topics.PROJECT_LOADED), anyString());
   }
 
   @Test
@@ -100,37 +101,36 @@ class TestProjectManager {
     String documentID = "salt:/rootCorpus/subCorpus2/doc3";
 
     // Load document once
-    Optional<SDocument> document = projectManager.getDocument(documentID);
+    Optional<SDocument> document = projectManager.getDocument(documentID, true);
     assertTrue(document.isPresent());
     assertNotNull(document.get().getDocumentGraphLocation());
-    document.get().loadDocumentGraph();
     assertNotNull(document.get().getDocumentGraph());
-    
+
     // Mock three open documents: two of them are the same
     Map<String, String> state1 = new HashMap<>();
     state1.put(DOCUMENT_ID, documentID);
-    
+
     Map<String, String> state2 = new HashMap<>();
     state2.put(DOCUMENT_ID, "salt:/rootCorpus/subCorpus2/doc4");
-    
+
     Map<String, String> state3 = new HashMap<>();
     state3.put(DOCUMENT_ID, documentID);
 
     MPart editor1 = mock(MPart.class);
     MPart editor2 = mock(MPart.class);
     MPart editor3 = mock(MPart.class);
-    
+
     when(editor1.getPersistedState()).thenReturn(state1);
     when(editor2.getPersistedState()).thenReturn(state2);
     when(editor3.getPersistedState()).thenReturn(state3);
-    
+
     when(partService.getParts()).thenReturn(Arrays.asList(editor1, editor2, editor3));
-    
+
     // Notify one of the documents was closed
     projectManager.unloadDocumentGraphWhenClosed(documentID);
     // Document must still be loaded in memory
     assertNotNull(document.get().getDocumentGraph());
-    
+
     // Remove the one of the closed parts
     when(partService.getParts()).thenReturn(Arrays.asList(editor2, editor3));
     // Notify about closing one of the documents again
@@ -138,5 +138,6 @@ class TestProjectManager {
     // Document should have been unloaded from memory
     assertNull(document.get().getDocumentGraph());
   }
+
 
 }

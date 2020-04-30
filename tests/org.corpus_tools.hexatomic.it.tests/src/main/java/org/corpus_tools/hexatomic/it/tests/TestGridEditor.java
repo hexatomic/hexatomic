@@ -9,8 +9,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -49,8 +49,6 @@ public class TestGridEditor {
 
   private ErrorService errorService = new ErrorService();
 
-
-
   @BeforeEach
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
@@ -86,8 +84,10 @@ public class TestGridEditor {
   @AfterEach
   void cleanup() {
     // Close all editors manually.
-    // If the editor is not closed, it might trigger bugs when executing other tests.
-    // For example, notifications about project changes might trigger exception when the document
+    // If the editor is not closed, it might trigger bugs when executing other
+    // tests.
+    // For example, notifications about project changes might trigger exception when
+    // the document
     // is already gone.
     for (SWTBotView view : bot.parts()) {
       if (view.getPart().getPersistedState()
@@ -95,7 +95,8 @@ public class TestGridEditor {
         view.close();
       }
     }
-    // TODO: when close project is implemented with save functionality, change this to close the
+    // TODO: when close project is implemented with save functionality, change this
+    // to close the
     // project and its editors
 
   }
@@ -151,10 +152,9 @@ public class TestGridEditor {
     return view;
   }
 
-
   private void openExample(URI exampleUri) {
     Map<String, String> params = new HashMap<>();
-    params.put(OpenSaltProjectHandler.COMMAND_PARAM_LOCATION_ID, exampleUri.toFileString());
+    params.put(CommandParams.LOCATION, exampleUri.toFileString());
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.open_salt_project", params);
     handlerService.executeHandler(cmd);
@@ -198,7 +198,8 @@ public class TestGridEditor {
     assertNotNull(table);
 
     // Need to maximize the window so that all comlumns are displayed,
-    // as NatTable knows only about completely displayed columns in the virtual table
+    // as NatTable knows only about completely displayed columns in the virtual
+    // table
     bot.activeShell().maximize(true);
 
     // Check number of rows and columns (5 + 1 header row, 5 + 1 header column)

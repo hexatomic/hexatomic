@@ -20,16 +20,21 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
+import java.util.Optional;
 import javax.inject.Named;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
-import org.corpus_tools.salt.exceptions.SaltResourceException;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * Handler to open a document with a specific editor.
@@ -40,11 +45,6 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
  */
 public class OpenSaltDocumentHandler {
 
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(OpenSaltDocumentHandler.class);
-
-  public static final String COMMAND_PARAM_EDITOR_ID =
-      "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
   public static final String DOCUMENT_ID = "org.corpus_tools.hexatomic.document-id";
   public static final String COMMAND_OPEN_DOCUMENT_ID =
       "org.corpus_tools.hexatomic.core.command.open_salt_document";
@@ -58,44 +58,50 @@ public class OpenSaltDocumentHandler {
    * @param selectionService An instance of the selection service used to get the currently selected
    *        document
    * @param editorID The model ID of the editor PartDescription to use a template
+   * @param errorService The error service which allows to report errors.
+   * @param sync The Eclipse synchronization service.
+   * @param parent The SWT display shell.
    */
   @Execute
-  public static void execute(ProjectManager projectManager, EPartService partService,
-      ESelectionService selectionService, @Named(COMMAND_PARAM_EDITOR_ID) String editorID) {
+  protected static void execute(Shell parent, ProjectManager projectManager,
+      EPartService partService, ESelectionService selectionService, ErrorService errorService,
+      UISynchronize sync, @Named(CommandParams.EDITOR_ID) String editorID) {
 
     // get currently selected document
     Object selection = selectionService.getSelection();
     if (selection instanceof SDocument) {
 
-      SDocument document = (SDocument) selection;
+      String id = ((SDocument) selection).getId();
+      Job job = Job.create("Loading document " + id, (monitor) -> {
+        monitor.beginTask("Loading document " + id, 0);
+        Optional<SDocument> document = projectManager.getDocument(id, true);
 
-      if (document.getDocumentGraph() == null) {
-        try {
-          if (document.getDocumentGraphLocation() == null) {
-            // create a new document graph, because no one exists yet
-            document.createDocumentGraph();
+        
+        sync.syncExec(() -> {
+
+          if (document.isPresent()) {
+            // Create a new part from an editor part descriptor
+            MPart editorPart = partService.createPart(editorID);
+            String title = document.get().getName();
+            if (editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
+              title = title + " (" + editorPart.getLabel() + ")";
+            }
+            editorPart.setLabel(title);
+            editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID,
+                document.get().getId());
+
+            partService.showPart(editorPart, PartState.ACTIVATE);
           } else {
-            // TODO: show progress indicator
-            document.loadDocumentGraph();
+            errorService.showError("Document not found",
+                "The selected document was not found in the project.",
+                OpenSaltDocumentHandler.class);
           }
+          
+          monitor.done();
+        });
+      });
 
-        } catch (SaltResourceException ex) {
-          // TODO: display error to the user in a dialog
-          log.error("Could not load document graph (the actual annotations for document {}).",
-              document.getId(), ex);
-        }
-      }
-
-      // Create a new part from an editor part descriptor
-      MPart editorPart = partService.createPart(editorID);
-      String title = document.getName();
-      if (editorPart.getLabel() != null || !editorPart.getLabel().isEmpty()) {
-        title = title + " (" + editorPart.getLabel() + ")";
-      }
-      editorPart.setLabel(title);
-      editorPart.getPersistedState().put(OpenSaltDocumentHandler.DOCUMENT_ID, document.getId());
-
-      partService.showPart(editorPart, PartState.ACTIVATE);
+      job.schedule();
 
     }
   }

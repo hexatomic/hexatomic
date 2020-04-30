@@ -39,7 +39,9 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -66,6 +68,8 @@ import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.emf.common.util.URI;
@@ -131,10 +135,19 @@ public class GraphEditor {
   @Inject
   ErrorService errors;
 
+  @Inject
+  private IEventBroker events;
+
   private ListenerImplementation projectChangeListener;
 
+  private ConsoleView consoleView;
+
+  private String getDocumentId() {
+    return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+  }
+
   private SDocumentGraph getGraph() {
-    String documentID = thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+    String documentID = getDocumentId();
     Optional<SDocument> doc = projectManager.getDocument(documentID);
     if (doc.isPresent()) {
       return doc.get().getDocumentGraph();
@@ -220,7 +233,7 @@ public class GraphEditor {
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
         "graph-editor/text-console");
-    new ConsoleView(consoleViewer, sync, getGraph());
+    consoleView = new ConsoleView(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
     updateView(true);
@@ -378,7 +391,20 @@ public class GraphEditor {
   @PreDestroy
   void preDestroy() {
     projectManager.removeListener(projectChangeListener);
+
+    events.post(Topics.DOCUMENT_CLOSED,
+        thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void documentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String changedDocumentId) {
+    if (changedDocumentId != null && changedDocumentId.equals(getDocumentId())) {
+      // Notify the console that there is a new annotation graph
+      consoleView.setGraph(getGraph());
+    }
+  }
+
 
   @SuppressWarnings("unchecked")
   private void updateView(boolean recalculateSegments) {
@@ -586,11 +612,17 @@ public class GraphEditor {
       } else if (container instanceof org.corpus_tools.salt.graph.Label) {
         element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
       }
+      SDocumentGraph graph = getGraph();
+      if (graph == null) {
+        errors.showError("Unexpected error",
+            "Annotation graph for subscribed document vanished. Please report this as a bug.",
+            GraphEditor.class);
+        return;
+      }
       if (element == null || element.getId() == null) {
         return;
       } else {
         URI elementUri = URI.createURI(element.getId());
-        SDocumentGraph graph = getGraph();
         if (!elementUri.path().equals(graph.getPath().path())) {
           return;
         }
