@@ -90,6 +90,15 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   }
 
   /**
+   * Sets a new Salt annotation graph to edit.
+   * 
+   * @param graph The Salt graph to edit.
+   */
+  public void setGraph(SDocumentGraph graph) {
+    this.controller.setGraph(graph);
+  }
+
+  /**
    * Outputs a string in the console.
    * 
    * @param str The string to output (without trailing new line).
@@ -97,16 +106,20 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   public void writeLine(String str) {
     sync.asyncExec(() -> {
       document.set(document.get() + str + "\n");
-      view.getTextWidget().setCaretOffset(document.getLength());
-      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+      if (view != null && view.getTextWidget() != null) {
+        view.getTextWidget().setCaretOffset(document.getLength());
+        view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+      }
     });
   }
 
   private void writePrompt() {
     sync.asyncExec(() -> {
       document.set(document.get() + controller.getPrompt());
-      view.getTextWidget().setCaretOffset(document.getLength());
-      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+      if (view != null && view.getTextWidget() != null) {
+        view.getTextWidget().setCaretOffset(document.getLength());
+        view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+      }
     });
   }
 
