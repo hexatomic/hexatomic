@@ -17,7 +17,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_wCaHIMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.opensaltproject" label="Open Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/folder-open-regular.png" command="_pA7BYMsLEemUdItNeSusZw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_P-HZsEy8EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_salt_project" label="Save Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" mnemonics="" command="_o-7oQEy7EeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_xiM4wEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_as_salt_project" label="Save Salt Project As..." iconURI="" command="_mqJxIEzaEeqppqV5eQIggg"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit Application" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
       </children>
     </mainMenu>
     <trimBars xmi:id="_c05WAFVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.trimbar.status" side="Bottom">
@@ -43,6 +43,9 @@
       <tags>type:user</tags>
     </bindings>
     <bindings xmi:id="_O0iGAFQQEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.keybinding.1" keySequence="M1+N" command="_kj2CcEmZEeqbxMjDv0hhTg">
+      <tags>type:user</tags>
+    </bindings>
+    <bindings xmi:id="_51fKcIrcEeqnztzmT9e26Q" elementId="org.corpus_tools.hexatomic.core.keybinding.4" keySequence="M1+Q" command="_HVy0oFPxEeq55bpbFwb6CQ">
       <tags>type:user</tags>
     </bindings>
   </bindingTables>
