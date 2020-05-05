@@ -2,10 +2,11 @@ os: linux
 jobs:
   include:
     - language: java
-
-      jdk: 
-      - openjdk8
-      - openjdk11
+      jdk: openjdk11
+      name: OpenJDK 11
+    - language: java
+      jdk: openjdk8
+      name: OpenJDK 8
 
       # enable a window manager to execute UI integration tests
       addons:
@@ -51,6 +52,7 @@ jobs:
           tag_name: $TRAVIS_TAG
 
     - language: rust
+      name: Documentation
      
       cache:
         - cargo
