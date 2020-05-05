@@ -20,7 +20,8 @@ Require-Bundle: javax.inject;bundle-version="0.0.0",
  ch.qos.logback.classic;bundle-version="1.1.2",
  ch.qos.logback.core;bundle-version="1.1.2",
  org.slf4j.api;bundle-version="1.7.10",
- org.corpus-tools.salt-api
+ org.corpus-tools.salt-api,
+ javax.annotation;bundle-version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
 Export-Package: org.corpus_tools.hexatomic.core,
