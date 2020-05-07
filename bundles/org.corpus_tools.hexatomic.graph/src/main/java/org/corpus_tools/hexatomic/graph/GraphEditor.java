@@ -26,7 +26,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -65,9 +64,6 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
-import org.eclipse.core.runtime.ICoreRunnable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -99,7 +95,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -122,12 +117,6 @@ public class GraphEditor {
   private MPart thisPart;
 
   @Inject
-  ErrorService errorService;
-
-  @Inject
-  Shell shell;
-
-  @Inject
   public GraphEditor() {
 
   }
@@ -146,17 +135,12 @@ public class GraphEditor {
   @Inject
   ErrorService errors;
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
-
   @Inject
   private IEventBroker events;
 
   private ListenerImplementation projectChangeListener;
 
   private ConsoleView consoleView;
-
-
-  private final Filter graphFilter = new Filter();
 
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -198,7 +182,6 @@ public class GraphEditor {
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
     viewer.getGraphControl().setDragDetect(true);
-    viewer.setFilters(graphFilter);
 
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
     GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
@@ -424,7 +407,7 @@ public class GraphEditor {
 
 
   @SuppressWarnings("unchecked")
-  private void updateView(final boolean recalculateSegments) {
+  private void updateView(boolean recalculateSegments) {
 
     try {
       SDocumentGraph graph = getGraph();
@@ -435,109 +418,47 @@ public class GraphEditor {
             GraphEditor.class);
         return;
       }
-      
-      final String segmentFilterText = txtSegmentFilter.getText();
-      final boolean includeSpans = btnIncludeSpans.getSelection();
-      final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
-      final List<Range<Long>> oldSelectedRanges = new LinkedList<>();
 
       if (recalculateSegments) {
-        // Store the old segment selection
+        // store the old segment selection
+        List<Range<Long>> oldSelectedRanges = new LinkedList<>();
         for (TableItem item : textRangeTable.getSelection()) {
           oldSelectedRanges.add((Range<Long>) item.getData("range"));
         }
-        // All ranges will be re-calculated in the background job.
-        textRangeTable.removeAll();
-      } else {
 
-        // The ranges that will be selected will be the same as the current ones
-        for (TableItem item : textRangeTable.getSelection()) {
-          SegmentSelectionEntry selection = new SegmentSelectionEntry();
-          selection.range = (Range<Long>) item.getData("range");
-          selection.text = (STextualDS) item.getData("text");
-          newSelectedSegments.add(selection);
+        updateSegments(graph);
+
+        textRangeTable.deselectAll();
+        textRangeTable.getColumn(0).pack();
+
+        boolean selectedSomeOld = false;
+        for (Range<Long> oldRange : oldSelectedRanges) {
+          for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
+            Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
+            if (itemRange.isConnected(oldRange)) {
+              textRangeTable.select(idx);
+              selectedSomeOld = true;
+            }
+          }
         }
+        if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
+          textRangeTable.setSelection(0);
+        }
+
       }
 
-      Job job = Job.create("Update graph view", (ICoreRunnable) monitor -> {
-        monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
+      // update the status check for each item
+      for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
+        textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
+      }
 
-        if (recalculateSegments) {
-          monitor.subTask("Recalculating available segments");
-          newSelectedSegments.clear();
-          ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
+      viewer.setFilters(new Filter());
 
-          final Multimap<STextualDS, Range<Long>> segments =
-              calculateSegments(graph, currentFilter);
+      if (viewer.getInput() != graph) {
+        viewer.setInput(graph);
+      }
 
-          sync.syncExec(() -> {
-            for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
-              TableItem item = new TableItem(textRangeTable, SWT.NONE);
-
-              long rangeStart = e.getValue().lowerEndpoint();
-              long rangeEnd = e.getValue().upperEndpoint();
-
-              String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
-
-              item.setText(coveredText);
-              item.setData("range", e.getValue());
-              item.setData("text", e.getKey());
-            }
-
-            textRangeTable.deselectAll();
-            textRangeTable.getColumn(0).pack();
-
-            boolean selectedSomeOld = false;
-            for (Range<Long> oldRange : oldSelectedRanges) {
-              for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
-                Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
-                if (itemRange.isConnected(oldRange)) {
-                  textRangeTable.select(idx);
-                  selectedSomeOld = true;
-
-                  SegmentSelectionEntry selection = new SegmentSelectionEntry();
-                  selection.range = itemRange;
-                  selection.text = (STextualDS) textRangeTable.getItem(idx).getData("text");
-                  newSelectedSegments.add(selection);
-                }
-              }
-            }
-            if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
-              textRangeTable.setSelection(0);
-              SegmentSelectionEntry selection = new SegmentSelectionEntry();
-              selection.range = (Range<Long>) textRangeTable.getItem(0).getData("range");
-              selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
-              newSelectedSegments.add(selection);
-            }
-          });
-        }
-
-        monitor.subTask("Showing selected segments in graph");
-
-        graphFilter.updateSelectedSegments(newSelectedSegments);
-
-        monitor.done();
-
-        sync.asyncExec(() -> {
-
-          // update the status check for each item
-          for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
-            textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
-          }
-
-          if (viewer.getInput() != graph) {
-            viewer.setInput(graph);
-          } else {
-            viewer.refresh();
-          }
-          viewer.applyLayout();
-
-        });
-
-      });
-      job.schedule();
-
-
+      viewer.applyLayout();
     } catch (Throwable ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
           GraphEditor.class);
@@ -631,6 +552,27 @@ public class GraphEditor {
     return result;
   }
 
+  private void updateSegments(SDocumentGraph graph) {
+    textRangeTable.removeAll();
+
+    ViewerFilter currentFilter = new RootFilter();
+
+    Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
+
+    for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
+      TableItem item = new TableItem(textRangeTable, SWT.NONE);
+
+      long rangeStart = e.getValue().lowerEndpoint();
+      long rangeEnd = e.getValue().upperEndpoint();
+
+      String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
+
+      item.setText(coveredText);
+      item.setData("range", e.getValue());
+      item.setData("text", e.getKey());
+    }
+
+  }
 
   private LayoutAlgorithm createLayout() {
 
@@ -692,14 +634,6 @@ public class GraphEditor {
 
   private class RootFilter extends ViewerFilter {
 
-    private final String segmentFilterText;
-    private final boolean includeSpans;
-
-    public RootFilter(String segmentFilterText, boolean includeSpans) {
-      this.segmentFilterText = segmentFilterText;
-      this.includeSpans = includeSpans;
-    }
-
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
 
@@ -709,12 +643,12 @@ public class GraphEditor {
 
         SNode node = (SNode) element;
 
-        if (segmentFilterText.isEmpty() || (node instanceof SToken)) {
+        if (txtSegmentFilter.getText().isEmpty() || (node instanceof SToken)) {
           include = true;
         } else {
           if (node.getAnnotations() != null) {
             for (SAnnotation anno : node.getAnnotations()) {
-              if (anno.getName().contains(segmentFilterText)) {
+              if (anno.getName().contains(txtSegmentFilter.getText())) {
                 include = true;
                 break;
               }
@@ -723,7 +657,7 @@ public class GraphEditor {
         }
 
         if (node instanceof SSpan) {
-          include = include && includeSpans;
+          include = include && btnIncludeSpans.getSelection();
         }
         return include;
 
@@ -733,35 +667,33 @@ public class GraphEditor {
     }
   }
 
-  private static class SegmentSelectionEntry {
-    Range<Long> range;
-    STextualDS text;
-  }
-
   private class Filter extends ViewerFilter {
 
-    private final Set<String> coveredTokenIDs = new HashSet<>();
+    private final Set<String> coveredTokenIDs;
 
-    public void updateSelectedSegments(Collection<SegmentSelectionEntry> selectedSegments) {
-      coveredTokenIDs.clear();
+    public Filter() {
 
       // Collect all tokens which are selected by the current ranges
       Set<SToken> coveredTokens = new HashSet<>();
-      for (SegmentSelectionEntry item : selectedSegments) {
+      for (TableItem item : textRangeTable.getSelection()) {
 
-        if (item.text.getGraph() != null) {
+        @SuppressWarnings("unchecked")
+        Range<Long> itemRange = (Range<Long>) item.getData("range");
+        STextualDS itemText = (STextualDS) item.getData("text");
+
+        if (itemText.getGraph() != null) {
 
           DataSourceSequence<Number> seq = new DataSourceSequence<>();
-          seq.setStart(item.range.lowerEndpoint());
-          seq.setEnd(item.range.upperEndpoint());
-          seq.setDataSource(item.text);
-          List<SToken> t = item.text.getGraph().getTokensBySequence(seq);
+          seq.setStart(itemRange.lowerEndpoint());
+          seq.setEnd(itemRange.upperEndpoint());
+          seq.setDataSource(itemText);
+          List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
           if (t != null) {
             coveredTokens.addAll(t);
           }
         }
       }
-
+      coveredTokenIDs = new HashSet<>();
       for (SToken t : coveredTokens) {
         coveredTokenIDs.add(t.getId());
       }
@@ -846,7 +778,6 @@ public class GraphEditor {
     private final boolean recalculateSegments;
 
     public UpdateViewListener(boolean recalculateSegments) {
-
       this.recalculateSegments = recalculateSegments;
     }
 
