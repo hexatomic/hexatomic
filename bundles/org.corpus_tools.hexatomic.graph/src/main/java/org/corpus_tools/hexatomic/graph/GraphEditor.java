@@ -92,7 +92,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -149,8 +148,6 @@ public class GraphEditor {
 
   @Inject
   ErrorService errors;
-
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   @Inject
   private IEventBroker events;
@@ -453,8 +450,6 @@ public class GraphEditor {
         for (TableItem item : textRangeTable.getSelection()) {
           oldSelectedRanges.add((Range<Long>) item.getData("range"));
         }
-        // All ranges will be re-calculated in the background job.
-        textRangeTable.removeAll();
       } else {
 
         // The ranges that will be selected will be the same as the current ones
@@ -478,6 +473,7 @@ public class GraphEditor {
               calculateSegments(graph, currentFilter);
 
           sync.syncExec(() -> {
+            textRangeTable.removeAll();
             for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
               TableItem item = new TableItem(textRangeTable, SWT.NONE);
 
