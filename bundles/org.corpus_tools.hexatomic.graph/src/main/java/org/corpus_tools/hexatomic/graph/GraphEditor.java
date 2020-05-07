@@ -92,11 +92,13 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -109,6 +111,8 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.progress.ProgressEvent;
+import org.eclipse.zest.layouts.progress.ProgressListener;
 
 public class GraphEditor {
 
@@ -157,6 +161,9 @@ public class GraphEditor {
 
 
   private final Filter graphFilter = new Filter();
+
+  private final ScrollToFirstTokenListener scrollToFirstTokenListener =
+      new ScrollToFirstTokenListener();
 
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -253,7 +260,7 @@ public class GraphEditor {
     consoleView = new ConsoleView(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
-    updateView(true);
+    updateView(true, true);
 
   }
 
@@ -424,7 +431,7 @@ public class GraphEditor {
 
 
   @SuppressWarnings("unchecked")
-  private void updateView(final boolean recalculateSegments) {
+  private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
     try {
       SDocumentGraph graph = getGraph();
@@ -435,7 +442,7 @@ public class GraphEditor {
             GraphEditor.class);
         return;
       }
-      
+
       final String segmentFilterText = txtSegmentFilter.getText();
       final boolean includeSpans = btnIncludeSpans.getSelection();
       final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
@@ -530,6 +537,18 @@ public class GraphEditor {
           } else {
             viewer.refresh();
           }
+
+          if (scrollToFirstToken) {
+            viewer.getGraphControl().getRootLayer().setScale(0);
+            // We can only scroll to the first token after the layout has been applied, which can be
+            // asynchronous
+            viewer.getGraphControl().getLayoutAlgorithm()
+                .addProgressListener(this.scrollToFirstTokenListener);
+          } else {
+            viewer.getGraphControl().getLayoutAlgorithm()
+                .removeProgressListener(this.scrollToFirstTokenListener);
+          }
+
           viewer.applyLayout();
 
         });
@@ -686,7 +705,7 @@ public class GraphEditor {
         }
       }
 
-      sync.syncExec(() -> updateView(true));
+      sync.syncExec(() -> updateView(true, false));
     }
   }
 
@@ -852,18 +871,50 @@ public class GraphEditor {
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-      updateView(recalculateSegments);
+      updateView(recalculateSegments, true);
     }
 
     @Override
     public void widgetDefaultSelected(SelectionEvent e) {
-      updateView(recalculateSegments);
+      updateView(recalculateSegments, true);
     }
 
     @Override
     public void modifyText(ModifyEvent e) {
-      updateView(recalculateSegments);
+      updateView(recalculateSegments, true);
     }
+  }
+
+  private class ScrollToFirstTokenListener implements ProgressListener {
+
+    @Override
+    public void progressStarted(ProgressEvent e) {
+
+    }
+
+    @Override
+    public void progressUpdated(ProgressEvent e) {
+
+    }
+
+    @Override
+    public void progressEnded(ProgressEvent e) {
+
+      Display.getCurrent().syncExec(() -> {
+        ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+        // Get the height needed for showing all tree layers
+        double newScale = (double) viewer.getGraphControl().getBounds().height
+            / figure.getBounds().preciseHeight();
+        figure.setScale(newScale);
+
+        viewer.getGraphControl().getViewport().setViewLocation(0, 0);
+        viewer.getGraphControl().getViewport().validate();
+      });
+
+
+
+    }
+
   }
 
 }
