@@ -26,7 +26,6 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -65,9 +64,6 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
-import org.eclipse.core.runtime.ICoreRunnable;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -99,7 +95,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -122,12 +117,6 @@ public class GraphEditor {
   private MPart thisPart;
 
   @Inject
-  ErrorService errorService;
-
-  @Inject
-  Shell shell;
-
-  @Inject
   public GraphEditor() {
 
   }
@@ -145,8 +134,6 @@ public class GraphEditor {
 
   @Inject
   ErrorService errors;
-
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   @Inject
   private IEventBroker events;
@@ -195,7 +182,7 @@ public class GraphEditor {
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
     viewer.getGraphControl().setDragDetect(true);
-    
+
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
     GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
     gridLayoutFilterComposite.marginWidth = 0;
@@ -465,36 +452,13 @@ public class GraphEditor {
         textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
       }
 
-      List<SegmentSelectionEntry> selectedSegments = new LinkedList<>();
-      for (TableItem item : textRangeTable.getSelection()) {
-        SegmentSelectionEntry selection = new SegmentSelectionEntry();
-        selection.range = (Range<Long>) item.getData("range");
-        selection.text = (STextualDS) item.getData("text");
-        selectedSegments.add(selection);
+      viewer.setFilters(new Filter());
+
+      if (viewer.getInput() != graph) {
+        viewer.setInput(graph);
       }
-      
-      Job job = Job.create("Update graph view", (ICoreRunnable) monitor -> {
-        monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
 
-        // Create the filter asynchronously: this will calculate all covered tokens
-        Filter newFilter = new Filter(selectedSegments);
-
-        sync.syncExec(() -> {
-          viewer.setFilters(newFilter);
-
-          if (viewer.getInput() != graph) {
-            viewer.setInput(graph);
-          }
-
-          viewer.applyLayout();
-        });
-
-        monitor.done();
-
-      });
-      job.schedule();
-
-
+      viewer.applyLayout();
     } catch (Throwable ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
           GraphEditor.class);
@@ -703,28 +667,27 @@ public class GraphEditor {
     }
   }
 
-  private static class SegmentSelectionEntry {
-    Range<Long> range;
-    STextualDS text;
-  }
-
   private class Filter extends ViewerFilter {
 
     private final Set<String> coveredTokenIDs;
 
-    public Filter(Collection<SegmentSelectionEntry> selectedSegments) {
+    public Filter() {
 
       // Collect all tokens which are selected by the current ranges
       Set<SToken> coveredTokens = new HashSet<>();
-      for (SegmentSelectionEntry item : selectedSegments) {
+      for (TableItem item : textRangeTable.getSelection()) {
 
-        if (item.text.getGraph() != null) {
+        @SuppressWarnings("unchecked")
+        Range<Long> itemRange = (Range<Long>) item.getData("range");
+        STextualDS itemText = (STextualDS) item.getData("text");
+
+        if (itemText.getGraph() != null) {
 
           DataSourceSequence<Number> seq = new DataSourceSequence<>();
-          seq.setStart(item.range.lowerEndpoint());
-          seq.setEnd(item.range.upperEndpoint());
-          seq.setDataSource(item.text);
-          List<SToken> t = item.text.getGraph().getTokensBySequence(seq);
+          seq.setStart(itemRange.lowerEndpoint());
+          seq.setEnd(itemRange.upperEndpoint());
+          seq.setDataSource(itemText);
+          List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
           if (t != null) {
             coveredTokens.addAll(t);
           }
@@ -815,25 +778,21 @@ public class GraphEditor {
     private final boolean recalculateSegments;
 
     public UpdateViewListener(boolean recalculateSegments) {
-
       this.recalculateSegments = recalculateSegments;
     }
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-      log.debug("widgetSelected() called");
       updateView(recalculateSegments);
     }
 
     @Override
     public void widgetDefaultSelected(SelectionEvent e) {
-      log.debug("widgetDefaultSelected() called");
       updateView(recalculateSegments);
     }
 
     @Override
     public void modifyText(ModifyEvent e) {
-      log.debug("modifyText() called");
       updateView(recalculateSegments);
     }
   }
