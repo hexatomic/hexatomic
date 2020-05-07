@@ -26,7 +26,7 @@ It's easy.
 
 ## Contribute code or documentation through pull requests
 
-[Pull requests](https://help.github.com/en/articles/github-glossary#pull-request) are the best way to propose changes to the codebase or the documentation sources. If you want to contribute code or documentation, please make sure that you read the relevant sections of the [developer documentation](https://hexatomic.github.io/hexatomic/v0.1.0/dev/) first. We actively welcome your pull requests:
+[Pull requests](https://help.github.com/en/articles/github-glossary#pull-request) are the best way to propose changes to the codebase or the documentation sources. If you want to contribute code or documentation, please make sure that you read the relevant sections of the [developer documentation](https://hexatomic.github.io/hexatomic/dev/) first. We actively welcome your pull requests:
 
 1. Fork this repository.
 1. Open a new issue describing what you are planning to do. The maintainer will decide and communicate whether your change is a *hotfix* or a *feature*.
