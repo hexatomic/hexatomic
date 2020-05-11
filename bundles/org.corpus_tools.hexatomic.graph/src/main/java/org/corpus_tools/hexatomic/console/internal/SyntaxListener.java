@@ -32,15 +32,17 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandBaseListener;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ClearContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DeleteContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.DominanceEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.EmptyAttributeContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ExistingDominanceEdgeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.ExistingPointingEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.LayerReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NamedNodeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewDominanceEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewEdgeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewPointingEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NonEmptyAttributeContext;
-import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PointingEdgeReferenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PunctuationContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
@@ -164,9 +166,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     }
   }
 
-
   @Override
-  public void enterPointingEdgeReference(PointingEdgeReferenceContext ctx) {
+  public void enterExistingPointingEdgeReference(ExistingPointingEdgeReferenceContext ctx) {
     Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
     Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
 
@@ -178,21 +179,13 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
             existing.add((SPointingRelation) rel);
           }
         }
-        // create a new temporary edge if does not exist in the graph yet
-        if (existing.isEmpty()) {
-          SPointingRelation rel = SaltFactory.createSPointingRelation();
-          rel.setSource(s);
-          rel.setTarget(t);
-          this.referencedEdges.add(rel);
-        } else {
-          this.referencedEdges.addAll(existing);
-        }
+        this.referencedEdges.addAll(existing);
       }
     }
   }
 
   @Override
-  public void enterDominanceEdgeReference(DominanceEdgeReferenceContext ctx) {
+  public void enterExistingDominanceEdgeReference(ExistingDominanceEdgeReferenceContext ctx) {
     Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
     Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
 
@@ -206,15 +199,40 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
               existing.add((SDominanceRelation) rel);
             }
           }
-          // create a new temporary edge if does not exist in the graph yet
-          if (existing.isEmpty()) {
-            SDominanceRelation rel = SaltFactory.createSDominanceRelation();
-            rel.setSource(s);
-            rel.setTarget(t);
-            this.referencedEdges.add(rel);
-          } else {
-            this.referencedEdges.addAll(existing);
-          }
+          this.referencedEdges.addAll(existing);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void enterNewPointingEdgeReference(NewPointingEdgeReferenceContext ctx) {
+    Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
+    Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
+
+    for (SStructuredNode s : sources) {
+      for (SStructuredNode t : targets) {
+        SPointingRelation rel = SaltFactory.createSPointingRelation();
+        rel.setSource(s);
+        rel.setTarget(t);
+        this.referencedEdges.add(rel);
+      }
+    }
+  }
+
+  @Override
+  public void enterNewDominanceEdgeReference(NewDominanceEdgeReferenceContext ctx) {
+    Set<SStructuredNode> sources = getReferencedNodes(ctx.source);
+    Set<SStructuredNode> targets = getReferencedNodes(ctx.target);
+
+    for (SStructuredNode sourceNodeRaw : sources) {
+      if (sourceNodeRaw instanceof SStructure) {
+        SStructure s = (SStructure) sourceNodeRaw;
+        for (SStructuredNode t : targets) {
+          SDominanceRelation rel = SaltFactory.createSDominanceRelation();
+          rel.setSource(s);
+          rel.setTarget(t);
+          this.referencedEdges.add(rel);
         }
       }
     }

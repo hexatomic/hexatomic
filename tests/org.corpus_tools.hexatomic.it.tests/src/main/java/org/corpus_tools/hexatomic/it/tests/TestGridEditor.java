@@ -9,8 +9,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -48,8 +48,6 @@ public class TestGridEditor {
   private EHandlerService handlerService;
 
   private ErrorService errorService = new ErrorService();
-
-
 
   @BeforeEach
   void setup() {
@@ -148,7 +146,6 @@ public class TestGridEditor {
 
     return view;
   }
-
 
   private void openExample(URI exampleUri) {
     Map<String, String> params = new HashMap<>();

@@ -26,28 +26,28 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.emf.common.util.URI;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class OpenSaltProjectHandler {
+public class NewSaltProjectHandler {
 
   @Inject
   private ProjectManager projectManager;
 
-  private String lastPath;
 
   /**
-   * Show a file choose to open Salt project.
+   * Close the current project if it exists and opens a new, empty projects.
    * 
    * @param shell The user interface shell
-   * @param location An optional predefined location. If null, the use is asked to select a location
-   *        with a file chooser.
    * @param forceCloseRaw Whether to force closing as raw string (e.g. "true")
    */
   @Execute
-  public void execute(Shell shell, @Optional @Named(CommandParams.LOCATION) String location,
+  protected void execute(Shell shell, EPartService partService, UISynchronize sync,
+      EModelService modelService, MApplication app,
       @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
 
     boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
@@ -55,29 +55,12 @@ public class OpenSaltProjectHandler {
       // Ask user if project should be closed even with unsaved changes
       boolean confirmed = MessageDialog.openConfirm(shell, "Discard unsaved changes?",
           "There are unsaved changes in the project that will be lost if you close it. "
-              + "Do you really want to close the project and open a new one?");
+              + "Do you really want to close the project and start a new, empty one?");
       if (!confirmed) {
         return;
       }
     }
 
-    String resultPath;
-
-    if (location == null) {
-      DirectoryDialog dialog = new DirectoryDialog(shell);
-      if (lastPath != null) {
-        dialog.setFilterPath(lastPath);
-      }
-      // Ask the user to choose a path
-      resultPath = dialog.open();
-    } else {
-      // Use the command argument as location
-      resultPath = location;
-    }
-
-    if (resultPath != null) {
-      projectManager.open(URI.createFileURI(resultPath));
-      lastPath = resultPath;
-    }
+    sync.syncExec(() -> projectManager.newProject());
   }
 }
