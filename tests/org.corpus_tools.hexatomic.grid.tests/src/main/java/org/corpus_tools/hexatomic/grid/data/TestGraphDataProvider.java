@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -84,7 +85,8 @@ class TestGraphDataProvider {
     assertEquals(null, fixture.getDataValue(0, 1));
     fixture.getDataValue(1, 1);
     fixture.getDataValue(1, 0);
-    verify(errorService, times(2)).handleException(eq("Index: 1, Size: 1"),
+    verify(errorService, times(2)).handleException(
+        matches("Index: 1, Size: 1|Index 1 out of bounds for length 1"),
         isA(IndexOutOfBoundsException.class), eq(GraphDataProvider.class));
   }
 
@@ -250,7 +252,8 @@ class TestGraphDataProvider {
     fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
     fixture.setDataValue(20, 1, "test");
-    verify(errorService).handleException(eq("Index: 20, Size: 4"),
+    verify(errorService).handleException(
+        matches("Index: 20, Size: 4|Index 20 out of bounds for length 4"),
         isA(IndexOutOfBoundsException.class), eq(GraphDataProvider.class));
   }
 
