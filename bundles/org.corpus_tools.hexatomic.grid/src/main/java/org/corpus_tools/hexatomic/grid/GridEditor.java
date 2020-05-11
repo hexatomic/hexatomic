@@ -28,11 +28,12 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.CustomHeaderMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.configuration.EditConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.style.EmptyCellLabelAccumulator;
+import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
@@ -125,8 +126,9 @@ public class GridEditor {
     // Body
     final DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
 
-    // Custom rendering of empty cells
-    bodyDataLayer.setConfigLabelAccumulator(new EmptyCellLabelAccumulator(bodyDataLayer));
+    // Set accumulator for config labels for cells
+    final LabelAccumulator labelAccumulator = new LabelAccumulator(bodyDataLayer);
+    bodyDataLayer.setConfigLabelAccumulator(labelAccumulator);
 
     // Selection
     final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
@@ -163,6 +165,7 @@ public class GridEditor {
     table.addConfiguration(new StyleConfiguration());
     table.addConfiguration(new CustomHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
+    table.addConfiguration(new EditConfiguration(labelAccumulator));
 
     table.configure();
 
