@@ -20,6 +20,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
@@ -46,7 +47,7 @@ class TestGraphEditor {
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
         "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
-    
+
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
