@@ -26,6 +26,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Range;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -64,6 +65,9 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
+import org.eclipse.core.runtime.ICoreRunnable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -93,8 +97,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -104,6 +110,8 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.progress.ProgressEvent;
+import org.eclipse.zest.layouts.progress.ProgressListener;
 
 public class GraphEditor {
 
@@ -115,6 +123,12 @@ public class GraphEditor {
 
   @Inject
   private MPart thisPart;
+
+  @Inject
+  ErrorService errorService;
+
+  @Inject
+  Shell shell;
 
   @Inject
   public GraphEditor() {
@@ -141,6 +155,12 @@ public class GraphEditor {
   private ListenerImplementation projectChangeListener;
 
   private ConsoleView consoleView;
+
+
+  private final Filter graphFilter = new Filter();
+
+  private final ScrollToFirstTokenListener scrollToFirstTokenListener =
+      new ScrollToFirstTokenListener();
 
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -182,6 +202,7 @@ public class GraphEditor {
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
     viewer.getGraphControl().setDragDetect(true);
+    viewer.setFilters(graphFilter);
 
     Composite filterComposite = new Composite(graphSash, SWT.NONE);
     GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
@@ -236,7 +257,7 @@ public class GraphEditor {
     consoleView = new ConsoleView(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
-    updateView(true);
+    updateView(true, true);
 
   }
 
@@ -407,7 +428,7 @@ public class GraphEditor {
 
 
   @SuppressWarnings("unchecked")
-  private void updateView(boolean recalculateSegments) {
+  private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
     try {
       SDocumentGraph graph = getGraph();
@@ -419,46 +440,119 @@ public class GraphEditor {
         return;
       }
 
+      final String segmentFilterText = txtSegmentFilter.getText();
+      final boolean includeSpans = btnIncludeSpans.getSelection();
+      final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
+      final List<Range<Long>> oldSelectedRanges = new LinkedList<>();
+
       if (recalculateSegments) {
-        // store the old segment selection
-        List<Range<Long>> oldSelectedRanges = new LinkedList<>();
+        // Store the old segment selection
         for (TableItem item : textRangeTable.getSelection()) {
           oldSelectedRanges.add((Range<Long>) item.getData("range"));
         }
+      } else {
 
-        updateSegments(graph);
+        // The ranges that will be selected will be the same as the current ones
+        for (TableItem item : textRangeTable.getSelection()) {
+          SegmentSelectionEntry selection = new SegmentSelectionEntry();
+          selection.range = (Range<Long>) item.getData("range");
+          selection.text = (STextualDS) item.getData("text");
+          newSelectedSegments.add(selection);
+        }
+      }
 
-        textRangeTable.deselectAll();
-        textRangeTable.getColumn(0).pack();
+      Job job = Job.create("Update graph view", (ICoreRunnable) monitor -> {
+        monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
 
-        boolean selectedSomeOld = false;
-        for (Range<Long> oldRange : oldSelectedRanges) {
-          for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
-            Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
-            if (itemRange.isConnected(oldRange)) {
-              textRangeTable.select(idx);
-              selectedSomeOld = true;
+        if (recalculateSegments) {
+          monitor.subTask("Recalculating available segments");
+          newSelectedSegments.clear();
+          ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
+
+          final Multimap<STextualDS, Range<Long>> segments =
+              calculateSegments(graph, currentFilter);
+
+          sync.syncExec(() -> {
+            textRangeTable.removeAll();
+            for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
+              TableItem item = new TableItem(textRangeTable, SWT.NONE);
+
+              long rangeStart = e.getValue().lowerEndpoint();
+              long rangeEnd = e.getValue().upperEndpoint();
+
+              String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
+
+              item.setText(coveredText);
+              item.setData("range", e.getValue());
+              item.setData("text", e.getKey());
             }
+
+            textRangeTable.deselectAll();
+            textRangeTable.getColumn(0).pack();
+
+            boolean selectedSomeOld = false;
+            for (Range<Long> oldRange : oldSelectedRanges) {
+              for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
+                Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
+                if (itemRange.isConnected(oldRange)) {
+                  textRangeTable.select(idx);
+                  selectedSomeOld = true;
+
+                  SegmentSelectionEntry selection = new SegmentSelectionEntry();
+                  selection.range = itemRange;
+                  selection.text = (STextualDS) textRangeTable.getItem(idx).getData("text");
+                  newSelectedSegments.add(selection);
+                }
+              }
+            }
+            if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
+              textRangeTable.setSelection(0);
+              SegmentSelectionEntry selection = new SegmentSelectionEntry();
+              selection.range = (Range<Long>) textRangeTable.getItem(0).getData("range");
+              selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
+              newSelectedSegments.add(selection);
+            }
+          });
+        }
+
+        monitor.subTask("Showing selected segments in graph");
+
+        graphFilter.updateSelectedSegments(newSelectedSegments);
+
+        monitor.done();
+
+        sync.asyncExec(() -> {
+
+          // update the status check for each item
+          for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
+            textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
           }
-        }
-        if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
-          textRangeTable.setSelection(0);
-        }
 
-      }
+          if (viewer.getInput() != graph) {
+            viewer.setInput(graph);
+          } else {
+            viewer.refresh();
+          }
 
-      // update the status check for each item
-      for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
-        textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
-      }
+          if (scrollToFirstToken) {
+            viewer.getGraphControl().getRootLayer().setScale(0);
+            // We can only scroll to the first token after the layout has been applied, which can be
+            // asynchronous
+            viewer.getGraphControl().getLayoutAlgorithm()
+                .addProgressListener(this.scrollToFirstTokenListener);
+          } else {
+            viewer.getGraphControl().getLayoutAlgorithm()
+                .removeProgressListener(this.scrollToFirstTokenListener);
+          }
 
-      viewer.setFilters(new Filter());
+          viewer.applyLayout();
 
-      if (viewer.getInput() != graph) {
-        viewer.setInput(graph);
-      }
+        });
 
-      viewer.applyLayout();
+      });
+      job.schedule();
+
+
     } catch (Throwable ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
           GraphEditor.class);
@@ -552,27 +646,6 @@ public class GraphEditor {
     return result;
   }
 
-  private void updateSegments(SDocumentGraph graph) {
-    textRangeTable.removeAll();
-
-    ViewerFilter currentFilter = new RootFilter();
-
-    Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
-
-    for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
-      TableItem item = new TableItem(textRangeTable, SWT.NONE);
-
-      long rangeStart = e.getValue().lowerEndpoint();
-      long rangeEnd = e.getValue().upperEndpoint();
-
-      String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
-
-      item.setText(coveredText);
-      item.setData("range", e.getValue());
-      item.setData("text", e.getKey());
-    }
-
-  }
 
   private LayoutAlgorithm createLayout() {
 
@@ -628,11 +701,19 @@ public class GraphEditor {
         }
       }
 
-      sync.syncExec(() -> updateView(true));
+      sync.syncExec(() -> updateView(true, false));
     }
   }
 
   private class RootFilter extends ViewerFilter {
+
+    private final String segmentFilterText;
+    private final boolean includeSpans;
+
+    public RootFilter(String segmentFilterText, boolean includeSpans) {
+      this.segmentFilterText = segmentFilterText;
+      this.includeSpans = includeSpans;
+    }
 
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
@@ -643,12 +724,12 @@ public class GraphEditor {
 
         SNode node = (SNode) element;
 
-        if (txtSegmentFilter.getText().isEmpty() || (node instanceof SToken)) {
+        if (segmentFilterText.isEmpty() || (node instanceof SToken)) {
           include = true;
         } else {
           if (node.getAnnotations() != null) {
             for (SAnnotation anno : node.getAnnotations()) {
-              if (anno.getName().contains(txtSegmentFilter.getText())) {
+              if (anno.getName().contains(segmentFilterText)) {
                 include = true;
                 break;
               }
@@ -657,7 +738,7 @@ public class GraphEditor {
         }
 
         if (node instanceof SSpan) {
-          include = include && btnIncludeSpans.getSelection();
+          include = include && includeSpans;
         }
         return include;
 
@@ -667,33 +748,35 @@ public class GraphEditor {
     }
   }
 
+  private static class SegmentSelectionEntry {
+    Range<Long> range;
+    STextualDS text;
+  }
+
   private class Filter extends ViewerFilter {
 
-    private final Set<String> coveredTokenIDs;
+    private final Set<String> coveredTokenIDs = new HashSet<>();
 
-    public Filter() {
+    public void updateSelectedSegments(Collection<SegmentSelectionEntry> selectedSegments) {
+      coveredTokenIDs.clear();
 
       // Collect all tokens which are selected by the current ranges
       Set<SToken> coveredTokens = new HashSet<>();
-      for (TableItem item : textRangeTable.getSelection()) {
+      for (SegmentSelectionEntry item : selectedSegments) {
 
-        @SuppressWarnings("unchecked")
-        Range<Long> itemRange = (Range<Long>) item.getData("range");
-        STextualDS itemText = (STextualDS) item.getData("text");
-
-        if (itemText.getGraph() != null) {
+        if (item.text.getGraph() != null) {
 
           DataSourceSequence<Number> seq = new DataSourceSequence<>();
-          seq.setStart(itemRange.lowerEndpoint());
-          seq.setEnd(itemRange.upperEndpoint());
-          seq.setDataSource(itemText);
-          List<SToken> t = itemText.getGraph().getTokensBySequence(seq);
+          seq.setStart(item.range.lowerEndpoint());
+          seq.setEnd(item.range.upperEndpoint());
+          seq.setDataSource(item.text);
+          List<SToken> t = item.text.getGraph().getTokensBySequence(seq);
           if (t != null) {
             coveredTokens.addAll(t);
           }
         }
       }
-      coveredTokenIDs = new HashSet<>();
+
       for (SToken t : coveredTokens) {
         coveredTokenIDs.add(t.getId());
       }
@@ -778,23 +861,56 @@ public class GraphEditor {
     private final boolean recalculateSegments;
 
     public UpdateViewListener(boolean recalculateSegments) {
+
       this.recalculateSegments = recalculateSegments;
     }
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-      updateView(recalculateSegments);
+      updateView(recalculateSegments, true);
     }
 
     @Override
     public void widgetDefaultSelected(SelectionEvent e) {
-      updateView(recalculateSegments);
+      updateView(recalculateSegments, true);
     }
 
     @Override
     public void modifyText(ModifyEvent e) {
-      updateView(recalculateSegments);
+      updateView(recalculateSegments, true);
     }
+  }
+
+  private class ScrollToFirstTokenListener implements ProgressListener {
+
+    @Override
+    public void progressStarted(ProgressEvent e) {
+
+    }
+
+    @Override
+    public void progressUpdated(ProgressEvent e) {
+
+    }
+
+    @Override
+    public void progressEnded(ProgressEvent e) {
+
+      Display.getCurrent().syncExec(() -> {
+        ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+        // Get the height needed for showing all tree layers
+        double newScale = (double) viewer.getGraphControl().getBounds().height
+            / figure.getBounds().preciseHeight();
+        figure.setScale(newScale);
+
+        viewer.getGraphControl().getViewport().setViewLocation(0, 0);
+        viewer.getGraphControl().getViewport().validate();
+      });
+
+
+
+    }
+
   }
 
 }
