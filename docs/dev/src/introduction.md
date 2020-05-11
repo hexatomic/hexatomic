@@ -3,7 +3,7 @@
 This is documentation for developers and maintainers of Hexatomic.
 
 If you are looking for documentation of how to *use* Hexatomic, 
-please refer to the [**user documentation**](../user/).
+please refer to the [**user documentation**](https://hexatomic.github.io/hexatomic/user/).
 
 ## Contributing to Hexatomic development
 
