@@ -24,9 +24,6 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
     this.labelAccumulator = labelAccumulator;
   }
 
-  /**
-   * TODO
-   */
   @Override
   public void configureRegistry(IConfigRegistry configRegistry) {
     // Make cells editable
