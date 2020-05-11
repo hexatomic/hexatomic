@@ -23,16 +23,17 @@ package org.corpus_tools.hexatomic.grid.style;
 
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
-import org.eclipse.nebula.widgets.nattable.layer.cell.IConfigLabelAccumulator;
+import org.eclipse.nebula.widgets.nattable.layer.cell.ColumnOverrideLabelAccumulator;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 
 /**
- * A cell label accumulator which assigns empty cells a custom configuration label.
+ * A label accumulator which assigns cells custom configuration labels whereby they can be
+ * identified for configuration.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-public class EmptyCellLabelAccumulator implements IConfigLabelAccumulator {
+public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
 
   private final SpanningDataLayer bodyDataLayer;
 
@@ -46,12 +47,16 @@ public class EmptyCellLabelAccumulator implements IConfigLabelAccumulator {
    * 
    * @param bodyDataLayer The {@link SpanningDataLayer} to set to the {@link #bodyDataLayer} field
    */
-  public EmptyCellLabelAccumulator(SpanningDataLayer bodyDataLayer) {
+  public LabelAccumulator(SpanningDataLayer bodyDataLayer) {
+    super(bodyDataLayer);
     this.bodyDataLayer = bodyDataLayer;
   }
 
   @Override
   public void accumulateConfigLabels(LabelStack configLabels, int columnPosition, int rowPosition) {
+    // Inherit defaults
+    super.accumulateConfigLabels(configLabels, columnPosition, rowPosition);
+
     ILayerCell bodyCell = bodyDataLayer.getCellByPosition(columnPosition, rowPosition);
 
     // Assign the empty cell style iff the cell in the data body layer is null
