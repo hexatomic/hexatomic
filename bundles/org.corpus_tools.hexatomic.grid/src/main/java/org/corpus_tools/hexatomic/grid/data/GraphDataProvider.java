@@ -55,6 +55,8 @@ public class GraphDataProvider implements IDataProvider {
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
 
+  public static final String TOKEN_TEXT_COLUMN_LABEL = "Token";
+
   private STextualDS dataSource = null;
   private SDocumentGraph graph;
 
@@ -103,7 +105,7 @@ public class GraphDataProvider implements IDataProvider {
 
     // Add a column for the token text as the first column
     Column tokenColumn = new Column();
-    tokenColumn.setHeader("Token");
+    tokenColumn.setHeader(TOKEN_TEXT_COLUMN_LABEL);
     for (int i = 0; i < orderedDsTokens.size(); i++) {
       SToken token = orderedDsTokens.get(i);
       try {
