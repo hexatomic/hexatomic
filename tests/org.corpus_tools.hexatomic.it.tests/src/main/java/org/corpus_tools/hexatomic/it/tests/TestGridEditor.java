@@ -349,4 +349,18 @@ public class TestGridEditor {
     bot.activeShell().maximize(false);
   }
 
+  @Test
+  void testCellEditable() {
+    bot.activeShell().maximize(true);
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("be", table.getCellDataValueByPosition(1, 2));
+    table.click(1, 2);
+    // Assert editable
+    bot.activeShell().maximize(false);
+  }
+
 }
