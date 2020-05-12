@@ -22,18 +22,14 @@
 package org.corpus_tools.hexatomic.core;
 
 /**
- * Contains constants for topics use by the core bundle.
+ * Contains constants for command parameters used by the core bundle.
  * 
  * @author Thomas Krause
  */
-public interface Topics {
-  
-  public static final String PROJECT_LOADED = "PROJECT_LOADED";
+public interface CommandParams {
 
-  public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
-  
-  public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
-  
-  public static final String STATUS_UPDATE = "STATUS_UPDATE";
-  
+  public static String EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
+  public static String LOCATION = "org.corpus_tools.hexatomic.core.commandparameter.location";
+  public static String FORCE_CLOSE = "org.corpus_tools.hexatomic.core.commandparameter.force_close";
+
 }

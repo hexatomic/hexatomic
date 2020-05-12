@@ -8,6 +8,8 @@ It provides a general visualization that displays all possible types of annotati
 ## Filters
 
 On the right-hand side of the interface, you can select which segment of the current document to show in the [graph view](#graph-view).
+For large graphs, it can take some time until its layout is calculated.
+The checkbox next to the segment indicates if this calculation is finished.
 You can select more than one segment to display, by holding the <kbd>Ctrl</kbd> key while clicking on additional segments.
 You can also show a whole range of segments by holding the <kbd>Shift</kbd> key and clicking on the last segment of the range you want to select.
 

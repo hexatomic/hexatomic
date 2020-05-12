@@ -2,7 +2,8 @@
  * #%L
  * org.corpus_tools.hexatomic.core
  * %%
- * Copyright (C) 2018 - 2019 Stephan Druskat, Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat,
+ *                                     Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,60 +25,65 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class OpenSaltProjectHandler {
+public class SaveAsHandler {
 
   @Inject
-  private ProjectManager projectManager;
+  ErrorService errorService;
+
+  @Inject
+  ProjectManager projectManager;
+
 
   private String lastPath;
 
+
   /**
-   * Show a file choose to open Salt project.
+   * Saves the Salt project and all opened documents.
    * 
    * @param shell The user interface shell
-   * @param location An optional predefined location. If null, the use is asked to select a location
-   *        with a file chooser.
-   * @param forceCloseRaw Whether to force closing as raw string (e.g. "true")
+   * @param location If non-null, save the project to this location. If null, use the original
+   *        location from where the project was loaded.
    */
   @Execute
-  public void execute(Shell shell, @Optional @Named(CommandParams.LOCATION) String location,
-      @Optional @Named(CommandParams.FORCE_CLOSE) String forceCloseRaw) {
-
-    boolean forceClose = Boolean.parseBoolean(forceCloseRaw);
-    if (!forceClose && projectManager.isDirty()) {
-      // Ask user if project should be closed even with unsaved changes
-      boolean confirmed = MessageDialog.openConfirm(shell, "Discard unsaved changes?",
-          "There are unsaved changes in the project that will be lost if you close it. "
-              + "Do you really want to close the project and open a new one?");
-      if (!confirmed) {
-        return;
-      }
-    }
+  public void execute(Shell shell,
+      @Optional @Named(CommandParams.LOCATION) String location) {
 
     String resultPath;
-
     if (location == null) {
       DirectoryDialog dialog = new DirectoryDialog(shell);
+
+      if (lastPath == null && projectManager.getLocation().isPresent()) {
+        // The user did not specifically selected a path to save yet, but we can use the original
+        // path from where the corpus was loaded.
+        lastPath = projectManager.getLocation().get().toFileString();
+      }
+
       if (lastPath != null) {
         dialog.setFilterPath(lastPath);
       }
       // Ask the user to choose a path
       resultPath = dialog.open();
     } else {
-      // Use the command argument as location
+      // Use the given argument as location
       resultPath = location;
     }
 
     if (resultPath != null) {
-      projectManager.open(URI.createFileURI(resultPath));
+      projectManager.saveTo(URI.createFileURI(resultPath), shell);
       lastPath = resultPath;
     }
+  }
+
+  @CanExecute
+  public boolean canExecute() {
+    return projectManager.isDirty() || projectManager.getLocation().isPresent();
   }
 }

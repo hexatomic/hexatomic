@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
 - Viewer for token and span annotations based on NatTable and using a similar interface to Excel
+- Salt Projects can be saved now
 
 ### Changed
 
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Update views via notification even if the object that changed was created before the view.
+- Allow to run Hexatomic on Java 11 platforms
 
 ## [0.3.1] - 2019-12-16
 

@@ -2,7 +2,8 @@
  * #%L
  * org.corpus_tools.hexatomic.core
  * %%
- * Copyright (C) 2018 - 2019 Stephan Druskat, Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat,
+ *                                     Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +23,31 @@ package org.corpus_tools.hexatomic.core.handlers;
 
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.swt.widgets.Shell;
 
-public class CloseSaltProjectHandler {
+public class SaveHandler {
 
   @Inject
-  private ProjectManager projectManager;
+  ErrorService errorService;
+
+  @Inject
+  ProjectManager projectManager;
 
   /**
-   * Close the current project.
+   * Saves the Salt project and all opened documents under its current location.
    * 
+   * @param shell The user interface shell
    */
   @Execute
-  public void execute() {
-    // TODO: when save is implement, check here for any modifications of the graph
+  public void execute(Shell shell) {
+    projectManager.save(shell);
+  }
 
-    projectManager.close();
+  @CanExecute
+  public boolean canExecute() {
+    return projectManager.getLocation().isPresent() && projectManager.isDirty();
   }
 }
