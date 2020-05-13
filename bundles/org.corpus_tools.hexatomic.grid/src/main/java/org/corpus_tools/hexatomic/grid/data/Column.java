@@ -24,7 +24,6 @@ package org.corpus_tools.hexatomic.grid.data;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -39,6 +38,22 @@ import org.corpus_tools.salt.graph.LabelableElement;
  *
  */
 public class Column {
+
+  /**
+   * An enum for distinguishing the type of elements a {@link Column} provides annotations for.
+   * 
+   * @author Stephan Druskat (mail@sdruskat.net)
+   *
+   */
+  enum ColumnType {
+    // To be used for the column providing token texts
+    TOKEN_TEXT,
+    // To be used for columns providing token annotations
+    TOKEN_ANNOTATION,
+    // To be used for columns providing span annotations
+    SPAN_ANNOTATION
+  }
+
 
   private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
   private String header = null;
