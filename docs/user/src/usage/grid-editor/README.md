@@ -1,6 +1,6 @@
 # Grid Editor
 
-The grid editor visualizes token and span annotations.
+The grid editor is for annotating tokens and spans.
 
 Tokens are the smallest countable units in a data source.
 Spans are units that span tokens.
@@ -33,6 +33,12 @@ Instead, the annotation values are spread over more than one adjacent columns, w
 > ![Screenshot of an annotation grid showing overlapping spans](overlap.png)
 
 Adjacent **cells** that have the same value for a qualified annotation are merged.
+
+To distinguish between the different types of content diplayed in the grid cells, they are styled differently:
+
+- *Token text* is displayed in italics.
+- *Token annotations* are displayed in a black font.
+- *Span annotations* are displayed in a green font.
 
 ## Navigation and selection
 
