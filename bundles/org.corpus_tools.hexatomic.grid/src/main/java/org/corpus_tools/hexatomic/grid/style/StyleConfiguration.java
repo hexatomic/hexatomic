@@ -67,7 +67,7 @@ public class StyleConfiguration extends DefaultNatTableStyleConfiguration {
     Style tokenTextCellStyle = new Style();
     FontData[] defaultFontData = GUIHelper.DEFAULT_FONT.getFontData();
     for (FontData fontDate : defaultFontData) {
-      fontDate.setStyle(SWT.BOLD);
+      fontDate.setStyle(SWT.ITALIC);
     }
     tokenTextCellStyle.setAttributeValue(CellStyleAttributes.FONT,
         GUIHelper.getFont(defaultFontData));
