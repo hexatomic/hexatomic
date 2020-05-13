@@ -127,7 +127,7 @@ public class GridEditor {
     final DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
 
     // Set accumulator for config labels for cells
-    final LabelAccumulator labelAccumulator = new LabelAccumulator(bodyDataLayer);
+    final LabelAccumulator labelAccumulator = new LabelAccumulator(bodyDataLayer, bodyDataProvider);
     bodyDataLayer.setConfigLabelAccumulator(labelAccumulator);
 
     // Selection

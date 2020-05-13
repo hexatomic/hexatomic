@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.style;
 
+import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ColumnOverrideLabelAccumulator;
@@ -36,20 +38,25 @@ import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
 
   private final SpanningDataLayer bodyDataLayer;
+  private final GraphDataProvider bodyDataProvider;
 
   /**
-   * Constructor setting the {@link #bodyDataLayer} field.
+   * Constructor setting the {@link #bodyDataLayer} field, and the {@link #bodyDataProvider} field.
    * 
    * <p>
    * The lowermost layer in the layer stack is needed to determine properties of cells that should
-   * be assigned custom configuration labels.
+   * be assigned custom configuration labels. Similarly, the dataProvider is neede to access
+   * properties of model elements to determine conditional styling of cells.
    * </p>
    * 
    * @param bodyDataLayer The {@link SpanningDataLayer} to set to the {@link #bodyDataLayer} field
+   * @param bodyDataProvider The {@link GraphDataProvider} to set to the {@link #bodyDataProvider}
+   *        field
    */
-  public LabelAccumulator(SpanningDataLayer bodyDataLayer) {
+  public LabelAccumulator(SpanningDataLayer bodyDataLayer, GraphDataProvider bodyDataProvider) {
     super(bodyDataLayer);
     this.bodyDataLayer = bodyDataLayer;
+    this.bodyDataProvider = bodyDataProvider;
   }
 
   @Override
@@ -62,6 +69,17 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
     // Assign the empty cell style iff the cell in the data body layer is null
     if (bodyCell.getDataValue() == null) {
       configLabels.addLabel(StyleConfiguration.EMPTY_CELL_STYLE);
+    }
+
+    // Assign the span annotation style label to cells in columns with the respective flag.
+    int columnIndex = bodyDataLayer.getColumnIndexByPosition(columnPosition);
+    ColumnType columnType = bodyDataProvider.getColumns().get(columnIndex).getColumnType();
+    if (columnType == ColumnType.SPAN_ANNOTATION) {
+      configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+    }
+    // Assign the token text style label to cells in columns with the respective flag.
+    else if (columnType == ColumnType.TOKEN_TEXT) {
+      configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
     }
   }
 
