@@ -236,6 +236,8 @@ class TestGraphDataProvider {
 
     fixture.setDataValue(2, 2, "test");
     assertEquals("test", fixture.getDataValue(2, 2));
+    assertEquals("test",
+        exampleGraph.getSortedTokenByText().get(2).getAnnotation("salt::pos").getValue());
   }
 
   /**
