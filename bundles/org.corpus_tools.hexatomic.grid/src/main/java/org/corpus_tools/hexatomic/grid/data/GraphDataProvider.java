@@ -354,7 +354,7 @@ public class GraphDataProvider implements IDataProvider {
    * 
    * @return the columns
    */
-  List<Column> getColumns() {
+  public List<Column> getColumns() {
     return columns;
   }
 
