@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
@@ -52,21 +53,6 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
  */
 @Creatable
 public class GraphDataProvider implements IDataProvider {
-
-  /**
-   * An enum for distinguishing the type of elements a {@link Column} provides annotations for.
-   * 
-   * @author Stephan Druskat (mail@sdruskat.net)
-   *
-   */
-  enum ColumnType {
-    // To be used for the column providing token texts
-    TOKEN_TEXT,
-    // To be used for columns providing token annotations
-    TOKEN_ANNOTATION,
-    // To be used for columns providing span annotations
-    SPAN_ANNOTATION
-  }
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
