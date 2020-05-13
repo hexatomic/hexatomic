@@ -53,6 +53,21 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 @Creatable
 public class GraphDataProvider implements IDataProvider {
 
+  /**
+   * An enum for distinguishing the type of elements a {@link Column} provides annotations for.
+   * 
+   * @author Stephan Druskat (mail@sdruskat.net)
+   *
+   */
+  enum ColumnType {
+    // To be used for the column providing token texts
+    TOKEN_TEXT,
+    // To be used for columns providing token annotations
+    TOKEN_ANNOTATION,
+    // To be used for columns providing span annotations
+    SPAN_ANNOTATION
+  }
+
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
 
@@ -105,7 +120,7 @@ public class GraphDataProvider implements IDataProvider {
     }
 
     // Add a column for the token text as the first column
-    Column tokenColumn = new Column();
+    Column tokenColumn = new Column(ColumnType.TOKEN_TEXT);
     tokenColumn.setHeader(TOKEN_TEXT_COLUMN_LABEL);
     for (int i = 0; i < orderedDsTokens.size(); i++) {
       SToken token = orderedDsTokens.get(i);
@@ -205,7 +220,7 @@ public class GraphDataProvider implements IDataProvider {
         resolveAnnotationRecursively(tokenIndices, annotation, spanColumnIndex);
       }
     } else {
-      column = new Column();
+      column = new Column(ColumnType.SPAN_ANNOTATION);
       column.setHeader(
           annotation.getQName() + (spanColumnIndex > 1 ? " (" + spanColumnIndex + ")" : ""));
       setMultipleRows(tokenIndices, column, annotation);
@@ -224,7 +239,7 @@ public class GraphDataProvider implements IDataProvider {
           // need to check as we do have to for spans.
           setSingleRow(column, orderedTokens.indexOf(token), anno);
         } else {
-          column = new Column();
+          column = new Column(ColumnType.TOKEN_ANNOTATION);
           column.setHeader(anno.getQName());
           setSingleRow(column, orderedTokens.indexOf(token), anno);
           tokenColumns.put(anno.getQName(), column);
