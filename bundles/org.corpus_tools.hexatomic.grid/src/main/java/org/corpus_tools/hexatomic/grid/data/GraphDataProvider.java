@@ -39,6 +39,7 @@ import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.graph.LabelableElement;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
@@ -54,6 +55,8 @@ public class GraphDataProvider implements IDataProvider {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
+
+  public static final String TOKEN_TEXT_COLUMN_LABEL = "Token";
 
   private STextualDS dataSource = null;
   private SDocumentGraph graph;
@@ -103,7 +106,7 @@ public class GraphDataProvider implements IDataProvider {
 
     // Add a column for the token text as the first column
     Column tokenColumn = new Column();
-    tokenColumn.setHeader("Token");
+    tokenColumn.setHeader(TOKEN_TEXT_COLUMN_LABEL);
     for (int i = 0; i < orderedDsTokens.size(); i++) {
       SToken token = orderedDsTokens.get(i);
       try {
@@ -253,6 +256,15 @@ public class GraphDataProvider implements IDataProvider {
         e, this.getClass());
   }
 
+  /**
+   * Returns the display text for the given cell, as identified by column and row index.
+   * 
+   * <p>
+   * This is either an annotation value; or a token text; or, if no {@link STextualDS} has been
+   * selected, a message to select a text; or, if the selected {@link STextualDS} contains no
+   * tokens, a message notifying the user of this.
+   * </p>
+   */
   @Override
   public String getDataValue(int columnIndex, int rowIndex) {
     if (dataSource == null) {
@@ -278,7 +290,22 @@ public class GraphDataProvider implements IDataProvider {
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    // TODO Auto-generated method stub
+    Column column = null;
+    try {
+      column = columns.get(columnIndex);
+    } catch (IndexOutOfBoundsException e) {
+      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+      return;
+    }
+    LabelableElement dataObject = column.getDataObject(rowIndex);
+    if (dataObject instanceof SAnnotation) {
+      SAnnotation anno = (SAnnotation) dataObject;
+      log.debug("Setting value on Salt element '{}' to '{}'.", dataObject, newValue);
+      anno.setValue(newValue);
+    } else {
+      log.debug("Action not implemented: Set text on '{}' to '{}'",
+          dataObject == null ? "NULL" : dataObject.toString());
+    }
   }
 
   @Override

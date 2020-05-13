@@ -9,4 +9,5 @@
 	- [Graph Editor](usage/graph-editor/README.md)
     	- [Editing the graph](usage/graph-editor/console.md)
   	- [Grid Editor](usage/grid-editor/README.md)
+    	- [Editing the grid](usage/grid-editor/editing.md)
 - [Troubleshooting & getting help](./troubleshooting.md)

@@ -2,15 +2,21 @@ package org.corpus_tools.hexatomic.grid.data;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +28,8 @@ import org.junit.jupiter.api.Test;
  *
  */
 class TestGraphDataProvider {
+
+  private ErrorService errorService;
 
   private static GraphDataProvider fixture = null;
   private SDocumentGraph exampleGraph;
@@ -47,6 +55,8 @@ class TestGraphDataProvider {
     overlappingExampleGraph = retrieveGraph(overlappingExamplePath);
     exampleText = getFirstTextFromGraph(exampleGraph);
     overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
+    errorService = mock(ErrorService.class);
+    fixture.errors = errorService;
   }
 
   /**
@@ -73,12 +83,11 @@ class TestGraphDataProvider {
     fixture.setDsAndResolveGraph(ds);
     assertEquals("Data source contains no tokens!", fixture.getDataValue(0, 0));
     assertEquals(null, fixture.getDataValue(0, 1));
-    // Cannot test other cells, as ErrorService cannot be be got via BundleContext, as this is not
-    // available in fragments. Instead, this is a circumvent way of testing whether the
-    // IndexOutOfBoundsException is thrown in the host, as this will throw an NPE here (as
-    // ErrorService is null).
-    assertThrows(NullPointerException.class, () -> fixture.getDataValue(1, 1));
-    assertThrows(NullPointerException.class, () -> fixture.getDataValue(1, 0));
+    fixture.getDataValue(1, 1);
+    fixture.getDataValue(1, 0);
+    verify(errorService, times(2)).handleException(
+        matches("Index: 1, Size: 1|Index 1 out of bounds for length 1"),
+        isA(IndexOutOfBoundsException.class), eq(GraphDataProvider.class));
   }
 
   /**
@@ -210,6 +219,44 @@ class TestGraphDataProvider {
     fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
     assertEquals(5, fixture.getRowCount());
+  }
+
+  /**
+   * Test method for
+   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#setDataValue(int, int, Object)}.
+   * 
+   * <p>
+   * This tests a successful change of value in an {@link SAnnotation}.
+   * </p>
+   */
+  @Test
+  final void testSetDataValue() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
+
+    fixture.setDataValue(2, 2, "test");
+    assertEquals("test", fixture.getDataValue(2, 2));
+    assertEquals("test",
+        exampleGraph.getSortedTokenByText().get(2).getAnnotation("salt::pos").getValue());
+  }
+
+  /**
+   * Test method for
+   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#setDataValue(int, int, Object)}.
+   * 
+   * <p>
+   * This tests whether an exception is thrown when trying to set a value to a cell that doesn't
+   * exist.
+   * </p>
+   */
+  @Test
+  final void testSetDataValueThrowsException() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
+    fixture.setDataValue(20, 1, "test");
+    verify(errorService).handleException(
+        matches("Index: 20, Size: 4|Index 20 out of bounds for length 4"),
+        isA(IndexOutOfBoundsException.class), eq(GraphDataProvider.class));
   }
 
   private SDocumentGraph retrieveGraph(String path) {
