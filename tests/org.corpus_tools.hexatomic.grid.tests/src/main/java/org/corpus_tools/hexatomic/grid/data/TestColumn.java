@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
@@ -44,7 +45,7 @@ class TestColumn {
     annotation = mock(SAnnotation.class);
     when(annotation.getValue()).thenReturn("testAnno");
 
-    fixture = new Column();
+    fixture = new Column(ColumnType.TOKEN_ANNOTATION);
     fixture.setHeader("Header");
     fixture.setRow(0, token);
     fixture.setRow(1, annotation);
