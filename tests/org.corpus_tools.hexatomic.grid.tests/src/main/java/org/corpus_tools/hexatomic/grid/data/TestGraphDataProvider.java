@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -257,6 +258,22 @@ class TestGraphDataProvider {
     verify(errorService).handleException(
         matches("Index: 20, Size: 4|Index 20 out of bounds for length 4"),
         isA(IndexOutOfBoundsException.class), eq(GraphDataProvider.class));
+  }
+
+  /**
+   * Tests whether the correct column types are set during graph resolution.
+   */
+  @Test
+  final void testColumnTypes() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
+
+    assertEquals("contrast-focus", fixture.getDataValue(3, 0));
+    assertEquals(ColumnType.SPAN_ANNOTATION, fixture.getColumns().get(3).getColumnType());
+    assertEquals("Is", fixture.getDataValue(0, 0));
+    assertEquals(ColumnType.TOKEN_TEXT, fixture.getColumns().get(0).getColumnType());
+    assertEquals("be", fixture.getDataValue(1, 0));
+    assertEquals(ColumnType.TOKEN_ANNOTATION, fixture.getColumns().get(1).getColumnType());
   }
 
   private SDocumentGraph retrieveGraph(String path) {
