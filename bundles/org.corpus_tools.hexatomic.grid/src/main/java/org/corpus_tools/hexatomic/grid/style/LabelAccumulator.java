@@ -71,14 +71,13 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
       configLabels.addLabel(StyleConfiguration.EMPTY_CELL_STYLE);
     }
 
-    // Assign the span annotation style label to cells in columns with the respective flag.
     int columnIndex = bodyDataLayer.getColumnIndexByPosition(columnPosition);
     ColumnType columnType = bodyDataProvider.getColumns().get(columnIndex).getColumnType();
     if (columnType == ColumnType.SPAN_ANNOTATION) {
+      // Assign the span annotation style label to cells in columns with the respective flag.
       configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
-    }
-    // Assign the token text style label to cells in columns with the respective flag.
-    else if (columnType == ColumnType.TOKEN_TEXT) {
+    } else if (columnType == ColumnType.TOKEN_TEXT) {
+      // Assign the token text style label to cells in columns with the respective flag.
       configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
     }
   }
