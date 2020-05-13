@@ -45,7 +45,7 @@ public class Column {
    * @author Stephan Druskat (mail@sdruskat.net)
    *
    */
-  enum ColumnType {
+  public enum ColumnType {
     // To be used for the column providing token texts
     TOKEN_TEXT,
     // To be used for columns providing token annotations
