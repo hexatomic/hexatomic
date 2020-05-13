@@ -24,7 +24,6 @@ package org.corpus_tools.hexatomic.grid.data;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;

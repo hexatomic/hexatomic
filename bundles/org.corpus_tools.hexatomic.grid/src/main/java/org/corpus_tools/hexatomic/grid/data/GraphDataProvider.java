@@ -54,21 +54,6 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 @Creatable
 public class GraphDataProvider implements IDataProvider {
 
-  /**
-   * An enum for distinguishing the type of elements a {@link Column} provides annotations for.
-   * 
-   * @author Stephan Druskat (mail@sdruskat.net)
-   *
-   */
-  enum ColumnType {
-    // To be used for the column providing token texts
-    TOKEN_TEXT,
-    // To be used for columns providing token annotations
-    TOKEN_ANNOTATION,
-    // To be used for columns providing span annotations
-    SPAN_ANNOTATION
-  }
-
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(GraphDataProvider.class);
 
