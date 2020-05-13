@@ -24,6 +24,7 @@ package org.corpus_tools.hexatomic.grid.data;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
+import org.corpus_tools.hexatomic.grid.data.GraphDataProvider.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -42,6 +43,11 @@ public class Column {
   private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
   private String header = null;
   private BitSet bits = new BitSet();
+  private final ColumnType columnType;
+
+  public Column(ColumnType columnType) {
+    this.columnType = columnType;
+  }
 
   /**
    * Returns the data object behind the row cell at the specified index.
@@ -152,6 +158,15 @@ public class Column {
 
   Map<Integer, LabelableElement> getCells() {
     return rowCells;
+  }
+
+  /**
+   * Returns the {@link ColumnType} for this column.
+   * 
+   * @return the columnType
+   */
+  public ColumnType getColumnType() {
+    return columnType;
   }
 
 }
