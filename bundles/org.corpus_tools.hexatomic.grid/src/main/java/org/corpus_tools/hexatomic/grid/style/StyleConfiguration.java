@@ -29,6 +29,8 @@ import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontData;
 
 /**
  * A custom style configuration for the {@link NatTable}.
@@ -39,17 +41,38 @@ import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 public class StyleConfiguration extends DefaultNatTableStyleConfiguration {
 
   public static final String EMPTY_CELL_STYLE = "EMPTY_CELL_STYLE";
+  public static final String SPAN_ANNOTATION_CELL_STYLE = "SPAN_ANNOTATION_CELL_STYLE";
+  public static final String TOKEN_TEXT_CELL_STYLE = "TOKEN_TEXT_CELL_STYLE";
 
   @Override
   public void configureRegistry(IConfigRegistry configRegistry) {
     // Configure as per defaults
     super.configureRegistry(configRegistry);
+
     // Create a new style to apply to empty cells
-    Style cellStyle = new Style();
-    cellStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
+    Style emptyCellStyle = new Style();
+    emptyCellStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR,
         GUIHelper.getColor(236, 236, 236));
-    configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, cellStyle,
+    configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, emptyCellStyle,
         DisplayMode.NORMAL, StyleConfiguration.EMPTY_CELL_STYLE);
+
+    // Create a new style to apply to cells containing span annotation values (green text color)
+    Style spanAnnotationCellStyle = new Style();
+    spanAnnotationCellStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR,
+        GUIHelper.getColor(35, 124, 82));
+    configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, spanAnnotationCellStyle,
+        DisplayMode.NORMAL, StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+
+    // Create a new style to apply to cells containing token text (bold font)
+    Style tokenTextCellStyle = new Style();
+    FontData[] defaultFontData = GUIHelper.DEFAULT_FONT.getFontData();
+    for (FontData fontDate : defaultFontData) {
+      fontDate.setStyle(SWT.BOLD);
+    }
+    tokenTextCellStyle.setAttributeValue(CellStyleAttributes.FONT,
+        GUIHelper.getFont(defaultFontData));
+    configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, tokenTextCellStyle,
+        DisplayMode.NORMAL, StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
   }
 
 
