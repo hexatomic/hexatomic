@@ -150,7 +150,7 @@ public class GraphDataProvider implements IDataProvider {
       }
       Collections.sort(tokenIndices);
       for (SAnnotation annotation : span.getAnnotations()) {
-        resolveAnnotationRecursively(tokenIndices, annotation, 1);
+        resolveAnnotationRecursively(tokenIndices, span, annotation, 1);
       }
     }
   }
@@ -183,12 +183,13 @@ public class GraphDataProvider implements IDataProvider {
    * </p>
    * 
    * @param tokenIndices The indices of the tokens spanned over by the span carrying the annotation
+   * @param span
    * @param annotation The annotation to resolve
    * @param spanColumnIndex An integer index tracking how many columns for the same annotation
    *        namespace-name combination already exist
    */
-  private void resolveAnnotationRecursively(List<Integer> tokenIndices, SAnnotation annotation,
-      Integer spanColumnIndex) {
+  private void resolveAnnotationRecursively(List<Integer> tokenIndices, SSpan span,
+      SAnnotation annotation, Integer spanColumnIndex) {
     String columnName = null;
     if (spanColumnIndex == 1) {
       columnName = annotation.getQName();
@@ -199,17 +200,17 @@ public class GraphDataProvider implements IDataProvider {
     if (column != null) {
       // Try to add, otherwise iterate and re-run
       if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
-        setMultipleRows(tokenIndices, column, annotation);
+        setMultipleRows(tokenIndices, column, span);
       } else {
         // Bump counter and re-run
         spanColumnIndex = spanColumnIndex + 1;
-        resolveAnnotationRecursively(tokenIndices, annotation, spanColumnIndex);
+        resolveAnnotationRecursively(tokenIndices, span, annotation, spanColumnIndex);
       }
     } else {
       column = new Column(ColumnType.SPAN_ANNOTATION);
       column.setHeader(
           annotation.getQName() + (spanColumnIndex > 1 ? " (" + spanColumnIndex + ")" : ""));
-      setMultipleRows(tokenIndices, column, annotation);
+      setMultipleRows(tokenIndices, column, span);
       spanColumns.put(columnName, column);
     }
   }
@@ -222,12 +223,12 @@ public class GraphDataProvider implements IDataProvider {
         Column column = tokenColumns.get(anno.getQName());
         if (column != null) {
           // There can be no two annotations of the same qualified name for a single token, so no
-          // need to check as we do have to for spans.
-          setSingleRow(column, orderedTokens.indexOf(token), anno);
+          // need to check for multiple rows as we do have to for spans.
+          setSingleRow(column, orderedTokens.indexOf(token), token);
         } else {
           column = new Column(ColumnType.TOKEN_ANNOTATION);
           column.setHeader(anno.getQName());
-          setSingleRow(column, orderedTokens.indexOf(token), anno);
+          setSingleRow(column, orderedTokens.indexOf(token), token);
           tokenColumns.put(anno.getQName(), column);
         }
       }
@@ -237,15 +238,16 @@ public class GraphDataProvider implements IDataProvider {
 
   }
 
-  private void setMultipleRows(List<Integer> tokenIndices, Column column, SAnnotation annotation) {
+  private void setMultipleRows(List<Integer> tokenIndices, Column column,
+      SStructuredNode annotationNode) {
     for (Integer idx : tokenIndices) {
-      setSingleRow(column, idx, annotation);
+      setSingleRow(column, idx, annotationNode);
     }
   }
 
-  private void setSingleRow(Column column, Integer idx, SAnnotation annotation) {
+  private void setSingleRow(Column column, Integer idx, SStructuredNode annotationNode) {
     try {
-      column.setRow(idx, annotation);
+      column.setRow(idx, annotationNode);
     } catch (RuntimeException e) {
       reportSetRow(e);
     }
