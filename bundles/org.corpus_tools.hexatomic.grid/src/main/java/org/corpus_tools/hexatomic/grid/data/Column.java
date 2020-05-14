@@ -25,6 +25,7 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.graph.LabelableElement;
@@ -55,7 +56,7 @@ public class Column {
   }
 
 
-  private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
+  private final Map<Integer, SStructuredNode> rowCells = new HashMap<>();
   private String header = null;
   private BitSet bits = new BitSet();
   private final ColumnType columnType;
@@ -112,16 +113,16 @@ public class Column {
    * Sets the specified data object to a row cell at the specified index.
    * 
    * @param rowIndex The index of the row cell to set the data object to
-   * @param dataObject The data object to set to the cell
+   * @param node The node data object to set to the cell
    * @throws RuntimeException if the row cell to set the data object to is already set
    */
-  void setRow(int rowIndex, LabelableElement dataObject) throws RuntimeException {
+  void setRow(int rowIndex, SStructuredNode node) throws RuntimeException {
     if (isRowEmpty(rowIndex)) {
-      rowCells.put(rowIndex, dataObject);
+      rowCells.put(rowIndex, node);
       bits.set(rowIndex);
     } else {
-      throw new RuntimeException("Cannot add " + dataObject + " to " + this.getHeader() + "::"
-          + rowIndex + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
+      throw new RuntimeException("Cannot add " + node + " to " + this.getHeader() + "::" + rowIndex
+          + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
     }
   }
 
@@ -132,21 +133,24 @@ public class Column {
    * @return the text to display
    */
   String getDisplayText(int rowIndex) {
-    LabelableElement dataObject = rowCells.get(rowIndex);
-    if (dataObject instanceof SToken) {
+    SStructuredNode dataObject = rowCells.get(rowIndex);
+    if (getColumnType() == ColumnType.TOKEN_TEXT) {
       SToken token = (SToken) dataObject;
       SDocumentGraph graph = token.getGraph();
       return graph.getText(token);
-    } else if (dataObject instanceof SAnnotation) {
-      SAnnotation annotation = (SAnnotation) dataObject;
-      Object value = annotation.getValue();
-      if (value == null) {
-        return null;
-      } else {
-        return value.toString();
-      }
+      // } else if (dataObject instanceof SAnnotation) {
+      // SAnnotation annotation = (SAnnotation) dataObject;
+      // Object value = annotation.getValue();
+      // if (value == null) {
+      // return null;
+      // } else {
+      // return value.toString();
+      // }
+    } else if (dataObject == null) {
+      return null;
+    } else {
+      return dataObject.toString();
     }
-    return null;
   }
 
   /**
@@ -171,7 +175,7 @@ public class Column {
     return bits;
   }
 
-  Map<Integer, LabelableElement> getCells() {
+  Map<Integer, SStructuredNode> getCells() {
     return rowCells;
   }
 
