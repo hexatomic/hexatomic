@@ -62,6 +62,8 @@ public class Column {
   private final Integer columnIndex;
 
   /**
+   * Constructs a new column with a column index.
+   * 
    * @param columnType The type of the column
    * @param annotationQName The qualified name of the {@link SAnnotation} for which the column holds
    *        values.
@@ -76,7 +78,7 @@ public class Column {
   }
 
   /**
-   * Constructor which sets the value for {@link #columnIndex} to <code>null</code>.
+   * Constructs a new column with the column index set to <code>null</code>.
    * 
    * @param columnType The type of the column
    * @param annotationQName The qualified name of the {@link SAnnotation} for which the column holds
@@ -213,6 +215,10 @@ public class Column {
   }
 
   /**
+   * Returns the column value for this column. For columns containing token text, this is an
+   * arbitrary string. For columns containing annotations, this is the qualified name of the
+   * {@link SAnnotation} for which the column holds values.
+   * 
    * @return the columnValue
    */
   public String getColumnValue() {
