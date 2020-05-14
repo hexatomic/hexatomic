@@ -234,6 +234,7 @@ public class GraphEditor {
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
     textRangeTable.getVerticalBar().setEnabled(true);
+    textRangeTable.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, "graph-editor/text-range");
 
     TableColumn tblclmnFilterBySegment = new TableColumn(textRangeTable, SWT.NONE);
     tblclmnFilterBySegment.setWidth(100);

@@ -7,10 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.salt.common.SDocument;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -22,6 +27,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +48,7 @@ class TestGraphEditor {
   private EPartService partService;
 
   private ErrorService errorService;
+  private ProjectManager projectManager;
 
   @BeforeEach
   void setup() {
@@ -51,6 +58,7 @@ class TestGraphEditor {
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
+    projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -140,5 +148,39 @@ class TestGraphEditor {
     // Check that no exception was thrown/handled by UI
     assertFalse(errorService.getLastException().isPresent());
   }
+  
+  /**
+   * Tests if the "t" command adds the new tokens to the currently selected textual datasource.
+   * This is a regression test for https://github.com/hexatomic/hexatomic/issues/139.
+   */
+  @Test
+  @Order(3)
+  void testTokenizeSelectedTextualDS() {
+    
+    openDefaultExample();
+    
+    // Get a reference to the opened document graph
+    SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
+    SDocumentGraph graph = doc.getDocumentGraph();
+    
+    // Add an additional data source to the document graph
+    STextualDS anotherText = graph.createTextualDS("");
+    graph.insertTokensAt(anotherText, 0, Arrays.asList("Another", "text"), true);
+    
+    
+    // Select the new text
+    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    textRangeTable.select("Another text");
+    
+    // Add a  new tokenized text to the end
+    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
+    console.insertText("t has more tokens");
+    console.typeText("\n");
+    
+    // Check that the right textual data source has been amended
+    assertEquals("Another text has more tokens", anotherText.getText());
+    
+  }
+
 
 }
