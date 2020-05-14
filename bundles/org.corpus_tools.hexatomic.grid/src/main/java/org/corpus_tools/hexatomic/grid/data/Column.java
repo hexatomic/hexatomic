@@ -32,8 +32,7 @@ import org.corpus_tools.salt.graph.LabelableElement;
 
 /**
  * Represents a column in the grid. A column has a title, and a list of row cells, the values of
- * which can be {@link LabelableElement}s (the first common superclass of {@link SAnnotation} and
- * {@link SToken}).
+ * which can be {@link SStructuredNode}s.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
@@ -57,12 +56,34 @@ public class Column {
 
 
   private final Map<Integer, SStructuredNode> rowCells = new HashMap<>();
-  private String header = null;
   private BitSet bits = new BitSet();
   private final ColumnType columnType;
+  private final String columnValue;
+  private final Integer columnIndex;
 
-  public Column(ColumnType columnType) {
+  /**
+   * @param columnType The type of the column
+   * @param annotationQName The qualified name of the {@link SAnnotation} for which the column holds
+   *        values.
+   * @param columnIndex The index of the column in a list of columns holding values for the same
+   *        type of column value (e.g., annotation values for annotations with the same qualified
+   *        name)
+   */
+  public Column(ColumnType columnType, String annotationQName, Integer columnIndex) {
     this.columnType = columnType;
+    this.columnValue = annotationQName;
+    this.columnIndex = columnIndex;
+  }
+
+  /**
+   * Constructor which sets the value for {@link #columnIndex} to <code>null</code>.
+   * 
+   * @param columnType The type of the column
+   * @param annotationQName The qualified name of the {@link SAnnotation} for which the column holds
+   *        values.
+   */
+  public Column(ColumnType columnType, String annotationQName) {
+    this(columnType, annotationQName, null);
   }
 
   /**
@@ -110,7 +131,7 @@ public class Column {
   }
 
   /**
-   * Sets the specified data object to a row cell at the specified index.
+   * Sets the specified {@link SStructuredNode} data object to a row cell at the specified index.
    * 
    * @param rowIndex The index of the row cell to set the data object to
    * @param node The node data object to set to the cell
@@ -135,31 +156,30 @@ public class Column {
   String getDisplayText(int rowIndex) {
     SStructuredNode dataObject = rowCells.get(rowIndex);
     if (getColumnType() == ColumnType.TOKEN_TEXT) {
-      SToken token = (SToken) dataObject;
-      SDocumentGraph graph = token.getGraph();
-      return graph.getText(token);
-      // } else if (dataObject instanceof SAnnotation) {
-      // SAnnotation annotation = (SAnnotation) dataObject;
-      // Object value = annotation.getValue();
-      // if (value == null) {
-      // return null;
-      // } else {
-      // return value.toString();
-      // }
-    } else if (dataObject == null) {
-      return null;
+      if (dataObject instanceof SToken) {
+        SToken token = (SToken) dataObject;
+        SDocumentGraph graph = token.getGraph();
+        return graph.getText(token);
+      } else if (dataObject == null) {
+        // As is the case when the first cell is used to display a message
+        return null;
+      } else {
+        throw new RuntimeException(
+            "A column of type " + ColumnType.TOKEN_TEXT + " can only contain data objects of type "
+                + SToken.class.getName() + ". Encountered: " + dataObject.getClass() + ".");
+      }
+    } else if (dataObject != null) {
+      // Column is for providing annotations, hence columnValue should be a valid annotation qName
+      SAnnotation annotation = dataObject.getAnnotation(this.columnValue);
+      if (annotation == null) {
+        return null;
+      } else {
+        Object value = annotation.getValue();
+        return value.toString();
+      }
     } else {
-      return dataObject.toString();
+      return null;
     }
-  }
-
-  /**
-   * Sets the column header.
-   * 
-   * @param header The header to set
-   */
-  void setHeader(String header) {
-    this.header = header;
   }
 
   /**
@@ -168,7 +188,11 @@ public class Column {
    * @return the column header
    */
   public String getHeader() {
-    return header;
+    if (columnIndex == null) {
+      return this.columnValue;
+    } else {
+      return this.columnValue + " (" + this.columnIndex + ")";
+    }
   }
 
   BitSet getBits() {
@@ -186,6 +210,13 @@ public class Column {
    */
   public ColumnType getColumnType() {
     return columnType;
+  }
+
+  /**
+   * @return the columnValue
+   */
+  public String getColumnValue() {
+    return columnValue;
   }
 
 }
