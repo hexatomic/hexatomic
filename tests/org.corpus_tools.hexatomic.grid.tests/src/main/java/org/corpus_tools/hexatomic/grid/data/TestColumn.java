@@ -136,7 +136,9 @@ class TestColumn {
     RuntimeException e =
         assertThrows(RuntimeException.class, () -> fixtureTokenTextColumn.getDisplayText(2));
     assertEquals(
-        "A column of type TOKEN_TEXT can only contain data objects of type org.corpus_tools.salt.common.SToken. Encountered: class org.corpus_tools.salt.common.SStructure$MockitoMock",
+        "A column of type TOKEN_TEXT can only contain data objects of type "
+            + "org.corpus_tools.salt.common.SToken. Encountered: class "
+            + "org.corpus_tools.salt.common.SStructure$MockitoMock",
         e.getMessage().split("\\$[\\d]+")[0]);
   }
 
