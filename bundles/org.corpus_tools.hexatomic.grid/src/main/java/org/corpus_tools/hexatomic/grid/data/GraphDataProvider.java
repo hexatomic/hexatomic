@@ -106,8 +106,7 @@ public class GraphDataProvider implements IDataProvider {
     }
 
     // Add a column for the token text as the first column
-    Column tokenColumn = new Column(ColumnType.TOKEN_TEXT);
-    tokenColumn.setHeader(TOKEN_TEXT_COLUMN_LABEL);
+    Column tokenColumn = new Column(ColumnType.TOKEN_TEXT, TOKEN_TEXT_COLUMN_LABEL);
     for (int i = 0; i < orderedDsTokens.size(); i++) {
       SToken token = orderedDsTokens.get(i);
       try {
@@ -177,13 +176,11 @@ public class GraphDataProvider implements IDataProvider {
    * </p>
    * 
    * <p>
-   * The column index is also used to set the header for the column, which will be '{annotation
-   * namespace}:{annotation name}' and additionally ' ({column index})', iff the column index is >
-   * 1.
+   * The column index is also passed to the constructor of {@link Column} iff it is > 1.
    * </p>
    * 
    * @param tokenIndices The indices of the tokens spanned over by the span carrying the annotation
-   * @param span
+   * @param span The span to operate on
    * @param annotation The annotation to resolve
    * @param spanColumnIndex An integer index tracking how many columns for the same annotation
    *        namespace-name combination already exist
@@ -191,10 +188,11 @@ public class GraphDataProvider implements IDataProvider {
   private void resolveAnnotationRecursively(List<Integer> tokenIndices, SSpan span,
       SAnnotation annotation, Integer spanColumnIndex) {
     String columnName = null;
+    String annotationQName = annotation.getQName();
     if (spanColumnIndex == 1) {
-      columnName = annotation.getQName();
+      columnName = annotationQName;
     } else {
-      columnName = annotation.getQName() + spanColumnIndex;
+      columnName = annotationQName + spanColumnIndex;
     }
     Column column = spanColumns.get(columnName);
     if (column != null) {
@@ -207,9 +205,11 @@ public class GraphDataProvider implements IDataProvider {
         resolveAnnotationRecursively(tokenIndices, span, annotation, spanColumnIndex);
       }
     } else {
-      column = new Column(ColumnType.SPAN_ANNOTATION);
-      column.setHeader(
-          annotation.getQName() + (spanColumnIndex > 1 ? " (" + spanColumnIndex + ")" : ""));
+      if (spanColumnIndex == 1) {
+        column = new Column(ColumnType.SPAN_ANNOTATION, annotationQName);
+      } else {
+        column = new Column(ColumnType.SPAN_ANNOTATION, annotationQName, spanColumnIndex);
+      }
       setMultipleRows(tokenIndices, column, span);
       spanColumns.put(columnName, column);
     }
@@ -226,8 +226,8 @@ public class GraphDataProvider implements IDataProvider {
           // need to check for multiple rows as we do have to for spans.
           setSingleRow(column, orderedTokens.indexOf(token), token);
         } else {
-          column = new Column(ColumnType.TOKEN_ANNOTATION);
-          column.setHeader(anno.getQName());
+          column = new Column(ColumnType.TOKEN_ANNOTATION, anno.getQName());
+          // No overlap possible, so we can simply set the header to the qName
           setSingleRow(column, orderedTokens.indexOf(token), token);
           tokenColumns.put(anno.getQName(), column);
         }
@@ -260,7 +260,7 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   /**
-   * Returns the display text for the given cell, as identified by column and row index.
+   * Returns the value to display for the given cell, as identified by column and row index.
    * 
    * <p>
    * This is either an annotation value; or a token text; or, if no {@link STextualDS} has been
@@ -301,11 +301,19 @@ public class GraphDataProvider implements IDataProvider {
       return;
     }
     LabelableElement dataObject = column.getDataObject(rowIndex);
-    if (dataObject instanceof SAnnotation) {
-      SAnnotation anno = (SAnnotation) dataObject;
-      log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
-          dataObject.hashCode(), dataObject, newValue);
-      anno.setValue(newValue);
+    if (column.getColumnType() == ColumnType.TOKEN_TEXT) {
+      log.debug("Action not implemented: Set token text");
+    } else if (dataObject instanceof SStructuredNode) {
+      SStructuredNode node = (SStructuredNode) dataObject;
+      SAnnotation anno = node.getAnnotation(column.getColumnValue());
+      if (anno == null) {
+        throw new RuntimeException(
+            "Failed to retrieve annotation to set the value for on node " + node.toString() + ".");
+      } else {
+        log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
+            dataObject.hashCode(), dataObject, newValue);
+        anno.setValue(newValue);
+      }
     } else if (dataObject == null) {
       // Check which column type we're looking at
       ColumnType columnType = column.getColumnType();
