@@ -301,12 +301,26 @@ public class GraphDataProvider implements IDataProvider {
     LabelableElement dataObject = column.getDataObject(rowIndex);
     if (dataObject instanceof SAnnotation) {
       SAnnotation anno = (SAnnotation) dataObject;
-      log.debug("Setting value on Salt element '{}' to '{}'.", dataObject, newValue);
+      log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
+          dataObject.hashCode(), dataObject, newValue);
       anno.setValue(newValue);
+    } else if (dataObject == null) {
+      // Check which column type we're looking at
+      ColumnType columnType = column.getColumnType();
+      if (columnType == ColumnType.SPAN_ANNOTATION) {
+        // Create new span
+        log.debug("Creating new span?");
+        // TODO HIER WEITER
+      } else if (columnType == ColumnType.TOKEN_ANNOTATION) {
+        // Handle token annotation
+        log.debug("Creating new token annotation?");
+      } else {
+        log.debug("Action not implemented: Set token text");
+      }
     } else {
-      log.debug("Action not implemented: Set text on '{}' to '{}'",
-          dataObject == null ? "NULL" : dataObject.toString());
+      log.debug("Action not implemented: Set text on '{}' to '{}'", dataObject.toString());
     }
+
   }
 
   @Override
