@@ -33,6 +33,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StartContext;
 import org.corpus_tools.hexatomic.console.internal.SyntaxListener;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.STextualDS;
 
 /**
  * Executes commands on an annotation graph.
@@ -45,6 +46,7 @@ public class ConsoleController {
   private static final int MAX_HISTORY_LENGTH = 1000;
 
   private SDocumentGraph graph;
+  private STextualDS selectedText;
 
   private final LinkedList<String> commandHistory = new LinkedList<>();
   private ListIterator<String> itCommandHistory;
@@ -97,7 +99,7 @@ public class ConsoleController {
     if (errorListener.errors.isEmpty()) {
       // Collect the relevant elements of the AST and execute the command
       ParseTreeWalker walker = new ParseTreeWalker();
-      SyntaxListener listener = new SyntaxListener(graph);
+      SyntaxListener listener = new SyntaxListener(graph, getSelectedText());
       walker.walk(listener, startCtx);
       output.addAll(listener.getOutputLines());
     } else {
@@ -117,13 +119,33 @@ public class ConsoleController {
   public ListIterator<String> getCommandHistoryIterator() {
     return itCommandHistory;
   }
-  
+
   public SDocumentGraph getGraph() {
     return graph;
   }
-  
+
   public void setGraph(SDocumentGraph graph) {
     this.graph = graph;
+  }
+
+  public void setSelectedText(STextualDS selectedText) {
+    this.selectedText = selectedText;
+  }
+
+  private STextualDS getSelectedText() {
+    if (this.selectedText == null) {
+      // Find the first data source of the current graph
+      if (this.graph != null) {
+        List<STextualDS> texts = this.graph.getTextualDSs();
+        if (texts != null && !texts.isEmpty()) {
+          return texts.get(0);
+        }
+      }
+    } else {
+      return this.selectedText;
+    }
+
+    return null;
   }
 
   private final class ErrorListener extends BaseErrorListener {

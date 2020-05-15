@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
@@ -96,6 +97,15 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
    */
   public void setGraph(SDocumentGraph graph) {
     this.controller.setGraph(graph);
+  }
+
+  /**
+   * Sets a textual data source that has been selected.
+   * 
+   * @param selectedText The selected data source.
+   */
+  public void setSelectedText(STextualDS selectedText) {
+    this.controller.setSelectedText(selectedText);
   }
 
   /**

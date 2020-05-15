@@ -524,6 +524,13 @@ public class GraphEditor {
 
         sync.asyncExec(() -> {
 
+          // make sure the console view knows about the currently selected text
+          if (newSelectedSegments.isEmpty()) {
+            consoleView.setSelectedText(null);
+          } else {
+            consoleView.setSelectedText(newSelectedSegments.get(0).text);
+          }
+
           // update the status check for each item
           for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
             textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));

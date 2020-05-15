@@ -74,6 +74,7 @@ import org.corpus_tools.salt.util.DataSourceSequence;
 public class SyntaxListener extends ConsoleCommandBaseListener {
 
   private final SDocumentGraph graph;
+  private final STextualDS selectedText;
   private final Set<SStructuredNode> referencedNodes = new LinkedHashSet<>();
   private final Set<SRelation<?, ?>> referencedEdges = new LinkedHashSet<>();
   private final Set<SAnnotation> attributes = new LinkedHashSet<>();
@@ -84,9 +85,11 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
    * Creates a new ANTLR listener.
    * 
    * @param graph The document graph to manipulate.
+   * @param selectedText The currently selected textual data source.
    */
-  public SyntaxListener(SDocumentGraph graph) {
+  public SyntaxListener(SDocumentGraph graph, STextualDS selectedText) {
     this.graph = graph;
+    this.selectedText = selectedText;
   }
 
   public List<String> getOutputLines() {
@@ -340,9 +343,11 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
     } else {
       // append to the first existing data source
-      ds = graph.getTextualDSs().iterator().next();
-      sb = new StringBuilder(ds.getText());
-      if (sb.length() > 0) {
+      ds = this.selectedText;
+      String originalText = ds.getText();
+      sb = new StringBuilder(originalText);
+      if (originalText.length() > 0 && originalText.charAt(originalText.length() - 1) != ' ') {
+        // Add a space to separate the new tokens from the original text
         sb.append(' ');
       }
     }
