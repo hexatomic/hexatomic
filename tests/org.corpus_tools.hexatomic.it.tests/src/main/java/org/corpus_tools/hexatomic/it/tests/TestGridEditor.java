@@ -150,6 +150,7 @@ public class TestGridEditor {
   private void openExample(URI exampleUri) {
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.LOCATION, exampleUri.toFileString());
+    params.put(CommandParams.FORCE_CLOSE, "true");
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.open_salt_project", params);
     handlerService.executeHandler(cmd);
