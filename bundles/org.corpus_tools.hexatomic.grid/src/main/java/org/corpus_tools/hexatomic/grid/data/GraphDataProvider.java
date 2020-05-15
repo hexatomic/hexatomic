@@ -40,7 +40,6 @@ import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.graph.LabelableElement;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
@@ -259,6 +258,35 @@ public class GraphDataProvider implements IDataProvider {
         e, this.getClass());
   }
 
+  private Column getColumnForIndex(int columnIndex) {
+    try {
+      return columns.get(columnIndex);
+    } catch (IndexOutOfBoundsException e) {
+      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+      return null;
+    }
+  }
+
+  /**
+   * @param newValue
+   * @param column
+   * @param dataObject
+   * @throws RuntimeException
+   */
+  private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject)
+      throws RuntimeException {
+    SStructuredNode node = (SStructuredNode) dataObject;
+    SAnnotation anno = node.getAnnotation(column.getColumnValue());
+    if (anno == null) {
+      throw new RuntimeException(
+          "Failed to retrieve annotation to set the value for on node " + node.toString() + ".");
+    } else {
+      log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
+          dataObject.hashCode(), dataObject, newValue);
+      anno.setValue(newValue);
+    }
+  }
+
   /**
    * Returns the value to display for the given cell, as identified by column and row index.
    * 
@@ -278,13 +306,7 @@ public class GraphDataProvider implements IDataProvider {
       if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
         return "Data source contains no tokens!";
       } else {
-        Column column = null;
-        try {
-          column = columns.get(columnIndex);
-        } catch (IndexOutOfBoundsException e) {
-          errors.handleException(e.getMessage(), e, GraphDataProvider.class);
-          return null;
-        }
+        Column column = getColumnForIndex(columnIndex);
         return column.getDisplayText(rowIndex);
       }
     }
@@ -300,56 +322,45 @@ public class GraphDataProvider implements IDataProvider {
    * @return The node that underlies the cell at the given column and row index
    */
   public SStructuredNode getNode(int columnIndex, int rowIndex) {
-    Column column = null;
-    try {
-      column = columns.get(columnIndex);
-    } catch (IndexOutOfBoundsException e) {
-      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
-      return null;
-    }
+    Column column = getColumnForIndex(columnIndex);
     return column.getDataObject(rowIndex);
   }
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    Column column = null;
-    try {
-      column = columns.get(columnIndex);
-    } catch (IndexOutOfBoundsException e) {
-      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
-      return;
-    }
-    LabelableElement dataObject = column.getDataObject(rowIndex);
+    Column column = getColumnForIndex(columnIndex);
+    SStructuredNode node = column.getDataObject(rowIndex);
     if (column.getColumnType() == ColumnType.TOKEN_TEXT) {
       log.debug("Action not implemented: Set token text");
-    } else if (dataObject instanceof SStructuredNode) {
-      SStructuredNode node = (SStructuredNode) dataObject;
-      SAnnotation anno = node.getAnnotation(column.getColumnValue());
-      if (anno == null) {
-        throw new RuntimeException(
-            "Failed to retrieve annotation to set the value for on node " + node.toString() + ".");
-      } else {
-        log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
-            dataObject.hashCode(), dataObject, newValue);
-        anno.setValue(newValue);
-      }
-    } else if (dataObject == null) {
+    } else if (node instanceof SStructuredNode) {
+      changeAnnotationValue(newValue, column, node);
+    } else if (node == null) {
       // Check which column type we're looking at
       ColumnType columnType = column.getColumnType();
       if (columnType == ColumnType.SPAN_ANNOTATION) {
         // Create new span
-        log.debug("Creating new span?");
-        // TODO HIER WEITER
+        SToken tokenToSpan = orderedDsTokens.get(rowIndex);
+        SSpan span = graph.createSpan(tokenToSpan);
+        column.setRow(rowIndex, span);
+        log.debug("Created new span {}, spanning token {}.", span, tokenToSpan);
+        createAnnotation(newValue, columnIndex, span);
       } else if (columnType == ColumnType.TOKEN_ANNOTATION) {
         // Handle token annotation
-        log.debug("Creating new token annotation?");
+        log.debug("Action not implemented: Create token annotation.");
       } else {
-        log.debug("Action not implemented: Set token text");
+        log.debug("Action not implemented: Set token text.");
       }
     } else {
-      log.debug("Action not implemented: Set text on '{}' to '{}'", dataObject.toString());
+      log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString());
     }
 
+  }
+
+  private void createAnnotation(Object newValue, int columnIndex, SStructuredNode node) {
+    node.createAnnotation(getAnnotationNamespace(columnIndex), getAnnotationName(columnIndex),
+        newValue);
+    log.debug("Created new annotation with value '{}' on {} ({}, '{}').", newValue,
+        node.getClass().getSimpleName(), node.hashCode(), node);
   }
 
   @Override
@@ -399,6 +410,14 @@ public class GraphDataProvider implements IDataProvider {
    */
   public List<Column> getColumns() {
     return columns;
+  }
+
+  private String getAnnotationNamespace(int columnIndex) {
+    return getColumns().get(columnIndex).getColumnValue().split("::")[0];
+  }
+
+  private String getAnnotationName(int columnIndex) {
+    return getColumns().get(columnIndex).getColumnValue().split("::")[1];
   }
 
 }
