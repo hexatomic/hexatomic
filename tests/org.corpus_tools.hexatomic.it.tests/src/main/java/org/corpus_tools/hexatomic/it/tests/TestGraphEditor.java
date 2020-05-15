@@ -224,6 +224,9 @@ class TestGraphEditor {
     SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
     SDocumentGraph graph = doc.getDocumentGraph();
     
+    STextualDS firstText = graph.getTextualDSs().get(0);
+    String originalText = firstText.getText();
+    
     // Add an additional data source to the document graph
     STextualDS anotherText = graph.createTextualDS("");
     graph.insertTokensAt(anotherText, 0, Arrays.asList("Another", "text"), true);
@@ -250,10 +253,13 @@ class TestGraphEditor {
     // Add a new tokenized text to the end
     enterCommand("t has more tokens");
 
-    
     // Check that the right textual data source has been amended
     assertEquals("Another text has more tokens", anotherText.getText());
     
+    // Check the original text has not been altered and is displayed correctly
+    assertEquals(originalText, firstText.getText());
+    assertEquals(originalText, textRangeTable.cell(0, 0));
+
   }
 
 
