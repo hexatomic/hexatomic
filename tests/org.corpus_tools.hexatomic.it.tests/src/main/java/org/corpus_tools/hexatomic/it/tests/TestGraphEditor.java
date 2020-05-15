@@ -9,12 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -110,7 +112,12 @@ class TestGraphEditor {
       @Override
       public boolean test() throws Exception {
         SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
-        return view != null;
+        if (view != null) {
+          SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+          // Wait until the graph has been loaded
+          return textRangeTable.getTableItem(0).isChecked();
+        }
+        return false;
       }
 
       @Override
@@ -119,6 +126,16 @@ class TestGraphEditor {
       }
     });
 
+  }
+
+  void enterCommand(String command) {
+    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
+    // We can't use typeText() here, because it would generate upper case characters
+    console.insertText(command);
+    // Make sure the cursor is at the end of the line
+    console.navigateTo(console.getLineCount() - 1, command.length() + 2);
+    // Finish with typing the return character
+    console.typeText("\n");
   }
 
   @Test
@@ -140,13 +157,28 @@ class TestGraphEditor {
   void testAddPointingRelation() {
 
     openDefaultExample();
+    
+    // Get a reference to the open graph
+    SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
+    SDocumentGraph graph = doc.getDocumentGraph();
+    
+    // Before state: no edges between the two structures
+    assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
+        "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
 
-    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
-    console.insertText("e #structure3 -> #structure5");
-    console.typeText("\n");
+    // Add a pointing relation between the two structures
+    enterCommand("e #structure3 -> #structure5");
 
     // Check that no exception was thrown/handled by UI
     assertFalse(errorService.getLastException().isPresent());
+
+    // Check that the edge has been added to the graph
+
+    List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
+        "salt:/rootCorpus/subCorpus1/doc1#structure5");
+    assertEquals(1, rels.size());
+    assertTrue(rels.get(0) instanceof SPointingRelation);
+
   }
   
   /**
@@ -172,10 +204,23 @@ class TestGraphEditor {
     SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
     textRangeTable.select("Another text");
     
+    // Wait until the graph has been properly selected
+    bot.waitUntil(new DefaultCondition() {
+      
+      @Override
+      public boolean test() throws Exception {
+        return textRangeTable.getTableItem("Another text").isChecked();
+      }
+      
+      @Override
+      public String getFailureMessage() {
+        return "Second text segment was not checked";
+      }
+    }, 5000);
+    
     // Add a  new tokenized text to the end
-    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
-    console.insertText("t has more tokens");
-    console.typeText("\n");
+    enterCommand("t has more tokens");
+
     
     // Check that the right textual data source has been amended
     assertEquals("Another text has more tokens", anotherText.getText());
