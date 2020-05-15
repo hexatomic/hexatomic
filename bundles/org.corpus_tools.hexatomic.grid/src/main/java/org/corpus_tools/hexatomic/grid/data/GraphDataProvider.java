@@ -258,21 +258,6 @@ public class GraphDataProvider implements IDataProvider {
         e, this.getClass());
   }
 
-  private Column getColumnForIndex(int columnIndex) {
-    try {
-      return columns.get(columnIndex);
-    } catch (IndexOutOfBoundsException e) {
-      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
-      return null;
-    }
-  }
-
-  /**
-   * @param newValue
-   * @param column
-   * @param dataObject
-   * @throws RuntimeException
-   */
   private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject)
       throws RuntimeException {
     SStructuredNode node = (SStructuredNode) dataObject;
@@ -306,7 +291,13 @@ public class GraphDataProvider implements IDataProvider {
       if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
         return "Data source contains no tokens!";
       } else {
-        Column column = getColumnForIndex(columnIndex);
+        Column column = null;
+        try {
+          column = columns.get(columnIndex);
+        } catch (IndexOutOfBoundsException e) {
+          errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+          return null;
+        }
         return column.getDisplayText(rowIndex);
       }
     }
@@ -322,13 +313,25 @@ public class GraphDataProvider implements IDataProvider {
    * @return The node that underlies the cell at the given column and row index
    */
   public SStructuredNode getNode(int columnIndex, int rowIndex) {
-    Column column = getColumnForIndex(columnIndex);
+    Column column = null;
+    try {
+      column = columns.get(columnIndex);
+    } catch (IndexOutOfBoundsException e) {
+      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+      return null;
+    }
     return column.getDataObject(rowIndex);
   }
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    Column column = getColumnForIndex(columnIndex);
+    Column column = null;
+    try {
+      column = columns.get(columnIndex);
+    } catch (IndexOutOfBoundsException e) {
+      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+      return;
+    }
     SStructuredNode node = column.getDataObject(rowIndex);
     if (column.getColumnType() == ColumnType.TOKEN_TEXT) {
       log.debug("Action not implemented: Set token text");
