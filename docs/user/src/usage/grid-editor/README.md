@@ -6,7 +6,7 @@ Tokens are the smallest countable units in a data source.
 Spans are units that span tokens.
 To learn more about how Hexatomic's data model - Salt - defines these units, please refer to the [Salt documentation](https://corpus-tools.org/salt/#documentation).
 
-![Screenshot of the grid editor](grid-viewer.png)
+![Screenshot of the grid editor](grid-editor.png)<a name="screenshot"/>
 
 ## Data source selection
 
@@ -20,7 +20,9 @@ If a document contains only a single data source, it is automatically selected.
 
 **Rows** in the grid contain a single token, its annotations, and the annotations on spans that overlap this token. *A token* in this case is the section of the data source the token covers. Depending on the type of data source and the resolution of the tokenization, this may be a word, a morpheme, a phoneme, a section of an audio or video source, etc.
 
-**Columns** in the grid contain all values of a single qualified annotation in this document, that is, a unique combination of `namespace` and `name` of an annotation.
+**Columns** in the grid contain all values of a single qualified annotation in this document, that is, a unique combination of `namespace` and `name` of an annotation. 
+Additionally, the tokens in a document - or rather, the segment of the document text they represent - are displayed in separate columns preceding any annotation columns.
+
 Note that overlapping spans which are annotated with the same qualified annotation cannot be visualized within the same column.
 Instead, the annotation values are spread over more than one adjacent columns, whose headers are then suffixed with the count of existing columns for that qualified annotation.
 
@@ -32,7 +34,8 @@ Instead, the annotation values are spread over more than one adjacent columns, w
 >
 > ![Screenshot of an annotation grid showing overlapping spans](overlap.png)
 
-Adjacent **cells** that have the same value for a qualified annotation are merged.
+**Merged cells** represent annotations on spans that cover more than one token.
+You can see this in the last grid column in the [screenshot](#screenshot) above.
 
 To distinguish between the different types of content diplayed in the grid cells, they are styled differently:
 
