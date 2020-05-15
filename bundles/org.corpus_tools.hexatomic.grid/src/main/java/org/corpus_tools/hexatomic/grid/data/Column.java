@@ -142,6 +142,9 @@ public class Column {
     if (isRowEmpty(rowIndex)) {
       rowCells.put(rowIndex, node);
       bits.set(rowIndex);
+    } else if (!isRowEmpty(rowIndex) && node == null) {
+      rowCells.remove(rowIndex);
+      bits.clear(rowIndex);
     } else {
       throw new RuntimeException("Cannot add " + node + " to " + this.getHeader() + "::" + rowIndex
           + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
