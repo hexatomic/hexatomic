@@ -234,6 +234,7 @@ public class GraphEditor {
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
     textRangeTable.getVerticalBar().setEnabled(true);
+    textRangeTable.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, "graph-editor/text-range");
 
     TableColumn tblclmnFilterBySegment = new TableColumn(textRangeTable, SWT.NONE);
     tblclmnFilterBySegment.setWidth(100);
@@ -522,6 +523,13 @@ public class GraphEditor {
         monitor.done();
 
         sync.asyncExec(() -> {
+
+          // make sure the console view knows about the currently selected text
+          if (newSelectedSegments.isEmpty()) {
+            consoleView.setSelectedText(null);
+          } else {
+            consoleView.setSelectedText(newSelectedSegments.get(0).text);
+          }
 
           // update the status check for each item
           for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {

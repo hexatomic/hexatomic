@@ -266,5 +266,4 @@ class TestConsoleController {
     console.executeCommand("e #n1 > #t2 ns:n:a");
     assertEquals(3, graph.getDominanceRelations().size()); 
   }
-
 }
