@@ -334,12 +334,14 @@ public class GraphDataProvider implements IDataProvider {
     }
     ColumnType columnType = column.getColumnType();
     SStructuredNode node = column.getDataObject(rowIndex);
+    String annotationQName = column.getColumnValue();
 
     // If new value is empty, remove annotation
     if (newValue == null || newValue.equals("")) {
       // Remove annotation from Salt model
       if (node != null) {
         node.removeLabel(column.getColumnValue());
+        log.debug("Removed annotation {} from node {}.", annotationQName, node);
       }
       // Remove annotation from all column cells
       if (node instanceof SToken) {
@@ -353,6 +355,7 @@ public class GraphDataProvider implements IDataProvider {
         // If, now, the span has no annotations, remove it
         if (node.getAnnotations().isEmpty()) {
           graph.removeNode(node);
+          log.debug("Removed empty span {} from graph {}.", node, graph);
         }
       }
     } else { // Value is not empty or null
