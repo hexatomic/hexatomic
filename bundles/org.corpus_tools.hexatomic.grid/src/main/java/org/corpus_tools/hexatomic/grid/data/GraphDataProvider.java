@@ -291,6 +291,25 @@ public class GraphDataProvider implements IDataProvider {
     return null;
   }
 
+  /**
+   * Returns the underlying {@link SStructuredNode} for the given cell, as identified by column and
+   * row index.
+   * 
+   * @param columnIndex the column index for which the node should be retrieved
+   * @param rowIndex the row index for which the node should be retrieved
+   * @return The node that underlies the cell at the given column and row index
+   */
+  public SStructuredNode getNode(int columnIndex, int rowIndex) {
+    Column column = null;
+    try {
+      column = columns.get(columnIndex);
+    } catch (IndexOutOfBoundsException e) {
+      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
+      return null;
+    }
+    return column.getDataObject(rowIndex);
+  }
+
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
     Column column = null;
