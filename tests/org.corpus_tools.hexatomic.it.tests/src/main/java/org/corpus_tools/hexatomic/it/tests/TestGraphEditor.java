@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -228,10 +227,10 @@ class TestGraphEditor {
     String originalText = firstText.getText();
     
     // Add an additional data source to the document graph
-    STextualDS anotherText = graph.createTextualDS("");
-    graph.insertTokensAt(anotherText, 0, Arrays.asList("Another", "text"), true);
-    
-    
+    STextualDS anotherText = graph.createTextualDS("Another text");
+    graph.createToken(anotherText, 0, 7);
+    graph.createToken(anotherText, 8, 12);
+
     // Select the new text
     SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
     textRangeTable.select("Another text");
