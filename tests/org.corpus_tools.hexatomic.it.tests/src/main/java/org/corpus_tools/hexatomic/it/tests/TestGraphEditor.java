@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
@@ -130,12 +131,40 @@ class TestGraphEditor {
 
   void enterCommand(String command) {
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
+    final SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+
+    // Remember the index of the currently selected segment
+    Optional<Integer> firstSelectedRow = Optional.empty();
+    for(int i=0; i < textRangeTable.rowCount(); i++) {
+      if (textRangeTable.getTableItem(i).isChecked()) {
+        firstSelectedRow = Optional.of(i);
+        break;
+      }
+    }
+    
     // We can't use typeText() here, because it would generate upper case characters
     console.insertText(command);
     // Make sure the cursor is at the end of the line
     console.navigateTo(console.getLineCount() - 1, command.length() + 2);
     // Finish with typing the return character
     console.typeText("\n");
+
+    // Wait until the graph has been rendered
+    if (firstSelectedRow.isPresent()) {
+      int row = firstSelectedRow.get();
+      bot.waitUntil(new DefaultCondition() {
+  
+        @Override
+        public boolean test() throws Exception {
+          return textRangeTable.getTableItem(row).isChecked();
+        }
+  
+        @Override
+        public String getFailureMessage() {
+          return "Second text segment was not checked";
+        }
+      }, 5000);
+    }
   }
 
   @Test
@@ -218,7 +247,7 @@ class TestGraphEditor {
       }
     }, 5000);
     
-    // Add a  new tokenized text to the end
+    // Add a new tokenized text to the end
     enterCommand("t has more tokens");
 
     
