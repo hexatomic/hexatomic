@@ -135,13 +135,13 @@ class TestGraphEditor {
 
     // Remember the index of the currently selected segment
     Optional<Integer> firstSelectedRow = Optional.empty();
-    for(int i=0; i < textRangeTable.rowCount(); i++) {
+    for (int i = 0; i < textRangeTable.rowCount(); i++) {
       if (textRangeTable.getTableItem(i).isChecked()) {
         firstSelectedRow = Optional.of(i);
         break;
       }
     }
-    
+
     // We can't use typeText() here, because it would generate upper case characters
     console.insertText(command);
     // Make sure the cursor is at the end of the line
@@ -153,12 +153,12 @@ class TestGraphEditor {
     if (firstSelectedRow.isPresent()) {
       int row = firstSelectedRow.get();
       bot.waitUntil(new DefaultCondition() {
-  
+
         @Override
         public boolean test() throws Exception {
           return textRangeTable.getTableItem(row).isChecked();
         }
-  
+
         @Override
         public String getFailureMessage() {
           return "Second text segment was not checked";
@@ -186,11 +186,11 @@ class TestGraphEditor {
   void testAddPointingRelation() {
 
     openDefaultExample();
-    
+
     // Get a reference to the open graph
     SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
     SDocumentGraph graph = doc.getDocumentGraph();
-    
+
     // Before state: no edges between the two structures
     assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
         "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
@@ -209,24 +209,24 @@ class TestGraphEditor {
     assertTrue(rels.get(0) instanceof SPointingRelation);
 
   }
-  
+
   /**
-   * Tests if the "t" command adds the new tokens to the currently selected textual datasource.
-   * This is a regression test for https://github.com/hexatomic/hexatomic/issues/139.
+   * Tests if the "t" command adds the new tokens to the currently selected textual datasource. This
+   * is a regression test for https://github.com/hexatomic/hexatomic/issues/139.
    */
   @Test
   @Order(3)
   void testTokenizeSelectedTextualDS() {
-    
+
     openDefaultExample();
-    
+
     // Get a reference to the opened document graph
     SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
     SDocumentGraph graph = doc.getDocumentGraph();
-    
+
     STextualDS firstText = graph.getTextualDSs().get(0);
-    String originalText = firstText.getText();
-    
+    final String originalText = firstText.getText();
+
     // Add an additional data source to the document graph
     STextualDS anotherText = graph.createTextualDS("Another text");
     graph.createToken(anotherText, 0, 7);
@@ -235,27 +235,27 @@ class TestGraphEditor {
     // Select the new text
     SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
     textRangeTable.select("Another text");
-    
+
     // Wait until the graph has been properly selected
     bot.waitUntil(new DefaultCondition() {
-      
+
       @Override
       public boolean test() throws Exception {
         return textRangeTable.getTableItem("Another text").isChecked();
       }
-      
+
       @Override
       public String getFailureMessage() {
         return "Second text segment was not checked";
       }
     }, 5000);
-    
+
     // Add a new tokenized text to the end
     enterCommand("t has more tokens");
 
     // Check that the right textual data source has been amended
     assertEquals("Another text has more tokens", anotherText.getText());
-    
+
     // Check the original text has not been altered and is displayed correctly
     assertEquals(originalText, firstText.getText());
     assertEquals(originalText, textRangeTable.cell(0, 0));
