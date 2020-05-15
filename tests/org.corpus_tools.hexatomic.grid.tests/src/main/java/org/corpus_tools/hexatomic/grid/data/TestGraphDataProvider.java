@@ -1,7 +1,8 @@
 package org.corpus_tools.hexatomic.grid.data;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -15,6 +16,8 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -274,6 +277,24 @@ class TestGraphDataProvider {
     assertEquals(ColumnType.TOKEN_TEXT, fixture.getColumns().get(0).getColumnType());
     assertEquals("be", fixture.getDataValue(1, 0));
     assertEquals(ColumnType.TOKEN_ANNOTATION, fixture.getColumns().get(1).getColumnType());
+  }
+
+  @Test
+  final void testCreateAnnotationOnEmptySpanCell() {
+    fixture.setGraph(overlappingExampleGraph);
+    fixture.setDsAndResolveGraph(overlappingExampleText);
+
+    assertNull(fixture.getNode(4, 0));
+    assertNull(fixture.getDataValue(4, 0));
+    fixture.setDataValue(4, 0, "test");
+    SStructuredNode node = fixture.getNode(4, 0);
+    assertNotNull(node);
+    assertTrue(node instanceof SSpan);
+    assertEquals(1, overlappingExampleGraph.getOverlappedTokens(node).size());
+    assertEquals(0, overlappingExampleGraph.getSortedTokenByText()
+        .indexOf(overlappingExampleGraph.getOverlappedTokens(node).get(0)));
+    assertEquals("test", fixture.getDataValue(4, 0));
+
   }
 
   private SDocumentGraph retrieveGraph(String path) {
