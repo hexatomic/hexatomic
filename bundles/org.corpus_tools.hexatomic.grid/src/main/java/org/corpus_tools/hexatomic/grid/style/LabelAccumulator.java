@@ -45,7 +45,7 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
    * 
    * <p>
    * The lowermost layer in the layer stack is needed to determine properties of cells that should
-   * be assigned custom configuration labels. Similarly, the dataProvider is neede to access
+   * be assigned custom configuration labels. Similarly, the dataProvider is needed to access
    * properties of model elements to determine conditional styling of cells.
    * </p>
    * 
