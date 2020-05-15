@@ -340,16 +340,17 @@ public class GraphDataProvider implements IDataProvider {
     } else if (node == null) {
       // Check which column type we're looking at
       ColumnType columnType = column.getColumnType();
+      SToken tokenAtIndex = orderedDsTokens.get(rowIndex);
       if (columnType == ColumnType.SPAN_ANNOTATION) {
         // Create new span
-        SToken tokenToSpan = orderedDsTokens.get(rowIndex);
-        SSpan span = graph.createSpan(tokenToSpan);
+        SSpan span = graph.createSpan(tokenAtIndex);
         column.setRow(rowIndex, span);
-        log.debug("Created new span {}, spanning token {}.", span, tokenToSpan);
+        log.debug("Created new span {}, spanning token {}.", span, tokenAtIndex);
         createAnnotation(newValue, columnIndex, span);
       } else if (columnType == ColumnType.TOKEN_ANNOTATION) {
-        // Handle token annotation
-        log.debug("Action not implemented: Create token annotation.");
+        // Create new token annotation
+        column.setRow(rowIndex, tokenAtIndex);
+        createAnnotation(newValue, columnIndex, tokenAtIndex);
       } else {
         log.debug("Action not implemented: Set token text.");
       }
