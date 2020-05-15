@@ -33,7 +33,7 @@ import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.layers.ConditionalSpanningDataLayer;
+import org.corpus_tools.hexatomic.grid.layers.ConditionalSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -53,7 +53,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
@@ -66,6 +65,7 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.swt.SWT;
@@ -119,10 +119,9 @@ public class GridEditor {
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    AutomaticSpanningDataProvider spanningDataProvider =
-        new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
-    final ConditionalSpanningDataLayer bodyDataLayer =
-        new ConditionalSpanningDataLayer(spanningDataProvider);
+    ConditionalSpanningDataProvider spanningDataProvider =
+        new ConditionalSpanningDataProvider(bodyDataProvider, false, true);
+    final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
     // Body
     final DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
