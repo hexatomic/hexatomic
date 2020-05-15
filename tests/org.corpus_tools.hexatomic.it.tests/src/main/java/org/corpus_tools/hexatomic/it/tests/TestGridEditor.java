@@ -54,8 +54,7 @@ public class TestGridEditor {
 
   private ErrorService errorService = new ErrorService();
 
-  // private final static Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
-  private final static Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   @BeforeEach
   void setup() {
