@@ -416,10 +416,23 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(1, 5));
     table.click(1, 5);
     typeTextPressReturn(table);
-    assertNotNull(table.getCellDataValueByPosition(1, 5));
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(1, 5));
 
     bot.activeShell().maximize(false);
+  }
+
+  @Test
+  void testCreateAnnotationOnEmptyTokenCell() {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("", table.getCellDataValueByPosition(2, 2));
+    table.click(2, 2);
+    typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+
   }
 
   /**
