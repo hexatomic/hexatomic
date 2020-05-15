@@ -28,7 +28,6 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
-import org.corpus_tools.salt.graph.LabelableElement;
 
 /**
  * Represents a column in the grid. A column has a title, and a list of row cells, the values of
@@ -95,7 +94,7 @@ public class Column {
    *        returned
    * @return The data object behind the specified row cell in this column
    */
-  LabelableElement getDataObject(int rowIndex) {
+  SStructuredNode getDataObject(int rowIndex) {
     return rowCells.get(rowIndex);
   }
 
