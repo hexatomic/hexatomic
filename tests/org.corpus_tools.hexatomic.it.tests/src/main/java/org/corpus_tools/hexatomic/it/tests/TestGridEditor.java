@@ -436,8 +436,8 @@ public class TestGridEditor {
   }
 
   /**
-   * Types "SUCCESS!", then Return, then waits until the table has no active cell editors, up to
-   * 1000ms.
+   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
+   * cell editors, up to 1000ms.
    * 
    * @param table The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
