@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.grid.data;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -19,6 +20,7 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.emf.common.util.URI;
@@ -165,7 +167,7 @@ class TestGraphDataProvider {
     assertEquals(".", fixture.getDataValue(0, 4));
 
     assertEquals("six_tok_anno_0", fixture.getDataValue(1, 0));
-    assertEquals("six_tok_anno_1", fixture.getDataValue(1, 1));
+    assertNull(fixture.getDataValue(1, 1));
     assertEquals("six_tok_anno_2", fixture.getDataValue(1, 2));
     assertEquals("six_tok_anno_3", fixture.getDataValue(1, 3));
     assertEquals("six_tok_anno_4", fixture.getDataValue(1, 4));
@@ -182,6 +184,7 @@ class TestGraphDataProvider {
     assertEquals("val_span_5", fixture.getDataValue(3, 3));
     assertEquals("val_span_5", fixture.getDataValue(3, 4));
 
+    assertNull(fixture.getDataValue(4, 0));
     assertEquals("val_span_new1", fixture.getDataValue(4, 1));
     assertEquals("val_span_new1", fixture.getDataValue(4, 2));
     assertEquals("val_span_new2", fixture.getDataValue(4, 3));
@@ -294,6 +297,22 @@ class TestGraphDataProvider {
     assertEquals(0, overlappingExampleGraph.getSortedTokenByText()
         .indexOf(overlappingExampleGraph.getOverlappedTokens(node).get(0)));
     assertEquals("test", fixture.getDataValue(4, 0));
+
+  }
+
+  @Test
+  final void testCreateAnnotationOnEmptyTokenCell() {
+    fixture.setGraph(overlappingExampleGraph);
+    fixture.setDsAndResolveGraph(overlappingExampleText);
+
+    assertNull(fixture.getNode(1, 1));
+    assertNull(fixture.getDataValue(1, 1));
+    fixture.setDataValue(1, 1, "test");
+    SStructuredNode node = fixture.getNode(1, 1);
+    assertNotNull(node);
+    assertTrue(node instanceof SToken);
+    assertSame(overlappingExampleGraph.getSortedTokenByText().get(1), node);
+    assertEquals("test", fixture.getDataValue(1, 1));
 
   }
 

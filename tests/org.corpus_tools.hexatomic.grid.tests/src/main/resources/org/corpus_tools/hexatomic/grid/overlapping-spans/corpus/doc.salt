@@ -13,7 +13,6 @@
 		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok1"/>
 	</nodes>
 	<nodes xsi:type="sDocumentStructure:SToken">
-		<labels xsi:type="saltCore:SAnnotation" namespace="six" name="token" value="T::six_tok_anno_1"/>
 		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok2"/>
 		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok2"/>
 	</nodes>
