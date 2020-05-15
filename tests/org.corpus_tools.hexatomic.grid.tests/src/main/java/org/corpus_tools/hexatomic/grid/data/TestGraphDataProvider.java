@@ -316,6 +316,42 @@ class TestGraphDataProvider {
 
   }
 
+  @Test
+  final void testRemoveAnnotationOnSetToEmpty() {
+    fixture.setGraph(overlappingExampleGraph);
+    fixture.setDsAndResolveGraph(overlappingExampleText);
+
+    // Remove single cell span annotation and delete span
+    assertEquals("val_span_1", fixture.getDataValue(2, 0));
+    SStructuredNode nodeToRemove = fixture.getNode(2, 0);
+    fixture.setDataValue(2, 0, null);
+    assertNull(fixture.getDataValue(2, 0));
+    assertNull(fixture.getNode(2, 0));
+    assertNull(overlappingExampleGraph.getNode(nodeToRemove.getId()));
+
+    // Remove data from one span cell in multi-cell annotation and remove span
+    assertEquals("val_span_2", fixture.getDataValue(2, 1));
+    nodeToRemove = fixture.getNode(2, 1);
+    fixture.setDataValue(2, 1, null);
+    assertNull(fixture.getDataValue(2, 1));
+    assertNull(fixture.getNode(2, 1));
+    assertNull(fixture.getDataValue(2, 2));
+    assertNull(fixture.getNode(2, 2));
+    assertNull(fixture.getDataValue(2, 3));
+    assertNull(fixture.getNode(2, 3));
+    assertNull(fixture.getDataValue(2, 4));
+    assertNull(fixture.getNode(2, 4));
+    assertNull(overlappingExampleGraph.getNode(nodeToRemove.getId()));
+
+    // Remove token annotation but don't remove token
+    assertEquals("six_tok_anno_3", fixture.getDataValue(1, 3));
+    SStructuredNode nodeNotToRemove = fixture.getNode(1, 3);
+    fixture.setDataValue(1, 3, null);
+    assertNull(fixture.getDataValue(1, 3));
+    assertNull(fixture.getNode(1, 3));
+    assertEquals(nodeNotToRemove, overlappingExampleGraph.getNode(nodeNotToRemove.getId()));
+  }
+
   private SDocumentGraph retrieveGraph(String path) {
     File exampleProjectDirectory = new File(path);
     assertTrue(exampleProjectDirectory.isDirectory());
