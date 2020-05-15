@@ -33,7 +33,7 @@ import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.layers.ConditionalSpanningDataProvider;
+import org.corpus_tools.hexatomic.grid.layers.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -119,8 +119,8 @@ public class GridEditor {
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    ConditionalSpanningDataProvider spanningDataProvider =
-        new ConditionalSpanningDataProvider(bodyDataProvider, false, true);
+    NodeSpanningDataProvider spanningDataProvider =
+        new NodeSpanningDataProvider(bodyDataProvider, false, true);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
     // Body
