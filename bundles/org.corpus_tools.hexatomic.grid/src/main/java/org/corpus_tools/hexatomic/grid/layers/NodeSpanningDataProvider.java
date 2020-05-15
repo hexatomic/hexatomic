@@ -145,6 +145,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
    * @return The row position where the spanning starts or the given row position if it is not
    *         spanned with rows above.
    */
+  @Override
   protected int getStartRowPosition(int columnPosition, int rowPosition) {
     int rowPos;
     for (rowPos = rowPosition; rowPos >= 0; rowPos--) {
@@ -174,6 +175,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
    * @param rowPosition The row position for which the column spanning should be checked
    * @return The number of columns to span
    */
+  @Override
   protected int getColumnSpan(int columnPosition, int rowPosition) {
     int span = 1;
 
@@ -196,6 +198,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
    * @param rowPosition The row position to start the check for spanning
    * @return The number of rows to span
    */
+  @Override
   protected int getRowSpan(int columnPosition, int rowPosition) {
     int span = 1;
 
@@ -208,5 +211,28 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
     }
     return span;
   }
+
+  /**
+   * Checks if the given values are not equal. This method is <code>null</code> safe. In contrast to
+   * the overridden method, this method returns <code>true</code> if both values are
+   * <code>null</code>! This is because two adjacent cells containing <code>null</code> should not
+   * be spanned, but kept separate for separate targeting of editing actions.
+   * 
+   * @param value1 The first value to check for equality with the second value
+   * @param value2 The second value to check for equality with the first value.
+   * @return <code>true</code> if the given values are not equal, or if both values are
+   *         <code>null</code>
+   */
+  protected boolean valuesNotEqual(Object value1, Object value2) {
+    if (value1 == null && value2 == null) {
+      return true;
+    } else if (value1 == value2) {
+      return false;
+    }
+    return ((value1 == null && value2 != null) || (value1 != null && value2 == null)
+        || !value1.equals(value2));
+  }
+
+
 
 }
