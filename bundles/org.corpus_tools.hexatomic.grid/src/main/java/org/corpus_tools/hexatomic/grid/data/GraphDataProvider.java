@@ -337,8 +337,10 @@ public class GraphDataProvider implements IDataProvider {
 
     // If new value is empty, remove annotation
     if (newValue == null || newValue.equals("")) {
-      // Remove annotaion from Salt model
-      node.removeLabel(column.getColumnValue());
+      // Remove annotation from Salt model
+      if (node != null) {
+        node.removeLabel(column.getColumnValue());
+      }
       // Remove annotation from all column cells
       if (node instanceof SToken) {
         // Annotation can only span a single token, i.e., a single row
