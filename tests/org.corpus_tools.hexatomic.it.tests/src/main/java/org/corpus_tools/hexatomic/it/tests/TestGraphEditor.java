@@ -202,7 +202,6 @@ class TestGraphEditor {
     assertFalse(errorService.getLastException().isPresent());
 
     // Check that the edge has been added to the graph
-
     List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
         "salt:/rootCorpus/subCorpus1/doc1#structure5");
     assertEquals(1, rels.size());
