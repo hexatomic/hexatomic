@@ -332,30 +332,52 @@ public class GraphDataProvider implements IDataProvider {
       errors.handleException(e.getMessage(), e, GraphDataProvider.class);
       return;
     }
+    ColumnType columnType = column.getColumnType();
     SStructuredNode node = column.getDataObject(rowIndex);
-    if (column.getColumnType() == ColumnType.TOKEN_TEXT) {
-      log.debug("Action not implemented: Set token text");
-    } else if (node instanceof SStructuredNode) {
-      changeAnnotationValue(newValue, column, node);
-    } else if (node == null) {
-      // Check which column type we're looking at
-      ColumnType columnType = column.getColumnType();
-      SToken tokenAtIndex = orderedDsTokens.get(rowIndex);
-      if (columnType == ColumnType.SPAN_ANNOTATION) {
-        // Create new span
-        SSpan span = graph.createSpan(tokenAtIndex);
-        column.setRow(rowIndex, span);
-        log.debug("Created new span {}, spanning token {}.", span, tokenAtIndex);
-        createAnnotation(newValue, columnIndex, span);
-      } else if (columnType == ColumnType.TOKEN_ANNOTATION) {
-        // Create new token annotation
-        column.setRow(rowIndex, tokenAtIndex);
-        createAnnotation(newValue, columnIndex, tokenAtIndex);
-      } else {
-        log.debug("Action not implemented: Set token text.");
+
+    // If new value is empty, remove annotation
+    if (newValue == null || newValue.equals("")) {
+      // Remove annotaion from Salt model
+      node.removeLabel(column.getColumnValue());
+      // Remove annotation from all column cells
+      if (node instanceof SToken) {
+        // Annotation can only span a single token, i.e., a single row
+        column.setRow(rowIndex, null);
+      } else if (node instanceof SSpan) {
+        List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
+        for (SToken token : overlappedTokens) {
+          column.setRow(orderedDsTokens.indexOf(token), null);
+        }
+        // If, now, the span has no annotations, remove it
+        if (node.getAnnotations().isEmpty()) {
+          graph.removeNode(node);
+        }
       }
-    } else {
-      log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString());
+    } else { // Value is not empty or null
+      if (columnType == ColumnType.TOKEN_TEXT) {
+        log.debug("Action not implemented: Set token text");
+      } else if (node instanceof SStructuredNode) {
+        changeAnnotationValue(newValue, column, node);
+      } else if (node == null) { // Span to take annotation doesn't exist yet
+        SToken tokenAtIndex = orderedDsTokens.get(rowIndex);
+        if (columnType == ColumnType.SPAN_ANNOTATION) {
+          // Create new span
+          SSpan span = graph.createSpan(tokenAtIndex);
+          column.setRow(rowIndex, span);
+          log.debug("Created new span {}, spanning token {}.", span, tokenAtIndex);
+          createAnnotation(newValue, columnIndex, span);
+        } else if (columnType == ColumnType.TOKEN_ANNOTATION) {
+          // While the token to attach the annotation is not null in the graph, the node backing up
+          // the cell in the column is, so we need to set it first.
+          column.setRow(rowIndex, tokenAtIndex);
+          // Create new token annotation
+          createAnnotation(newValue, columnIndex, tokenAtIndex);
+        } else {
+          log.debug("Action not implemented: Create token.");
+        }
+      } else {
+        log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString());
+      }
     }
 
   }
