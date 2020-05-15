@@ -44,6 +44,8 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
+  private static final String TEST_ANNOTATION_VALUE = "TEST_ANNOTATION_VALUE";
+
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
   private URI exampleProjectUri;
@@ -200,7 +202,7 @@ public class TestGridEditor {
     NatTable table = bot.widget(widgetOfType(NatTable.class));
     assertNotNull(table);
 
-    // Need to maximize the window so that all comlumns are displayed,
+    // Need to maximize the window so that all columns are displayed,
     // as NatTable knows only about completely displayed columns in the virtual table
     bot.activeShell().maximize(true);
 
@@ -366,7 +368,7 @@ public class TestGridEditor {
 
     table.doubleclick(2, 2);
     typeTextPressReturn(table);
-    assertEquals("SUCCESS!", table.getCellDataValueByPosition(2, 2));
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
   }
 
   /**
@@ -381,7 +383,7 @@ public class TestGridEditor {
 
     table.click(2, 2);
     typeTextPressReturn(table);
-    assertEquals("SUCCESS!", table.getCellDataValueByPosition(2, 2));
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
   }
 
   /**
@@ -397,7 +399,27 @@ public class TestGridEditor {
     table.click(2, 2);
     keyboard.pressShortcut(Keystrokes.SPACE);
     typeTextPressReturn(table);
-    assertEquals("SUCCESS!", table.getCellDataValueByPosition(2, 2));
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+  }
+
+  @Test
+  void testCreateAnnotationOnEmptySpanCell() {
+    openOverlapExample();
+
+    // Need to maximize the window so that all columns are displayed,
+    // as NatTable knows only about completely displayed columns in the virtual table
+    bot.activeShell().maximize(true);
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("", table.getCellDataValueByPosition(1, 5));
+    table.click(1, 5);
+    typeTextPressReturn(table);
+    assertNotNull(table.getCellDataValueByPosition(1, 5));
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(1, 5));
+
+    bot.activeShell().maximize(false);
   }
 
   /**
@@ -408,7 +430,7 @@ public class TestGridEditor {
    * @throws TimeoutException after 1000ms without returning successfully
    */
   private void typeTextPressReturn(SWTBotNatTable table) throws TimeoutException {
-    keyboard.typeText("SUCCESS!");
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new DefaultCondition() {
 
