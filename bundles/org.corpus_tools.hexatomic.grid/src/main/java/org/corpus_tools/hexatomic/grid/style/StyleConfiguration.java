@@ -63,7 +63,7 @@ public class StyleConfiguration extends DefaultNatTableStyleConfiguration {
     configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, spanAnnotationCellStyle,
         DisplayMode.NORMAL, StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
 
-    // Create a new style to apply to cells containing token text (bold font)
+    // Create a new style to apply to cells containing token text (italic font)
     Style tokenTextCellStyle = new Style();
     FontData[] defaultFontData = GUIHelper.DEFAULT_FONT.getFontData();
     for (FontData fontDate : defaultFontData) {
