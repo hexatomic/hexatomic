@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
-  private static final String TEST_ANNOTATION_VALUE = "TEST_ANNOTATION_VALUE";
+  private static final String TEST_ANNOTATION_VALUE = "TEST";
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
