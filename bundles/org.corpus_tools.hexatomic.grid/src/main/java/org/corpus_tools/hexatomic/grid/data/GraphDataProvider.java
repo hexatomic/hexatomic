@@ -348,7 +348,6 @@ public class GraphDataProvider implements IDataProvider {
       if (columnType == ColumnType.TOKEN_TEXT) {
         log.debug("Action not implemented: Set token text");
       } else if (node instanceof SStructuredNode) {
-        log.debug("NODE? {} ", node);
         changeAnnotationValue(newValue, column, node);
       } else if (node == null) { // Span to take annotation doesn't exist yet
         SToken tokenAtIndex = orderedDsTokens.get(rowIndex);
