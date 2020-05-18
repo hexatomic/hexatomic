@@ -383,7 +383,7 @@ class TestGraphDataProvider {
     exampleGraph.getTextualDSs().get(0).setText(exampleText.getText() + " Yes it is.");
     exampleText = exampleGraph.getTextualDSs().get(0);
     exampleGraph.createToken(exampleText, 56, 59);
-    SToken token = exampleGraph.createToken(exampleText, 60, 62);
+    final SToken token = exampleGraph.createToken(exampleText, 60, 62);
     fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
