@@ -267,22 +267,6 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
       } else if (e.keyCode == '\r') {
         // make sure the cursor is set to the end of the line
         styledText.setCaretOffset(document.getLength());
-      } else if (e.keyCode == SWT.HOME) {
-        Optional<Range<Integer>> promptRange = getPromptRange();
-        if (promptRange.isPresent()) {
-          // Set cursor at the beginning of the allowed input prompt position (which is a better
-          // home position than the non-editable beginning of the line)
-          styledText.setCaretOffset(promptRange.get().lowerEndpoint());
-          e.doit = false;
-        }
-      } else if (e.keyCode == SWT.END) {
-        Optional<Range<Integer>> promptRange = getPromptRange();
-        if (promptRange.isPresent()) {
-          // Set cursor at the end of the allowed input prompt position (which is a better
-          // home position than the non-editable beginning of the line)
-          styledText.setCaretOffset(promptRange.get().upperEndpoint());
-          e.doit = false;
-        }
       }
 
     }
