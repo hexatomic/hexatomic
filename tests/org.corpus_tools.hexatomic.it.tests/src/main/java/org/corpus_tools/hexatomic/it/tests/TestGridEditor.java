@@ -24,8 +24,13 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
+import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
+import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +44,8 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
+  private static final String TEST_ANNOTATION_VALUE = "TEST";
+
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
   private URI exampleProjectUri;
@@ -48,6 +55,8 @@ public class TestGridEditor {
   private EHandlerService handlerService;
 
   private ErrorService errorService = new ErrorService();
+
+  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   @BeforeEach
   void setup() {
@@ -193,7 +202,7 @@ public class TestGridEditor {
     NatTable table = bot.widget(widgetOfType(NatTable.class));
     assertNotNull(table);
 
-    // Need to maximize the window so that all comlumns are displayed,
+    // Need to maximize the window so that all columns are displayed,
     // as NatTable knows only about completely displayed columns in the virtual table
     bot.activeShell().maximize(true);
 
@@ -345,6 +354,109 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(1, 5));
     assertTrue(table.hasConfigLabel(1, 5, StyleConfiguration.EMPTY_CELL_STYLE));
     bot.activeShell().maximize(false);
+  }
+
+  /**
+   * Tests editing cells by activating the cell editor with a double-click on the cell.
+   */
+  @Test
+  void testEditCellOnDoubleClick() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.doubleclick(2, 2);
+    typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+  }
+
+  /**
+   * Tests editing cells by activating the cell editor by just typing away.
+   */
+  @Test
+  void testEditCellTyping() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 2);
+    typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+  }
+
+  /**
+   * Tests editing cells by activating the cell editor by just typing away.
+   */
+  @Test
+  void testEditCellSpaceActivatedTyping() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 2);
+    keyboard.pressShortcut(Keystrokes.SPACE);
+    typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+  }
+
+  @Test
+  void testCreateAnnotationOnEmptySpanCell() {
+    openOverlapExample();
+
+    // Need to maximize the window so that all columns are displayed,
+    // as NatTable knows only about completely displayed columns in the virtual table
+    bot.activeShell().maximize(true);
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("", table.getCellDataValueByPosition(1, 5));
+    table.click(1, 5);
+    typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(1, 5));
+
+    bot.activeShell().maximize(false);
+  }
+
+  @Test
+  void testCreateAnnotationOnEmptyTokenCell() {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("", table.getCellDataValueByPosition(2, 2));
+    table.click(2, 2);
+    typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+
+  }
+
+  /**
+   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
+   * cell editors, up to 1000ms.
+   * 
+   * @param table The {@link NatTable} to operate on
+   * @throws TimeoutException after 1000ms without returning successfully
+   */
+  private void typeTextPressReturn(SWTBotNatTable table) throws TimeoutException {
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.pressShortcut(Keystrokes.CR);
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return table.widget.getActiveCellEditor() == null;
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Setting new value for cell took too long.";
+      }
+    }, 1000);
   }
 
 }

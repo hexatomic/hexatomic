@@ -25,23 +25,67 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
-import org.corpus_tools.salt.graph.LabelableElement;
 
 /**
  * Represents a column in the grid. A column has a title, and a list of row cells, the values of
- * which can be {@link LabelableElement}s (the first common superclass of {@link SAnnotation} and
- * {@link SToken}).
+ * which can be {@link SStructuredNode}s.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
 public class Column {
 
-  private final Map<Integer, LabelableElement> rowCells = new HashMap<>();
-  private String header = null;
+  /**
+   * An enum for distinguishing the type of elements a {@link Column} provides annotations for.
+   * 
+   * @author Stephan Druskat (mail@sdruskat.net)
+   *
+   */
+  public enum ColumnType {
+    // To be used for the column providing token texts
+    TOKEN_TEXT,
+    // To be used for columns providing token annotations
+    TOKEN_ANNOTATION,
+    // To be used for columns providing span annotations
+    SPAN_ANNOTATION
+  }
+
+
+  private final Map<Integer, SStructuredNode> rowCells = new HashMap<>();
   private BitSet bits = new BitSet();
+  private final ColumnType columnType;
+  private final String columnValue;
+  private final Integer columnIndex;
+
+  /**
+   * Constructs a new column with a column index.
+   * 
+   * @param columnType The type of the column
+   * @param annotationQName The qualified name of the {@link SAnnotation} for which the column holds
+   *        values.
+   * @param columnIndex The index of the column in a list of columns holding values for the same
+   *        type of column value (e.g., annotation values for annotations with the same qualified
+   *        name)
+   */
+  public Column(ColumnType columnType, String annotationQName, Integer columnIndex) {
+    this.columnType = columnType;
+    this.columnValue = annotationQName;
+    this.columnIndex = columnIndex;
+  }
+
+  /**
+   * Constructs a new column with the column index set to <code>null</code>.
+   * 
+   * @param columnType The type of the column
+   * @param annotationQName The qualified name of the {@link SAnnotation} for which the column holds
+   *        values.
+   */
+  public Column(ColumnType columnType, String annotationQName) {
+    this(columnType, annotationQName, null);
+  }
 
   /**
    * Returns the data object behind the row cell at the specified index.
@@ -50,7 +94,7 @@ public class Column {
    *        returned
    * @return The data object behind the specified row cell in this column
    */
-  LabelableElement getDataObject(int rowIndex) {
+  SStructuredNode getDataObject(int rowIndex) {
     return rowCells.get(rowIndex);
   }
 
@@ -88,19 +132,22 @@ public class Column {
   }
 
   /**
-   * Sets the specified data object to a row cell at the specified index.
+   * Sets the specified {@link SStructuredNode} data object to a row cell at the specified index.
    * 
    * @param rowIndex The index of the row cell to set the data object to
-   * @param dataObject The data object to set to the cell
+   * @param node The node data object to set to the cell
    * @throws RuntimeException if the row cell to set the data object to is already set
    */
-  void setRow(int rowIndex, LabelableElement dataObject) throws RuntimeException {
+  void setRow(int rowIndex, SStructuredNode node) throws RuntimeException {
     if (isRowEmpty(rowIndex)) {
-      rowCells.put(rowIndex, dataObject);
+      rowCells.put(rowIndex, node);
       bits.set(rowIndex);
+    } else if (!isRowEmpty(rowIndex) && node == null) {
+      rowCells.remove(rowIndex);
+      bits.clear(rowIndex);
     } else {
-      throw new RuntimeException("Cannot add " + dataObject + " to " + this.getHeader() + "::"
-          + rowIndex + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
+      throw new RuntimeException("Cannot add " + node + " to " + this.getHeader() + "::" + rowIndex
+          + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
     }
   }
 
@@ -111,30 +158,32 @@ public class Column {
    * @return the text to display
    */
   String getDisplayText(int rowIndex) {
-    LabelableElement dataObject = rowCells.get(rowIndex);
-    if (dataObject instanceof SToken) {
-      SToken token = (SToken) dataObject;
-      SDocumentGraph graph = token.getGraph();
-      return graph.getText(token);
-    } else if (dataObject instanceof SAnnotation) {
-      SAnnotation annotation = (SAnnotation) dataObject;
-      Object value = annotation.getValue();
-      if (value == null) {
+    SStructuredNode dataObject = rowCells.get(rowIndex);
+    if (getColumnType() == ColumnType.TOKEN_TEXT) {
+      if (dataObject instanceof SToken) {
+        SToken token = (SToken) dataObject;
+        SDocumentGraph graph = token.getGraph();
+        return graph.getText(token);
+      } else if (dataObject == null) {
+        // As is the case when the first cell is used to display a message
         return null;
       } else {
+        throw new RuntimeException(
+            "A column of type " + ColumnType.TOKEN_TEXT + " can only contain data objects of type "
+                + SToken.class.getName() + ". Encountered: " + dataObject.getClass() + ".");
+      }
+    } else if (dataObject != null) {
+      // Column is for providing annotations, hence columnValue should be a valid annotation qName
+      SAnnotation annotation = dataObject.getAnnotation(this.columnValue);
+      if (annotation == null) {
+        return null;
+      } else {
+        Object value = annotation.getValue();
         return value.toString();
       }
+    } else {
+      return null;
     }
-    return null;
-  }
-
-  /**
-   * Sets the column header.
-   * 
-   * @param header The header to set
-   */
-  void setHeader(String header) {
-    this.header = header;
   }
 
   /**
@@ -143,15 +192,39 @@ public class Column {
    * @return the column header
    */
   public String getHeader() {
-    return header;
+    if (columnIndex == null) {
+      return this.columnValue;
+    } else {
+      return this.columnValue + " (" + this.columnIndex + ")";
+    }
   }
 
   BitSet getBits() {
     return bits;
   }
 
-  Map<Integer, LabelableElement> getCells() {
+  Map<Integer, SStructuredNode> getCells() {
     return rowCells;
+  }
+
+  /**
+   * Returns the {@link ColumnType} for this column.
+   * 
+   * @return the columnType
+   */
+  public ColumnType getColumnType() {
+    return columnType;
+  }
+
+  /**
+   * Returns the column value for this column. For columns containing token text, this is an
+   * arbitrary string. For columns containing annotations, this is the qualified name of the
+   * {@link SAnnotation} for which the column holds values.
+   * 
+   * @return the columnValue
+   */
+  public String getColumnValue() {
+    return columnValue;
   }
 
 }
