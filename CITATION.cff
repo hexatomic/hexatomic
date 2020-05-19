@@ -9,7 +9,7 @@ authors:
   given-names: Thomas
   orcid: https://orcid.org/0000-0003-3731-2422
 version: 0.4.0-SNAPSHOT
-date-released: 2020-04-06
+date-released: 2020-05-19
 references:
 - type: software
   title: SWT Resource Manager
@@ -53,7 +53,7 @@ references:
 - type: software
   title: Java Text Categorizing Library
   abbreviation: textcat
-  version: 3.3.11
+  version: 3.4.2
   license: LGPL-3.0-or-later
   license-url: http://www.gnu.org/licenses/lgpl.txt
   repository-code: https://sourceforge.net/p/textcat/code/
@@ -799,7 +799,7 @@ references:
     directory.
 - type: software
   title: salt-api
-  version: 3.3.11
+  version: 3.4.2
   abbreviation: org.corpus-tools:salt-api
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/salt_api directory.
@@ -809,7 +809,7 @@ references:
   repository-code: https://github.com/korpling/salt/salt-api
 - type: software
   title: salt-extensions
-  version: 3.3.11
+  version: 3.4.2
   abbreviation: org.corpus-tools:salt-extensions
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/salt_extensions
