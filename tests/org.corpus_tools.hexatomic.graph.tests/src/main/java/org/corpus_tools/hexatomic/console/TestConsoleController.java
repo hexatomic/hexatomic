@@ -228,12 +228,11 @@ class TestConsoleController {
 
     // Check the original text has not been altered and is displayed correctly
     assertEquals(originalText, firstText.getText());
-    graph.sortTokenByText();
     DataSourceSequence<Integer> seq = new DataSourceSequence<>();
     seq.setDataSource(firstText);
     seq.setStart(0);
     seq.setEnd(firstText.getText().length());
-    List<SToken> firstTextTokens = graph.getTokensBySequence(seq);
+    List<SToken> firstTextTokens = graph.getSortedTokenByText(graph.getTokensBySequence(seq));
     assertEquals(7, firstTextTokens.size());
     assertEquals("This", graph.getText(firstTextTokens.get(0)));
     assertEquals("text", graph.getText(firstTextTokens.get(1)));
