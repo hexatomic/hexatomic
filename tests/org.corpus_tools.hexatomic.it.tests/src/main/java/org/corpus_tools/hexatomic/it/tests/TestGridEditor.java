@@ -504,11 +504,11 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(1, 4);
-    bot.sleep(2000);
     List<String> columnItems = table.contextMenu(2, 3).menuItems();
-    bot.sleep(2000);
-    assertEquals("Delete cell(s)", columnItems.get(0));
-    bot.sleep(2000);
+    assertTrue(columnItems.get(0).contains("Delete cell(s)"));
+    table.contextMenu(2, 3).contextMenu("Delete cell(s)").click();
+    assertEquals("", table.getCellDataValueByPosition(1, 4));
+    assertNotNull(table.getCellDataValueByPosition(2, 3));
   }
 
 }
