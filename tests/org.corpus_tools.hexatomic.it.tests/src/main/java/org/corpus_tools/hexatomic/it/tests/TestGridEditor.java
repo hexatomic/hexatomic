@@ -496,4 +496,19 @@ public class TestGridEditor {
     // https://bugs.eclipse.org/bugs/show_bug.cgi?id=563300
   }
 
+  @Test
+  void testDeletePopupMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    bot.sleep(2000);
+    List<String> columnItems = table.contextMenu(2, 3).menuItems();
+    bot.sleep(2000);
+    assertEquals("Delete cell(s)", columnItems.get(0));
+    bot.sleep(2000);
+  }
+
 }
