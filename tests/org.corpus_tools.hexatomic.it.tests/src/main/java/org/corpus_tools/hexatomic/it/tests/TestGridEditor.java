@@ -461,6 +461,7 @@ public class TestGridEditor {
 
   @Test
   void testRemoveSingleAnnotationByDelKey() {
+    bot.activeShell().maximize(true);
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -468,8 +469,25 @@ public class TestGridEditor {
 
     table.click(1, 4);
     keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals("", table.getCellDataValueByPosition(1, 4));
 
-    assertEquals(null, table.getCellDataValueByPosition(1, 4));
+    table.click(2, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals("", table.getCellDataValueByPosition(2, 3));
+
+    table.click(2, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals("", table.getCellDataValueByPosition(2, 4));
+    assertEquals("", table.getCellDataValueByPosition(3, 4));
+    assertEquals("", table.getCellDataValueByPosition(4, 4));
+    assertEquals("", table.getCellDataValueByPosition(5, 4));
+    assertEquals("", table.getCellDataValueByPosition(6, 4));
+    assertEquals("", table.getCellDataValueByPosition(7, 4));
+
+    bot.activeShell().maximize(false);
   }
 
   @Test
