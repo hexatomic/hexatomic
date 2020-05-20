@@ -459,4 +459,23 @@ public class TestGridEditor {
     }, 1000);
   }
 
+  @Test
+  void testRemoveSingleAnnotationByDelKey() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+
+    assertEquals(null, table.getCellDataValueByPosition(1, 4));
+  }
+
+  @Test
+  void testRemoveMultipleAnnotationsByDelKey() {
+    // TODO Implement once this can be tested!
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=563300
+  }
+
 }
