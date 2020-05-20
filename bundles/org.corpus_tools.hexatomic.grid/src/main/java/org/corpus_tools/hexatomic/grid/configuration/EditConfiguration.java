@@ -26,7 +26,10 @@ import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
+import org.eclipse.nebula.widgets.nattable.edit.command.DeleteSelectionCommandHandler;
 import org.eclipse.nebula.widgets.nattable.edit.editor.TextCellEditor;
+import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 
 /**
@@ -39,10 +42,12 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   private static final String CELL_EDITOR = "CELL_EDITOR";
   private static final String TOKEN_COLUMN_CONFIG_LABEL = "TOKEN_COLUMN_CONFIG_LABEL";
-  private LabelAccumulator labelAccumulator;
+  private final LabelAccumulator labelAccumulator;
+  private final SelectionLayer selectionLayer;
 
-  public EditConfiguration(LabelAccumulator labelAccumulator) {
+  public EditConfiguration(LabelAccumulator labelAccumulator, SelectionLayer selectionLayer) {
     this.labelAccumulator = labelAccumulator;
+    this.selectionLayer = selectionLayer;
   }
 
   @Override
@@ -66,5 +71,12 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
     configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITOR, textCellEditor,
         DisplayMode.NORMAL, CELL_EDITOR);
   }
+
+  @Override
+  public void configureLayer(ILayer layer) {
+    layer.registerCommandHandler(new DeleteSelectionCommandHandler(this.selectionLayer));
+  }
+
+
 
 }

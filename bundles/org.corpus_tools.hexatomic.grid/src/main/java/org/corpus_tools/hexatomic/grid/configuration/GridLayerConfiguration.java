@@ -21,7 +21,11 @@
 
 package org.corpus_tools.hexatomic.grid.configuration;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.IConfiguration;
+import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
 import org.eclipse.nebula.widgets.nattable.edit.action.KeyEditAction;
 import org.eclipse.nebula.widgets.nattable.edit.action.MouseEditAction;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
@@ -40,6 +44,8 @@ import org.eclipse.swt.SWT;
  *
  */
 public class GridLayerConfiguration extends DefaultGridLayerConfiguration {
+
+  private final Collection<IConfiguration> configurations = new LinkedList<IConfiguration>();
 
   public GridLayerConfiguration(CompositeLayer gridLayer) {
     super(gridLayer);
@@ -71,6 +77,10 @@ public class GridLayerConfiguration extends DefaultGridLayerConfiguration {
         // Start typing on double-click (single click only selects
         uiBindingRegistry.registerFirstDoubleClickBinding(
             new CellEditorMouseEventMatcher(GridRegion.BODY), new MouseEditAction());
+
+        // Delete annotation when user presses Delete key
+        uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.NONE, SWT.DEL),
+            new DeleteSelectionAction());
       }
     });
   }
