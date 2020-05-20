@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
+import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.util.DataSourceSequence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -197,6 +199,50 @@ class TestConsoleController {
     assertEquals("text", graph.getText(tokens.get(5)));
   }
 
+
+  /**
+   * Tests if the "ta" and "tb" commands add t work correctly and with no side-effects when having
+   * multiple text. This is a regression test for https://github.com/hexatomic/hexatomic/issues/140.
+   */
+  @Test
+  void testTokenizeAfterBeforeMultipleTexts() {
+
+    // Add initial tokens
+    console.executeCommand("t This text is the first one.");
+    assertEquals(1, graph.getTextualDSs().size());
+    STextualDS firstText = graph.getTextualDSs().get(0);
+    final String originalText = firstText.getText();
+    
+    // Add another textual data source manually
+    STextualDS anotherText = graph.createTextualDS("Another text");
+    final SToken tok1 = graph.createToken(anotherText, 0, 7);
+    final SToken tok2 = graph.createToken(anotherText, 8, 12);
+
+    // Append tokens after the first token
+    console.executeCommand("ta #" + tok1.getName() + " very fancy");
+    // Prepend token before the second token
+    console.executeCommand("tb #" + tok2.getName() + " and reliable");
+
+    // Check that the right textual data source has been amended
+    assertEquals("Another very fancy and reliable text", anotherText.getText());
+
+    // Check the original text has not been altered and is displayed correctly
+    assertEquals(originalText, firstText.getText());
+    DataSourceSequence<Integer> seq = new DataSourceSequence<>();
+    seq.setDataSource(firstText);
+    seq.setStart(0);
+    seq.setEnd(firstText.getText().length());
+    List<SToken> firstTextTokens = graph.getSortedTokenByText(graph.getTokensBySequence(seq));
+    assertEquals(7, firstTextTokens.size());
+    assertEquals("This", graph.getText(firstTextTokens.get(0)));
+    assertEquals("text", graph.getText(firstTextTokens.get(1)));
+    assertEquals("is", graph.getText(firstTextTokens.get(2)));
+    assertEquals("the", graph.getText(firstTextTokens.get(3)));
+    assertEquals("first", graph.getText(firstTextTokens.get(4)));
+    assertEquals("one", graph.getText(firstTextTokens.get(5)));
+    assertEquals(".", graph.getText(firstTextTokens.get(6)));
+  }
+
   @Test
   void testExampleDelete() {
     // Add initial tokens
@@ -266,4 +312,5 @@ class TestConsoleController {
     console.executeCommand("e #n1 > #t2 ns:n:a");
     assertEquals(3, graph.getDominanceRelations().size()); 
   }
+
 }
