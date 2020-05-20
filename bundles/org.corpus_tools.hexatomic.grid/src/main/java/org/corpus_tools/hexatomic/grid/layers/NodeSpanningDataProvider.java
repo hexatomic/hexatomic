@@ -21,8 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.layers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
@@ -46,18 +45,6 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
   private final GraphDataProvider graphDataProvider;
 
   /**
-   * List of column positions for which automatic spanning is enabled. If this list is empty, all
-   * columns will do auto row spanning.
-   */
-  private List<Integer> autoSpanColumns = new ArrayList<Integer>();
-
-  /**
-   * List of row positions for which automatic spanning is enabled. If this list is empty, all rows
-   * will do auto column spanning.
-   */
-  private List<Integer> autoSpanRows = new ArrayList<Integer>();
-
-  /**
    * Constructor limiting the parameter <code>underlyingDataProvider</code> to instance of
    * {@link GraphDataProvider}, that this class needs wo work on nodes rather than strings for
    * equality checks. If another type is passed as data provider, an unchecked
@@ -78,28 +65,6 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
           + this.getClass().getCanonicalName() + " must be of type "
           + GraphDataProvider.class.getCanonicalName() + ".");
     }
-    super.setAutoColumnSpan(autoColumnSpan);
-    super.setAutoRowSpan(autoRowSpan);
-  }
-
-  /**
-   * Checks if the given column position is configured as an auto span column.
-   *
-   * @param columnPosition The column position to check
-   * @return <code>true</code> if the given column position is configured as an auto span column.
-   */
-  private boolean isAutoSpanColumn(int columnPosition) {
-    return (this.autoSpanColumns.isEmpty() || this.autoSpanColumns.contains(columnPosition));
-  }
-
-  /**
-   * Checks if the given row position is configured as an auto span row.
-   *
-   * @param rowPosition The row position to check
-   * @return <code>true</code> if the given row position is configured as an auto span row.
-   */
-  private boolean isAutoSpanRow(int rowPosition) {
-    return (this.autoSpanRows.isEmpty() || this.autoSpanRows.contains(rowPosition));
   }
 
   /**
@@ -117,7 +82,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
   protected int getStartColumnPosition(int columnPosition, int rowPosition) {
     int columnPos;
     for (columnPos = columnPosition; columnPos >= 0; columnPos--) {
-      if (columnPos <= 0 || !isAutoSpanColumn(columnPos) || !isAutoSpanColumn(columnPos - 1)) {
+      if (columnPos <= 0) {
         break;
       }
 
@@ -149,7 +114,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
   protected int getStartRowPosition(int columnPosition, int rowPosition) {
     int rowPos;
     for (rowPos = rowPosition; rowPos >= 0; rowPos--) {
-      if (rowPos <= 0 || !isAutoSpanRow(rowPos) || !isAutoSpanRow(rowPos - 1)) {
+      if (rowPos <= 0) {
         break;
       }
 
@@ -179,8 +144,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
   protected int getColumnSpan(int columnPosition, int rowPosition) {
     int span = 1;
 
-    while (columnPosition < getColumnCount() - 1 && isAutoSpanColumn(columnPosition)
-        && isAutoSpanColumn(columnPosition + 1)
+    while (columnPosition < getColumnCount() - 1
         && !valuesNotEqual(graphDataProvider.getNode(columnPosition, rowPosition),
             graphDataProvider.getNode(columnPosition + 1, rowPosition))) {
       span++;
@@ -202,8 +166,7 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
   protected int getRowSpan(int columnPosition, int rowPosition) {
     int span = 1;
 
-    while (rowPosition < getRowCount() - 1 && isAutoSpanRow(rowPosition)
-        && isAutoSpanRow(rowPosition + 1)
+    while (rowPosition < getRowCount() - 1
         && !valuesNotEqual(graphDataProvider.getNode(columnPosition, rowPosition),
             graphDataProvider.getNode(columnPosition, rowPosition + 1))) {
       span++;
@@ -223,14 +186,13 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
    * @return <code>true</code> if the given values are not equal, or if both values are
    *         <code>null</code>
    */
+  @Override
   protected boolean valuesNotEqual(Object value1, Object value2) {
     if (value1 == null && value2 == null) {
       return true;
-    } else if (value1 == value2) {
-      return false;
+    } else {
+      return !Objects.equals(value1, value2);
     }
-    return ((value1 == null && value2 != null) || (value1 != null && value2 == null)
-        || !value1.equals(value2));
   }
 
 

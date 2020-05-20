@@ -444,12 +444,15 @@ public class GraphEditor {
       final String segmentFilterText = txtSegmentFilter.getText();
       final boolean includeSpans = btnIncludeSpans.getSelection();
       final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
-      final List<Range<Long>> oldSelectedRanges = new LinkedList<>();
+      final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
 
       if (recalculateSegments) {
         // Store the old segment selection
         for (TableItem item : textRangeTable.getSelection()) {
-          oldSelectedRanges.add((Range<Long>) item.getData("range"));
+          SegmentSelectionEntry entry = new SegmentSelectionEntry();
+          entry.range = (Range<Long>) item.getData("range");
+          entry.text = (STextualDS) item.getData("text");
+          oldSelectedSegments.add(entry);
         }
       } else {
 
@@ -492,16 +495,18 @@ public class GraphEditor {
             textRangeTable.getColumn(0).pack();
 
             boolean selectedSomeOld = false;
-            for (Range<Long> oldRange : oldSelectedRanges) {
+            for (SegmentSelectionEntry oldSegment : oldSelectedSegments) {
               for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
-                Range<Long> itemRange = (Range<Long>) textRangeTable.getItem(idx).getData("range");
-                if (itemRange.isConnected(oldRange)) {
+                TableItem item = textRangeTable.getItem(idx);
+                Range<Long> itemRange = (Range<Long>) item.getData("range");
+                STextualDS itemText = (STextualDS) item.getData("text");
+                if (itemText == oldSegment.text &&   itemRange.isConnected(oldSegment.range)) {
                   textRangeTable.select(idx);
                   selectedSomeOld = true;
 
                   SegmentSelectionEntry selection = new SegmentSelectionEntry();
                   selection.range = itemRange;
-                  selection.text = (STextualDS) textRangeTable.getItem(idx).getData("text");
+                  selection.text = itemText;
                   newSelectedSegments.add(selection);
                 }
               }
