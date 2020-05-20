@@ -21,10 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.configuration;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
-import org.eclipse.nebula.widgets.nattable.config.IConfiguration;
 import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
 import org.eclipse.nebula.widgets.nattable.edit.action.KeyEditAction;
 import org.eclipse.nebula.widgets.nattable.edit.action.MouseEditAction;
@@ -44,8 +41,6 @@ import org.eclipse.swt.SWT;
  *
  */
 public class GridLayerConfiguration extends DefaultGridLayerConfiguration {
-
-  private final Collection<IConfiguration> configurations = new LinkedList<IConfiguration>();
 
   public GridLayerConfiguration(CompositeLayer gridLayer) {
     super(gridLayer);
