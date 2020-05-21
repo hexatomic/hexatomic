@@ -9,7 +9,7 @@ authors:
   given-names: Thomas
   orcid: https://orcid.org/0000-0003-3731-2422
 version: 0.4.0-SNAPSHOT
-date-released: 2020-05-19
+date-released: 2020-05-21
 references:
 - type: software
   title: SWT Resource Manager
