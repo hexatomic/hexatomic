@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
+import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.emf.common.util.URI;
 
@@ -41,5 +42,28 @@ public class Checkpoint {
       }
     }
     // TODO: store the whole corpus graph including document annotations
+  }
+
+  /**
+   * Restores all document that belong to this checkpoint.
+   * 
+   * @param projectManager The project manager, used to get and set the actual documents.
+   */
+  public void restore(ProjectManager projectManager) {
+    // TODO: restore corpus graph including document annotations
+    
+    for (Map.Entry<String, File> entry : temporaryFiles.entrySet()) {
+      String documentID = entry.getKey();
+      File temporaryFileForDocument = entry.getValue();
+
+      // Load document graph from file
+      SDocumentGraph documentGraph =
+          SaltUtil.loadDocumentGraph(URI.createFileURI(temporaryFileForDocument.getAbsolutePath()));
+      
+      Optional<SDocument> document = projectManager.getDocument(documentID);
+      if (document.isPresent()) {
+        document.get().setDocumentGraph(documentGraph);
+      }
+    }
   }
 }

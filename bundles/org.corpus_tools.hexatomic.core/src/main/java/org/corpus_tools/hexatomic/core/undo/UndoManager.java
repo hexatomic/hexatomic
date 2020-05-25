@@ -43,6 +43,24 @@ public class UndoManager implements Listener {
   public void addCheckpoint() {
     // Go through all inconsistent events and collect the document graphs we need to save for this
     // checkpoint
+    Set<String> documents = inconsistentDocuments();
+    try {
+      checkpoints.add(new Checkpoint(documents, projectManager));
+      this.inconsistantEvents.clear();
+      log.debug("Added new checkpoint to undo list");
+      // TODO: if the changes are reversable without saving and loading the whole document, create a
+      // different kind of checkpoint
+    } catch (IOException ex) {
+      errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
+    }
+  }
+
+  /**
+   * Collects the IDs of all currently inconsistent documents.
+   * 
+   * @return The document IDs.
+   */
+  private Set<String> inconsistentDocuments() {
     Set<String> documents = new HashSet<>();
     for (SaltUpdateEvent e : this.inconsistantEvents) {
       IdentifiableElement element = null;
@@ -55,13 +73,27 @@ public class UndoManager implements Listener {
         documents.add(element.getId());
       }
     }
-    try {
-      checkpoints.add(new Checkpoint(documents, projectManager));
-      log.debug("Added new checkpoint to undo list");
-    } catch (IOException ex) {
-      errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
-    }
+    return documents;
+  }
 
+  /**
+   * Checks whether it is possible to perform an undo.
+   * 
+   * @return True if undo is possible.
+   */
+  public boolean canUndo() {
+    return !checkpoints.isEmpty();
+  }
+
+  /**
+   * Undoes all changes made since the last checkpoint was added.
+   */
+  public void undo() {
+    if (canUndo()) {
+      // Restore all documents from the last checkpoint
+      this.checkpoints.pop().restore(projectManager);
+      // TODO: how to implement redo?
+    }
   }
 
   @Override
