@@ -539,6 +539,21 @@ public class TestGridEditor {
 
     List<String> columnHeaderMenuItems = table.contextMenu(0, 2).menuItems();
     assertTrue(columnHeaderMenuItems.contains("Change annotation name"));
+    assertTrue(table.contextMenu(0, 2).contextMenu("Change annotation name").isVisible());
+    assertTrue(table.contextMenu(0, 2).contextMenu("Change annotation name").isEnabled());
+  }
+
+  @Test
+  void testRenameColumnMenuNotVisibleInIdxAndTokenTextColumn() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(0, 0).contextMenu("Change annotation name"));
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(0, 1).contextMenu("Change annotation name"));
   }
 
 }
