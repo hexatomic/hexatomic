@@ -12,9 +12,10 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 
-public class Checkpoint {
+public class DocumentGraphModifications implements ReversableOperation {
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Checkpoint.class);
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(DocumentGraphModifications.class);
 
   private Map<String, File> temporaryFiles = new HashMap<>();
 
@@ -27,7 +28,7 @@ public class Checkpoint {
    * @throws IOException Checkpoints use temporary files on disk. If creating these files or
    *         serializing the document graph fails, an exception is thrown.
    */
-  public Checkpoint(Collection<String> documents, ProjectManager projectManager)
+  public DocumentGraphModifications(Collection<String> documents, ProjectManager projectManager)
       throws IOException {
     // Store all changed document in temporary files
     for (String doc : documents) {
@@ -36,9 +37,8 @@ public class Checkpoint {
         File temporaryFileForDocument =
             File.createTempFile("hexatomic-checkpoint-documentgraph-", ".salt");
         temporaryFileForDocument.deleteOnExit();
-        SaltUtil.saveDocumentGraph(
-            loadedDocument.get()
-                .getDocumentGraph(),
+        SaltUtil.saveDocumentGraph(loadedDocument.get()
+            .getDocumentGraph(),
             URI.createFileURI(temporaryFileForDocument.getAbsolutePath()));
         temporaryFiles.put(doc, temporaryFileForDocument);
         log.debug("Adding document {} with temporary file {} to checkpoint", doc,
@@ -46,7 +46,6 @@ public class Checkpoint {
 
       }
     }
-    // TODO: store the whole corpus graph including document annotations
   }
 
   /**
@@ -56,15 +55,13 @@ public class Checkpoint {
    * @param events An event broker used to send load events.
    */
   public void restore(ProjectManager projectManager, IEventBroker events) {
-    // TODO: restore corpus graph including document annotations
-    
     for (Map.Entry<String, File> entry : temporaryFiles.entrySet()) {
       String documentID = entry.getKey();
       File temporaryFileForDocument = entry.getValue();
 
       // Load document graph from file
       projectManager.loadDocumentFrom(documentID, temporaryFileForDocument);
-      
+
       // Delete the temporary file
       if (!temporaryFileForDocument.delete()) {
         log.warn("Could not delete temporary file {}", temporaryFileForDocument.getAbsoluteFile());

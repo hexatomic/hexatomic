@@ -24,9 +24,8 @@ public class UndoManager implements Listener {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UndoManager.class);
 
-  private final Stack<SaltUpdateEvent> inconsistantEvents = new Stack<>();
-
-  private final Stack<Checkpoint> checkpoints = new Stack<>();
+  private final Stack<ReversableOperation> checkpoints = new Stack<>();
+  private final Set<String> inconsistantDocuments = new HashSet<>();
 
   @Inject
   private ErrorService errors;
@@ -41,18 +40,19 @@ public class UndoManager implements Listener {
   private void init() {
     // We need to receive all updates on all document graphs
     projectManager.addListener(this);
+
   }
 
   /**
    * Adds a checkpoint. A user will be able to undo all changes made after these checkpoint.
    */
   public void addCheckpoint() {
-    // Go through all inconsistent events and collect the document graphs we need to save for this
-    // checkpoint
-    Set<String> documents = inconsistentDocuments();
+    // Go through all inconsistent events and merge them into a new combined event.
+    // Currently, the strategy is to collect the documents that are affected by these events and
+    // create a single DocumentGraphModifications event.
     try {
-      checkpoints.add(new Checkpoint(documents, projectManager));
-      this.inconsistantEvents.clear();
+      checkpoints.add(new DocumentGraphModifications(inconsistantDocuments, projectManager));
+      this.inconsistantDocuments.clear();
       log.debug("Added new checkpoint to undo list");
       // TODO: if the changes are reversable without saving and loading the whole document, create a
       // different kind of checkpoint
@@ -66,24 +66,10 @@ public class UndoManager implements Listener {
   private void documentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String changedDocumentId) {
     Optional<SDocument> loadedDocument = projectManager.getDocument(changedDocumentId);
     if (loadedDocument.isPresent()) {
-      this.inconsistantEvents.add(new SaltUpdateEvent(loadedDocument.get().getId()));
+      this.inconsistantDocuments.add(loadedDocument.get().getId());
     }
   }
 
-  /**
-   * Collects the IDs of all currently inconsistent documents.
-   * 
-   * @return The document IDs.
-   */
-  private Set<String> inconsistentDocuments() {
-    Set<String> documents = new HashSet<>();
-    for (SaltUpdateEvent e : this.inconsistantEvents) {
-      if (e.getDocumentID().isPresent()) {
-        documents.add(e.getDocumentID().get());
-      }
-    }
-    return documents;
-  }
 
   /**
    * Checks whether it is possible to perform an undo.
@@ -91,7 +77,7 @@ public class UndoManager implements Listener {
    * @return True if undo is possible.
    */
   public boolean canUndo() {
-    return !checkpoints.isEmpty() && !inconsistantEvents.isEmpty();
+    return !checkpoints.isEmpty() && !inconsistantDocuments.isEmpty();
   }
 
   /**
@@ -109,6 +95,9 @@ public class UndoManager implements Listener {
   public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
       Object newValue, Object container) {
     // Add this event to our list of events that happened between two checkpoint commands
-    inconsistantEvents.add(new SaltUpdateEvent(type, attribute, oldValue, newValue, container));
+    SaltUpdateEvent event = new SaltUpdateEvent(type, attribute, oldValue, newValue, container);
+    if (event.getDocumentID().isPresent()) {
+      inconsistantDocuments.add(event.getDocumentID().get());
+    }
   }
 }

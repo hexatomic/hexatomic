@@ -47,16 +47,6 @@ public class SaltUpdateEvent {
     }
   }
 
-  public SaltUpdateEvent(String documentID) {
-    this.documentID = Optional.ofNullable(documentID);
-
-    this.type = NOTIFICATION_TYPE.SET;
-    this.attribute = GRAPH_ATTRIBUTES.GRAPH_LABELS;
-    this.oldValue = null;
-    this.newValue = null;
-    this.container = null;
-  }
-
   public NOTIFICATION_TYPE getType() {
     return type;
   }
