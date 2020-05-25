@@ -2,8 +2,8 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -25,6 +25,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -515,7 +516,18 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
-    assertFalse(table.contextMenu(1, 1).contextMenu("Delete cell(s)").isVisible());
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+  }
+
+  @Test
+  void testPopupMenuInvisibleOnNoSelection() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
   }
 
 }
