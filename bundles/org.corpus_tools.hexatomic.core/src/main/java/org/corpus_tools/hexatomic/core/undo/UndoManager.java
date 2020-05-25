@@ -13,6 +13,7 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.events.IEventBroker;
 
 @Creatable
 @Singleton
@@ -30,6 +31,9 @@ public class UndoManager implements Listener {
 
   @Inject
   private ProjectManager projectManager;
+
+  @Inject
+  IEventBroker events;
 
   @PostConstruct
   private void init() {
@@ -91,7 +95,7 @@ public class UndoManager implements Listener {
   public void undo() {
     if (canUndo()) {
       // Restore all documents from the last checkpoint
-      this.checkpoints.pop().restore(projectManager);
+      this.checkpoints.pop().restore(projectManager, events);
       // TODO: how to implement redo?
     }
   }

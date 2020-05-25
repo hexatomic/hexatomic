@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.util.SaltUtil;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 
 public class Checkpoint {
@@ -53,8 +55,9 @@ public class Checkpoint {
    * Restores all document that belong to this checkpoint.
    * 
    * @param projectManager The project manager, used to get and set the actual documents.
+   * @param events An event broker used to send load events.
    */
-  public void restore(ProjectManager projectManager) {
+  public void restore(ProjectManager projectManager, IEventBroker events) {
     // TODO: restore corpus graph including document annotations
     
     for (Map.Entry<String, File> entry : temporaryFiles.entrySet()) {
@@ -68,6 +71,7 @@ public class Checkpoint {
       Optional<SDocument> document = projectManager.getDocument(documentID);
       if (document.isPresent()) {
         document.get().setDocumentGraph(documentGraph);
+        events.send(Topics.DOCUMENT_LOADED, document.get().getId());
       }
     }
   }
