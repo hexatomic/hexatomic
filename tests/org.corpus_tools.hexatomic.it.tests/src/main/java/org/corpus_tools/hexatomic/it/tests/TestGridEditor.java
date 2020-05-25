@@ -530,4 +530,15 @@ public class TestGridEditor {
         () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
   }
 
+  @Test
+  void testRenameColumnByContextMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    List<String> columnHeaderMenuItems = table.contextMenu(0, 2).menuItems();
+    assertTrue(columnHeaderMenuItems.contains("Change annotation name"));
+  }
+
 }
