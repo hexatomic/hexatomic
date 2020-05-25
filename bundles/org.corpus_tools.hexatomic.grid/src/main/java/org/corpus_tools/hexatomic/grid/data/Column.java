@@ -57,7 +57,8 @@ public class Column {
   private final Map<Integer, SStructuredNode> rowCells = new HashMap<>();
   private BitSet bits = new BitSet();
   private final ColumnType columnType;
-  private final String columnValue;
+  private String columnValue;
+
   private final Integer columnIndex;
 
   /**
@@ -217,6 +218,15 @@ public class Column {
   }
 
   /**
+   * Sets the column value.
+   * 
+   * @param columnValue the columnValue to set
+   */
+  public void setColumnValue(String columnValue) {
+    this.columnValue = columnValue;
+  }
+
+  /**
    * Returns the column value for this column. For columns containing token text, this is an
    * arbitrary string. For columns containing annotations, this is the qualified name of the
    * {@link SAnnotation} for which the column holds values.
@@ -225,6 +235,15 @@ public class Column {
    */
   public String getColumnValue() {
     return columnValue;
+  }
+
+  /**
+   * Returns the map of row indices to nodes contained in the cells of the row.
+   * 
+   * @return the rowCells
+   */
+  public Map<Integer, SStructuredNode> getRowCells() {
+    return rowCells;
   }
 
 }
