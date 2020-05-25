@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.common.SDocument;
-import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
@@ -65,14 +63,14 @@ public class Checkpoint {
       File temporaryFileForDocument = entry.getValue();
 
       // Load document graph from file
-      SDocumentGraph documentGraph =
-          SaltUtil.loadDocumentGraph(URI.createFileURI(temporaryFileForDocument.getAbsolutePath()));
+      projectManager.loadDocumentFrom(documentID, temporaryFileForDocument);
       
-      Optional<SDocument> document = projectManager.getDocument(documentID);
-      if (document.isPresent()) {
-        document.get().setDocumentGraph(documentGraph);
-        events.send(Topics.DOCUMENT_LOADED, document.get().getId());
+      // Delete the temporary file
+      if (!temporaryFileForDocument.delete()) {
+        log.warn("Could not delete temporary file {}", temporaryFileForDocument.getAbsoluteFile());
       }
     }
+
+    temporaryFiles.clear();
   }
 }

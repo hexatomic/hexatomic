@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -208,6 +209,33 @@ public class ProjectManager {
     }
 
     return result;
+  }
+
+  /**
+   * Load an existing document from a specific location on the disk.
+   * Loading this graph will not change the persisted location for the document but just change the
+   * content of the graph.
+   * 
+   * @param documentID The ID of the document to load. This document ID must exist in the corpus
+   *        graph.
+   * @param saltFile The SaltXML file to load.
+   */
+  public void loadDocumentFrom(String documentID, File saltFile) {
+    Optional<SDocument> document =
+        this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
+            .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
+
+    if (document.isPresent() && saltFile.isFile()) {
+      // Deactivate listeners to avoid partial updates during load
+      listenersActive = false;
+      SDocumentGraph documentGraph =
+          SaltUtil.loadDocumentGraph(URI.createFileURI(saltFile.getAbsolutePath()));
+      // Re-enable listeners and notify them of the loaded document
+      listenersActive = true;
+      document.get().setDocumentGraph(documentGraph);
+
+      events.send(Topics.DOCUMENT_LOADED, document.get().getId());
+    }
   }
 
   /**
