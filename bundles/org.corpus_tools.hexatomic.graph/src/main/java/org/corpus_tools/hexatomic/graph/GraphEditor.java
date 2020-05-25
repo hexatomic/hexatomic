@@ -72,6 +72,8 @@ import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -113,6 +115,7 @@ import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
 
+@SuppressWarnings("restriction")
 public class GraphEditor {
 
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
@@ -151,6 +154,12 @@ public class GraphEditor {
 
   @Inject
   private IEventBroker events;
+
+  @Inject
+  private ECommandService commandService;
+
+  @Inject
+  private EHandlerService handlerService;
 
   private ListenerImplementation projectChangeListener;
 
@@ -255,7 +264,7 @@ public class GraphEditor {
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
         "graph-editor/text-console");
-    consoleView = new ConsoleView(consoleViewer, sync, getGraph());
+    consoleView = new ConsoleView(consoleViewer, sync, commandService, handlerService, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
     updateView(true, true);
