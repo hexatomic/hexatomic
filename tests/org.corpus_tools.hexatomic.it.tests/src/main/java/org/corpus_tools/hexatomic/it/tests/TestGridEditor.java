@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -491,13 +492,8 @@ public class TestGridEditor {
   }
 
   @Test
-  void testRemoveMultipleAnnotationsByDelKey() {
-    // TODO Implement once this can be tested!
-    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=563300
-  }
-
-  @Test
-  void testDeletePopupMenu() {
+  void testRemoveSingleAnnotationByPopupMenu() {
+    bot.activeShell().maximize(true);
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -509,6 +505,17 @@ public class TestGridEditor {
     table.contextMenu(2, 3).contextMenu("Delete cell(s)").click();
     assertEquals("", table.getCellDataValueByPosition(1, 4));
     assertNotNull(table.getCellDataValueByPosition(2, 3));
+    bot.activeShell().maximize(false);
+  }
+
+  @Test
+  void testPopupMenuInvisibleOnSelectedTokenText() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    table.click(1, 1);
+    assertFalse(table.contextMenu(1, 1).contextMenu("Delete cell(s)").isVisible());
   }
 
 }
