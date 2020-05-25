@@ -444,21 +444,11 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private String getAnnotationNamespace(int columnIndex) {
-    String[] splitColumnValue = getColumns().get(columnIndex).getColumnValue().split("::");
-    if (splitColumnValue.length == 2) {
-      return splitColumnValue[0];
-    } else {
-      return null;
-    }
+    return DataUtil.getNamespaceFromQNameString(getColumns().get(columnIndex).getColumnValue());
   }
 
   private String getAnnotationName(int columnIndex) {
-    String[] splitColumnValue = getColumns().get(columnIndex).getColumnValue().split("::");
-    if (splitColumnValue.length == 2) {
-      return splitColumnValue[1];
-    } else {
-      return splitColumnValue[0];
-    }
+    return DataUtil.getNameFromQNameString(getColumns().get(columnIndex).getColumnValue());
   }
 
 }

@@ -3,7 +3,7 @@ package org.corpus_tools.hexatomic.grid.layers;
 import java.util.Map.Entry;
 import org.corpus_tools.hexatomic.grid.data.Column;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.data.DataHelper;
+import org.corpus_tools.hexatomic.grid.data.DataUtil;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -67,11 +67,11 @@ public class CustomColumnHeaderLayer extends ColumnHeaderLayer {
     String oldQName = column.getColumnValue();
     boolean renamed = (!oldHeader.equals(customColumnName) && (!oldQName.equals(customColumnName)));
     if (renamed) {
-      String namespace = DataHelper.getNamespaceFromQNameString(customColumnName);
+      String namespace = DataUtil.getNamespaceFromQNameString(customColumnName);
       if (namespace == null) {
         namespace = SaltUtil.SALT_NAMESPACE;
       }
-      String name = DataHelper.getNameFromQNameString(customColumnName);
+      String name = DataUtil.getNameFromQNameString(customColumnName);
       // Sets the column value via the ColumnHeaderDataProvider
       dataProvider.setDataValue(idx, 0, namespace + SaltUtil.NAMESPACE_SEPERATOR + name);
       log.debug("Set column value at index {} (old value: '{}' to '{}'.", idx, oldHeader,
