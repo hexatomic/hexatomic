@@ -24,7 +24,7 @@ public class UndoManager implements Listener {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UndoManager.class);
 
-  private final Stack<ReversableOperation> checkpoints = new Stack<>();
+  private final Stack<ReversibleOperation> checkpoints = new Stack<>();
   private final Set<String> inconsistantDocuments = new HashSet<>();
 
   @Inject

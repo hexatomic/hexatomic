@@ -12,7 +12,7 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 
-public class DocumentGraphModifications implements ReversableOperation {
+public class DocumentGraphModifications implements ReversibleOperation {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(DocumentGraphModifications.class);
@@ -20,7 +20,7 @@ public class DocumentGraphModifications implements ReversableOperation {
   private Map<String, File> temporaryFiles = new HashMap<>();
 
   /**
-   * Creates a new restorable checkpoint for a Salt project.
+   * Creates a new reversible checkpoint for a Salt project.
    * 
    * @param documents The IDs of the documents that have been changed compared to the previous
    *        checkpoint and will be restored.
