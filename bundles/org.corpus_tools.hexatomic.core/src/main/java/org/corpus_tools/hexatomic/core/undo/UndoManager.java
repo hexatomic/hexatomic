@@ -2,25 +2,27 @@ package org.corpus_tools.hexatomic.core.undo;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
-import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 
 @Creatable
 @Singleton
 public class UndoManager implements Listener {
 
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(UndoManager.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UndoManager.class);
 
   private final Stack<SaltUpdateEvent> inconsistantEvents = new Stack<>();
 
@@ -59,6 +61,15 @@ public class UndoManager implements Listener {
     }
   }
 
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void documentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String changedDocumentId) {
+    Optional<SDocument> loadedDocument = projectManager.getDocument(changedDocumentId);
+    if (loadedDocument.isPresent()) {
+      this.inconsistantEvents.add(new SaltUpdateEvent(loadedDocument.get().getId()));
+    }
+  }
+
   /**
    * Collects the IDs of all currently inconsistent documents.
    * 
@@ -67,14 +78,8 @@ public class UndoManager implements Listener {
   private Set<String> inconsistentDocuments() {
     Set<String> documents = new HashSet<>();
     for (SaltUpdateEvent e : this.inconsistantEvents) {
-      IdentifiableElement element = null;
-      if (e.getContainer() instanceof IdentifiableElement) {
-        element = (IdentifiableElement) e.getContainer();
-      } else if (e.getContainer() instanceof org.corpus_tools.salt.graph.Label) {
-        element = ((org.corpus_tools.salt.graph.Label) e.getContainer()).getContainer();
-      }
-      if (element != null && element.getId() != null) {
-        documents.add(element.getId());
+      if (e.getDocumentID().isPresent()) {
+        documents.add(e.getDocumentID().get());
       }
     }
     return documents;
@@ -86,7 +91,7 @@ public class UndoManager implements Listener {
    * @return True if undo is possible.
    */
   public boolean canUndo() {
-    return !checkpoints.isEmpty();
+    return !checkpoints.isEmpty() && !inconsistantEvents.isEmpty();
   }
 
   /**

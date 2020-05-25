@@ -1,7 +1,10 @@
 package org.corpus_tools.hexatomic.core.undo;
 
+import java.util.Optional;
 import org.corpus_tools.salt.extensions.notification.Listener.NOTIFICATION_TYPE;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
+import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.graph.IdentifiableElement;
 
 public class SaltUpdateEvent {
   private final NOTIFICATION_TYPE type;
@@ -9,6 +12,8 @@ public class SaltUpdateEvent {
   private final Object oldValue;
   private final Object newValue;
   private final Object container;
+
+  private Optional<String> documentID;
 
   /**
    * Creates a new wrapper object around an Salt notification.
@@ -27,6 +32,29 @@ public class SaltUpdateEvent {
     this.oldValue = oldValue;
     this.newValue = newValue;
     this.container = container;
+    
+    // Calculate the document ID from the changed container
+    IdentifiableElement element = null;
+    if (container instanceof IdentifiableElement) {
+      element = (IdentifiableElement) container;
+    } else if (container instanceof org.corpus_tools.salt.graph.Label) {
+      element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
+    }
+    if ((element instanceof Graph<?, ?, ?>) && element.getId() != null) {
+      this.documentID = Optional.of(element.getId());
+    } else {
+      this.documentID = Optional.empty();
+    }
+  }
+
+  public SaltUpdateEvent(String documentID) {
+    this.documentID = Optional.ofNullable(documentID);
+
+    this.type = NOTIFICATION_TYPE.SET;
+    this.attribute = GRAPH_ATTRIBUTES.GRAPH_LABELS;
+    this.oldValue = null;
+    this.newValue = null;
+    this.container = null;
   }
 
   public NOTIFICATION_TYPE getType() {
@@ -47,5 +75,9 @@ public class SaltUpdateEvent {
 
   public Object getContainer() {
     return container;
+  }
+
+  public Optional<String> getDocumentID() {
+    return documentID;
   }
 }
