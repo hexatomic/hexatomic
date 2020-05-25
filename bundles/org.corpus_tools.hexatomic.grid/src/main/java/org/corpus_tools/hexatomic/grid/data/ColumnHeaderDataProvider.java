@@ -23,14 +23,18 @@ package org.corpus_tools.hexatomic.grid.data;
 
 import java.util.List;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A data provider for column headers.
+ * Data provider for column headers, which display qualified annotation names.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
 public class ColumnHeaderDataProvider implements IDataProvider {
+
+  private final static Logger log = LoggerFactory.getLogger(ColumnHeaderDataProvider.class);
 
   private final GraphDataProvider provider;
 
@@ -48,9 +52,22 @@ public class ColumnHeaderDataProvider implements IDataProvider {
     }
   }
 
+  /**
+   * Returns the value of the underlying {@link Column} at the specified index.
+   * 
+   * @param columnIndex the index of the Column in the underlying data model for which the value
+   *        should be set.
+   * @return the value of the Column specified via the passed index
+   */
+  public String getColumnValue(int columnIndex) {
+    return provider.getColumns().get(columnIndex).getColumnValue();
+  }
+
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    // Left unimplemented, as header data shouldn't be settable
+    log.debug("Setting new value '{}' to value of column {}.", newValue, columnIndex);
+    Column column = provider.getColumns().get(columnIndex);
+    column.setColumnValue(newValue.toString());
   }
 
   @Override
