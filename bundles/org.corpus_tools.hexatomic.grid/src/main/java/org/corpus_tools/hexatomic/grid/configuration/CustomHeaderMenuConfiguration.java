@@ -82,7 +82,7 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
    * 
    * @return IMenuItemProvider An item provider for a menu item which toggles the freeze state
    */
-  public static IMenuItemProvider withToggleColumnFreezeMenuItemProvider(final String typeSwitch) {
+  private static IMenuItemProvider withToggleColumnFreezeMenuItemProvider(final String typeSwitch) {
     return new IMenuItemProvider() {
 
       @Override
