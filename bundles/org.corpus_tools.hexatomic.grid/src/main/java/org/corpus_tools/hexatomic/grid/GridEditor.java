@@ -165,7 +165,7 @@ public class GridEditor {
 
     // Configuration
     table.addConfiguration(new StyleConfiguration());
-    table.addConfiguration(new CustomHeaderMenuConfiguration(table, columnHeaderLayer));
+    table.addConfiguration(new CustomHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
     table.addConfiguration(new EditConfiguration(labelAccumulator, selectionLayer));
     table.addConfiguration(new CustomBodyMenuConfiguration(table, selectionLayer));
