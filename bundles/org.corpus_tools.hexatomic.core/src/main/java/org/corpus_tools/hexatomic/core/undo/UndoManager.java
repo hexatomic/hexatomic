@@ -6,36 +6,41 @@ import java.util.Set;
 import java.util.Stack;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
-import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Creatable;
 
-public class AddUndoCheckpointHandler implements Listener {
+@Creatable
+@Singleton
+public class UndoManager implements Listener {
 
   private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(AddUndoCheckpointHandler.class);
-
-  public static final String COMMAND_ADD_UNDO_CHECKPOINT_ID =
-      "org.corpus_tools.hexatomic.core.command.add_undo_checkpoint";
+      org.slf4j.LoggerFactory.getLogger(UndoManager.class);
 
   private final Stack<SaltUpdateEvent> inconsistantEvents = new Stack<>();
 
   private final Stack<Checkpoint> checkpoints = new Stack<>();
 
   @Inject
-  ErrorService errors;
+  private ErrorService errors;
+
+  @Inject
+  private ProjectManager projectManager;
 
   @PostConstruct
-  private void init(ProjectManager projectManager) {
+  private void init() {
     // We need to receive all updates on all document graphs
     projectManager.addListener(this);
   }
 
-  @Execute
-  protected void execute(ProjectManager projectManager) {
+  /**
+   * Adds a checkpoint. A user will be able to undo all changes made after these checkpoint.
+   */
+  public void addCheckpoint() {
     // Go through all inconsistent events and collect the document graphs we need to save for this
     // checkpoint
     Set<String> documents = new HashSet<>();
@@ -54,7 +59,7 @@ public class AddUndoCheckpointHandler implements Listener {
       checkpoints.add(new Checkpoint(documents, projectManager));
       log.debug("Added new checkpoint to undo list");
     } catch (IOException ex) {
-      errors.handleException("Undo checkpoint creation failed", ex, AddUndoCheckpointHandler.class);
+      errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
     }
 
   }
@@ -62,7 +67,7 @@ public class AddUndoCheckpointHandler implements Listener {
   @Override
   public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
       Object newValue, Object container) {
-    // Add this event to our list of events that happened between to checkpoint commands
+    // Add this event to our list of events that happened between two checkpoint commands
     inconsistantEvents.add(new SaltUpdateEvent(type, attribute, oldValue, newValue, container));
   }
 }

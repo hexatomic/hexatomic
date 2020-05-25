@@ -24,12 +24,9 @@ import com.google.common.collect.Range;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-import org.corpus_tools.hexatomic.core.undo.AddUndoCheckpointHandler;
+import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
-import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
@@ -47,7 +44,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 
-@SuppressWarnings("restriction")
 public class ConsoleView implements Runnable, IDocumentListener, VerifyListener {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ConsoleView.class);
@@ -55,9 +51,8 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   private final IDocument document;
 
   private final UISynchronize sync;
-  
-  private final ECommandService commandService;
-  private final EHandlerService handlerService;
+
+  private final UndoManager undoManager;
 
   private final ConsoleController controller;
 
@@ -68,18 +63,16 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
    * 
    * @param view The view widget the console view is using
    * @param sync An Eclipse synchronization object.
-   * @param commandService An Eclipse command service object.
-   * @param handlerService An Eclipse handler service object.
+   * @param undoManager An undo manager object.
    * @param graph The Salt graph to edit.
    */
   public ConsoleView(SourceViewer view, UISynchronize sync,
-      ECommandService commandService, EHandlerService handlerService,
+      UndoManager undoManager,
       SDocumentGraph graph) {
     this.document = view.getDocument();
     this.sync = sync;
-    this.commandService = commandService;
-    this.handlerService = handlerService;
     this.view = view;
+    this.undoManager = undoManager;
     this.controller = new ConsoleController(graph);
 
     this.document.addDocumentListener(this);
@@ -162,12 +155,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           for (String l : output) {
             writeLine(l);
           }
-          ParameterizedCommand cmd =
-              commandService.createCommand(AddUndoCheckpointHandler.COMMAND_ADD_UNDO_CHECKPOINT_ID);
-          if (handlerService.canExecute(cmd)) {
-            handlerService.executeHandler(cmd);
-          }
-
+          undoManager.addCheckpoint();
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);

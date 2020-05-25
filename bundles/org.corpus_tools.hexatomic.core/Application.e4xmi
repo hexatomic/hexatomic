@@ -32,7 +32,6 @@
   <handlers xmi:id="_nNYLEEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveHandler" command="_o-7oQEy7EeqppqV5eQIggg"/>
   <handlers xmi:id="_rG0JsEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_as_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveAsHandler" command="_mqJxIEzaEeqppqV5eQIggg"/>
   <handlers xmi:id="_TH7l8FPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handler.exit" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.ExitHandler" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
-  <handlers xmi:id="_VnmXwJ5rEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handler.add_undo_checkpoint" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.undo.AddUndoCheckpointHandlerler" command="_iQV2YJ5qEeqcNd4BgS8ZlA"/>
   <bindingTables xmi:id="_oI0WcEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.bindingtable.windows" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_qIQeoEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.0" keySequence="M1+M2+S" command="_mqJxIEzaEeqppqV5eQIggg">
       <tags>type:user</tags>
@@ -69,9 +68,6 @@
     <parameters xmi:id="_IV2hoEzZEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>
   </commands>
   <commands xmi:id="_HVy0oFPxEeq55bpbFwb6CQ" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
-  <commands xmi:id="_iQV2YJ5qEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.command.add_undo_checkpoint" commandName="Add Undo Checkpoint" description="Creates a checkpoint to which it possible to change the state to. This should only be executed after a document has a consistent state.">
-    <parameters xmi:id="_tBZIsJ5rEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.commandparameter.object" name="Object to create the checkpoint for" optional="false"/>
-  </commands>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
