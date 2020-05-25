@@ -34,6 +34,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
 import org.corpus_tools.salt.SaltFactory;
@@ -125,6 +126,9 @@ public class CorpusStructureView implements Listener {
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_TITLE = "Error when adding (sub-) corpus";
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG =
       "You can only create a (sub-) corpus when a corpus graph or another corpus is selected.";
+
+  @Inject
+  private UndoManager undo;
 
   static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
@@ -235,6 +239,8 @@ public class CorpusStructureView implements Listener {
         if (element instanceof TreeItem) {
           TreeItem item = (TreeItem) element;
           if (item.getData() instanceof SNamedElement) {
+            undo.addCheckpoint();
+
             SNamedElement n = (SNamedElement) item.getData();
             n.setName(value.toString());
           }
@@ -365,6 +371,8 @@ public class CorpusStructureView implements Listener {
 
   private void addCorpusGraph() {
 
+    undo.addCheckpoint();
+
     int oldSize = projectManager.getProject().getCorpusGraphs() == null ? 0
         : projectManager.getProject().getCorpusGraphs().size();
 
@@ -376,6 +384,7 @@ public class CorpusStructureView implements Listener {
   }
 
   private void addCorpus(Shell shell) {
+
 
     SCorpusGraph g = null;
     SCorpus parent = null;
@@ -396,6 +405,8 @@ public class CorpusStructureView implements Listener {
     }
 
     if (g != null) {
+
+      undo.addCheckpoint();
 
       int oldSize = g.getCorpora() == null ? 0 : g.getCorpora().size();
       String newCorpusName = "corpus_" + (oldSize + 1);
@@ -434,6 +445,9 @@ public class CorpusStructureView implements Listener {
     }
 
     if (parent != null) {
+
+      undo.addCheckpoint();
+
       int oldSize =
           parent.getGraph().getDocuments() == null ? 0 : parent.getGraph().getDocuments().size();
       SDocument newDocument = parent.getGraph().createDocument(parent, "document_" + (oldSize + 1));

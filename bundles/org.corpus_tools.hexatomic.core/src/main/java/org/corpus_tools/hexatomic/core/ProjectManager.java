@@ -156,6 +156,16 @@ public class ProjectManager {
   }
 
   /**
+   * Sets the current project object without changing the on-disk location.
+   * 
+   * @param project The new project object.
+   */
+  public void setProject(SaltProject project) {
+    this.project = project;
+    events.send(Topics.PROJECT_LOADED, this.getLocation().orElse(null));
+  }
+
+  /**
    * Return a document by its ID. The document graph might not be loaded.
    * 
    * @param documentID The Salt ID

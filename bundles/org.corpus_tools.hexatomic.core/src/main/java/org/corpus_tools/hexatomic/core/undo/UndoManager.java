@@ -26,6 +26,7 @@ public class UndoManager implements Listener {
 
   private final Stack<ReversibleOperation> checkpoints = new Stack<>();
   private final Set<String> inconsistantDocuments = new HashSet<>();
+  private boolean projectStructureIsInconsistant = false;
 
   @Inject
   private ErrorService errors;
@@ -47,17 +48,28 @@ public class UndoManager implements Listener {
    * Adds a checkpoint. A user will be able to undo all changes made after these checkpoint.
    */
   public void addCheckpoint() {
-    // Go through all inconsistent events and merge them into a new combined event.
-    // Currently, the strategy is to collect the documents that are affected by these events and
-    // create a single DocumentGraphModifications event.
-    try {
-      checkpoints.add(new DocumentGraphModifications(inconsistantDocuments, projectManager));
-      this.inconsistantDocuments.clear();
-      log.debug("Added new checkpoint to undo list");
-      // TODO: if the changes are reversable without saving and loading the whole document, create a
-      // different kind of checkpoint
-    } catch (IOException ex) {
-      errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
+    if (projectStructureIsInconsistant) {
+      try {
+        // Events without document as container are related to updates of the project structure
+        checkpoints.add(new ProjectStructureModification(projectManager.getProject()));
+      } catch (IOException ex) {
+        errors.handleException("Could not add undo savepoint for project", ex, UndoManager.class);
+      }
+    }
+    if (!inconsistantDocuments.isEmpty()) {
+      // Go through all inconsistent events and merge them into a new combined event.
+      // Currently, the strategy is to collect the documents that are affected by these events and
+      // create a single DocumentGraphModifications event.
+      try {
+        checkpoints.add(new DocumentGraphModifications(inconsistantDocuments, projectManager));
+        this.inconsistantDocuments.clear();
+        log.debug("Added new checkpoint to undo list");
+        // TODO: if the changes are reversable without saving and loading the whole document, create
+        // a
+        // different kind of checkpoint
+      } catch (IOException ex) {
+        errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
+      }
     }
   }
 
@@ -77,7 +89,7 @@ public class UndoManager implements Listener {
    * @return True if undo is possible.
    */
   public boolean canUndo() {
-    return !checkpoints.isEmpty() && !inconsistantDocuments.isEmpty();
+    return !checkpoints.isEmpty();
   }
 
   /**
@@ -98,6 +110,8 @@ public class UndoManager implements Listener {
     SaltUpdateEvent event = new SaltUpdateEvent(type, attribute, oldValue, newValue, container);
     if (event.getDocumentID().isPresent()) {
       inconsistantDocuments.add(event.getDocumentID().get());
+    } else {
+      projectStructureIsInconsistant = true;
     }
   }
 }
