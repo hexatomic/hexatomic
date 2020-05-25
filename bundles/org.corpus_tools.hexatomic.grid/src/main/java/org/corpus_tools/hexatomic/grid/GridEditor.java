@@ -34,6 +34,7 @@ import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.layers.CustomColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.layers.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
@@ -58,7 +59,6 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
-import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultColumnHeaderDataLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultRowHeaderDataLayer;
@@ -139,10 +139,11 @@ public class GridEditor {
         new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
 
     // Column header
-    final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
-    final ILayer columnHeaderLayer =
-        new ColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
-            compositeFreezeLayer, selectionLayer);
+    final ColumnHeaderDataProvider columnHeaderDataProvider =
+        new ColumnHeaderDataProvider(bodyDataProvider);
+    final CustomColumnHeaderLayer columnHeaderLayer =
+        new CustomColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
+            compositeFreezeLayer, selectionLayer, bodyDataProvider);
 
     // Row header
     final IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);
@@ -164,7 +165,7 @@ public class GridEditor {
 
     // Configuration
     table.addConfiguration(new StyleConfiguration());
-    table.addConfiguration(new CustomHeaderMenuConfiguration(table));
+    table.addConfiguration(new CustomHeaderMenuConfiguration(table, columnHeaderLayer));
     table.addConfiguration(new FreezeGridBindings());
     table.addConfiguration(new EditConfiguration(labelAccumulator, selectionLayer));
     table.addConfiguration(new CustomBodyMenuConfiguration(table, selectionLayer));
