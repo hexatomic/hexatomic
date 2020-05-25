@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ColumnHeaderDataProvider implements IDataProvider {
 
-  private final static Logger log = LoggerFactory.getLogger(ColumnHeaderDataProvider.class);
+  private static final Logger log = LoggerFactory.getLogger(ColumnHeaderDataProvider.class);
 
   private final GraphDataProvider provider;
 

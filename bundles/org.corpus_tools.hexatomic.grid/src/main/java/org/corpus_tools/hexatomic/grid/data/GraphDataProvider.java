@@ -444,11 +444,11 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private String getAnnotationNamespace(int columnIndex) {
-    return DataUtil.getNamespaceFromQNameString(getColumns().get(columnIndex).getColumnValue());
+    return DataUtil.splitNamespaceFromQNameString(getColumns().get(columnIndex).getColumnValue());
   }
 
   private String getAnnotationName(int columnIndex) {
-    return DataUtil.getNameFromQNameString(getColumns().get(columnIndex).getColumnValue());
+    return DataUtil.splitNameFromQNameString(getColumns().get(columnIndex).getColumnValue());
   }
 
 }
