@@ -14,6 +14,8 @@ import org.eclipse.emf.common.util.URI;
 
 public class Checkpoint {
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Checkpoint.class);
+
   private Map<String, File> temporaryFiles = new HashMap<>();
 
   /**
@@ -39,6 +41,9 @@ public class Checkpoint {
                 .getDocumentGraph(),
             URI.createFileURI(temporaryFileForDocument.getAbsolutePath()));
         temporaryFiles.put(doc, temporaryFileForDocument);
+        log.debug("Adding document {} with temporary file {} to checkpoint", doc,
+            temporaryFileForDocument.getAbsoluteFile());
+
       }
     }
     // TODO: store the whole corpus graph including document annotations
