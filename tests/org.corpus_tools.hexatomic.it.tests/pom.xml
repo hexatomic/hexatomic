@@ -26,6 +26,14 @@
                     <application>org.eclipse.e4.ui.workbench.swt.E4Application</application>
                     <runOrder>alphabetical</runOrder>
                     <threadCount>1</threadCount>
+                    <environmentVariables>
+	                    <!--  
+	                    This will ensure the XServer backend is used on Linux instead of Wayland.
+	                    The ",*" is important so that GDK is trying other backends e.g. on Windows or Mac
+	                    if x11 is not available.
+	                    -->
+                    	<GDK_BACKEND>x11,*</GDK_BACKEND>
+                    </environmentVariables>
                 </configuration>
             </plugin>
         </plugins>
