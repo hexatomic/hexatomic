@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.core.salt_notifications;
 
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.graph.Label;
@@ -11,25 +12,31 @@ public class LabelNotifierImpl extends LabelImpl implements Label {
   private static final long serialVersionUID = 8010124349555159857L;
 
   private final IEventBroker events;
+  private final ProjectManager projectManager;
 
-  public LabelNotifierImpl(IEventBroker events) {
+  public LabelNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
+    this.projectManager = projectManager;
   }
 
   private void sendEventBefore() {
-    String id = null;
-    if (getContainer() instanceof IdentifiableElement) {
-      id = ((IdentifiableElement) getContainer()).getId();
+    if (!projectManager.isSuppressingEvents()) {
+      String id = null;
+      if (getContainer() instanceof IdentifiableElement) {
+        id = ((IdentifiableElement) getContainer()).getId();
+      }
+      events.send(Topics.BEFORE_PROJECT_CHANGED, id);
     }
-    events.send(Topics.BEFORE_PROJECT_CHANGED, id);
   }
 
   private void sendEventAfter() {
-    String id = null;
-    if (getContainer() instanceof IdentifiableElement) {
-      id = ((IdentifiableElement) getContainer()).getId();
+    if (!projectManager.isSuppressingEvents()) {
+      String id = null;
+      if (getContainer() instanceof IdentifiableElement) {
+        id = ((IdentifiableElement) getContainer()).getId();
+      }
+      events.send(Topics.PROJECT_CHANGED, id);
     }
-    events.send(Topics.PROJECT_CHANGED, id);
   }
 
   @Override

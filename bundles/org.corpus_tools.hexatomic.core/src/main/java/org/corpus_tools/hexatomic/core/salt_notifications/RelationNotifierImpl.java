@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.core.salt_notifications;
 
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Node;
@@ -14,17 +15,23 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
   private static final long serialVersionUID = 1171405238664510985L;
 
   private final IEventBroker events;
+  private final ProjectManager projectManager;
 
-  public RelationNotifierImpl(IEventBroker events) {
+  public RelationNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
+    this.projectManager = projectManager;
   }
 
   private void sendEventBefore() {
-    events.send(Topics.BEFORE_PROJECT_CHANGED, this.getId());
+    if (!projectManager.isSuppressingEvents()) {
+      events.send(Topics.BEFORE_PROJECT_CHANGED, this.getId());
+    }
   }
 
   private void sendEventAfter() {
-    events.send(Topics.PROJECT_CHANGED, this.getId());
+    if (!projectManager.isSuppressingEvents()) {
+      events.send(Topics.PROJECT_CHANGED, this.getId());
+    }
   }
 
   @Override

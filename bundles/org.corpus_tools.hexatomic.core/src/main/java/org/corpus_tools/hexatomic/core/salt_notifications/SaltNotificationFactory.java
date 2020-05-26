@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.core.salt_notifications;
 
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.ISaltFactory;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
@@ -82,15 +83,17 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 public class SaltNotificationFactory implements ISaltFactory {
 
   private final IEventBroker events;
+  private final ProjectManager projectManager;
 
-  public SaltNotificationFactory(IEventBroker events) {
+  public SaltNotificationFactory(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
+    this.projectManager = projectManager;
   }
 
 
   @Override
   public Node createNode() {
-    return new NodeNotifierImpl(events);
+    return new NodeNotifierImpl(events, projectManager);
   }
 
   @Override
@@ -99,18 +102,18 @@ public class SaltNotificationFactory implements ISaltFactory {
   }
 
   private GraphNotifierImpl createNotifierGraph() {
-    GraphNotifierImpl graph = new GraphNotifierImpl(events);
+    GraphNotifierImpl graph = new GraphNotifierImpl(events, projectManager);
     return graph;
   }
 
   @Override
   public Relation<Node, Node> createRelation() {
-    return new RelationNotifierImpl<>(events);
+    return new RelationNotifierImpl<>(events, projectManager);
   }
 
   @Override
   public Label createLabel() {
-    return new LabelNotifierImpl(events);
+    return new LabelNotifierImpl(events, projectManager);
   }
 
   @Override
@@ -120,7 +123,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public LayerNotifierImpl<Node, Relation<Node, Node>> createLayer() {
-    return new LayerNotifierImpl<>(events);
+    return new LayerNotifierImpl<>(events, projectManager);
   }
 
   @Override

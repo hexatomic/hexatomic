@@ -91,6 +91,8 @@ public class ProjectManager {
 
   private boolean hasUnsavedChanges;
 
+  private boolean suppressingEvents;
+
   public ProjectManager() {
 
   }
@@ -105,7 +107,7 @@ public class ProjectManager {
     this.hasUnsavedChanges = false;
 
     // Allow to register a change listener with Salt
-    SaltNotificationFactory notificationFactory = new SaltNotificationFactory(events);
+    SaltNotificationFactory notificationFactory = new SaltNotificationFactory(events, this);
     SaltFactory.setFactory(notificationFactory);
 
   }
@@ -123,6 +125,16 @@ public class ProjectManager {
    */
   public SaltProject getProject() {
     return project;
+  }
+
+  /**
+   * If true, events for project updates should not be active. This property will be set if bulk
+   * changes like loading are made to a document.
+   * 
+   * @return True if project change events should be suppressed.
+   */
+  public boolean isSuppressingEvents() {
+    return suppressingEvents;
   }
 
   /**
@@ -159,7 +171,9 @@ public class ProjectManager {
           // Load the existing document graph from disk
           try {
             // Load document
+            suppressingEvents = true;
             result.get().loadDocumentGraph();
+            suppressingEvents = false;
             // Re-enable listeners and notify them of the loaded document
             events.send(Topics.DOCUMENT_LOADED, result.get().getId());
           } catch (SaltResourceException ex) {
@@ -212,7 +226,9 @@ public class ProjectManager {
     project = SaltFactory.createSaltProject();
     location = Optional.of(path);
     try {
+      suppressingEvents = true;
       project.loadCorpusStructure(path);
+      suppressingEvents = false;
       events.send(Topics.PROJECT_LOADED, path.toFileString());
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
@@ -278,6 +294,10 @@ public class ProjectManager {
           }
 
           monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
+
+          // Disable listeners for document changes while performing massive amounts of temporary
+          // changes
+          suppressingEvents = true;
 
           Path outputDirectory = Paths.get(path.toFileString());
           if (!savingToCurrentLocation) {
@@ -362,6 +382,8 @@ public class ProjectManager {
             uiStatus.setDirty(false);
             uiStatus.setLocation(path.toFileString());
 
+            // Enable the listeners again
+            suppressingEvents = false;
             hasUnsavedChanges = false;
 
           });
@@ -488,10 +510,18 @@ public class ProjectManager {
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
+            suppressingEvents = true;
             document.get().setDocumentGraph(null);
+            suppressingEvents = false;
           }
         }
       }
     }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void projectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String path) {
+    hasUnsavedChanges = true;
   }
 }
