@@ -95,7 +95,12 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> createGraph() {
-    return new GraphNotifierImpl<>(events);
+    return createNotifierGraph();
+  }
+
+  private GraphNotifierImpl createNotifierGraph() {
+    GraphNotifierImpl graph = new GraphNotifierImpl(events);
+    return graph;
   }
 
   @Override
@@ -120,7 +125,10 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SGraph createSGraph() {
-    return new SGraphImpl(createGraph());
+    GraphNotifierImpl delegate = createNotifierGraph();
+    SGraphImpl result = new SGraphImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
@@ -185,12 +193,18 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SCorpusGraph createSCorpusGraph() {
-    return new SCorpusGraphImpl(createGraph());
+    GraphNotifierImpl delegate = createNotifierGraph();
+    SCorpusGraphImpl result = new SCorpusGraphImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SDocumentGraph createSDocumentGraph() {
-    return new SDocumentGraphImpl(createGraph());
+    GraphNotifierImpl delegate = createNotifierGraph();
+    SDocumentGraphImpl result = new SDocumentGraphImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
