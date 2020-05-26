@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -457,6 +459,75 @@ public class TestGridEditor {
         return "Setting new value for cell took too long.";
       }
     }, 1000);
+  }
+
+  @Test
+  void testRemoveSingleAnnotationByDelKey() {
+    bot.activeShell().maximize(true);
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals("", table.getCellDataValueByPosition(1, 4));
+
+    table.click(2, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals("", table.getCellDataValueByPosition(2, 3));
+
+    table.click(2, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals("", table.getCellDataValueByPosition(2, 4));
+    assertEquals("", table.getCellDataValueByPosition(3, 4));
+    assertEquals("", table.getCellDataValueByPosition(4, 4));
+    assertEquals("", table.getCellDataValueByPosition(5, 4));
+    assertEquals("", table.getCellDataValueByPosition(6, 4));
+    assertEquals("", table.getCellDataValueByPosition(7, 4));
+
+    bot.activeShell().maximize(false);
+  }
+
+  @Test
+  void testRemoveSingleAnnotationByPopupMenu() {
+    bot.activeShell().maximize(true);
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    List<String> columnItems = table.contextMenu(2, 3).menuItems();
+    assertTrue(columnItems.get(0).contains("Delete cell(s)"));
+    table.contextMenu(2, 3).contextMenu("Delete cell(s)").click();
+    assertEquals("", table.getCellDataValueByPosition(1, 4));
+    assertNotNull(table.getCellDataValueByPosition(2, 3));
+    bot.activeShell().maximize(false);
+  }
+
+  @Test
+  void testPopupMenuInvisibleOnSelectedTokenText() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    table.click(1, 1);
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+  }
+
+  @Test
+  void testPopupMenuInvisibleOnNoSelection() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
   }
 
 }
