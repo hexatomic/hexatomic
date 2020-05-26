@@ -679,8 +679,8 @@ public class GraphEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String path) {
-    if (path != null) {
+  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String elementID) {
+    if (elementID != null) {
       SDocumentGraph graph = getGraph();
       if (graph == null) {
         errors.showError("Unexpected error",
@@ -688,7 +688,7 @@ public class GraphEditor {
             GraphEditor.class);
         return;
       }
-      URI elementUri = URI.createURI(path);
+      URI elementUri = URI.createURI(elementID);
       if (!elementUri.path().equals(graph.getPath().path())) {
         return;
       }
