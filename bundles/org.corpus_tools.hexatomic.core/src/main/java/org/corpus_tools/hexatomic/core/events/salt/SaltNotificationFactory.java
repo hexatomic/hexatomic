@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.core.salt_notifications;
+package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.ISaltFactory;

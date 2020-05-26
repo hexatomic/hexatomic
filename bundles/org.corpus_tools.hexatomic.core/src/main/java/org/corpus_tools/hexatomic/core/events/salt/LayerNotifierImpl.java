@@ -19,42 +19,29 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.core.salt_notifications;
+package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
-import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.Relation;
-import org.corpus_tools.salt.graph.impl.GraphImpl;
-import org.corpus_tools.salt.graph.impl.NodeImpl;
-import org.corpus_tools.salt.graph.impl.RelationImpl;
+import org.corpus_tools.salt.graph.impl.LayerImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
-public class GraphNotifierImpl extends
-    GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
-    implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> {
+public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
+    implements Layer<N, R> {
 
-  private static final long serialVersionUID = 2590632940284255617L;
+
+  private static final long serialVersionUID = -4708308546018698463L;
 
   private final IEventBroker events;
   private final ProjectManager projectManager;
 
-  private Graph<?, ?, ?> owner;
-
-  public GraphNotifierImpl(IEventBroker events, ProjectManager projectManager) {
+  public LayerNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
     this.projectManager = projectManager;
-  }
-
-  public Graph<?, ?, ?> getOwner() {
-    return owner;
-  }
-
-  public void setOwner(Graph<?, ?, ?> owner) {
-    this.owner = owner;
   }
 
   private void sendEventBefore() {
@@ -91,67 +78,30 @@ public class GraphNotifierImpl extends
   }
 
   @Override
-  public void addNode(Node node) {
+  public void addNode(N node) {
     sendEventBefore();
     super.addNode(node);
-    // HACK: Reset to the actual owning graph before notifying the listeners.
-    // It would be better if the super.addNode() would have an optional parameter for
-    // the real graph.
-    if (owner != null) {
-      if (node instanceof NodeImpl) {
-        ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
-      }
-    }
     sendEventAfter();
   }
 
   @Override
-  public void removeNode(Node node) {
+  public void removeNode(N node) {
     sendEventBefore();
     super.removeNode(node);
     sendEventAfter();
   }
 
   @Override
-  public void addRelation(Relation<? extends Node, ? extends Node> relation) {
+  public void addRelation(Relation<? extends N, ? extends N> relation) {
     sendEventBefore();
     super.addRelation(relation);
-    // HACK: Reset to the actual owning graph before notifying the listeners.
-    // It would be better if the super.addRelation() would have an optional parameter for
-    // the real graph.
-    if (owner != null) {
-      if (relation instanceof RelationImpl<?, ?>) {
-        ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
-      }
-    }
     sendEventAfter();
   }
 
   @Override
-  public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
+  public void removeRelation(Relation<? extends N, ? extends N> rel) {
     sendEventBefore();
     super.removeRelation(rel);
-    sendEventAfter();
-  }
-
-  @Override
-  public void removeRelations() {
-    sendEventBefore();
-    super.removeRelations();
-    sendEventAfter();
-  }
-
-  @Override
-  public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEventBefore();
-    super.addLayer(layer);
-    sendEventAfter();
-  }
-
-  @Override
-  public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEventBefore();
-    super.removeLayer(layer);
     sendEventAfter();
   }
 }

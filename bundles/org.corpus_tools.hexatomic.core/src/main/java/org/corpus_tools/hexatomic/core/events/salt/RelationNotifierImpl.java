@@ -19,23 +19,26 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.core.salt_notifications;
+package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Node;
-import org.corpus_tools.salt.graph.impl.NodeImpl;
+import org.corpus_tools.salt.graph.Relation;
+import org.corpus_tools.salt.graph.impl.RelationImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
-public class NodeNotifierImpl extends NodeImpl implements Node {
+public class RelationNotifierImpl<S extends Node, T extends Node>
+    extends RelationImpl<S, T> implements Relation<S, T> {
 
-  private static final long serialVersionUID = -7940440063671378198L;
+
+  private static final long serialVersionUID = 1171405238664510985L;
+
   private final IEventBroker events;
   private final ProjectManager projectManager;
 
-
-  public NodeNotifierImpl(IEventBroker events, ProjectManager projectManager) {
+  public RelationNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
     this.projectManager = projectManager;
   }
@@ -72,4 +75,19 @@ public class NodeNotifierImpl extends NodeImpl implements Node {
     super.removeAll();
     sendEventAfter();
   }
+
+  @Override
+  public void setSource(S source) {
+    sendEventBefore();
+    super.setSource(source);
+    sendEventAfter();
+  }
+
+  @Override
+  public void setTarget(T target) {
+    sendEventBefore();
+    super.setTarget(target);
+    sendEventAfter();
+  }
+
 }
