@@ -680,19 +680,21 @@ public class GraphEditor {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String path) {
-    SDocumentGraph graph = getGraph();
-    if (graph == null) {
-      errors.showError("Unexpected error",
-          "Annotation graph for subscribed document vanished. Please report this as a bug.",
-          GraphEditor.class);
-      return;
-    }
-    URI elementUri = URI.createURI(path);
-    if (!elementUri.path().equals(graph.getPath().path())) {
-      return;
-    }
+    if (path != null) {
+      SDocumentGraph graph = getGraph();
+      if (graph == null) {
+        errors.showError("Unexpected error",
+            "Annotation graph for subscribed document vanished. Please report this as a bug.",
+            GraphEditor.class);
+        return;
+      }
+      URI elementUri = URI.createURI(path);
+      if (!elementUri.path().equals(graph.getPath().path())) {
+        return;
+      }
 
-    sync.syncExec(() -> updateView(true, false));
+      sync.syncExec(() -> updateView(true, false));
+    }
   }
 
   private class RootFilter extends ViewerFilter {
