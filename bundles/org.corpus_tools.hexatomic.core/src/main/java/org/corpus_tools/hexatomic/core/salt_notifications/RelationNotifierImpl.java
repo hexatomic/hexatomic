@@ -15,8 +15,6 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   private final IEventBroker events;
 
-  private Relation<?, ?> wrapper;
-
   public RelationNotifierImpl(IEventBroker events) {
     this.events = events;
   }
@@ -27,14 +25,6 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   private void sendEventAfter() {
     events.send(Topics.PROJECT_CHANGED, this.getId());
-  }
-
-  public Relation<?, ?> getWrapper() {
-    return wrapper;
-  }
-
-  public void setWrapper(Relation<?, ?> wrapper) {
-    this.wrapper = wrapper;
   }
 
   @Override

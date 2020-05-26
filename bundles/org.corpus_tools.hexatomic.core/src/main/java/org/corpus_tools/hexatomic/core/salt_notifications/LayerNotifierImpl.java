@@ -1,7 +1,6 @@
 package org.corpus_tools.hexatomic.core.salt_notifications;
 
 import org.corpus_tools.hexatomic.core.Topics;
-import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -17,18 +16,9 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   private final IEventBroker events;
 
-  private Graph<?, ?, ?> wrapper;
 
   public LayerNotifierImpl(IEventBroker events) {
     this.events = events;
-  }
-
-  public Graph<?, ?, ?> getWrapper() {
-    return wrapper;
-  }
-
-  public void setWrapper(Graph<?, ?, ?> wrapper) {
-    this.wrapper = wrapper;
   }
 
   private void sendEventBefore() {

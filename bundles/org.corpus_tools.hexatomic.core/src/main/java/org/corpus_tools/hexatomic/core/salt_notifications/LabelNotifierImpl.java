@@ -12,32 +12,22 @@ public class LabelNotifierImpl extends LabelImpl implements Label {
 
   private final IEventBroker events;
 
-  private Label wrapper;
-
   public LabelNotifierImpl(IEventBroker events) {
     this.events = events;
   }
 
-  public Label getWrapper() {
-    return wrapper;
-  }
-
-  public void setWrapper(Label wrapper) {
-    this.wrapper = wrapper;
-  }
-
   private void sendEventBefore() {
     String id = null;
-    if (wrapper != null && wrapper.getContainer() instanceof IdentifiableElement) {
-      id = ((IdentifiableElement) wrapper.getContainer()).getId();
+    if (getContainer() instanceof IdentifiableElement) {
+      id = ((IdentifiableElement) getContainer()).getId();
     }
     events.send(Topics.BEFORE_PROJECT_CHANGED, id);
   }
 
   private void sendEventAfter() {
     String id = null;
-    if (wrapper != null && wrapper.getContainer() instanceof IdentifiableElement) {
-      id = ((IdentifiableElement) wrapper.getContainer()).getId();
+    if (getContainer() instanceof IdentifiableElement) {
+      id = ((IdentifiableElement) getContainer()).getId();
     }
     events.send(Topics.PROJECT_CHANGED, id);
   }

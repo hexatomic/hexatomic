@@ -21,6 +21,26 @@ import org.corpus_tools.salt.common.STimeline;
 import org.corpus_tools.salt.common.STimelineRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.common.impl.SCorpusDocumentRelationImpl;
+import org.corpus_tools.salt.common.impl.SCorpusGraphImpl;
+import org.corpus_tools.salt.common.impl.SCorpusImpl;
+import org.corpus_tools.salt.common.impl.SCorpusRelationImpl;
+import org.corpus_tools.salt.common.impl.SDocumentGraphImpl;
+import org.corpus_tools.salt.common.impl.SDocumentImpl;
+import org.corpus_tools.salt.common.impl.SDominanceRelationImpl;
+import org.corpus_tools.salt.common.impl.SMedialDSImpl;
+import org.corpus_tools.salt.common.impl.SMedialRelationImpl;
+import org.corpus_tools.salt.common.impl.SOrderRelationImpl;
+import org.corpus_tools.salt.common.impl.SPointingRelationImpl;
+import org.corpus_tools.salt.common.impl.SSpanImpl;
+import org.corpus_tools.salt.common.impl.SSpanningRelationImpl;
+import org.corpus_tools.salt.common.impl.SStructureImpl;
+import org.corpus_tools.salt.common.impl.STextualDSImpl;
+import org.corpus_tools.salt.common.impl.STextualRelationImpl;
+import org.corpus_tools.salt.common.impl.STimelineImpl;
+import org.corpus_tools.salt.common.impl.STimelineRelationImpl;
+import org.corpus_tools.salt.common.impl.STokenImpl;
+import org.corpus_tools.salt.common.impl.SaltProjectImpl;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.core.SGraph;
@@ -29,7 +49,13 @@ import org.corpus_tools.salt.core.SMetaAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SProcessingAnnotation;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.core.impl.SAnnotationImpl;
+import org.corpus_tools.salt.core.impl.SFeatureImpl;
+import org.corpus_tools.salt.core.impl.SGraphImpl;
+import org.corpus_tools.salt.core.impl.SLayerImpl;
+import org.corpus_tools.salt.core.impl.SMetaAnnotationImpl;
 import org.corpus_tools.salt.core.impl.SNodeImpl;
+import org.corpus_tools.salt.core.impl.SProcessingAnnotationImpl;
 import org.corpus_tools.salt.core.impl.SRelationImpl;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.IdentifiableElement;
@@ -38,12 +64,19 @@ import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.Relation;
+import org.corpus_tools.salt.graph.impl.IdentifierImpl;
 import org.corpus_tools.salt.semantics.SCatAnnotation;
 import org.corpus_tools.salt.semantics.SLemmaAnnotation;
 import org.corpus_tools.salt.semantics.SPOSAnnotation;
 import org.corpus_tools.salt.semantics.SSentenceAnnotation;
 import org.corpus_tools.salt.semantics.STypeAnnotation;
 import org.corpus_tools.salt.semantics.SWordAnnotation;
+import org.corpus_tools.salt.semantics.impl.SCatAnnotationImpl;
+import org.corpus_tools.salt.semantics.impl.SLemmaAnnotationImpl;
+import org.corpus_tools.salt.semantics.impl.SPOSAnnotationImpl;
+import org.corpus_tools.salt.semantics.impl.SSentenceAnnotationImpl;
+import org.corpus_tools.salt.semantics.impl.STypeAnnotationImpl;
+import org.corpus_tools.salt.semantics.impl.SWordAnnotationImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
 public class SaltNotificationFactory implements ISaltFactory {
@@ -56,245 +89,203 @@ public class SaltNotificationFactory implements ISaltFactory {
 
 
   @Override
-  public NodeNotifierImpl createNode() {
+  public Node createNode() {
     return new NodeNotifierImpl(events);
   }
 
   @Override
   public Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> createGraph() {
-    // TODO Auto-generated method stub
-    return null;
+    return new GraphNotifierImpl<>(events);
   }
 
   @Override
-  public RelationNotifierImpl<Node, Node> createRelation() {
-    return new RelationNotifierImpl<Node, Node>(events);
+  public Relation<Node, Node> createRelation() {
+    return new RelationNotifierImpl<>(events);
   }
 
   @Override
   public Label createLabel() {
-    // TODO Auto-generated method stub
-    return null;
+    return new LabelNotifierImpl(events);
   }
 
   @Override
   public Identifier createIdentifier(IdentifiableElement container, String id) {
-    // TODO Auto-generated method stub
-    return null;
+    return new IdentifierImpl(container, id);
   }
 
   @Override
-  public Layer<Node, Relation<Node, Node>> createLayer() {
-    // TODO Auto-generated method stub
-    return null;
+  public LayerNotifierImpl<Node, Relation<Node, Node>> createLayer() {
+    return new LayerNotifierImpl<>(events);
   }
 
   @Override
   public SGraph createSGraph() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SGraphImpl(createGraph());
   }
 
   @Override
   public SNode createSNode() {
-    NodeNotifierImpl delegate = createNode();
-    SNode node = new SNodeImpl(delegate);
-    delegate.setWrapper(node);
-    return node;
+    return new SNodeImpl(createNode());
   }
 
   @Override
   public SRelation<SNode, SNode> createSRelation() {
-    RelationNotifierImpl<Node, Node> delegate = createRelation();
-    SRelation<SNode, SNode> relation = new SRelationImpl<SNode, SNode>(delegate);
-    delegate.setWrapper(relation);
-    return relation;
+    return new SRelationImpl<>(createRelation());
   }
 
   @Override
   public SAnnotation createSAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SAnnotationImpl(createLabel());
   }
 
   @Override
   public SMetaAnnotation createSMetaAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SMetaAnnotationImpl(createLabel());
   }
 
   @Override
   public SProcessingAnnotation createSProcessingAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SProcessingAnnotationImpl(createLabel());
   }
 
   @Override
   public SFeature createSFeature() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SFeatureImpl(createLabel());
   }
 
   @Override
   public SLayer createSLayer() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SLayerImpl(createLayer());
   }
 
   @Override
   public SaltProject createSaltProject() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SaltProjectImpl();
   }
 
   @Override
   public SCorpus createSCorpus() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SCorpusImpl(createNode());
   }
 
   @Override
   public SDocument createSDocument() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SDocumentImpl(createNode());
   }
 
   @Override
   public SCorpusRelation createSCorpusRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SCorpusRelationImpl(createRelation());
   }
 
   @Override
   public SCorpusDocumentRelation createSCorpusDocumentRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SCorpusDocumentRelationImpl(createRelation());
   }
 
   @Override
   public SCorpusGraph createSCorpusGraph() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SCorpusGraphImpl(createGraph());
   }
 
   @Override
   public SDocumentGraph createSDocumentGraph() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SDocumentGraphImpl(createGraph());
   }
 
   @Override
   public SSpanningRelation createSSpanningRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SSpanningRelationImpl(createRelation());
   }
 
   @Override
   public SDominanceRelation createSDominanceRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SDominanceRelationImpl(createRelation());
   }
 
   @Override
   public SPointingRelation createSPointingRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SPointingRelationImpl(createRelation());
   }
 
   @Override
   public SOrderRelation createSOrderRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SOrderRelationImpl(createRelation());
   }
 
   @Override
   public STextualRelation createSTextualRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new STextualRelationImpl(createRelation());
   }
 
   @Override
   public STimelineRelation createSTimelineRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new STimelineRelationImpl(createRelation());
   }
 
   @Override
   public SMedialRelation createSMedialRelation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SMedialRelationImpl(createRelation());
   }
 
   @Override
   public SSpan createSSpan() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SSpanImpl(createNode());
   }
 
   @Override
   public SStructure createSStructure() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SStructureImpl(createNode());
   }
 
   @Override
   public STextualDS createSTextualDS() {
-    // TODO Auto-generated method stub
-    return null;
+    return new STextualDSImpl(createNode());
   }
 
   @Override
   public SMedialDS createSMedialDS() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SMedialDSImpl(createNode());
   }
 
   @Override
   public STimeline createSTimeline() {
-    // TODO Auto-generated method stub
-    return null;
+    return new STimelineImpl(createNode());
   }
 
   @Override
   public SToken createSToken() {
-    // TODO Auto-generated method stub
-    return null;
+    return new STokenImpl(createNode());
   }
 
   @Override
   public SCatAnnotation createSCatAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SCatAnnotationImpl(createLabel());
   }
 
   @Override
   public SPOSAnnotation createSPOSAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SPOSAnnotationImpl(createLabel());
   }
 
   @Override
   public SLemmaAnnotation createSLemmaAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SLemmaAnnotationImpl(createLabel());
   }
 
   @Override
   public STypeAnnotation createSTypeAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new STypeAnnotationImpl(createLabel());
   }
 
   @Override
   public SWordAnnotation createSWordAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SWordAnnotationImpl(createLabel());
   }
 
   @Override
   public SSentenceAnnotation createSSentenceAnnotation() {
-    // TODO Auto-generated method stub
-    return null;
+    return new SSentenceAnnotationImpl(createLabel());
   }
 
 }

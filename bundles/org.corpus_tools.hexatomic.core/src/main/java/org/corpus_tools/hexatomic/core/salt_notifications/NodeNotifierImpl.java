@@ -11,18 +11,9 @@ public class NodeNotifierImpl extends NodeImpl implements Node {
   private static final long serialVersionUID = -7940440063671378198L;
   private final IEventBroker events;
 
-  private Node wrapper;
 
   public NodeNotifierImpl(IEventBroker events) {
     this.events = events;
-  }
-
-  public void setWrapper(Node wrapper) {
-    this.wrapper = wrapper;
-  }
-
-  public Node getWrapper() {
-    return wrapper;
   }
 
   private void sendEventBefore() {

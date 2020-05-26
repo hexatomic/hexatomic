@@ -16,19 +16,10 @@ public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L exten
 
   private final IEventBroker events;
 
-  private Graph<?, ?, ?> wrapper;
-
   public GraphNotifierImpl(IEventBroker events) {
     this.events = events;
   }
 
-  public Graph<?, ?, ?> getWrapper() {
-    return wrapper;
-  }
-
-  public void setWrapper(Graph<?, ?, ?> wrapper) {
-    this.wrapper = wrapper;
-  }
 
   private void sendEventBefore() {
     events.send(Topics.BEFORE_PROJECT_CHANGED, this.getId());
