@@ -125,6 +125,7 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
 
         for (PositionCoordinate coord : selectedCellCoordinates) {
+          // The first column is reserved for token text
           if (coord.getColumnPosition() == 0) {
             return false;
           }
