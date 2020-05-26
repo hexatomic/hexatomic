@@ -25,6 +25,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.graph.Label;
+import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.impl.LabelImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
@@ -51,23 +52,34 @@ public class LabelNotifierImpl extends LabelImpl implements Label {
     this.projectManager = projectManager;
   }
 
+  /**
+   * Attempts to find the element this label is attached to which should have an ID. This will
+   * traverse all labels in case the label is attached to another label.
+   * 
+   * @return The ID of the first non-label element or null if not attached.
+   */
+  private String getContainerID() {
+
+    LabelableElement currentContainer = getContainer();
+    while (currentContainer != null) {
+      if (currentContainer instanceof IdentifiableElement) {
+        return ((IdentifiableElement) currentContainer).getId();
+      }
+    }
+
+    return null;
+  }
+
   private void sendEventBefore() {
     if (!projectManager.isSuppressingEvents()) {
-      String id = null;
-      if (getContainer() instanceof IdentifiableElement) {
-        id = ((IdentifiableElement) getContainer()).getId();
-      }
-      events.send(Topics.BEFORE_PROJECT_CHANGED, id);
+      events.send(Topics.BEFORE_PROJECT_CHANGED, getContainerID());
     }
   }
 
   private void sendEventAfter() {
     if (!projectManager.isSuppressingEvents()) {
-      String id = null;
-      if (getContainer() instanceof IdentifiableElement) {
-        id = ((IdentifiableElement) getContainer()).getId();
-      }
-      events.send(Topics.PROJECT_CHANGED, id);
+      events.send(Topics.PROJECT_CHANGED,
+          events.send(Topics.BEFORE_PROJECT_CHANGED, getContainerID()));
     }
   }
 
