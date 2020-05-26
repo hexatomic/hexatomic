@@ -30,6 +30,17 @@ import org.corpus_tools.salt.graph.Relation;
 import org.corpus_tools.salt.graph.impl.LayerImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
+/**
+ * Implements a Salt {@link Layer} which use the {@link IEventBroker} to send events when the layer
+ * was updated.
+ * 
+ * <p>
+ * The event will have the ID of the layer as argument.
+ * </p>
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
 public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
     implements Layer<N, R> {
 

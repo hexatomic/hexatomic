@@ -33,6 +33,17 @@ import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.corpus_tools.salt.graph.impl.RelationImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
+/**
+ * Implements a Salt {@link Graph} which use the {@link IEventBroker} to send events when the graph
+ * was updated.
+ * 
+ * <p>
+ * The event will have the ID of the graph as argument.
+ * </p>
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
 public class GraphNotifierImpl extends
     GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
     implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> {

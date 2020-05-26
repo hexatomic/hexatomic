@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.ISaltFactory;
+import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -101,6 +102,17 @@ import org.corpus_tools.salt.semantics.impl.STypeAnnotationImpl;
 import org.corpus_tools.salt.semantics.impl.SWordAnnotationImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
+/**
+ * Implements at {@link SaltFactory} where the created objects will use the {@link IEventBroker} to
+ * send events when the objects are updated.
+ * 
+ * <p>
+ * The event will have the ID of the updated element as argument.
+ * </p>
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
 public class SaltNotificationFactory implements ISaltFactory {
 
   private final IEventBroker events;

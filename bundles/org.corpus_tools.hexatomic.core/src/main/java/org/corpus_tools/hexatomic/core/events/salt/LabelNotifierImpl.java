@@ -28,6 +28,17 @@ import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.impl.LabelImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
+/**
+ * Implements a Salt {@link Label} which use the {@link IEventBroker} to send events when the label
+ * was updated.
+ * 
+ * <p>
+ * The event will have the ID of the element this label belongs to as argument.
+ * </p>
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
 public class LabelNotifierImpl extends LabelImpl implements Label {
 
   private static final long serialVersionUID = 8010124349555159857L;

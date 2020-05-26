@@ -29,6 +29,17 @@ import org.corpus_tools.salt.graph.Relation;
 import org.corpus_tools.salt.graph.impl.RelationImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
+/**
+ * Implements a Salt {@link Relation} which use the {@link IEventBroker} to send events when the
+ * relation was updated.
+ * 
+ * <p>
+ * The event will have the ID of the relation as argument.
+ * </p>
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
 public class RelationNotifierImpl<S extends Node, T extends Node>
     extends RelationImpl<S, T> implements Relation<S, T> {
 

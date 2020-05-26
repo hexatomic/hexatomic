@@ -28,6 +28,17 @@ import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
+/**
+ * Implements a Salt {@link Node} which use the {@link IEventBroker} to send events when the node
+ * was updated.
+ * 
+ * <p>
+ * The event will have the ID of the node as argument.
+ * </p>
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
 public class NodeNotifierImpl extends NodeImpl implements Node {
 
   private static final long serialVersionUID = -7940440063671378198L;
