@@ -2,6 +2,9 @@ package org.corpus_tools.hexatomic.core.undo;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
@@ -24,7 +27,7 @@ public class UndoManager implements Listener {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UndoManager.class);
 
-  private final Stack<ReversibleOperation> checkpoints = new Stack<>();
+  private final Stack<List<ReversibleOperation>> changeSets = new Stack<>();
   private final Set<String> inconsistantDocuments = new HashSet<>();
   private boolean projectStructureIsInconsistant = false;
 
@@ -41,7 +44,6 @@ public class UndoManager implements Listener {
   private void init() {
     // We need to receive all updates on all document graphs
     projectManager.addListener(this);
-
   }
 
   /**
@@ -51,7 +53,9 @@ public class UndoManager implements Listener {
     if (projectStructureIsInconsistant) {
       try {
         // Events without document as container are related to updates of the project structure
-        checkpoints.add(new ProjectStructureModification(projectManager.getProject()));
+        List<ReversibleOperation> currentChangeSet = new LinkedList<>();
+        currentChangeSet.add(new ProjectStructureModification(projectManager.getProject()));
+        changeSets.add(currentChangeSet);
       } catch (IOException ex) {
         errors.handleException("Could not add undo savepoint for project", ex, UndoManager.class);
       }
@@ -61,12 +65,13 @@ public class UndoManager implements Listener {
       // Currently, the strategy is to collect the documents that are affected by these events and
       // create a single DocumentGraphModifications event.
       try {
-        checkpoints.add(new DocumentGraphModifications(inconsistantDocuments, projectManager));
+        List<ReversibleOperation> currentChangeSet = new LinkedList<>();
+        currentChangeSet.add(new DocumentGraphModifications(inconsistantDocuments, projectManager));
+        changeSets.add(currentChangeSet);
         this.inconsistantDocuments.clear();
         log.debug("Added new checkpoint to undo list");
         // TODO: if the changes are reversable without saving and loading the whole document, create
-        // a
-        // different kind of checkpoint
+        // a different kind of checkpoint
       } catch (IOException ex) {
         errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
       }
@@ -89,7 +94,7 @@ public class UndoManager implements Listener {
    * @return True if undo is possible.
    */
   public boolean canUndo() {
-    return !checkpoints.isEmpty();
+    return !changeSets.isEmpty();
   }
 
   /**
@@ -98,7 +103,15 @@ public class UndoManager implements Listener {
   public void undo() {
     if (canUndo()) {
       // Restore all documents from the last checkpoint
-      this.checkpoints.pop().restore(projectManager, events);
+      List<ReversibleOperation> lastChangeSet = this.changeSets.pop();
+      // Iterate over the elements in reversed order
+      ListIterator<ReversibleOperation> itLastChangeSet =
+          lastChangeSet.listIterator(lastChangeSet.size());
+      while (itLastChangeSet.hasPrevious()) {
+        ReversibleOperation op = itLastChangeSet.previous();
+        op.restore(projectManager, events);
+      }
+
       // TODO: how to implement redo?
     }
   }
