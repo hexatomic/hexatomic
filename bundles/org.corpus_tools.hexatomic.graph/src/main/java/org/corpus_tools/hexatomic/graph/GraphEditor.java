@@ -61,8 +61,6 @@ import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.core.runtime.ICoreRunnable;
@@ -152,8 +150,6 @@ public class GraphEditor {
   @Inject
   private IEventBroker events;
 
-  private ListenerImplementation projectChangeListener;
-
   private ConsoleView consoleView;
 
 
@@ -183,9 +179,6 @@ public class GraphEditor {
    */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
-
-    projectChangeListener = new ListenerImplementation();
-    projectManager.addListener(projectChangeListener);
 
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
@@ -412,8 +405,6 @@ public class GraphEditor {
 
   @PreDestroy
   void preDestroy() {
-    projectManager.removeListener(projectChangeListener);
-
     events.post(Topics.DOCUMENT_CLOSED,
         thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
@@ -686,36 +677,22 @@ public class GraphEditor {
     return layout;
   }
 
-  private final class ListenerImplementation implements Listener {
-    @Override
-    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-        Object newValue, Object container) {
-
-      // Check if the ID of the changed object points to the same document as our annotation graph
-      IdentifiableElement element = null;
-      if (container instanceof IdentifiableElement) {
-        element = (IdentifiableElement) container;
-      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
-        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
-      }
-      SDocumentGraph graph = getGraph();
-      if (graph == null) {
-        errors.showError("Unexpected error",
-            "Annotation graph for subscribed document vanished. Please report this as a bug.",
-            GraphEditor.class);
-        return;
-      }
-      if (element == null || element.getId() == null) {
-        return;
-      } else {
-        URI elementUri = URI.createURI(element.getId());
-        if (!elementUri.path().equals(graph.getPath().path())) {
-          return;
-        }
-      }
-
-      sync.syncExec(() -> updateView(true, false));
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeProjectChanged(@UIEventTopic(Topics.DOCUMENT_CHANGED) String path) {
+    SDocumentGraph graph = getGraph();
+    if (graph == null) {
+      errors.showError("Unexpected error",
+          "Annotation graph for subscribed document vanished. Please report this as a bug.",
+          GraphEditor.class);
+      return;
     }
+    URI elementUri = URI.createURI(path);
+    if (!elementUri.path().equals(graph.getPath().path())) {
+      return;
+    }
+
+    sync.syncExec(() -> updateView(true, false));
   }
 
   private class RootFilter extends ViewerFilter {

@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,15 +34,13 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.salt_notifications.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.exceptions.SaltException;
 import org.corpus_tools.salt.exceptions.SaltResourceException;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.corpus_tools.salt.util.internal.persistence.SaltXML10Writer;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -92,11 +89,6 @@ public class ProjectManager {
   @Inject
   UISynchronize sync;
 
-  private SaltNotificationFactory notificationFactory;
-
-  private final Set<Listener> allListeners = new LinkedHashSet<>();
-  private boolean listenersActive = true;
-
   private boolean hasUnsavedChanges;
 
   public ProjectManager() {
@@ -113,30 +105,9 @@ public class ProjectManager {
     this.hasUnsavedChanges = false;
 
     // Allow to register a change listener with Salt
-    notificationFactory = new SaltNotificationFactory();
+    SaltNotificationFactory notificationFactory = new SaltNotificationFactory();
     SaltFactory.setFactory(notificationFactory);
-    notificationFactory.addListener(new ProxyListener());
 
-  }
-
-  /**
-   * Adds a Salt notification listener for all updates on the Salt project.
-   * 
-   * @param listener The listener to add
-   */
-  public void addListener(Listener listener) {
-    allListeners.add(listener);
-  }
-
-  /**
-   * Removes a Salt notification listener.
-   * 
-   * @param listener The listener to remove
-   */
-  public void removeListener(Listener listener) {
-    if (listener != null) {
-      allListeners.remove(listener);
-    }
   }
 
   /**
@@ -187,12 +158,9 @@ public class ProjectManager {
         if (Files.exists(saltFile)) {
           // Load the existing document graph from disk
           try {
-            // Deactivate listeners to avoid partial updates during load
-            listenersActive = false;
             // Load document
             result.get().loadDocumentGraph();
             // Re-enable listeners and notify them of the loaded document
-            listenersActive = true;
             events.send(Topics.DOCUMENT_LOADED, result.get().getId());
           } catch (SaltResourceException ex) {
             errorService.handleException(
@@ -311,10 +279,6 @@ public class ProjectManager {
 
           monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
 
-          // Disable listeners for document changes while performing massive amounts of temporary
-          // changes
-          listenersActive = false;
-
           Path outputDirectory = Paths.get(path.toFileString());
           if (!savingToCurrentLocation) {
             // Clear existing files from the folder, which is not the same as the current one
@@ -398,8 +362,6 @@ public class ProjectManager {
             uiStatus.setDirty(false);
             uiStatus.setLocation(path.toFileString());
 
-            // Enable the listeners again
-            listenersActive = true;
             hasUnsavedChanges = false;
 
           });
@@ -526,39 +488,10 @@ public class ProjectManager {
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
-            listenersActive = false;
             document.get().setDocumentGraph(null);
-            listenersActive = true;
           }
         }
       }
     }
   }
-
-
-  /**
-   * We can't add listeners to existing objects in the corpus graph, so iterate over the internal
-   * list of all registered listeners and notify them.
-   *
-   */
-  private final class ProxyListener implements Listener {
-
-    @Override
-    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-        Object newValue, Object container) {
-
-      sync.syncExec(() -> {
-        if (listenersActive) {
-          hasUnsavedChanges = true;
-          uiStatus.setDirty(true);
-
-          for (Listener l : allListeners) {
-            l.notify(type, attribute, oldValue, newValue, container);
-          }
-        }
-      });
-    }
-
-  }
-
 }

@@ -30,10 +30,14 @@ public interface Topics {
   
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
+  public static final String PROJECT_CHANGED = "PROJECT_CHANGED";
+
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
   
+  public static final String DOCUMENT_CHANGED = "DOCUMENT_CHANGED";
+
   public static final String STATUS_UPDATE = "STATUS_UPDATE";
   
 }
