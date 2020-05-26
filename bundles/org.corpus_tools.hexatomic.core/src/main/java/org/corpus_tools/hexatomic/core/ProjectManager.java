@@ -105,7 +105,7 @@ public class ProjectManager {
     this.hasUnsavedChanges = false;
 
     // Allow to register a change listener with Salt
-    SaltNotificationFactory notificationFactory = new SaltNotificationFactory();
+    SaltNotificationFactory notificationFactory = new SaltNotificationFactory(events);
     SaltFactory.setFactory(notificationFactory);
 
   }

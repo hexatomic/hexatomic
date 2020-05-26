@@ -679,7 +679,7 @@ public class GraphEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.DOCUMENT_CHANGED) String path) {
+  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String path) {
     SDocumentGraph graph = getGraph();
     if (graph == null) {
       errors.showError("Unexpected error",
