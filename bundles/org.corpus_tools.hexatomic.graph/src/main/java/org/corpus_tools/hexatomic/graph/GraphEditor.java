@@ -40,6 +40,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -61,6 +62,7 @@ import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.core.runtime.ICoreRunnable;
@@ -74,7 +76,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -679,21 +680,13 @@ public class GraphEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String elementID) {
-    if (elementID != null) {
-      SDocumentGraph graph = getGraph();
-      if (graph == null) {
-        errors.showError("Unexpected error",
-            "Annotation graph for subscribed document vanished. Please report this as a bug.",
-            GraphEditor.class);
-        return;
+  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) Object element) {
+    if (element != null) {
+      SDocumentGraph loadedGraph = getGraph();
+      Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
+      if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
+        sync.syncExec(() -> updateView(true, false));
       }
-      URI elementUri = URI.createURI(elementID);
-      if (!elementUri.path().equals(graph.getPath().path())) {
-        return;
-      }
-
-      sync.syncExec(() -> updateView(true, false));
     }
   }
 

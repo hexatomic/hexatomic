@@ -22,10 +22,9 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
-import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.graph.Label;
-import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.impl.LabelImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
@@ -63,83 +62,68 @@ public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElem
     this.owner = owner;
   }
 
-  /**
-   * Attempts to find the element this label is attached to which should have an ID. This will
-   * traverse all labels in case the label is attached to another label.
-   * 
-   * @return The ID of the first non-label element or null if not attached.
-   */
-  private String getContainerID() {
 
-    LabelableElement currentContainer = getContainer();
-    while (currentContainer != null) {
-      if (currentContainer instanceof IdentifiableElement) {
-        return ((IdentifiableElement) currentContainer).getId();
-      }
-    }
-
-    return null;
-  }
-
-  private void sendEventBefore() {
+  private void sendEventBefore(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, getContainerID());
+      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
-  private void sendEventAfter() {
+  private void sendEventAfter(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED,
-          events.send(Topics.BEFORE_PROJECT_CHANGED, getContainerID()));
+      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore();
+    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter();
+    sendEventAfter(label);
   }
 
   @Override
-  public void removeLabel(String namespace, String name) {
-    sendEventBefore();
-    super.removeLabel(namespace, name);
-    sendEventAfter();
+  public void removeLabel(String qname) {
+    if (qname != null) {
+      Label label = getLabel(qname);
+      sendEventBefore(label);
+      super.removeLabel(qname);
+      sendEventAfter(label);
+    }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore();
+    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void setNamespace(String namespace) {
-    sendEventBefore();
+    sendEventBefore(this);
     super.setNamespace(namespace);
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void setName(String name) {
-    sendEventBefore();
+    sendEventBefore(this);
     super.setName(name);
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void setQName(String newQName) {
-    sendEventBefore();
+    sendEventBefore(this);
     super.setQName(newQName);
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void setValue(Object value) {
-    sendEventBefore();
+    sendEventBefore(this);
     super.setValue(value);
-    sendEventAfter();
+    sendEventAfter(this);
   }
 }

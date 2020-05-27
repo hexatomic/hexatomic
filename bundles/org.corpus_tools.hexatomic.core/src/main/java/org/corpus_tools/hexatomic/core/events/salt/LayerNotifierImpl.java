@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
@@ -66,64 +67,67 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
     this.owner = owner;
   }
 
-  private void sendEventBefore() {
+  private void sendEventBefore(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, this.getId());
+      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
-  private void sendEventAfter() {
+  private void sendEventAfter(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED, this.getId());
+      events.send(Topics.PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore();
+    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter();
+    sendEventAfter(label);
   }
 
   @Override
-  public void removeLabel(String namespace, String name) {
-    sendEventBefore();
-    super.removeLabel(namespace, name);
-    sendEventAfter();
+  public void removeLabel(String qname) {
+    if (qname != null) {
+      Label label = getLabel(qname);
+      sendEventBefore(label);
+      super.removeLabel(qname);
+      sendEventAfter(label);
+    }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore();
+    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void addNode(N node) {
-    sendEventBefore();
+    sendEventBefore(node);
     super.addNode(node);
-    sendEventAfter();
+    sendEventAfter(node);
   }
 
   @Override
   public void removeNode(N node) {
-    sendEventBefore();
+    sendEventBefore(node);
     super.removeNode(node);
-    sendEventAfter();
+    sendEventAfter(node);
   }
 
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
-    sendEventBefore();
+    sendEventBefore(relation);
     super.addRelation(relation);
-    sendEventAfter();
+    sendEventAfter(relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    sendEventBefore();
+    sendEventBefore(rel);
     super.removeRelation(rel);
-    sendEventAfter();
+    sendEventAfter(rel);
   }
 }

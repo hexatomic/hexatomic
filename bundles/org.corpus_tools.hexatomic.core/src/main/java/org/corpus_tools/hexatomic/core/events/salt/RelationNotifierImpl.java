@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Node;
@@ -65,51 +66,54 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
     this.owner = owner;
   }
 
-  private void sendEventBefore() {
+  private void sendEventBefore(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, this.getId());
+      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
-  private void sendEventAfter() {
+  private void sendEventAfter(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED, this.getId());
+      events.send(Topics.PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore();
+    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter();
+    sendEventAfter(label);
   }
 
   @Override
-  public void removeLabel(String namespace, String name) {
-    sendEventBefore();
-    super.removeLabel(namespace, name);
-    sendEventAfter();
+  public void removeLabel(String qname) {
+    if (qname != null) {
+      Label label = getLabel(qname);
+      sendEventBefore(label);
+      super.removeLabel(qname);
+      sendEventAfter(label);
+    }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore();
+    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void setSource(S source) {
-    sendEventBefore();
+    sendEventBefore(this);
     super.setSource(source);
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void setTarget(T target) {
-    sendEventBefore();
+    sendEventBefore(this);
     super.setTarget(target);
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
 }

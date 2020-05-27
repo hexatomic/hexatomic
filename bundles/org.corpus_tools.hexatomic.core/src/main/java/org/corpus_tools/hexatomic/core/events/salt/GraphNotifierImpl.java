@@ -22,9 +22,9 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Graph;
-import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -72,44 +72,47 @@ public class GraphNotifierImpl extends
     this.owner = owner;
   }
 
-  private void sendEventBefore() {
+  private void sendEventBefore(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, this.getId());
+      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
-  private void sendEventAfter() {
+  private void sendEventAfter(Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED, this.getId());
+      events.send(Topics.PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore();
+    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter();
+    sendEventAfter(label);
   }
 
   @Override
-  public void removeLabel(String namespace, String name) {
-    sendEventBefore();
-    super.removeLabel(namespace, name);
-    sendEventAfter();
+  public void removeLabel(String qname) {
+    if (qname != null) {
+      Label label = getLabel(qname);
+      sendEventBefore(label);
+      super.removeLabel(qname);
+      sendEventAfter(label);
+    }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore();
+    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void addNode(Node node) {
-    sendEventBefore();
+    sendEventBefore(node);
     super.addNode(node);
-    // HACK: Reset to the actual owning graph before notifying the listeners.
+    // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
     // the real graph.
     if (owner != null) {
@@ -117,21 +120,21 @@ public class GraphNotifierImpl extends
         ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    sendEventAfter();
+    sendEventAfter(node);
   }
 
   @Override
   public void removeNode(Node node) {
-    sendEventBefore();
+    sendEventBefore(node);
     super.removeNode(node);
-    sendEventAfter();
+    sendEventAfter(node);
   }
 
   @Override
   public void addRelation(Relation<? extends Node, ? extends Node> relation) {
-    sendEventBefore();
+    sendEventBefore(relation);
     super.addRelation(relation);
-    // HACK: Reset to the actual owning graph before notifying the listeners.
+    // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
     // the real graph.
     if (owner != null) {
@@ -139,34 +142,34 @@ public class GraphNotifierImpl extends
         ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    sendEventAfter();
+    sendEventAfter(relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    sendEventBefore();
+    sendEventBefore(rel);
     super.removeRelation(rel);
-    sendEventAfter();
+    sendEventAfter(rel);
   }
 
   @Override
   public void removeRelations() {
-    sendEventBefore();
+    sendEventBefore(this);
     super.removeRelations();
-    sendEventAfter();
+    sendEventAfter(this);
   }
 
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEventBefore();
+    sendEventBefore(layer);
     super.addLayer(layer);
-    sendEventAfter();
+    sendEventAfter(layer);
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEventBefore();
+    sendEventBefore(layer);
     super.removeLayer(layer);
-    sendEventAfter();
+    sendEventAfter(layer);
   }
 }
