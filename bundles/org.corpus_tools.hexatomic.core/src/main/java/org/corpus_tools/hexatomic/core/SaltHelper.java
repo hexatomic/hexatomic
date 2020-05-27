@@ -29,6 +29,11 @@ import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.Relation;
 
+/**
+ * A utility class to handle Salt objects.
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ */
 public class SaltHelper {
 
   /**
