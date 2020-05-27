@@ -40,16 +40,27 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
-public class LabelNotifierImpl extends LabelImpl implements Label {
+public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElement<Label> {
 
   private static final long serialVersionUID = 8010124349555159857L;
 
   private final IEventBroker events;
   private final ProjectManager projectManager;
+  private Label owner;
 
   public LabelNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
     this.projectManager = projectManager;
+  }
+
+  @Override
+  public Label getOwner() {
+    return owner;
+  }
+
+  @Override
+  public void setOwner(Label owner) {
+    this.owner = owner;
   }
 
   /**

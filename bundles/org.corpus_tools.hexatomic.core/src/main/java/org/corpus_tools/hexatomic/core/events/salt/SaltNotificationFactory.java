@@ -124,9 +124,32 @@ public class SaltNotificationFactory implements ISaltFactory {
   }
 
 
+  private GraphNotifierImpl createNotifierGraph() {
+    return new GraphNotifierImpl(events, projectManager);
+  }
+
+  private LabelNotifierImpl createNotifierLabel() {
+    return new LabelNotifierImpl(events, projectManager);
+  }
+
+
+  private LayerNotifierImpl<Node, Relation<Node, Node>> createNotifierLayer() {
+    return new LayerNotifierImpl<>(events, projectManager);
+  }
+
+  private NodeNotifierImpl createNotifierNode() {
+    return new NodeNotifierImpl(events, projectManager);
+  }
+
+
+  private RelationNotifierImpl<Node, Node> createNotifierRelation() {
+    return new RelationNotifierImpl<>(events, projectManager);
+  }
+
+
   @Override
   public Node createNode() {
-    return new NodeNotifierImpl(events, projectManager);
+    return createNotifierNode();
   }
 
   @Override
@@ -134,19 +157,15 @@ public class SaltNotificationFactory implements ISaltFactory {
     return createNotifierGraph();
   }
 
-  private GraphNotifierImpl createNotifierGraph() {
-    GraphNotifierImpl graph = new GraphNotifierImpl(events, projectManager);
-    return graph;
-  }
 
   @Override
   public Relation<Node, Node> createRelation() {
-    return new RelationNotifierImpl<>(events, projectManager);
+    return createNotifierRelation();
   }
 
   @Override
   public Label createLabel() {
-    return new LabelNotifierImpl(events, projectManager);
+    return createNotifierLabel();
   }
 
   @Override
@@ -155,8 +174,8 @@ public class SaltNotificationFactory implements ISaltFactory {
   }
 
   @Override
-  public LayerNotifierImpl<Node, Relation<Node, Node>> createLayer() {
-    return new LayerNotifierImpl<>(events, projectManager);
+  public Layer<Node, Relation<Node, Node>> createLayer() {
+    return createNotifierLayer();
   }
 
   @Override
@@ -169,37 +188,58 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SNode createSNode() {
-    return new SNodeImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SNode result = new SNodeImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SRelation<SNode, SNode> createSRelation() {
-    return new SRelationImpl<>(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SRelation<SNode, SNode> result = new SRelationImpl<>(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SAnnotation createSAnnotation() {
-    return new SAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SAnnotation result = new SAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SMetaAnnotation createSMetaAnnotation() {
-    return new SMetaAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SMetaAnnotation result = new SMetaAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SProcessingAnnotation createSProcessingAnnotation() {
-    return new SProcessingAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SProcessingAnnotation result = new SProcessingAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SFeature createSFeature() {
-    return new SFeatureImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SFeature result = new SFeatureImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SLayer createSLayer() {
-    return new SLayerImpl(createLayer());
+    LayerNotifierImpl<Node, Relation<Node, Node>> delegate = createNotifierLayer();
+    SLayer result = new SLayerImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
@@ -209,22 +249,18 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SCorpus createSCorpus() {
-    return new SCorpusImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SCorpus result = new SCorpusImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SDocument createSDocument() {
-    return new SDocumentImpl(createNode());
-  }
-
-  @Override
-  public SCorpusRelation createSCorpusRelation() {
-    return new SCorpusRelationImpl(createRelation());
-  }
-
-  @Override
-  public SCorpusDocumentRelation createSCorpusDocumentRelation() {
-    return new SCorpusDocumentRelationImpl(createRelation());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SDocument result = new SDocumentImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
@@ -243,99 +279,174 @@ public class SaltNotificationFactory implements ISaltFactory {
     return result;
   }
 
+
+
+  @Override
+  public SCorpusRelation createSCorpusRelation() {
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SCorpusRelation result = new SCorpusRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
+  }
+
+  @Override
+  public SCorpusDocumentRelation createSCorpusDocumentRelation() {
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SCorpusDocumentRelation result = new SCorpusDocumentRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
+  }
+
   @Override
   public SSpanningRelation createSSpanningRelation() {
-    return new SSpanningRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SSpanningRelation result = new SSpanningRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SDominanceRelation createSDominanceRelation() {
-    return new SDominanceRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SDominanceRelation result = new SDominanceRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SPointingRelation createSPointingRelation() {
-    return new SPointingRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SPointingRelation result = new SPointingRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SOrderRelation createSOrderRelation() {
-    return new SOrderRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SOrderRelation result = new SOrderRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public STextualRelation createSTextualRelation() {
-    return new STextualRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    STextualRelation result = new STextualRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public STimelineRelation createSTimelineRelation() {
-    return new STimelineRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    STimelineRelation result = new STimelineRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SMedialRelation createSMedialRelation() {
-    return new SMedialRelationImpl(createRelation());
+    RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
+    SMedialRelation result = new SMedialRelationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SSpan createSSpan() {
-    return new SSpanImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SSpan result = new SSpanImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SStructure createSStructure() {
-    return new SStructureImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SStructure result = new SStructureImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public STextualDS createSTextualDS() {
-    return new STextualDSImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    STextualDS result = new STextualDSImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SMedialDS createSMedialDS() {
-    return new SMedialDSImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SMedialDS result = new SMedialDSImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public STimeline createSTimeline() {
-    return new STimelineImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    STimeline result = new STimelineImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SToken createSToken() {
-    return new STokenImpl(createNode());
+    NodeNotifierImpl delegate = createNotifierNode();
+    SToken result = new STokenImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SCatAnnotation createSCatAnnotation() {
-    return new SCatAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SCatAnnotation result = new SCatAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SPOSAnnotation createSPOSAnnotation() {
-    return new SPOSAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SPOSAnnotation result = new SPOSAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SLemmaAnnotation createSLemmaAnnotation() {
-    return new SLemmaAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SLemmaAnnotation result = new SLemmaAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public STypeAnnotation createSTypeAnnotation() {
-    return new STypeAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    STypeAnnotation result = new STypeAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SWordAnnotation createSWordAnnotation() {
-    return new SWordAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SWordAnnotation result = new SWordAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
   @Override
   public SSentenceAnnotation createSSentenceAnnotation() {
-    return new SSentenceAnnotationImpl(createLabel());
+    LabelNotifierImpl delegate = createNotifierLabel();
+    SSentenceAnnotation result = new SSentenceAnnotationImpl(delegate);
+    delegate.setOwner(result);
+    return result;
   }
 
 }

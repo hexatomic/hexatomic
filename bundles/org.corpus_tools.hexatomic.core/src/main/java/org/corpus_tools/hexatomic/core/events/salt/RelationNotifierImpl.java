@@ -41,17 +41,28 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class RelationNotifierImpl<S extends Node, T extends Node>
-    extends RelationImpl<S, T> implements Relation<S, T> {
+    extends RelationImpl<S, T> implements Relation<S, T>, NotifyingElement<Relation<?, ?>> {
 
 
   private static final long serialVersionUID = 1171405238664510985L;
 
   private final IEventBroker events;
   private final ProjectManager projectManager;
+  private Relation<?, ?> owner;
 
   public RelationNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
     this.projectManager = projectManager;
+  }
+
+  @Override
+  public Relation<?, ?> getOwner() {
+    return owner;
+  }
+
+  @Override
+  public void setOwner(Relation<?, ?> owner) {
+    this.owner = owner;
   }
 
   private void sendEventBefore() {

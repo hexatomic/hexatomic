@@ -42,17 +42,28 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
-    implements Layer<N, R> {
+    implements Layer<N, R>, NotifyingElement<Layer<?, ?>> {
 
 
   private static final long serialVersionUID = -4708308546018698463L;
 
   private final IEventBroker events;
   private final ProjectManager projectManager;
+  private Layer<?, ?> owner;
 
   public LayerNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
     this.projectManager = projectManager;
+  }
+
+  @Override
+  public Layer<?, ?> getOwner() {
+    return owner;
+  }
+
+  @Override
+  public void setOwner(Layer<?, ?> owner) {
+    this.owner = owner;
   }
 
   private void sendEventBefore() {

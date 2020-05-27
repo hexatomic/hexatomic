@@ -39,16 +39,27 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
-public class NodeNotifierImpl extends NodeImpl implements Node {
+public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingElement<Node> {
 
   private static final long serialVersionUID = -7940440063671378198L;
   private final IEventBroker events;
   private final ProjectManager projectManager;
+  private Node owner;
 
 
   public NodeNotifierImpl(IEventBroker events, ProjectManager projectManager) {
     this.events = events;
     this.projectManager = projectManager;
+  }
+
+  @Override
+  public Node getOwner() {
+    return owner;
+  }
+
+  @Override
+  public void setOwner(Node owner) {
+    this.owner = owner;
   }
 
   private void sendEventBefore() {

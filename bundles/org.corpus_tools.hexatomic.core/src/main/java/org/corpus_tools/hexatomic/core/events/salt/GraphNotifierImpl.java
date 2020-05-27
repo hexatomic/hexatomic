@@ -24,6 +24,7 @@ package org.corpus_tools.hexatomic.core.events.salt;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -46,7 +47,8 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  */
 public class GraphNotifierImpl extends
     GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
-    implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> {
+    implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>,
+    NotifyingElement<Graph<?, ?, ?>> {
 
   private static final long serialVersionUID = 2590632940284255617L;
 
@@ -60,10 +62,12 @@ public class GraphNotifierImpl extends
     this.projectManager = projectManager;
   }
 
+  @Override
   public Graph<?, ?, ?> getOwner() {
     return owner;
   }
 
+  @Override
   public void setOwner(Graph<?, ?, ?> owner) {
     this.owner = owner;
   }
