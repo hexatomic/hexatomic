@@ -72,45 +72,35 @@ public class GraphNotifierImpl extends
     this.owner = owner;
   }
 
-  private void sendEventBefore(Object element) {
+  private void sendEvent(String topic, Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
-    }
-  }
-
-  private void sendEventAfter(Object element) {
-    if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
+      events.send(topic, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter(label);
+    sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      sendEventBefore(label);
+      sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
-      sendEventAfter(label);
     }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void addNode(Node node) {
-    sendEventBefore(node);
     super.addNode(node);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
@@ -120,19 +110,17 @@ public class GraphNotifierImpl extends
         ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    sendEventAfter(node);
+    sendEvent(Topics.ANNOTATION_ADDED, node);
   }
 
   @Override
   public void removeNode(Node node) {
-    sendEventBefore(node);
+    sendEvent(Topics.ANNOTATION_REMOVED, node);
     super.removeNode(node);
-    sendEventAfter(node);
   }
 
   @Override
   public void addRelation(Relation<? extends Node, ? extends Node> relation) {
-    sendEventBefore(relation);
     super.addRelation(relation);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
@@ -142,34 +130,30 @@ public class GraphNotifierImpl extends
         ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    sendEventAfter(relation);
+    sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    sendEventBefore(rel);
+    sendEvent(Topics.ANNOTATION_REMOVED, rel);
     super.removeRelation(rel);
-    sendEventAfter(rel);
   }
 
   @Override
   public void removeRelations() {
-    sendEventBefore(this);
     super.removeRelations();
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_REMOVED, this);
   }
 
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEventBefore(layer);
     super.addLayer(layer);
-    sendEventAfter(layer);
+    sendEvent(Topics.ANNOTATION_ADDED, layer);
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEventBefore(layer);
+    sendEvent(Topics.ANNOTATION_REMOVED, layer);
     super.removeLayer(layer);
-    sendEventAfter(layer);
   }
 }

@@ -63,67 +63,54 @@ public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElem
   }
 
 
-  private void sendEventBefore(Object element) {
+  private void sendEvent(String topic, Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
-    }
-  }
-
-  private void sendEventAfter(Object element) {
-    if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
+      events.send(topic, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter(label);
+    sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      sendEventBefore(label);
+      sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
-      sendEventAfter(label);
     }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void setNamespace(String namespace) {
-    sendEventBefore(this);
     super.setNamespace(namespace);
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void setName(String name) {
-    sendEventBefore(this);
     super.setName(name);
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void setQName(String newQName) {
-    sendEventBefore(this);
     super.setQName(newQName);
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void setValue(Object value) {
-    sendEventBefore(this);
     super.setValue(value);
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 }

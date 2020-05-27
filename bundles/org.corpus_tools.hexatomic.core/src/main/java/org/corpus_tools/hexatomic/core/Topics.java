@@ -30,8 +30,12 @@ public interface Topics {
   
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
-  public static final String BEFORE_PROJECT_CHANGED = "BEFORE_PROJECT_CHANGED";
-  public static final String PROJECT_CHANGED = "PROJECT_CHANGED";
+
+  public static final String ANNOTATION_ANY_UPDATE = "ANNOTATION_UPDATE/*";
+
+  public static final String ANNOTATION_ADDED = "ANNOTATION_UPDATE/ADD";
+  public static final String ANNOTATION_REMOVED = "ANNOTATION_UPDATE/REMOVED";
+  public static final String ANNOTATION_MODIFIED = "ANNOTATION_UPDATE/MODIFIED";
 
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   

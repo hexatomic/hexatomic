@@ -66,54 +66,43 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
     this.owner = owner;
   }
 
-  private void sendEventBefore(Object element) {
+  private void sendEvent(String topic, Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
-    }
-  }
-
-  private void sendEventAfter(Object element) {
-    if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
+      events.send(topic, SaltHelper.resolveDelegation(element));
     }
   }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter(label);
+    sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      sendEventBefore(label);
+      sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
-      sendEventAfter(label);
     }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void setSource(S source) {
-    sendEventBefore(this);
     super.setSource(source);
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void setTarget(T target) {
-    sendEventBefore(this);
     super.setTarget(target);
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
 }

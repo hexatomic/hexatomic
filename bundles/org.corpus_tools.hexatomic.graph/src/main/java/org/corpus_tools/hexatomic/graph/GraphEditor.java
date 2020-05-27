@@ -680,7 +680,7 @@ public class GraphEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) Object element) {
+  private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     if (element != null) {
       SDocumentGraph loadedGraph = getGraph();
       Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);

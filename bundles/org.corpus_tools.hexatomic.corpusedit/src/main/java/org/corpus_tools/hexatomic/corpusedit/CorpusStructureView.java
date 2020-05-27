@@ -593,7 +593,7 @@ public class CorpusStructureView {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_CHANGED) Object element) {
+  private void subscribeProjectLoaded(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     updateView();
   }
 

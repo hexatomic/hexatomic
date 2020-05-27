@@ -67,67 +67,55 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
     this.owner = owner;
   }
 
-  private void sendEventBefore(Object element) {
+  private void sendEvent(String topic, Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.BEFORE_PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
+      events.send(topic, SaltHelper.resolveDelegation(element));
     }
   }
 
-  private void sendEventAfter(Object element) {
-    if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.PROJECT_CHANGED, SaltHelper.resolveDelegation(element));
-    }
-  }
 
   @Override
   public void addLabel(Label label) {
-    sendEventBefore(label);
     super.addLabel(label);
-    sendEventAfter(label);
+    sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      sendEventBefore(label);
+      sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
-      sendEventAfter(label);
     }
   }
 
   @Override
   public void removeAll() {
-    sendEventBefore(this);
     super.removeAll();
-    sendEventAfter(this);
+    sendEvent(Topics.ANNOTATION_MODIFIED, this);
   }
 
   @Override
   public void addNode(N node) {
-    sendEventBefore(node);
     super.addNode(node);
-    sendEventAfter(node);
+    sendEvent(Topics.ANNOTATION_ADDED, node);
   }
 
   @Override
   public void removeNode(N node) {
-    sendEventBefore(node);
+    sendEvent(Topics.ANNOTATION_REMOVED, node);
     super.removeNode(node);
-    sendEventAfter(node);
   }
 
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
-    sendEventBefore(relation);
     super.addRelation(relation);
-    sendEventAfter(relation);
+    sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    sendEventBefore(rel);
+    sendEvent(Topics.ANNOTATION_REMOVED, rel);
     super.removeRelation(rel);
-    sendEventAfter(rel);
   }
 }
