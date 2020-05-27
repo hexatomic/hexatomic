@@ -685,6 +685,9 @@ public class GraphEditor {
     Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
     if (changedGraph.isPresent() && loadedGraph.getId().equals(changedGraph.get().getId())) {
       updateView(true, false);
+    } else {
+      // TODO: this is just for testing the CI, remove it when finished testing!
+      updateView(true, false);
     }
   }
 
