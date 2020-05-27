@@ -684,7 +684,7 @@ public class GraphEditor {
     SDocumentGraph loadedGraph = getGraph();
     Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
-      sync.syncExec(() -> updateView(true, false));
+      updateView(true, false);
     }
   }
 
