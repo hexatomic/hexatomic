@@ -79,6 +79,10 @@ public class SaltHelper {
     } else if (object instanceof Label) {
       // Labels might not be directly attached to graphs, but to other elements of the graph
       LabelableElement container = ((Label) object).getContainer();
+      Object resolvedContainer = resolveDelegation(container);
+      if (resolvedContainer instanceof LabelableElement) {
+        container = (LabelableElement) resolvedContainer;
+      }
       if (container instanceof Graph<?, ?, ?>) {
         return Optional.of((Graph<?, ?, ?>) container);
       } else if (container != null) {

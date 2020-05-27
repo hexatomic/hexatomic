@@ -3,8 +3,10 @@ package org.corpus_tools.hexatomic.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.mock;
 
 import org.corpus_tools.hexatomic.core.events.salt.NodeNotifierImpl;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -14,10 +16,25 @@ import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SProcessingAnnotation;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.impl.NodeImpl;
+import org.corpus_tools.salt.impl.SaltFactoryImpl;
 import org.corpus_tools.salt.samples.SampleGenerator;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class SaltHelperTest {
+
+
+
+
+  @BeforeEach
+  public void setUp() throws Exception {
+
+    // Use our notifying Salt factory
+    ProjectManager projectManager = mock(ProjectManager.class);
+    IEventBroker events = mock(IEventBroker.class);
+    SaltFactory.setFactory(new SaltNotificationFactory(events, projectManager));
+  }
 
   /**
    * Create a document graph with complex labels and resolve the graph for the elements.
@@ -53,6 +70,7 @@ class SaltHelperTest {
    */
   @Test
   void testResolveDelegation() {
+    SaltFactory.setFactory(new SaltFactoryImpl());
     final NodeNotifierImpl delegate = new NodeNotifierImpl(null, null);
     final Node actualNode = new NodeImpl(delegate);
     delegate.setOwner(actualNode);
