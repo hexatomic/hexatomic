@@ -37,16 +37,18 @@ public class MyClass {
 }
 ```
 
-You can register for any changes on the Salt project (e.g., added annotations to a document), by subscribing to the `Topics.PROJECT_CHANGED` topic, which will be sent by the [Eclipse RCP `IEventBroker` service](http://web.archive.org/web/20200427021644/https://www.vogella.com/tutorials/Eclipse4EventSystem/article.html).
+You can register for any changes on the Salt project (e.g., added annotations to a document), by subscribing to the `Topics.ANNOTATION_ANY_UPDATE` topic, which will be sent by the [Eclipse RCP `IEventBroker` service](http://web.archive.org/web/20200427021644/https://www.vogella.com/tutorials/Eclipse4EventSystem/article.html).
 ```java
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_CHANGED) String elementID) {
-    if (elementID != null) {
-      // TODO: update view
-    }
+@Inject
+@org.eclipse.e4.core.di.annotations.Optional
+private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+  // Use a helper function to get the graph the changed element is connected to
+  Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
+  if (changedGraph.isPresent()) {
+    // TODO: check graph update is relevant for this editor and update UI
   }
+}
 ```
 After registering your listener, you will receive *all* updates for *all* documents and *all* changes to the project structure.
-The Salt ID of the changed element will be given as argument.
+The changed element will be given as argument.
 You have to decide in your own code if you need to handle an update, e.g., because it is related to a document you are editing for which the event should trigger redrawing the editor you are implementing.

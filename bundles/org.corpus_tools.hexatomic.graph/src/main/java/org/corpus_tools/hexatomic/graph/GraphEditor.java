@@ -681,12 +681,10 @@ public class GraphEditor {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
-    if (element != null) {
-      SDocumentGraph loadedGraph = getGraph();
-      Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
-      if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
-        sync.syncExec(() -> updateView(true, false));
-      }
+    SDocumentGraph loadedGraph = getGraph();
+    Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
+    if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
+      sync.syncExec(() -> updateView(true, false));
     }
   }
 
