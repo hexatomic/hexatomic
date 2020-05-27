@@ -150,8 +150,6 @@ class TestSaltNotifications {
     verify(events, times(2)).send(eq(Topics.ANNOTATION_REMOVED), eq(tok));
     verify(events).send(eq(Topics.ANNOTATION_REMOVED), eq(layer));
     verify(events).send(eq(Topics.ANNOTATION_REMOVED), eq(textRel));
-
-
   }
 
   private void verifySetNameEvents(SAnnotationContainer element) {
