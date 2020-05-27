@@ -11,6 +11,9 @@ import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.samples.SampleGenerator;
 import org.corpus_tools.salt.util.SaltUtil;
@@ -64,6 +67,9 @@ class TestSaltNotifications {
 
   }
 
+  /**
+   * Create a simple example graph and check that all events have been fired (and not more).
+   */
   @Test
   public void testExampleGraph() {
     // Create a document with a single primary data text
@@ -72,38 +78,64 @@ class TestSaltNotifications {
 
     // Document graph connection is set as a label and consists of 3 events(set namespace, set name,
     // set value)
-    SFeature docGraphFeat = doc.getFeature(SaltUtil.FEAT_SDOCUMENT_GRAPH_QNAME);
-    verify(events, times(3)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(docGraphFeat));
-    verify(events, times(3)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(docGraphFeat));
-    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(docGraphFeat));
-
+    verifyCreatedFeatureEvents(doc.getFeature(SaltUtil.FEAT_SDOCUMENT_GRAPH_QNAME));
 
     // The connection is double linked
-    SFeature docFeat =
-        doc.getDocumentGraph().getFeature(SaltUtil.FEAT_SDOCUMENT_QNAME);
-    verify(events, times(3)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(docFeat));
-    verify(events, times(3)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(docFeat));
-    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(docFeat));
-    
+    verifyCreatedFeatureEvents(doc.getDocumentGraph().getFeature(SaltUtil.FEAT_SDOCUMENT_QNAME));
+
     // Textual data source is added as node, its content and ID is a feature
     STextualDS text = doc.getDocumentGraph().getTextualDSs().get(0);
     verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(text));
-    SFeature textDataFeat = text.getFeature(SaltUtil.FEAT_SDATA_QNAME);
-    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(textDataFeat));
-    verify(events, times(3)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(textDataFeat));
-    verify(events, times(3)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(textDataFeat));
     // Text text ID is an own object that is added to the node as label
     verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(text.getIdentifier()));
+    verifySetNameEvents(text);
 
-    // The name feature is first created with 3 calls, then the value is set: this makes 4 events in
-    // total
-    SFeature textNameFeat = text.getFeature(SaltUtil.FEAT_NAME_QNAME);
-    verify(events, times(4)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(textNameFeat));
-    verify(events, times(4)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(textNameFeat));
-    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(textNameFeat));
+    verifyCreatedFeatureEvents(text.getFeature(SaltUtil.FEAT_SDATA_QNAME));
 
     // This have been all recorded events
     verifyNoMoreInteractions(events);
 
+    // Add a token "Is"
+    SToken tok = doc.getDocumentGraph().createToken(text, 0, 2);
+
+    // Test all events for the created token
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(tok));
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(tok.getIdentifier()));
+    verifySetNameEvents(tok);
+
+
+    // Creating a token also adds a relation from the token to the text
+    STextualRelation textRel = doc.getDocumentGraph().getTextualRelations().get(0);
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(textRel.getIdentifier()));
+    verifySetNameEvents(textRel);
+
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(textRel));
+    // Setting the target and source of the relation creates each 2 events
+    verify(events, times(2)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(textRel));
+    verify(events, times(2)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(textRel));
+
+    verifyCreatedFeatureEvents(textRel.getFeature(SaltUtil.FEAT_SSTART_QNAME));
+    verifyCreatedFeatureEvents(textRel.getFeature(SaltUtil.FEAT_SEND_QNAME));
+
+    verifyNoMoreInteractions(events);
   }
+
+  private void verifySetNameEvents(SAnnotationContainer element) {
+    SFeature nameFeat = element.getFeature(SaltUtil.FEAT_NAME_QNAME);
+    // The name feature is first created with 3 calls, then the value is set: this makes 4 events in
+    // total
+    verify(events, times(4)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(nameFeat));
+    verify(events, times(4)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(nameFeat));
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(nameFeat));
+  }
+
+  private void verifyCreatedFeatureEvents(SFeature feat) {
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(feat));
+    // Creating a new feature consists of 3 events(set namespace, set name,
+    // set value)
+    verify(events, times(3)).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(feat));
+    verify(events, times(3)).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(feat));
+  }
+
+
 }
