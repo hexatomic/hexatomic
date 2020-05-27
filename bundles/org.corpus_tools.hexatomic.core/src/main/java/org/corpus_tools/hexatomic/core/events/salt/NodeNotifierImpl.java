@@ -65,7 +65,7 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingElement
 
   private void sendEvent(String topic, Object element) {
     if (!projectManager.isSuppressingEvents()) {
-      events.send(Topics.ANNOTATION_ADDED, SaltHelper.resolveDelegation(element));
+      events.send(topic, SaltHelper.resolveDelegation(element));
     }
   }
 
