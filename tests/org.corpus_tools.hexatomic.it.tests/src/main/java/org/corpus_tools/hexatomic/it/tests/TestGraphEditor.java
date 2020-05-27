@@ -231,8 +231,22 @@ class TestGraphEditor {
     graph.createToken(anotherText, 0, 7);
     graph.createToken(anotherText, 8, 12);
 
-    // Select the new text
+    // Wait until the text segments have been calculated
     SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return textRangeTable.getTableItem("Another text") != null;
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Text segmentation calculation never finished";
+      }
+    }, 5000);
+
+    // Select the new text
     textRangeTable.select("Another text");
 
     // Wait until the graph has been properly selected
