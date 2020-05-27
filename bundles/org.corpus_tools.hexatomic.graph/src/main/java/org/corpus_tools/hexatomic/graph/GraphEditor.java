@@ -891,9 +891,6 @@ public class GraphEditor {
         viewer.getGraphControl().getViewport().setViewLocation(0, 0);
         viewer.getGraphControl().getViewport().validate();
       });
-
-
-
     }
 
   }

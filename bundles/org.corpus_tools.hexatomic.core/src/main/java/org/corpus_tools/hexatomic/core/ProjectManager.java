@@ -521,7 +521,7 @@ public class ProjectManager {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) String path) {
+  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     hasUnsavedChanges = true;
   }
 }

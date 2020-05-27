@@ -86,7 +86,8 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingElement
 
   @Override
   public void removeAll() {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 }

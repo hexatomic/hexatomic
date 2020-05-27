@@ -35,7 +35,9 @@ public interface Topics {
 
   public static final String ANNOTATION_ADDED = "ANNOTATION_UPDATE/ADD";
   public static final String ANNOTATION_REMOVED = "ANNOTATION_UPDATE/REMOVED";
-  public static final String ANNOTATION_MODIFIED = "ANNOTATION_UPDATE/MODIFIED";
+  public static final String ANNOTATION_BEFORE_MODIFICATION =
+      "ANNOTATION_UPDATE/BEFORE_MODIFICATION";
+  public static final String ANNOTATION_AFTER_MODIFICATION = "ANNOTATION_UPDATE/AFTER_MODIFICATION";
 
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   

@@ -86,31 +86,36 @@ public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElem
 
   @Override
   public void removeAll() {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setNamespace(String namespace) {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setNamespace(namespace);
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setName(String name) {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setName(name);
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setQName(String newQName) {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setQName(newQName);
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setValue(Object value) {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setValue(value);
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 }

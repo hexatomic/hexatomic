@@ -89,20 +89,23 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   @Override
   public void removeAll() {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setSource(S source) {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setSource(source);
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setTarget(T target) {
+    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setTarget(target);
-    sendEvent(Topics.ANNOTATION_MODIFIED, this);
+    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
 }
