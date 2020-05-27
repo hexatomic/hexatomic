@@ -24,18 +24,19 @@ class SaltHelperTest {
    */
   @Test
   void testGetGraphForObject() {
-    SDocument doc = SaltFactory.createSDocument();
+    final SDocument doc = SaltFactory.createSDocument();
     SampleGenerator.createPrimaryData(doc);
     SampleGenerator.createTokens(doc);
     
-    SDocumentGraph graph = doc.getDocumentGraph();
-    SProcessingAnnotation graphAnno = graph.createProcessingAnnotation("process", "the", "graph");
+    final SDocumentGraph graph = doc.getDocumentGraph();
+    final SProcessingAnnotation graphAnno =
+        graph.createProcessingAnnotation("process", "the", "graph");
 
-    SToken token = graph.getTokens().get(0);
-    SAnnotation anno = token.createAnnotation("some", "name", "test");
-    SAnnotation nestedAnno = anno.createAnnotation("nested", "anno", "value");
+    final SToken token = graph.getTokens().get(0);
+    final SAnnotation anno = token.createAnnotation("some", "name", "test");
+    final SAnnotation nestedAnno = anno.createAnnotation("nested", "anno", "value");
 
-    STextualRelation textRel = graph.getTextualRelations().get(0);
+    final STextualRelation textRel = graph.getTextualRelations().get(0);
 
     assertEquals(graph, SaltHelper.getGraphForObject(graph).get());
     assertEquals(graph, SaltHelper.getGraphForObject(token).get());
@@ -52,8 +53,8 @@ class SaltHelperTest {
    */
   @Test
   void testResolveDelegation() {
-    NodeNotifierImpl delegate = new NodeNotifierImpl(null, null);
-    Node actualNode = new NodeImpl(delegate);
+    final NodeNotifierImpl delegate = new NodeNotifierImpl(null, null);
+    final Node actualNode = new NodeImpl(delegate);
     delegate.setOwner(actualNode);
 
     assertEquals(null, SaltHelper.resolveDelegation(null));

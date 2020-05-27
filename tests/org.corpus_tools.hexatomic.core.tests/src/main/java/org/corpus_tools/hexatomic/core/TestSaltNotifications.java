@@ -79,22 +79,22 @@ class TestSaltNotifications {
     /// Part 1, create and manipulate a sample graph
 
     // Create a document with a single primary data text
-    SDocument doc = SaltFactory.createSDocument();
+    final SDocument doc = SaltFactory.createSDocument();
     SampleGenerator.createPrimaryData(doc);
 
     // Textual data source is added as node, its content and ID is a feature
-    STextualDS text = doc.getDocumentGraph().getTextualDSs().get(0);
+    final STextualDS text = doc.getDocumentGraph().getTextualDSs().get(0);
 
     // Add a token "Is"
-    SToken tok = doc.getDocumentGraph().createToken(text, 0, 2);
-    STextualRelation textRel = doc.getDocumentGraph().getTextualRelations().get(0);
+    final SToken tok = doc.getDocumentGraph().createToken(text, 0, 2);
+    final STextualRelation textRel = doc.getDocumentGraph().getTextualRelations().get(0);
 
     // Add and remove an annotation on the token
-    SAnnotation tokAnno = tok.createAnnotation("test", "somename", "anyvalue");
+    final SAnnotation tokAnno = tok.createAnnotation("test", "somename", "anyvalue");
     tok.removeLabel("test", "somename");
 
     // Add and remove a layer
-    SLayer layer = SaltFactory.createSLayer();
+    final SLayer layer = SaltFactory.createSLayer();
     doc.getDocumentGraph().addLayer(layer);
     layer.addNode(tok);
     layer.removeNode(tok);
