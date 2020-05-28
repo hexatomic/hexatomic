@@ -244,7 +244,7 @@ class TestGraphEditor {
       public String getFailureMessage() {
         return "Text segmentation calculation never finished";
       }
-    }, 10000);
+    }, 100000);
 
     // Select the new text
     textRangeTable.select("Another text");
