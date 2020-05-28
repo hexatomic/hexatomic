@@ -118,6 +118,7 @@ public class GraphEditor {
 
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   @Inject
   private ProjectManager projectManager;
@@ -425,6 +426,9 @@ public class GraphEditor {
   @SuppressWarnings("unchecked")
   private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
+    log.debug("Updating graph editor view recalculateSegments={}, scrollToFirstToken={}",
+        recalculateSegments, scrollToFirstToken);
+
     try {
       SDocumentGraph graph = getGraph();
 
@@ -461,6 +465,8 @@ public class GraphEditor {
 
       Job job = Job.create("Update graph view", (ICoreRunnable) monitor -> {
         monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
+
+        log.debug("Begin background task for updating graph editor view");
 
         if (recalculateSegments) {
           monitor.subTask("Recalculating available segments");
@@ -521,7 +527,7 @@ public class GraphEditor {
 
         monitor.done();
 
-        sync.asyncExec(() -> {
+        sync.syncExec(() -> {
 
           // make sure the console view knows about the currently selected text
           if (newSelectedSegments.isEmpty()) {
@@ -555,6 +561,9 @@ public class GraphEditor {
           viewer.applyLayout();
 
         });
+
+        log.debug("Finished background task for updating graph editor view");
+
 
       });
       job.schedule();
@@ -687,9 +696,9 @@ public class GraphEditor {
       if (element instanceof STextualRelation || element instanceof STextOverlappingRelation<?,?>) {
         // Only relations with text coverage semantics can change the structure of the graph and
         // modify segments
-        sync.syncExec(() -> updateView(true, false));
+        updateView(true, false);
       } else {
-        sync.syncExec(() -> updateView(false, false));
+        updateView(false, false);
       }
     }
   }
@@ -697,12 +706,14 @@ public class GraphEditor {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
+    log.debug("Received ANNOTATION_ADDED event for element {}", element);
     checkUpdateViewNecessary(element);
   }
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
+    log.debug("Received ANNOTATION_REMOVED event for element {}", element);
     checkUpdateViewNecessary(element);
   }
 
@@ -710,6 +721,7 @@ public class GraphEditor {
   @org.eclipse.e4.core.di.annotations.Optional
   private void onAnnotationModified(
       @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
+    log.debug("Received ANNOTATION_AFTER_MODIFICATION event for element {}", element);
     checkUpdateViewNecessary(element);
   }
 

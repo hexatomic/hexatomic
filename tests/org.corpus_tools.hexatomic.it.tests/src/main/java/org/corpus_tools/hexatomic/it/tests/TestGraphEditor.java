@@ -131,10 +131,11 @@ class TestGraphEditor {
 
   void enterCommand(String command) {
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
-    final SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+
 
     // Remember the index of the currently selected segment
     Optional<Integer> firstSelectedRow = Optional.empty();
+    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
     for (int i = 0; i < textRangeTable.rowCount(); i++) {
       if (textRangeTable.getTableItem(i).isChecked()) {
         firstSelectedRow = Optional.of(i);
@@ -156,6 +157,7 @@ class TestGraphEditor {
 
         @Override
         public boolean test() throws Exception {
+          SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
           return textRangeTable.getTableItem(row).isChecked();
         }
 
@@ -233,18 +235,6 @@ class TestGraphEditor {
 
     // Wait until the text segments have been calculated
     SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-    bot.waitUntil(new DefaultCondition() {
-
-      @Override
-      public boolean test() throws Exception {
-        return textRangeTable.getTableItem("Another text") != null;
-      }
-
-      @Override
-      public String getFailureMessage() {
-        return "Text segmentation calculation never finished";
-      }
-    }, 120000, 5000);
 
     // Select the new text
     textRangeTable.select("Another text");
@@ -254,6 +244,7 @@ class TestGraphEditor {
 
       @Override
       public boolean test() throws Exception {
+        SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
         return textRangeTable.getTableItem("Another text").isChecked();
       }
 
