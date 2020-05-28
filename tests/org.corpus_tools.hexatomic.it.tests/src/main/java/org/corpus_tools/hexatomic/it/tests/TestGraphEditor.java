@@ -241,7 +241,7 @@ class TestGraphEditor {
 
       @Override
       public String getFailureMessage() {
-        return "Second text segment was not checked";
+        return "Second text element did not appear";
       }
     }, 5000);
 

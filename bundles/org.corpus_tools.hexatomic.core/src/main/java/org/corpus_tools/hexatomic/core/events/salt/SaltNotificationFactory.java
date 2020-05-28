@@ -101,6 +101,7 @@ import org.corpus_tools.salt.semantics.impl.SSentenceAnnotationImpl;
 import org.corpus_tools.salt.semantics.impl.STypeAnnotationImpl;
 import org.corpus_tools.salt.semantics.impl.SWordAnnotationImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
 
 /**
  * Implements at {@link SaltFactory} where the created objects will use the {@link IEventBroker} to
@@ -115,35 +116,34 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  */
 public class SaltNotificationFactory implements ISaltFactory {
 
-  private final IEventBroker events;
-  private final ProjectManager projectManager;
 
-  public SaltNotificationFactory(IEventBroker events, ProjectManager projectManager) {
-    this.events = events;
-    this.projectManager = projectManager;
+  private final NotificationHelper notificationHelper;
+
+  public SaltNotificationFactory(IEventBroker events, ProjectManager projectManager,
+      UISynchronize sync) {
+    this.notificationHelper = new NotificationHelper(events, projectManager, sync);
   }
 
-
   private GraphNotifierImpl createNotifierGraph() {
-    return new GraphNotifierImpl(events, projectManager);
+    return new GraphNotifierImpl(notificationHelper);
   }
 
   private LabelNotifierImpl createNotifierLabel() {
-    return new LabelNotifierImpl(events, projectManager);
+    return new LabelNotifierImpl(notificationHelper);
   }
 
 
   private LayerNotifierImpl<Node, Relation<Node, Node>> createNotifierLayer() {
-    return new LayerNotifierImpl<>(events, projectManager);
+    return new LayerNotifierImpl<>(notificationHelper);
   }
 
   private NodeNotifierImpl createNotifierNode() {
-    return new NodeNotifierImpl(events, projectManager);
+    return new NodeNotifierImpl(notificationHelper);
   }
 
 
   private RelationNotifierImpl<Node, Node> createNotifierRelation() {
-    return new RelationNotifierImpl<>(events, projectManager);
+    return new RelationNotifierImpl<>(notificationHelper);
   }
 
 

@@ -21,8 +21,6 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Label;
@@ -52,14 +50,12 @@ public class GraphNotifierImpl extends
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private final IEventBroker events;
-  private final ProjectManager projectManager;
+  private final NotificationHelper notificationHelper;
 
   private Graph<?, ?, ?> owner;
 
-  public GraphNotifierImpl(IEventBroker events, ProjectManager projectManager) {
-    this.events = events;
-    this.projectManager = projectManager;
+  public GraphNotifierImpl(NotificationHelper notificationHelper) {
+    this.notificationHelper = notificationHelper;
   }
 
   @Override
@@ -72,32 +68,26 @@ public class GraphNotifierImpl extends
     this.owner = owner;
   }
 
-  private void sendEvent(String topic, Object element) {
-    if (!projectManager.isSuppressingEvents()) {
-      events.send(topic, SaltHelper.resolveDelegation(element));
-    }
-  }
-
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    sendEvent(Topics.ANNOTATION_ADDED, label);
+    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      sendEvent(Topics.ANNOTATION_REMOVED, label);
+      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
@@ -111,12 +101,12 @@ public class GraphNotifierImpl extends
         ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    sendEvent(Topics.ANNOTATION_ADDED, node);
+    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, node);
   }
 
   @Override
   public void removeNode(Node node) {
-    sendEvent(Topics.ANNOTATION_REMOVED, node);
+    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, node);
     super.removeNode(node);
   }
 
@@ -131,30 +121,30 @@ public class GraphNotifierImpl extends
         ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    sendEvent(Topics.ANNOTATION_ADDED, relation);
+    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    sendEvent(Topics.ANNOTATION_REMOVED, rel);
+    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, rel);
     super.removeRelation(rel);
   }
 
   @Override
   public void removeRelations() {
     super.removeRelations();
-    sendEvent(Topics.ANNOTATION_REMOVED, this);
+    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, this);
   }
 
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
     super.addLayer(layer);
-    sendEvent(Topics.ANNOTATION_ADDED, layer);
+    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, layer);
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    sendEvent(Topics.ANNOTATION_REMOVED, layer);
+    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, layer);
     super.removeLayer(layer);
   }
 }

@@ -66,7 +66,8 @@ class TestSaltNotifications {
 
     projectManager.postConstruct();
 
-    SaltFactory.setFactory(new SaltNotificationFactory(events, projectManager));
+    SaltFactory
+        .setFactory(new SaltNotificationFactory(events, projectManager, projectManager.sync));
 
   }
 

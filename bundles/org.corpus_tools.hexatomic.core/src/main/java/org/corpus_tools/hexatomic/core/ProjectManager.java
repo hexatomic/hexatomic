@@ -93,23 +93,17 @@ public class ProjectManager {
 
   private boolean suppressingEvents;
 
-  public ProjectManager() {
-
-  }
-
   @PostConstruct
   void postConstruct() {
     log.debug("Starting Project Manager");
+
+    // Set the factory before any Salt object is created
+    SaltFactory.setFactory(new SaltNotificationFactory(events, this, sync));
 
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     this.location = Optional.empty();
     this.hasUnsavedChanges = false;
-
-    // Allow to register a change listener with Salt
-    SaltNotificationFactory notificationFactory = new SaltNotificationFactory(events, this);
-    SaltFactory.setFactory(notificationFactory);
-
   }
 
   /**

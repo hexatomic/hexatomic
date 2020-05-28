@@ -21,8 +21,6 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Node;
@@ -43,14 +41,13 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingElement<Node> {
 
   private static final long serialVersionUID = -7940440063671378198L;
-  private final IEventBroker events;
-  private final ProjectManager projectManager;
+
+  private final NotificationHelper notificationHelper;
   private Node owner;
 
 
-  public NodeNotifierImpl(IEventBroker events, ProjectManager projectManager) {
-    this.events = events;
-    this.projectManager = projectManager;
+  public NodeNotifierImpl(NotificationHelper notificationHelper) {
+    this.notificationHelper = notificationHelper;
   }
 
   @Override
@@ -63,31 +60,25 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingElement
     this.owner = owner;
   }
 
-  private void sendEvent(String topic, Object element) {
-    if (!projectManager.isSuppressingEvents()) {
-      events.send(topic, SaltHelper.resolveDelegation(element));
-    }
-  }
-
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    sendEvent(Topics.ANNOTATION_ADDED, label);
+    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      sendEvent(Topics.ANNOTATION_REMOVED, label);
+      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 }
