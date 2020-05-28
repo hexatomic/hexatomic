@@ -678,14 +678,31 @@ public class GraphEditor {
     return layout;
   }
 
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+  private void checkUpdateViewNecessary(Object element) {
     SDocumentGraph loadedGraph = getGraph();
     Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
       updateView(true, false);
     }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
+    checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
+    checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationModified(
+      @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
+    checkUpdateViewNecessary(element);
   }
 
   private class RootFilter extends ViewerFilter {
