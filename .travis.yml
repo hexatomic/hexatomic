@@ -44,7 +44,7 @@ jobs:
           file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
           tag_name: $TRAVIS_TAG
     - language: java
-      jdk: openjdk8
+      jdk: openjdk11
       name: SonarCloud code analysis
       addons:
         sonarcloud:
