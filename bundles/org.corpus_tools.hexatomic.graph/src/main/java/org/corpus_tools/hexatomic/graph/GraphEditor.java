@@ -687,9 +687,9 @@ public class GraphEditor {
       if (element instanceof STextualRelation || element instanceof STextOverlappingRelation<?,?>) {
         // Only relations with text coverage semantics can change the structure of the graph and
         // modify segments
-        updateView(true, false);
+        sync.syncExec(() -> updateView(true, false));
       } else {
-        updateView(false, false);
+        sync.syncExec(() -> updateView(false, false));
       }
     }
   }
