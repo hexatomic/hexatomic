@@ -31,6 +31,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -48,6 +49,7 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.graph.Graph;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -594,7 +596,10 @@ public class CorpusStructureView {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectLoaded(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
-    updateView();
+    Optional<Graph<?, ?, ?>> graph = SaltHelper.getGraphForObject(element);
+    if (graph.isPresent() && graph.get() instanceof SCorpusGraph) {
+      updateView();
+    }
   }
 
   private void registerEditors(EModelService modelService, MApplication application,
