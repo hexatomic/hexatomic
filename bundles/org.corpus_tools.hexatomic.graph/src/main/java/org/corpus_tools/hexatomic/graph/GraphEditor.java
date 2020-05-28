@@ -683,7 +683,7 @@ public class GraphEditor {
   private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     SDocumentGraph loadedGraph = getGraph();
     Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
-    if (changedGraph.isPresent() && loadedGraph.getId().equals(changedGraph.get().getId())) {
+    if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
       updateView(true, false);
     }
   }
