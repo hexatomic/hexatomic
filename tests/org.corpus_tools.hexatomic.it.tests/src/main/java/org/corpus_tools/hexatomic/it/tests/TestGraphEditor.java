@@ -114,9 +114,8 @@ class TestGraphEditor {
       public boolean test() throws Exception {
         SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
         if (view != null) {
-          SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
           // Wait until the graph has been loaded
-          return textRangeTable.getTableItem(0).isChecked();
+          return bot.tableWithId("graph-editor/text-range").getTableItem(0).isChecked();
         }
         return false;
       }
@@ -157,8 +156,7 @@ class TestGraphEditor {
 
         @Override
         public boolean test() throws Exception {
-          SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-          return textRangeTable.getTableItem(row).isChecked();
+          return bot.tableWithId("graph-editor/text-range").getTableItem(row).isChecked();
         }
 
         @Override
@@ -234,9 +232,21 @@ class TestGraphEditor {
     graph.createToken(anotherText, 8, 12);
 
     // Wait until the text segments have been calculated
-    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return bot.tableWithId("graph-editor/text-range").getTableItem("Another text") != null;
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Second text segment was not checked";
+      }
+    }, 5000);
 
     // Select the new text
+    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
     textRangeTable.select("Another text");
 
     // Wait until the graph has been properly selected
@@ -244,8 +254,7 @@ class TestGraphEditor {
 
       @Override
       public boolean test() throws Exception {
-        SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-        return textRangeTable.getTableItem("Another text").isChecked();
+        return bot.tableWithId("graph-editor/text-range").getTableItem("Another text").isChecked();
       }
 
       @Override
