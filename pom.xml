@@ -15,7 +15,7 @@
         <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <tycho.version>1.5.1</tycho.version>
+        <tycho.version>1.6.0</tycho.version>
     </properties>
     <!-- MODULES -->
     <modules>
