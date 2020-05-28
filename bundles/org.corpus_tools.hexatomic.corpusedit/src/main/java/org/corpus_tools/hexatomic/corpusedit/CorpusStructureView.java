@@ -589,13 +589,13 @@ public class CorpusStructureView {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_LOADED) String value) {
+  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_LOADED) String value) {
     updateView();
   }
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectLoaded(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+  private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     Optional<Graph<?, ?, ?>> graph = SaltHelper.getGraphForObject(element);
     if (graph.isPresent() && graph.get() instanceof SCorpusGraph) {
       updateView();
