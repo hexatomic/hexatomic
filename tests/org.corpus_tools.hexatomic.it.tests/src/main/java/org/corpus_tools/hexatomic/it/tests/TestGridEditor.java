@@ -18,6 +18,9 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.IPresentationEngine;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -56,6 +59,7 @@ public class TestGridEditor {
   private URI twoDsExampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
+  private EPartService partService;
 
   private ErrorService errorService = new ErrorService();
 
@@ -72,6 +76,9 @@ public class TestGridEditor {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
+
+    partService = ctx.get(EPartService.class);
+    assertNotNull(partService);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -108,6 +115,46 @@ public class TestGridEditor {
 
   }
 
+  protected class PartMaximizedCondition extends DefaultCondition {
+
+    private final MPart part;
+
+    public PartMaximizedCondition(MPart part) {
+      super();
+      this.part = part;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return part.getParent().getTags().contains(IPresentationEngine.MAXIMIZED);
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Could not maximize part";
+    }
+  }
+
+  protected class PartActiveCondition extends DefaultCondition {
+
+    private final MPart part;
+
+    public PartActiveCondition(MPart part) {
+      super();
+      this.part = part;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return part.getParent().getTags().contains(IPresentationEngine.ACTIVE);
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Could not activate part";
+    }
+  }
+
   SWTBotView openDefaultExample() {
     // Programmatically open the example corpus
     openExample(exampleProjectUri);
@@ -121,6 +168,11 @@ public class TestGridEditor {
 
     SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
     assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     return view;
   }
@@ -136,8 +188,13 @@ public class TestGridEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
 
-    SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    final SWTBotView view = bot.partByTitle("doc (Grid Editor)");
     assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     return view;
   }
@@ -155,6 +212,11 @@ public class TestGridEditor {
 
     SWTBotView view = bot.partByTitle("doc (Grid Editor)");
     assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     return view;
   }
@@ -205,10 +267,6 @@ public class TestGridEditor {
     NatTable table = bot.widget(widgetOfType(NatTable.class));
     assertNotNull(table);
 
-    // Need to maximize the window so that all columns are displayed,
-    // as NatTable knows only about completely displayed columns in the virtual table
-    bot.activeShell().maximize(true);
-
     // Check number of rows and columns (5 + 1 header row, 5 + 1 header column)
     assertEquals(6, table.getRowCount());
     assertEquals(6, table.getColumnCount());
@@ -229,9 +287,6 @@ public class TestGridEditor {
     assertEquals("val_span_3", table.getDataValueByPosition(4, 1));
     assertEquals("val_span_3", table.getDataValueByPosition(4, 2));
     assertEquals(null, table.getDataValueByPosition(5, 1));
-
-    // Un-maximize to reset to original dimensions
-    bot.activeShell().maximize(false);
   }
 
   @Test
@@ -348,7 +403,6 @@ public class TestGridEditor {
 
   @Test
   void testEmptyCellStyleApplied() {
-    bot.activeShell().maximize(true);
     openOverlapExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -356,7 +410,6 @@ public class TestGridEditor {
 
     assertEquals("", table.getCellDataValueByPosition(1, 5));
     assertTrue(table.hasConfigLabel(1, 5, StyleConfiguration.EMPTY_CELL_STYLE));
-    bot.activeShell().maximize(false);
   }
 
   /**
@@ -409,10 +462,6 @@ public class TestGridEditor {
   void testCreateAnnotationOnEmptySpanCell() {
     openOverlapExample();
 
-    // Need to maximize the window so that all columns are displayed,
-    // as NatTable knows only about completely displayed columns in the virtual table
-    bot.activeShell().maximize(true);
-
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
@@ -420,8 +469,6 @@ public class TestGridEditor {
     table.click(1, 5);
     typeTextPressReturn(table);
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(1, 5));
-
-    bot.activeShell().maximize(false);
   }
 
   @Test
@@ -462,7 +509,7 @@ public class TestGridEditor {
     }, 1000);
   }
 
-  static class CellDataValueCondition extends DefaultCondition {
+  protected static class CellDataValueCondition extends DefaultCondition {
 
     private final SWTNatTableBot tableBot;
     private final int row;
@@ -493,7 +540,6 @@ public class TestGridEditor {
 
   @Test
   void testRemoveSingleAnnotationByDelKey() {
-    bot.activeShell().maximize(true);
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -515,13 +561,10 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(5, 4));
     assertEquals("", table.getCellDataValueByPosition(6, 4));
     assertEquals("", table.getCellDataValueByPosition(7, 4));
-
-    bot.activeShell().maximize(false);
   }
 
   @Test
   void testRemoveSingleAnnotationByPopupMenu() {
-    bot.activeShell().maximize(true);
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -533,7 +576,6 @@ public class TestGridEditor {
     table.contextMenu(2, 3).contextMenu("Delete cell(s)").click();
     assertEquals("", table.getCellDataValueByPosition(1, 4));
     assertNotNull(table.getCellDataValueByPosition(2, 3));
-    bot.activeShell().maximize(false);
   }
 
   @Test
