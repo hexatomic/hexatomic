@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -461,6 +462,35 @@ public class TestGridEditor {
     }, 1000);
   }
 
+  static class CellDataValueCondition extends DefaultCondition {
+
+    private final SWTNatTableBot tableBot;
+    private final int row;
+    private final int column;
+    private final String expected;
+
+    public CellDataValueCondition(SWTNatTableBot tableBot, int row, int column, String expected) {
+      super();
+      this.tableBot = tableBot;
+      this.row = row;
+      this.column = column;
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      String value = tableBot.nattable().getCellDataValueByPosition(row, column);
+      return Objects.equals(value, expected);
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "NatTable cell at position " + row + "," + column + " did not have expected value "
+          + expected;
+    }
+
+  }
+
   @Test
   void testRemoveSingleAnnotationByDelKey() {
     bot.activeShell().maximize(true);
@@ -471,18 +501,15 @@ public class TestGridEditor {
 
     table.click(1, 4);
     keyboard.pressShortcut(Keystrokes.DELETE);
-    bot.sleep(500);
-    assertEquals("", table.getCellDataValueByPosition(1, 4));
+    bot.waitUntil(new CellDataValueCondition(tableBot, 1, 4, ""));
 
     table.click(2, 3);
     keyboard.pressShortcut(Keystrokes.DELETE);
-    bot.sleep(500);
-    assertEquals("", table.getCellDataValueByPosition(2, 3));
+    bot.waitUntil(new CellDataValueCondition(tableBot, 2, 3, ""));
 
     table.click(2, 4);
     keyboard.pressShortcut(Keystrokes.DELETE);
-    bot.sleep(500);
-    assertEquals("", table.getCellDataValueByPosition(2, 4));
+    bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
     assertEquals("", table.getCellDataValueByPosition(3, 4));
     assertEquals("", table.getCellDataValueByPosition(4, 4));
     assertEquals("", table.getCellDataValueByPosition(5, 4));
