@@ -57,7 +57,9 @@ import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
+import org.corpus_tools.salt.common.STextOverlappingRelation;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
@@ -682,7 +684,13 @@ public class GraphEditor {
     SDocumentGraph loadedGraph = getGraph();
     Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
-      updateView(true, false);
+      if (element instanceof STextualRelation || element instanceof STextOverlappingRelation<?,?>) {
+        // Only relations with text coverage semantics can change the structure of the graph and
+        // modify segments
+        updateView(true, false);
+      } else {
+        updateView(false, false);
+      }
     }
   }
 
