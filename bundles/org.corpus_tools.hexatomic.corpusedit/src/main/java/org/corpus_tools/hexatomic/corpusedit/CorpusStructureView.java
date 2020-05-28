@@ -31,6 +31,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -49,11 +50,7 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.Graph;
-import org.corpus_tools.salt.graph.IdentifiableElement;
-import org.corpus_tools.salt.graph.Node;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -107,7 +104,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
-public class CorpusStructureView implements Listener {
+public class CorpusStructureView {
 
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
@@ -298,8 +295,6 @@ public class CorpusStructureView implements Listener {
     });
 
     registerEditors(modelService, application, thisPart);
-
-    projectManager.addListener(this);
   }
 
   private void createAddMenu(ToolBar toolBar) {
@@ -606,33 +601,19 @@ public class CorpusStructureView implements Listener {
     }
   }
 
-
-  @Override
-  public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-      Object newValue, Object container) {
-
-    IdentifiableElement element = null;
-    if (container instanceof IdentifiableElement) {
-      element = (IdentifiableElement) container;
-    } else if (container instanceof org.corpus_tools.salt.graph.Label) {
-      element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
-    }
-
-    if (element instanceof Graph<?, ?, ?>) {
-      updateView();
-    } else if (element instanceof Node) {
-      element = ((Node) element).getGraph();
-      if (element instanceof SCorpusGraph) {
-        updateView();
-      }
-    }
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeProjectChanged(@UIEventTopic(Topics.PROJECT_LOADED) String value) {
+    updateView();
   }
-
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_LOADED) String path) {
-    updateView();
+  private void subscribeProjectLoaded(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+    Optional<Graph<?, ?, ?>> graph = SaltHelper.getGraphForObject(element);
+    if (graph.isPresent() && graph.get() instanceof SCorpusGraph) {
+      updateView();
+    }
   }
 
   private void registerEditors(EModelService modelService, MApplication application,

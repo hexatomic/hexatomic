@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
 - Grid Editor for token and span annotations based on NatTable and using a similar interface to Excel
 - Salt Projects can be saved now
+- Annotation graph updates are propagated using the Eclipse RCP event bus
 
 ### Changed
 
@@ -18,10 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   This will only unload the document graph when no other editor has opened the document.
 - Updated the Eclipse platform to the 2020-03 release
 
+## Removed
+
+- The Salt graphs are not using the Salt notification extension anymore
+- `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
+
 ### Fixed
 
 - Update views via notification even if the object that changed was created before the view.
 - Allow to run Hexatomic on Java 11 platforms
+
 
 ## [0.3.1] - 2019-12-16
 
