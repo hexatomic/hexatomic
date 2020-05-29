@@ -124,7 +124,7 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
    */
   @Override
   protected void createButtons(final Shell shell) {
-    Composite buttonPanel = new Composite(shell, SWT.NONE);
+    final Composite buttonPanel = new Composite(shell, SWT.NONE);
 
     GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
