@@ -33,9 +33,9 @@ import org.corpus_tools.hexatomic.grid.configuration.EditConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.layers.CustomColumnHeaderLayer;
-import org.corpus_tools.hexatomic.grid.layers.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -99,8 +99,6 @@ public class GridEditor {
   @Inject
   private GraphDataProvider bodyDataProvider;
 
-  private SDocumentGraph graph;
-
   private NatTable table;
 
   /**
@@ -110,9 +108,9 @@ public class GridEditor {
    */
   @PostConstruct
   public void postConstruct(Composite parent) {
-    this.graph = getGraph();
-    bodyDataProvider.setGraph(graph);
-    log.debug("Starting Grid Editor for document '{}'.", graph.getDocument().getName());
+
+    bodyDataProvider.setGraph(getGraph());
+    log.debug("Starting Grid Editor for document '{}'.", getGraph().getDocument().getName());
 
     parent.setLayout(new GridLayout());
 
@@ -248,6 +246,7 @@ public class GridEditor {
         }
       }
     });
+    SDocumentGraph graph = getGraph();
     viewer.setInput(graph.getTextualDSs());
     if (graph.getTextualDSs().size() == 1) {
       viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
