@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.configuration;
 
+import org.corpus_tools.hexatomic.grid.commands.DisplayAnnotationRenameDialogCommand;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -48,6 +49,7 @@ import org.eclipse.swt.widgets.MenuItem;
 public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   private static final String DELETE_CELL_ITEM = "DELETE_CELL_ITEM"; //$NON-NLS-1$
+  private static final String CHANGE_CELL_ANNOTATION_NAME_ITEM = "CHNG_ANNO_NAME"; //$NON-NLS-1$
   private Menu menu;
   private final NatTable table;
   private final SelectionLayer selectionLayer;
@@ -70,6 +72,8 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
     builder.withVisibleState(DELETE_CELL_ITEM, new ValidSelectionState());
+    builder.withMenuItemProvider(CHANGE_CELL_ANNOTATION_NAME_ITEM,
+        new ChangeAnnotationNameItemProvider());
     Menu popUpMenu = builder.build();
     return popUpMenu;
   }
@@ -99,6 +103,30 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         @Override
         public void widgetSelected(SelectionEvent event) {
           new DeleteSelectionAction().run(natTable, null);
+        }
+      });
+    }
+
+  }
+
+  /**
+   * Provides a menu item for changing the qualified annotation names for annotations in cells.
+   * 
+   * @author Stephan Druskat (mail@sdruskat.net)
+   *
+   */
+  public class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText("Change annotation name");
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          natTable.doCommand(new DisplayAnnotationRenameDialogCommand(natTable,
+              selectionLayer.getSelectedCellPositions()));
         }
       });
     }
