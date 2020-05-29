@@ -60,7 +60,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
   private double averageTokenNodeWidth;
   private double maxNodeHeight;
 
-  private final double percentInterNodeMargin = 1.8;
+  private static final double percentInterNodeMargin = 1.8;
 
   private BiMap<InternalNode, SNode> nodes;
   private BiMap<InternalRelationship, SRelation<?, ?>> relations;
@@ -74,7 +74,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
   @Override
   public void setLayoutArea(double x, double y, double width, double height) {
-    throw new RuntimeException("Operation not implemented");
+    // ignore and always layout the whole area
   }
 
   @Override
@@ -100,18 +100,15 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (SNode n : this.nodes.values()) {
       if (n instanceof SToken) {
         tokens.add((SToken) n);
-      } else if (n != null) {
+      } else if (n != null && n.getGraph() != null) {
         boolean isRoot = true;
-        @SuppressWarnings("rawtypes")
-        List<SRelation> inRelations = n.getInRelations();
-        if (inRelations != null) {
-          for (SRelation<?, ?> rel : inRelations) {
-            if (this.relations.containsValue(rel)) {
-              isRoot = false;
-              continue;
-            }
+        for (SRelation<?, ?> rel : n.getGraph().getInRelations(n.getId())) {
+          if (this.relations.containsValue(rel)) {
+            isRoot = false;
+            break;
           }
         }
+
         if (isRoot) {
           assignRankRecursively(this.nodes.inverse().get(n), rankForNode, 0);
         }
@@ -297,10 +294,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
     ranks.putIfAbsent(node, rank);
 
-    @SuppressWarnings("rawtypes")
-    List<SRelation> outRelations = saltNode.getOutRelations();
-    if (outRelations != null) {
-      for (SRelation<?, ?> rel : outRelations) {
+    if (saltNode.getGraph() != null) {
+      for (SRelation<?, ?> rel : saltNode.getGraph().getOutRelations(saltNode.getId())) {
         if (this.relations.values().contains(rel)) {
           InternalNode outNode = this.nodes.inverse().get(rel.getTarget());
           if (outNode != null) {
@@ -383,7 +378,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
   @Override
   protected void postLayoutAlgorithm(InternalNode[] entitiesToLayout,
       InternalRelationship[] relationshipsToConsider) {
-
+    // We don't need any post-calculations for this layout algorithm
   }
 
   @Override
