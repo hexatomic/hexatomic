@@ -35,6 +35,10 @@ import org.corpus_tools.salt.graph.Relation;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  */
 public class SaltHelper {
+  
+  private SaltHelper() {
+    // Should not be initiated
+  }
 
   /**
    * Delegated elements might have an actual owning element. This functions returns the actual
