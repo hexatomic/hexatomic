@@ -22,10 +22,13 @@
 package org.corpus_tools.hexatomic.grid;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.ColumnHeaderMenuConfiguration;
@@ -42,10 +45,16 @@ import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.extensions.notification.Listener;
+import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
+import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -91,6 +100,9 @@ public class GridEditor {
   private ESelectionService selectionService;
 
   @Inject
+  private IEventBroker events;
+
+  @Inject
   private ProjectManager projectManager;
 
   @Inject
@@ -101,6 +113,10 @@ public class GridEditor {
 
   private NatTable table;
 
+  private STextualDS currentDs = null;
+
+  private ProjectChangeListener projectChangeListener;
+
   /**
    * Creates the grid that contains the data of the {@link SDocumentGraph}.
    * 
@@ -109,8 +125,10 @@ public class GridEditor {
   @PostConstruct
   public void postConstruct(Composite parent) {
 
-    bodyDataProvider.setGraph(getGraph());
     log.debug("Starting Grid Editor for document '{}'.", getGraph().getDocument().getName());
+
+    projectChangeListener = new ProjectChangeListener();
+    projectManager.addListener(projectChangeListener);
 
     parent.setLayout(new GridLayout());
 
@@ -175,6 +193,13 @@ public class GridEditor {
 
   }
 
+  @PreDestroy
+  void preDestroy() {
+    projectManager.removeListener(projectChangeListener);
+    events.post(Topics.DOCUMENT_CLOSED,
+        thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
+  }
+
   /**
    * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.
    * 
@@ -183,6 +208,7 @@ public class GridEditor {
   @Inject
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
+      currentDs = ds;
       log.debug("The textual data source {} has been selected.", ds.getId());
       bodyDataProvider.setDsAndResolveGraph(ds);
       // Refresh all layers
@@ -254,12 +280,69 @@ public class GridEditor {
   }
 
   private SDocumentGraph getGraph() {
-    String documentID = thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+    String documentID = getDocumentId();
     java.util.Optional<SDocument> doc = projectManager.getDocument(documentID);
     if (doc.isPresent()) {
       return doc.get().getDocumentGraph();
     }
     return null;
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void documentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String changedDocumentId) {
+    if (changedDocumentId != null && changedDocumentId.equals(getDocumentId())) {
+      // Get the currently selected STextualDS and resolve the graph
+      if (currentDs != null) {
+        for (STextualDS ds : getGraph().getTextualDSs()) {
+          if (currentDs.getId().equals(ds.getId())) {
+            bodyDataProvider.setDsAndResolveGraph(ds);
+          }
+        }
+      }
+    }
+  }
+
+  private String getDocumentId() {
+    return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+  }
+
+  /**
+   * Listens to changes in the corpus project and updates the table.
+   * 
+   * @author Thomas Krause (krauseto@hu-berlin.de)
+   * @author Stephan Druskat (mail@sdruskat.net)
+   */
+  private final class ProjectChangeListener implements Listener {
+    @Override
+    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
+        Object newValue, Object container) {
+
+      // Check if the ID of the changed object points to the same document as our annotation graph
+      IdentifiableElement element = null;
+      if (container instanceof IdentifiableElement) {
+        element = (IdentifiableElement) container;
+      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
+        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
+      }
+      SDocumentGraph graph = getGraph();
+      if (graph == null) {
+        errors.showError("Unexpected error",
+            "Annotation graph for subscribed document vanished. Please report this as a bug.",
+            GridEditor.class);
+        return;
+      }
+      if (element == null || element.getId() == null) {
+        return;
+      } else {
+        URI elementUri = URI.createURI(element.getId());
+        if (!elementUri.path().equals(graph.getPath().path())) {
+          return;
+        }
+      }
+      bodyDataProvider.setDsAndResolveGraph(currentDs);
+      table.refresh();
+    }
   }
 
 }
