@@ -312,6 +312,9 @@ public class GraphDataProvider implements IDataProvider {
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
     Column column = null;
+    if (columnIndex >= columns.size() && newValue == null) {
+      return;
+    }
     try {
       column = columns.get(columnIndex);
     } catch (IndexOutOfBoundsException e) {
@@ -415,23 +418,15 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   /**
-   * Sets the data source field.
+   * Sets the data source field and sets the data providers graph to the data sources graph.
    * 
-   * @param ds the ds to set
+   * @param ds the ds to set: its graph will become the model object for this data provider.
    */
   public void setDsAndResolveGraph(STextualDS ds) {
     log.debug("Setting data source {}.", ds);
     this.dataSource = ds;
+    this.graph = ds.getGraph();
     resolveGraph();
-  }
-
-  /**
-   * Set the {@link SDocumentGraph} that the data provider operates on.
-   * 
-   * @param graph the graph to set
-   */
-  public final void setGraph(SDocumentGraph graph) {
-    this.graph = graph;
   }
 
   /**
