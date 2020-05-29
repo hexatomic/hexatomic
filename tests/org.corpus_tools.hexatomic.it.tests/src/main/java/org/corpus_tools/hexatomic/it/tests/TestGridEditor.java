@@ -666,7 +666,7 @@ public class TestGridEditor {
     table.contextMenu(0, 2).contextMenu("Change annotation name").click();
     SWTBotShell dialog = tableBot.shell("Rename annotation");
     keyboard.typeText("TEST");
-    tableBot.button("Cancel");
+    tableBot.button("Cancel").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
   }
