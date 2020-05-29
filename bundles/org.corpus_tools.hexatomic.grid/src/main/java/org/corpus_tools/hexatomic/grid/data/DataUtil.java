@@ -40,6 +40,9 @@ public class DataUtil {
    *         <code>null</code>.
    */
   public static String splitNamespaceFromQNameString(String qualifiedNameString) {
+    if (qualifiedNameString == null) {
+      return null;
+    }
     String[] splitValue = qualifiedNameString.split(SaltUtil.NAMESPACE_SEPERATOR);
     if (splitValue.length == 2) {
       return splitValue[0];
@@ -58,11 +61,57 @@ public class DataUtil {
    *         operator, or the original parameter if it doesn't contain the Salt namespace operator
    */
   public static String splitNameFromQNameString(String qualifiedNameString) {
+    if (qualifiedNameString == null) {
+      return null;
+    }
     String[] splitValue = qualifiedNameString.split(SaltUtil.NAMESPACE_SEPERATOR);
     if (splitValue.length == 2) {
       return splitValue[1];
+    } else if (qualifiedNameString.endsWith(SaltUtil.NAMESPACE_SEPERATOR)) {
+      return null;
     } else {
       return splitValue[0];
+    }
+  }
+
+  /**
+   * Checks whether the qualified name is valid, i.e., does not contain more than one namespace
+   * separator, and does not contain whitespaces.
+   * 
+   * @param qualifiedNameString The string to validate
+   * @return Whether the string is valid
+   */
+  public static boolean isValidQName(String qualifiedNameString) {
+    if (qualifiedNameString.contains(" ")) {
+      return false;
+    } else if (qualifiedNameString.split("::").length > 2) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Builds a qualified annotation name from a namespace string and a name string.
+   * 
+   * @param namespace The namespace string
+   * @param name The name string
+   * @return The qualified annotation name
+   */
+  public static String buildQName(String namespace, String name) {
+    if (namespace.isEmpty()) {
+      namespace = null;
+    }
+    if (name.isEmpty()) {
+      name = null;
+    }
+    if (namespace == null && name == null) {
+      return null;
+    } else if (namespace == null) {
+      return name;
+    } else if (name == null) {
+      return namespace + SaltUtil.NAMESPACE_SEPERATOR;
+    } else {
+      return namespace + SaltUtil.NAMESPACE_SEPERATOR + name;
     }
   }
 
