@@ -49,9 +49,9 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
    * from the compound string parameter and setting them to fields, and initializing the
    * construction of the panel.
    * 
-   * @param parent
-   * @param oldQName
-   * @param newQName
+   * @param parent The parent widget
+   * @param oldQName the old qualified annotation name
+   * @param newQName the new qualified annotation name
    */
   public AnnotationLabelPanel(Composite parent, String oldQName, String newQName) {
     super(parent, SWT.NONE);
@@ -143,9 +143,8 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
    */
   @Override
   public String getNewValue() {
-    // Both fields are enabled
+    // Both fields are enabled, and neither field is null (i.e., contains at least the empty string)
     if (this.namespaceField.isEnabled() && this.nameField.isEnabled()
-    // Neither field is null (i.e., contains at least the empty string)
         && this.namespaceField.getText() != null && this.nameField != null) {
       return DataUtil.buildQName(this.namespaceField.getText(), this.nameField.getText());
     }

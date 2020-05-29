@@ -27,7 +27,7 @@ import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/***
+/**
  * Handles renaming of annotations - and thus column headers - on behalf of NatTable's generic
  * {@link RenameColumnHeaderCommand}. Registered with the {@link GridColumnHeaderLayer} to which it
  * forwards the new annotation name.

@@ -24,10 +24,8 @@ package org.corpus_tools.hexatomic.grid.configuration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.freeze.command.FreezeColumnCommand;
 import org.eclipse.nebula.widgets.nattable.freeze.command.FreezeRowCommand;
-import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.menu.AbstractHeaderMenuConfiguration;
 import org.eclipse.nebula.widgets.nattable.ui.menu.IMenuItemProvider;
-import org.eclipse.nebula.widgets.nattable.ui.menu.IMenuItemState;
 import org.eclipse.nebula.widgets.nattable.ui.menu.MenuItemProviders;
 import org.eclipse.nebula.widgets.nattable.ui.menu.PopupMenuBuilder;
 import org.eclipse.swt.SWT;
@@ -123,23 +121,6 @@ public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
         }
       }
     };
-  }
-
-}
-
-
-/**
- * A menu item state which is active on column indices > 1 (i.e., excluding the index and token text
- * columns).
- * 
- * @author Stephan Druskat (mail@sdruskat.net)
- *
- */
-class AnnotationHeaderState implements IMenuItemState {
-
-  @Override
-  public boolean isActive(NatEventData natEventData) {
-    return natEventData.getColumnPosition() > 1;
   }
 
 }
