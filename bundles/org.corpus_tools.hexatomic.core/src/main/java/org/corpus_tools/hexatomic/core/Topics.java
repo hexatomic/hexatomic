@@ -22,18 +22,18 @@
 package org.corpus_tools.hexatomic.core;
 
 /**
- * Contains constants for topics use by the core bundle.
+ * Contains constants for topics used by the core bundle.
  * 
  * @author Thomas Krause
  */
 public interface Topics {
-  
+
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
-  
+
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
-  
+
   public static final String STATUS_UPDATE = "STATUS_UPDATE";
-  
+
 }
