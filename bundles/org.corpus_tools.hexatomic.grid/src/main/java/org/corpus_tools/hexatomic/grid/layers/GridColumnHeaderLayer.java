@@ -78,6 +78,11 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
    */
   @Override
   public boolean renameColumnPosition(int columnPosition, String newQName) {
+    String name = DataUtil.splitNameFromQNameString(newQName);
+    if (name == null || name.isEmpty()) {
+      throw new RuntimeException(
+          "Annotation name is null! Compund qualified name is " + newQName + ".");
+    }
     log.debug("New qualified name: {}", newQName);
     IDataProvider columnHeaderDataProvider =
         ((DefaultColumnHeaderDataLayer) this.getBaseLayer()).getDataProvider();
@@ -104,8 +109,7 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
               node.getName());
           node.removeLabel(oldQName);
           SAnnotation newAnnotation =
-              node.createAnnotation(DataUtil.splitNamespaceFromQNameString(newQName),
-                  DataUtil.splitNameFromQNameString(newQName), value);
+              node.createAnnotation(DataUtil.splitNamespaceFromQNameString(newQName), name, value);
           // Should ideally work like this:
           // annotation.setNamespace(namespace);
           // annotation.setName(name);
