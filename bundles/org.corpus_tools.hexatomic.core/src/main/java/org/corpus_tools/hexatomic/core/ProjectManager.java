@@ -272,9 +272,9 @@ public class ProjectManager {
   }
 
   /**
-   * Saves all documents and the corpus structure as Salt project to a new location.
+   * Saves all documents and the corpus structure as Salt project to the specified location.
    * 
-   * @param path The file URI of the new location.
+   * @param path The file URI of the location to save to.
    * @param shell The SWT shell: needed to display the progress dialog.
    */
   public void saveTo(URI path, Shell shell) {
@@ -482,7 +482,7 @@ public class ProjectManager {
 
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
-    
+
     events.send(Topics.PROJECT_LOADED, null);
   }
 
