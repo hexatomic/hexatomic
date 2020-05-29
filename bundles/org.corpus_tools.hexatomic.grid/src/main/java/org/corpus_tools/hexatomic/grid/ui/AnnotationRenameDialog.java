@@ -21,12 +21,16 @@
 
 package org.corpus_tools.hexatomic.grid.ui;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.style.editor.AbstractStyleEditorDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
@@ -113,6 +117,46 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
    */
   public String getNewQName() {
     return this.newQName;
+  }
+
+  /**
+   * Create OK and Cancel buttons, unlike in the super class, no Clear button is added.
+   */
+  @Override
+  protected void createButtons(final Shell shell) {
+    Composite buttonPanel = new Composite(shell, SWT.NONE);
+
+    GridLayout gridLayout = new GridLayout();
+    gridLayout.numColumns = 3;
+    gridLayout.makeColumnsEqualWidth = false;
+    gridLayout.horizontalSpacing = 2;
+    buttonPanel.setLayout(gridLayout);
+
+    GridDataFactory.fillDefaults().grab(true, true).applyTo(buttonPanel);
+
+    Button okButton = new Button(buttonPanel, SWT.PUSH);
+    okButton.setText("OK"); //$NON-NLS-1$
+    okButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        doFormOK(shell);
+      }
+    });
+    GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.BOTTOM).minSize(70, 25).grab(true, true)
+        .applyTo(okButton);
+
+    Button cancelButton = new Button(buttonPanel, SWT.NONE);
+    cancelButton.setText("Cancel"); //$NON-NLS-1$
+    cancelButton.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        doFormCancel(shell);
+      }
+    });
+    GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.BOTTOM).minSize(80, 25).grab(false, false)
+        .applyTo(cancelButton);
+
+    shell.setDefaultButton(okButton);
   }
 
 
