@@ -43,10 +43,12 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfiguration {
+public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfiguration {
 
   private static final String COLUMN = "column"; //$NON-NLS-1$
   private static final String ROW = "row"; //$NON-NLS-1$
+  private static final String ANNOTATION_RENAME = "ANNOTATION_RENAME";
+
 
   /**
    * Generic constructor calling
@@ -54,7 +56,7 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
    * 
    * @param natTable The NatTable to configure
    */
-  public CustomHeaderMenuConfiguration(NatTable natTable) {
+  public ColumnHeaderMenuConfiguration(NatTable natTable) {
     super(natTable);
   }
 
@@ -66,8 +68,8 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
         .withAutoResizeSelectedColumnsMenuItem("Auto-resize column(s)").withSeparator()
         .withFreezeColumnMenuItem("Set column freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN)).withSeparator()
-        .withColumnRenameDialog("Change annotation name").withVisibleState(
-            PopupMenuBuilder.COLUMN_RENAME_MENU_ITEM_ID, new ValidRenamableHeaderState());
+        .withColumnRenameDialog("-> Change annotation name")
+        .withVisibleState(ANNOTATION_RENAME, new AnnotationHeaderState());
   }
 
   @Override
@@ -123,20 +125,21 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
     };
   }
 
-  /**
-   * A menu item state which is active on column indices > 1 (i.e., excluding the index and token
-   * text columns).
-   * 
-   * @author Stephan Druskat (mail@sdruskat.net)
-   *
-   */
-  public class ValidRenamableHeaderState implements IMenuItemState {
+}
 
-    @Override
-    public boolean isActive(NatEventData natEventData) {
-      return natEventData.getColumnPosition() > 1;
-    }
 
+/**
+ * A menu item state which is active on column indices > 1 (i.e., excluding the index and token text
+ * columns).
+ * 
+ * @author Stephan Druskat (mail@sdruskat.net)
+ *
+ */
+class AnnotationHeaderState implements IMenuItemState {
+
+  @Override
+  public boolean isActive(NatEventData natEventData) {
+    return natEventData.getColumnPosition() > 1;
   }
 
 }

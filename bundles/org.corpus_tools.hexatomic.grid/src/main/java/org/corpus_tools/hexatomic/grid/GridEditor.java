@@ -28,7 +28,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.CustomBodyMenuConfiguration;
-import org.corpus_tools.hexatomic.grid.configuration.CustomHeaderMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.configuration.ColumnHeaderMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.EditConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
@@ -163,7 +163,7 @@ public class GridEditor {
 
     // Configuration
     table.addConfiguration(new StyleConfiguration());
-    table.addConfiguration(new CustomHeaderMenuConfiguration(table));
+    table.addConfiguration(new ColumnHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
     table.addConfiguration(new EditConfiguration(labelAccumulator, selectionLayer));
     table.addConfiguration(new CustomBodyMenuConfiguration(table, selectionLayer));
