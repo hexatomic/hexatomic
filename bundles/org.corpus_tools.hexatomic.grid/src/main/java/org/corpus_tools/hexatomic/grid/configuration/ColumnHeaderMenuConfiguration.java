@@ -45,7 +45,6 @@ public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
 
   private static final String COLUMN = "column"; //$NON-NLS-1$
   private static final String ROW = "row"; //$NON-NLS-1$
-  private static final String ANNOTATION_RENAME = "ANNOTATION_RENAME";
 
 
   /**
@@ -67,7 +66,7 @@ public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
         .withFreezeColumnMenuItem("Set column freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN)).withSeparator()
         .withColumnRenameDialog("Change annotation name")
-        .withVisibleState(ANNOTATION_RENAME, new AnnotationHeaderState());
+        .withVisibleState(PopupMenuBuilder.COLUMN_RENAME_MENU_ITEM_ID, new AnnotationHeaderState());
   }
 
   @Override
