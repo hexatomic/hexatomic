@@ -45,9 +45,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
-public class CustomColumnHeaderLayer extends ColumnHeaderLayer {
+public class GridColumnHeaderLayer extends ColumnHeaderLayer {
 
-  private static final Logger log = LoggerFactory.getLogger(CustomColumnHeaderLayer.class);
+  private static final Logger log = LoggerFactory.getLogger(GridColumnHeaderLayer.class);
   private final GraphDataProvider graphDataProvider;
 
   /**
@@ -60,7 +60,7 @@ public class CustomColumnHeaderLayer extends ColumnHeaderLayer {
    * @param selectionLayer The SelectionLayer needed to respond to selection events
    * @param graphDataProvider The body data provider for the NatTable
    */
-  public CustomColumnHeaderLayer(IUniqueIndexLayer baseLayer, ILayer horizontalLayerDependency,
+  public GridColumnHeaderLayer(IUniqueIndexLayer baseLayer, ILayer horizontalLayerDependency,
       SelectionLayer selectionLayer, GraphDataProvider graphDataProvider) {
     super(baseLayer, horizontalLayerDependency, selectionLayer);
     this.graphDataProvider = graphDataProvider;

@@ -35,7 +35,7 @@ import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.layers.CustomColumnHeaderLayer;
+import org.corpus_tools.hexatomic.grid.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -139,8 +139,8 @@ public class GridEditor {
     // Column header
     final ColumnHeaderDataProvider columnHeaderDataProvider =
         new ColumnHeaderDataProvider(bodyDataProvider);
-    final CustomColumnHeaderLayer columnHeaderLayer =
-        new CustomColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
+    final GridColumnHeaderLayer columnHeaderLayer =
+        new GridColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
             compositeFreezeLayer, selectionLayer, bodyDataProvider);
 
     // Row header
