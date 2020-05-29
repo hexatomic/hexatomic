@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.corpus_tools.hexatomic.core.events.salt.NodeNotifierImpl;
@@ -51,6 +52,15 @@ class SaltHelperTest {
     final SAnnotation nestedAnno = anno.createAnnotation("nested", "anno", "value");
 
     final STextualRelation textRel = graph.getTextualRelations().get(0);
+
+
+
+    assertTrue(SaltHelper.getGraphForObject(graph).isPresent());
+    assertTrue(SaltHelper.getGraphForObject(token).isPresent());
+    assertTrue(SaltHelper.getGraphForObject(anno).isPresent());
+    assertTrue(SaltHelper.getGraphForObject(nestedAnno).isPresent());
+    assertTrue(SaltHelper.getGraphForObject(textRel).isPresent());
+    assertTrue(SaltHelper.getGraphForObject(graphAnno).isPresent());
 
     assertEquals(graph, SaltHelper.getGraphForObject(graph).get());
     assertEquals(graph, SaltHelper.getGraphForObject(token).get());
