@@ -19,10 +19,9 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.layers;
+package org.corpus_tools.hexatomic.grid.data;
 
 import java.util.Objects;
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
