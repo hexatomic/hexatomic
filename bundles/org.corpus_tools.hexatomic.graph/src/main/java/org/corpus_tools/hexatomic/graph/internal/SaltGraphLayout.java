@@ -60,7 +60,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
   private double averageTokenNodeWidth;
   private double maxNodeHeight;
 
-  private static final double percentInterNodeMargin = 1.8;
+  private static final double PERCENT_INTER_NODE_MARGIN = 1.8;
 
   private BiMap<InternalNode, SNode> nodes;
   private BiMap<InternalRelationship, SRelation<?, ?>> relations;
@@ -234,7 +234,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           }
         }
         node.setInternalLocation(boundsX + x,
-            boundsY + (rank * (this.maxNodeHeight * this.percentInterNodeMargin)));
+            boundsY + (rank * (this.maxNodeHeight * PERCENT_INTER_NODE_MARGIN)));
 
       }
     }
@@ -322,7 +322,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           InternalNode n = this.nodes.inverse().get(t);
           if (n != null) {
             n.setInternalLocation(x,
-                boundsY + (tokenRank * (this.maxNodeHeight * this.percentInterNodeMargin)));
+                boundsY + (tokenRank * (this.maxNodeHeight * PERCENT_INTER_NODE_MARGIN)));
             x += this.averageTokenNodeWidth / 10.0;
             x += n.getLayoutEntity().getWidthInLayout();
           }
