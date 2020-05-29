@@ -1,0 +1,124 @@
+package org.corpus_tools.hexatomic.grid.ui;
+
+import org.corpus_tools.hexatomic.grid.data.DataUtil;
+import org.eclipse.nebula.widgets.nattable.style.editor.AbstractEditorPanel;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+
+/**
+ * Provides a panel with two input fields, one for the new namespace value, and one for the new name
+ * value. Despite this, it works on a single string, the compund qualified annotation name.
+ * 
+ * @author Stephan Druskat (mail@sdruskat.net)
+ */
+public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
+
+  private final String oldQName;
+  private Text namespaceField;
+  private String newNamespace;
+  private Text nameField;
+  private String newName;
+
+  public AnnotationLabelPanel(Composite parent, String oldQName, String newQName) {
+    super(parent, SWT.NONE);
+    this.oldQName = oldQName;
+    this.newNamespace = DataUtil.splitNamespaceFromQNameString(newQName);
+    this.newName = DataUtil.splitNameFromQNameString(newQName);
+    init();
+  }
+
+  private void init() {
+    GridLayout gridLayout = new GridLayout(3, false);
+    setLayout(gridLayout);
+
+    String oldNamespace = DataUtil.splitNamespaceFromQNameString(this.oldQName);
+    String oldName = DataUtil.splitNameFromQNameString(this.oldQName);
+    if (oldNamespace == null) {
+      oldNamespace = "";
+    }
+    if (oldName == null) {
+      oldName = "";
+    }
+
+    // "Headers"
+    new Label(this, SWT.NONE);
+
+    Label namespaceLabel = new Label(this, SWT.NONE);
+    namespaceLabel.setText("Namespace"); //$NON-NLS-1$
+
+    Label nameLabel = new Label(this, SWT.NONE);
+    nameLabel.setText("Name"); //$NON-NLS-1$
+
+    // Original label
+    Label oldlabel = new Label(this, SWT.NONE);
+    oldlabel.setText("Old:"); //$NON-NLS-1$
+
+    Label oldNamespaceLabel = new Label(this, SWT.NONE);
+    oldNamespaceLabel.setText(oldNamespace); // $NON-NLS-2$
+
+    Label oldNamelabel = new Label(this, SWT.NONE);
+    oldNamelabel.setText(oldName); // $NON-NLS-3$
+
+    // New values
+    Label newLabel = new Label(this, SWT.NONE);
+    newLabel.setText("New:"); // $NON-NLS-4$
+
+    // Namespace
+    this.namespaceField = new Text(this, SWT.BORDER);
+    GridData gridData = new GridData(200, 15);
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.horizontalAlignment = GridData.FILL;
+    this.namespaceField.setLayoutData(gridData);
+    this.namespaceField.setText(oldNamespace);
+
+    if (this.newNamespace != null && this.newNamespace.length() > 0) {
+      this.namespaceField.setText(this.newNamespace);
+      this.namespaceField.selectAll();
+    }
+
+    this.nameField = new Text(this, SWT.BORDER);
+    GridData gridData2 = new GridData(200, 15);
+    gridData2.grabExcessHorizontalSpace = true;
+    gridData2.horizontalAlignment = GridData.FILL;
+    this.nameField.setLayoutData(gridData2);
+    this.nameField.setText(oldName);
+    this.nameField.setFocus();
+
+    if (this.newName != null && this.newName.length() > 0) {
+      this.nameField.setText(this.newName);
+      this.nameField.selectAll();
+    }
+  }
+
+  @Override
+  public void edit(String newQName) throws Exception {
+    if (newQName != null && newQName.length() > 0) {
+      this.namespaceField.setText(DataUtil.splitNamespaceFromQNameString(newQName));
+      this.nameField.setText(DataUtil.splitNameFromQNameString(newQName));
+      this.nameField.selectAll();
+    }
+  }
+
+  @Override
+  public String getEditorName() {
+    return "Grid editor"; //$NON-NLS-1$
+  }
+
+  /**
+   * Builds a new value string from the values of the text fields for namespace and name.
+   */
+  @Override
+  public String getNewValue() {
+    // Both fields are enabled
+    if (this.namespaceField.isEnabled() && this.nameField.isEnabled()
+    // Neither field is null (i.e., contains at least the empty string)
+        && this.namespaceField.getText() != null && this.nameField != null) {
+      return DataUtil.buildQName(this.namespaceField.getText(), this.nameField.getText());
+    }
+    return null;
+  }
+}
