@@ -54,3 +54,27 @@ You can delete annotations in two different ways:
 
 After you have deleted one or more annotations, one or more spans could be left without any annotations.
 In this case, these spans will also be deleted.
+
+## Changing annotation names
+
+So called "qualified annotation names" consist of a *namespace* (optional) and a *name*.
+You can change the qualified annotation names in the grid editor
+
+- for a whole column at once, or
+- only for selected cells.
+
+### Changing the annotation names for a whole column
+
+You can use the *Rename annotation* dialog to change the qualified annotation names of all annotations in a column, and with them the column header.
+To open the dialog, right-click on the header of an annotation column, and select **Change annotation name**.
+In the dialog, you can change the namespace and the name.
+
+![Screenshot showing the "Rename annotation" dialog, and the context menu that opens it.](change-annotation-name.png)
+
+When you click **OK** or press <kbd>Return</kbd>, all annotations in the column will be changed to the new values.
+To abort the change, click **Cancel**. The annotation names will then stay the same as before.
+
+Note that the annotation name needs to be valid:
+
+1. It should not be empty.
+2. It should not comtain whitespaces.
