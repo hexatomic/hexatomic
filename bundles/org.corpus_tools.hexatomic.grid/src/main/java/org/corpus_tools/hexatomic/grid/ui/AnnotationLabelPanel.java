@@ -22,10 +22,16 @@
 package org.corpus_tools.hexatomic.grid.ui;
 
 import org.corpus_tools.hexatomic.grid.data.DataUtil;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.nebula.widgets.nattable.style.editor.AbstractEditorPanel;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -38,9 +44,18 @@ import org.eclipse.swt.widgets.Text;
  */
 public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
+  /**
+   * @author Stephan Druskat (mail@sdruskat.net)
+   *
+   */
+  public class AnnotationNameValidator {
+
+  }
+
   private final String oldQName;
   private Text namespaceField;
   private Text nameField;
+  private Button okButton;
 
   /**
    * Passing the parent widget to the super class constructor, retrieving namespace and name values
@@ -86,6 +101,36 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
     this.nameField = new Text(this, SWT.BORDER);
     this.nameField.setLayoutData(gridData);
+
+    this.nameField.addModifyListener(new ModifyListener() {
+      ControlDecoration decoration;
+
+      {
+        decoration = new ControlDecoration(nameField, SWT.LEFT | SWT.TOP);
+        decoration.setDescriptionText("Please enter a valid annotation name.");
+        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+            .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+        decoration.setImage(fieldDecoration.getImage());
+      }
+
+      @Override
+      public void modifyText(ModifyEvent e) {
+        Text source = (Text) e.getSource();
+        String name = source.getText();
+        if (name.isEmpty() || name == null) {
+          decoration.setDescriptionText("Annotation name can not be empty!");
+          decoration.show();
+          setOkButtonActive(false);
+        } else if (name.contains(" ")) {
+          decoration.setDescriptionText("Annotation name can not contain whitespaces!");
+          decoration.show();
+          setOkButtonActive(false);
+        } else {
+          decoration.hide();
+          setOkButtonActive(true);
+        }
+      }
+    });
   }
 
   @Override
@@ -115,4 +160,19 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     }
     return null;
   }
+
+  void setOkButton(Button okButton) {
+    this.okButton = okButton;
+  }
+
+  private void setOkButtonActive(boolean enableButton) {
+    if (this.okButton != null) {
+      if (enableButton) {
+        this.okButton.setEnabled(true);
+      } else {
+        this.okButton.setEnabled(false);
+      }
+    }
+  }
+
 }

@@ -144,6 +144,7 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
     });
     GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.BOTTOM).minSize(70, 25).grab(true, true)
         .applyTo(okButton);
+    this.columnLabelPanel.setOkButton(okButton);
 
     Button cancelButton = new Button(buttonPanel, SWT.NONE);
     cancelButton.setText("Cancel"); //$NON-NLS-1$
