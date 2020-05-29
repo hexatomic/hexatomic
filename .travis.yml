@@ -46,6 +46,8 @@ jobs:
     - language: java
       jdk: openjdk11
       name: SonarCloud code analysis
+      git:
+        depth: false
       addons:
         sonarcloud:
           organization: "hexatomic"
