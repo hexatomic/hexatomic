@@ -33,8 +33,10 @@ import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
@@ -488,7 +490,7 @@ public class TestGridEditor {
   /**
    * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
    * cell editors, up to 1000ms.
-   * 
+   *
    * @param table The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
@@ -622,6 +624,51 @@ public class TestGridEditor {
         () -> table.contextMenu(0, 0).contextMenu("Change annotation name"));
     assertThrows(WidgetNotFoundException.class,
         () -> table.contextMenu(0, 1).contextMenu("Change annotation name"));
+  }
+
+  @Test
+  void testAnnotationChangeDialogWithOkButton() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu("Change annotation name").click();
+    SWTBotShell dialog = tableBot.shell("Rename annotation");
+    keyboard.typeText("TEST");
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals("salt::TEST", table.getCellDataValueByPosition(0, 2));
+  }
+
+  @Test
+  void testAnnotationChangeDialogWithReturn() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu("Change annotation name").click();
+    SWTBotShell dialog = tableBot.shell("Rename annotation");
+    keyboard.typeText("TEST");
+    keyboard.pressShortcut(Keystrokes.CR);
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals("salt::TEST", table.getCellDataValueByPosition(0, 2));
+  }
+
+  @Test
+  void testAnnotationChangeDialogCancel() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu("Change annotation name").click();
+    SWTBotShell dialog = tableBot.shell("Rename annotation");
+    keyboard.typeText("TEST");
+    tableBot.button("Cancel");
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
   }
 
 }
