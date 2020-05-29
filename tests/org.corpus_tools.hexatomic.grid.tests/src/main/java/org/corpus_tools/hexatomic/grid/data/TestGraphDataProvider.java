@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Arrays;
@@ -87,7 +88,7 @@ class TestGraphDataProvider {
   final void testGetDataValueSetDsWithoutTokens() {
     STextualDS ds = mock(STextualDS.class);
     SDocumentGraph graph = mock(SDocumentGraph.class);
-    fixture.setGraph(graph);
+    when(ds.getGraph()).thenReturn(graph);
     fixture.setDsAndResolveGraph(ds);
     assertEquals("Data source contains no tokens!", fixture.getDataValue(0, 0));
     assertEquals(null, fixture.getDataValue(0, 1));
@@ -104,7 +105,6 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetDataValueDefaultExample() {
-    fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
     assertEquals("Is", fixture.getDataValue(0, 0));
@@ -159,7 +159,6 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetDataValueOverlappingExample() {
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
     assertEquals("Overlapping", fixture.getDataValue(0, 0));
@@ -201,13 +200,10 @@ class TestGraphDataProvider {
   final void testGetColumnCount() {
     assertEquals(1, fixture.getColumnCount());
 
-    fixture.setGraph(exampleGraph);
-    assertEquals(1, fixture.getColumnCount());
 
     fixture.setDsAndResolveGraph(exampleText);
     assertEquals(4, fixture.getColumnCount());
 
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
     assertEquals(5, fixture.getColumnCount());
   }
@@ -219,13 +215,9 @@ class TestGraphDataProvider {
   final void testGetRowCount() {
     assertEquals(1, fixture.getRowCount());
 
-    fixture.setGraph(exampleGraph);
-    assertEquals(1, fixture.getRowCount());
-
     fixture.setDsAndResolveGraph(exampleText);
     assertEquals(11, fixture.getRowCount());
 
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
     assertEquals(5, fixture.getRowCount());
   }
@@ -240,7 +232,6 @@ class TestGraphDataProvider {
    */
   @Test
   final void testSetDataValue() {
-    fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
     fixture.setDataValue(2, 2, "test");
@@ -260,7 +251,6 @@ class TestGraphDataProvider {
    */
   @Test
   final void testSetDataValueThrowsException() {
-    fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
     fixture.setDataValue(20, 1, "test");
     verify(errorService).handleException(
@@ -273,7 +263,6 @@ class TestGraphDataProvider {
    */
   @Test
   final void testColumnTypes() {
-    fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
     assertEquals("contrast-focus", fixture.getDataValue(3, 0));
@@ -286,7 +275,6 @@ class TestGraphDataProvider {
 
   @Test
   final void testCreateAnnotationOnEmptySpanCell() {
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
     assertNull(fixture.getNode(4, 0));
@@ -304,7 +292,6 @@ class TestGraphDataProvider {
 
   @Test
   final void testCreateAnnotationOnEmptyTokenCell() {
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
     assertNull(fixture.getNode(1, 1));
@@ -320,7 +307,6 @@ class TestGraphDataProvider {
 
   @Test
   final void testRemoveAnnotationOnSetToEmpty() {
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
     // Remove single cell span annotation and delete span
@@ -356,7 +342,6 @@ class TestGraphDataProvider {
 
   @Test
   final void testAddNewSpanAnnotationOnEmptyCellWithNamespace() {
-    fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
     fixture.setDataValue(4, 0, "ABC");
@@ -384,7 +369,6 @@ class TestGraphDataProvider {
     exampleText = exampleGraph.getTextualDSs().get(0);
     exampleGraph.createToken(exampleText, 56, 59);
     final SToken token = exampleGraph.createToken(exampleText, 60, 62);
-    fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
     fixture.setDataValue(3, 12, "ABC");
