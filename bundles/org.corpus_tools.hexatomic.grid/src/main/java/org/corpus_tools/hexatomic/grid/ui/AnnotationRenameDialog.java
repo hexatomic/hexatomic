@@ -88,7 +88,7 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
 
     this.columnLabelPanel = new AnnotationLabelPanel(panel, this.oldQName, this.newQName);
     try {
-      this.columnLabelPanel.edit(this.newQName);
+      this.columnLabelPanel.edit(this.oldQName);
     } catch (Exception e) {
       log.warn("An error occurred!", e);
     }

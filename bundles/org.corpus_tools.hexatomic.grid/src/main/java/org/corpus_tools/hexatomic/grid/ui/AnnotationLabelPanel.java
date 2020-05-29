@@ -40,9 +40,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
   private final String oldQName;
   private Text namespaceField;
-  private String newNamespace;
   private Text nameField;
-  private String newName;
 
   /**
    * Passing the parent widget to the super class constructor, retrieving namespace and name values
@@ -56,8 +54,6 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
   public AnnotationLabelPanel(Composite parent, String oldQName, String newQName) {
     super(parent, SWT.NONE);
     this.oldQName = oldQName;
-    this.newNamespace = DataUtil.splitNamespaceFromQNameString(newQName);
-    this.newName = DataUtil.splitNameFromQNameString(newQName);
     init();
   }
 
@@ -76,31 +72,28 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
     // Namespace
     Label namespaceLabel = new Label(this, SWT.NONE);
-    namespaceLabel.setText("Namespace: "); //$NON-NLS-1$
+    namespaceLabel.setText("Namespace:"); //$NON-NLS-1$
 
     this.namespaceField = new Text(this, SWT.BORDER);
     GridData gridData = new GridData(200, 15);
     gridData.grabExcessHorizontalSpace = true;
     gridData.horizontalAlignment = GridData.FILL;
     this.namespaceField.setLayoutData(gridData);
-    this.namespaceField.setText(oldNamespace);
 
     // Name
     Label nameLabel = new Label(this, SWT.NONE);
-    nameLabel.setText("Name: "); //$NON-NLS-1$
+    nameLabel.setText("Name:"); //$NON-NLS-1$
 
     this.nameField = new Text(this, SWT.BORDER);
     this.nameField.setLayoutData(gridData);
-    this.nameField.setText(oldName);
-    this.nameField.setFocus();
-    this.nameField.selectAll();
   }
 
   @Override
-  public void edit(String newQName) throws Exception {
-    if (newQName != null && newQName.length() > 0) {
-      this.namespaceField.setText(DataUtil.splitNamespaceFromQNameString(newQName));
-      this.nameField.setText(DataUtil.splitNameFromQNameString(newQName));
+  public void edit(String oldQName) throws Exception {
+    if (oldQName != null && oldQName.length() > 0) {
+      this.namespaceField.setText(DataUtil.splitNamespaceFromQNameString(oldQName));
+      this.nameField.setText(DataUtil.splitNameFromQNameString(oldQName));
+      this.nameField.setFocus();
       this.nameField.selectAll();
     }
   }
