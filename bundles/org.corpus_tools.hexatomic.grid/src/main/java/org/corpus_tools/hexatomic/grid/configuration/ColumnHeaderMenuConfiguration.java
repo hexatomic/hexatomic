@@ -66,7 +66,7 @@ public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
         .withAutoResizeSelectedColumnsMenuItem("Auto-resize column(s)").withSeparator()
         .withFreezeColumnMenuItem("Set column freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN)).withSeparator()
-        .withColumnRenameDialog("-> Change annotation name")
+        .withColumnRenameDialog("Change annotation name")
         .withVisibleState(ANNOTATION_RENAME, new AnnotationHeaderState());
   }
 
