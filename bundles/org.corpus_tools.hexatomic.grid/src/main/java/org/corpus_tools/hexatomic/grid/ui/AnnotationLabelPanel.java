@@ -62,7 +62,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
   }
 
   private void init() {
-    GridLayout gridLayout = new GridLayout(3, false);
+    GridLayout gridLayout = new GridLayout(2, false);
     setLayout(gridLayout);
 
     String oldNamespace = DataUtil.splitNamespaceFromQNameString(this.oldQName);
@@ -74,30 +74,10 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
       oldName = "";
     }
 
-    // "Headers"
-    new Label(this, SWT.NONE);
-
-    Label namespaceLabel = new Label(this, SWT.NONE);
-    namespaceLabel.setText("Namespace"); //$NON-NLS-1$
-
-    Label nameLabel = new Label(this, SWT.NONE);
-    nameLabel.setText("Name"); //$NON-NLS-1$
-
-    // Original label
-    Label oldlabel = new Label(this, SWT.NONE);
-    oldlabel.setText("Old:"); //$NON-NLS-1$
-
-    Label oldNamespaceLabel = new Label(this, SWT.NONE);
-    oldNamespaceLabel.setText(oldNamespace); // $NON-NLS-2$
-
-    Label oldNamelabel = new Label(this, SWT.NONE);
-    oldNamelabel.setText(oldName); // $NON-NLS-3$
-
-    // New values
-    Label newLabel = new Label(this, SWT.NONE);
-    newLabel.setText("New:"); // $NON-NLS-4$
-
     // Namespace
+    Label namespaceLabel = new Label(this, SWT.NONE);
+    namespaceLabel.setText("Namespace: "); //$NON-NLS-1$
+
     this.namespaceField = new Text(this, SWT.BORDER);
     GridData gridData = new GridData(200, 15);
     gridData.grabExcessHorizontalSpace = true;
@@ -105,23 +85,15 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     this.namespaceField.setLayoutData(gridData);
     this.namespaceField.setText(oldNamespace);
 
-    if (this.newNamespace != null && this.newNamespace.length() > 0) {
-      this.namespaceField.setText(this.newNamespace);
-      this.namespaceField.selectAll();
-    }
+    // Name
+    Label nameLabel = new Label(this, SWT.NONE);
+    nameLabel.setText("Name: "); //$NON-NLS-1$
 
     this.nameField = new Text(this, SWT.BORDER);
-    GridData gridData2 = new GridData(200, 15);
-    gridData2.grabExcessHorizontalSpace = true;
-    gridData2.horizontalAlignment = GridData.FILL;
-    this.nameField.setLayoutData(gridData2);
+    this.nameField.setLayoutData(gridData);
     this.nameField.setText(oldName);
     this.nameField.setFocus();
-
-    if (this.newName != null && this.newName.length() > 0) {
-      this.nameField.setText(this.newName);
-      this.nameField.selectAll();
-    }
+    this.nameField.selectAll();
   }
 
   @Override
