@@ -373,8 +373,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    this.averageTokenNodeWidth = sumWidth / (double) tokenCount;
-
+    if (tokenCount > 0) {
+      this.averageTokenNodeWidth = sumWidth / (double) tokenCount;
+    } else {
+      this.averageTokenNodeWidth = 0;
+    }
   }
 
   @Override
