@@ -16,11 +16,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<tycho.version>1.6.0</tycho.version>
+		<jacoco.version>0.8.5</jacoco.version>
 		<sonar.coverage.jacoco.xmlReportPaths>
-			./tests/org.corpus_tools.hexatomic.core.tests/target/site/jacoco/jacoco.xml,
-			./tests/org.corpus_tools.hexatomic.grid.tests/target/site/jacoco/jacoco.xml,
-			./tests/org.corpus_tools.hexatomic.graph.tests/target/site/jacoco/jacoco.xml,
-			./tests/org.corpus_tools.hexatomic.it.tests/target/site/jacoco/jacoco.xml
+			./tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<!-- MODULES -->
@@ -250,6 +248,29 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<!-- JAVADOC REPORTING -->
 	<!--<reporting><excludeDefaults>true</excludeDefaults><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId><version>3.1.1</version><reportSets><reportSet><reports><report>aggregate-no-fork</report><report>test-aggregate-no-fork</report></reports></reportSet></reportSets></plugin></plugins></reporting> -->
