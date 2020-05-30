@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.corpus_tools</groupId>
+		<artifactId>org.corpus_tools.hexatomic.tests</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>org.corpus_tools.hexatomic.tests.report</artifactId>
+	<name>Aggregate Test Report</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.core</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.core.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.graph</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.graph.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.grid</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.grid.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.it.tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<executions>
+							<execution>
+								<id>report-aggregate</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>report-aggregate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
