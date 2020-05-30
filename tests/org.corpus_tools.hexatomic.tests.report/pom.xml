@@ -11,6 +11,11 @@
 
 	<artifactId>org.corpus_tools.hexatomic.tests.report</artifactId>
 	<name>Aggregate Test Report</name>
+	
+	<properties>
+    	<sonar.coverage.jacoco.xmlReportPaths>${basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+  	</properties>
+	
 
 	<dependencies>
 		<dependency>
