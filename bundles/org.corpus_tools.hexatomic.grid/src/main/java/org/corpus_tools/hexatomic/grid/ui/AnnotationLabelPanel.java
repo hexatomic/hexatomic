@@ -44,14 +44,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
-  /**
-   * @author Stephan Druskat (mail@sdruskat.net)
-   *
-   */
-  public class AnnotationNameValidator {
-
-  }
-
   private final String oldQName;
   private Text namespaceField;
   private Text nameField;
