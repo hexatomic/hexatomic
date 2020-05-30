@@ -15,9 +15,10 @@
 		<license-maven-plugin.version>2.0.0</license-maven-plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
 		<tycho.version>1.6.0</tycho.version>
 		<jacoco.version>0.8.5</jacoco.version>
-		 <aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
 	<!-- MODULES -->
 	<modules>
