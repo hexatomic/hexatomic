@@ -90,10 +90,8 @@ public class GraphNotifierImpl extends
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
     // the real graph.
-    if (owner != null) {
-      if (node instanceof NodeImpl) {
-        ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
-      }
+    if (owner != null && node instanceof NodeImpl) {
+      ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
     }
     SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
   }
@@ -110,10 +108,8 @@ public class GraphNotifierImpl extends
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
     // the real graph.
-    if (owner != null) {
-      if (relation instanceof RelationImpl<?, ?>) {
-        ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
-      }
+    if (owner != null && relation instanceof RelationImpl<?, ?>) {
+      ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
     }
     SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
