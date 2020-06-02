@@ -37,7 +37,8 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
-public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElement<Label> {
+public class LabelNotifierImpl extends LabelImpl
+    implements Label, NotifyingLabelableElement<Label> {
 
   private static final long serialVersionUID = 8010124349555159857L;
 
@@ -63,9 +64,7 @@ public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElem
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }

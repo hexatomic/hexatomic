@@ -40,7 +40,8 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class RelationNotifierImpl<S extends Node, T extends Node>
-    extends RelationImpl<S, T> implements Relation<S, T>, NotifyingElement<Relation<?, ?>> {
+    extends RelationImpl<S, T>
+    implements Relation<S, T>, NotifyingLabelableElement<Relation<?, ?>> {
 
 
   private static final long serialVersionUID = 1171405238664510985L;
@@ -66,9 +67,7 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }

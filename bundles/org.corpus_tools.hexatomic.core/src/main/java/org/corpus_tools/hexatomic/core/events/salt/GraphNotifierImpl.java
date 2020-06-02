@@ -46,7 +46,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 public class GraphNotifierImpl extends
     GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
     implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>,
-    NotifyingElement<Graph<?, ?, ?>> {
+    NotifyingLabelableElement<Graph<?, ?, ?>> {
 
   private static final long serialVersionUID = 2590632940284255617L;
 
@@ -70,9 +70,7 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }

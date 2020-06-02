@@ -41,7 +41,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
-    implements Layer<N, R>, NotifyingElement<Layer<?, ?>> {
+    implements Layer<N, R>, NotifyingLabelableElement<Layer<?, ?>> {
 
 
   private static final long serialVersionUID = -4708308546018698463L;
@@ -67,9 +67,7 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }
