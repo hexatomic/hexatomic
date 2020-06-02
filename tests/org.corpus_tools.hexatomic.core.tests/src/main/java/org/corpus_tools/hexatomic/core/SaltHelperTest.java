@@ -10,13 +10,14 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.events.salt.NodeNotifierImpl;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SGraph;
 import org.corpus_tools.salt.core.SProcessingAnnotation;
-import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.corpus_tools.salt.impl.SaltFactoryImpl;
@@ -58,32 +59,38 @@ class SaltHelperTest {
 
     final STextualRelation textRel = graph.getTextualRelations().get(0);
 
-    Optional<Graph<?, ?, ?>> graphForGraph = SaltHelper.getGraphForObject(graph);
+    Optional<SDocumentGraph> graphForGraph =
+        SaltHelper.getGraphForObject(graph, SDocumentGraph.class);
     assertTrue(graphForGraph.isPresent());
     assertEquals(graph, graphForGraph.get());
 
-    Optional<Graph<?, ?, ?>> graphForToken = SaltHelper.getGraphForObject(token);
+    Optional<SDocumentGraph> graphForToken =
+        SaltHelper.getGraphForObject(token, SDocumentGraph.class);
     assertTrue(graphForToken.isPresent());
     assertEquals(graph, graphForToken.get());
 
-    Optional<Graph<?, ?, ?>> graphForAnno = SaltHelper.getGraphForObject(anno);
+    Optional<SDocumentGraph> graphForAnno =
+        SaltHelper.getGraphForObject(anno, SDocumentGraph.class);
     assertTrue(graphForAnno.isPresent());
     assertEquals(graph, graphForAnno.get());
 
-    Optional<Graph<?, ?, ?>> graphForNestedAnno = SaltHelper.getGraphForObject(nestedAnno);
+    Optional<SDocumentGraph> graphForNestedAnno =
+        SaltHelper.getGraphForObject(nestedAnno, SDocumentGraph.class);
     assertTrue(graphForNestedAnno.isPresent());
     assertEquals(graph, graphForNestedAnno.get());
 
-    Optional<Graph<?, ?, ?>> graphForTextRel = SaltHelper.getGraphForObject(textRel);
+    Optional<SDocumentGraph> graphForTextRel =
+        SaltHelper.getGraphForObject(textRel, SDocumentGraph.class);
     assertTrue(graphForTextRel.isPresent());
     assertEquals(graph, graphForTextRel.get());
 
-    Optional<Graph<?, ?, ?>> graphForGraphAnno = SaltHelper.getGraphForObject(graphAnno);
+    Optional<SDocumentGraph> graphForGraphAnno =
+        SaltHelper.getGraphForObject(graphAnno, SDocumentGraph.class);
     assertTrue(graphForGraphAnno.isPresent());
     assertEquals(graph, graphForGraphAnno.get());
 
-    assertFalse(SaltHelper.getGraphForObject(doc).isPresent());
-    assertFalse(SaltHelper.getGraphForObject(null).isPresent());
+    assertFalse(SaltHelper.getGraphForObject(doc, SCorpusGraph.class).isPresent());
+    assertFalse(SaltHelper.getGraphForObject(null, SGraph.class).isPresent());
   }
 
   /**

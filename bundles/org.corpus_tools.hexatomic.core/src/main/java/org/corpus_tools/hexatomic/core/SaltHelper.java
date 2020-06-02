@@ -23,7 +23,8 @@ package org.corpus_tools.hexatomic.core;
 
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.events.salt.NotifyingElement;
-import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.core.SGraph;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.Node;
@@ -60,26 +61,28 @@ public class SaltHelper {
     return currentElement;
   }
 
+
   /**
    * Gets the graph the object is transitively attached to.
    * 
    * @param object The object to get the graph for.
-   * @return The graph or empty value if not found.
+   * @param graphType A {@link Class} instance of the graph type which is requested, e.g. a
+   *        {@link SDocumentGraph}.
+   * @return The graph or empty value if not found or the graph has the wrong type
    */
-  public static Optional<Graph<?, ?, ?>> getGraphForObject(Object object) {
+  public static <G extends SGraph> Optional<G> getGraphForObject(Object object,
+      Class<G> graphType) {
 
-    if (object instanceof Graph<?, ?, ?>) {
+    if (graphType.isInstance(object)) {
       // Basic case: the object is already a graph
-      return Optional.of((Graph<?, ?, ?>) object);
-    } else if (object instanceof Node) {
+      return Optional.of(graphType.cast(object));
+    } else if (object instanceof Node && graphType.isInstance(((Node) object).getGraph())) {
       // Directly get the graph the node is attached to (or not if null)
-      return Optional.ofNullable(((Node) object).getGraph());
-    } else if (object instanceof Relation<?, ?>) {
+      return Optional.ofNullable(graphType.cast(((Node) object).getGraph()));
+    } else if (object instanceof Relation<?, ?>
+        && graphType.isInstance(((Relation<?, ?>) object).getGraph())) {
       // Directly get the graph the relation is attached to (or not if null)
-      Graph<?, ?, ?> g = ((Relation<?, ?>) object).getGraph();
-      if (g instanceof Graph<?, ?, ?>) {
-        return Optional.of((Graph<?, ?, ?>) g);
-      }
+      return Optional.of(graphType.cast(((Relation<?, ?>) object).getGraph()));
     } else if (object instanceof Label) {
       // Labels might not be directly attached to graphs, but to other elements of the graph
       LabelableElement container = ((Label) object).getContainer();
@@ -87,12 +90,12 @@ public class SaltHelper {
       if (resolvedContainer instanceof LabelableElement) {
         container = (LabelableElement) resolvedContainer;
       }
-      if (container instanceof Graph<?, ?, ?>) {
-        return Optional.of((Graph<?, ?, ?>) container);
+      if (graphType.isInstance(container)) {
+        return Optional.of(graphType.cast(container));
       } else if (container != null) {
         // The container can be a label by itself or another graph item. Use recursion to find the
         // transitive graph.
-        return getGraphForObject(container);
+        return getGraphForObject(container, graphType);
       }
     }
 
