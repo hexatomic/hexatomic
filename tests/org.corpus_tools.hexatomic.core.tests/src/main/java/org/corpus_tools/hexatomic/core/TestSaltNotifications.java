@@ -56,7 +56,7 @@ class TestSaltNotifications {
 
 
   @BeforeEach
-  public void setUp() throws Exception {
+  public void setUp() {
 
     events = mock(IEventBroker.class);
     errorService = mock(ErrorService.class);

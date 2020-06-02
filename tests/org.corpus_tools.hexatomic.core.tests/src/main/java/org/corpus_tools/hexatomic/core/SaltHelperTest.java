@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 class SaltHelperTest {
 
   @BeforeEach
-  public void setUp() throws Exception {
+  public void setUp() {
 
     // Use our notifying Salt factory
     SaltNotificationFactory factory = new SaltNotificationFactory();
