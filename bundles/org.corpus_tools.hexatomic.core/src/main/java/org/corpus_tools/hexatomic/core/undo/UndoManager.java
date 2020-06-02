@@ -16,7 +16,7 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
-import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.core.SGraph;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -114,7 +114,7 @@ public class UndoManager {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
-    Optional<Graph<?, ?, ?>> graph = SaltHelper.getGraphForObject(element);
+    Optional<SGraph> graph = SaltHelper.getGraphForObject(element, SGraph.class);
     if (graph.isPresent()) {
       if (graph.get() instanceof SDocumentGraph) {
         inconsistantDocuments.add(((SDocumentGraph) graph.get()).getId());

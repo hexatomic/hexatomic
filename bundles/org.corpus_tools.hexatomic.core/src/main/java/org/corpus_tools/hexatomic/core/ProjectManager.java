@@ -133,9 +133,11 @@ public class ProjectManager {
     events.send(Topics.PROJECT_LOADED, this.getLocation().orElse(null));
   }
 
+  /*
    * Return a document by its ID. The document graph might not be loaded.
    * 
    * @param documentID The Salt ID
+   * 
    * @return An optional document.
    * 
    * @see ProjectManager#getDocument(String, boolean)
@@ -203,11 +205,11 @@ public class ProjectManager {
 
     if (document.isPresent() && saltFile.isFile()) {
       // Deactivate listeners to avoid partial updates during load
-      suppressingEvents = true;
+      notificationFactory.setSuppressingEvents(true);
       SDocumentGraph documentGraph =
           SaltUtil.loadDocumentGraph(URI.createFileURI(saltFile.getAbsolutePath()));
       // Re-enable listeners and notify them of the loaded document
-      suppressingEvents = false;
+      notificationFactory.setSuppressingEvents(false);
       document.get().setDocumentGraph(documentGraph);
 
       events.send(Topics.DOCUMENT_LOADED, document.get().getId());
