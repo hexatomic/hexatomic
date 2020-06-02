@@ -44,24 +44,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TestSaltNotifications {
-  private ProjectManager projectManager;
 
   private IEventBroker events;
-
-  private ErrorService errorService;
-
-  private EPartService partService;
-
-  private UiStatusReport uiStatus;
 
 
   @BeforeEach
   public void setUp() {
 
     events = mock(IEventBroker.class);
-    errorService = mock(ErrorService.class);
-    partService = mock(EPartService.class);
-    uiStatus = mock(UiStatusReport.class);
+    ErrorService errorService = mock(ErrorService.class);
+    EPartService partService = mock(EPartService.class);
+    UiStatusReport uiStatus = mock(UiStatusReport.class);
 
 
     UISynchronize sync = new DummySync();
@@ -70,7 +63,7 @@ class TestSaltNotifications {
     factory.setSync(sync);
     factory.setEvents(events);
 
-    projectManager = new ProjectManager();
+    ProjectManager projectManager = new ProjectManager();
     projectManager.events = events;
     projectManager.errorService = errorService;
     projectManager.partService = partService;
