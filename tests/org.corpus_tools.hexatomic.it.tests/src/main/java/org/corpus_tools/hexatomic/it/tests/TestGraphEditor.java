@@ -42,6 +42,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String GRAPH_EDITOR_TEXT_RANGE = "graph-editor/text-range";
+
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
   private URI exampleProjectUri;
@@ -115,7 +117,7 @@ class TestGraphEditor {
         SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
         if (view != null) {
           // Wait until the graph has been loaded
-          return bot.tableWithId("graph-editor/text-range").getTableItem(0).isChecked();
+          return bot.tableWithId(GRAPH_EDITOR_TEXT_RANGE).getTableItem(0).isChecked();
         }
         return false;
       }
@@ -134,7 +136,7 @@ class TestGraphEditor {
 
     // Remember the index of the currently selected segment
     Optional<Integer> firstSelectedRow = Optional.empty();
-    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    SWTBotTable textRangeTable = bot.tableWithId(GRAPH_EDITOR_TEXT_RANGE);
     for (int i = 0; i < textRangeTable.rowCount(); i++) {
       if (textRangeTable.getTableItem(i).isChecked()) {
         firstSelectedRow = Optional.of(i);
@@ -156,7 +158,7 @@ class TestGraphEditor {
 
         @Override
         public boolean test() throws Exception {
-          return bot.tableWithId("graph-editor/text-range").getTableItem(row).isChecked();
+          return bot.tableWithId(GRAPH_EDITOR_TEXT_RANGE).getTableItem(row).isChecked();
         }
 
         @Override
@@ -236,7 +238,7 @@ class TestGraphEditor {
 
       @Override
       public boolean test() throws Exception {
-        return bot.tableWithId("graph-editor/text-range").getTableItem("Another text") != null;
+        return bot.tableWithId(GRAPH_EDITOR_TEXT_RANGE).getTableItem("Another text") != null;
       }
 
       @Override
@@ -246,7 +248,7 @@ class TestGraphEditor {
     }, 5000);
 
     // Select the new text
-    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    SWTBotTable textRangeTable = bot.tableWithId(GRAPH_EDITOR_TEXT_RANGE);
     textRangeTable.select("Another text");
 
     // Wait until the graph has been properly selected
@@ -254,7 +256,7 @@ class TestGraphEditor {
 
       @Override
       public boolean test() throws Exception {
-        return bot.tableWithId("graph-editor/text-range").getTableItem("Another text").isChecked();
+        return bot.tableWithId(GRAPH_EDITOR_TEXT_RANGE).getTableItem("Another text").isChecked();
       }
 
       @Override

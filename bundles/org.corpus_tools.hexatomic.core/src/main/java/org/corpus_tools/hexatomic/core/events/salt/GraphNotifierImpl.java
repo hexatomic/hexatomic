@@ -46,17 +46,11 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 public class GraphNotifierImpl extends
     GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
     implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>,
-    NotifyingElement<Graph<?, ?, ?>> {
+    NotifyingLabelableElement<Graph<?, ?, ?>> {
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private final NotificationHelper notificationHelper;
-
   private Graph<?, ?, ?> owner;
-
-  public GraphNotifierImpl(NotificationHelper notificationHelper) {
-    this.notificationHelper = notificationHelper;
-  }
 
   @Override
   public Graph<?, ?, ?> getOwner() {
@@ -71,23 +65,21 @@ public class GraphNotifierImpl extends
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
@@ -96,17 +88,15 @@ public class GraphNotifierImpl extends
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
     // the real graph.
-    if (owner != null) {
-      if (node instanceof NodeImpl) {
-        ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
-      }
+    if (owner != null && node instanceof NodeImpl) {
+      ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
     }
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, node);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
   }
 
   @Override
   public void removeNode(Node node) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, node);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, node);
     super.removeNode(node);
   }
 
@@ -116,35 +106,34 @@ public class GraphNotifierImpl extends
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
     // the real graph.
-    if (owner != null) {
-      if (relation instanceof RelationImpl<?, ?>) {
-        ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
-      }
+    if (owner != null && relation instanceof RelationImpl<?, ?>) {
+      ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
     }
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, relation);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, rel);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, rel);
     super.removeRelation(rel);
   }
 
   @Override
   public void removeRelations() {
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeRelations();
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
     super.addLayer(layer);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, layer);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, layer);
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, layer);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, layer);
     super.removeLayer(layer);
   }
 }

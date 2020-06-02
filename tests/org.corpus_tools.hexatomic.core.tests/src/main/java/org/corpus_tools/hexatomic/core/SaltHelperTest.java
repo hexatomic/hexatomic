@@ -3,34 +3,41 @@ package org.corpus_tools.hexatomic.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import java.util.Optional;
 import org.corpus_tools.hexatomic.core.events.salt.NodeNotifierImpl;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SGraph;
 import org.corpus_tools.salt.core.SProcessingAnnotation;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.corpus_tools.salt.impl.SaltFactoryImpl;
 import org.corpus_tools.salt.samples.SampleGenerator;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 class SaltHelperTest {
 
   @BeforeEach
-  public void setUp() throws Exception {
+  public void setUp() {
 
     // Use our notifying Salt factory
-    SaltFactory.setFactory(new SaltNotificationFactory(mock(IEventBroker.class),
-        mock(ProjectManager.class), mock(UISynchronize.class)));
+    SaltNotificationFactory factory = new SaltNotificationFactory();
+    factory.setEvents(mock(IEventBroker.class));
+    factory.setSync(new DummySync());
+
+    SaltFactory.setFactory(factory);
   }
 
   /**
@@ -52,14 +59,38 @@ class SaltHelperTest {
 
     final STextualRelation textRel = graph.getTextualRelations().get(0);
 
-    assertEquals(graph, SaltHelper.getGraphForObject(graph).get());
-    assertEquals(graph, SaltHelper.getGraphForObject(token).get());
-    assertEquals(graph, SaltHelper.getGraphForObject(anno).get());
-    assertEquals(graph, SaltHelper.getGraphForObject(nestedAnno).get());
-    assertEquals(graph, SaltHelper.getGraphForObject(textRel).get());
-    assertEquals(graph, SaltHelper.getGraphForObject(graphAnno).get());
-    assertFalse(SaltHelper.getGraphForObject(doc).isPresent());
-    assertFalse(SaltHelper.getGraphForObject(null).isPresent());
+    Optional<SDocumentGraph> graphForGraph =
+        SaltHelper.getGraphForObject(graph, SDocumentGraph.class);
+    assertTrue(graphForGraph.isPresent());
+    assertEquals(graph, graphForGraph.get());
+
+    Optional<SDocumentGraph> graphForToken =
+        SaltHelper.getGraphForObject(token, SDocumentGraph.class);
+    assertTrue(graphForToken.isPresent());
+    assertEquals(graph, graphForToken.get());
+
+    Optional<SDocumentGraph> graphForAnno =
+        SaltHelper.getGraphForObject(anno, SDocumentGraph.class);
+    assertTrue(graphForAnno.isPresent());
+    assertEquals(graph, graphForAnno.get());
+
+    Optional<SDocumentGraph> graphForNestedAnno =
+        SaltHelper.getGraphForObject(nestedAnno, SDocumentGraph.class);
+    assertTrue(graphForNestedAnno.isPresent());
+    assertEquals(graph, graphForNestedAnno.get());
+
+    Optional<SDocumentGraph> graphForTextRel =
+        SaltHelper.getGraphForObject(textRel, SDocumentGraph.class);
+    assertTrue(graphForTextRel.isPresent());
+    assertEquals(graph, graphForTextRel.get());
+
+    Optional<SDocumentGraph> graphForGraphAnno =
+        SaltHelper.getGraphForObject(graphAnno, SDocumentGraph.class);
+    assertTrue(graphForGraphAnno.isPresent());
+    assertEquals(graph, graphForGraphAnno.get());
+
+    assertFalse(SaltHelper.getGraphForObject(doc, SCorpusGraph.class).isPresent());
+    assertFalse(SaltHelper.getGraphForObject(null, SGraph.class).isPresent());
   }
 
   /**
@@ -68,7 +99,7 @@ class SaltHelperTest {
   @Test
   void testResolveDelegation() {
     SaltFactory.setFactory(new SaltFactoryImpl());
-    final NodeNotifierImpl delegate = new NodeNotifierImpl(null);
+    final NodeNotifierImpl delegate = new NodeNotifierImpl();
     final Node actualNode = new NodeImpl(delegate);
     delegate.setOwner(actualNode);
 

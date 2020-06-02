@@ -37,16 +37,13 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
-public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElement<Label> {
+public class LabelNotifierImpl extends LabelImpl
+    implements Label, NotifyingLabelableElement<Label> {
 
   private static final long serialVersionUID = 8010124349555159857L;
 
-  private final NotificationHelper notificationHelper;
   private Label owner;
 
-  public LabelNotifierImpl(NotificationHelper notificationHelper) {
-    this.notificationHelper = notificationHelper;
-  }
 
   @Override
   public Label getOwner() {
@@ -62,43 +59,41 @@ public class LabelNotifierImpl extends LabelImpl implements Label, NotifyingElem
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setNamespace(String namespace) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setNamespace(namespace);
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setName(String name) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setName(name);
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setValue(Object value) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setValue(value);
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 }

@@ -65,7 +65,6 @@ import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.core.runtime.ICoreRunnable;
@@ -695,7 +694,8 @@ public class GraphEditor {
 
   private void checkUpdateViewNecessary(Object element) {
     SDocumentGraph loadedGraph = getGraph();
-    Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
+    Optional<SDocumentGraph> changedGraph =
+        SaltHelper.getGraphForObject(element, SDocumentGraph.class);
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
       if (element instanceof STextualRelation || element instanceof STextOverlappingRelation<?,?>) {
         // Only relations with text coverage semantics can change the structure of the graph and

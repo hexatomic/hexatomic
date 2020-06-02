@@ -90,16 +90,17 @@ public class ProjectManager {
   @Inject
   UISynchronize sync;
 
-  private boolean hasUnsavedChanges;
+  @Inject
+  SaltNotificationFactory notificationFactory;
 
-  private boolean suppressingEvents;
+  private boolean hasUnsavedChanges;
 
   @PostConstruct
   void postConstruct() {
     log.debug("Starting Project Manager");
 
     // Set the factory before any Salt object is created
-    SaltFactory.setFactory(new SaltNotificationFactory(events, this, sync));
+    SaltFactory.setFactory(notificationFactory);
 
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
@@ -132,17 +133,6 @@ public class ProjectManager {
     events.send(Topics.PROJECT_LOADED, this.getLocation().orElse(null));
   }
 
-  /**
-   * If true, events for project updates should not be active. This property will be set if bulk
-   * changes like loading are made to a document.
-   * 
-   * @return True if project change events should be suppressed.
-   */
-  public boolean isSuppressingEvents() {
-    return suppressingEvents;
-  }
-
-  /**
    * Return a document by its ID. The document graph might not be loaded.
    * 
    * @param documentID The Salt ID
@@ -176,9 +166,9 @@ public class ProjectManager {
           // Load the existing document graph from disk
           try {
             // Load document
-            suppressingEvents = true;
+            notificationFactory.setSuppressingEvents(true);
             result.get().loadDocumentGraph();
-            suppressingEvents = false;
+            notificationFactory.setSuppressingEvents(false);
             // Re-enable listeners and notify them of the loaded document
             events.send(Topics.DOCUMENT_LOADED, result.get().getId());
           } catch (SaltResourceException ex) {
@@ -258,9 +248,9 @@ public class ProjectManager {
     project = SaltFactory.createSaltProject();
     location = Optional.of(path);
     try {
-      suppressingEvents = true;
+      notificationFactory.setSuppressingEvents(true);
       project.loadCorpusStructure(path);
-      suppressingEvents = false;
+      notificationFactory.setSuppressingEvents(false);
       events.send(Topics.PROJECT_LOADED, path.toFileString());
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
@@ -329,7 +319,7 @@ public class ProjectManager {
 
           // Disable listeners for document changes while performing massive amounts of temporary
           // changes
-          suppressingEvents = true;
+          notificationFactory.setSuppressingEvents(true);
 
           Path outputDirectory = Paths.get(path.toFileString());
           if (!savingToCurrentLocation) {
@@ -415,7 +405,7 @@ public class ProjectManager {
             uiStatus.setLocation(path.toFileString());
 
             // Enable the listeners again
-            suppressingEvents = false;
+            notificationFactory.setSuppressingEvents(false);
             hasUnsavedChanges = false;
 
           });
@@ -542,9 +532,9 @@ public class ProjectManager {
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
-            suppressingEvents = true;
+            notificationFactory.setSuppressingEvents(true);
             document.get().setDocumentGraph(null);
-            suppressingEvents = false;
+            notificationFactory.setSuppressingEvents(false);
           }
         }
       }

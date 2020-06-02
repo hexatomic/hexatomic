@@ -40,17 +40,13 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class RelationNotifierImpl<S extends Node, T extends Node>
-    extends RelationImpl<S, T> implements Relation<S, T>, NotifyingElement<Relation<?, ?>> {
+    extends RelationImpl<S, T>
+    implements Relation<S, T>, NotifyingLabelableElement<Relation<?, ?>> {
 
 
   private static final long serialVersionUID = 1171405238664510985L;
 
-  private final NotificationHelper notificationHelper;
   private Relation<?, ?> owner;
-
-  public RelationNotifierImpl(NotificationHelper notificationHelper) {
-    this.notificationHelper = notificationHelper;
-  }
 
   @Override
   public Relation<?, ?> getOwner() {
@@ -66,37 +62,35 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setSource(S source) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setSource(source);
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void setTarget(T target) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.setTarget(target);
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
 }

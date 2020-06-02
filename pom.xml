@@ -1,245 +1,251 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.corpus_tools</groupId>
-    <artifactId>org.corpus_tools.hexatomic.root</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <!-- SCM -->
-    <scm>
-        <connection>scm:git:https://github.com/hexatomic/hexatomic.git</connection>
-    </scm>
-    <!-- PROPERTIES -->
-    <properties>
-        <license-maven-plugin.version>2.0.0</license-maven-plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <tycho.version>1.5.1</tycho.version>
-    </properties>
-    <!-- MODULES -->
-    <modules>
-        <module>bundles</module>
-        <module>features</module>
-        <module>releng</module>
-        <module>tests</module>
-    </modules>
-    <!-- BUILD -->
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <version>3.1.1</version>
-                    <executions>
-                        <execution>
-                            <id>build-apidocs</id>
-                            <phase>generate-resources</phase>
-                            <goals>
-                                <goal>javadoc</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <windowtitle>Hexatomic API Documentation</windowtitle>
-                        <doctitle>Hexatomic
-                            ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
-                            API</doctitle>
-                        <!-- <excludePackageNames>*.internal.*</excludePackageNames> -->
-                        <linksource>true</linksource>
-                        <links>
-                            <!-- This list should match the bundles/packages 
-                                depended on, with the versions as specified in the target platform -->
-                            <link>https://docs.oracle.com/javase/8/docs/api/</link>
-                        </links>
-                        <failOnError>false</failOnError>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>${license-maven-plugin.version}</version>
-                    <configuration>
-                        <verbose>false</verbose>
-                        <licensesOutputFileEol>AUTODETECT</licensesOutputFileEol>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>first</id>
-                            <goals>
-                                <goal>update-file-header</goal>
-                            </goals>
-                            <phase>process-sources</phase>
-                            <configuration>
-                                <organizationName>Stephan Druskat,
-                                    Thomas Krause</organizationName>
-                                <inceptionYear>2018</inceptionYear>
-                                <licenseName>apache_v2</licenseName>
-                                <roots>
-                                    <root>src/main/java</root>
-                                    <root>src/test</root>
-                                </roots>
-                                <excludes>
-                                    <exclude>**/*ResourceManager.java</exclude>
-                                    <!-- Licensed under EPL -->
-                                    <exclude>**/*SWTResourceManager.java</exclude>
-                                    <!-- Licensed under EPL -->
-                                </excludes>
-                                <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-                                <addSvnKeyWords>false</addSvnKeyWords>
-                                <emptyLineAfterHeader>true</emptyLineAfterHeader>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>aggregate-download-licenses</id>
-                            <goals>
-                                <goal>aggregate-download-licenses</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr4-maven-plugin</artifactId>
-                    <version>4.7.2</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-maven-plugin</artifactId>
-                <version>${tycho.version}</version>
-                <extensions>true</extensions>
-            </plugin>
-            <!--Enable the replacement of the SNAPSHOT version in the final 
-                product configuration -->
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>tycho-packaging-plugin</artifactId>
-                <version>${tycho.version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <id>package-feature</id>
-                        <configuration>
-                            <finalName>${project.artifactId}-${unqualifiedVersion}.${buildQualifier}</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.tycho</groupId>
-                <artifactId>target-platform-configuration</artifactId>
-                <version>${tycho.version}</version>
-                <configuration>
-                    <target>
-                        <artifact>
-                            <groupId>org.corpus_tools</groupId>
-                            <artifactId>org.corpus_tools.hexatomic.target</artifactId>
-                            <version>0.4.0-SNAPSHOT</version>
-                        </artifact>
-                    </target>
-                    <environments>
-                        <environment>
-                            <os>linux</os>
-                            <ws>gtk</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>win32</os>
-                            <ws>win32</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                        <environment>
-                            <os>macosx</os>
-                            <ws>cocoa</ws>
-                            <arch>x86_64</arch>
-                        </environment>
-                    </environments>
-                </configuration>
-            </plugin>
-            <!-- USE GITFLOW -->
-            <plugin>
-                <groupId>com.amashchenko.maven.plugin</groupId>
-                <artifactId>gitflow-maven-plugin</artifactId>
-                <version>1.12.0</version>
-                <configuration>
-                    <tychoBuild>true</tychoBuild>
-                    <gpgSignTag>true</gpgSignTag>
-                    <gpgSignCommit>true</gpgSignCommit>
-                    <verbose>true</verbose>
-                    <skipFeatureVersion>true</skipFeatureVersion>
-                    <versionDigitToIncrement>1</versionDigitToIncrement>
-                    <pushRemote>true</pushRemote>
-                    <keepRemote>false</keepRemote>
-                    <digitsOnlyDevVersion>true</digitsOnlyDevVersion>
-                    <versionsForceUpdate>true</versionsForceUpdate>
-                    <gitFlowConfig>
-                        <versionTagPrefix>v</versionTagPrefix>
-                    </gitFlowConfig>
-                </configuration>
-            </plugin>
-            <!-- BUILD JAVADOCS -->
-            <plugin>
-                <!-- Parse version during `validate` phase to create the 
-                    properties - ${parsedVersion.majorVersion} - ${parsedVersion.minorVersion} 
-                    - ${parsedVersion.incrementalVersion}. They are used during the aggregation 
-                    phase for javadoc by the maven-javadoc-plugin -->
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <groupId>org.codehaus.mojo</groupId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>parse-version</id>
-                        <goals>
-                            <goal>parse-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.corpus_tools</groupId>
+	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
+	<version>0.4.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<!-- SCM -->
+	<scm>
+		<connection>scm:git:https://github.com/hexatomic/hexatomic.git</connection>
+	</scm>
+	<!-- PROPERTIES -->
+	<properties>
+		<license-maven-plugin.version>2.0.0</license-maven-plugin.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<tycho.version>1.6.0</tycho.version>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			./tests/org.corpus_tools.hexatomic.core.tests/target/site/jacoco/jacoco.xml,
+			./tests/org.corpus_tools.hexatomic.grid.tests/target/site/jacoco/jacoco.xml,
+			./tests/org.corpus_tools.hexatomic.graph.tests/target/site/jacoco/jacoco.xml,
+			./tests/org.corpus_tools.hexatomic.it.tests/target/site/jacoco/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
+	</properties>
+	<!-- MODULES -->
+	<modules>
+		<module>bundles</module>
+		<module>features</module>
+		<module>releng</module>
+		<module>tests</module>
+	</modules>
+	<!-- BUILD -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<groupId>org.apache.maven.plugins</groupId>
+					<version>3.1.1</version>
+					<executions>
+						<execution>
+							<id>build-apidocs</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>javadoc</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<windowtitle>Hexatomic API Documentation</windowtitle>
+						<doctitle>Hexatomic
+							${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
+							API</doctitle>
+						<!-- <excludePackageNames>*.internal.*</excludePackageNames> -->
+						<linksource>true</linksource>
+						<links>
+							<!-- This list should match the bundles/packages depended on, with 
+								the versions as specified in the target platform -->
+							<link>https://docs.oracle.com/javase/8/docs/api/</link>
+						</links>
+						<failOnError>false</failOnError>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>${license-maven-plugin.version}</version>
+					<configuration>
+						<verbose>false</verbose>
+						<licensesOutputFileEol>AUTODETECT</licensesOutputFileEol>
+					</configuration>
+					<executions>
+						<execution>
+							<id>first</id>
+							<goals>
+								<goal>update-file-header</goal>
+							</goals>
+							<phase>process-sources</phase>
+							<configuration>
+								<organizationName>Stephan Druskat,
+									Thomas Krause</organizationName>
+								<inceptionYear>2018</inceptionYear>
+								<licenseName>apache_v2</licenseName>
+								<roots>
+									<root>src/main/java</root>
+									<root>src/test</root>
+								</roots>
+								<excludes>
+									<exclude>**/*ResourceManager.java</exclude>
+									<!-- Licensed under EPL -->
+									<exclude>**/*SWTResourceManager.java</exclude>
+									<!-- Licensed under EPL -->
+								</excludes>
+								<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+								<addSvnKeyWords>false</addSvnKeyWords>
+								<emptyLineAfterHeader>true</emptyLineAfterHeader>
+							</configuration>
+						</execution>
+						<execution>
+							<id>aggregate-download-licenses</id>
+							<goals>
+								<goal>aggregate-download-licenses</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr4-maven-plugin</artifactId>
+					<version>4.7.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<!--Enable the replacement of the SNAPSHOT version in the final product 
+				configuration -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-packaging-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<id>package-feature</id>
+						<configuration>
+							<finalName>${project.artifactId}-${unqualifiedVersion}.${buildQualifier}</finalName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>org.corpus_tools</groupId>
+							<artifactId>org.corpus_tools.hexatomic.target</artifactId>
+							<version>0.4.0-SNAPSHOT</version>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<!-- USE GITFLOW -->
+			<plugin>
+				<groupId>com.amashchenko.maven.plugin</groupId>
+				<artifactId>gitflow-maven-plugin</artifactId>
+				<version>1.12.0</version>
+				<configuration>
+					<tychoBuild>true</tychoBuild>
+					<gpgSignTag>true</gpgSignTag>
+					<gpgSignCommit>true</gpgSignCommit>
+					<verbose>true</verbose>
+					<skipFeatureVersion>true</skipFeatureVersion>
+					<versionDigitToIncrement>1</versionDigitToIncrement>
+					<pushRemote>true</pushRemote>
+					<keepRemote>false</keepRemote>
+					<digitsOnlyDevVersion>true</digitsOnlyDevVersion>
+					<versionsForceUpdate>true</versionsForceUpdate>
+					<gitFlowConfig>
+						<versionTagPrefix>v</versionTagPrefix>
+					</gitFlowConfig>
+				</configuration>
+			</plugin>
+			<!-- BUILD JAVADOCS -->
+			<plugin>
+				<!-- Parse version during `validate` phase to create the properties - 
+					${parsedVersion.majorVersion} - ${parsedVersion.minorVersion} - ${parsedVersion.incrementalVersion}. 
+					They are used during the aggregation phase for javadoc by the maven-javadoc-plugin -->
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-            <!-- Check coding style with checkstyle plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <!-- This is a default configuration available on the 
-                        classpath of the checkstyle plugin -->
-                    <configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
-                    <encoding>UTF-8</encoding>
-                    <violationSeverity>warning</violationSeverity>
-                    <failOnViolation>true</failOnViolation>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>verify</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.29</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+			<!-- Check coding style with checkstyle plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<!-- This is a default configuration available on the classpath of the 
+						checkstyle plugin -->
+					<configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
+					<encoding>UTF-8</encoding>
+					<violationSeverity>warning</violationSeverity>
+					<failOnViolation>true</failOnViolation>
+				</configuration>
+				<executions>
+					<execution>
+						<id>verify</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>8.29</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 
-            <!-- Update the changelog header during a release -->
-            <plugin>
-                <groupId>co.enear.maven.plugins</groupId>
-                <artifactId>keepachangelog-maven-plugin</artifactId>
-                <version>1.2.3</version>
-                <inherited>false</inherited>
-            </plugin>
-        </plugins>
-    </build>
-    <!-- JAVADOC REPORTING -->
-    <!--<reporting><excludeDefaults>true</excludeDefaults><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId><version>3.1.1</version><reportSets><reportSet><reports><report>aggregate-no-fork</report><report>test-aggregate-no-fork</report></reports></reportSet></reportSets></plugin></plugins></reporting> -->
+			<!-- Update the changelog header during a release -->
+			<plugin>
+				<groupId>co.enear.maven.plugins</groupId>
+				<artifactId>keepachangelog-maven-plugin</artifactId>
+				<version>1.2.3</version>
+				<inherited>false</inherited>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- JAVADOC REPORTING -->
+	<!--<reporting><excludeDefaults>true</excludeDefaults><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId><version>3.1.1</version><reportSets><reportSet><reports><report>aggregate-no-fork</report><report>test-aggregate-no-fork</report></reports></reportSet></reportSets></plugin></plugins></reporting> -->
 </project>

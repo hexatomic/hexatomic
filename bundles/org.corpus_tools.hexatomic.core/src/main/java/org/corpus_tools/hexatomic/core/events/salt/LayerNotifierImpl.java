@@ -41,17 +41,13 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
-    implements Layer<N, R>, NotifyingElement<Layer<?, ?>> {
+    implements Layer<N, R>, NotifyingLabelableElement<Layer<?, ?>> {
 
 
   private static final long serialVersionUID = -4708308546018698463L;
 
-  private final NotificationHelper notificationHelper;
   private Layer<?, ?> owner;
 
-  public LayerNotifierImpl(NotificationHelper notificationHelper) {
-    this.notificationHelper = notificationHelper;
-  }
 
   @Override
   public Layer<?, ?> getOwner() {
@@ -66,46 +62,44 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
-    if (qname != null) {
-      Label label = getLabel(qname);
-      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
+    if (prepareRemoveLabel(qname)) {
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
   public void addNode(N node) {
     super.addNode(node);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, node);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
   }
 
   @Override
   public void removeNode(N node) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, node);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, node);
     super.removeNode(node);
   }
 
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
     super.addRelation(relation);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, relation);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, rel);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, rel);
     super.removeRelation(rel);
   }
 }
