@@ -9,6 +9,9 @@ import static org.mockito.Mockito.verify;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SCorpus;
+import org.corpus_tools.salt.common.SCorpusDocumentRelation;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
@@ -18,6 +21,8 @@ import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.core.SLayer;
+import org.corpus_tools.salt.core.SMetaAnnotation;
+import org.corpus_tools.salt.core.SProcessingAnnotation;
 import org.corpus_tools.salt.samples.SampleGenerator;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -90,12 +95,18 @@ class TestSaltNotifications {
     final SAnnotation tokAnno = tok.createAnnotation("test", "somename", "anyvalue");
     tok.removeLabel("test", "somename");
 
+    // Add and remove a processing annotation on the token annotation
+    final SProcessingAnnotation processingAnno =
+        tokAnno.createProcessingAnnotation("salt", "processing", "anno");
+    tokAnno.removeLabel("salt::processing");
+
     // Add and remove a layer
     final SLayer layer = SaltFactory.createSLayer();
     doc.getDocumentGraph().addLayer(layer);
     layer.addNode(tok);
     layer.removeNode(tok);
     doc.getDocumentGraph().removeLayer(layer);
+
 
     // Remove the token, this should also remove the relation
     doc.getDocumentGraph().removeNode(tok);
@@ -136,8 +147,10 @@ class TestSaltNotifications {
     verifyCreatedAnnoEvents(textRel.getFeature(SaltUtil.FEAT_SEND_QNAME));
 
     verifyCreatedAnnoEvents(tokAnno);
-    
     verify(events).send(eq(Topics.ANNOTATION_REMOVED), eq(tokAnno));
+
+    verifyCreatedAnnoEvents(processingAnno);
+    verify(events).send(eq(Topics.ANNOTATION_REMOVED), eq(processingAnno));
 
     verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(layer));
     verifySetNameEvents(layer);
@@ -147,6 +160,84 @@ class TestSaltNotifications {
     verify(events, times(2)).send(eq(Topics.ANNOTATION_REMOVED), eq(tok));
     verify(events).send(eq(Topics.ANNOTATION_REMOVED), eq(layer));
     verify(events).send(eq(Topics.ANNOTATION_REMOVED), eq(textRel));
+  }
+
+  /**
+   * Tests the different removeAll functions of the graph objects.
+   */
+  @Test
+  public void testRemoveAll() {
+
+    final SCorpusGraph graph = SaltFactory.createSCorpusGraph();
+
+    final SCorpus corpus = SaltFactory.createSCorpus();
+    final SDocument doc = SaltFactory.createSDocument();
+    
+    graph.addNode(corpus);
+    graph.addNode(doc);
+
+    verifySetNameEvents(corpus);
+    verifySetNameEvents(doc);
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(corpus));
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(doc));
+
+
+    // Add and remove an annotation on the document and on the label itself
+    final SMetaAnnotation docAnno = doc.createMetaAnnotation("meta", "anno", "value");
+    final SFeature metaFeature = docAnno.createFeature("another", "feature", "value");
+
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(metaFeature));
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(docAnno));
+
+    // Create a relation
+    final SCorpusDocumentRelation corpusRel = SaltFactory.createSCorpusDocumentRelation();
+    final SProcessingAnnotation relAnno =
+        corpusRel.createProcessingAnnotation("just", "another", "annotation");
+
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(relAnno));
+
+    corpusRel.setSource(corpus);
+    corpusRel.setTarget(doc);
+
+    graph.addRelation(corpusRel);
+    verify(events).send(eq(Topics.ANNOTATION_ADDED), eq(corpusRel));
+    graph.removeRelations();
+    verify(events).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(graph));
+    verify(events).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(graph));
+
+    // Create a layer and add the node and relation to it
+    final SLayer layer = SaltFactory.createSLayer();
+    layer.addNode(doc);
+    layer.addRelation(corpusRel);
+
+    verify(events, times(2)).send(eq(Topics.ANNOTATION_ADDED), eq(doc));
+    verify(events, times(2)).send(eq(Topics.ANNOTATION_ADDED), eq(corpusRel));
+
+    // Call the removeAll functions on the created objects
+    graph.removeAll();
+    layer.removeAll();
+    corpusRel.removeAll();
+    docAnno.removeAll();
+    doc.removeAll();
+
+
+    // The annotation is marked as added, but because removeAll is used, the argument to the remove
+    // event is the annotated element itself
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(graph));
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(graph));
+
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(layer));
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(layer));
+
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(corpusRel));
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(corpusRel));
+
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(docAnno));
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(docAnno));
+
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_BEFORE_MODIFICATION), eq(doc));
+    verify(events, atLeastOnce()).send(eq(Topics.ANNOTATION_AFTER_MODIFICATION), eq(doc));
+
   }
 
   private void verifySetNameEvents(SAnnotationContainer element) {

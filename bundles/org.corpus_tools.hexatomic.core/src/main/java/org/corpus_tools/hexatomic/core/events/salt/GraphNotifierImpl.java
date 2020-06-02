@@ -126,8 +126,9 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeRelations() {
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeRelations();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
