@@ -50,13 +50,7 @@ public class GraphNotifierImpl extends
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private final NotificationHelper notificationHelper;
-
   private Graph<?, ?, ?> owner;
-
-  public GraphNotifierImpl(NotificationHelper notificationHelper) {
-    this.notificationHelper = notificationHelper;
-  }
 
   @Override
   public Graph<?, ?, ?> getOwner() {
@@ -71,23 +65,23 @@ public class GraphNotifierImpl extends
   @Override
   public void addLabel(Label label) {
     super.addLabel(label);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, label);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
   }
 
   @Override
   public void removeLabel(String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, label);
+      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
       super.removeLabel(qname);
     }
   }
 
   @Override
   public void removeAll() {
-    notificationHelper.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
     super.removeAll();
-    notificationHelper.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
   }
 
   @Override
@@ -101,12 +95,12 @@ public class GraphNotifierImpl extends
         ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, node);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
   }
 
   @Override
   public void removeNode(Node node) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, node);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, node);
     super.removeNode(node);
   }
 
@@ -121,30 +115,30 @@ public class GraphNotifierImpl extends
         ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
       }
     }
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, relation);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, rel);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, rel);
     super.removeRelation(rel);
   }
 
   @Override
   public void removeRelations() {
     super.removeRelations();
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, this);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, this);
   }
 
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
     super.addLayer(layer);
-    notificationHelper.sendEvent(Topics.ANNOTATION_ADDED, layer);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, layer);
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    notificationHelper.sendEvent(Topics.ANNOTATION_REMOVED, layer);
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, layer);
     super.removeLayer(layer);
   }
 }

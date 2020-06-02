@@ -22,9 +22,9 @@ import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.corpus_tools.salt.impl.SaltFactoryImpl;
 import org.corpus_tools.salt.samples.SampleGenerator;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 class SaltHelperTest {
 
@@ -32,8 +32,11 @@ class SaltHelperTest {
   public void setUp() throws Exception {
 
     // Use our notifying Salt factory
-    SaltFactory.setFactory(new SaltNotificationFactory(mock(IEventBroker.class),
-        mock(ProjectManager.class), mock(UISynchronize.class)));
+    SaltNotificationFactory factory = new SaltNotificationFactory();
+    factory.setEvents(mock(IEventBroker.class));
+    factory.setSync(new DummySync());
+
+    SaltFactory.setFactory(factory);
   }
 
   /**
@@ -89,7 +92,7 @@ class SaltHelperTest {
   @Test
   void testResolveDelegation() {
     SaltFactory.setFactory(new SaltFactoryImpl());
-    final NodeNotifierImpl delegate = new NodeNotifierImpl(null);
+    final NodeNotifierImpl delegate = new NodeNotifierImpl();
     final Node actualNode = new NodeImpl(delegate);
     delegate.setOwner(actualNode);
 

@@ -46,29 +46,25 @@ class TestSaltNotifications {
     partService = mock(EPartService.class);
     uiStatus = mock(UiStatusReport.class);
 
+
+    UISynchronize sync = new DummySync();
+
+    SaltNotificationFactory factory = new SaltNotificationFactory();
+    factory.setSync(sync);
+    factory.setEvents(events);
+
     projectManager = new ProjectManager();
     projectManager.events = events;
     projectManager.errorService = errorService;
     projectManager.partService = partService;
     projectManager.uiStatus = uiStatus;
-    projectManager.sync = new UISynchronize() {
-
-      @Override
-      public void syncExec(Runnable runnable) {
-        runnable.run();
-      }
-
-      @Override
-      public void asyncExec(Runnable runnable) {
-        runnable.run();
-      }
-    };
+    projectManager.sync = new DummySync();
+    projectManager.notificationFactory = factory;
+    
 
     projectManager.postConstruct();
 
-    SaltFactory
-        .setFactory(new SaltNotificationFactory(events, projectManager, projectManager.sync));
-
+    SaltFactory.setFactory(factory);
   }
 
   /**

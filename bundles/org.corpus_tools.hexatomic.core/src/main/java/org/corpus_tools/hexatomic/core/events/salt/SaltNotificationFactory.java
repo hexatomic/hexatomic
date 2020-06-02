@@ -21,7 +21,8 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-import org.corpus_tools.hexatomic.core.ProjectManager;
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.salt.ISaltFactory;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SCorpus;
@@ -100,6 +101,7 @@ import org.corpus_tools.salt.semantics.impl.SPOSAnnotationImpl;
 import org.corpus_tools.salt.semantics.impl.SSentenceAnnotationImpl;
 import org.corpus_tools.salt.semantics.impl.STypeAnnotationImpl;
 import org.corpus_tools.salt.semantics.impl.SWordAnnotationImpl;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 
@@ -114,36 +116,111 @@ import org.eclipse.e4.ui.di.UISynchronize;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
+@Creatable
 public class SaltNotificationFactory implements ISaltFactory {
 
 
-  private final NotificationHelper notificationHelper;
+  @Inject
+  private UISynchronize sync;
 
-  public SaltNotificationFactory(IEventBroker events, ProjectManager projectManager,
-      UISynchronize sync) {
-    this.notificationHelper = new NotificationHelper(events, projectManager, sync);
+  @Inject
+  private IEventBroker events;
+
+  private boolean suppressingEvents;
+
+
+  /**
+   * If true, events for project updates should not be active. This property will be set if bulk
+   * changes like loading are made to a document.
+   * 
+   * @return True if project change events should be suppressed.
+   */
+  public boolean isSuppressingEvents() {
+    return suppressingEvents;
+  }
+
+  /**
+   * If set to true, events for project updates should not be active. This property should be set if
+   * bulk changes like loading are made to a document.
+   * 
+   * @param suppressingEvents Set to true if project change events should be suppressed.
+   */
+  public void setSuppressingEvents(boolean suppressingEvents) {
+    this.suppressingEvents = suppressingEvents;
+  }
+
+  /**
+   * Sets the Eclipse event broker.
+   * 
+   * @param events The event broker.
+   */
+  public void setEvents(IEventBroker events) {
+    this.events = events;
+  }
+
+  /**
+   * Sets the Eclipse UI synchronization instance.
+   * 
+   * @param sync The UI synchronization instance.
+   */
+  public void setSync(UISynchronize sync) {
+    this.sync = sync;
+  }
+
+  /**
+   * Sends the topic over the Eclipse event bus. This only works if the {@link SaltFactory}
+   * implementation is set to be an instance of this class. It will throw a runtime exception
+   * otherwise.
+   * 
+   * @param topic The topic to send.
+   * @param element The element which is used as argument to the topic.
+   * 
+   * @throws IllegalStateException Thrown if the current {@link SaltFactory} implementation is not
+   *         of this type.
+   */
+  static void sendEvent(String topic, Object element) {
+
+    // Get an instance to the factory singleton and check if this has the correct class
+    ISaltFactory factory = SaltFactory.getFactory();
+    if (factory instanceof SaltNotificationFactory) {
+      SaltNotificationFactory notificationFactory = (SaltNotificationFactory) factory;
+      // We have to assume that other thread can modify the Salt graph.
+      // Since we are sending the events synchronously and receivers are likely using the UI thread
+      // for receiving the event, synchronizing here and not in the event bus makes sure the event
+      // handler is always executed before this function returns.
+      notificationFactory.sync.syncExec(() -> {
+        if (!notificationFactory.isSuppressingEvents()) {
+          Object resolvedElement = SaltHelper.resolveDelegation(element);
+          notificationFactory.events.send(topic, resolvedElement);
+        }
+      });
+    } else {
+      throw new IllegalStateException(
+          "Current Salt factory is not of type SaltNotificationFactory but "
+              + factory.getClass().getName());
+    }
   }
 
   private GraphNotifierImpl createNotifierGraph() {
-    return new GraphNotifierImpl(notificationHelper);
+    return new GraphNotifierImpl();
   }
 
   private LabelNotifierImpl createNotifierLabel() {
-    return new LabelNotifierImpl(notificationHelper);
+    return new LabelNotifierImpl();
   }
 
 
   private LayerNotifierImpl<Node, Relation<Node, Node>> createNotifierLayer() {
-    return new LayerNotifierImpl<>(notificationHelper);
+    return new LayerNotifierImpl<>();
   }
 
   private NodeNotifierImpl createNotifierNode() {
-    return new NodeNotifierImpl(notificationHelper);
+    return new NodeNotifierImpl();
   }
 
 
   private RelationNotifierImpl<Node, Node> createNotifierRelation() {
-    return new RelationNotifierImpl<>(notificationHelper);
+    return new RelationNotifierImpl<>();
   }
 
 
