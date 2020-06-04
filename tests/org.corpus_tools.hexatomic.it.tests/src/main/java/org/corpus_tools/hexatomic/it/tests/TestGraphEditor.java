@@ -53,6 +53,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String GET_VIEWPORT = "getViewport";
+
+  private static final String GET_VIEW_LOCATION = "getViewLocation";
+
   private final class GraphLoadedCondition extends DefaultCondition {
 
     private final List<Integer> segmentIndexes;
@@ -257,9 +261,9 @@ class TestGraphEditor {
     assertNotNull(g);
     SWTUtils.display().syncExec(g::forceFocus);
 
-    final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
+    final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, GET_VIEWPORT);
     
-    Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
+    Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
     // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
     keyboard.pressShortcut(Keystrokes.DOWN);
@@ -272,7 +276,7 @@ class TestGraphEditor {
     // Zoom in so we can move the view with the cursors
     keyboard.pressShortcut(SWT.CTRL, '+');
 
-    origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
+    origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
@@ -317,7 +321,7 @@ class TestGraphEditor {
 
     // Zoom out again: moving up should not have any effect again
     keyboard.pressShortcut(SWT.CTRL, '-');
-    origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
+    origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
