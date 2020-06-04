@@ -37,8 +37,10 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +52,24 @@ import org.junit.jupiter.api.TestMethodOrder;
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
+
+  private final class GraphLoadedCondition extends DefaultCondition {
+    @Override
+    public boolean test() throws Exception {
+      SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
+      if (view != null) {
+        SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+        // Wait until the graph has been loaded
+        return textRangeTable.getTableItem(0).isChecked();
+      }
+      return false;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Showing the graph editor part took too long";
+    }
+  }
 
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
@@ -124,25 +144,7 @@ class TestGraphEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
-    bot.waitUntil(new DefaultCondition() {
-
-      @Override
-      public boolean test() throws Exception {
-        SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
-        if (view != null) {
-          SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-          // Wait until the graph has been loaded
-          return textRangeTable.getTableItem(0).isChecked();
-        }
-        return false;
-      }
-
-      @Override
-      public String getFailureMessage() {
-        return "Showing the graph editor part took too long";
-      }
-    });
-
+    bot.waitUntil(new GraphLoadedCondition());
   }
 
   void enterCommand(String command) {
@@ -197,7 +199,6 @@ class TestGraphEditor {
 
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
-
 
     // Check all nodes and edges have been created
     assertEquals(23, g.getNodes().size());
@@ -270,6 +271,12 @@ class TestGraphEditor {
     assertEquals(1, rels.size());
     assertTrue(rels.get(0) instanceof SPointingRelation);
 
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+
+    // Check that the edge was also added as connection in the view
+    assertEquals(23, g.getConnections().size());
+
   }
 
   /**
@@ -324,5 +331,57 @@ class TestGraphEditor {
 
   }
 
+  @Test
+  @Order(4)
+  void testFilterOptions() {
+    openDefaultExample();
+
+
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+
+    // Add a pointing relation between the two structures
+    enterCommand("e #structure3 -> #structure5");
+
+    // Pointing relations are shown initially and the new one should be visible now
+    assertEquals(23, g.getConnections().size());
+
+    // Deactivate/activate pointing relations in view and check the view has less/more connections
+    SWTBotCheckBox includePointing = bot.checkBox("Include pointing relations");
+    includePointing.deselect();
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(22, g.getConnections().size());
+    includePointing.select();
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(23, g.getConnections().size());
+
+    // Deactivate/activate spans in view and check the view has less/more nodes
+    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    includeSpans.deselect();
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(23, g.getNodes().size());
+    includeSpans.select();
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(26, g.getNodes().size());
+
+    // With spans enabled, filter for annotation names
+    SWTBotText annoFilter = bot.textWithMessage("Filter by node annotation name");
+
+    // Tokens and the matching structure nodes
+    annoFilter.setText("const");
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(23, g.getNodes().size());
+
+    // Tokens and the matching spans
+    annoFilter.setText("Inf-Struct");
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(13, g.getNodes().size());
+
+    // Only tokens because annotation is non-existing
+    annoFilter.setText("not actually there");
+    bot.waitUntil(new GraphLoadedCondition());
+    assertEquals(11, g.getNodes().size());
+
+  }
 
 }
