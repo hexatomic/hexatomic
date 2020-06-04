@@ -83,6 +83,52 @@ class TestGraphEditor {
     }
   }
 
+  private final class NumberOfConnectionsCondition extends DefaultCondition {
+
+    private final int expected;
+
+    public NumberOfConnectionsCondition(int expected) {
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      Graph g = bot.widget(widgetOfType(Graph.class));
+      if (g != null) {
+        return g.getConnections().size() == expected;
+      }
+      return false;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Showing the expected number of " + expected + " connections took too long";
+    }
+  }
+
+  private final class NumberOfNodesCondition extends DefaultCondition {
+
+    private final int expected;
+
+    public NumberOfNodesCondition(int expected) {
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      Graph g = bot.widget(widgetOfType(Graph.class));
+      if (g != null) {
+        return g.getNodes().size() == expected;
+      }
+      return false;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Showing the expected number of " + expected + " connections took too long";
+    }
+  }
+
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
 
   private URI exampleProjectUri;
@@ -203,13 +249,12 @@ class TestGraphEditor {
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
+    // Check all nodes and edges have been created
+    bot.waitUntil(new NumberOfNodesCondition(23));
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+    
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
-
-    // Check all nodes and edges have been created
-    assertEquals(23, g.getNodes().size());
-    assertEquals(22, g.getConnections().size());
-    
     final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
     
     // Zoom in so we can move the view with the cursors
@@ -281,8 +326,7 @@ class TestGraphEditor {
     assertNotNull(g);
 
     // Check that the edge was also added as connection in the view
-    assertEquals(23, g.getConnections().size());
-
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
   }
 
   /**
@@ -350,44 +394,35 @@ class TestGraphEditor {
     enterCommand("e #structure3 -> #structure5");
 
     // Pointing relations are shown initially and the new one should be visible now
-    assertEquals(23, g.getConnections().size());
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate pointing relations in view and check the view has less/more connections
     SWTBotCheckBox includePointing = bot.checkBox("Include pointing relations");
     includePointing.deselect();
-    bot.waitUntil(new GraphLoadedCondition(0));
-    assertEquals(22, g.getConnections().size());
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
     includePointing.select();
-    bot.waitUntil(new GraphLoadedCondition(0));
-    assertEquals(23, g.getConnections().size());
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate spans in view and check the view has less/more nodes
     SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
     includeSpans.deselect();
-    bot.waitUntil(new GraphLoadedCondition(0));
-    assertEquals(23, g.getNodes().size());
+    bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
-    bot.waitUntil(new GraphLoadedCondition(0, 1, 2));
-    assertEquals(26, g.getNodes().size());
-
+    bot.waitUntil(new NumberOfNodesCondition(26));
     // With spans enabled, filter for annotation names
     SWTBotText annoFilter = bot.textWithMessage("Filter by node annotation name");
 
     // Tokens and the matching structure nodes
     annoFilter.setText("const");
-    bot.waitUntil(new GraphLoadedCondition(0));
-    assertEquals(23, g.getNodes().size());
+    bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
     annoFilter.setText("Inf-Struct");
-    bot.waitUntil(new GraphLoadedCondition(0, 1));
-    assertEquals(13, g.getNodes().size());
+    bot.waitUntil(new NumberOfNodesCondition(13));
 
     // Only tokens because annotation is non-existing
     annoFilter.setText("not actually there");
-    bot.waitUntil(new GraphLoadedCondition(0));
-    assertEquals(11, g.getNodes().size());
-
+    bot.waitUntil(new NumberOfNodesCondition(11));
   }
 
 }
