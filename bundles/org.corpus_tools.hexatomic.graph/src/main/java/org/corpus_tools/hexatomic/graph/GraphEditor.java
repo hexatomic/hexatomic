@@ -267,7 +267,7 @@ public class GraphEditor {
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
 
     // Add a mouse wheel listener that zooms instead of scrolling
-    viewer.getGraphControl().addMouseWheelListener(new MouseZoomListener());
+    viewer.getGraphControl().addMouseWheelListener(new MouseZoomOrScrollListener());
     // Center the view on the mouse cursor when it was double clicked
     viewer.getGraphControl().addMouseListener(new DoubleClickCenterListener());
 
@@ -590,36 +590,34 @@ public class GraphEditor {
     return layout;
   }
 
-  private final class MouseZoomListener implements MouseWheelListener {
-    @Override
-    public void mouseScrolled(MouseEvent e) {
-      // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
-      if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
-        Viewport viewPort = viewer.getGraphControl().getViewport();
-        Point loc = viewPort.getViewLocation();
-        int diff = 50;
-        if (e.stateMask == SWT.SHIFT) {
-          // Mouse wheel scrolled down
-          if (e.count < 0) {
-            // Scroll down
-            loc.translate(0, +diff);
-          } else {
-            // Scroll up
-            loc.translate(0, -diff);
-          }
-        } else if (e.stateMask == SWT.CTRL) {
-          if (e.count < 0) {
-            // Scroll left
-            loc.translate(+diff, 0);
-          } else {
-            // Scroll right
-            loc.translate(-diff, 0);
-          }
-        }
-        viewPort.setViewLocation(loc);
-        return;
-      }
+  private final class MouseZoomOrScrollListener implements MouseWheelListener {
 
+    private void doScroll(MouseEvent e) {
+      Viewport viewPort = viewer.getGraphControl().getViewport();
+      Point loc = viewPort.getViewLocation();
+      int diff = 50;
+      if (e.stateMask == SWT.SHIFT) {
+        // Mouse wheel scrolled down
+        if (e.count < 0) {
+          // Scroll down
+          loc.translate(0, +diff);
+        } else {
+          // Scroll up
+          loc.translate(0, -diff);
+        }
+      } else if (e.stateMask == SWT.CTRL) {
+        if (e.count < 0) {
+          // Scroll left
+          loc.translate(+diff, 0);
+        } else {
+          // Scroll right
+          loc.translate(-diff, 0);
+        }
+      }
+      viewPort.setViewLocation(loc);
+    }
+
+    private void doZoom(MouseEvent e) {
       ScalableFigure figure = viewer.getGraphControl().getRootLayer();
       double oldScale = figure.getScale();
       double newScale;
@@ -646,7 +644,17 @@ public class GraphEditor {
         Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
         centerViewportToPoint(scaledClicked);
       }
+    }
 
+    @Override
+    public void mouseScrolled(MouseEvent e) {
+
+      // If Shift or Ctrl are pressed while scrolling the mouse wheel, scroll rather than zoom
+      if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
+        doScroll(e);
+      } else {
+        doZoom(e);
+      }
     }
   }
 
