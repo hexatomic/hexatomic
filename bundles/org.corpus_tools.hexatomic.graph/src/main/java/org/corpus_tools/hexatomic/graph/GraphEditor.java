@@ -608,7 +608,7 @@ public class GraphEditor {
       for (SToken t : token) {
         SNode currentRoot = RootTraverser.getRoot(t, filter);
         Range<Long> tokenRange = getRangeForToken(t);
-        if (Objects.equal(lastRoot, currentRoot)) {
+        if (tokenRange != null && Objects.equal(lastRoot, currentRoot)) {
           // extend range
           if (!rangeStart.isPresent()) {
             rangeStart = Optional.of(tokenRange.lowerEndpoint());
