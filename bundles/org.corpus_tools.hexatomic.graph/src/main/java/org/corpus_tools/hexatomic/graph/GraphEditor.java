@@ -65,7 +65,6 @@ import org.corpus_tools.salt.extensions.notification.Listener;
 import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
-import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ScalableFigure;
@@ -464,7 +463,7 @@ public class GraphEditor {
         }
       }
 
-      Job job = Job.create("Update graph view", (ICoreRunnable) monitor -> {
+      Job job = Job.create("Update graph view", monitor -> {
         monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
 
         if (recalculateSegments) {
