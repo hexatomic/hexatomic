@@ -277,6 +277,12 @@ class TestGraphEditor {
     keyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.PAGE_DOWN);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
+    keyboard.pressShortcut(Keystrokes.PAGE_UP);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
     bot.waitUntil(
@@ -290,6 +296,12 @@ class TestGraphEditor {
         new ViewLocationReachedCondition(viewPort,
             new Point(origLocation.x, origLocation.y + 250)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_DOWN);
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x, origLocation.y + 250)));
+    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
