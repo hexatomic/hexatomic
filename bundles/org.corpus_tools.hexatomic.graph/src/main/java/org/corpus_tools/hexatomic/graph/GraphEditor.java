@@ -115,6 +115,9 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
 
 public class GraphEditor {
 
+  private static final String RANGE = "range";
+
+
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
 
@@ -446,7 +449,7 @@ public class GraphEditor {
         // Store the old segment selection
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry entry = new SegmentSelectionEntry();
-          entry.range = (Range<Long>) item.getData("range");
+          entry.range = (Range<Long>) item.getData(RANGE);
           entry.text = (STextualDS) item.getData("text");
           oldSelectedSegments.add(entry);
         }
@@ -455,7 +458,7 @@ public class GraphEditor {
         // The ranges that will be selected will be the same as the current ones
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry selection = new SegmentSelectionEntry();
-          selection.range = (Range<Long>) item.getData("range");
+          selection.range = (Range<Long>) item.getData(RANGE);
           selection.text = (STextualDS) item.getData("text");
           newSelectedSegments.add(selection);
         }
@@ -483,7 +486,7 @@ public class GraphEditor {
               String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
 
               item.setText(coveredText);
-              item.setData("range", e.getValue());
+              item.setData(RANGE, e.getValue());
               item.setData("text", e.getKey());
             }
 
@@ -494,7 +497,7 @@ public class GraphEditor {
             for (SegmentSelectionEntry oldSegment : oldSelectedSegments) {
               for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
                 TableItem item = textRangeTable.getItem(idx);
-                Range<Long> itemRange = (Range<Long>) item.getData("range");
+                Range<Long> itemRange = (Range<Long>) item.getData(RANGE);
                 STextualDS itemText = (STextualDS) item.getData("text");
                 if (itemText == oldSegment.text &&   itemRange.isConnected(oldSegment.range)) {
                   textRangeTable.select(idx);
@@ -510,7 +513,7 @@ public class GraphEditor {
             if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
               textRangeTable.setSelection(0);
               SegmentSelectionEntry selection = new SegmentSelectionEntry();
-              selection.range = (Range<Long>) textRangeTable.getItem(0).getData("range");
+              selection.range = (Range<Long>) textRangeTable.getItem(0).getData(RANGE);
               selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
               newSelectedSegments.add(selection);
             }
