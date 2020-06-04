@@ -255,14 +255,24 @@ class TestGraphEditor {
     
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
+    SWTUtils.display().syncExec(g::forceFocus);
+
     final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
     
-    // Zoom in so we can move the view with the cursors
-    SWTUtils.display().syncExec(g::forceFocus);
-    keyboard.pressShortcut(SWT.CTRL, '+');
-    bot.sleep(1000);
-
     Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
+
+    // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+
+    // Zoom in so we can move the view with the cursors
+    keyboard.pressShortcut(SWT.CTRL, '+');
+
+    origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
@@ -305,7 +315,15 @@ class TestGraphEditor {
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
-
+    // Zoom out again: moving up should not have any effect again
+    keyboard.pressShortcut(SWT.CTRL, '-');
+    origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
   }
 
   @Test
