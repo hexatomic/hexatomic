@@ -271,8 +271,8 @@ public class GraphEditor {
     // Center the view on the mouse cursor when it was double clicked
     viewer.getGraphControl().addMouseListener(new DoubleClickCenterListener());
 
-    // React to arrow keys to scroll the viewport
-    viewer.getGraphControl().addKeyListener(new ArrowKeyScrollListener());
+    // React to arrow keys to scroll the viewport or CTRL plus/minus to zoom
+    viewer.getGraphControl().addKeyListener(new ScrollAndZoomKeyListener());
   }
 
   /**
@@ -607,6 +607,30 @@ public class GraphEditor {
     return false;
   }
 
+  private void zoomGraphView(double factor, Point originallyClicked) {
+    ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+    double oldScale = figure.getScale();
+    double newScale = oldScale * factor;
+
+
+    double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
+
+    if (clippedScale != oldScale) {
+
+      Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
+
+      figure.setScale(clippedScale);
+      viewer.getGraphControl().getViewport().validate();
+
+      viewer.getGraphControl().getViewport()
+          .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
+      viewer.getGraphControl().getViewport().validate();
+
+      Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
+      centerViewportToPoint(scaledClicked);
+    }
+  }
+
   private final class MouseZoomOrScrollListener implements MouseWheelListener {
 
     private void doScroll(MouseEvent e) {
@@ -635,31 +659,11 @@ public class GraphEditor {
     }
 
     private void doZoom(MouseEvent e) {
-      ScalableFigure figure = viewer.getGraphControl().getRootLayer();
-      double oldScale = figure.getScale();
-      double newScale;
+      Point originallyClicked = new Point(e.x, e.y);
       if (e.count < 0) {
-        newScale = oldScale * 0.75;
+        zoomGraphView(0.75, originallyClicked);
       } else {
-        newScale = oldScale * 1.25;
-      }
-
-      double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
-
-      if (clippedScale != oldScale) {
-
-        Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
-
-        figure.setScale(clippedScale);
-        viewer.getGraphControl().getViewport().validate();
-
-        viewer.getGraphControl().getViewport()
-            .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
-        viewer.getGraphControl().getViewport().validate();
-
-        Point originallyClicked = new Point(e.x, e.y);
-        Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
-        centerViewportToPoint(scaledClicked);
+        zoomGraphView(1.25, originallyClicked);
       }
     }
 
@@ -693,7 +697,7 @@ public class GraphEditor {
     }
   }
 
-  private final class ArrowKeyScrollListener implements KeyListener {
+  private final class ScrollAndZoomKeyListener implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
       // Only react to key pressed, but not the released event
@@ -701,24 +705,32 @@ public class GraphEditor {
 
     @Override
     public void keyPressed(KeyEvent e) {
-      int diff = 25;
-      if ((e.stateMask & SWT.SHIFT) != 0) {
-        diff = 250;
-      }
+
       Viewport viewPort = viewer.getGraphControl().getViewport();
       Point loc = viewPort.getViewLocation();
+      
+      if (e.character == '+' && (e.stateMask & SWT.CTRL) != 0) {
+        zoomGraphView(2.0, loc);
+      } else if (e.character == '-' && (e.stateMask & SWT.CTRL) != 0) {
+        zoomGraphView(0.5, loc);
+      } else {
+        // Prepare scroll
+        int diff = 25;
+        if ((e.stateMask & SWT.SHIFT) != 0) {
+          diff = 250;
+        }
 
-      if (e.keyCode == SWT.ARROW_LEFT) {
-        loc.translate(-diff, 0);
-      } else if (e.keyCode == SWT.ARROW_RIGHT) {
-        loc.translate(+diff, 0);
-      } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
-        loc.translate(0, +diff);
-      } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
-        loc.translate(0, -diff);
+        if (e.keyCode == SWT.ARROW_LEFT) {
+          loc.translate(-diff, 0);
+        } else if (e.keyCode == SWT.ARROW_RIGHT) {
+          loc.translate(+diff, 0);
+        } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
+          loc.translate(0, +diff);
+        } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
+          loc.translate(0, -diff);
+        }
+        viewPort.setViewLocation(loc);
       }
-      viewPort.setViewLocation(loc);
-
     }
   }
 
@@ -936,11 +948,7 @@ public class GraphEditor {
         viewer.getGraphControl().getViewport().setViewLocation(0, 0);
         viewer.getGraphControl().getViewport().validate();
       });
-
-
-
     }
-
   }
 
 }

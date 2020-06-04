@@ -18,8 +18,6 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.IPresentationEngine;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -113,46 +111,6 @@ public class TestGridEditor {
     // TODO: when close project is implemented with save functionality, change this to close the
     // project and its editors
 
-  }
-
-  protected class PartMaximizedCondition extends DefaultCondition {
-
-    private final MPart part;
-
-    public PartMaximizedCondition(MPart part) {
-      super();
-      this.part = part;
-    }
-
-    @Override
-    public boolean test() throws Exception {
-      return part.getParent().getTags().contains(IPresentationEngine.MAXIMIZED);
-    }
-
-    @Override
-    public String getFailureMessage() {
-      return "Could not maximize part";
-    }
-  }
-
-  protected class PartActiveCondition extends DefaultCondition {
-
-    private final MPart part;
-
-    public PartActiveCondition(MPart part) {
-      super();
-      this.part = part;
-    }
-
-    @Override
-    public boolean test() throws Exception {
-      return part.getParent().getTags().contains(IPresentationEngine.ACTIVE);
-    }
-
-    @Override
-    public String getFailureMessage() {
-      return "Could not activate part";
-    }
   }
 
   SWTBotView openDefaultExample() {

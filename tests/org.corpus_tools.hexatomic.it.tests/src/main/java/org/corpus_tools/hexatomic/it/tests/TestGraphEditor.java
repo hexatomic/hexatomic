@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,14 +20,22 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
+import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -52,6 +61,10 @@ class TestGraphEditor {
   private ErrorService errorService;
   private ProjectManager projectManager;
 
+  private UISynchronize sync;
+
+  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
+
   @BeforeEach
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
@@ -67,6 +80,9 @@ class TestGraphEditor {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
+    
+    sync = ctx.get(UISynchronize.class);
+    assertNotNull(sync);
 
 
     partService = ctx.get(EPartService.class);
@@ -169,16 +185,63 @@ class TestGraphEditor {
 
   @Test
   @Order(1)
-  void testShowSaltExample() {
+  void testShowSaltExample()
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
+    // Open example and maximize part
     openDefaultExample();
+
+    SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
 
+
     // Check all nodes and edges have been created
     assertEquals(23, g.getNodes().size());
     assertEquals(22, g.getConnections().size());
+    
+    Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
+    
+    // Zoom in so we can move the view with the cursors
+    SWTUtils.display().syncExec(() -> g.forceFocus());
+    keyboard.pressShortcut(SWT.CTRL, '+');
+    bot.sleep(1000);
+
+    Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, "getViewLocation");
+
+    // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
+    keyboard.pressShortcut(Keystrokes.RIGHT);
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x + 25, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.LEFT);
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+
+    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort,
+            new Point(origLocation.x + 250, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort,
+            new Point(origLocation.x, origLocation.y + 250)));
+    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+
+
   }
 
   @Test
