@@ -800,17 +800,16 @@ public class GraphEditor {
         }
 
         // additionally check for valid annotation
-        if (include && !txtSegmentFilter.getText().isEmpty() && !(node instanceof SToken)) {
-          if (node.getAnnotations() != null) {
-            boolean annoFound = false;
-            for (SAnnotation anno : node.getAnnotations()) {
-              if (anno.getName().contains(txtSegmentFilter.getText())) {
-                annoFound = true;
-                break;
-              }
+        if (include && !txtSegmentFilter.getText().isEmpty() && !(node instanceof SToken)
+            && node.getAnnotations() != null) {
+          boolean annoFound = false;
+          for (SAnnotation anno : node.getAnnotations()) {
+            if (anno.getName().contains(txtSegmentFilter.getText())) {
+              annoFound = true;
+              break;
             }
-            include = annoFound;
           }
+          include = annoFound;
         }
 
         return include;
