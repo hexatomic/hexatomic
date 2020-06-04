@@ -88,7 +88,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -110,10 +109,17 @@ import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
 
+/**
+ * A part that allows to edit a graph. This includes a graph view and an interactive console for
+ * editing the graph.
+ * 
+ * @author Thomas Krause {@literal krauseto@hu-berlin.de}
+ *
+ */
 public class GraphEditor {
 
   private static final String RANGE = "range";
-  private static final int DEFAULT_DIFF = 25;
+  static final int DEFAULT_DIFF = 25;
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
 
@@ -266,7 +272,7 @@ public class GraphEditor {
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
 
     // Add a mouse wheel listener that zooms instead of scrolling
-    viewer.getGraphControl().addMouseWheelListener(new MouseZoomOrScrollListener());
+    viewer.getGraphControl().addMouseWheelListener(new MouseZoomOrScrollListener(this));
     // Center the view on the mouse cursor when it was double clicked
     viewer.getGraphControl().addMouseListener(new DoubleClickCenterListener());
 
@@ -606,7 +612,7 @@ public class GraphEditor {
     return false;
   }
 
-  private void zoomGraphView(double factor, Point originallyClicked) {
+  void zoomGraphView(double factor, Point originallyClicked) {
     ScalableFigure figure = viewer.getGraphControl().getRootLayer();
     double oldScale = figure.getScale();
     double newScale = oldScale * factor;
@@ -631,56 +637,11 @@ public class GraphEditor {
   }
   
 
-  private void scrollGraphView(int xoffset, int yoffset) {
+  void scrollGraphView(int xoffset, int yoffset) {
     Viewport viewPort = viewer.getGraphControl().getViewport();
     Point loc = viewPort.getViewLocation();
     loc.translate(xoffset, yoffset);
     viewPort.setViewLocation(loc);
-  }
-
-  private final class MouseZoomOrScrollListener implements MouseWheelListener {
-
-
-    private void doScroll(MouseEvent e) {
-      if (e.stateMask == SWT.SHIFT) {
-        // Mouse wheel scrolled down
-        if (e.count < 0) {
-          // Scroll down
-          scrollGraphView(0, +DEFAULT_DIFF);
-        } else {
-          // Scroll up
-          scrollGraphView(0, -DEFAULT_DIFF);
-        }
-      } else if (e.stateMask == SWT.CTRL) {
-        if (e.count < 0) {
-          // Scroll left
-          scrollGraphView(+DEFAULT_DIFF, 0);
-        } else {
-          // Scroll right
-          scrollGraphView(-DEFAULT_DIFF, 0);
-        }
-      }
-    }
-
-    private void doZoom(MouseEvent e) {
-      Point originallyClicked = new Point(e.x, e.y);
-      if (e.count < 0) {
-        zoomGraphView(0.75, originallyClicked);
-      } else {
-        zoomGraphView(1.25, originallyClicked);
-      }
-    }
-
-    @Override
-    public void mouseScrolled(MouseEvent e) {
-
-      // If Shift or Ctrl are pressed while scrolling the mouse wheel, scroll rather than zoom
-      if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
-        doScroll(e);
-      } else {
-        doZoom(e);
-      }
-    }
   }
 
   private final class DoubleClickCenterListener implements MouseListener {
