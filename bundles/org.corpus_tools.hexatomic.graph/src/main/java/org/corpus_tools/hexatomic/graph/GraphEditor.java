@@ -88,7 +88,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -97,7 +96,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -266,77 +264,66 @@ public class GraphEditor {
     GraphDragMoveAdapter.register(viewer.getGraphControl());
 
     // Disable the original scroll event when the mouse wheel is activated
-    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
-        new org.eclipse.swt.widgets.Listener() {
-
-          @Override
-          public void handleEvent(Event event) {
-            event.doit = false;
-          }
-        });
+    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> {
+      event.doit = false;
+    });
 
     // Add a mouse wheel listener that zooms instead of scrolling
-    viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
-
-      @Override
-      public void mouseScrolled(MouseEvent e) {
-
-        // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
-        if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
-          Viewport viewPort = viewer.getGraphControl().getViewport();
-          Point loc = viewPort.getViewLocation();
-          int diff = 50;
-          if (e.stateMask == SWT.SHIFT) {
-            // Mouse wheel scrolled down
-            if (e.count < 0) {
-              // Scroll down
-              loc.translate(0, +diff);
-            } else {
-              // Scroll up
-              loc.translate(0, -diff);
-            }
-          } else if (e.stateMask == SWT.CTRL) {
-            if (e.count < 0) {
-              // Scroll left
-              loc.translate(+diff, 0);
-            } else {
-              // Scroll right
-              loc.translate(-diff, 0);
-            }
+    viewer.getGraphControl().addMouseWheelListener((e) -> {
+      // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
+      if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
+        Viewport viewPort = viewer.getGraphControl().getViewport();
+        Point loc = viewPort.getViewLocation();
+        int diff = 50;
+        if (e.stateMask == SWT.SHIFT) {
+          // Mouse wheel scrolled down
+          if (e.count < 0) {
+            // Scroll down
+            loc.translate(0, +diff);
+          } else {
+            // Scroll up
+            loc.translate(0, -diff);
           }
-          viewPort.setViewLocation(loc);
-          return;
-        }
-
-        ScalableFigure figure = viewer.getGraphControl().getRootLayer();
-        double oldScale = figure.getScale();
-        Optional<Double> newScale = Optional.empty();
-        if (e.count < 0) {
-          newScale = Optional.of(oldScale * 0.75);
-        } else {
-          newScale = Optional.of(oldScale * 1.25);
-        }
-
-        if (newScale.isPresent()) {
-          double clippedScale = Math.max(0.0625, Math.min(2.0, newScale.get()));
-
-          if (clippedScale != oldScale) {
-
-            Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
-
-            figure.setScale(clippedScale);
-            viewer.getGraphControl().getViewport().validate();
-
-            viewer.getGraphControl().getViewport()
-                .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
-            viewer.getGraphControl().getViewport().validate();
-
-            Point originallyClicked = new Point(e.x, e.y);
-            Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
-            centerViewportToPoint(scaledClicked);
+        } else if (e.stateMask == SWT.CTRL) {
+          if (e.count < 0) {
+            // Scroll left
+            loc.translate(+diff, 0);
+          } else {
+            // Scroll right
+            loc.translate(-diff, 0);
           }
         }
+        viewPort.setViewLocation(loc);
+        return;
+      }
 
+      ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+      double oldScale = figure.getScale();
+      Optional<Double> newScale = Optional.empty();
+      if (e.count < 0) {
+        newScale = Optional.of(oldScale * 0.75);
+      } else {
+        newScale = Optional.of(oldScale * 1.25);
+      }
+
+      if (newScale.isPresent()) {
+        double clippedScale = Math.max(0.0625, Math.min(2.0, newScale.get()));
+
+        if (clippedScale != oldScale) {
+
+          Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
+
+          figure.setScale(clippedScale);
+          viewer.getGraphControl().getViewport().validate();
+
+          viewer.getGraphControl().getViewport()
+              .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
+          viewer.getGraphControl().getViewport().validate();
+
+          Point originallyClicked = new Point(e.x, e.y);
+          Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
+          centerViewportToPoint(scaledClicked);
+        }
       }
     });
     // Center the view on the mouse cursor when it was double clicked
@@ -498,7 +485,7 @@ public class GraphEditor {
                 TableItem item = textRangeTable.getItem(idx);
                 Range<Long> itemRange = (Range<Long>) item.getData(RANGE);
                 STextualDS itemText = (STextualDS) item.getData("text");
-                if (itemText == oldSegment.text &&   itemRange.isConnected(oldSegment.range)) {
+                if (itemText == oldSegment.text && itemRange.isConnected(oldSegment.range)) {
                   textRangeTable.select(idx);
                   selectedSomeOld = true;
 
