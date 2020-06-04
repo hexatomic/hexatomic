@@ -410,7 +410,6 @@ public class GraphEditor {
     }
   }
 
-
   @SuppressWarnings("unchecked")
   private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
@@ -426,8 +425,9 @@ public class GraphEditor {
 
       final String segmentFilterText = txtSegmentFilter.getText();
       final boolean includeSpans = btnIncludeSpans.getSelection();
-      final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
+
       final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
+      final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
 
       if (recalculateSegments) {
         // Store the old segment selection
@@ -438,7 +438,6 @@ public class GraphEditor {
           oldSelectedSegments.add(entry);
         }
       } else {
-
         // The ranges that will be selected will be the same as the current ones
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry selection = new SegmentSelectionEntry();
@@ -448,105 +447,8 @@ public class GraphEditor {
         }
       }
 
-      Job job = Job.create("Update graph view", monitor -> {
-        monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
-
-        if (recalculateSegments) {
-          monitor.subTask("Recalculating available segments");
-          newSelectedSegments.clear();
-          ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
-
-          final Multimap<STextualDS, Range<Long>> segments =
-              calculateSegments(graph, currentFilter);
-
-          sync.syncExec(() -> {
-            textRangeTable.removeAll();
-            for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
-              TableItem item = new TableItem(textRangeTable, SWT.NONE);
-
-              long rangeStart = e.getValue().lowerEndpoint();
-              long rangeEnd = e.getValue().upperEndpoint();
-
-              String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
-
-              item.setText(coveredText);
-              item.setData(RANGE, e.getValue());
-              item.setData("text", e.getKey());
-            }
-
-            textRangeTable.deselectAll();
-            textRangeTable.getColumn(0).pack();
-
-            boolean selectedSomeOld = false;
-            for (SegmentSelectionEntry oldSegment : oldSelectedSegments) {
-              for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
-                TableItem item = textRangeTable.getItem(idx);
-                Range<Long> itemRange = (Range<Long>) item.getData(RANGE);
-                STextualDS itemText = (STextualDS) item.getData("text");
-                if (itemText == oldSegment.text && itemRange.isConnected(oldSegment.range)) {
-                  textRangeTable.select(idx);
-                  selectedSomeOld = true;
-
-                  SegmentSelectionEntry selection = new SegmentSelectionEntry();
-                  selection.range = itemRange;
-                  selection.text = itemText;
-                  newSelectedSegments.add(selection);
-                }
-              }
-            }
-            if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
-              textRangeTable.setSelection(0);
-              SegmentSelectionEntry selection = new SegmentSelectionEntry();
-              selection.range = (Range<Long>) textRangeTable.getItem(0).getData(RANGE);
-              selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
-              newSelectedSegments.add(selection);
-            }
-          });
-        }
-
-        monitor.subTask("Showing selected segments in graph");
-
-        graphFilter.updateSelectedSegments(newSelectedSegments);
-
-        monitor.done();
-
-        sync.asyncExec(() -> {
-
-          // make sure the console view knows about the currently selected text
-          if (newSelectedSegments.isEmpty()) {
-            consoleView.setSelectedText(null);
-          } else {
-            consoleView.setSelectedText(newSelectedSegments.get(0).text);
-          }
-
-          // update the status check for each item
-          for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
-            textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
-          }
-
-          if (viewer.getInput() != graph) {
-            viewer.setInput(graph);
-          } else {
-            viewer.refresh();
-          }
-
-          if (scrollToFirstToken) {
-            viewer.getGraphControl().getRootLayer().setScale(0);
-            // We can only scroll to the first token after the layout has been applied, which can be
-            // asynchronous
-            viewer.getGraphControl().getLayoutAlgorithm()
-                .addProgressListener(this.scrollToFirstTokenListener);
-          } else {
-            viewer.getGraphControl().getLayoutAlgorithm()
-                .removeProgressListener(this.scrollToFirstTokenListener);
-          }
-
-          viewer.applyLayout();
-
-        });
-
-      });
-      job.schedule();
+      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+          includeSpans, graph, recalculateSegments, scrollToFirstToken);
 
 
     } catch (RuntimeException ex) {
@@ -554,6 +456,130 @@ public class GraphEditor {
           GraphEditor.class);
     }
   }
+
+  private void scheduleUpdateViewJob(List<SegmentSelectionEntry> newSelectedSegments,
+      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      boolean includeSpans, SDocumentGraph graph, boolean recalculateSegments,
+      boolean scrollToFirstToken) {
+
+    Job job = Job.create("Update graph view", monitor -> {
+      monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
+
+      if (recalculateSegments) {
+        monitor.subTask("Recalculating available segments");
+        recalculateAvailableSegments(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+            includeSpans, graph);
+      }
+
+      monitor.subTask("Showing selected segments in graph");
+
+      graphFilter.updateSelectedSegments(newSelectedSegments);
+
+      monitor.done();
+
+      sync.asyncExec(() -> {
+
+        // make sure the console view knows about the currently selected text
+        if (newSelectedSegments.isEmpty()) {
+          consoleView.setSelectedText(null);
+        } else {
+          consoleView.setSelectedText(newSelectedSegments.get(0).text);
+        }
+
+        // update the status check for each item
+        for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
+          textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
+        }
+
+        updateGraphViewer(graph, scrollToFirstToken);
+
+      });
+
+    });
+    job.schedule();
+  }
+
+
+  @SuppressWarnings("unchecked")
+  private List<SegmentSelectionEntry> recalculateAvailableSegments(
+      List<SegmentSelectionEntry> newSelectedSegments,
+      List<SegmentSelectionEntry> oldSelectedSegments,
+      String segmentFilterText, boolean includeSpans, SDocumentGraph graph) {
+
+    newSelectedSegments.clear();
+
+    ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
+
+    final Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
+
+    sync.syncExec(() -> {
+      textRangeTable.removeAll();
+      for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
+        TableItem item = new TableItem(textRangeTable, SWT.NONE);
+
+        long rangeStart = e.getValue().lowerEndpoint();
+        long rangeEnd = e.getValue().upperEndpoint();
+
+        String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
+
+        item.setText(coveredText);
+        item.setData(RANGE, e.getValue());
+        item.setData("text", e.getKey());
+      }
+
+      textRangeTable.deselectAll();
+      textRangeTable.getColumn(0).pack();
+
+      boolean selectedSomeOld = false;
+      for (SegmentSelectionEntry oldSegment : oldSelectedSegments) {
+        for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
+          TableItem item = textRangeTable.getItem(idx);
+          Range<Long> itemRange = (Range<Long>) item.getData(RANGE);
+          STextualDS itemText = (STextualDS) item.getData("text");
+          if (itemText == oldSegment.text && itemRange.isConnected(oldSegment.range)) {
+            textRangeTable.select(idx);
+            selectedSomeOld = true;
+
+            SegmentSelectionEntry selection = new SegmentSelectionEntry();
+            selection.range = itemRange;
+            selection.text = itemText;
+            newSelectedSegments.add(selection);
+          }
+        }
+      }
+      if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
+        textRangeTable.setSelection(0);
+        SegmentSelectionEntry selection = new SegmentSelectionEntry();
+        selection.range = (Range<Long>) textRangeTable.getItem(0).getData(RANGE);
+        selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
+        newSelectedSegments.add(selection);
+      }
+    });
+
+    return newSelectedSegments;
+  }
+
+  private void updateGraphViewer(SDocumentGraph graph, boolean scrollToFirstToken) {
+    if (viewer.getInput() != graph) {
+      viewer.setInput(graph);
+    } else {
+      viewer.refresh();
+    }
+
+    if (scrollToFirstToken) {
+      viewer.getGraphControl().getRootLayer().setScale(0);
+      // We can only scroll to the first token after the layout has been applied, which can be
+      // asynchronous
+      viewer.getGraphControl().getLayoutAlgorithm()
+          .addProgressListener(this.scrollToFirstTokenListener);
+    } else {
+      viewer.getGraphControl().getLayoutAlgorithm()
+          .removeProgressListener(this.scrollToFirstTokenListener);
+    }
+
+    viewer.applyLayout();
+  }
+
 
 
   private static Range<Long> getRangeForToken(SToken tok) {
