@@ -113,8 +113,7 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
 public class GraphEditor {
 
   private static final String RANGE = "range";
-
-
+  private static final int DEFAULT_DIFF = 25;
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
 
@@ -630,32 +629,37 @@ public class GraphEditor {
       centerViewportToPoint(scaledClicked);
     }
   }
+  
+
+  private void scrollGraphView(int xoffset, int yoffset) {
+    Viewport viewPort = viewer.getGraphControl().getViewport();
+    Point loc = viewPort.getViewLocation();
+    loc.translate(xoffset, yoffset);
+    viewPort.setViewLocation(loc);
+  }
 
   private final class MouseZoomOrScrollListener implements MouseWheelListener {
 
+
     private void doScroll(MouseEvent e) {
-      Viewport viewPort = viewer.getGraphControl().getViewport();
-      Point loc = viewPort.getViewLocation();
-      int diff = 50;
       if (e.stateMask == SWT.SHIFT) {
         // Mouse wheel scrolled down
         if (e.count < 0) {
           // Scroll down
-          loc.translate(0, +diff);
+          scrollGraphView(0, +DEFAULT_DIFF);
         } else {
           // Scroll up
-          loc.translate(0, -diff);
+          scrollGraphView(0, -DEFAULT_DIFF);
         }
       } else if (e.stateMask == SWT.CTRL) {
         if (e.count < 0) {
           // Scroll left
-          loc.translate(+diff, 0);
+          scrollGraphView(+DEFAULT_DIFF, 0);
         } else {
           // Scroll right
-          loc.translate(-diff, 0);
+          scrollGraphView(-DEFAULT_DIFF, 0);
         }
       }
-      viewPort.setViewLocation(loc);
     }
 
     private void doZoom(MouseEvent e) {
@@ -705,31 +709,30 @@ public class GraphEditor {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+      
       Viewport viewPort = viewer.getGraphControl().getViewport();
       Point loc = viewPort.getViewLocation();
-      
+
       if (e.character == '+' && (e.stateMask & SWT.CTRL) != 0) {
         zoomGraphView(2.0, loc);
       } else if (e.character == '-' && (e.stateMask & SWT.CTRL) != 0) {
         zoomGraphView(0.5, loc);
       } else {
         // Prepare scroll
-        int diff = 25;
+        int diff = DEFAULT_DIFF;
         if ((e.stateMask & SWT.SHIFT) != 0) {
-          diff = 250;
+          diff = DEFAULT_DIFF * 10;
         }
 
         if (e.keyCode == SWT.ARROW_LEFT) {
-          loc.translate(-diff, 0);
+          scrollGraphView(-diff, 0);
         } else if (e.keyCode == SWT.ARROW_RIGHT) {
-          loc.translate(+diff, 0);
+          scrollGraphView(+diff, 0);
         } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
-          loc.translate(0, +diff);
+          scrollGraphView(0, +diff);
         } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
-          loc.translate(0, -diff);
+          scrollGraphView(0, -diff);
         }
-        viewPort.setViewLocation(loc);
       }
     }
   }
