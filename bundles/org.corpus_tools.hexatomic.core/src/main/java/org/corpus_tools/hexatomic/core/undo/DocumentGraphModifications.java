@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.util.SaltUtil;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 
 public class DocumentGraphModifications implements ReversibleOperation {
@@ -49,12 +48,12 @@ public class DocumentGraphModifications implements ReversibleOperation {
   }
 
   /**
-   * Restores all document that belong to this checkpoint.
+   * Restores all documents that belong to this checkpoint.
    * 
    * @param projectManager The project manager, used to get and set the actual documents.
-   * @param events An event broker used to send load events.
    */
-  public void restore(ProjectManager projectManager, IEventBroker events) {
+  @Override
+  public void restore(ProjectManager projectManager) {
     for (Map.Entry<String, File> entry : temporaryFiles.entrySet()) {
       String documentID = entry.getKey();
       File temporaryFileForDocument = entry.getValue();

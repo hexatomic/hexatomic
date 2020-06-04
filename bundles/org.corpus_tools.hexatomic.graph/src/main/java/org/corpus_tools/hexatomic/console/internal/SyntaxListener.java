@@ -60,6 +60,7 @@ import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
@@ -445,25 +446,32 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     }
   }
 
+  private void updateAnnotationForElement(SAnnotationContainer element, SAnnotation anno) {
+    SAnnotation existingAnnotation = element.getAnnotation(anno.getNamespace(), anno.getName());
+    if (existingAnnotation == null) {
+      if (anno.getValue() == null) {
+        // Remove the existing annotation
+        element.removeLabel(anno.getNamespace(), anno.getName());
+      } else {
+        // Create a new one
+        element.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+      }
+    } else if (anno.getValue() != null) {
+      // Update the value of the annotation: this causes fever update events than deleting and (re-)
+      // adding it
+      existingAnnotation.setValue(anno.getValue());
+    }
+  }
+
   @Override
   public void exitAnnotate(AnnotateContext ctx) {
     for (SAnnotation anno : this.attributes) {
 
       for (SStructuredNode n : this.referencedNodes) {
-        if (n.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-          n.removeLabel(anno.getNamespace(), anno.getName());
-        }
-        if (anno.getValue() != null) {
-          n.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
-        }
+        updateAnnotationForElement(n, anno);
       }
       for (SRelation<?, ?> rel : this.referencedEdges) {
-        if (rel.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-          rel.removeLabel(anno.getNamespace(), anno.getName());
-        }
-        if (anno.getValue() != null) {
-          rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
-        }
+        updateAnnotationForElement(rel, anno);
       }
     }
   }

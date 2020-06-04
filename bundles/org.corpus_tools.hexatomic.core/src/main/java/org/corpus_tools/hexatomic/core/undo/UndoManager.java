@@ -14,9 +14,11 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.core.SGraph;
+import org.corpus_tools.salt.graph.Label;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -29,6 +31,7 @@ public class UndoManager {
 
   private final Stack<List<ReversibleOperation>> changeSets = new Stack<>();
   private final Set<String> inconsistantDocuments = new HashSet<>();
+  private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
   private boolean projectStructureIsInconsistant = false;
 
   @Inject
@@ -36,6 +39,9 @@ public class UndoManager {
 
   @Inject
   private ProjectManager projectManager;
+
+  @Inject
+  private SaltNotificationFactory notificationFactory;
 
   @Inject
   IEventBroker events;
@@ -47,6 +53,7 @@ public class UndoManager {
     if (projectStructureIsInconsistant) {
       try {
         // Events without document as container are related to updates of the project structure
+        log.debug("Adding project structure state as checkpoint to undo list");
         List<ReversibleOperation> currentChangeSet = new LinkedList<>();
         currentChangeSet.add(new ProjectStructureModification(projectManager.getProject()));
         changeSets.add(currentChangeSet);
@@ -59,17 +66,24 @@ public class UndoManager {
       // Currently, the strategy is to collect the documents that are affected by these events and
       // create a single DocumentGraphModifications event.
       try {
+        log.debug("Adding {} documents as checkpoint to undo list", inconsistantDocuments.size());
         List<ReversibleOperation> currentChangeSet = new LinkedList<>();
         currentChangeSet.add(new DocumentGraphModifications(inconsistantDocuments, projectManager));
         changeSets.add(currentChangeSet);
-        this.inconsistantDocuments.clear();
-        log.debug("Added new checkpoint to undo list");
-        // TODO: if the changes are reversable without saving and loading the whole document, create
-        // a different kind of checkpoint
       } catch (IOException ex) {
         errors.handleException("Undo checkpoint creation failed", ex, UndoManager.class);
       }
+    } else if (!uncommittedChanges.isEmpty()) {
+      // All recorded changes are reversable without saving and loading the whole document, create
+      // a different kind of checkpoint using a copy of all uncomitted changes
+      log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
+      changeSets.add(new LinkedList<>(uncommittedChanges));
     }
+
+    // All uncommitted changes have been handled: restore internal recored state to default:
+    projectStructureIsInconsistant = false;
+    inconsistantDocuments.clear();
+    uncommittedChanges.clear();
   }
 
   @Inject
@@ -96,6 +110,7 @@ public class UndoManager {
    */
   public void undo() {
     if (canUndo()) {
+      notificationFactory.setSuppressingEvents(true);
       // Restore all documents from the last checkpoint
       List<ReversibleOperation> lastChangeSet = this.changeSets.pop();
       // Iterate over the elements in reversed order
@@ -103,17 +118,16 @@ public class UndoManager {
           lastChangeSet.listIterator(lastChangeSet.size());
       while (itLastChangeSet.hasPrevious()) {
         ReversibleOperation op = itLastChangeSet.previous();
-        op.restore(projectManager, events);
+        op.restore(projectManager);
       }
+      notificationFactory.setSuppressingEvents(false);
 
       // TODO: how to implement redo?
     }
   }
 
 
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+  private void addGenericChange(Object element) {
     Optional<SGraph> graph = SaltHelper.getGraphForObject(element, SGraph.class);
     if (graph.isPresent()) {
       if (graph.get() instanceof SDocumentGraph) {
@@ -122,5 +136,36 @@ public class UndoManager {
         projectStructureIsInconsistant = true;
       }
     }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeBeforeAnnotationModified(
+      @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
+    Optional<SGraph> graph = SaltHelper.getGraphForObject(element, SGraph.class);
+    // Only record changes for annotations that belong to a graph
+    if (graph.isPresent()) {
+      if (element instanceof Label) {
+        Label label = (Label) element;
+        if (label.getValue() != null) {
+          uncommittedChanges.add(new LabelModification(label));
+          return;
+        }
+      }
+      addGenericChange(element);
+    }
+  }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
+    addGenericChange(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
+    addGenericChange(element);
   }
 }

@@ -6,7 +6,6 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.corpus_tools.salt.util.internal.persistence.SaltXML10Writer;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 
 public class ProjectStructureModification implements ReversibleOperation {
@@ -31,7 +30,7 @@ public class ProjectStructureModification implements ReversibleOperation {
   }
 
   @Override
-  public void restore(ProjectManager projectManager, IEventBroker events) {
+  public void restore(ProjectManager projectManager) {
     
     // Load project from file
     Object object = SaltUtil.load(URI.createFileURI(temporaryProjectFile.getAbsolutePath()));
