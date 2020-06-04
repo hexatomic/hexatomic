@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,13 +54,25 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestGraphEditor {
 
   private final class GraphLoadedCondition extends DefaultCondition {
+
+    private final List<Integer> segmentIndexes;
+
+    public GraphLoadedCondition(Integer... segmentIndexes) {
+      this.segmentIndexes = Arrays.asList(segmentIndexes);
+    }
+
     @Override
     public boolean test() throws Exception {
       SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
         // Wait until the graph has been loaded
-        return textRangeTable.getTableItem(0).isChecked();
+        for (int i : segmentIndexes) {
+          if (!textRangeTable.getTableItem(i).isChecked()) {
+            return false;
+          }
+        }
+        return true;
       }
       return false;
     }
@@ -137,7 +150,7 @@ class TestGraphEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0));
   }
 
   void enterCommand(String command) {
@@ -342,19 +355,19 @@ class TestGraphEditor {
     // Deactivate/activate pointing relations in view and check the view has less/more connections
     SWTBotCheckBox includePointing = bot.checkBox("Include pointing relations");
     includePointing.deselect();
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0));
     assertEquals(22, g.getConnections().size());
     includePointing.select();
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0));
     assertEquals(23, g.getConnections().size());
 
     // Deactivate/activate spans in view and check the view has less/more nodes
     SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
     includeSpans.deselect();
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0));
     assertEquals(23, g.getNodes().size());
     includeSpans.select();
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0, 1, 2));
     assertEquals(26, g.getNodes().size());
 
     // With spans enabled, filter for annotation names
@@ -362,17 +375,17 @@ class TestGraphEditor {
 
     // Tokens and the matching structure nodes
     annoFilter.setText("const");
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0));
     assertEquals(23, g.getNodes().size());
 
     // Tokens and the matching spans
     annoFilter.setText("Inf-Struct");
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0, 1));
     assertEquals(13, g.getNodes().size());
 
     // Only tokens because annotation is non-existing
     annoFilter.setText("not actually there");
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition(0));
     assertEquals(11, g.getNodes().size());
 
   }
