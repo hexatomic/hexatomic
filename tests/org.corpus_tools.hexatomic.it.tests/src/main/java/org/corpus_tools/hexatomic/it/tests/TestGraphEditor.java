@@ -26,7 +26,6 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.SWT;
@@ -81,8 +80,6 @@ class TestGraphEditor {
   private ErrorService errorService;
   private ProjectManager projectManager;
 
-  private UISynchronize sync;
-
   private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
   @BeforeEach
@@ -101,10 +98,6 @@ class TestGraphEditor {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
     
-    sync = ctx.get(UISynchronize.class);
-    assertNotNull(sync);
-
-
     partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
@@ -207,7 +200,7 @@ class TestGraphEditor {
     final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
     
     // Zoom in so we can move the view with the cursors
-    SWTUtils.display().syncExec(() -> g.forceFocus());
+    SWTUtils.display().syncExec(g::forceFocus);
     keyboard.pressShortcut(SWT.CTRL, '+');
     bot.sleep(1000);
 
