@@ -29,8 +29,8 @@ You can navigate the graph view as follows:
 
 - **Zoom in and out** by using the **mouse wheel**.
   - You will zoom in to where your mouse cursor is.
-- **Zoom in and out** by using **using the cursor**.
-  - If you press and hold the <kbd>Shift</kbd> key you can zoom in with <kbd>+</kbd> and zoom out with <kbd>-</kbd>.
+- **Zoom in and out** by using **using the keyboard**.
+  - If you press and hold the <kbd>Shift</kbd> key you can zoom in with the <kbd>+</kbd> key and zoom out with <kbd>-</kbd> key.
 
 - **Move** the area of the graph that is displayed by **using the keyboard**:
   - The <kbd>Arrow keys</kbd> move the area in the respective direction, and <kbd>PgUp</kbd> and <kbd>PgDown</kbd> move it up and down.
