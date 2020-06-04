@@ -52,7 +52,7 @@ public class TestGridEditor {
 
   private static final String TEST_ANNOTATION_VALUE = "TEST";
 
-  private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+  private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
@@ -67,9 +67,9 @@ public class TestGridEditor {
 
   @BeforeEach
   void setup() {
-    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+    TestHelper.setKeyboardLayout();
 
-    IEclipseContext ctx = ContextHelper.getEclipseContext();
+    IEclipseContext ctx = TestHelper.getEclipseContext();
 
     ctx.set(ErrorService.class, errorService);
 

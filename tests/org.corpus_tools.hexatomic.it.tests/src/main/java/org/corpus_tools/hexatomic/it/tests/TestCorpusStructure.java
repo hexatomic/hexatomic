@@ -29,7 +29,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestCorpusStructure {
 
-  private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+  private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private ECommandService commandService;
   private EHandlerService handlerService;
@@ -41,9 +41,9 @@ class TestCorpusStructure {
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
         "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
-    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+    TestHelper.setKeyboardLayout();
 
-    IEclipseContext ctx = ContextHelper.getEclipseContext();
+    IEclipseContext ctx = TestHelper.getEclipseContext();
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
