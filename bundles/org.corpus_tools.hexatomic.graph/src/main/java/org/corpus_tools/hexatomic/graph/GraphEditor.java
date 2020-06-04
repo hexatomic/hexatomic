@@ -105,7 +105,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
-import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
@@ -648,21 +647,17 @@ public class GraphEditor {
 
     SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
 
-    org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
-
-      @Override
-      public boolean isObjectFiltered(LayoutItem object) {
-        IdentifiableElement data = SaltGraphContentProvider.getData(object);
-        if (data instanceof SStructuredNode || data instanceof SToken) {
+    org.eclipse.zest.layouts.Filter hierarchyFilter = object -> {
+      IdentifiableElement data = SaltGraphContentProvider.getData(object);
+      if (data instanceof SStructuredNode || data instanceof SToken) {
+        return false;
+      } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
+        SRelation<?, ?> rel = (SRelation<?, ?>) data;
+        if (rel.getTarget() instanceof SStructuredNode) {
           return false;
-        } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
-          SRelation<?, ?> rel = (SRelation<?, ?>) data;
-          if (rel.getTarget() instanceof SStructuredNode) {
-            return false;
-          }
         }
-        return true;
       }
+      return true;
     };
 
     layout.setFilter(hierarchyFilter);
