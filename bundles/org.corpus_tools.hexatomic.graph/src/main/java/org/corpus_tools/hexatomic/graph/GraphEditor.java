@@ -593,6 +593,24 @@ public class GraphEditor {
     return layout;
   }
 
+  private static boolean hasMatchingAnnotation(SNode node, String segmentFilterText) {
+    if (segmentFilterText == null || segmentFilterText.isEmpty() || node instanceof SToken) {
+      // If no filter is set or the type of node should always be included, always return true
+      return true;
+    }
+    if (node.getAnnotations() != null) {
+      for (SAnnotation anno : node.getAnnotations()) {
+        if (anno.getName().contains(segmentFilterText)) {
+          // Annotation found
+          return true;
+        }
+      }
+    }
+
+    // No matching annotation found
+    return false;
+  }
+
   private final class MouseZoomOrScrollListener implements MouseWheelListener {
 
     private void doScroll(MouseEvent e) {
@@ -754,23 +772,9 @@ public class GraphEditor {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
 
       if (element instanceof SNode) {
-
-        boolean include = false;
-
         SNode node = (SNode) element;
 
-        if (segmentFilterText.isEmpty() || (node instanceof SToken)) {
-          include = true;
-        } else {
-          if (node.getAnnotations() != null) {
-            for (SAnnotation anno : node.getAnnotations()) {
-              if (anno.getName().contains(segmentFilterText)) {
-                include = true;
-                break;
-              }
-            }
-          }
-        }
+        boolean include = hasMatchingAnnotation(node, segmentFilterText);
 
         if (node instanceof SSpan) {
           include = include && includeSpans;
@@ -817,23 +821,6 @@ public class GraphEditor {
       }
     }
 
-    private boolean hasMatchingAnnotation(SNode node) {
-      if (txtSegmentFilter.getText().isEmpty() || node instanceof SToken) {
-        // If no filter is set or the type of node should always be included, always return true
-        return true;
-      }
-      if (node.getAnnotations() != null) {
-        for (SAnnotation anno : node.getAnnotations()) {
-          if (anno.getName().contains(txtSegmentFilter.getText())) {
-            // Annotation found
-            return true;
-          }
-        }
-      }
-
-      // No matching annotation found
-      return false;
-    }
 
     private boolean overlapsSelectedRange(SDocumentGraph graph, SNode node) {
       List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
@@ -864,7 +851,7 @@ public class GraphEditor {
           include = include && btnIncludeSpans.getSelection();
         }
         // additionally check if the node has a matching annotation
-        return include && hasMatchingAnnotation(node);
+        return include && hasMatchingAnnotation(node, txtSegmentFilter.getText());
 
       } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
