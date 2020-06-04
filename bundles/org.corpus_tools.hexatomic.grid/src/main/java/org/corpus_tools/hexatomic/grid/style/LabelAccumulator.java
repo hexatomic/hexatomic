@@ -75,11 +75,8 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
 
     int columnIndex = bodyDataLayer.getColumnIndexByPosition(columnPosition);
     List<Column> columns = bodyDataProvider.getColumns();
-    ColumnType columnType = null;
     if (columns.size() != 0) {
-      columnType = columns.get(columnIndex).getColumnType();
-    }
-    if (columnType != null) {
+      ColumnType columnType = columns.get(columnIndex).getColumnType();
       if (columnType == ColumnType.SPAN_ANNOTATION) {
         // Assign the span annotation style label to cells in columns with the respective flag.
         configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
