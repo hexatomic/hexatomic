@@ -594,7 +594,7 @@ public class GraphEditor {
       TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
 
 
-      DataSourceSequence<Integer> textSeq = new DataSourceSequence<Integer>();
+      DataSourceSequence<Integer> textSeq = new DataSourceSequence<>();
       textSeq.setDataSource(ds);
       textSeq.setStart(ds.getStart());
       textSeq.setEnd(ds.getEnd());
