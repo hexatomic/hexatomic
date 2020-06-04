@@ -8,22 +8,32 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
 /**
- * A helper class to get an Eclipse context in test to create {@link SWTWorkbenchBot} instances.
+ * Provides static helper methods.
+ * 
  * @author Thomas Krause
+ * @author Stephan Druskat
  *
  */
-public class ContextHelper {
-  
+public class TestHelper {
+
   /**
-   * Get the Eclipse context for testing.
+   * Get the Eclipse context for testing to create {@link SWTWorkbenchBot} instances.
+   * 
    * @return The context.
    */
   public static IEclipseContext getEclipseContext() {
     Bundle activatorBundle = FrameworkUtil.getBundle(Activator.class);
-    final IEclipseContext serviceContext = EclipseContextFactory
-        .getServiceContext(activatorBundle.getBundleContext());
+    final IEclipseContext serviceContext =
+        EclipseContextFactory.getServiceContext(activatorBundle.getBundleContext());
 
     return serviceContext.get(IWorkbench.class).getApplication().getContext();
+  }
+
+  /**
+   * Sets the SWTBot keyboard layout to <code>EN_US</code>.
+   */
+  public synchronized static void setKeyboardLayout() {
+    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
   }
 
 }
