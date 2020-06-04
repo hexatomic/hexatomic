@@ -533,38 +533,34 @@ public class GraphEditor {
 
     List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
 
-
-    Optional<Long> rangeStart = Optional.empty();
-    Optional<Long> rangeEnd = Optional.empty();
+    Optional<Range<Long>> range = Optional.empty();
     SNode lastRoot = null;
     for (SToken t : token) {
       SNode currentRoot = RootTraverser.getRoot(t, filter);
       Range<Long> tokenRange = getRangeForToken(t);
       if (tokenRange != null && Objects.equal(lastRoot, currentRoot)) {
-        // extend range
-        if (!rangeStart.isPresent()) {
-          rangeStart = Optional.of(tokenRange.lowerEndpoint());
-        }
-        if (!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
-          rangeEnd = Optional.of(tokenRange.upperEndpoint());
+        if (range.isPresent()) {
+          // Extend existing range at the end
+          long upper = Math.max(range.get().upperEndpoint(), tokenRange.upperEndpoint());
+          range = Optional.of(Range.closedOpen(range.get().lowerEndpoint(), upper));
+        } else {
+          // Use initial token range
+          range = Optional.of(tokenRange);
         }
       } else {
-
         // add the completed range
-        if (rangeStart.isPresent() && rangeEnd.isPresent()) {
-          sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
+        if (range.isPresent()) {
+          sortedRangesForDS.add(range.get());
         }
-
         // begin new range
-        rangeStart = Optional.of(tokenRange.lowerEndpoint());
-        rangeEnd = Optional.of(tokenRange.upperEndpoint());
+        range = Optional.of(tokenRange);
       }
 
       lastRoot = currentRoot;
     }
     // add the last range
-    if (rangeStart.isPresent() && rangeEnd.isPresent()) {
-      sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
+    if (range.isPresent()) {
+      sortedRangesForDS.add(range.get());
     }
 
     return sortedRangesForDS;
