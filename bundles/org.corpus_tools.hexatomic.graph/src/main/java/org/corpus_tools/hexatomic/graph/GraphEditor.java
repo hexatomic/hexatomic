@@ -263,12 +263,10 @@ public class GraphEditor {
     GraphDragMoveAdapter.register(viewer.getGraphControl());
 
     // Disable the original scroll event when the mouse wheel is activated
-    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> {
-      event.doit = false;
-    });
+    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
 
     // Add a mouse wheel listener that zooms instead of scrolling
-    viewer.getGraphControl().addMouseWheelListener((e) -> {
+    viewer.getGraphControl().addMouseWheelListener(e -> {
       // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
       if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
         Viewport viewPort = viewer.getGraphControl().getViewport();
@@ -503,8 +501,8 @@ public class GraphEditor {
   @SuppressWarnings("unchecked")
   private List<SegmentSelectionEntry> recalculateAvailableSegments(
       List<SegmentSelectionEntry> newSelectedSegments,
-      List<SegmentSelectionEntry> oldSelectedSegments,
-      String segmentFilterText, boolean includeSpans, SDocumentGraph graph) {
+      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      boolean includeSpans, SDocumentGraph graph) {
 
     newSelectedSegments.clear();
 
