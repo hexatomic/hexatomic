@@ -330,12 +330,12 @@ public class GraphEditor {
 
       @Override
       public void mouseUp(MouseEvent e) {
-
+        // Only react to double clicks, ignore mouse up
       }
 
       @Override
       public void mouseDown(MouseEvent e) {
-
+        // Only react to double clicks, ignore mouse down
       }
 
       @Override
@@ -350,7 +350,7 @@ public class GraphEditor {
 
       @Override
       public void keyReleased(KeyEvent e) {
-
+        // Only react to key pressed, but not the released event
       }
 
       @Override
