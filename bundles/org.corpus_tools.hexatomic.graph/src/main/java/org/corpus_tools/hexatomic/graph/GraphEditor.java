@@ -88,6 +88,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -266,112 +267,12 @@ public class GraphEditor {
     viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
 
     // Add a mouse wheel listener that zooms instead of scrolling
-    viewer.getGraphControl().addMouseWheelListener(e -> {
-      // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
-      if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
-        Viewport viewPort = viewer.getGraphControl().getViewport();
-        Point loc = viewPort.getViewLocation();
-        int diff = 50;
-        if (e.stateMask == SWT.SHIFT) {
-          // Mouse wheel scrolled down
-          if (e.count < 0) {
-            // Scroll down
-            loc.translate(0, +diff);
-          } else {
-            // Scroll up
-            loc.translate(0, -diff);
-          }
-        } else if (e.stateMask == SWT.CTRL) {
-          if (e.count < 0) {
-            // Scroll left
-            loc.translate(+diff, 0);
-          } else {
-            // Scroll right
-            loc.translate(-diff, 0);
-          }
-        }
-        viewPort.setViewLocation(loc);
-        return;
-      }
-
-      ScalableFigure figure = viewer.getGraphControl().getRootLayer();
-      double oldScale = figure.getScale();
-      double newScale;
-      if (e.count < 0) {
-        newScale = oldScale * 0.75;
-      } else {
-        newScale = oldScale * 1.25;
-      }
-
-      double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
-
-      if (clippedScale != oldScale) {
-
-        Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
-
-        figure.setScale(clippedScale);
-        viewer.getGraphControl().getViewport().validate();
-
-        viewer.getGraphControl().getViewport()
-            .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
-        viewer.getGraphControl().getViewport().validate();
-
-        Point originallyClicked = new Point(e.x, e.y);
-        Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
-        centerViewportToPoint(scaledClicked);
-      }
-
-    });
+    viewer.getGraphControl().addMouseWheelListener(new MouseZoomListener());
     // Center the view on the mouse cursor when it was double clicked
-    viewer.getGraphControl().addMouseListener(new MouseListener() {
-
-      @Override
-      public void mouseUp(MouseEvent e) {
-        // Only react to double clicks, ignore mouse up
-      }
-
-      @Override
-      public void mouseDown(MouseEvent e) {
-        // Only react to double clicks, ignore mouse down
-      }
-
-      @Override
-      public void mouseDoubleClick(MouseEvent e) {
-        Point clickedInViewport = new Point(e.x, e.y);
-        centerViewportToPoint(clickedInViewport);
-      }
-    });
+    viewer.getGraphControl().addMouseListener(new DoubleClickCenterListener());
 
     // React to arrow keys to scroll the viewport
-    viewer.getGraphControl().addKeyListener(new KeyListener() {
-
-      @Override
-      public void keyReleased(KeyEvent e) {
-        // Only react to key pressed, but not the released event
-      }
-
-      @Override
-      public void keyPressed(KeyEvent e) {
-        int diff = 25;
-        if ((e.stateMask & SWT.SHIFT) != 0) {
-          diff = 250;
-        }
-        Viewport viewPort = viewer.getGraphControl().getViewport();
-        Point loc = viewPort.getViewLocation();
-
-        if (e.keyCode == SWT.ARROW_LEFT) {
-          loc.translate(-diff, 0);
-        } else if (e.keyCode == SWT.ARROW_RIGHT) {
-          loc.translate(+diff, 0);
-        } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
-          loc.translate(0, +diff);
-        } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
-          loc.translate(0, -diff);
-        }
-        viewPort.setViewLocation(loc);
-
-      }
-    });
+    viewer.getGraphControl().addKeyListener(new ArrowKeyScrollListener());
   }
 
   /**
@@ -687,6 +588,113 @@ public class GraphEditor {
     layout.setFilter(hierarchyFilter);
 
     return layout;
+  }
+
+  private final class MouseZoomListener implements MouseWheelListener {
+    @Override
+    public void mouseScrolled(MouseEvent e) {
+      // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
+      if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
+        Viewport viewPort = viewer.getGraphControl().getViewport();
+        Point loc = viewPort.getViewLocation();
+        int diff = 50;
+        if (e.stateMask == SWT.SHIFT) {
+          // Mouse wheel scrolled down
+          if (e.count < 0) {
+            // Scroll down
+            loc.translate(0, +diff);
+          } else {
+            // Scroll up
+            loc.translate(0, -diff);
+          }
+        } else if (e.stateMask == SWT.CTRL) {
+          if (e.count < 0) {
+            // Scroll left
+            loc.translate(+diff, 0);
+          } else {
+            // Scroll right
+            loc.translate(-diff, 0);
+          }
+        }
+        viewPort.setViewLocation(loc);
+        return;
+      }
+
+      ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+      double oldScale = figure.getScale();
+      double newScale;
+      if (e.count < 0) {
+        newScale = oldScale * 0.75;
+      } else {
+        newScale = oldScale * 1.25;
+      }
+
+      double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
+
+      if (clippedScale != oldScale) {
+
+        Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
+
+        figure.setScale(clippedScale);
+        viewer.getGraphControl().getViewport().validate();
+
+        viewer.getGraphControl().getViewport()
+            .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
+        viewer.getGraphControl().getViewport().validate();
+
+        Point originallyClicked = new Point(e.x, e.y);
+        Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
+        centerViewportToPoint(scaledClicked);
+      }
+
+    }
+  }
+
+  private final class DoubleClickCenterListener implements MouseListener {
+    @Override
+    public void mouseUp(MouseEvent e) {
+      // Only react to double clicks, ignore mouse up
+    }
+
+    @Override
+    public void mouseDown(MouseEvent e) {
+      // Only react to double clicks, ignore mouse down
+    }
+
+    @Override
+    public void mouseDoubleClick(MouseEvent e) {
+      Point clickedInViewport = new Point(e.x, e.y);
+      centerViewportToPoint(clickedInViewport);
+    }
+  }
+
+  private final class ArrowKeyScrollListener implements KeyListener {
+    @Override
+    public void keyReleased(KeyEvent e) {
+      // Only react to key pressed, but not the released event
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+      int diff = 25;
+      if ((e.stateMask & SWT.SHIFT) != 0) {
+        diff = 250;
+      }
+      Viewport viewPort = viewer.getGraphControl().getViewport();
+      Point loc = viewPort.getViewLocation();
+
+      if (e.keyCode == SWT.ARROW_LEFT) {
+        loc.translate(-diff, 0);
+      } else if (e.keyCode == SWT.ARROW_RIGHT) {
+        loc.translate(+diff, 0);
+      } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
+        loc.translate(0, +diff);
+      } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
+        loc.translate(0, -diff);
+      }
+      viewPort.setViewLocation(loc);
+
+    }
   }
 
   private final class ListenerImplementation implements Listener {
