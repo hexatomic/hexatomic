@@ -299,32 +299,31 @@ public class GraphEditor {
 
       ScalableFigure figure = viewer.getGraphControl().getRootLayer();
       double oldScale = figure.getScale();
-      Optional<Double> newScale;
+      double newScale;
       if (e.count < 0) {
-        newScale = Optional.of(oldScale * 0.75);
+        newScale = oldScale * 0.75;
       } else {
-        newScale = Optional.of(oldScale * 1.25);
+        newScale = oldScale * 1.25;
       }
 
-      if (newScale.isPresent()) {
-        double clippedScale = Math.max(0.0625, Math.min(2.0, newScale.get()));
+      double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
 
-        if (clippedScale != oldScale) {
+      if (clippedScale != oldScale) {
 
-          Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
+        Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
 
-          figure.setScale(clippedScale);
-          viewer.getGraphControl().getViewport().validate();
+        figure.setScale(clippedScale);
+        viewer.getGraphControl().getViewport().validate();
 
-          viewer.getGraphControl().getViewport()
-              .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
-          viewer.getGraphControl().getViewport().validate();
+        viewer.getGraphControl().getViewport()
+            .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
+        viewer.getGraphControl().getViewport().validate();
 
-          Point originallyClicked = new Point(e.x, e.y);
-          Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
-          centerViewportToPoint(scaledClicked);
-        }
+        Point originallyClicked = new Point(e.x, e.y);
+        Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
+        centerViewportToPoint(scaledClicked);
       }
+
     });
     // Center the view on the mouse cursor when it was double clicked
     viewer.getGraphControl().addMouseListener(new MouseListener() {
