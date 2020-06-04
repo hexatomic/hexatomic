@@ -56,6 +56,7 @@ class TestGraphEditor {
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
         "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
+    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
 
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 

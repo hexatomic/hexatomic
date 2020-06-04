@@ -67,6 +67,8 @@ public class TestGridEditor {
 
   @BeforeEach
   void setup() {
+    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+
     IEclipseContext ctx = ContextHelper.getEclipseContext();
 
     ctx.set(ErrorService.class, errorService);
