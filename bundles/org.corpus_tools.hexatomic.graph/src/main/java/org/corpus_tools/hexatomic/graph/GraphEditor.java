@@ -299,7 +299,7 @@ public class GraphEditor {
 
       ScalableFigure figure = viewer.getGraphControl().getRootLayer();
       double oldScale = figure.getScale();
-      Optional<Double> newScale = Optional.empty();
+      Optional<Double> newScale;
       if (e.count < 0) {
         newScale = Optional.of(oldScale * 0.75);
       } else {
