@@ -549,7 +549,7 @@ public class GraphEditor {
       job.schedule();
 
 
-    } catch (Throwable ex) {
+    } catch (RuntimeException ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
           GraphEditor.class);
     }
