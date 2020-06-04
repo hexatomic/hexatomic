@@ -509,62 +509,65 @@ public class GraphEditor {
     List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
     allTexts.sort(new STextualDataSourceComparator());
 
-
     for (STextualDS ds : graph.getTextualDSs()) {
-
       if (ds.getText() == null) {
         continue;
       }
-
-      TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
-
-
-      DataSourceSequence<Integer> textSeq = new DataSourceSequence<>();
-      textSeq.setDataSource(ds);
-      textSeq.setStart(ds.getStart());
-      textSeq.setEnd(ds.getEnd());
-
-      List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
-
-
-      Optional<Long> rangeStart = Optional.empty();
-      Optional<Long> rangeEnd = Optional.empty();
-      SNode lastRoot = null;
-      for (SToken t : token) {
-        SNode currentRoot = RootTraverser.getRoot(t, filter);
-        Range<Long> tokenRange = getRangeForToken(t);
-        if (tokenRange != null && Objects.equal(lastRoot, currentRoot)) {
-          // extend range
-          if (!rangeStart.isPresent()) {
-            rangeStart = Optional.of(tokenRange.lowerEndpoint());
-          }
-          if (!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
-            rangeEnd = Optional.of(tokenRange.upperEndpoint());
-          }
-        } else {
-
-          // add the completed range
-          if (rangeStart.isPresent() && rangeEnd.isPresent()) {
-            sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
-          }
-
-          // begin new range
-          rangeStart = Optional.of(tokenRange.lowerEndpoint());
-          rangeEnd = Optional.of(tokenRange.upperEndpoint());
-        }
-
-        lastRoot = currentRoot;
-      }
-      // add the last range
-      if (rangeStart.isPresent() && rangeEnd.isPresent()) {
-        sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
-      }
-
-
-      result.putAll(ds, sortedRangesForDS);
+      result.putAll(ds, calculateSegmentsForText(ds, graph, filter));
     }
 
     return result;
+  }
+
+  private static TreeSet<Range<Long>> calculateSegmentsForText(STextualDS ds,
+      SDocumentGraph graph,
+      ViewerFilter filter) {
+
+    TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
+
+
+    DataSourceSequence<Integer> textSeq = new DataSourceSequence<>();
+    textSeq.setDataSource(ds);
+    textSeq.setStart(ds.getStart());
+    textSeq.setEnd(ds.getEnd());
+
+    List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
+
+
+    Optional<Long> rangeStart = Optional.empty();
+    Optional<Long> rangeEnd = Optional.empty();
+    SNode lastRoot = null;
+    for (SToken t : token) {
+      SNode currentRoot = RootTraverser.getRoot(t, filter);
+      Range<Long> tokenRange = getRangeForToken(t);
+      if (tokenRange != null && Objects.equal(lastRoot, currentRoot)) {
+        // extend range
+        if (!rangeStart.isPresent()) {
+          rangeStart = Optional.of(tokenRange.lowerEndpoint());
+        }
+        if (!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
+          rangeEnd = Optional.of(tokenRange.upperEndpoint());
+        }
+      } else {
+
+        // add the completed range
+        if (rangeStart.isPresent() && rangeEnd.isPresent()) {
+          sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
+        }
+
+        // begin new range
+        rangeStart = Optional.of(tokenRange.lowerEndpoint());
+        rangeEnd = Optional.of(tokenRange.upperEndpoint());
+      }
+
+      lastRoot = currentRoot;
+    }
+    // add the last range
+    if (rangeStart.isPresent() && rangeEnd.isPresent()) {
+      sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
+    }
+
+    return sortedRangesForDS;
   }
 
 
