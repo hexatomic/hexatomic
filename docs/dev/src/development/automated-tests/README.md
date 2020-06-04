@@ -23,10 +23,10 @@ To specifically run the tests and not install the artifacts, use `mvn integratio
 Unlike unit tests, `mvn test` will not work for integration tests, as the Tycho Surefire Plugin requires
 the bundles to be packaged, which happens in Maven's `package` phase, which comes after `test` and before `integration-test`.
 
+To learn more about the Maven build lifecycle, read the [Maven Lifecycles Reference](http://web.archive.org/web/20191128092924/https://maven.apache.org/ref/3.6.2/maven-core/lifecycles.html).
+
 You can also generate a test code coverage report by executing `mvn verify site -Pcoverage`. 
 The generated report will be located under `tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/index.html`.
-
-To learn more about the Maven build lifecycle, read the [Maven Lifecycles Reference](http://web.archive.org/web/20191128092924/https://maven.apache.org/ref/3.6.2/maven-core/lifecycles.html).
 
 ## Execute tests in Eclipse
 
