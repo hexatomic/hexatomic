@@ -130,10 +130,6 @@ public class GraphEditor {
   @Inject
   Shell shell;
 
-  @Inject
-  public GraphEditor() {
-
-  }
 
   private Button btnIncludeSpans;
   private Table textRangeTable;
