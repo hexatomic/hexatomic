@@ -692,14 +692,13 @@ public class GraphEditor {
     SDocumentGraph loadedGraph = getGraph();
     Optional<SDocumentGraph> changedGraph =
         SaltHelper.getGraphForObject(element, SDocumentGraph.class);
+
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
-      if (element instanceof STextualRelation || element instanceof STextOverlappingRelation<?,?>) {
-        // Only relations with text coverage semantics can change the structure of the graph and
-        // modify segments
-        updateView(true, false);
-      } else {
-        updateView(false, false);
-      }
+      // Only relations with text coverage semantics can change the structure of the graph and
+      // modify segments
+      updateView(
+          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>,
+          false);
     }
   }
 
