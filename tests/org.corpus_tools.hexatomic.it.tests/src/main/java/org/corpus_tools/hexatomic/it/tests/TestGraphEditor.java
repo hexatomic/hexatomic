@@ -203,7 +203,7 @@ class TestGraphEditor {
     assertEquals(23, g.getNodes().size());
     assertEquals(22, g.getConnections().size());
     
-    Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
+    final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, "getViewport");
     
     // Zoom in so we can move the view with the cursors
     SWTUtils.display().syncExec(() -> g.forceFocus());
