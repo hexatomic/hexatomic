@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update views via notification even if the object that changed was created before the view.
 - Allow to run Hexatomic on Java 11 platforms
+- Set locale in UI tests to avoid issues with auto-detected keyboard layouts
 
 ## [0.3.1] - 2019-12-16
 
