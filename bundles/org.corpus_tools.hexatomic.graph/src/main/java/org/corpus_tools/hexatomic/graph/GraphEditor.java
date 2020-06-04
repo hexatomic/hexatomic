@@ -806,6 +806,34 @@ public class GraphEditor {
       }
     }
 
+    private boolean hasMatchingAnnotation(SNode node) {
+      if (txtSegmentFilter.getText().isEmpty() || node instanceof SToken) {
+        // If no filter is set or the type of node should always be included, always return true
+        return true;
+      }
+      if (node.getAnnotations() != null) {
+        for (SAnnotation anno : node.getAnnotations()) {
+          if (anno.getName().contains(txtSegmentFilter.getText())) {
+            // Annotation found
+            return true;
+          }
+        }
+      }
+
+      // No matching annotation found
+      return false;
+    }
+
+    private boolean overlapsSelectedRange(SDocumentGraph graph, SNode node) {
+      List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
+      for (SToken t : overlappedTokens) {
+        if (coveredTokenIDs.contains(t.getId())) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
 
@@ -816,35 +844,17 @@ public class GraphEditor {
 
       if (element instanceof SNode) {
         SNode node = (SNode) element;
-        boolean include = false;
 
         // check if the node covers a currently selected range
-        List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
-        for (SToken t : overlappedTokens) {
-          if (coveredTokenIDs.contains(t.getId())) {
-            include = true;
-            break;
-          }
-        }
+        boolean include = overlapsSelectedRange(graph, node);
 
         if (node instanceof SSpan) {
+          // If this is a span, the inclusion must be explicitly requested by the user
           include = include && btnIncludeSpans.getSelection();
         }
+        // additionally check if the node has a matching annotation
+        return include && hasMatchingAnnotation(node);
 
-        // additionally check for valid annotation
-        if (include && !txtSegmentFilter.getText().isEmpty() && !(node instanceof SToken)
-            && node.getAnnotations() != null) {
-          boolean annoFound = false;
-          for (SAnnotation anno : node.getAnnotations()) {
-            if (anno.getName().contains(txtSegmentFilter.getText())) {
-              annoFound = true;
-              break;
-            }
-          }
-          include = annoFound;
-        }
-
-        return include;
       } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
         boolean include = true;
@@ -856,8 +866,9 @@ public class GraphEditor {
         return true;
       }
     }
-
   }
+
+
 
   private static class STextualDataSourceComparator implements Comparator<STextualDS> {
 
