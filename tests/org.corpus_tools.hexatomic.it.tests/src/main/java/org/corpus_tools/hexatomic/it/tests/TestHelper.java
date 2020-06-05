@@ -16,6 +16,10 @@ import org.osgi.framework.FrameworkUtil;
  */
 public class TestHelper {
 
+  private TestHelper() {
+    // Hide default constructor
+  }
+
   /**
    * Get the Eclipse context for testing to create {@link SWTWorkbenchBot} instances.
    * 
