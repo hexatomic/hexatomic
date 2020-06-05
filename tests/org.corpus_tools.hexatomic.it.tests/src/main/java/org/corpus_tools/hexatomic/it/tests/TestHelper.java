@@ -32,7 +32,7 @@ public class TestHelper {
   /**
    * Sets the SWTBot keyboard layout to <code>EN_US</code>.
    */
-  public synchronized static void setKeyboardLayout() {
+  public static void setKeyboardLayout() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
   }
 
