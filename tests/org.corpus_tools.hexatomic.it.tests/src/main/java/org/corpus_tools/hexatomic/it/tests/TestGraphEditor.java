@@ -53,9 +53,20 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
   private static final String GET_VIEWPORT = "getViewport";
 
   private static final String GET_VIEW_LOCATION = "getViewLocation";
+
+  private URI exampleProjectUri;
+  private ECommandService commandService;
+  private EHandlerService handlerService;
+  private EPartService partService;
+
+  private ErrorService errorService;
+  private ProjectManager projectManager;
+
+  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
   private final class GraphLoadedCondition extends DefaultCondition {
 
@@ -133,24 +144,13 @@ class TestGraphEditor {
     }
   }
 
-  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
-
-  private URI exampleProjectUri;
-  private ECommandService commandService;
-  private EHandlerService handlerService;
-  private EPartService partService;
-
-  private ErrorService errorService;
-  private ProjectManager projectManager;
-
-  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
-
   @BeforeEach
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
         "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
+    TestHelper.setKeyboardLayout();
 
-    IEclipseContext ctx = ContextHelper.getEclipseContext();
+    IEclipseContext ctx = TestHelper.getEclipseContext();
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);

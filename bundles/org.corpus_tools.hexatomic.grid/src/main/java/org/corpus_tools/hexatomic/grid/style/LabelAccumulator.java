@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.style;
 
+import java.util.List;
+import org.corpus_tools.hexatomic.grid.data.Column;
 import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
@@ -72,13 +74,16 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
     }
 
     int columnIndex = bodyDataLayer.getColumnIndexByPosition(columnPosition);
-    ColumnType columnType = bodyDataProvider.getColumns().get(columnIndex).getColumnType();
-    if (columnType == ColumnType.SPAN_ANNOTATION) {
-      // Assign the span annotation style label to cells in columns with the respective flag.
-      configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
-    } else if (columnType == ColumnType.TOKEN_TEXT) {
-      // Assign the token text style label to cells in columns with the respective flag.
-      configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
+    List<Column> columns = bodyDataProvider.getColumns();
+    if (!columns.isEmpty()) {
+      ColumnType columnType = columns.get(columnIndex).getColumnType();
+      if (columnType == ColumnType.SPAN_ANNOTATION) {
+        // Assign the span annotation style label to cells in columns with the respective flag.
+        configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+      } else if (columnType == ColumnType.TOKEN_TEXT) {
+        // Assign the token text style label to cells in columns with the respective flag.
+        configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
+      }
     }
   }
 
