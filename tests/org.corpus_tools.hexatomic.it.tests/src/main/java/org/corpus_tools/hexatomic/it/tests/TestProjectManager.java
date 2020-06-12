@@ -52,7 +52,7 @@ class TestProjectManager {
 
   @BeforeEach
   void setup() {
-    IEclipseContext ctx = ContextHelper.getEclipseContext();
+    IEclipseContext ctx = TestHelper.getEclipseContext();
 
     bot = new SWTWorkbenchBot(ctx);
 

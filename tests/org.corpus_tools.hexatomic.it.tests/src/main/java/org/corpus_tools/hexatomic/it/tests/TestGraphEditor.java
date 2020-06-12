@@ -44,7 +44,7 @@ class TestGraphEditor {
 
   private static final String GRAPH_EDITOR_TEXT_RANGE = "graph-editor/text-range";
 
-  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
   private ECommandService commandService;
@@ -58,8 +58,9 @@ class TestGraphEditor {
   void setup() {
     org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
         "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
+    TestHelper.setKeyboardLayout();
 
-    IEclipseContext ctx = ContextHelper.getEclipseContext();
+    IEclipseContext ctx = TestHelper.getEclipseContext();
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);

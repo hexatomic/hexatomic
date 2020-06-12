@@ -65,3 +65,12 @@ You can set the execution order within a test class explicitly with the `@Order(
 If you integrate a new bundle that has not been tested before, you have to add the bundle manually to the 
 dependencies of `org.corpus_tools.hexatomic.it.tests`.
 Adding it to the feature or product is not enough.
+
+Note that the Hexatomic integration tests use the SWTBot *EN_US* keyboard layout.
+If you see UI tests failing on your local machine, you may have to install US English language support.
+In other words, the *locale en_US* must be available on your operating system.
+
+On Linux, you can test this with the command `locale -a`.
+If `en_US.utf8` is listed in the output, you're all set up.
+
+For more information on SWTBot's keyboard layouts, see [Keyboard Layouts in SWTBot on the Eclipse wiki](https://wiki.eclipse.org/SWTBot/Keyboard_Layouts).
