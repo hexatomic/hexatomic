@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1590060969">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1592811653">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="4.15.0.I20200305-0155"/>
@@ -43,7 +43,7 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.swtbot.nebula.nattable.finder" version="2.8.0.201906121535"/>
-      <repository location="https://download.eclipse.org/technology/swtbot/releases/latest/"/>
+      <repository location="https://download.eclipse.org/technology/swtbot/releases/2.8.0/"/>
     </location>
   </locations>
 </target>
