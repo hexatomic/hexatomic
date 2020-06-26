@@ -273,7 +273,7 @@ class TestGraphEditor {
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
-    // Zoom in so we can move the view with the cursors
+    // Zoom in so we can move the view with the arrow keys
     keyboard.pressShortcut(SWT.CTRL, '+');
 
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
