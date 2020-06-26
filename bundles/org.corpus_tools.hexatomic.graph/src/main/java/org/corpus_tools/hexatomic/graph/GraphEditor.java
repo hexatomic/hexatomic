@@ -118,6 +118,7 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  */
 public class GraphEditor {
 
+  private static final String TEXT = "text";
   private static final String RANGE = "range";
   static final int DEFAULT_DIFF = 25;
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
@@ -338,7 +339,7 @@ public class GraphEditor {
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry entry = new SegmentSelectionEntry();
           entry.range = (Range<Long>) item.getData(RANGE);
-          entry.text = (STextualDS) item.getData("text");
+          entry.text = (STextualDS) item.getData(TEXT);
           oldSelectedSegments.add(entry);
         }
       } else {
@@ -346,7 +347,7 @@ public class GraphEditor {
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry selection = new SegmentSelectionEntry();
           selection.range = (Range<Long>) item.getData(RANGE);
-          selection.text = (STextualDS) item.getData("text");
+          selection.text = (STextualDS) item.getData(TEXT);
           newSelectedSegments.add(selection);
         }
       }
@@ -428,7 +429,7 @@ public class GraphEditor {
 
         item.setText(coveredText);
         item.setData(RANGE, e.getValue());
-        item.setData("text", e.getKey());
+        item.setData(TEXT, e.getKey());
       }
 
       textRangeTable.deselectAll();
@@ -439,7 +440,7 @@ public class GraphEditor {
         for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
           TableItem item = textRangeTable.getItem(idx);
           Range<Long> itemRange = (Range<Long>) item.getData(RANGE);
-          STextualDS itemText = (STextualDS) item.getData("text");
+          STextualDS itemText = (STextualDS) item.getData(TEXT);
           if (itemText == oldSegment.text && itemRange.isConnected(oldSegment.range)) {
             textRangeTable.select(idx);
             selectedSomeOld = true;
@@ -455,7 +456,7 @@ public class GraphEditor {
         textRangeTable.setSelection(0);
         SegmentSelectionEntry selection = new SegmentSelectionEntry();
         selection.range = (Range<Long>) textRangeTable.getItem(0).getData(RANGE);
-        selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
+        selection.text = (STextualDS) textRangeTable.getItem(0).getData(TEXT);
         newSelectedSegments.add(selection);
       }
     });
