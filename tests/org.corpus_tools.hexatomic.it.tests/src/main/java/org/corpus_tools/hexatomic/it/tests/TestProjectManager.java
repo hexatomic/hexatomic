@@ -100,7 +100,7 @@ class TestProjectManager {
     assertFalse(projectManager.isDirty());
 
     // Load a single document into memory
-    SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
+    SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).isPresent() ? projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
     SDocumentGraph doc1Graph = doc1.getDocumentGraph();
     assertNotNull(doc1Graph);
 
@@ -133,7 +133,7 @@ class TestProjectManager {
 
     // Apply some more changes to the loaded document graph and save to same
     // location
-    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
+    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).isPresent() ? projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
     doc1Graph = doc1.getDocumentGraph();
     assertNotNull(doc1Graph);
     tokens = doc1Graph.getSortedTokenByText();

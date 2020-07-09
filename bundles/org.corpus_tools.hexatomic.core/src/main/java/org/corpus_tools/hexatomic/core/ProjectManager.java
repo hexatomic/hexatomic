@@ -18,9 +18,6 @@
  * #L%
  */
 
-/* Hello Everyone */
-
-
 package org.corpus_tools.hexatomic.core;
 
 import java.io.IOException;
@@ -298,7 +295,7 @@ public class ProjectManager {
             throws InvocationTargetException, InterruptedException {
 
           boolean savingToCurrentLocation =
-              getLocation().isPresent() && getLocation().get().equals(path);
+              getLocation().isPresent() ? getLocation().get().equals(path) : false;
 
           // Collect all documents that need to be saved
           final List<SDocument> documents;
@@ -417,8 +414,12 @@ public class ProjectManager {
       dialog.setCancelable(true);
       try {
         dialog.run(true, true, operation);
-      } catch (InvocationTargetException | InterruptedException ex) {
+      } catch (InvocationTargetException e) {
+        errorService.handleException("Could not save project", e, ProjectManager.class);
+      }
+        catch (InterruptedException ex) {
         errorService.handleException("Could not save project", ex, ProjectManager.class);
+        Thread.currentThread().interrupt();
       }
     }
   }
