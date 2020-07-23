@@ -675,9 +675,10 @@ public class GraphEditor {
       Viewport viewPort = viewer.getGraphControl().getViewport();
       Point loc = viewPort.getViewLocation();
 
-      if (e.character == '+' && (e.stateMask & SWT.CTRL) != 0) {
+      if ((e.character == '+' || e.keyCode == SWT.KEYPAD_ADD) && (e.stateMask & SWT.CTRL) != 0) {
         zoomGraphView(2.0, loc);
-      } else if (e.character == '-' && (e.stateMask & SWT.CTRL) != 0) {
+      } else if ((e.character == '-' || e.keyCode == SWT.KEYPAD_SUBTRACT)
+          && (e.stateMask & SWT.CTRL) != 0) {
         zoomGraphView(0.5, loc);
       } else {
         // Prepare scroll
