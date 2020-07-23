@@ -68,6 +68,6 @@ Adding it to the feature or product is not enough.
 
 Note that the SWTBot-based integration tests try to detect the keyboard layout automatically using the system locale.
 For example, `de_DE.UTF` would result in the keyboard layout `DE_DE`.
-This can lead to test errors when the locale is not consistent with the keyboard layout (e.g. some programmers prefer English keyboard layouts while still using their native locale).
+This can lead to test errors when the locale is not consistent with the keyboard layout (e.g. some programmers prefer English keyboard layouts, which would be `EN_US` or `MAC_EN_US`, while still using their native locale).
 To enforce a specific keyboard layout for the tests, set the `SWTBOT_KEYBOARD_LAYOUT` environment variable to the layout you want to select.
 For more information on SWTBot's keyboard layouts, see [Keyboard Layouts in SWTBot on the Eclipse wiki](https://wiki.eclipse.org/SWTBot/Keyboard_Layouts).
