@@ -38,7 +38,7 @@ import org.corpus_tools.salt.common.STextualDS;
 /**
  * Executes commands on an annotation graph.
  * 
- * @author Thomas Krause
+ * @author Thomas Krause {@literal krauseto@hu-berlin.de}
  *
  */
 public class ConsoleController {
