@@ -66,11 +66,8 @@ If you integrate a new bundle that has not been tested before, you have to add t
 dependencies of `org.corpus_tools.hexatomic.it.tests`.
 Adding it to the feature or product is not enough.
 
-Note that the Hexatomic integration tests use the SWTBot *EN_US* keyboard layout.
-If you see UI tests failing on your local machine, you may have to install US English language support.
-In other words, the *locale en_US* must be available on your operating system.
-
-On Linux, you can test this with the command `locale -a`.
-If `en_US.utf8` is listed in the output, you're all set up.
-
+Note that the SWTBot-based integration tests try to detect the keyboard layout automatically using the system locale.
+For example, `de_DE.UTF` would result in the keyboard layout `DE_DE`.
+This can lead to test errors when the locale is not consistent with the keyboard layout (e.g. some programmers prefer English keyboard layouts while still using their native locale).
+To enforce a specific keyboard layout for the tests, set the `SWTBOT_KEYBOARD_LAYOUT` environment variable to the layout you want to select.
 For more information on SWTBot's keyboard layouts, see [Keyboard Layouts in SWTBot on the Eclipse wiki](https://wiki.eclipse.org/SWTBot/Keyboard_Layouts).
