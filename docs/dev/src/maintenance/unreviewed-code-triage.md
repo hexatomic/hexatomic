@@ -54,6 +54,11 @@ The heading is the date and if a conflict occurred during merging the PRs, which
 After the heading, the person who did the triage, the revision hash of the start/end commit and a list of PRs that where included in the triage.
 Then add a list entry for each issue you found.
 
+ ```
+- https://github.com/hexatomic/hexatomic/issues/123
+- https://github.com/hexatomic/hexatomic/issues/456
+```
+
 ### Examples for a triage result
 
 First part of a triage which was split due to conflicts.
