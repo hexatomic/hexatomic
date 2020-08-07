@@ -12,30 +12,34 @@ Open the list of all pull requests in GitHub and filter by the "unreviewed" labe
 If there are no pull requests which such a label, the triage is finished and you can proceed to the "Documenting the results" section.
 
 Next, open `TRIAGE.md` file and check which commit of the master branch was last triaged.
-Create a new local branch from this commit. This branch should not be pushed to the remote repository.
+Create a new branch from this commit.
+**This branch should never be merged into another branch.**
 
 For each of the pull requests with the label, merge the tip commit of the pull request into your branch.
 It can happen that there is a conflict because for example reviewed PRs with larger features have been added in between the non-reviewed hotfix PRs.
 If there is any conflict, abort the merge and review the current changes until this point and start a new triage with the commit before the merge commit of the problematic PR as a starting point.
-For example in the following history of pull requests, there would be two triages: one for PR 1 and 2 starting from the last triaged master commit, and one triage from the PR X commit (which was reviewed) that includes PR 4.
+For example in the following history of pull requests, there would be two triages: one for PR 1 and 2 starting from the last triaged master commit, and one triage from the PR X commit (which was reviewed) that includes PR 4 and 5.
 
 ```
-last triaged master commit
-            |
-            v
-            + <-- PR 1 (not reviewed)
-            |
-            v
-            + <-- PR 2 (not reviewed)
-            |
-            v
-            + <-- PR X (reviewed)
-            |
-            v
-           conflict! <-- PR 4 (not reviewed)
+last triaged commit
+        |
+        v
+        + <-- PR 1 (not reviewed)
+        |
+        v
+        + <-- PR 2 (not reviewed)
+        |
+        v
+        + <-- PR X (reviewed)
+        |
+        v
+    conflict! <-- PR 4 (not reviewed)
+        |
+        v     <-- PR 5 (not reviewed)
 
 ```
 
+When you have merged all the pull requests for included in this triage, compare the changes of the branch with the previously triaged commit and review the code changes.
 For each problem you find, create a new issue in the GitHub issue tracker and add document it in the `TRIAGE.md` file.
 
 ## Documenting the results
