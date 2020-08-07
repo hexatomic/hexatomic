@@ -1,15 +1,5 @@
 <!-- Please refer to our contributing documentation for any questions on submitting a pull request, or let us know here if you need any help. -->
 
-## Pull request checklist
-
-Please check if your PR fulfills the following requirements:
-- [ ] Tests for the changes have been added, or the PR is neither a bug fix nor a feature
-- [ ] Docs have been reviewed and added / updated if needed, or the PR is neither a bug fix nor a feature
-- [ ] The *Unreleased* section in CHANGELOG.md has been amended to reflect the changes in this PR if needed
-- [ ] Build (`mvn verify`) was run locally and any changes were pushed
-- [ ] The pull request is against the correct branch (`master` for bug fixes, `develop` for new functionality)
-- [ ] [Dependencies and citation templates](https://github.com/hexatomic/hexatomic/tree/develop/releng/templates) have been updated where necessary or there are no new dependencies
-
 
 ## Pull request type
 
@@ -50,6 +40,17 @@ N/A
 ## Other information
 
 <!-- Any other information that is important to this PR such as screenshots of how the component looks before and after the change. -->
+
+
+## Pull request checklist
+
+Please check if your PR fulfills the following requirements:
+- [ ] Tests for the changes have been added, or the PR is neither a bug fix nor a feature
+- [ ] Docs have been reviewed and added / updated if needed, or the PR is neither a bug fix nor a feature
+- [ ] The *Unreleased* section in CHANGELOG.md has been amended to reflect the changes in this PR if needed
+- [ ] Build (`mvn verify`) was run locally and any changes were pushed
+- [ ] The pull request is against the correct branch (`master` for bug fixes, `develop` for new functionality)
+- [ ] [Dependencies and citation templates](https://github.com/hexatomic/hexatomic/tree/develop/releng/templates) have been updated where necessary or there are no new dependencies
 
 ---
 
