@@ -110,7 +110,7 @@ If the maintainer itself is authoring the pull requests and there are no other m
 2. Check that all automatic checks have been successful. If static code analysis is enabled, check that no new issues (like the "Code Smell" or "Bug" categories in SonarCloud) have been introduced and that all quality metrics (like minimal test coverage or maximum duplication of lines) are in the accepted range.
 3. Use the administrator privileges to merge the PR without code review.
 
-Unreviewed PRs are subject to [periodic code triages](../../maintenance/periodic-code-triage.md).
+Unreviewed PRs are subject to [periodic code triages](../../maintenance/unreviewed-code-triage.md).
 
 ## Create a pull request for your contribution before you start working
 
