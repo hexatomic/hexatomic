@@ -1,4 +1,6 @@
-# Use interface integration tests
+# Using interface integration tests
+
+## Adding new integration tests
 
 To add user interface integration tests add new test cases to the special bundle `org.corpus_tools.hexatomic.it.tests`.
 The tests are executed with SWTBot, a testing tool for user interfaces.
@@ -66,11 +68,11 @@ If you integrate a new bundle that has not been tested before, you have to add t
 dependencies of `org.corpus_tools.hexatomic.it.tests`.
 Adding it to the feature or product is not enough.
 
-Note that the Hexatomic integration tests use the SWTBot *EN_US* keyboard layout.
-If you see UI tests failing on your local machine, you may have to install US English language support.
-In other words, the *locale en_US* must be available on your operating system.
+## Issues with keyboard layout and integration tests
 
-On Linux, you can test this with the command `locale -a`.
-If `en_US.utf8` is listed in the output, you're all set up.
-
+Note that the SWTBot-based integration tests try to detect the keyboard layout automatically using the system locale.
+For example, if the computer running the tests has the locale `de_DE.UTF`, SWTBot would detect the keyboard layout `DE_DE`.
+This can lead to test errors when the locale is not consistent with the keyboard layout (e.g. some programmers prefer English keyboard layouts, which would be `EN_US` or `MAC_EN_US`, while still using their native locale).
+To enforce a specific keyboard layout for the tests, set the `SWTBOT_KEYBOARD_LAYOUT` environment variable to the layout you want to use.
+This can also be helpful if SWTBot does not provide a keyboard layout for the current locale, e.g., if there is no `EN_GB` layout you can still enforce the very similar `EN_US` layout.
 For more information on SWTBot's keyboard layouts, see [Keyboard Layouts in SWTBot on the Eclipse wiki](https://wiki.eclipse.org/SWTBot/Keyboard_Layouts).

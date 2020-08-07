@@ -12,6 +12,8 @@ E.g. tests for classes of the `org.corpus_tools.hexatomic.core` bundle should be
 If you add a new bundle, always also create a corresponding test bundle.
 
 The special bundle `org.corpus_tools.hexatomic.it.tests` is used for [integration tests](http://web.archive.org/web/20190928235028/https://en.wikipedia.org/wiki/Integration_testing) on the whole application.
+There can be failures executing the integration tests if the keyboard layout of the system is unsupported or wrongly detected.
+See the [UI integration tests](./ui-integration-tests.html#issues-with-keyboard-layout-and-integration-tests) section for hints on how to fix these failures.
 
 
 ## Execute tests with Maven

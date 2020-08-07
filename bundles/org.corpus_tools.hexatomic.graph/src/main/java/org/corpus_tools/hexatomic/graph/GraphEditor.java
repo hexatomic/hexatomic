@@ -669,15 +669,24 @@ public class GraphEditor {
       // Only react to key pressed, but not the released event
     }
 
+    private boolean isZoomInKey(KeyEvent e) {
+      return (e.character == '+' || e.keyCode == SWT.KEYPAD_ADD) && (e.stateMask & SWT.CTRL) != 0;
+    }
+
+    private boolean isZoomOutKey(KeyEvent e) {
+      return (e.character == '-' || e.keyCode == SWT.KEYPAD_SUBTRACT)
+          && (e.stateMask & SWT.CTRL) != 0;
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
       
       Viewport viewPort = viewer.getGraphControl().getViewport();
       Point loc = viewPort.getViewLocation();
 
-      if (e.character == '+' && (e.stateMask & SWT.CTRL) != 0) {
+      if (isZoomInKey(e)) {
         zoomGraphView(2.0, loc);
-      } else if (e.character == '-' && (e.stateMask & SWT.CTRL) != 0) {
+      } else if (isZoomOutKey(e)) {
         zoomGraphView(0.5, loc);
       } else {
         // Prepare scroll
