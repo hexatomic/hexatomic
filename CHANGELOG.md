@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
 - Grid Editor for token and span annotations based on NatTable and using a similar interface to Excel
 - Salt Projects can be saved now
+- Added a process to merge non-reviewed code and triage these unreviewed PRs regulary
 
 ### Changed
 
