@@ -48,6 +48,7 @@ At the end of the triage and after all issues are documented, remove the "unrevi
 ## Documenting the results
 
 Each triage should have its own section in the `TRIAGE.md` file.
+New triages result are added to the top of the file.
 
 The heading is the date and if a conflict occurred during merging the PRs, which part of the PR collection (e.g. "Part 1", "Part 2", etc.).
 After the heading, the person who did the triage, the revision hash of the start/end commit and a list of PRs that where included in the triage.
