@@ -22,7 +22,7 @@ Choose one of the following types (you can copy and paste them if you like)
 - Refactoring (no functional changes, no API changes)
 - Build related changes
 - Documentation content changes
-- Other (please describe it )
+- Other (please describe it)
 
 --> 
 
