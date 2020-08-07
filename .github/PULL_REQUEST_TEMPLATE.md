@@ -15,7 +15,7 @@ Choose one of the following types (you can copy and paste them if you like)
 
 --> 
 
-Type: N/A
+N/A
 
 ## What is the current behavior?
 <!-- Please describe the current behavior that you are modifying, or link to a relevant issue. -->
