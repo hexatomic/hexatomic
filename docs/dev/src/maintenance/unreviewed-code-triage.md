@@ -43,6 +43,8 @@ When you have merged all the pull requests for included in this triage, compare 
 To compare the changes, you can use the git command line (`git diff <last-triaged-commit> HEAD`), a graphical git diff tool or even the GitHub "compare branches" feature.
 For each problem you find, create a new issue in the GitHub issue tracker and add document it in the `TRIAGE.md` file.
 
+At the end of the triage and after all issues are documented, remove the "unreviewed" label from the triaged pull requests.
+
 ## Documenting the results
 
 Each triage should have its own section in the `TRIAGE.md` file.
