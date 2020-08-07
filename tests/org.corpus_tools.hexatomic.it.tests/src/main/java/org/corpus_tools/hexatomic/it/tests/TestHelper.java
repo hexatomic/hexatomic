@@ -38,7 +38,7 @@ public class TestHelper {
   }
 
   /**
-   * Checks if the {{@link #SWTBOT_KEYBOARD_LAYOUT} environment variable is set and update the
+   * Checks if the {{@link #SWTBOT_KEYBOARD_LAYOUT} environment variable is set and updates the
    * keyboard layout accordingly.
    */
   public static void setKeyboardLayout() {
