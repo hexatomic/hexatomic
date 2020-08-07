@@ -44,12 +44,12 @@ N/A
 ## Pull request checklist
 
 Please check if your PR fulfills the following requirements:
-- [ ] Tests for the changes have been added, or the PR is neither a bug fix nor a feature
-- [ ] Docs have been reviewed and added / updated if needed, or the PR is neither a bug fix nor a feature
+- [ ] Tests for the changes have been added / the PR is neither a bug fix nor a feature
+- [ ] Docs have been reviewed and added / updated if needed / the PR is neither a bug fix nor a feature
 - [ ] The *Unreleased* section in CHANGELOG.md has been amended to reflect the changes in this PR if needed
 - [ ] Build (`mvn verify`) was run locally and any changes were pushed
 - [ ] The pull request is against the correct branch (`master` for bug fixes, `develop` for new functionality)
-- [ ] [Dependencies and citation templates](https://github.com/hexatomic/hexatomic/tree/develop/releng/templates) have been updated where necessary or there are no new dependencies
+- [ ] [Dependencies and citation templates](https://github.com/hexatomic/hexatomic/tree/develop/releng/templates) have been updated where necessary / there are no new dependencies
 
 ---
 
