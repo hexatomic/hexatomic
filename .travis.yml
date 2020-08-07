@@ -15,10 +15,10 @@ before_install:
   - metacity --sm-disable --replace 2> metacity.err &
 
 branches:
-	only:
-	- master
-	- develop
-	- /release/.*/
+    only:
+    - master
+    - develop
+    - /release/.*/
 
 script:
   - mvn -B verify
@@ -28,7 +28,7 @@ jobs:
     - language: java
       jdk: openjdk11
       name: OpenJDK 11 + SonarCloud code analysis
-	  git:
+      git:
         depth: false
       cache:
         directories:
