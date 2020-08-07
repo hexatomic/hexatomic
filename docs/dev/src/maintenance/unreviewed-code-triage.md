@@ -20,7 +20,7 @@ It can happen that there is a conflict because for example reviewed PRs with lar
 If there is any conflict, abort the merge and review the current changes until this point and start a new triage with the commit before the merge commit of the problematic PR as a starting point.
 For example in the following history of pull requests, there would be two triages: one for PR 1 and 2 starting from the last triaged master commit, and one triage from the PR X commit (which was reviewed) that includes PR 4 and 5.
 
-```
+```plain
 last triaged commit
         |
         v
