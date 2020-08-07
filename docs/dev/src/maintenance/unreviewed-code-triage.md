@@ -40,6 +40,7 @@ last triaged commit
 ```
 
 When you have merged all the pull requests for included in this triage, compare the changes of the branch with the previously triaged commit and review the code changes.
+To compare the changes, you can use the git command line (`git diff <last-triaged-commit> HEAD`), a graphical git diff tool or even the GitHub "compare branches" feature.
 For each problem you find, create a new issue in the GitHub issue tracker and add document it in the `TRIAGE.md` file.
 
 ## Documenting the results
