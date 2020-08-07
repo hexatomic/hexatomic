@@ -105,9 +105,9 @@ mvn gitflow:hotfix-start
 7. Make sure that you have documented your changes in the changelog (`CHANGELOG.md`) in the `[Unreleased]` section, and that the updated changelog is pushed to your hotfix branch.
 8. Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer (via the *Reviewers* settings for the pull request) and clicking `Ready to review` in the pull request page on GitHub.
 
-If the maintainer itself is authoring the pull requests and there are no other maintainers to review it, the maintainer can:
-1. Add the "unreviewed" tag to the PR.
-2. Check that all automatic checks have been successful. If static code analysis is enabled, check that no new issues (like the "Code Smell" or "Bug" categories in SonarCloud) have been introduced and that all quality metrics (like minimal test coverage or maximum duplication of lines) are in the accepted range.
+If the maintainer themself is authoring the pull requests and there are no other maintainers available to review it, the maintainer can:
+1. Add the `unreviewed` label to the PR.
+2. Check that all automatic checks have been successful. If static code analysis is enabled, check that no new issues (like the "Code Smell" or "Bug" categories in SonarCloud) have been introduced and that all quality metrics (like minimal test coverage or maximum duplication of lines) are within the accepted range.
 3. Use the administrator privileges to merge the PR without code review.
 
 Unreviewed PRs are subject to [periodic code triages](../../maintenance/unreviewed-code-triage.md).
