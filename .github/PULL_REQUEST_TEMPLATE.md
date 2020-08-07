@@ -59,4 +59,4 @@ Please check if your PR fulfills the following requirements:
 
 - Do **NOT** push the green merge button on GitHub.  
 Follow the latest version of the [developer/maintainer docs](https://hexatomic.github.io/hexatomic/dev/) for making releases.
-- License and citation information for dependencies are complete (each dependency has a folder in `/THIRD-PARTY/`).
+- Check that license and citation information for dependencies are complete (each dependency has a folder in `/THIRD-PARTY/`).
