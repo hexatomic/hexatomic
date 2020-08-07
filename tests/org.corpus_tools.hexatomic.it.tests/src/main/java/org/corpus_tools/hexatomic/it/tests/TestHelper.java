@@ -16,6 +16,10 @@ import org.osgi.framework.FrameworkUtil;
  */
 public class TestHelper {
 
+  private static final String SWTBOT_KEYBOARD_LAYOUT = "SWTBOT_KEYBOARD_LAYOUT";
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TestHelper.class);
+
+
   private TestHelper() {
     // Hide default constructor
   }
@@ -34,10 +38,22 @@ public class TestHelper {
   }
 
   /**
-   * Sets the SWTBot keyboard layout to <code>EN_US</code>.
+   * Checks if the {{@link #SWTBOT_KEYBOARD_LAYOUT} environment variable is set and updates the
+   * keyboard layout accordingly.
    */
   public static void setKeyboardLayout() {
-    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
+    try {
+      String forcedKeyboardLayout = System.getenv(SWTBOT_KEYBOARD_LAYOUT);
+      if (forcedKeyboardLayout != null) {
+        org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT =
+            forcedKeyboardLayout;
+      }
+    } catch (SecurityException ex) {
+      log.error(
+          "Could not get environment variable " + SWTBOT_KEYBOARD_LAYOUT
+              + " because the security mananger is running and disallowed access",
+          ex);
+    }
   }
 
 }

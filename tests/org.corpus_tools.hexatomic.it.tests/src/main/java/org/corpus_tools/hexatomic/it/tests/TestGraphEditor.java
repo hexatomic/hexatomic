@@ -29,6 +29,7 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
@@ -36,6 +37,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
+import org.eclipse.swtbot.swt.finder.utils.WidgetTextDescription;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
@@ -66,7 +68,7 @@ class TestGraphEditor {
   private ErrorService errorService;
   private ProjectManager projectManager;
 
-  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
+  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   private final class GraphLoadedCondition extends DefaultCondition {
 
@@ -146,8 +148,6 @@ class TestGraphEditor {
 
   @BeforeEach
   void setup() {
-    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
-        "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
     TestHelper.setKeyboardLayout();
 
     IEclipseContext ctx = TestHelper.getEclipseContext();
@@ -274,7 +274,11 @@ class TestGraphEditor {
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
     // Zoom in so we can move the view with the arrow keys
-    keyboard.pressShortcut(SWT.CTRL, '+');
+    // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad keys yet.
+    Keyboard mockKeyboadForGraph =
+        KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
+    KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
+    mockKeyboadForGraph.pressShortcut(strokesZoomIn);
 
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
@@ -320,7 +324,8 @@ class TestGraphEditor {
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
     // Zoom out again: moving up should not have any effect again
-    keyboard.pressShortcut(SWT.CTRL, '-');
+    KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
+    mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
