@@ -29,18 +29,52 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
     extends NotifyingElement<T>, LabelableElement {
 
   /**
-   * Sends the event for removing the label given by the qualified name.
+   * Applies an action that modifies this element but sends notifications before and after the
+   * action.
+   * 
+   * @param action The action to execute
+   */
+  default void applyModification(GraphModificationAction action) {
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
+    action.apply();
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+  }
+
+  /**
+   * Applies an action that adds an annotation and sends a notifications after adding it.
+   * 
+   * @param action The action to execute
+   * @param element The element that is added and will the the argument of the notification event
+   */
+  default void applyAdd(GraphModificationAction action, Object element) {
+    action.apply();
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, element);
+  }
+
+  /**
+   * Applies an action that removes an annotation and sends a notifications before removing it.
+   * 
+   * @param action The action to execute
+   * @param element The element that is removed and will the the argument of the notification event
+   */
+  default void applyRemove(GraphModificationAction action, Object element) {
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, element);
+    action.apply();
+  }
+
+
+  /**
+   * Applies an action that removes a label if the label exists and sends the event for removing it.
    * 
    * @param qname The qualified name of the label to remove.
-   * @return If, true, the label should be removed.
    */
-  default boolean prepareRemoveLabel(String qname) {
+  default void applyRemoveLabelIfExisting(GraphModificationAction action, String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
       SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
-      return true;
-    } else {
-      return false;
+      action.apply();
     }
   }
+
+
 }

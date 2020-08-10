@@ -21,7 +21,6 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -61,45 +60,36 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void addLabel(Label label) {
-    super.addLabel(label);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
+    applyAdd(() -> super.addLabel(label), label);
   }
 
   @Override
   public void removeLabel(String qname) {
-    if (prepareRemoveLabel(qname)) {
-      super.removeLabel(qname);
-    }
+    applyRemoveLabelIfExisting(() -> super.removeLabel(qname), qname);
   }
 
   @Override
   public void removeAll() {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    super.removeAll();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    applyModification(() -> super.removeAll());
   }
 
   @Override
   public void addNode(N node) {
-    super.addNode(node);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
+    applyAdd(() -> super.addNode(node), node);
   }
 
   @Override
   public void removeNode(N node) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, node);
-    super.removeNode(node);
+    applyRemove(() -> super.removeNode(node), node);
   }
 
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
-    super.addRelation(relation);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
+    applyAdd(() -> super.addRelation(relation), relation);
   }
 
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, rel);
-    super.removeRelation(rel);
+    applyRemove(() -> super.removeRelation(rel), rel);
   }
 }
