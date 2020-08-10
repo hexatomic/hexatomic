@@ -12,12 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Grid Editor for token and span annotations based on NatTable and using a similar interface to Excel
 - Salt Projects can be saved now
 - Annotation graph updates are propagated using the Eclipse RCP event bus
+- Added a process to merge non-reviewed code and triage these unreviewed PRs regulary
 
 ### Changed
 
 - Don't unload the Salt document graph when text viewer is closed, notify the project manager instead.
   This will only unload the document graph when no other editor has opened the document.
-- Updated the Eclipse platform to the 2020-03 release
+- Updated the Eclipse platform to the 2020-03 release.
+- Updated PR template so that every checkbox is an actual task and should be checked to pass quality control.
 
 ## Removed
 
