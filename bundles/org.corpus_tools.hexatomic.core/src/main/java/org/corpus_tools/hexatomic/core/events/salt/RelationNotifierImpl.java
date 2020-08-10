@@ -70,7 +70,7 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   @Override
   public void removeAll() {
-    applyModification(() -> super.removeAll());
+    applyModification(super::removeAll);
   }
 
   @Override

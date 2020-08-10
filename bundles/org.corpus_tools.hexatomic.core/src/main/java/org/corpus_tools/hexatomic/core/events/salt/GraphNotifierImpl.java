@@ -74,7 +74,7 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeAll() {
-    applyModification(() -> super.removeAll());
+    applyModification(super::removeAll);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeRelations() {
-    applyModification(() -> super.removeRelations());
+    applyModification(super::removeRelations);
   }
 
   @Override

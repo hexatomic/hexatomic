@@ -65,6 +65,6 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingLabelab
 
   @Override
   public void removeAll() {
-    applyModification(() -> super.removeAll());
+    applyModification(super::removeAll);
   }
 }

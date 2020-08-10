@@ -67,7 +67,7 @@ public class LabelNotifierImpl extends LabelImpl
 
   @Override
   public void removeAll() {
-    applyModification(() -> super.removeAll());
+    applyModification(super::removeAll);
   }
 
   @Override

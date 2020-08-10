@@ -70,7 +70,7 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void removeAll() {
-    applyModification(() -> super.removeAll());
+    applyModification(super::removeAll);
   }
 
   @Override
