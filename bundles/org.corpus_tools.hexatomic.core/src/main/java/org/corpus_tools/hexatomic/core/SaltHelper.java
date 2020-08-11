@@ -43,9 +43,9 @@ public class SaltHelper {
   }
 
   /**
-   * Delegated elements might link to an actual typed element. This function returns the actual
-   * typed element or the original element itself. If there is a chain of links, the last element 
-   * in this chain will be returned.
+   * Delegated elements might link to an actual typed element (the delegate). This function returns
+   * the actual typed element or the original element itself. If there is a chain of links, the last
+   * element in this chain will be returned.
    * 
    * @param element The element to get the last typed object element for
    * @return The actual typed object
