@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Graph Editor - Hexatomic User Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../../usage/index.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../../usage/projects.html"><strong aria-hidden="true">3.1.</strong> Working with projects</a></li><li><a href="../../usage/corpus-structure.html"><strong aria-hidden="true">3.2.</strong> Editing the corpus structure</a></li><li><a href="../../usage/open-editor.html"><strong aria-hidden="true">3.3.</strong> Opening an editor</a></li><li><a href="../../usage/graph-editor/index.html" class="active"><strong aria-hidden="true">3.4.</strong> Graph Editor</a></li><li><ol class="section"><li><a href="../../usage/graph-editor/console.html"><strong aria-hidden="true">3.4.1.</strong> Editing the graph</a></li></ol></li><li><a href="../../usage/grid-editor/index.html"><strong aria-hidden="true">3.5.</strong> Grid Editor</a></li><li><ol class="section"><li><a href="../../usage/grid-editor/editing.html"><strong aria-hidden="true">3.5.1.</strong> Editing the grid</a></li></ol></li></ol></li><li><a href="../../troubleshooting.html"><strong aria-hidden="true">4.</strong> Troubleshooting &amp; getting help</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic User Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#graph-editor" id="graph-editor">Graph Editor</a></h1>
+<p>The graph editor is for visualizing and annotating annotation graphs.
+It provides a general visualization that displays all possible types of annotation in a graph of annotatable elements.</p>
+<p><img src="graph-viewer.png" alt="Screenshot of the graph editor" /></p>
+<h2><a class="header" href="#filters" id="filters">Filters</a></h2>
+<p>On the right-hand side of the interface, you can select which segment of the current document to show in the <a href="#graph-view">graph view</a>.
+For large graphs, it can take some time until its layout is calculated.
+The checkbox next to the segment indicates if this calculation is finished.
+You can select more than one segment to display, by holding the <kbd>Ctrl</kbd> key while clicking on additional segments.
+You can also show a whole range of segments by holding the <kbd>Shift</kbd> key and clicking on the last segment of the range you want to select.</p>
+<p>You can also choose to display spans and their annotations in the graph, by checking the checkbox <strong>Include spans</strong>. 
+Spans are special nodes to collect a number of tokens and to annotate them all at once.
+If you want to learn more about spans, please read the <a href="http://corpus-tools.org/salt/#documentation">Salt documentation</a>.</p>
+<p>Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox <strong>Include pointing relations</strong>.</p>
+<p>And you can filter the segments that include annotations of a specific <em>name</em> by using the filter text field above the list of segments.</p>
+<h2><a class="header" href="#graph-view" id="graph-view">Graph view</a></h2>
+<p>The left-hand side of the graph editor is taken up by the graph view, which displays the nodes and relations in the data model of the current document.</p>
+<p>You can navigate the graph view as follows:</p>
+<ul>
+<li>
+<p><strong>Zoom in and out</strong> by using the <strong>mouse wheel</strong>.</p>
+<ul>
+<li>You will zoom in to where your mouse cursor is.</li>
+</ul>
+</li>
+<li>
+<p><strong>Zoom in and out</strong> by using <strong>using the keyboard</strong>.</p>
+<ul>
+<li>If you press and hold the <kbd>Ctrl</kbd> key, you can zoom in with the <kbd>+</kbd> key and zoom out with the <kbd>-</kbd> key.</li>
+</ul>
+</li>
+<li>
+<p><strong>Move</strong> the area of the graph that is displayed by <strong>using the keyboard</strong>:</p>
+<ul>
+<li>The <kbd>Arrow keys</kbd> move the area in the respective direction, and <kbd>PgUp</kbd> and <kbd>PgDown</kbd> move it up and down.</li>
+<li>If you press and hold the <kbd>Shift</kbd> key and then use the arrow or paging keys, you move more quickly.</li>
+</ul>
+</li>
+<li>
+<p><strong>Move</strong> the area of the graph that is displayed by <strong>using the mouse wheel and function keys</strong>:</p>
+<ul>
+<li>If you hold down <kbd>Shift</kbd> key while moving the mouse wheel, you can scroll <em>up and down</em>.</li>
+<li>If you hold down <kbd>Ctrl</kbd> key while moving the mouse wheel, you can scroll <em>left and right</em>.</li>
+</ul>
+</li>
+<li>
+<p>You can <strong>center the view</strong> around a specific point in the graph by double-clicking that point.</p>
+</li>
+</ul>
+<p>If you don't like the layout of the graph, you can change it by simply dragging nodes with your mouse.</p>
+<h2><a class="header" href="#console" id="console">Console</a></h2>
+<p>On the bottom of the graph editor, there is the console which you can use to actually edit the graph.
+How to do this is explained in detail in the next section, <a href="./console.html">Editing the graph</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../usage/open-editor.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../usage/graph-editor/console.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../usage/open-editor.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../usage/graph-editor/console.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

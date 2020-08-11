@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Editing the graph - Hexatomic User Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><a href="../../usage/index.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="../../usage/projects.html"><strong aria-hidden="true">3.1.</strong> Working with projects</a></li><li><a href="../../usage/corpus-structure.html"><strong aria-hidden="true">3.2.</strong> Editing the corpus structure</a></li><li><a href="../../usage/open-editor.html"><strong aria-hidden="true">3.3.</strong> Opening an editor</a></li><li><a href="../../usage/graph-editor/index.html"><strong aria-hidden="true">3.4.</strong> Graph Editor</a></li><li><ol class="section"><li><a href="../../usage/graph-editor/console.html" class="active"><strong aria-hidden="true">3.4.1.</strong> Editing the graph</a></li></ol></li><li><a href="../../usage/grid-editor/index.html"><strong aria-hidden="true">3.5.</strong> Grid Editor</a></li><li><ol class="section"><li><a href="../../usage/grid-editor/editing.html"><strong aria-hidden="true">3.5.1.</strong> Editing the grid</a></li></ol></li></ol></li><li><a href="../../troubleshooting.html"><strong aria-hidden="true">4.</strong> Troubleshooting &amp; getting help</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic User Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#editing-the-graph" id="editing-the-graph">Editing the graph</a></h1>
+<p>The graph editor contains a console, which you can use to manipulate the annotation graph.
+You first enter a command by entering it as text behind the so-called prompt <code>&gt; </code> and pressing <kbd>Enter</kbd>.</p>
+<p><img src="prompt.png" alt="Screenshot of the console prompt, showing the text &gt; name arg1 arg2" /></p>
+<p>Commands typically start with its name and a list of arguments. The arguments are specific to each command but can share similar syntax.
+Hexatomics command line syntax is similar to the one of <a href="https://github.com/LBierkandt/graph-anno/blob/master/doc/GraphAnno-Documentation_en.pdf">GraphAnno</a>.</p>
+<p>Currently, the following commands are supported.</p>
+<blockquote>
+<ul>
+<li><a href="#tokenize-t"><code>t</code>: Tokenize</a></li>
+<li><a href="%60#tokenize-before-tb-and-after-ta-a-given-token%60"><code>tb</code>/<code>ta</code>: Tokenize before /after a token</a></li>
+<li><a href="#new-node-n"><code>n</code>: New node</a></li>
+<li><a href="#new-edge-e"><code>e</code>: New edge</a></li>
+<li><a href="#annotate-a"><code>a</code>: Annotate</a></li>
+<li><a href="#delete-elements-d"><code>d</code>: Delete elements</a></li>
+</ul>
+</blockquote>
+<h2><a class="header" href="#tokenize-t" id="tokenize-t">Tokenize: <code>t</code></a></h2>
+<p>Tokenize the given argument string and add the tokens to the annotation graph.
+String values can be enclosed in quotes, e.g., for punctuation and for tokens that include whitespace.</p>
+<h3><a class="header" href="#examples" id="examples">Examples</a></h3>
+<pre><code class="language-text">t This is an example &quot;.&quot;
+</code></pre>
+<p>This command will result in 5 tokens: <code>[This] [is] [an] [example] [.]</code>.</p>
+<p><img src="tokenize-example.png" alt="The resulting tokens after the command" /></p>
+<p>If you call <code>t</code> again, the new token will be appended to the end.
+E.g. calling <code>t Not .</code> will result in 7 tokens in total: <code>[This] [is] [an] [example] [.] [Not] [.]</code>.
+Note that the dot is not escaped with <code>&quot;</code> quotation marks in this example, and that <code>t Not.</code> would also work.</p>
+<p>Other than that, escaping punctuation with quotation marks is required for all non-alphabetical characters, to ensure correct tokenization, such as in <code>t I &quot;'&quot; m ...</code>.</p>
+<h2><a class="header" href="#tokenize-before-tb-and-after-ta-a-given-token" id="tokenize-before-tb-and-after-ta-a-given-token">Tokenize before (<code>tb</code>) and after (<code>ta</code>) a given token</a></h2>
+<p>Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.</p>
+<h3><a class="header" href="#examples-1" id="examples-1">Examples</a></h3>
+<p>Starting with an initial text with the two tokens <code>[This] [text]</code> (first one is called &quot;t1&quot; and the second one &quot;t2&quot;),
+executing</p>
+<pre><code class="language-text">tb #t2 very simple
+</code></pre>
+<p>will append the two new tokens <em>before</em> the second token: <code>[This] [very] [simple] [text]</code>.
+Given the new tokens, calling the following command will insert the two new tokens <em>after</em> the first token (<code>[This] [is] [a] [very] [simple] [text]</code>).</p>
+<pre><code class="language-text">ta #t1 is a
+</code></pre>
+<h4><a class="header" href="#see-also" id="see-also">See also</a></h4>
+<ul>
+<li><a href="#identifying-elements">Identifying elements</a></li>
+</ul>
+<h2><a class="header" href="#new-node-n" id="new-node-n">New node: <code>n</code></a></h2>
+<p>The command <code>n</code> will create a new node, and dominance relations between the new node and existing nodes.</p>
+<p>Additionally, it can be used to annotate the new node in the same command.</p>
+<p>Arguments starting with <code>#</code> refer to the node names to which dominance edges are added (e.g. <code>#someNodeName</code>).</p>
+<p>When the creation was successful, the console will print a message giving the name of the new node and its annotations.</p>
+<h3><a class="header" href="#examples-2" id="examples-2">Examples</a></h3>
+<p>Starting with the tokens <code>[This] [is] [an] [example] [.]</code>, the following command will group &quot;an example&quot; to a node
+with the label &quot;cat=NP&quot;.</p>
+<pre><code class="language-text">n cat:NP #t3 #t4
+</code></pre>
+<p><img src="newnode-example-1.png" alt="Output after adding an NP node" /></p>
+<p>The following command creates a new node using the namespace &quot;tiger&quot; for the annotation.</p>
+<pre><code class="language-text">n tiger:cat:NP #t1
+</code></pre>
+<p><img src="newnode-example-2.png" alt="Output after adding an NP and a namespace" /></p>
+<p>You can mix nodes and tokens in the <code>n</code> command.
+Also, the number of dominated nodes is not restricted.</p>
+<pre><code class="language-text">n cat:VP #t2 #n1
+n cat:S #n2 #n3
+</code></pre>
+<p><img src="newnode-example-3.png" alt="Complete syntax annotation" /></p>
+<h4><a class="header" href="#see-also-1" id="see-also-1">See also</a></h4>
+<ul>
+<li><a href="#identifying-elements">Identifying elements</a></li>
+<li><a href="#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#new-edge-e" id="new-edge-e">New edge: <code>e</code></a></h2>
+<p>You can add two types of edges to the graph: dominance relations (e.g., for syntax trees) and pointing relations (directed edges without a specific semantic).
+Dominance edges are created with the syntax <code>e #source &gt; #target</code> where <code>#source</code> is a node reference to the source node and <code>#target</code> a node reference to the target node.
+For pointing relations, use <code>-&gt;</code> instead of <code>&gt;</code>.
+This syntax is used to reference edges in general, e.g., when annotating or deleting them.
+As with new nodes, initial annotations can be added as arguments: <code>e #source &gt; #target name:value</code>.</p>
+<h3><a class="header" href="#examples-3" id="examples-3">Examples</a></h3>
+<pre><code class="language-text">e #t2 -&gt; #t1 func:nsubj
+</code></pre>
+<p>This adds a pointing relation between <code>#t2</code> and <code>#t1</code> with an annotation named &quot;func&quot; and the value &quot;nsubj.&quot;</p>
+<p><img src="addedge-pointing.png" alt="Added pointing relation" /></p>
+<pre><code class="language-text">e #n4 &gt; #t5
+</code></pre>
+<p>This example adds a dominance relation between the existing nodes.</p>
+<p><img src="addedge-dominance.png" alt="Added dominance relation" /></p>
+<h4><a class="header" href="#see-also-2" id="see-also-2">See also</a></h4>
+<ul>
+<li><a href="#identifying-elements">Identifying elements</a></li>
+<li><a href="#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#annotate-a" id="annotate-a">Annotate: <code>a</code></a></h2>
+<p>Adds, updates, or deletes annotations on existing nodes or edges.
+Takes as arguments the nodes or edges which should be annotated, and the annotation to add, change, or delete.
+You can delete existing annotations by leaving the value in the annotation attribute empty.</p>
+<h3><a class="header" href="#examples-4" id="examples-4">Examples</a></h3>
+<pre><code class="language-text">a pos:DT #t1 #t3
+</code></pre>
+<p>Sets the annotation &quot;pos&quot; to the value &quot;DT&quot; for both nodes &quot;t1&quot; and &quot;t3&quot;.</p>
+<p><img src="set-annotation-dt.png" alt="Annotated tokens" /></p>
+<pre><code class="language-text">a pos: #t1
+</code></pre>
+<p>Deletes the &quot;pos&quot; annotation for the &quot;t1&quot; node.</p>
+<pre><code class="language-text">a func_alt:nominal_subject #t2 -&gt; #t1
+</code></pre>
+<p>Adds the &quot;func_alt&quot; annotation to the existing pointing relation between &quot;t2&quot; and &quot;t1&quot;.</p>
+<h4><a class="header" href="#see-also-3" id="see-also-3">See also</a></h4>
+<ul>
+<li><a href="#identifying-elements">Identifying elements</a></li>
+<li><a href="#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#delete-elements-d" id="delete-elements-d">Delete elements: <code>d</code></a></h2>
+<p>Deletes any node or edge of the graph.
+Give the elements to delete as an argument.</p>
+<h3><a class="header" href="#examples-5" id="examples-5">Examples</a></h3>
+<pre><code class="language-text">d #t1 #t2
+</code></pre>
+<p>Deletes nodes &quot;t1&quot; and &quot;t2&quot;.</p>
+<pre><code class="language-text">d #t4 -&gt; #t3
+</code></pre>
+<p>Deletes the pointing relation between &quot;t4&quot; and &quot;t3&quot;.</p>
+<h4><a class="header" href="#see-also-4" id="see-also-4">See also</a></h4>
+<ul>
+<li><a href="#identifying-elements">Identifying elements</a></li>
+</ul>
+<h2><a class="header" href="#identifying-elements" id="identifying-elements">Identifying elements</a></h2>
+<p>Elements in the graph are identified by the identifier on the node/edge in the graph. In the example below, the tokens have
+the identifiers <code>sTok1</code>, <code>sTok2</code>, <code>sTok3</code>, and <code>t28</code>. </p>
+<p>Note that identifiers for the same type of element may look different within one and the same document (as in <code>sTok1</code> and <code>t28</code>).</p>
+<p><img src="node-labels.png" alt="Labelled token nodes" /></p>
+<h2><a class="header" href="#defining-annotations" id="defining-annotations">Defining annotations</a></h2>
+<p>Annotation arguments have the form <code>name:value</code> or <code>namespace:name:value</code>.</p>
+<p>This is true both for defining new annotations (<code>namespace</code> is optional), and for addressing existing annotations (<code>namespace</code> is <strong>required</strong>).</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../usage/graph-editor/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../usage/grid-editor/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../usage/graph-editor/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../usage/grid-editor/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
