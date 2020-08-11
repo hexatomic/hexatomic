@@ -151,12 +151,11 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           String lastLine = document.get(lineRegion.getOffset(), lineRegion.getLength())
               .substring(controller.getPrompt().length());
 
-
-          undoManager.addCheckpoint();
           List<String> output = controller.executeCommand(lastLine);
           for (String l : output) {
             writeLine(l);
           }
+          undoManager.addCheckpoint();
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);

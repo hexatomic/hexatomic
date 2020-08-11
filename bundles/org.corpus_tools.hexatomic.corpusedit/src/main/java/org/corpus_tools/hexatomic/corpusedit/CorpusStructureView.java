@@ -235,10 +235,10 @@ public class CorpusStructureView {
         if (element instanceof TreeItem) {
           TreeItem item = (TreeItem) element;
           if (item.getData() instanceof SNamedElement) {
-            undo.addCheckpoint();
 
             SNamedElement n = (SNamedElement) item.getData();
             n.setName(value.toString());
+            undo.addCheckpoint();
           }
         }
 
@@ -365,8 +365,6 @@ public class CorpusStructureView {
 
   private void addCorpusGraph() {
 
-    undo.addCheckpoint();
-
     int oldSize = projectManager.getProject().getCorpusGraphs() == null ? 0
         : projectManager.getProject().getCorpusGraphs().size();
 
@@ -374,6 +372,8 @@ public class CorpusStructureView {
     newGraph.setName("corpus_graph_" + (oldSize + 1));
 
     selectSaltObject(newGraph, true);
+
+    undo.addCheckpoint();
 
   }
 
@@ -400,8 +400,6 @@ public class CorpusStructureView {
 
     if (g != null) {
 
-      undo.addCheckpoint();
-
       int oldSize = g.getCorpora() == null ? 0 : g.getCorpora().size();
       String newCorpusName = "corpus_" + (oldSize + 1);
       SCorpus newCorpus;
@@ -415,6 +413,7 @@ public class CorpusStructureView {
       if (newCorpus != null) {
         selectSaltObject(newCorpus, true);
       }
+      undo.addCheckpoint();
     }
 
   }
@@ -440,13 +439,12 @@ public class CorpusStructureView {
 
     if (parent != null) {
 
-      undo.addCheckpoint();
-
       int oldSize =
           parent.getGraph().getDocuments() == null ? 0 : parent.getGraph().getDocuments().size();
       SDocument newDocument = parent.getGraph().createDocument(parent, "document_" + (oldSize + 1));
       log.debug("Selecting created document");
       selectSaltObject(newDocument, true);
+      undo.addCheckpoint();
     }
 
   }

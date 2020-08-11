@@ -55,6 +55,17 @@ public interface Topics {
    */
   public static final String ANNOTATION_AFTER_MODIFICATION = "ANNOTATION_UPDATE/AFTER_MODIFICATION";
 
+  /**
+   * Send after a collection of Salt elements is modified and a consistent state is reached.
+   */
+  public static final String ANNOTATION_CHECKPOINT_CREATED = "ANNOTATION_UPDATE/CHECKPOINT/CREATED";
+
+  /**
+   * Send after a consistent state has been restored.
+   */
+  public static final String ANNOTATION_CHECKPOINT_RESTORED =
+      "ANNOTATION_UPDATE/CHECKPOINT/RESTORED";
+
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
