@@ -37,7 +37,7 @@ public interface Topics {
   /**
    * Send when a Salt element has been added.
    */
-  public static final String ANNOTATION_ADDED = "ANNOTATION_UPDATE/ADD";
+  public static final String ANNOTATION_ADDED = "ANNOTATION_UPDATE/ADDED";
 
   /**
    * Send when a Salt element has been removed.

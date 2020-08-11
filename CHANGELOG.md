@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Removed
 
-- The Salt graphs are not using the Salt notification extension anymore
+- The Salt graphs are not using the insufficient Salt notification extension anymore
 - `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
 
 ### Fixed
