@@ -2,8 +2,7 @@
  * #%L
  * org.corpus_tools.hexatomic.core
  * %%
- * Copyright (C) 2018 - 2020 Stephan Druskat,
- *                                     Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat, Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +20,16 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-public interface NotifyingElement<T> {
-  public T getTypedDelegation();
+/**
+ * An interface use for lambda expressions that modify the graph.
+ * 
+ * @author Thomas Krause
+ *
+ */
+public interface GraphModificationAction {
 
-  public void setTypedDelegation(T typedDelegation);
+  /**
+   * Apply the internal modification of the graph.
+   */
+  public void apply();
 }

@@ -101,7 +101,7 @@ class SaltHelperTest {
     SaltFactory.setFactory(new SaltFactoryImpl());
     final NodeNotifierImpl delegate = new NodeNotifierImpl();
     final Node actualNode = new NodeImpl(delegate);
-    delegate.setOwner(actualNode);
+    delegate.setTypedDelegation(actualNode);
 
     assertEquals(null, SaltHelper.resolveDelegation(null));
     assertEquals(actualNode, SaltHelper.resolveDelegation(actualNode));

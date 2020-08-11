@@ -12,6 +12,8 @@ E.g. tests for classes of the `org.corpus_tools.hexatomic.core` bundle should be
 If you add a new bundle, always also create a corresponding test bundle.
 
 The special bundle `org.corpus_tools.hexatomic.it.tests` is used for [integration tests](http://web.archive.org/web/20190928235028/https://en.wikipedia.org/wiki/Integration_testing) on the whole application.
+There can be failures executing the integration tests if the keyboard layout of the system is unsupported or wrongly detected.
+See the [UI integration tests](./ui-integration-tests.html#issues-with-keyboard-layout-and-integration-tests) section for hints on how to fix these failures.
 
 
 ## Execute tests with Maven
@@ -27,6 +29,9 @@ You can also generate a test code coverage report by executing `mvn verify site 
 The generated report will be located under `tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/index.html`.
 
 To learn more about the Maven build lifecycle, read the [Maven Lifecycles Reference](http://web.archive.org/web/20191128092924/https://maven.apache.org/ref/3.6.2/maven-core/lifecycles.html).
+
+You can also generate a test code coverage report by executing `mvn verify site -Pcoverage`. 
+The generated report will be located under `tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/index.html`.
 
 ## Execute tests in Eclipse
 

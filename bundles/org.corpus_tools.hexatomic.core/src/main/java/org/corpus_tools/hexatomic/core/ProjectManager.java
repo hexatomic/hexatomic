@@ -167,11 +167,11 @@ public class ProjectManager {
         if (Files.exists(saltFile)) {
           // Load the existing document graph from disk
           try {
-            // Load document
+            // Load document and suppress unneeded notifications
             notificationFactory.setSuppressingEvents(true);
             result.get().loadDocumentGraph();
             notificationFactory.setSuppressingEvents(false);
-            // Re-enable listeners and notify them of the loaded document
+            // Send event notification of the loaded document
             events.send(Topics.DOCUMENT_LOADED, result.get().getId());
           } catch (SaltResourceException ex) {
             errorService.handleException(
@@ -250,6 +250,7 @@ public class ProjectManager {
     project = SaltFactory.createSaltProject();
     location = Optional.of(path);
     try {
+      // Suppress superfluous notifications
       notificationFactory.setSuppressingEvents(true);
       project.loadCorpusStructure(path);
       notificationFactory.setSuppressingEvents(false);
@@ -534,6 +535,7 @@ public class ProjectManager {
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
+            // Suppress superfluous notifications
             notificationFactory.setSuppressingEvents(true);
             document.get().setDocumentGraph(null);
             notificationFactory.setSuppressingEvents(false);

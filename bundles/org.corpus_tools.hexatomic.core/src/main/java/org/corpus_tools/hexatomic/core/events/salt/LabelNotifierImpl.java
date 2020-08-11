@@ -21,7 +21,6 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.impl.LabelImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -35,6 +34,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * </p>
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
 public class LabelNotifierImpl extends LabelImpl
@@ -42,58 +42,47 @@ public class LabelNotifierImpl extends LabelImpl
 
   private static final long serialVersionUID = 8010124349555159857L;
 
-  private Label owner;
+  private Label typedDelegation;
 
 
   @Override
-  public Label getOwner() {
-    return owner;
+  public Label getTypedDelegation() {
+    return typedDelegation;
   }
 
   @Override
-  public void setOwner(Label owner) {
-    this.owner = owner;
+  public void setTypedDelegation(Label typedDelegation) {
+    this.typedDelegation = typedDelegation;
   }
 
 
   @Override
   public void addLabel(Label label) {
-    super.addLabel(label);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, label);
+    applyAdd(() -> super.addLabel(label), label);
   }
 
   @Override
   public void removeLabel(String qname) {
-    if (prepareRemoveLabel(qname)) {
-      super.removeLabel(qname);
-    }
+    applyRemoveLabelIfExisting(() -> super.removeLabel(qname), qname);
   }
 
   @Override
   public void removeAll() {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    super.removeAll();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    applyModification(super::removeAll);
   }
 
   @Override
   public void setNamespace(String namespace) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    super.setNamespace(namespace);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    applyModification(() -> super.setNamespace(namespace));
   }
 
   @Override
   public void setName(String name) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    super.setName(name);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    applyModification(() -> super.setName(name));
   }
 
   @Override
   public void setValue(Object value) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    super.setValue(value);
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
+    applyModification(() -> super.setValue(value));
   }
 }

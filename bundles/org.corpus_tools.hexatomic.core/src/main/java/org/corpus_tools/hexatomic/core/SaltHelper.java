@@ -34,6 +34,7 @@ import org.corpus_tools.salt.graph.Relation;
  * A utility class to handle Salt objects.
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
 public class SaltHelper {
   
@@ -42,12 +43,12 @@ public class SaltHelper {
   }
 
   /**
-   * Delegated elements might have an actual owning element. This functions returns the actual
-   * owning element or the element itself. If there is a chain of owners, the last element in this
-   * chain will be returned.
+   * Delegated elements might link to an actual typed element (the delegate). This function returns
+   * the actual typed element or the original element itself. If there is a chain of links, the last
+   * element in this chain will be returned.
    * 
-   * @param element The element to get the owner for
-   * @return The actual implementation object
+   * @param element The element to get the last typed object element for
+   * @return The actual typed object
    */
   public static Object resolveDelegation(Object element) {
     if (element == null) {
@@ -55,8 +56,8 @@ public class SaltHelper {
     }
     Object currentElement = element;
     while (currentElement instanceof NotifyingElement<?>
-        && ((NotifyingElement<?>) currentElement).getOwner() != null) {
-      currentElement = ((NotifyingElement<?>) currentElement).getOwner();
+        && ((NotifyingElement<?>) currentElement).getTypedDelegation() != null) {
+      currentElement = ((NotifyingElement<?>) currentElement).getTypedDelegation();
     }
     return currentElement;
   }
