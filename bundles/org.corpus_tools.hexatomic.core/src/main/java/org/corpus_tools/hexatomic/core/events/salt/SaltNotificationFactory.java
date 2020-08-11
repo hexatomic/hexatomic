@@ -184,7 +184,7 @@ public class SaltNotificationFactory implements ISaltFactory {
     ISaltFactory factory = SaltFactory.getFactory();
     if (factory instanceof SaltNotificationFactory) {
       SaltNotificationFactory notificationFactory = (SaltNotificationFactory) factory;
-      // We have to assume that other thread can modify the Salt graph.
+      // We have to assume that other threads can modify the Salt graph.
       // Since we are sending the events synchronously and receivers are likely using the UI thread
       // for receiving the event, synchronizing here and not in the event bus makes sure the event
       // handler is always executed before this function returns.
