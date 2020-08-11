@@ -6,7 +6,6 @@ addons:
       - metacity
 services:
   - xvfb
-  - metacity
 
 before_install:
   - export DISPLAY=:99.0
@@ -52,8 +51,7 @@ jobs:
 
       deploy:
         - provider: releases
-          api_key:
-            secure: $GITHUB_TOKEN
+          token: $GITHUB_TOKEN
           on:
             repo: hexatomic/hexatomic
             branch: master
@@ -64,6 +62,7 @@ jobs:
           file_glob: true
           file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
           tag_name: $TRAVIS_TAG
+          edge: true
     - language: rust
       name: Documentation
 
@@ -101,3 +100,4 @@ jobs:
             tags: true
             condition: $TRAVIS_OS_NAME = linux
           skip_cleanup: true
+          edge: true
