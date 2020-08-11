@@ -9,7 +9,7 @@ import org.corpus_tools.salt.graph.Label;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
-public class LabelModification implements ReversibleOperation {
+public class LabelModify implements ReversibleOperation {
 
   private final Label label;
 
@@ -22,7 +22,7 @@ public class LabelModification implements ReversibleOperation {
    * 
    * @param label The label that changed.
    */
-  public LabelModification(Label label) {
+  public LabelModify(Label label) {
 
     this.label = label;
 

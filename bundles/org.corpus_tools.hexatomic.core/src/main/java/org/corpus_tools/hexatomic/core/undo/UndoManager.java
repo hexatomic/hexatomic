@@ -92,14 +92,14 @@ public class UndoManager {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeBeforeAnnotationModified(
-      @UIEventTopic(Topics.ANNOTATION_BEFORE_MODIFICATION) Object element) {
+      @UIEventTopic(Topics.LABEL_MODIFY) Object element) {
     Optional<SGraph> graph = SaltHelper.getGraphForObject(element, SGraph.class);
     // Only record changes for annotations that belong to a graph
     if (graph.isPresent()) {
       if (element instanceof Label) {
         Label label = (Label) element;
         if (label.getValue() != null) {
-          uncommittedChanges.add(new LabelModification(label));
+          uncommittedChanges.add(new LabelModify(label));
           return;
         }
       }

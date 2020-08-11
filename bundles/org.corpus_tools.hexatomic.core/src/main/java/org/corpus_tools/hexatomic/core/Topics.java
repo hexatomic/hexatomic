@@ -66,6 +66,8 @@ public interface Topics {
   public static final String ANNOTATION_CHECKPOINT_RESTORED =
       "ANNOTATION_UPDATE/CHECKPOINT/RESTORED";
 
+  public static final String LABEL_MODIFY = "ANNOTATION_UPDATE/LABEL/MODIFY";
+
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
