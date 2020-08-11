@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed incorrect description of unreviewed hotfixes workflow in developer/maintainer documentation
+
 ## [0.4.2] - 2020-08-11
 
 ### Fixed
