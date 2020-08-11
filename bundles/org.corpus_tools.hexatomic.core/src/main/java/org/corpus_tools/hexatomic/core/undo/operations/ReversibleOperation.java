@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.core.undo;
+package org.corpus_tools.hexatomic.core.undo.operations;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 

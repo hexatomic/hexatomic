@@ -3,17 +3,14 @@ package org.corpus_tools.hexatomic.core.undo;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Optional;
 import java.util.Stack;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
-import org.corpus_tools.salt.core.SGraph;
-import org.corpus_tools.salt.graph.Label;
+import org.corpus_tools.hexatomic.core.undo.operations.ReversibleOperation;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -91,18 +88,10 @@ public class UndoManager {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeBeforeAnnotationModified(
-      @UIEventTopic(Topics.LABEL_MODIFY) Object element) {
-    Optional<SGraph> graph = SaltHelper.getGraphForObject(element, SGraph.class);
-    // Only record changes for annotations that belong to a graph
-    if (graph.isPresent()) {
-      if (element instanceof Label) {
-        Label label = (Label) element;
-        if (label.getValue() != null) {
-          uncommittedChanges.add(new LabelModify(label));
-          return;
-        }
-      }
+  private void subscribeUndoOperationAdded(
+      @UIEventTopic(Topics.UNDO_OPERATION_ADDED) Object element) {
+    if (element instanceof ReversibleOperation) {
+      uncommittedChanges.add((ReversibleOperation) element);
     }
   }
 }

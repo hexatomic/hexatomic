@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.core.undo;
+package org.corpus_tools.hexatomic.core.undo.operations;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.graph.Label;
@@ -9,7 +9,7 @@ import org.corpus_tools.salt.graph.Label;
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
  */
-public class LabelModify implements ReversibleOperation {
+public class LabelModifyOperation implements ReversibleOperation {
 
   private final Label label;
 
@@ -18,11 +18,11 @@ public class LabelModify implements ReversibleOperation {
   private final Object value;
 
   /**
-   * Creates a new label modification event.
+   * Creates a new label modification operation.
    * 
    * @param label The label that changed.
    */
-  public LabelModify(Label label) {
+  public LabelModifyOperation(Label label) {
 
     this.label = label;
 

@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.LabelRemoveOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 
@@ -71,7 +72,8 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
   default void applyRemoveLabelIfExisting(GraphModificationAction action, String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
+      SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+          new LabelRemoveOperation(label, label.getContainer()));
       action.apply();
     }
   }
