@@ -19,7 +19,7 @@ branches:
     - master
     - develop
     - /release/.*/
-	- /^v\d+.\d+(.\d+)?(-\S*)?$/
+    - /^v\d+.\d+(.\d+)?(-\S*)?$/
 
 script:
   - mvn -B verify
