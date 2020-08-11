@@ -22,7 +22,7 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 public interface NotifyingElement<T> {
-  public T getOwner();
+  public T getTypedDelegation();
 
-  public void setOwner(T owner);
+  public void setTypedDelegation(T typedDelegation);
 }

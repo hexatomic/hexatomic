@@ -50,16 +50,16 @@ public class GraphNotifierImpl extends
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private Graph<?, ?, ?> owner;
+  private Graph<?, ?, ?> typedDelegation;
 
   @Override
-  public Graph<?, ?, ?> getOwner() {
-    return owner;
+  public Graph<?, ?, ?> getTypedDelegation() {
+    return typedDelegation;
   }
 
   @Override
-  public void setOwner(Graph<?, ?, ?> owner) {
-    this.owner = owner;
+  public void setTypedDelegation(Graph<?, ?, ?> typedDelegation) {
+    this.typedDelegation = typedDelegation;
   }
 
   @Override
@@ -83,8 +83,8 @@ public class GraphNotifierImpl extends
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
     // the real graph.
-    if (owner != null && node instanceof NodeImpl) {
-      ((NodeImpl) node).basicSetGraph_WithoutRemoving(owner);
+    if (typedDelegation != null && node instanceof NodeImpl) {
+      ((NodeImpl) node).basicSetGraph_WithoutRemoving(typedDelegation);
     }
     SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
   }
@@ -100,8 +100,8 @@ public class GraphNotifierImpl extends
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
     // the real graph.
-    if (owner != null && relation instanceof RelationImpl<?, ?>) {
-      ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(owner);
+    if (typedDelegation != null && relation instanceof RelationImpl<?, ?>) {
+      ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(typedDelegation);
     }
     SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
   }

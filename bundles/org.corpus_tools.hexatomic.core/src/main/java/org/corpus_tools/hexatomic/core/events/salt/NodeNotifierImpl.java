@@ -41,16 +41,16 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingLabelab
 
   private static final long serialVersionUID = -7940440063671378198L;
 
-  private Node owner;
+  private Node typedDelegation;
 
   @Override
-  public Node getOwner() {
-    return owner;
+  public Node getTypedDelegation() {
+    return typedDelegation;
   }
 
   @Override
-  public void setOwner(Node owner) {
-    this.owner = owner;
+  public void setTypedDelegation(Node typedDelegation) {
+    this.typedDelegation = typedDelegation;
   }
 
   @Override

@@ -45,16 +45,16 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   private static final long serialVersionUID = 1171405238664510985L;
 
-  private Relation<?, ?> owner;
+  private Relation<?, ?> typedDelegation;
 
   @Override
-  public Relation<?, ?> getOwner() {
-    return owner;
+  public Relation<?, ?> getTypedDelegation() {
+    return typedDelegation;
   }
 
   @Override
-  public void setOwner(Relation<?, ?> owner) {
-    this.owner = owner;
+  public void setTypedDelegation(Relation<?, ?> typedDelegation) {
+    this.typedDelegation = typedDelegation;
   }
 
 

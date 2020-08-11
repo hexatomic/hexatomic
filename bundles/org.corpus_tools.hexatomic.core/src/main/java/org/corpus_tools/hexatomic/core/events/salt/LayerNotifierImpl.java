@@ -45,17 +45,17 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   private static final long serialVersionUID = -4708308546018698463L;
 
-  private Layer<?, ?> owner;
+  private Layer<?, ?> typedDelegation;
 
 
   @Override
-  public Layer<?, ?> getOwner() {
-    return owner;
+  public Layer<?, ?> getTypedDelegation() {
+    return typedDelegation;
   }
 
   @Override
-  public void setOwner(Layer<?, ?> owner) {
-    this.owner = owner;
+  public void setTypedDelegation(Layer<?, ?> typedDelegation) {
+    this.typedDelegation = typedDelegation;
   }
 
   @Override

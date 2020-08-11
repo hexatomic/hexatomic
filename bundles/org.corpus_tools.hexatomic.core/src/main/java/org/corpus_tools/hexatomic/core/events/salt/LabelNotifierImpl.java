@@ -41,17 +41,17 @@ public class LabelNotifierImpl extends LabelImpl
 
   private static final long serialVersionUID = 8010124349555159857L;
 
-  private Label owner;
+  private Label typedDelegation;
 
 
   @Override
-  public Label getOwner() {
-    return owner;
+  public Label getTypedDelegation() {
+    return typedDelegation;
   }
 
   @Override
-  public void setOwner(Label owner) {
-    this.owner = owner;
+  public void setTypedDelegation(Label typedDelegation) {
+    this.typedDelegation = typedDelegation;
   }
 
 

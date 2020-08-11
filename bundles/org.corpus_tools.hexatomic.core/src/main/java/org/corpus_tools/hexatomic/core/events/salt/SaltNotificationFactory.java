@@ -259,7 +259,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SGraph createSGraph() {
     GraphNotifierImpl delegate = createNotifierGraph();
     SGraphImpl result = new SGraphImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -267,7 +267,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SNode createSNode() {
     NodeNotifierImpl delegate = createNotifierNode();
     SNode result = new SNodeImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -275,7 +275,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SRelation<SNode, SNode> createSRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SRelation<SNode, SNode> result = new SRelationImpl<>(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -283,7 +283,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SAnnotation createSAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SAnnotation result = new SAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -291,7 +291,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SMetaAnnotation createSMetaAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SMetaAnnotation result = new SMetaAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -299,7 +299,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SProcessingAnnotation createSProcessingAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SProcessingAnnotation result = new SProcessingAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -307,7 +307,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SFeature createSFeature() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SFeature result = new SFeatureImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -315,7 +315,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SLayer createSLayer() {
     LayerNotifierImpl<Node, Relation<Node, Node>> delegate = createNotifierLayer();
     SLayer result = new SLayerImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -328,7 +328,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SCorpus createSCorpus() {
     NodeNotifierImpl delegate = createNotifierNode();
     SCorpus result = new SCorpusImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -336,7 +336,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SDocument createSDocument() {
     NodeNotifierImpl delegate = createNotifierNode();
     SDocument result = new SDocumentImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -344,7 +344,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SCorpusGraph createSCorpusGraph() {
     GraphNotifierImpl delegate = createNotifierGraph();
     SCorpusGraphImpl result = new SCorpusGraphImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -352,7 +352,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SDocumentGraph createSDocumentGraph() {
     GraphNotifierImpl delegate = createNotifierGraph();
     SDocumentGraphImpl result = new SDocumentGraphImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -362,7 +362,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SCorpusRelation createSCorpusRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SCorpusRelation result = new SCorpusRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -370,7 +370,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SCorpusDocumentRelation createSCorpusDocumentRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SCorpusDocumentRelation result = new SCorpusDocumentRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -378,7 +378,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SSpanningRelation createSSpanningRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SSpanningRelation result = new SSpanningRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -386,7 +386,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SDominanceRelation createSDominanceRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SDominanceRelation result = new SDominanceRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -394,7 +394,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SPointingRelation createSPointingRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SPointingRelation result = new SPointingRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -402,7 +402,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SOrderRelation createSOrderRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SOrderRelation result = new SOrderRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -410,7 +410,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public STextualRelation createSTextualRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     STextualRelation result = new STextualRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -418,7 +418,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public STimelineRelation createSTimelineRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     STimelineRelation result = new STimelineRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -426,7 +426,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SMedialRelation createSMedialRelation() {
     RelationNotifierImpl<Node, Node> delegate = createNotifierRelation();
     SMedialRelation result = new SMedialRelationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -434,7 +434,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SSpan createSSpan() {
     NodeNotifierImpl delegate = createNotifierNode();
     SSpan result = new SSpanImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -442,7 +442,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SStructure createSStructure() {
     NodeNotifierImpl delegate = createNotifierNode();
     SStructure result = new SStructureImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -450,7 +450,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public STextualDS createSTextualDS() {
     NodeNotifierImpl delegate = createNotifierNode();
     STextualDS result = new STextualDSImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -458,7 +458,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SMedialDS createSMedialDS() {
     NodeNotifierImpl delegate = createNotifierNode();
     SMedialDS result = new SMedialDSImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -466,7 +466,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public STimeline createSTimeline() {
     NodeNotifierImpl delegate = createNotifierNode();
     STimeline result = new STimelineImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -474,7 +474,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SToken createSToken() {
     NodeNotifierImpl delegate = createNotifierNode();
     SToken result = new STokenImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -482,7 +482,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SCatAnnotation createSCatAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SCatAnnotation result = new SCatAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -490,7 +490,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SPOSAnnotation createSPOSAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SPOSAnnotation result = new SPOSAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -498,7 +498,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SLemmaAnnotation createSLemmaAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SLemmaAnnotation result = new SLemmaAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -506,7 +506,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public STypeAnnotation createSTypeAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     STypeAnnotation result = new STypeAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -514,7 +514,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SWordAnnotation createSWordAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SWordAnnotation result = new SWordAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
@@ -522,7 +522,7 @@ public class SaltNotificationFactory implements ISaltFactory {
   public SSentenceAnnotation createSSentenceAnnotation() {
     LabelNotifierImpl delegate = createNotifierLabel();
     SSentenceAnnotation result = new SSentenceAnnotationImpl(delegate);
-    delegate.setOwner(result);
+    delegate.setTypedDelegation(result);
     return result;
   }
 
