@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Release artifacts where not created because Travis configuration contained bugs (#209)
+
 ## [0.4.1] - 2020-08-11
 
 ### Fixed
