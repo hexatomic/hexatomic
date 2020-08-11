@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -18,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
@@ -55,26 +56,22 @@ class TestProjectManager {
     partService = mock(EPartService.class);
     uiStatus = mock(UiStatusReport.class);
 
+
+    DummySync sync = new DummySync();
+
+    SaltNotificationFactory factory = new SaltNotificationFactory();
+    factory.setSync(sync);
+    factory.setEvents(events);
+
     projectManager = new ProjectManager();
     projectManager.events = events;
     projectManager.errorService = errorService;
     projectManager.partService = partService;
     projectManager.uiStatus = uiStatus;
-    projectManager.sync = new UISynchronize() {
-
-      @Override
-      public void syncExec(Runnable runnable) {
-        runnable.run();
-      }
-
-      @Override
-      public void asyncExec(Runnable runnable) {
-        runnable.run();
-      }
-    };
+    projectManager.sync = sync;
+    projectManager.notificationFactory = factory;
 
     projectManager.postConstruct();
-
   }
 
   @Test
@@ -92,6 +89,7 @@ class TestProjectManager {
   public void testEventOnOpen() {
     projectManager.open(exampleProjectUri);
     verify(events).send(eq(Topics.PROJECT_LOADED), anyString());
+    verifyNoMoreInteractions(events);
   }
 
   @Test

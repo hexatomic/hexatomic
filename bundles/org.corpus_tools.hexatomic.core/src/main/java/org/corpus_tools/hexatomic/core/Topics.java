@@ -30,6 +30,31 @@ public interface Topics {
   
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
+
+  /** Send when there is a any change to the Salt annotations (including project structure). */
+  public static final String ANNOTATION_ANY_UPDATE = "ANNOTATION_UPDATE/*";
+
+  /**
+   * Send when a Salt element has been added.
+   */
+  public static final String ANNOTATION_ADDED = "ANNOTATION_UPDATE/ADDED";
+
+  /**
+   * Send when a Salt element has been removed.
+   */
+  public static final String ANNOTATION_REMOVED = "ANNOTATION_UPDATE/REMOVED";
+
+  /**
+   * Send before a Salt element is modified (e.g. if a label gets a new value).
+   */
+  public static final String ANNOTATION_BEFORE_MODIFICATION =
+      "ANNOTATION_UPDATE/BEFORE_MODIFICATION";
+
+  /**
+   * Send after a Salt element is modified (e.g. if a label gets a new value).
+   */
+  public static final String ANNOTATION_AFTER_MODIFICATION = "ANNOTATION_UPDATE/AFTER_MODIFICATION";
+
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";

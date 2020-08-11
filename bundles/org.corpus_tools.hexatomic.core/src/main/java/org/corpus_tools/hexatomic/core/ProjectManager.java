@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +33,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
@@ -41,9 +41,6 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.exceptions.SaltException;
 import org.corpus_tools.salt.exceptions.SaltResourceException;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.extensions.notification.SaltNotificationFactory;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.corpus_tools.salt.util.internal.persistence.SaltXML10Writer;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -92,51 +89,22 @@ public class ProjectManager {
   @Inject
   UISynchronize sync;
 
-  private SaltNotificationFactory notificationFactory;
-
-  private final Set<Listener> allListeners = new LinkedHashSet<>();
-  private boolean listenersActive = true;
+  @Inject
+  SaltNotificationFactory notificationFactory;
 
   private boolean hasUnsavedChanges;
-
-  public ProjectManager() {
-
-  }
 
   @PostConstruct
   void postConstruct() {
     log.debug("Starting Project Manager");
 
+    // Set the factory before any Salt object is created
+    SaltFactory.setFactory(notificationFactory);
+
     // Create an empty project
     this.project = SaltFactory.createSaltProject();
     this.location = Optional.empty();
     this.hasUnsavedChanges = false;
-
-    // Allow to register a change listener with Salt
-    notificationFactory = new SaltNotificationFactory();
-    SaltFactory.setFactory(notificationFactory);
-    notificationFactory.addListener(new ProxyListener());
-
-  }
-
-  /**
-   * Adds a Salt notification listener for all updates on the Salt project.
-   * 
-   * @param listener The listener to add
-   */
-  public void addListener(Listener listener) {
-    allListeners.add(listener);
-  }
-
-  /**
-   * Removes a Salt notification listener.
-   * 
-   * @param listener The listener to remove
-   */
-  public void removeListener(Listener listener) {
-    if (listener != null) {
-      allListeners.remove(listener);
-    }
   }
 
   /**
@@ -187,12 +155,11 @@ public class ProjectManager {
         if (Files.exists(saltFile)) {
           // Load the existing document graph from disk
           try {
-            // Deactivate listeners to avoid partial updates during load
-            listenersActive = false;
-            // Load document
+            // Load document and suppress unneeded notifications
+            notificationFactory.setSuppressingEvents(true);
             result.get().loadDocumentGraph();
-            // Re-enable listeners and notify them of the loaded document
-            listenersActive = true;
+            notificationFactory.setSuppressingEvents(false);
+            // Send event notification of the loaded document
             events.send(Topics.DOCUMENT_LOADED, result.get().getId());
           } catch (SaltResourceException ex) {
             errorService.handleException(
@@ -244,7 +211,10 @@ public class ProjectManager {
     project = SaltFactory.createSaltProject();
     location = Optional.of(path);
     try {
+      // Suppress superfluous notifications
+      notificationFactory.setSuppressingEvents(true);
       project.loadCorpusStructure(path);
+      notificationFactory.setSuppressingEvents(false);
       events.send(Topics.PROJECT_LOADED, path.toFileString());
     } catch (SaltException ex) {
       errorService.handleException(LOAD_ERROR_MSG + path.toString(), ex, ProjectManager.class);
@@ -313,7 +283,7 @@ public class ProjectManager {
 
           // Disable listeners for document changes while performing massive amounts of temporary
           // changes
-          listenersActive = false;
+          notificationFactory.setSuppressingEvents(true);
 
           Path outputDirectory = Paths.get(path.toFileString());
           if (!savingToCurrentLocation) {
@@ -399,7 +369,7 @@ public class ProjectManager {
             uiStatus.setLocation(path.toFileString());
 
             // Enable the listeners again
-            listenersActive = true;
+            notificationFactory.setSuppressingEvents(false);
             hasUnsavedChanges = false;
 
           });
@@ -526,39 +496,19 @@ public class ProjectManager {
           if (document.get().getDocumentGraphLocation() != null
               && document.get().getDocumentGraph() != null) {
             log.debug("Unloading document {}", documentID);
-            listenersActive = false;
+            // Suppress superfluous notifications
+            notificationFactory.setSuppressingEvents(true);
             document.get().setDocumentGraph(null);
-            listenersActive = true;
+            notificationFactory.setSuppressingEvents(false);
           }
         }
       }
     }
   }
 
-
-  /**
-   * We can't add listeners to existing objects in the corpus graph, so iterate over the internal
-   * list of all registered listeners and notify them.
-   *
-   */
-  private final class ProxyListener implements Listener {
-
-    @Override
-    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-        Object newValue, Object container) {
-
-      sync.syncExec(() -> {
-        if (listenersActive) {
-          hasUnsavedChanges = true;
-          uiStatus.setDirty(true);
-
-          for (Listener l : allListeners) {
-            l.notify(type, attribute, oldValue, newValue, container);
-          }
-        }
-      });
-    }
-
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+    hasUnsavedChanges = true;
   }
-
 }

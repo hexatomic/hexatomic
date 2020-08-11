@@ -40,6 +40,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -56,13 +57,13 @@ import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
+import org.corpus_tools.salt.common.STextOverlappingRelation;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -75,7 +76,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -118,6 +118,8 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  */
 public class GraphEditor {
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
+
   private static final String TEXT = "text";
   private static final String RANGE = "range";
   static final int DEFAULT_DIFF = 25;
@@ -154,10 +156,7 @@ public class GraphEditor {
   @Inject
   private IEventBroker events;
 
-  private ListenerImplementation projectChangeListener;
-
   private ConsoleView consoleView;
-
 
   private final Filter graphFilter = new Filter();
 
@@ -185,10 +184,6 @@ public class GraphEditor {
    */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
-
-    projectChangeListener = new ListenerImplementation();
-    projectManager.addListener(projectChangeListener);
-
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
     SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
@@ -300,8 +295,6 @@ public class GraphEditor {
 
   @PreDestroy
   void preDestroy() {
-    projectManager.removeListener(projectChangeListener);
-
     events.post(Topics.DOCUMENT_CLOSED,
         thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
@@ -525,8 +518,7 @@ public class GraphEditor {
     return result;
   }
 
-  private static TreeSet<Range<Long>> calculateSegmentsForText(STextualDS ds,
-      SDocumentGraph graph,
+  private static TreeSet<Range<Long>> calculateSegmentsForText(STextualDS ds, SDocumentGraph graph,
       ViewerFilter filter) {
 
     TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
@@ -636,7 +628,7 @@ public class GraphEditor {
       centerViewportToPoint(scaledClicked);
     }
   }
-  
+
 
   void scrollGraphView(int xoffset, int yoffset) {
     Viewport viewPort = viewer.getGraphControl().getViewport();
@@ -680,7 +672,7 @@ public class GraphEditor {
 
     @Override
     public void keyPressed(KeyEvent e) {
-      
+
       Viewport viewPort = viewer.getGraphControl().getViewport();
       Point loc = viewPort.getViewLocation();
 
@@ -708,36 +700,41 @@ public class GraphEditor {
     }
   }
 
-  private final class ListenerImplementation implements Listener {
-    @Override
-    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-        Object newValue, Object container) {
+  private void checkUpdateViewNecessary(Object element) {
+    SDocumentGraph loadedGraph = getGraph();
+    Optional<SDocumentGraph> changedGraph =
+        SaltHelper.getGraphForObject(element, SDocumentGraph.class);
 
-      // Check if the ID of the changed object points to the same document as our annotation graph
-      IdentifiableElement element = null;
-      if (container instanceof IdentifiableElement) {
-        element = (IdentifiableElement) container;
-      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
-        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
-      }
-      SDocumentGraph graph = getGraph();
-      if (graph == null) {
-        errors.showError("Unexpected error",
-            "Annotation graph for subscribed document vanished. Please report this as a bug.",
-            GraphEditor.class);
-        return;
-      }
-      if (element == null || element.getId() == null) {
-        return;
-      } else {
-        URI elementUri = URI.createURI(element.getId());
-        if (!elementUri.path().equals(graph.getPath().path())) {
-          return;
-        }
-      }
-
-      sync.syncExec(() -> updateView(true, false));
+    if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
+      // Only relations with text coverage semantics can change the structure of the graph and
+      // modify segments
+      updateView(
+          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>,
+          false);
     }
+  }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
+    log.debug("Received ANNOTATION_ADDED event for element {}", element);
+    checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
+    log.debug("Received ANNOTATION_REMOVED event for element {}", element);
+    checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationModified(
+      @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
+    log.debug("Received ANNOTATION_AFTER_MODIFICATION event for element {}", element);
+    checkUpdateViewNecessary(element);
   }
 
   private class RootFilter extends ViewerFilter {
