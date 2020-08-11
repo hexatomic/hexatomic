@@ -27,15 +27,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
+import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
@@ -47,6 +48,11 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.extensions.notification.Listener;
+import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
+import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.graph.IdentifiableElement;
+import org.corpus_tools.salt.graph.Node;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -100,7 +106,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
-public class CorpusStructureView {
+public class CorpusStructureView implements Listener {
 
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
@@ -220,7 +226,7 @@ public class CorpusStructureView {
     Tree tree = treeViewer.getTree();
     treeViewer.setColumnProperties(new String[] {"name"});
     treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree)});
-    
+
     CorpusLabelProvider labelProvider = new CorpusLabelProvider();
     treeViewer.setCellModifier(new ICellModifier() {
 
@@ -287,6 +293,7 @@ public class CorpusStructureView {
 
     registerEditors(modelService, application, thisPart);
 
+    projectManager.addListener(this);
   }
 
   private void createAddMenu(ToolBar toolBar) {
@@ -391,7 +398,15 @@ public class CorpusStructureView {
     if (g != null) {
 
       int oldSize = g.getCorpora() == null ? 0 : g.getCorpora().size();
-      SCorpus newCorpus = g.createCorpus(parent, "corpus_" + (oldSize + 1));
+      String newCorpusName = "corpus_" + (oldSize + 1);
+      SCorpus newCorpus;
+      if (parent == null) {
+        newCorpus = SaltFactory.createSCorpus();
+        newCorpus.setName(newCorpusName);
+        g.addNode(newCorpus);
+      } else {
+        newCorpus = g.createCorpus(parent, newCorpusName);
+      }
       if (newCorpus != null) {
         selectSaltObject(newCorpus, true);
       }
@@ -473,7 +488,36 @@ public class CorpusStructureView {
             Optional<SNode> parent =
                 n.getInRelations().stream().filter((rel) -> rel instanceof SCorpusDocumentRelation)
                     .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
+
+            // Attempt to find the previous sibling document of the one that is deleted
+            Optional<SDocument> previousDocument = Optional.empty();
             if (parent.isPresent()) {
+              // Collect all siblings
+              List<SDocument> siblings = parent.get().getOutRelations().stream()
+                  .filter(rel -> rel instanceof SCorpusDocumentRelation)
+                  .map(rel -> ((SCorpusDocumentRelation) rel).getTarget())
+                  .collect(Collectors.toList());
+              if (!siblings.isEmpty()) {
+                // Find the position of the deleted document and use the index
+                // to get the previous document (or select the first other if not found)
+                int indexOfDocument = siblings.indexOf(n);
+                if (indexOfDocument == 0) {
+                  if (siblings.size() > 1) {
+                    // select the next document in the list since we are deleting the first one
+                    previousDocument = Optional.of(siblings.get(1));
+                  }
+                } else if (indexOfDocument > 0) {
+                  previousDocument = Optional.of(siblings.get(indexOfDocument - 1));
+                } else {
+                  previousDocument = Optional.of(siblings.get(0));
+                }
+              }
+            }
+
+            if (previousDocument.isPresent()) {
+              // select the previous corpus
+              selectSaltObject(previousDocument.get(), true);
+            } else if (parent.isPresent()) {
               // select parent corpus
               selectSaltObject(parent.get(), true);
             } else {
@@ -494,6 +538,7 @@ public class CorpusStructureView {
 
   /**
    * Selects a Salt object (like document, sub-corpus, etc.) in the overview.
+   * 
    * @param object The object to select
    * @param reveal If true, make sure the object is visible by revealing it
    */
@@ -540,16 +585,40 @@ public class CorpusStructureView {
     }
   }
 
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(
-      @UIEventTopic(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED) String path) {
-    log.debug("Corpus Structure Viewer received update");
+
+  private void updateView() {
     if (treeViewer != null) {
       treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
-      log.debug("Corpus Structure Viewer udpated");
+    }
+  }
+
+
+  @Override
+  public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
+      Object newValue, Object container) {
+
+    IdentifiableElement element = null;
+    if (container instanceof IdentifiableElement) {
+      element = (IdentifiableElement) container;
+    } else if (container instanceof org.corpus_tools.salt.graph.Label) {
+      element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
     }
 
+    if (element instanceof Graph<?, ?, ?>) {
+      updateView();
+    } else if (element instanceof Node) {
+      element = ((Node) element).getGraph();
+      if (element instanceof SCorpusGraph) {
+        updateView();
+      }
+    }
+  }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_LOADED) String path) {
+    updateView();
   }
 
   private void registerEditors(EModelService modelService, MApplication application,
@@ -570,7 +639,7 @@ public class CorpusStructureView {
 
       // Set the correct editor ID as parameter
       MParameter paramEditorID = modelService.createModelElement(MParameter.class);
-      paramEditorID.setName(OpenSaltDocumentHandler.COMMAND_PARAM_EDITOR_ID);
+      paramEditorID.setName(CommandParams.EDITOR_ID);
       paramEditorID.setValue(desc.getElementId());
       menuItem.getParameters().add(paramEditorID);
 

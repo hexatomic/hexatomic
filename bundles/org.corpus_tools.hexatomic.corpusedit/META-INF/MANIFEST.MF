@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Corpus Structure Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.corpusstructureeditor;singleton:=true
-Bundle-Version: 0.3.1
+Bundle-Version: 0.4.0
 Require-Bundle: javax.inject,
  org.eclipse.osgi,
  org.eclipse.jface,
@@ -10,14 +10,17 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.core.di.annotations,
- org.corpus-tools.salt-api;bundle-version="3.3.8",
+ org.corpus-tools.salt-api,
  org.eclipse.core.runtime;bundle-version="3.15.300",
  org.corpus_tools.hexatomic.core;bundle-version="0.1.0",
  org.slf4j.api,
- org.eclipse.emf.common;bundle-version="2.16.0"
+ org.eclipse.emf.common;bundle-version="2.16.0",
+ org.eclipse.e4.ui.workbench;bundle-version="1.10.0",
+ org.corpus-tools.salt-extensions,
+ javax.annotation;bundle-version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: javax.annotation;version="1.2.0",
- org.eclipse.e4.ui.workbench.modeling
 Automatic-Module-Name: org.corpus_tools.hexatomic.corpusedit
 Bundle-ClassPath: .
-Export-Package: org.corpus_tools.hexatomic.corpusedit
+Export-Package: org.corpus_tools.hexatomic.corpusedit,
+ org.corpus_tools.hexatomic.corpusedit.dnd,
+ org.eclipse.wb.swt

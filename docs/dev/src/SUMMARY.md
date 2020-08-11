@@ -21,5 +21,6 @@
   - [Versioning](./maintenance/versioning/README.md)
   - [Licensing and citation](./maintenance/licensing/README.md)
   - [Releases](./maintenance/releases/README.md)
+  - [Periodic unreviewed code triage](./maintenance/unreviewed-code-triage.md)
 - [Governance](./governance.md)
 - [License](./LICENSE.md)

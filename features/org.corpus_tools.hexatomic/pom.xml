@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.features</artifactId>
-        <version>0.3.1</version>
+        <version>0.4.0</version>
     </parent>
 
     <build>
@@ -25,6 +25,18 @@
                     <thirdPartyFolder>${maven.multiModuleProjectDirectory}/THIRD-PARTY</thirdPartyFolder>
                     <p2ReconstructGroupId>false</p2ReconstructGroupId>
                     <referenceTemplates>
+                        <referenceTemplate>
+                            <pattern>.*:org\.hamcrest\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/hamcrest.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.apache\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/apache.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.antlr\.runtime.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/antlr.yml</template>
+                        </referenceTemplate>
                         <referenceTemplate>
                             <pattern>.*:ch\.qos\.logback\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/logback.yml</template>
@@ -57,6 +69,21 @@
                             project first -->
                         <referenceTemplate>
                             <pattern>.*:org\.eclipse\.swt\.(cocoa|linux|win32).*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <pattern>.*:org\.eclipse\.(draw2d|zest)\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <!-- While originally Apache licensed, these 
+                                are redistributed by Eclipse -->
+                            <pattern>.*:org\.apache\.(commons\.(io|logging)|xmlgraphics|batik).*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
+                        </referenceTemplate>
+                        <referenceTemplate>
+                            <!-- Redistributed by Eclipse -->
+                            <pattern>.*:org\.w3c\.dom\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl1.yml</template>
                         </referenceTemplate>
                         <!-- All other Eclipse project dependencies are EPL-2.0 -->

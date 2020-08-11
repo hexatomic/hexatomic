@@ -1,52 +1,71 @@
 os: linux
+# enable a window manager to execute UI integration tests
+addons:
+  apt:
+    packages:
+      - metacity
+services:
+  - xvfb
+  - metacity
+
+before_install:
+  - export DISPLAY=:99.0
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
+  - sleep 5
+  - metacity --sm-disable --replace 2> metacity.err &
+
+branches:
+    only:
+    - master
+    - develop
+    - /release/.*/
+
+script:
+  - mvn -B verify
+
 jobs:
   include:
     - language: java
-
-      jdk: openjdk8
-
-      # enable a window manager to execute UI integration tests
+      jdk: openjdk11
+      name: OpenJDK 11 + SonarCloud code analysis
+      git:
+        depth: false
+      cache:
+        directories:
+          - '$HOME/.m2/repository'
+          - '$HOME/.sonar/cache'
       addons:
-        apt:
-          packages:
-          - metacity
-      services:
-        - xvfb
-        - metacity
+        sonarcloud:
+          organization: "hexatomic"
+          token:
+            secure: "DSx+XeN4OpXp/aiAQvbTekn9cBrEePnitTfLK/Farxg/0rfp2Dv+REvmRAY/GFJPfJ+mcaO0QPzOTPy7FhfDIkQkmgJjTXiQLhRLQ+WLvs5q8UyMUpS1SzKDLOQsWhyp0iVW3RicU6yJ18twfraf2t/Wz7UBfuN3O1M5Wsxspvwxe2fHkqKGlR6iOWJIefVmyS6d5MomK2DrtXdZ1HR56MKKxNOOxW90QJyU+3eEKkgWYNW5GrKdCIfJGM/maTc5AYoJgurQIrmiW+A9ILN/LUiD9ubnf4IT0uFNZA837tdA7ovM20jaOuwPGRPXiCPMHYhhmJexTrsRi1SVz172+RnRxqKmvDhB4djpbQ+SUgPTOgLUYr9g+NPA85xTs57ANqAjJi4SP0oFQyWG0tlXl6wbHp+DvvdQ/YP3M5zyPEMxFucnojx7zMxDxoNmMKFpSu4io/424FEjSTE79EVe0dsN1lm9GjkexSoftce3N9HGqRKBtx98fqa1SGi5LP102JVnTw+7Hg1ayDNeOT7ZJRu5NRrZ5KPn9s8sxFtIPUxZM0OTVDu7qwdwkeKZcszC36J+OKCvK5iJ9iNNkm5xasHmeuoVNGje14kng0McAE6BO6zWIyFG5r2B8G/e6Q/VJtR6y8fHhEjFxk9B93lHgCA0A5lAF6Ws9AvZdTnmljk="
 
-      # Enforce Maven version to fix regression with version 3.6.2, used by Travis as of 2019-12-11
-      # Cf. https://issues.apache.org/jira/browse/MNG-6765
-      before_install:
-        - wget https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip
-        - unzip -qq apache-maven-3.6.3-bin.zip
-        - export M2_HOME=$PWD/apache-maven-3.6.3
-        - export PATH=$M2_HOME/bin:$PATH
-      
       script:
-        - mvn integration-test
-      
-      script: mvn verify -B
-      
+         - mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic
+    - language: java
+      jdk: openjdk8
+      name: OpenJDK 8
+
       before_deploy:
-         - mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && mvn clean verify
-      
+        - mvn clean install && mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create && mvn clean verify
+
       deploy:
         - provider: releases
           api_key:
-             secure: $GITHUB_TOKEN
+            secure: $GITHUB_TOKEN
           on:
-             repo: hexatomic/hexatomic
-             branch: master
-             tags: true
-             condition: $TRAVIS_OS_NAME = linux
+            repo: hexatomic/hexatomic
+            branch: master
+            tags: true
+            condition: $TRAVIS_OS_NAME = linux
           skip_cleanup: true
           draft: true
           file_glob: true
           file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
           tag_name: $TRAVIS_TAG
-
     - language: rust
-     
+      name: Documentation
+
       cache:
         - cargo
 

@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sDocumentStructure:SDocumentGraph xmlns:sDocumentStructure="sDocumentStructure" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:saltCore="saltCore" xmi:version="2.0">
+	<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc"/>
+	
+	<nodes xsi:type="sDocumentStructure:STextualDS">
+		<labels xsi:type="saltCore:SFeature" namespace="saltCommon" name="SDATA" value="T::Overlapping spans, etc."/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#Overlapping spans"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::Overlapping spans"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SAnnotation" namespace="six" name="token" value="T::six_tok_anno_0"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok1"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok2"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok2"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SAnnotation" namespace="six" name="token" value="T::six_tok_anno_2"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok3"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok3"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SAnnotation" namespace="six" name="token" value="T::six_tok_anno_3"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok4"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok4"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SAnnotation" namespace="six" name="token" value="T::six_tok_anno_4"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok5"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok5"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_1" value="T::val_span_1"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan1"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_1" value="T::val_span_2"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan2"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan2"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_1" value="T::val_span_3"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan3"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan3"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_1" value="T::val_span_4"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan4"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan4"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_1" value="T::val_span_5"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan5"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan5"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan6"/>
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_2" value="T::val_span_new1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan6"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SSpan">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpan7"/>
+		<labels xsi:type="saltCore:SAnnotation" namespace="five" name="span_2" value="T::val_span_new2"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpan7"/>
+	</nodes>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.1" target="//@nodes.0">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::11"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::0"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel1"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.2" target="//@nodes.0">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::17"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel2"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::12"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel2"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.3" target="//@nodes.0">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::18"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel3"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::17"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel3"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.4" target="//@nodes.0">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::22"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel4"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::19"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel4"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.5" target="//@nodes.0">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::23"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel5"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::22"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel5"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.6" target="//@nodes.1">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel1"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.7" target="//@nodes.2">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel2"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel2"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.7" target="//@nodes.3">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel3"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel3"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.7" target="//@nodes.4">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel4"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel4"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.7" target="//@nodes.5">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel5"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel5"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.8" target="//@nodes.1">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel6"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel6"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.8" target="//@nodes.2">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel7"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel7"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.9" target="//@nodes.3">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel8"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel8"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.10" target="//@nodes.4">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel9"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel9"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.10" target="//@nodes.5">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel10"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel10"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.11" target="//@nodes.2">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel11"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel11"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.11" target="//@nodes.3">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel12"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel12"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.12" target="//@nodes.4">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel13"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel13"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:SSpanningRelation" source="//@nodes.12" target="//@nodes.5">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sSpanRel14"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sSpanRel14"/>
+	</edges>
+</sDocumentStructure:SDocumentGraph>

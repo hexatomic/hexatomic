@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Hexatomic Grid Editor
+Bundle-SymbolicName: org.corpus_tools.hexatomic.grid;singleton:=true
+Bundle-Version: 0.4.0
+Bundle-Vendor: Hexatomic Research Project
+Require-Bundle: javax.inject,
+ org.corpus_tools.hexatomic.core;bundle-version="0.4.0",
+ org.slf4j.api,
+ org.eclipse.jface,
+ org.corpus-tools.salt-api,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.nebula.widgets.nattable.core,
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.e4.ui.services,
+ org.eclipse.e4.core.di.annotations,
+ javax.annotation;bundle-version="1.2.0"
+Automatic-Module-Name: org.corpus_tools.hexatomic.grid
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: org.corpus_tools.hexatomic.grid.style

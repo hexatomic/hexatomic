@@ -2,7 +2,7 @@
 <feature
       id="org.corpus_tools.hexatomic"
       label="Hexatomic Core Feature"
-      version="0.3.1"
+      version="0.4.0"
       provider-name="Hexatomic Research Project">
 
    <description url="http://www.example.com/description">
@@ -28,20 +28,23 @@
       <import plugin="org.eclipse.e4.core.di"/>
       <import plugin="org.eclipse.e4.ui.di"/>
       <import plugin="org.eclipse.e4.core.contexts"/>
-      <import plugin="org.corpus-tools.salt-api" version="3.3.8" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.e4.core.services" version="2.1.400" match="greaterOrEqual"/>
-      <import plugin="org.corpus-tools.salt-extensions" version="3.3.8" match="greaterOrEqual"/>
+      <import plugin="org.corpus-tools.salt-extensions" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="ch.qos.logback.classic" version="1.1.2" match="greaterOrEqual"/>
       <import plugin="ch.qos.logback.core" version="1.1.2" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.10" match="greaterOrEqual"/>
-      <import plugin="javax.annotation"/>
+      <import plugin="org.corpus-tools.salt-api" version="3.3.12" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.10" match="equivalent"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.eclipse.core.runtime" version="3.15.300" match="greaterOrEqual"/>
       <import plugin="org.corpus_tools.hexatomic.core" version="0.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common" version="2.16.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.ui.workbench" version="1.10.0" match="greaterOrEqual"/>
+      <import plugin="org.corpus-tools.salt-api" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.corpus_tools.hexatomic.core" version="0.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.nebula.widgets.nattable.core"/>
    </requires>
 
    <plugin
@@ -68,6 +71,20 @@
 
    <plugin
          id="org.corpus_tools.hexatomic.textviewer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.corpus_tools.hexatomic.grid"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.corpus_tools.hexatomic.graph"
          download-size="0"
          install-size="0"
          version="0.0.0"

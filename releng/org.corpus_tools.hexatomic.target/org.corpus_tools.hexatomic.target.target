@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1575631785">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1592811653">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
-      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.18.0.v20190528-1257"/>
-      <unit id="org.eclipse.emf.common" version="2.16.0.v20190528-0845"/>
-      <unit id="org.eclipse.e4.core.services" version="2.1.400.v20181215-2145"/>
-      <unit id="org.eclipse.jdt.junit5.runtime" version="1.0.500.v20190510-0840"/>
-      <unit id="org.junit.jupiter.api" version="5.4.0.v20190212-2109"/>
-      <unit id="org.junit.jupiter.engine" version="5.4.0.v20190212-2109"/>
-      <unit id="org.junit.platform.engine" version="1.4.0.v20190212-2109"/>
-      <unit id="org.junit.vintage.engine" version="5.4.0.v20190212-2109"/>
+      <unit id="org.eclipse.platform.sdk" version="4.15.0.I20200305-0155"/>
+      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.100.v20200303-1901"/>
+      <unit id="org.eclipse.emf.common" version="2.18.0.v20191225-1014"/>
+      <unit id="org.eclipse.e4.core.services" version="2.2.200.v20200127-0814"/>
+      <unit id="org.eclipse.zest.core" version="1.5.300.201606061308"/>
+      <unit id="org.eclipse.zest.layouts" version="1.1.300.201606061308"/>
+      <unit id="org.eclipse.jdt.junit5.runtime" version="1.0.800.v20200214-0716"/>
+      <unit id="org.junit.jupiter.api" version="5.6.0.v20200203-2009"/>
+      <unit id="org.junit.jupiter.engine" version="5.6.0.v20200203-2009"/>
+      <unit id="org.junit.platform.engine" version="1.6.0.v20200203-2009"/>
+      <unit id="org.junit.vintage.engine" version="5.6.0.v20200203-2009"/>
       <unit id="org.eclipse.swtbot.e4.finder" version="2.8.0.201906121535"/>
       <unit id="org.eclipse.swtbot.generator" version="2.8.0.201906121535"/>
       <unit id="org.eclipse.swtbot.go" version="2.8.0.201906121535"/>
-      <repository location="http://download.eclipse.org/releases/2019-06/"/>
+      <unit id="org.eclipse.swtbot.swt.finder" version="2.8.0.201906121535"/>
+      <unit id="org.eclipse.jface" version="3.19.0.v20200218-1607"/>
+      <repository location="http://download.eclipse.org/releases/2020-03/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
@@ -24,12 +28,22 @@
       <unit id="ch.qos.logback.classic" version="1.1.2.v20171220-1825"/>
       <unit id="org.mockito" version="2.23.0.v20190527-1420"/>
       <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
+      <unit id="org.antlr.runtime" version="4.7.1.v20181120-0808"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.corpus-tools.salt-api" version="3.3.8"/>
-      <unit id="org.corpus-tools.salt-extensions" version="3.3.8"/>
-      <repository location="https://korpling.github.io/salt/p2/salt-3.3/"/>
+      <unit id="org.corpus-tools.salt-api" version="3.4.2"/>
+      <unit id="org.corpus-tools.salt-extensions" version="3.4.2"/>
+      <repository location="https://korpling.github.io/salt/p2/salt-3.4/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+      <unit id="org.eclipse.nebula.widgets.nattable.core" version="1.6.0.201909181823"/>
+      <unit id="org.eclipse.nebula.widgets.nattable.extension.e4" version="1.2.0.201909181823"/>
+      <repository location="http://download.eclipse.org/nattable/releases/1.6.0/repository/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+      <unit id="org.eclipse.swtbot.nebula.nattable.finder" version="2.8.0.201906121535"/>
+      <repository location="https://download.eclipse.org/technology/swtbot/releases/2.8.0/"/>
     </location>
   </locations>
 </target>

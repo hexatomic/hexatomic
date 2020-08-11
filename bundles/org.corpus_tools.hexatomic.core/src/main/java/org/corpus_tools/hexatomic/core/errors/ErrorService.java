@@ -22,11 +22,14 @@ package org.corpus_tools.hexatomic.core.errors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.osgi.framework.Bundle;
@@ -54,22 +57,34 @@ public class ErrorService {
   private static final org.slf4j.Logger errorServiceLog =
       org.slf4j.LoggerFactory.getLogger(ErrorService.class);
 
+  private Optional<IStatus> lastException = Optional.empty();
+
+  @Inject
+  UISynchronize sync;
+
   /**
    * Display a (runtime) exception to the user and add it to the log.
    * 
    * @param message A message to the user explaining what went wrong.
    * @param ex The exception that occurred.
-   * @param context The class in which the error occurred. This is used to extract the bundle ID and
-   *        to get the correct logger when logging the error to the console/log file.
+   * @param triggeringClass The class in which the error occurred. This is used to extract the
+   *        bundle ID and to get the correct logger when logging the error to the console/log file.
    */
-  public void handleException(String message, Throwable ex, Class<?> context) {
+  public void handleException(String message, Throwable ex, Class<?> triggeringClass) {
     // log error so whatever happens, it is visible in the log file/console
-    Logger log = getLogger(context);
+    Logger log = getLogger(triggeringClass);
     log.error("Exception occured: {}", message, ex);
 
-    String bundleID = getBundleID(context);
-    ErrorDialog.openError(null, ERROR_OCCURED_MSG, message,
-        createStatusFromException(message, bundleID, ex));
+    String bundleID = getBundleID(triggeringClass);
+
+    IStatus status = createStatusFromException(message, bundleID, ex);
+    lastException = Optional.of(status);
+
+    sync.syncExec(() -> {
+      ErrorDialog.openError(null, ERROR_OCCURED_MSG, message, status);
+    });
+
+
   }
 
   /**
@@ -118,6 +133,21 @@ public class ErrorService {
       }
     }
     return bundleID;
+  }
+
+  /**
+   * Return the last exception that has been handled with
+   * {@link #handleException(String, Throwable, Class)}.
+   * 
+   * <p>
+   * This property can be used to check in unit tests if any error has occured and was handled in
+   * the UI.
+   * </p>
+   * 
+   * @return The {@link IStatus} created by from the exception.
+   */
+  public Optional<IStatus> getLastException() {
+    return lastException;
   }
 
   /**
