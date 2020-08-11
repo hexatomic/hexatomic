@@ -14,13 +14,6 @@ before_install:
   - sleep 5
   - metacity --sm-disable --replace 2> metacity.err &
 
-branches:
-    only:
-    - master
-    - develop
-    - /release/.*/
-    - /^v\d+.\d+(.\d+)?(-\S*)?$/
-
 script:
   - mvn -B verify
 
