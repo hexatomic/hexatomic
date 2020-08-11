@@ -57,7 +57,6 @@ jobs:
             branch: master
             tags: true
             condition: $TRAVIS_OS_NAME = linux
-          skip_cleanup: true
           draft: true
           file_glob: true
           file: releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*.zip
@@ -99,5 +98,4 @@ jobs:
             branch: master
             tags: true
             condition: $TRAVIS_OS_NAME = linux
-          skip_cleanup: true
           edge: true
