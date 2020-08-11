@@ -34,6 +34,7 @@ import org.corpus_tools.salt.graph.Relation;
  * A utility class to handle Salt objects.
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
 public class SaltHelper {
   

@@ -41,6 +41,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * </p>
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
 public class GraphNotifierImpl extends
