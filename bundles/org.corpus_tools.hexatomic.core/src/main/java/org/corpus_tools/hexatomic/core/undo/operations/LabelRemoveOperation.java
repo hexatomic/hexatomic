@@ -25,8 +25,9 @@ public class LabelRemoveOperation implements ReversibleOperation {
 
   @Override
   public void restore(ProjectManager projectManager) {
-    // TODO Auto-generated method stub
-
+    if (container != null && label != null) {
+      container.addLabel(label);
+    }
   }
 
 }
