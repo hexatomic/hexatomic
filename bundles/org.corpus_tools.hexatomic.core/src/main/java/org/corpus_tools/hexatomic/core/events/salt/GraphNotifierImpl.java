@@ -22,6 +22,8 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveNodeFromGraphOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
@@ -65,7 +67,7 @@ public class GraphNotifierImpl extends
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -75,7 +77,7 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 
   @Override
@@ -87,12 +89,15 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && node instanceof NodeImpl) {
       ((NodeImpl) node).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
+    SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new AddNodeToGraphOperation<Node>(node));
   }
 
   @Override
   public void removeNode(Node node) {
-    applyRemove(() -> super.removeNode(node), node);
+    super.removeNode(node);
+    SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new RemoveNodeFromGraphOperation<Node>(node, this));
   }
 
   @Override
