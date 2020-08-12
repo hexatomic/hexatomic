@@ -75,8 +75,7 @@
 							</goals>
 							<phase>process-sources</phase>
 							<configuration>
-								<organizationName>Stephan Druskat,
-									Thomas Krause</organizationName>
+								<organizationName>Stephan Druskat, Thomas Krause</organizationName>
 								<inceptionYear>2018</inceptionYear>
 								<licenseName>apache_v2</licenseName>
 								<roots>
@@ -113,10 +112,10 @@
 					<version>3.9.0</version>
 				</plugin>
 				<plugin>
-		          <groupId>org.eclipse.tycho</groupId>
-		          <artifactId>tycho-versions-plugin</artifactId>
-		          <version>${tycho.version}</version>
-		        </plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-versions-plugin</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -252,7 +251,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>coverage</id>
