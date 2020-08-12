@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Implement undoing changes (#38)
+
 ## [0.4.2] - 2020-08-11
 
 ### Fixed
