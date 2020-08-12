@@ -44,6 +44,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
@@ -704,7 +705,7 @@ public class GraphEditor {
     }
   }
 
-  private void checkUpdateViewNecessary(Object element) {
+  private boolean checkUpdateViewNecessary(Object element) {
     SDocumentGraph loadedGraph = getGraph();
     Optional<SDocumentGraph> changedGraph =
         SaltHelper.getGraphForObject(element, SDocumentGraph.class);
@@ -715,7 +716,10 @@ public class GraphEditor {
       updateView(
           element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>,
           false);
+      return true;
     }
+
+    return false;
   }
 
 
@@ -739,6 +743,21 @@ public class GraphEditor {
       @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
     log.debug("Received ANNOTATION_AFTER_MODIFICATION event for element {}", element);
     checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
+      for (Object container : changeSet.getChangedContainers()) {
+        if (checkUpdateViewNecessary(container)) {
+          break;
+        }
+      }
+    }
   }
 
   private class RootFilter extends ViewerFilter {

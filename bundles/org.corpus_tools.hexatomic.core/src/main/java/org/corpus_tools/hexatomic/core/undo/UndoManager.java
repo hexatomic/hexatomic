@@ -20,7 +20,7 @@ public class UndoManager {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UndoManager.class);
 
-  private final Stack<List<ReversibleOperation>> changeSets = new Stack<>();
+  private final Stack<ChangeSet> changeSets = new Stack<>();
   private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
 
   @Inject
@@ -43,13 +43,13 @@ public class UndoManager {
       // All recorded changes are reversable without saving and loading the whole document, create
       // a different kind of checkpoint using a copy of all uncomitted changes
       log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
-      changeSets.add(new LinkedList<>(uncommittedChanges));
+      changeSets.add(new ChangeSet(uncommittedChanges));
     }
 
     // All uncommitted changes have been handled: restore internal recored state to default:
     uncommittedChanges.clear();
 
-    events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, null);
+    events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changeSets.lastElement());
   }
 
 
@@ -69,16 +69,16 @@ public class UndoManager {
     if (canUndo()) {
       notificationFactory.setSuppressingEvents(true);
       // Restore all documents from the last checkpoint
-      List<ReversibleOperation> lastChangeSet = this.changeSets.pop();
+      ChangeSet lastChangeSet = this.changeSets.pop();
       // Iterate over the elements in reversed order
       ListIterator<ReversibleOperation> itLastChangeSet =
-          lastChangeSet.listIterator(lastChangeSet.size());
+          lastChangeSet.getChanges().listIterator(lastChangeSet.getChanges().size());
       while (itLastChangeSet.hasPrevious()) {
         ReversibleOperation op = itLastChangeSet.previous();
         op.restore(projectManager);
       }
       notificationFactory.setSuppressingEvents(false);
-      events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, null);
+      events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
 
       // TODO: how to implement redo?
     }
