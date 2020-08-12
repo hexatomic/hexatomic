@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.core.events.salt;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.undo.operations.LabelAddOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.LabelRemoveOperation;
@@ -72,12 +73,15 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
   default void applyRemoveAllLabels(GraphModificationAction action, LabelableElement container) {
     Collection<Label> labels = container.getLabels();
     if (labels != null) {
-      for (Label l : labels) {
-        SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
-            new LabelRemoveOperation(l, container));
-      }
+      labels = new LinkedList<>(labels);
+    } else {
+      labels = new LinkedList<>();
     }
     action.apply();
+    for (Label l : labels) {
+      SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+          new LabelRemoveOperation(l, container));
+    }
   }
 
 

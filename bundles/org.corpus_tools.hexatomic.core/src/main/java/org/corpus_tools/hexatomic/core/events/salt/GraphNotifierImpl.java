@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.core.events.salt;
 
 import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory.sendEvent;
 
+import java.util.LinkedList;
 import java.util.List;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.undo.operations.AddLayerToGraphOperation;
@@ -133,7 +134,7 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeRelations() {
-    List<Relation<Node, Node>> relations = getRelations();
+    List<Relation<Node, Node>> relations = new LinkedList<>(getRelations());
     super.removeRelations();
     for (Relation<Node, Node> rel : relations) {
       sendEvent(Topics.UNDO_OPERATION_ADDED,
