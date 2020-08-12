@@ -5,22 +5,24 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Node;
+import org.corpus_tools.salt.graph.Relation;
 
-public class AddNodeToGraphOperation<N extends Node> implements ReversibleOperation {
+public class AddRelationToGraphOperation<N extends Node, R extends Relation<N, N>>
+    implements ReversibleOperation {
 
-  private final N node;
-  private final Graph<N, ?, ?> graph;
+  private final R rel;
+  private final Graph<N, R, ?> graph;
 
   /**
    * Create a undo operation for a node that was added to a graph.
    * 
-   * @param node The node that was added.
+   * @param relation The relation that was added.
    */
   @SuppressWarnings("unchecked")
-  public AddNodeToGraphOperation(N node) {
+  public AddRelationToGraphOperation(R relation) {
     super();
-    this.node = node;
-    this.graph = node.getGraph();
+    this.rel = relation;
+    this.graph = relation.getGraph();
   }
 
 
@@ -28,7 +30,7 @@ public class AddNodeToGraphOperation<N extends Node> implements ReversibleOperat
   @Override
   public void restore(ProjectManager projectManager) {
     if (graph != null) {
-      graph.removeNode(node);
+      graph.removeRelation(rel);
     }
   }
 

@@ -21,9 +21,14 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory.sendEvent;
+
+import java.util.List;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.AddRelationToGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.RemoveNodeFromGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveRelationFromGraphOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
@@ -89,17 +94,18 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && node instanceof NodeImpl) {
       ((NodeImpl) node).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
         new AddNodeToGraphOperation<Node>(node));
   }
 
   @Override
   public void removeNode(Node node) {
     super.removeNode(node);
-    SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
         new RemoveNodeFromGraphOperation<Node>(node, this));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void addRelation(Relation<? extends Node, ? extends Node> relation) {
     super.addRelation(relation);
@@ -109,17 +115,28 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && relation instanceof RelationImpl<?, ?>) {
       ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new AddRelationToGraphOperation<Node, Relation<Node, Node>>(
+            (Relation<Node, Node>) relation));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    applyRemove(() -> super.removeRelation(rel), rel);
+    super.removeRelation(rel);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new RemoveRelationFromGraphOperation<Node, Relation<Node, Node>>((Relation<Node, Node>) rel,
+            this));
   }
 
   @Override
   public void removeRelations() {
-    applyModification(super::removeRelations);
+    List<Relation<Node, Node>> relations = getRelations();
+    super.removeRelations();
+    for (Relation<Node, Node> rel : relations) {
+      sendEvent(Topics.UNDO_OPERATION_ADDED,
+          new RemoveRelationFromGraphOperation<Node, Relation<Node, Node>>(rel, this));
+    }
   }
 
   @Override
