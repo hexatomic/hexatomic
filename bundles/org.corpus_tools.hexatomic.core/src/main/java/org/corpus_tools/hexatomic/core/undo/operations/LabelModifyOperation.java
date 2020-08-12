@@ -76,4 +76,24 @@ public class LabelModifyOperation implements ReversibleOperation {
     return SaltHelper.resolveDelegation(label);
   }
 
+  public String getNamespace() {
+    return namespace;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Object getValue() {
+    return value;
+  }
+
+  @Override
+  public String toString() {
+    return "LabelModifyOperation [container=" + container + ", label=" + label + ", namespace="
+        + namespace + ", name=" + name + ", value=" + value + "]";
+  }
+
+
+
 }
