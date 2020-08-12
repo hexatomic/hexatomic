@@ -31,45 +31,6 @@ import org.corpus_tools.salt.graph.LabelableElement;
 public interface NotifyingLabelableElement<T extends LabelableElement>
     extends NotifyingElement<T>, LabelableElement {
 
-  /**
-   * Applies an action that modifies this element but sends notifications before and after the
-   * action.
-   * 
-   * @param action The action to execute
-   */
-  @Deprecated
-  default void applyModification(GraphModificationAction action) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    action.apply();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
-  }
-
-
-  /**
-   * Applies an action that adds an annotation and sends a notifications after adding it.
-   * 
-   * @param action The action to execute
-   * @param element The element that is added and will the the argument of the notification event
-   */
-  @Deprecated
-  default void applyAdd(GraphModificationAction action, Object element) {
-    action.apply();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, element);
-  }
-
-
-  /**
-   * Applies an action that removes an annotation and sends a notifications before removing it.
-   * 
-   * @param action The action to execute
-   * @param element The element that is removed and will the the argument of the notification event
-   */
-  @Deprecated
-  default void applyRemove(GraphModificationAction action, Object element) {
-    SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED, element);
-    action.apply();
-  }
-
 
   /**
    * Applies an action that adds an label to a container and sends a notifications after adding it.

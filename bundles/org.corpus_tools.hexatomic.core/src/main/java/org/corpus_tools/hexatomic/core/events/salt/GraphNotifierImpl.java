@@ -25,8 +25,10 @@ import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactor
 
 import java.util.List;
 import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.AddLayerToGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.AddRelationToGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveLayerFromGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.RemoveNodeFromGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.RemoveRelationFromGraphOperation;
 import org.corpus_tools.salt.graph.Graph;
@@ -141,11 +143,15 @@ public class GraphNotifierImpl extends
 
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
-    applyAdd(() -> super.addLayer(layer), layer);
+    super.addLayer(layer);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new AddLayerToGraphOperation<Layer<Node, Relation<Node, Node>>>(layer));
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    applyRemove(() -> super.removeLayer(layer), layer);
+    super.removeLayer(layer);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new RemoveLayerFromGraphOperation<Layer<Node, Relation<Node, Node>>>(layer));
   }
 }

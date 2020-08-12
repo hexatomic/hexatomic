@@ -25,6 +25,9 @@ import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactor
 
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToLayerOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.AddRelationToLayerOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveNodeFromLayerOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveRelationFromLayerOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -87,16 +90,23 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void removeNode(N node) {
-    applyRemove(() -> super.removeNode(node), node);
+    super.removeNode(node);
+    sendEvent(Topics.UNDO_OPERATION_ADDED, new RemoveNodeFromLayerOperation<N>(this, node));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
-    applyAdd(() -> super.addRelation(relation), relation);
+    super.addRelation(relation);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new AddRelationToLayerOperation<N, R>(this, (R) relation));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    applyRemove(() -> super.removeRelation(rel), rel);
+    super.removeRelation(rel);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new RemoveRelationFromLayerOperation<N, R>(this, (R) rel));
   }
 }

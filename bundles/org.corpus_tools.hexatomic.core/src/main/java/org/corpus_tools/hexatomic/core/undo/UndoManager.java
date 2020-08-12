@@ -7,7 +7,6 @@ import java.util.Stack;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.Topics;
-import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -21,9 +20,6 @@ public class UndoManager {
 
   private final Stack<ChangeSet> changeSets = new Stack<>();
   private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
-
-  @Inject
-  private ErrorService errors;
 
   @Inject
   private SaltNotificationFactory notificationFactory;

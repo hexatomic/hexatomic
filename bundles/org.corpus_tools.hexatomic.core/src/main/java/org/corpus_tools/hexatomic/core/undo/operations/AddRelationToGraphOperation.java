@@ -13,7 +13,7 @@ public class AddRelationToGraphOperation<N extends Node, R extends Relation<N, N
   private final Graph<N, R, ?> graph;
 
   /**
-   * Create a undo operation for a node that was added to a graph.
+   * Create a undo operation for a relation that was added to a graph.
    * 
    * @param relation The relation that was added.
    */
