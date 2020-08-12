@@ -1,6 +1,7 @@
 package org.corpus_tools.hexatomic.core.undo;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,8 +51,8 @@ public class ChangeSet {
     return result;
   }
 
-  List<ReversibleOperation> getChanges() {
-    return changes;
+  public List<ReversibleOperation> getChanges() {
+    return Collections.unmodifiableList(changes);
   }
 
 }
