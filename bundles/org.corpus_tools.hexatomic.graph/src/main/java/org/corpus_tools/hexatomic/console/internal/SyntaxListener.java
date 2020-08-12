@@ -449,13 +449,13 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
   private void updateAnnotationForElement(SAnnotationContainer element, SAnnotation anno) {
     SAnnotation existingAnnotation = element.getAnnotation(anno.getNamespace(), anno.getName());
     if (existingAnnotation == null) {
-      if (anno.getValue() == null) {
-        // Remove the existing annotation
-        element.removeLabel(anno.getNamespace(), anno.getName());
-      } else {
+      if (anno.getValue() != null) {
         // Create a new one
         element.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
       }
+    } else if (anno.getValue() == null) {
+      // Remove the existing annotation
+      element.removeLabel(anno.getNamespace(), anno.getName());
     } else if (anno.getValue() != null) {
       // Update the value of the annotation: this causes fever update events than deleting and (re-)
       // adding it
