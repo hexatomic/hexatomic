@@ -55,9 +55,11 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
   default void applyRemoveLabelIfExisting(GraphModificationAction action, String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
-          new LabelRemoveOperation(label, label.getContainer()));
-      action.apply();
+      if (label != null) {
+        SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+            new LabelRemoveOperation(label, label.getContainer()));
+        action.apply();
+      }
     }
   }
 

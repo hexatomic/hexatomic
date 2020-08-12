@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.LabelModifyOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.impl.LabelImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -87,7 +89,14 @@ public class LabelNotifierImpl extends LabelImpl
   }
 
   protected void modified(GraphModificationAction action) {
-    action.apply();
+    if (this.getContainer() != null) {
+      LabelModifyOperation op =
+          new LabelModifyOperation(this, this.getNamespace(), this.getName(), this.getValue());
+      action.apply();
+      SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED, op);
+    } else {
+      action.apply();
+    }
   }
 
 }

@@ -506,7 +506,9 @@ public class ProjectManager {
    */
   public void addCheckpoint() {
     ChangeSet changes = undoManager.commitCanges();
-    events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
+    if (changes != null) {
+      events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
+    }
   }
 
   /**
@@ -561,7 +563,8 @@ public class ProjectManager {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
     hasUnsavedChanges = true;
+    uiStatus.setDirty(true);
   }
 }

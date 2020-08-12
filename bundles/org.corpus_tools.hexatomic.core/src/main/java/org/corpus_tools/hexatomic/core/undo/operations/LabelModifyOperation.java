@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.core.undo.operations;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.graph.Label;
+import org.corpus_tools.salt.graph.LabelableElement;
 
 /**
  * Operation that represents a modification of a label (like setting the value, name etc.).
@@ -12,28 +13,34 @@ import org.corpus_tools.salt.graph.Label;
  */
 public class LabelModifyOperation implements ReversibleOperation {
 
+  private final LabelableElement container;
   private final Label label;
-
   private final String namespace;
   private final String name;
   private final Object value;
 
+
   /**
    * Creates a new label modification operation.
    * 
-   * @param label The label that changed.
+   * @param label The changed label.
+   * @param namespace The old namespace.
+   * @param name The old name.
+   * @param value The old value.
+   * 
    */
-  public LabelModifyOperation(Label label) {
+  public LabelModifyOperation(Label label, String namespace, String name, Object value) {
 
+    this.container = label.getContainer();
     this.label = label;
-
-    this.namespace = label.getNamespace();
-    this.name = label.getName();
-    this.value = label.getValue();
+    this.namespace = namespace;
+    this.name = name;
+    this.value = value;
   }
 
   @Override
   public void restore() {
+
     label.setNamespace(namespace);
     label.setName(name);
     label.setValue(value);
@@ -41,7 +48,7 @@ public class LabelModifyOperation implements ReversibleOperation {
 
   @Override
   public Object getChangedContainer() {
-    return SaltHelper.resolveDelegation(label);
+    return SaltHelper.resolveDelegation(container);
   }
 
   @Override

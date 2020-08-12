@@ -719,29 +719,6 @@ public class GraphEditor {
     return false;
   }
 
-
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
-    log.debug("Received ANNOTATION_ADDED event for element {}", element);
-    checkUpdateViewNecessary(element);
-  }
-
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
-    log.debug("Received ANNOTATION_REMOVED event for element {}", element);
-    checkUpdateViewNecessary(element);
-  }
-
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationModified(
-      @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
-    log.debug("Received ANNOTATION_AFTER_MODIFICATION event for element {}", element);
-    checkUpdateViewNecessary(element);
-  }
-
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onCheckpointCreated(
