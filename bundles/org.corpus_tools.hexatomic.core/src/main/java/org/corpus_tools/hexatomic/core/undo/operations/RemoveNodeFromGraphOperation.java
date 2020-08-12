@@ -1,6 +1,8 @@
 package org.corpus_tools.hexatomic.core.undo.operations;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
+import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Node;
 
@@ -28,6 +30,11 @@ public class RemoveNodeFromGraphOperation<N extends Node> implements ReversibleO
     if (graph != null) {
       graph.addNode(node);
     }
+  }
+
+  @Override
+  public Object getContainer() {
+    return SaltHelper.resolveDelegation(graph);
   }
 
 }

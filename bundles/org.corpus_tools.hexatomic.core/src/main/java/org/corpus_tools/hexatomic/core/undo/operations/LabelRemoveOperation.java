@@ -1,6 +1,8 @@
 package org.corpus_tools.hexatomic.core.undo.operations;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
+import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 
@@ -28,6 +30,11 @@ public class LabelRemoveOperation implements ReversibleOperation {
     if (container != null && label != null) {
       container.addLabel(label);
     }
+  }
+
+  @Override
+  public Object getContainer() {
+    return SaltHelper.resolveDelegation(container);
   }
 
 }

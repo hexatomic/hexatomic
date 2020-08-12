@@ -35,6 +35,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
@@ -607,10 +608,17 @@ public class CorpusStructureView {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
-    Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(element, SCorpusGraph.class);
+    Object container = element;
+    if (element instanceof ReversibleOperation) {
+      ReversibleOperation op = (ReversibleOperation) element;
+      container = op.getContainer();
+    }
+
+    Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(container, SCorpusGraph.class);
     if (graph.isPresent()) {
       updateView();
     }
+
   }
 
   private void registerEditors(EModelService modelService, MApplication application,
