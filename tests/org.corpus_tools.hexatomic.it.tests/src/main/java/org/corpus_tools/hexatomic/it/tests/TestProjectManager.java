@@ -108,6 +108,8 @@ class TestProjectManager {
     List<SToken> tokens = doc1Graph.getSortedTokenByText();
     doc1Graph.createSpan(tokens.get(0), tokens.get(1));
 
+    projectManager.addCheckpoint();
+
     assertTrue(projectManager.isDirty());
 
     // Save the project to a different location
@@ -138,6 +140,8 @@ class TestProjectManager {
     assertNotNull(doc1Graph);
     tokens = doc1Graph.getSortedTokenByText();
     doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+    projectManager.addCheckpoint();
 
     assertTrue(projectManager.isDirty());
 
