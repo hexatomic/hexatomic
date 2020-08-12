@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.salt.SaltFactory;
@@ -38,6 +39,7 @@ import org.junit.jupiter.api.Test;
 class TestGraphDataProvider {
 
   private ErrorService errorService;
+  private ProjectManager projectManager;
 
   private static GraphDataProvider fixture = null;
   private SDocumentGraph exampleGraph;
@@ -64,7 +66,9 @@ class TestGraphDataProvider {
     exampleText = getFirstTextFromGraph(exampleGraph);
     overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);
+    projectManager = mock(ProjectManager.class);
     fixture.errors = errorService;
+    fixture.projectManager = projectManager;
   }
 
   /**
