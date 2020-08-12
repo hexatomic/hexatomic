@@ -31,10 +31,12 @@ import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -53,6 +55,12 @@ public class TextViewer {
   private IEventBroker events;
 
   @Inject
+  private MPart part;
+
+  @Inject
+  private Composite parent;
+
+  @Inject
   public TextViewer() {
 
   }
@@ -62,22 +70,31 @@ public class TextViewer {
    * Creates a new text viewer.
    * 
    * @param parent The parent SWT object
-   * @param part Part this text viewer is part of
    */
   @PostConstruct
-  public void postConstruct(Composite parent, MPart part) {
+  public void postConstruct(Composite parent) {
     parent.setLayout(new FillLayout(SWT.HORIZONTAL));
+    updateView();
+  }
 
+  private void updateView() {
+    // Remove any previously created text fields
+    for (Control c : parent.getChildren()) {
+      c.dispose();
+    }
+    
     // Get the document graph for this editor
     Optional<SDocument> document = getDocument(part);
     if (document.isPresent()) {
       SDocumentGraph graph = document.get().getDocumentGraph();
+      // Add a gtext field for each textual data source
       for (STextualDS text : graph.getTextualDSs()) {
         Text textField =
             new Text(parent, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.READ_ONLY);
         textField.setText(text.getText());
       }
     }
+    parent.pack();
   }
 
   @PreDestroy
@@ -85,6 +102,14 @@ public class TextViewer {
     events.post(Topics.DOCUMENT_CLOSED,
         part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+    updateView();
+  }
+
 
 
   /**

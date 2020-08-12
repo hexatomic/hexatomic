@@ -42,8 +42,16 @@ public interface Topics {
   public static final String ANNOTATION_CHECKPOINT_RESTORED =
       "ANNOTATION_UPDATE/CHECKPOINT/RESTORED";
 
+  /**
+   * An alias for all events where a checkpoint is created or restored and thus the annotations
+   * changed.
+   */
   public static final String ANNOTATION_CHANGED = "ANNOTATION_UPDATE/CHECKPOINT/*";
 
+  /**
+   * Send as event when the annotation graph is modified but this single change can be reversed with
+   * an undo operation.
+   */
   public static final String UNDO_OPERATION_ADDED = "ANNOTATION_UPDATE/OPERATION/ADDED";
 
 
