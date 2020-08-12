@@ -94,7 +94,7 @@ public class TextViewer {
         textField.setText(text.getText());
       }
     }
-    parent.pack();
+    parent.requestLayout();
   }
 
   @PreDestroy
