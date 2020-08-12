@@ -21,6 +21,10 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory.sendEvent;
+
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToLayerOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -61,7 +65,7 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -71,12 +75,14 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 
   @Override
   public void addNode(N node) {
-    applyAdd(() -> super.addNode(node), node);
+    super.addNode(node);
+    sendEvent(Topics.UNDO_OPERATION_ADDED,
+        new AddNodeToLayerOperation<N>(this, node));
   }
 
   @Override

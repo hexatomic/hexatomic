@@ -45,7 +45,6 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
-import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -158,8 +157,6 @@ public class GraphEditor {
   @Inject
   private IEventBroker events;
 
-  @Inject
-  private UndoManager undoManager;
 
   private ConsoleView consoleView;
 
@@ -257,7 +254,7 @@ public class GraphEditor {
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
         "graph-editor/text-console");
-    consoleView = new ConsoleView(consoleViewer, sync, undoManager, getGraph());
+    consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
     updateView(true, true);
@@ -713,10 +710,10 @@ public class GraphEditor {
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
       // Only relations with text coverage semantics can change the structure of the graph and
       // modify segments
-      updateView(
-          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>,
-          false);
-      return true;
+      boolean recalculateSegments =
+          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>;
+      updateView(recalculateSegments, false);
+      return recalculateSegments;
     }
 
     return false;
@@ -747,18 +744,27 @@ public class GraphEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+  private void onCheckpointCreated(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_CREATED) Object element) {
 
     if (element instanceof ChangeSet) {
       ChangeSet changeSet = (ChangeSet) element;
       log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
-      for (Object container : changeSet.getChangedContainers()) {
-        if (checkUpdateViewNecessary(container)) {
+      for (Object changed : changeSet.getChangedElements()) {
+        if (checkUpdateViewNecessary(changed)) {
           break;
         }
       }
     }
   }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onCheckpointRestored(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
+    updateView(true, false);
+  }
+
 
   private class RootFilter extends ViewerFilter {
 

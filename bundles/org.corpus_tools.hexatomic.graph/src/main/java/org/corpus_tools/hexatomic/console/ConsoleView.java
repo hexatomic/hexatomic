@@ -24,7 +24,7 @@ import com.google.common.collect.Range;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-import org.corpus_tools.hexatomic.core.undo.UndoManager;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -52,7 +52,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   private final UISynchronize sync;
 
-  private final UndoManager undoManager;
+  private final ProjectManager projectManager;
 
   private final ConsoleController controller;
 
@@ -63,16 +63,16 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
    * 
    * @param view The view widget the console view is using
    * @param sync An Eclipse synchronization object.
-   * @param undoManager An undo manager object.
+   * @param projectManager An project manager object.
    * @param graph The Salt graph to edit.
    */
   public ConsoleView(SourceViewer view, UISynchronize sync,
-      UndoManager undoManager,
+      ProjectManager projectManager,
       SDocumentGraph graph) {
     this.document = view.getDocument();
     this.sync = sync;
     this.view = view;
-    this.undoManager = undoManager;
+    this.projectManager = projectManager;
     this.controller = new ConsoleController(graph);
 
     this.document.addDocumentListener(this);
@@ -155,7 +155,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           for (String l : output) {
             writeLine(l);
           }
-          undoManager.addCheckpoint();
+          projectManager.addCheckpoint();
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);

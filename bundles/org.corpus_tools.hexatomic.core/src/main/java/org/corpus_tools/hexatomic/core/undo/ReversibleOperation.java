@@ -1,9 +1,9 @@
 package org.corpus_tools.hexatomic.core.undo;
 
-import org.corpus_tools.hexatomic.core.ProjectManager;
-
 public interface ReversibleOperation {
-  public void restore(ProjectManager projectManager);
+  public void restore();
 
-  public Object getContainer();
+  public Object getChangedContainer();
+
+  public Object getChangedElement();
 }

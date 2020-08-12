@@ -6,7 +6,6 @@ import java.util.ListIterator;
 import java.util.Stack;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
@@ -27,31 +26,10 @@ public class UndoManager {
   private ErrorService errors;
 
   @Inject
-  private ProjectManager projectManager;
-
-  @Inject
   private SaltNotificationFactory notificationFactory;
 
   @Inject
   IEventBroker events;
-
-  /**
-   * Adds a checkpoint. A user will be able to undo all changes made between checkpointss.
-   */
-  public void addCheckpoint() {
-    if (!uncommittedChanges.isEmpty()) {
-      // All recorded changes are reversable without saving and loading the whole document, create
-      // a different kind of checkpoint using a copy of all uncomitted changes
-      log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
-      changeSets.add(new ChangeSet(uncommittedChanges));
-    }
-
-    // All uncommitted changes have been handled: restore internal recored state to default:
-    uncommittedChanges.clear();
-
-    events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changeSets.lastElement());
-  }
-
 
   /**
    * Checks whether it is possible to perform an undo.
@@ -75,13 +53,34 @@ public class UndoManager {
           lastChangeSet.getChanges().listIterator(lastChangeSet.getChanges().size());
       while (itLastChangeSet.hasPrevious()) {
         ReversibleOperation op = itLastChangeSet.previous();
-        op.restore(projectManager);
+        op.restore();
       }
       notificationFactory.setSuppressingEvents(false);
       events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
 
       // TODO: how to implement redo?
     }
+  }
+
+  /**
+   * Commit all recorded changes into a new {@link ChangeSet} that can be reversed.
+   * 
+   * @return The created {@link ChangeSet} or null of none was created.
+   */
+  public ChangeSet commitCanges() {
+    ChangeSet changes = null;
+    if (!uncommittedChanges.isEmpty()) {
+      // All recorded changes are reversable without saving and loading the whole document, create
+      // a different kind of checkpoint using a copy of all uncomitted changes
+      log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
+      changes = new ChangeSet(uncommittedChanges);
+      changeSets.add(changes);
+    }
+
+    // All uncommitted changes have been handled: restore internal recored state to default:
+    uncommittedChanges.clear();
+
+    return changes;
   }
 
 

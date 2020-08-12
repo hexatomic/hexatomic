@@ -36,7 +36,6 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
-import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
 import org.corpus_tools.salt.SaltFactory;
@@ -124,8 +123,6 @@ public class CorpusStructureView {
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG =
       "You can only create a (sub-) corpus when a corpus graph or another corpus is selected.";
 
-  @Inject
-  private UndoManager undo;
 
   static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
@@ -239,7 +236,7 @@ public class CorpusStructureView {
 
             SNamedElement n = (SNamedElement) item.getData();
             n.setName(value.toString());
-            undo.addCheckpoint();
+            projectManager.addCheckpoint();
           }
         }
 
@@ -371,7 +368,7 @@ public class CorpusStructureView {
 
     SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
     newGraph.setName("corpus_graph_" + (oldSize + 1));
-    undo.addCheckpoint();
+    projectManager.addCheckpoint();
 
     selectSaltObject(newGraph, true);
 
@@ -412,7 +409,7 @@ public class CorpusStructureView {
         newCorpus = g.createCorpus(parent, newCorpusName);
       }
 
-      undo.addCheckpoint();
+      projectManager.addCheckpoint();
 
       if (newCorpus != null) {
         selectSaltObject(newCorpus, true);
@@ -445,7 +442,7 @@ public class CorpusStructureView {
       int oldSize =
           parent.getGraph().getDocuments() == null ? 0 : parent.getGraph().getDocuments().size();
       SDocument newDocument = parent.getGraph().createDocument(parent, "document_" + (oldSize + 1));
-      undo.addCheckpoint();
+      projectManager.addCheckpoint();
 
       log.debug("Selecting created document");
       selectSaltObject(newDocument, true);

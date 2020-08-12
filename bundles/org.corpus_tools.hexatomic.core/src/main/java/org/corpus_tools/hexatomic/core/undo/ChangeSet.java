@@ -15,7 +15,7 @@ public class ChangeSet {
   }
 
   /**
-   * Return a set of all containers affected directly by this change.
+   * Return a set of all containers directly affected by this change.
    * 
    * @return The container objects.
    */
@@ -23,7 +23,25 @@ public class ChangeSet {
     Set<Object> result = new LinkedHashSet<>();
 
     for (ReversibleOperation op : this.changes) {
-      Object container = op.getContainer();
+      Object container = op.getChangedContainer();
+      if (container != null) {
+        result.add(container);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Return a set of all elements directly affected by this change.
+   * 
+   * @return The elements.
+   */
+  public Set<Object> getChangedElements() {
+    Set<Object> result = new LinkedHashSet<>();
+
+    for (ReversibleOperation op : this.changes) {
+      Object container = op.getChangedElement();
       if (container != null) {
         result.add(container);
       }

@@ -390,6 +390,9 @@ class TestGraphEditor {
     graph.createToken(anotherText, 0, 7);
     graph.createToken(anotherText, 8, 12);
 
+    // Add a checkpoint so the changes are propagated to the view
+    projectManager.addCheckpoint();
+
     // Select the new text
     SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
     textRangeTable.select("Another text");

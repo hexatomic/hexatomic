@@ -36,6 +36,8 @@ import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.core.undo.UndoManager;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -92,6 +94,9 @@ public class ProjectManager {
 
   @Inject
   SaltNotificationFactory notificationFactory;
+
+  @Inject
+  UndoManager undoManager;
 
   private boolean hasUnsavedChanges;
 
@@ -493,6 +498,15 @@ public class ProjectManager {
     uiStatus.setLocation(null);
     
     events.send(Topics.PROJECT_LOADED, null);
+  }
+
+
+  /**
+   * Adds a checkpoint. A user will be able to undo all changes made between checkpoints.
+   */
+  public void addCheckpoint() {
+    ChangeSet changes = undoManager.commitCanges();
+    events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
   }
 
   /**

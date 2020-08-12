@@ -2,38 +2,35 @@ package org.corpus_tools.hexatomic.core.undo.operations;
 
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
-import org.corpus_tools.salt.graph.Graph;
+import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
 
-public class AddNodeToGraphOperation<N extends Node> implements ReversibleOperation {
+public class AddNodeToLayerOperation<N extends Node>
+    implements ReversibleOperation {
 
+  private final Layer<N, ?> layer;
   private final N node;
-  private final Graph<N, ?, ?> graph;
-
+  
   /**
-   * Create a undo operation for a node that was added to a graph.
+   * Create a reversible operation for adding a node to a layer.
    * 
-   * @param node The node that was added.
+   * @param layer The layer the node was added to.
+   * @param node The node that was added to the layer.
    */
-  @SuppressWarnings("unchecked")
-  public AddNodeToGraphOperation(N node) {
+  public AddNodeToLayerOperation(Layer<N, ?> layer, N node) {
     super();
+    this.layer = layer;
     this.node = node;
-    this.graph = node.getGraph();
   }
-
-
 
   @Override
   public void restore() {
-    if (graph != null) {
-      graph.removeNode(node);
-    }
+    layer.removeNode(node);
   }
 
   @Override
   public Object getChangedContainer() {
-    return SaltHelper.resolveDelegation(graph);
+    return SaltHelper.resolveDelegation(layer);
   }
 
   @Override

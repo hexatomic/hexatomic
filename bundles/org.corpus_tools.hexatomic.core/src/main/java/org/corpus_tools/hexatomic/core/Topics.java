@@ -68,7 +68,6 @@ public interface Topics {
 
   public static final String ANNOTATION_CHANGED = "ANNOTATION_UPDATE/CHECKPOINT/*";
 
-
   public static final String UNDO_OPERATION_ADDED = "ANNOTATION_UPDATE/OPERATION/ADDED";
 
 
