@@ -25,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.CustomBodyMenuConfiguration;
@@ -42,6 +43,7 @@ import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -175,6 +177,15 @@ public class GridEditor {
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
 
   }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onCheckpointRestored(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
+    table.refresh();
+  }
+
 
   /**
    * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.

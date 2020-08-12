@@ -536,7 +536,7 @@ public class ProjectManager {
   }
 
   /**
-   * Undoes all changes made in the last checkpoint
+   * Undoes all changes made in the last checkpoint.
    */
   public void undo() {
 

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -72,6 +73,9 @@ public class GraphDataProvider implements IDataProvider {
 
   @Inject
   ErrorService errors;
+
+  @Inject
+  ProjectManager projectManager;
 
   private void resolveGraph() {
     // Reset data
@@ -370,6 +374,8 @@ public class GraphDataProvider implements IDataProvider {
         log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString(), newValue);
       }
     }
+
+    projectManager.addCheckpoint();
 
   }
 
