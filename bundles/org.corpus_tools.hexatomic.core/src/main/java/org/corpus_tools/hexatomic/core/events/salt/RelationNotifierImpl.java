@@ -21,6 +21,11 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory.sendEvent;
+
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.SetSourceOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.SetTargetOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.Relation;
@@ -61,7 +66,7 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -71,17 +76,21 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 
   @Override
   public void setSource(S source) {
-    applyModification(() -> super.setSource(source));
+    S oldNode = getSource();
+    super.setSource(source);
+    sendEvent(Topics.UNDO_OPERATION_ADDED, new SetSourceOperation<S>(this, oldNode));
   }
 
   @Override
   public void setTarget(T target) {
-    applyModification(() -> super.setTarget(target));
+    T oldNode = getTarget();
+    super.setTarget(target);
+    sendEvent(Topics.UNDO_OPERATION_ADDED, new SetTargetOperation<T>(this, oldNode));
   }
 
 }
