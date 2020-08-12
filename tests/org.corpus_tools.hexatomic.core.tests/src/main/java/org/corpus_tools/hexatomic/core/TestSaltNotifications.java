@@ -13,10 +13,13 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import java.util.List;
+import java.util.Objects;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
+import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.AddLayerToGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToGraphOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToLayerOperation;
@@ -57,6 +60,9 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -135,14 +141,13 @@ class TestSaltNotifications {
 
     // Document graph connection is set as a label and consists of 3 events(set namespace, set name,
     // set value)
-    verifyCreatedAnnoEvents(doc.getFeature(SaltUtil.FEAT_SDOCUMENT_GRAPH_QNAME));
-
     // The connection is double linked
     verifyCreatedAnnoEvents(doc.getDocumentGraph().getFeature(SaltUtil.FEAT_SDOCUMENT_QNAME));
+    verifyCreatedAnnoEvents(doc.getFeature(SaltUtil.FEAT_SDOCUMENT_GRAPH_QNAME));
 
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
-        allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty("node", is(text))));
+        argThat(allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty("node", is(text)))));
     // Text text ID is an own object that is added to the node as label
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         allOf(instanceOf(LabelAddOperation.class), hasProperty("container", is(text)),
@@ -303,8 +308,37 @@ class TestSaltNotifications {
 
   private void verifyCreatedAnnoEvents(SAbstractAnnotation anno) {
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
-        allOf(instanceOf(LabelAddOperation.class),
-            hasProperty("qname", is(anno.getQName())), hasProperty("value", is(anno.getValue()))));
+        argThat(allOf(instanceOf(LabelAddOperation.class),
+            sameContainer(anno.getContainer()),
+            hasProperty("qname", is(anno.getQName())))));
+  }
+
+  static Matcher<ReversibleOperation> sameContainer(Object container) {
+    return new LabelHasSameContainer(container);
+  }
+
+  static class LabelHasSameContainer extends TypeSafeMatcher<ReversibleOperation> {
+
+    private Object expected;
+    
+    public LabelHasSameContainer(Object expected) {
+      this.expected = SaltHelper.resolveDelegation(expected);
+    }
+    
+    @Override
+    protected boolean matchesSafely(ReversibleOperation op) {
+      Object other = op.getChangedContainer();
+      if (Objects.equals(expected, other)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText("sameContainer(" + expected + ")");
+    }
   }
 
 

@@ -52,4 +52,13 @@ public class LabelAddOperation implements ReversibleOperation {
     return SaltHelper.resolveDelegation(container.getLabel(qname));
   }
 
+  public String getQname() {
+    return qname;
+  }
+
+  @Override
+  public String toString() {
+    return "LabelAddOperation [qname=" + qname + ", container=" + container + "]";
+  }
+
 }
