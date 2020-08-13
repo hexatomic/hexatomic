@@ -32,6 +32,7 @@ import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.ColumnHeaderMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.configuration.ColumnHeaderUiBindingConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.EditConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
@@ -160,6 +161,7 @@ public class GridEditor {
     final GridColumnHeaderLayer columnHeaderLayer =
         new GridColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
             compositeFreezeLayer, selectionLayer, bodyDataProvider);
+    columnHeaderLayer.addConfiguration(new ColumnHeaderUiBindingConfiguration(selectionLayer));
 
     // Row header
     final IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);

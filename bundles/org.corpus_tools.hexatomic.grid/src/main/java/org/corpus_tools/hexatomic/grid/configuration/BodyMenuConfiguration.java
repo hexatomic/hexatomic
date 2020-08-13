@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.grid.configuration;
 
 import org.corpus_tools.hexatomic.grid.commands.DisplayAnnotationRenameDialogCommand;
+import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -69,11 +70,13 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
   }
 
   private Menu createMenu() {
+    ValidSelectionState validSelectionState = new ValidSelectionState();
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
-    builder.withVisibleState(DELETE_CELL_ITEM, new ValidSelectionState());
+    builder.withVisibleState(DELETE_CELL_ITEM, validSelectionState);
     builder.withMenuItemProvider(CHANGE_CELL_ANNOTATION_NAME_ITEM,
         new ChangeAnnotationNameItemProvider());
+    builder.withVisibleState(CHANGE_CELL_ANNOTATION_NAME_ITEM, validSelectionState);
     Menu popUpMenu = builder.build();
     return popUpMenu;
   }
@@ -153,8 +156,9 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
 
         for (PositionCoordinate coord : selectedCellCoordinates) {
-          // The first column is reserved for token text
-          if (coord.getColumnPosition() == 0) {
+          // Check whether the column at the position is the token column
+          if (GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
+              coord.getColumnPosition(), false)) {
             return false;
           }
         }

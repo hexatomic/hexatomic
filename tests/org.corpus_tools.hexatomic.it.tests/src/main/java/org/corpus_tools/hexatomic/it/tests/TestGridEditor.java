@@ -580,7 +580,7 @@ public class TestGridEditor {
   }
 
   @Test
-  void testPopupMenuInvisibleOnSelectedTokenText() {
+  void testDeleteCellsPopupMenuInvisibleOnSelectedTokenText() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -591,7 +591,7 @@ public class TestGridEditor {
   }
 
   @Test
-  void testPopupMenuInvisibleOnNoSelection() {
+  void testDeleteCellsPopupMenuInvisibleOnNoSelection() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -669,6 +669,19 @@ public class TestGridEditor {
     tableBot.button("Cancel").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+  }
+  
+  /**
+   * The popup menu "Delete cell(s)" should only be visible when no token cells are selected.
+   * This tests whether the menu is visible when selecting cells exclusively in other columns
+   * than the token column. 
+   */
+  @Test
+  void testDeleteCellsMenuVisible() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
   }
 
 }

@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.configuration;
 
+import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.menu.IMenuItemState;
 
@@ -35,7 +36,11 @@ class AnnotationHeaderState implements IMenuItemState {
 
   @Override
   public boolean isActive(NatEventData natEventData) {
-    return natEventData.getColumnPosition() > 1;
+    System.err.println("pos " + natEventData.getColumnPosition());
+    boolean ret = !GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
+        natEventData.getColumnPosition(), true);
+    System.err.println("EH? " + ret);
+    return ret;
   }
 
 }
