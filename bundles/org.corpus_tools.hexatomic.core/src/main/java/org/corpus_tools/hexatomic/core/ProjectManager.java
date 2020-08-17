@@ -26,12 +26,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Stack;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -100,7 +100,7 @@ public class ProjectManager {
 
   private boolean hasUnsavedChanges;
 
-  private final Stack<ChangeSet> changeSets = new Stack<>();
+  private final Deque<ChangeSet> changeSets = new LinkedList<>();
   private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
 
   @PostConstruct
