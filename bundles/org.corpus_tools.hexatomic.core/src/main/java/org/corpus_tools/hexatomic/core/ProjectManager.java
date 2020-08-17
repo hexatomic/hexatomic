@@ -103,8 +103,7 @@ public class ProjectManager {
   private final Deque<ChangeSet> undoChangeSets = new LinkedList<>();
   private final Deque<ChangeSet> redoChangeSets = new LinkedList<>();
 
-  private final List<ReversibleOperation> uncommittedUndoChanges = new LinkedList<>();
-  private final List<ReversibleOperation> uncommittedRedoChanges = new LinkedList<>();
+  private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
 
 
   @PostConstruct
@@ -202,9 +201,8 @@ public class ProjectManager {
   }
 
   /**
-   * Load an existing document from a specific location on the disk.
-   * Loading this graph will not change the persisted location for the document but just change the
-   * content of the graph.
+   * Load an existing document from a specific location on the disk. Loading this graph will not
+   * change the persisted location for the document but just change the content of the graph.
    * 
    * @param documentID The ID of the document to load. This document ID must exist in the corpus
    *        graph.
@@ -501,10 +499,14 @@ public class ProjectManager {
     this.location = Optional.empty();
     this.project = SaltFactory.createSaltProject();
     hasUnsavedChanges = false;
+    this.uncommittedChanges.clear();
+    this.undoChangeSets.clear();
+    this.redoChangeSets.clear();
 
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
-    
+
+
     events.send(Topics.PROJECT_LOADED, null);
   }
 
@@ -514,16 +516,16 @@ public class ProjectManager {
    */
   public void addCheckpoint() {
     ChangeSet changes = null;
-    if (!uncommittedUndoChanges.isEmpty()) {
+    if (!uncommittedChanges.isEmpty()) {
       // All recorded changes are reversable without saving and loading the whole document, create
       // a different kind of checkpoint using a copy of all uncomitted changes
-      log.debug("Adding {} changes as checkpoint to undo list", uncommittedUndoChanges.size());
-      changes = new ChangeSet(uncommittedUndoChanges);
+      log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
+      changes = new ChangeSet(uncommittedChanges);
       undoChangeSets.add(changes);
     }
 
     // All uncommitted changes have been handled: restore internal recored state to default:
-    uncommittedUndoChanges.clear();
+    uncommittedChanges.clear();
 
     if (changes != null) {
       events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
@@ -544,16 +546,15 @@ public class ProjectManager {
    */
   public void undo() {
 
-    // Make sure the last uncommited changes are added as a checkoint, but don't fire an event
-    if (!uncommittedUndoChanges.isEmpty()) {
+    // Make sure the last uncommitted changes are added as a checkpoint, but don't fire an event
+    if (!uncommittedChanges.isEmpty()) {
       log.warn("Adding checkpoint for {} uncommited changes before performing undo.",
-          uncommittedUndoChanges.size());
-      undoChangeSets.add(new ChangeSet(uncommittedUndoChanges));
-      uncommittedUndoChanges.clear();
+          uncommittedChanges.size());
+      undoChangeSets.add(new ChangeSet(uncommittedChanges));
+      uncommittedChanges.clear();
     }
 
     if (canUndo()) {
-      notificationFactory.setSuppressingEvents(true);
       // Restore all documents from the last checkpoint
       ChangeSet lastChangeSet = this.undoChangeSets.pop();
       // Iterate over the elements in reversed order
@@ -563,15 +564,49 @@ public class ProjectManager {
         ReversibleOperation op = itLastChangeSet.previous();
         op.restore();
       }
-      notificationFactory.setSuppressingEvents(false);
+
+      // All uncommitted changes recorded when restoring the previous state should be added
+      // to the "redo" stack instead of the undo one.
+      if (!uncommittedChanges.isEmpty()) {
+        redoChangeSets.add(new ChangeSet(uncommittedChanges));
+        uncommittedChanges.clear();
+      }
 
       // Performing an undo might unload documents, close the editors to avoid errors
       // and give the user a visually clue (s)he unloaded/removed a document.
       closeEditorsForRemovedDocuments();
 
       events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
+    }
+  }
 
-      // TODO: how to implement redo?
+  /**
+   * Checks whether it is possible to perform an redo.
+   * 
+   * @return True if redo is possible.
+   */
+  public boolean canRedo() {
+    return !redoChangeSets.isEmpty();
+  }
+
+  /**
+   * Redo all changes made in the last undo.
+   */
+  public void redo() {
+    if (canRedo()) {
+      ChangeSet lastChangeSet = this.redoChangeSets.pop();
+      // Iterate over the elements in reversed order
+      ListIterator<ReversibleOperation> itLastChangeSet =
+          lastChangeSet.getChanges().listIterator(lastChangeSet.getChanges().size());
+      while (itLastChangeSet.hasPrevious()) {
+        ReversibleOperation op = itLastChangeSet.previous();
+        op.restore();
+      }
+
+      // Performing an redo might unload documents, close the editors to avoid errors
+      // and give the user a visually clue (s)he unloaded/removed a document.
+      closeEditorsForRemovedDocuments();
+      events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
     }
   }
 
@@ -580,7 +615,7 @@ public class ProjectManager {
   private void subscribeUndoOperationAdded(
       @UIEventTopic(Topics.ANNOTATION_OPERATION_ADDED) Object element) {
     if (element instanceof ReversibleOperation) {
-      uncommittedUndoChanges.add((ReversibleOperation) element);
+      uncommittedChanges.add((ReversibleOperation) element);
     }
   }
 
