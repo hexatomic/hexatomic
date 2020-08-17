@@ -100,8 +100,12 @@ public class ProjectManager {
 
   private boolean hasUnsavedChanges;
 
-  private final Deque<ChangeSet> changeSets = new LinkedList<>();
-  private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
+  private final Deque<ChangeSet> undoChangeSets = new LinkedList<>();
+  private final Deque<ChangeSet> redoChangeSets = new LinkedList<>();
+
+  private final List<ReversibleOperation> uncommittedUndoChanges = new LinkedList<>();
+  private final List<ReversibleOperation> uncommittedRedoChanges = new LinkedList<>();
+
 
   @PostConstruct
   void postConstruct() {
@@ -510,16 +514,16 @@ public class ProjectManager {
    */
   public void addCheckpoint() {
     ChangeSet changes = null;
-    if (!uncommittedChanges.isEmpty()) {
+    if (!uncommittedUndoChanges.isEmpty()) {
       // All recorded changes are reversable without saving and loading the whole document, create
       // a different kind of checkpoint using a copy of all uncomitted changes
-      log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
-      changes = new ChangeSet(uncommittedChanges);
-      changeSets.add(changes);
+      log.debug("Adding {} changes as checkpoint to undo list", uncommittedUndoChanges.size());
+      changes = new ChangeSet(uncommittedUndoChanges);
+      undoChangeSets.add(changes);
     }
 
     // All uncommitted changes have been handled: restore internal recored state to default:
-    uncommittedChanges.clear();
+    uncommittedUndoChanges.clear();
 
     if (changes != null) {
       events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
@@ -532,7 +536,7 @@ public class ProjectManager {
    * @return True if undo is possible.
    */
   public boolean canUndo() {
-    return !changeSets.isEmpty();
+    return !undoChangeSets.isEmpty();
   }
 
   /**
@@ -541,17 +545,17 @@ public class ProjectManager {
   public void undo() {
 
     // Make sure the last uncommited changes are added as a checkoint, but don't fire an event
-    if (!uncommittedChanges.isEmpty()) {
+    if (!uncommittedUndoChanges.isEmpty()) {
       log.warn("Adding checkpoint for {} uncommited changes before performing undo.",
-          uncommittedChanges.size());
-      changeSets.add(new ChangeSet(uncommittedChanges));
-      uncommittedChanges.clear();
+          uncommittedUndoChanges.size());
+      undoChangeSets.add(new ChangeSet(uncommittedUndoChanges));
+      uncommittedUndoChanges.clear();
     }
 
     if (canUndo()) {
       notificationFactory.setSuppressingEvents(true);
       // Restore all documents from the last checkpoint
-      ChangeSet lastChangeSet = this.changeSets.pop();
+      ChangeSet lastChangeSet = this.undoChangeSets.pop();
       // Iterate over the elements in reversed order
       ListIterator<ReversibleOperation> itLastChangeSet =
           lastChangeSet.getChanges().listIterator(lastChangeSet.getChanges().size());
@@ -574,9 +578,9 @@ public class ProjectManager {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeUndoOperationAdded(
-      @UIEventTopic(Topics.UNDO_OPERATION_ADDED) Object element) {
+      @UIEventTopic(Topics.ANNOTATION_OPERATION_ADDED) Object element) {
     if (element instanceof ReversibleOperation) {
-      uncommittedChanges.add((ReversibleOperation) element);
+      uncommittedUndoChanges.add((ReversibleOperation) element);
     }
   }
 

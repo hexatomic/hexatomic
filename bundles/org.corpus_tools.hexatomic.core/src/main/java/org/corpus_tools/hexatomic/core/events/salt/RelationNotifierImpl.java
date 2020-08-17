@@ -83,14 +83,14 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
   public void setSource(S source) {
     S oldNode = getSource();
     super.setSource(source);
-    sendEvent(Topics.UNDO_OPERATION_ADDED, new SetSourceOperation<S>(this, oldNode));
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED, new SetSourceOperation<S>(this, oldNode));
   }
 
   @Override
   public void setTarget(T target) {
     T oldNode = getTarget();
     super.setTarget(target);
-    sendEvent(Topics.UNDO_OPERATION_ADDED, new SetTargetOperation<T>(this, oldNode));
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED, new SetTargetOperation<T>(this, oldNode));
   }
 
 }

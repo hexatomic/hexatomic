@@ -43,7 +43,7 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
   default void applyAddLabel(GraphModificationAction action, LabelableElement container,
       Label label) {
     action.apply();
-    SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new LabelAddOperation(this, label.getQName()));
   }
 
@@ -57,7 +57,7 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
     if (qname != null) {
       Label label = getLabel(qname);
       if (label != null) {
-        SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+        SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
             new LabelRemoveOperation(label, label.getContainer()));
         action.apply();
       }
@@ -79,7 +79,7 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
     }
     action.apply();
     for (Label l : labels) {
-      SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED,
+      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
           new LabelRemoveOperation(l, container));
     }
   }

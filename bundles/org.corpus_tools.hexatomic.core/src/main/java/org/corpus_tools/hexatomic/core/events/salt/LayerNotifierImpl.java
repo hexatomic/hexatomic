@@ -84,21 +84,21 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
   @Override
   public void addNode(N node) {
     super.addNode(node);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new AddNodeToLayerOperation<N>(this, node));
   }
 
   @Override
   public void removeNode(N node) {
     super.removeNode(node);
-    sendEvent(Topics.UNDO_OPERATION_ADDED, new RemoveNodeFromLayerOperation<N>(this, node));
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED, new RemoveNodeFromLayerOperation<N>(this, node));
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
     super.addRelation(relation);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new AddRelationToLayerOperation<N, R>(this, (R) relation));
   }
 
@@ -106,7 +106,7 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
     super.removeRelation(rel);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new RemoveRelationFromLayerOperation<N, R>(this, (R) rel));
   }
 }

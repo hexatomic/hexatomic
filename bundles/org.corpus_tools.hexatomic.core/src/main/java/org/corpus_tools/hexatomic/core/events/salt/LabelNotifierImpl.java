@@ -93,7 +93,7 @@ public class LabelNotifierImpl extends LabelImpl
       LabelModifyOperation op =
           new LabelModifyOperation(this, this.getNamespace(), this.getName(), this.getValue());
       action.apply();
-      SaltNotificationFactory.sendEvent(Topics.UNDO_OPERATION_ADDED, op);
+      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED, op);
     } else {
       action.apply();
     }

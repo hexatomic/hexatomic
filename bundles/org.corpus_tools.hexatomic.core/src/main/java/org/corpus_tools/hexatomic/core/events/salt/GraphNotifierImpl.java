@@ -97,14 +97,14 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && node instanceof NodeImpl) {
       ((NodeImpl) node).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new AddNodeToGraphOperation<Node>(node));
   }
 
   @Override
   public void removeNode(Node node) {
     super.removeNode(node);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new RemoveNodeFromGraphOperation<Node>(node, this));
   }
 
@@ -118,7 +118,7 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && relation instanceof RelationImpl<?, ?>) {
       ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new AddRelationToGraphOperation<Node, Relation<Node, Node>>(
             (Relation<Node, Node>) relation));
   }
@@ -127,7 +127,7 @@ public class GraphNotifierImpl extends
   @Override
   public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
     super.removeRelation(rel);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new RemoveRelationFromGraphOperation<Node, Relation<Node, Node>>((Relation<Node, Node>) rel,
             this));
   }
@@ -137,7 +137,7 @@ public class GraphNotifierImpl extends
     List<Relation<Node, Node>> relations = new LinkedList<>(getRelations());
     super.removeRelations();
     for (Relation<Node, Node> rel : relations) {
-      sendEvent(Topics.UNDO_OPERATION_ADDED,
+      sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
           new RemoveRelationFromGraphOperation<Node, Relation<Node, Node>>(rel, this));
     }
   }
@@ -145,14 +145,14 @@ public class GraphNotifierImpl extends
   @Override
   public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
     super.addLayer(layer);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new AddLayerToGraphOperation<Layer<Node, Relation<Node, Node>>>(layer));
   }
 
   @Override
   public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
     super.removeLayer(layer);
-    sendEvent(Topics.UNDO_OPERATION_ADDED,
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new RemoveLayerFromGraphOperation<Layer<Node, Relation<Node, Node>>>(layer));
   }
 }

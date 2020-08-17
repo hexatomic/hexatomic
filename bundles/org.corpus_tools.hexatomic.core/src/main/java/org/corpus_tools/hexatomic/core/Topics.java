@@ -34,7 +34,7 @@ public interface Topics {
   /**
    * Send after a collection of Salt elements is modified and a consistent state is reached.
    */
-  public static final String ANNOTATION_CHECKPOINT_CREATED = "ANNOTATION_UPDATE/CHECKPOINT/CREATED";
+  public static final String ANNOTATION_CHECKPOINT_CREATED = "ANNOTATION/CHECKPOINT/CREATED";
 
   /**
    * Send after a consistent state has been restored.
@@ -46,13 +46,14 @@ public interface Topics {
    * An alias for all events where a checkpoint is created or restored and thus the annotations
    * changed.
    */
-  public static final String ANNOTATION_CHANGED = "ANNOTATION_UPDATE/CHECKPOINT/*";
+  public static final String ANNOTATION_CHANGED = "ANNOTATION/CHECKPOINT/*";
 
   /**
    * Send as event when the annotation graph is modified but this single change can be reversed with
    * an undo operation.
    */
-  public static final String UNDO_OPERATION_ADDED = "ANNOTATION_UPDATE/OPERATION/ADDED";
+  public static final String ANNOTATION_OPERATION_ADDED =
+      "ANNOTATION/OPERATION/ADDED";
 
 
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
