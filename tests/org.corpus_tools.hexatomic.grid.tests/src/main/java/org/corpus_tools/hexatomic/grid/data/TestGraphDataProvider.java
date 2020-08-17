@@ -39,7 +39,6 @@ import org.junit.jupiter.api.Test;
 class TestGraphDataProvider {
 
   private ErrorService errorService;
-  private ProjectManager projectManager;
 
   private static GraphDataProvider fixture = null;
   private SDocumentGraph exampleGraph;
@@ -66,9 +65,8 @@ class TestGraphDataProvider {
     exampleText = getFirstTextFromGraph(exampleGraph);
     overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);
-    projectManager = mock(ProjectManager.class);
     fixture.errors = errorService;
-    fixture.projectManager = projectManager;
+    fixture.projectManager = mock(ProjectManager.class);
   }
 
   /**
