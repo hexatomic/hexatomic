@@ -54,22 +54,22 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
-public class GraphNotifierImpl extends
-    GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
-    implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>,
-    NotifyingLabelableElement<Graph<?, ?, ?>> {
+public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>> extends
+    GraphImpl<N, R, Layer<N, R>>
+    implements Graph<N, R, Layer<N, R>>,
+    NotifyingLabelableElement<Graph<N, R, ?>> {
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private Graph<?, ?, ?> typedDelegation;
+  private Graph<N, R, ?> typedDelegation;
 
   @Override
-  public Graph<?, ?, ?> getTypedDelegation() {
+  public Graph<N, R, ?> getTypedDelegation() {
     return typedDelegation;
   }
 
   @Override
-  public void setTypedDelegation(Graph<?, ?, ?> typedDelegation) {
+  public void setTypedDelegation(Graph<N, R, ?> typedDelegation) {
     this.typedDelegation = typedDelegation;
   }
 
@@ -89,7 +89,7 @@ public class GraphNotifierImpl extends
   }
 
   @Override
-  public void addNode(Node node) {
+  public void addNode(N node) {
     super.addNode(node);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
@@ -102,15 +102,15 @@ public class GraphNotifierImpl extends
   }
 
   @Override
-  public void removeNode(Node node) {
+  public void removeNode(N node) {
     super.removeNode(node);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new RemoveNodeFromGraphOperation<Node>(node, this));
+        new RemoveNodeFromGraphOperation<N>(node, typedDelegation));
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public void addRelation(Relation<? extends Node, ? extends Node> relation) {
+  public void addRelation(Relation<? extends N, ? extends N> relation) {
     super.addRelation(relation);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
@@ -125,34 +125,34 @@ public class GraphNotifierImpl extends
 
   @SuppressWarnings("unchecked")
   @Override
-  public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
+  public void removeRelation(Relation<? extends N, ? extends N> rel) {
     super.removeRelation(rel);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new RemoveRelationFromGraphOperation<Node, Relation<Node, Node>>((Relation<Node, Node>) rel,
-            this));
+        new RemoveRelationFromGraphOperation<N, R>((R) rel,
+            typedDelegation));
   }
 
   @Override
   public void removeRelations() {
-    List<Relation<Node, Node>> relations = new LinkedList<>(getRelations());
+    List<R> relations = new LinkedList<>(getRelations());
     super.removeRelations();
-    for (Relation<Node, Node> rel : relations) {
+    for (R rel : relations) {
       sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-          new RemoveRelationFromGraphOperation<Node, Relation<Node, Node>>(rel, this));
+          new RemoveRelationFromGraphOperation<N, R>(rel, typedDelegation));
     }
   }
 
   @Override
-  public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
+  public void addLayer(Layer<N, R> layer) {
     super.addLayer(layer);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new AddLayerToGraphOperation<Layer<Node, Relation<Node, Node>>>(layer));
+        new AddLayerToGraphOperation<Layer<N, R>>(layer));
   }
 
   @Override
-  public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
+  public void removeLayer(Layer<N, R> layer) {
     super.removeLayer(layer);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new RemoveLayerFromGraphOperation<Layer<Node, Relation<Node, Node>>>(layer));
+        new RemoveLayerFromGraphOperation<Layer<N, R>>(layer));
   }
 }

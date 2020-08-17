@@ -201,9 +201,6 @@ public class SaltNotificationFactory implements ISaltFactory {
     }
   }
 
-  private GraphNotifierImpl createNotifierGraph() {
-    return new GraphNotifierImpl();
-  }
 
   private LabelNotifierImpl createNotifierLabel() {
     return new LabelNotifierImpl();
@@ -231,7 +228,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> createGraph() {
-    return createNotifierGraph();
+    return new GraphNotifierImpl<>();
   }
 
 
@@ -257,7 +254,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SGraph createSGraph() {
-    GraphNotifierImpl delegate = createNotifierGraph();
+    GraphNotifierImpl<SNode, SRelation<SNode, SNode>> delegate = new GraphNotifierImpl<>();
     SGraphImpl result = new SGraphImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
@@ -342,7 +339,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SCorpusGraph createSCorpusGraph() {
-    GraphNotifierImpl delegate = createNotifierGraph();
+    GraphNotifierImpl<SNode, SRelation<SNode, SNode>> delegate = new GraphNotifierImpl<>();
     SCorpusGraphImpl result = new SCorpusGraphImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
@@ -350,7 +347,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SDocumentGraph createSDocumentGraph() {
-    GraphNotifierImpl delegate = createNotifierGraph();
+    GraphNotifierImpl<SNode, SRelation<SNode, SNode>> delegate = new GraphNotifierImpl<>();
     SDocumentGraphImpl result = new SDocumentGraphImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
