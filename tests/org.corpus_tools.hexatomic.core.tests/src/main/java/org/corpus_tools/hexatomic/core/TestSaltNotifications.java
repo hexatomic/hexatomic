@@ -63,6 +63,10 @@ import org.junit.jupiter.api.Test;
 
 class TestSaltNotifications {
 
+  private static final String TEST_VALUE = "value";
+  private static final String QNAME = "qname";
+  private static final String CHANGED_CONTAINER = "changedContainer";
+  private static final String CHANGED_ELEMENT = "changedElement";
   private IEventBroker events;
 
 
@@ -142,12 +146,12 @@ class TestSaltNotifications {
 
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty("changedElement", is(text)))));
+        allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty(CHANGED_ELEMENT, is(text)))));
     // Text text ID is an own object that is added to the node as label
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(
-            allOf(instanceOf(LabelAddOperation.class), hasProperty("changedContainer", is(text)),
-                hasProperty("qname", is(text.getIdentifier().getQName())))));
+            allOf(instanceOf(LabelAddOperation.class), hasProperty(CHANGED_CONTAINER, is(text)),
+                hasProperty(QNAME, is(text.getIdentifier().getQName())))));
     verifySetNameEvents(text);
 
     verifyCreatedAnnoEvents(text.getFeature(SaltUtil.FEAT_SDATA_QNAME));
@@ -155,22 +159,22 @@ class TestSaltNotifications {
     // Test all events for the created token
     // token has been added to times, once to the graph and once to the layer
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty("changedElement", is(tok)))));
+        allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty(CHANGED_ELEMENT, is(tok)))));
     verifySetNameEvents(tok);
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(AddNodeToLayerOperation.class), hasProperty("changedElement", is(tok)))));
+        allOf(instanceOf(AddNodeToLayerOperation.class), hasProperty(CHANGED_ELEMENT, is(tok)))));
 
     // Creating a token also adds a relation from the token to the text
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddRelationToGraphOperation.class),
-            hasProperty("changedElement", is(textRel)))));
+            hasProperty(CHANGED_ELEMENT, is(textRel)))));
     verifySetNameEvents(textRel);
 
     // Setting the target and source of the relation creates each events
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(SetSourceOperation.class), hasProperty("changedElement", is(textRel)))));
+        allOf(instanceOf(SetSourceOperation.class), hasProperty(CHANGED_ELEMENT, is(textRel)))));
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(SetTargetOperation.class), hasProperty("changedElement", is(textRel)))));
+        allOf(instanceOf(SetTargetOperation.class), hasProperty(CHANGED_ELEMENT, is(textRel)))));
 
     verifyCreatedAnnoEvents(textRel.getFeature(SaltUtil.FEAT_SSTART_QNAME));
     verifyCreatedAnnoEvents(textRel.getFeature(SaltUtil.FEAT_SEND_QNAME));
@@ -178,17 +182,17 @@ class TestSaltNotifications {
     verifyCreatedAnnoEvents(tokAnno);
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(LabelRemoveOperation.class), hasProperty("changedElement", is(tokAnno)))));
+        allOf(instanceOf(LabelRemoveOperation.class), hasProperty(CHANGED_ELEMENT, is(tokAnno)))));
 
     verifyCreatedAnnoEvents(processingAnno);
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelRemoveOperation.class),
-            hasProperty("changedElement", is(processingAnno)))));
+            hasProperty(CHANGED_ELEMENT, is(processingAnno)))));
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddLayerToGraphOperation.class),
-            hasProperty("changedElement", is(layer)))));
+            hasProperty(CHANGED_ELEMENT, is(layer)))));
     verifySetNameEvents(layer);
 
 
@@ -199,7 +203,7 @@ class TestSaltNotifications {
         argThat(instanceOf(RemoveLayerFromGraphOperation.class)));
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(RemoveRelationFromGraphOperation.class),
-            hasProperty("changedElement", is(textRel)))));
+            hasProperty(CHANGED_ELEMENT, is(textRel)))));
   }
 
   /**
@@ -222,24 +226,24 @@ class TestSaltNotifications {
     verifySetNameEvents(doc);
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddNodeToGraphOperation.class),
-            hasProperty("changedElement", is(corpus)),
-            hasProperty("changedContainer", is(graph)))));
+            hasProperty(CHANGED_ELEMENT, is(corpus)),
+            hasProperty(CHANGED_CONTAINER, is(graph)))));
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddNodeToGraphOperation.class),
-            hasProperty("changedElement", is(doc)), hasProperty("changedContainer", is(graph)))));
+            hasProperty(CHANGED_ELEMENT, is(doc)), hasProperty(CHANGED_CONTAINER, is(graph)))));
 
 
     // Add and remove an annotation on the document and on the label itself
-    final SMetaAnnotation docAnno = doc.createMetaAnnotation("meta", "anno", "value");
-    docAnno.createFeature("another", "feature", "value");
+    final SMetaAnnotation docAnno = doc.createMetaAnnotation("meta", "anno", TEST_VALUE);
+    docAnno.createFeature("another", "feature", TEST_VALUE);
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
-        argThat(allOf(instanceOf(LabelAddOperation.class), hasProperty("changedContainer", is(doc)),
-            hasProperty("qname", is("meta::anno")))));
+        argThat(allOf(instanceOf(LabelAddOperation.class), hasProperty(CHANGED_CONTAINER, is(doc)),
+            hasProperty(QNAME, is("meta::anno")))));
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(
-            allOf(instanceOf(LabelAddOperation.class), hasProperty("changedContainer", is(docAnno)),
-                hasProperty("qname", is("another::feature")))));
+            allOf(instanceOf(LabelAddOperation.class), hasProperty(CHANGED_CONTAINER, is(docAnno)),
+                hasProperty(QNAME, is("another::feature")))));
 
     // Create a relation
     final SCorpusDocumentRelation corpusRel = SaltFactory.createSCorpusDocumentRelation();
@@ -247,8 +251,8 @@ class TestSaltNotifications {
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(
-            allOf(instanceOf(LabelAddOperation.class), hasProperty("qname", is("just::another")),
-                hasProperty("changedContainer", is(corpusRel)))));
+            allOf(instanceOf(LabelAddOperation.class), hasProperty(QNAME, is("just::another")),
+                hasProperty(CHANGED_CONTAINER, is(corpusRel)))));
 
     corpusRel.setSource(corpus);
     corpusRel.setTarget(doc);
@@ -256,13 +260,13 @@ class TestSaltNotifications {
     graph.addRelation(corpusRel);
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddRelationToGraphOperation.class),
-            hasProperty("changedElement", is(corpusRel)))));
+            hasProperty(CHANGED_ELEMENT, is(corpusRel)))));
     graph.removeRelations();
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(RemoveRelationFromGraphOperation.class),
-            hasProperty("changedElement", is(corpusRel)),
-            hasProperty("changedContainer", is(graph)))));
+            hasProperty(CHANGED_ELEMENT, is(corpusRel)),
+            hasProperty(CHANGED_CONTAINER, is(graph)))));
 
     // Create a layer and add the node and relation to it
     final SLayer layer = SaltFactory.createSLayer();
@@ -272,11 +276,11 @@ class TestSaltNotifications {
 
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddNodeToLayerOperation.class),
-            hasProperty("changedContainer", is(layer)), hasProperty("changedElement", is(doc)))));
+            hasProperty(CHANGED_CONTAINER, is(layer)), hasProperty(CHANGED_ELEMENT, is(doc)))));
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddRelationToLayerOperation.class),
-            hasProperty("changedContainer", is(layer)),
-            hasProperty("changedElement", is(corpusRel)))));
+            hasProperty(CHANGED_CONTAINER, is(layer)),
+            hasProperty(CHANGED_ELEMENT, is(corpusRel)))));
 
     // Call the removeAll functions on the created objects
     graph.removeAll();
@@ -288,21 +292,21 @@ class TestSaltNotifications {
 
     // Check all removing the labels add the events
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(LabelRemoveOperation.class), hasProperty("changedContainer", is(graph)))));
+        allOf(instanceOf(LabelRemoveOperation.class), hasProperty(CHANGED_CONTAINER, is(graph)))));
 
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(LabelRemoveOperation.class), hasProperty("changedContainer", is(layer)))));
+        allOf(instanceOf(LabelRemoveOperation.class), hasProperty(CHANGED_CONTAINER, is(layer)))));
 
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelRemoveOperation.class),
-            hasProperty("changedContainer", is(corpusRel)))));
+            hasProperty(CHANGED_CONTAINER, is(corpusRel)))));
 
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelRemoveOperation.class),
-            hasProperty("changedContainer", is(docAnno)))));
+            hasProperty(CHANGED_CONTAINER, is(docAnno)))));
 
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED), argThat(
-        allOf(instanceOf(LabelRemoveOperation.class), hasProperty("changedContainer", is(doc)))));
+        allOf(instanceOf(LabelRemoveOperation.class), hasProperty(CHANGED_CONTAINER, is(doc)))));
 
   }
 
@@ -312,24 +316,24 @@ class TestSaltNotifications {
     // call creating an event
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelModifyOperation.class),
-            hasProperty("changedContainer", is(element)),
+            hasProperty(CHANGED_CONTAINER, is(element)),
             hasProperty("namespace", is(nameFeat.getNamespace())))));
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelModifyOperation.class),
-            hasProperty("changedContainer", is(element)),
+            hasProperty(CHANGED_CONTAINER, is(element)),
             hasProperty("name", is(nameFeat.getName())))));
     // The event needs to reset the value and therefore stores the old value, which is null
     verify(events, atLeastOnce()).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelModifyOperation.class),
-            hasProperty("changedContainer", is(element)), hasProperty("value", nullValue()))));
+            hasProperty(CHANGED_CONTAINER, is(element)), hasProperty(TEST_VALUE, nullValue()))));
   }
 
   private void verifyCreatedAnnoEvents(SAbstractAnnotation anno) {
     Object container = SaltHelper.resolveDelegation(anno.getContainer());
     verify(events).send(eq(Topics.UNDO_OPERATION_ADDED),
         argThat(allOf(instanceOf(LabelAddOperation.class),
-            hasProperty("changedContainer", is(container)),
-            hasProperty("qname", is(anno.getQName())))));
+            hasProperty(CHANGED_CONTAINER, is(container)),
+            hasProperty(QNAME, is(anno.getQName())))));
   }
 
 
