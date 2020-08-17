@@ -20,10 +20,20 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_c2kBYJ6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.menu.edit" label="Edit" mnemonics="e">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_lQqf4J6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.undo" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_lQqf4J6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.undo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/undo.png" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
       </children>
     </mainMenu>
+    <trimBars xmi:id="_ZPTWQOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.trimbar.tools">
+      <children xsi:type="menu:ToolBar" xmi:id="_cmxBUOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.toolbar.0">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_omg7YOCvEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.new_salt_project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/file-regular.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_g5ek8OC0EeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.open_salt_project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/folder-open-regular.png" command="_pA7BYMsLEemUdItNeSusZw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_yLmNAOC0EeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.save_salt_project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" command="_o-7oQEy7EeqppqV5eQIggg"/>
+        <children xsi:type="menu:ToolBarSeparator" xmi:id="_9uH1AOC0EeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.toolbarseparator.0"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_daWaYOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.undo" label="" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/undo.png" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_WKd20OCvEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.redo" label="" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
+      </children>
+    </trimBars>
     <trimBars xmi:id="_c05WAFVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.trimbar.status" side="Bottom">
       <children xsi:type="menu:ToolControl" xmi:id="_fZh18FVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.toolcontrol.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.ui.StatusBar">
         <tags>stretch</tags>
