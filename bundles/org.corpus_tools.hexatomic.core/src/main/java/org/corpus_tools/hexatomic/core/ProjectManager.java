@@ -100,7 +100,8 @@ public class ProjectManager {
 
   private boolean hasUnsavedChanges;
 
-  private final Deque<ChangeSet> undoChangeSets = new LinkedList<>();
+  private final Deque<ChangeSet> undoChangeSets =
+      new LinkedList<>();
   private final Deque<ChangeSet> redoChangeSets = new LinkedList<>();
 
   private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
@@ -521,7 +522,7 @@ public class ProjectManager {
       // a different kind of checkpoint using a copy of all uncomitted changes
       log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
       changes = new ChangeSet(uncommittedChanges);
-      undoChangeSets.add(changes);
+      undoChangeSets.addFirst(changes);
     }
 
     // All uncommitted changes have been handled: restore internal recored state to default:
@@ -568,7 +569,7 @@ public class ProjectManager {
       // All uncommitted changes recorded when restoring the previous state should be added
       // to the "redo" stack instead of the undo one.
       if (!uncommittedChanges.isEmpty()) {
-        redoChangeSets.add(new ChangeSet(uncommittedChanges));
+        redoChangeSets.addFirst(new ChangeSet(uncommittedChanges));
         uncommittedChanges.clear();
       }
 
@@ -603,9 +604,12 @@ public class ProjectManager {
         op.restore();
       }
 
+      addCheckpoint();
+
       // Performing an redo might unload documents, close the editors to avoid errors
       // and give the user a visually clue (s)he unloaded/removed a document.
       closeEditorsForRemovedDocuments();
+
       events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
     }
   }
