@@ -24,6 +24,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Node;
+import org.corpus_tools.salt.util.SaltUtil;
 
 public class RemoveNodeFromGraphOperation<N extends Node> implements ReversibleOperation {
 
@@ -47,6 +48,9 @@ public class RemoveNodeFromGraphOperation<N extends Node> implements ReversibleO
   @Override
   public void restore() {
     if (graph != null) {
+      // Make sure the node object does not have an existing ID label from being added
+      // previously.
+      node.removeLabel(SaltUtil.LABEL_ID_QNAME);
       graph.addNode(node);
     }
   }

@@ -25,6 +25,7 @@ import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.Relation;
+import org.corpus_tools.salt.util.SaltUtil;
 
 public class RemoveRelationFromGraphOperation<N extends Node, R extends Relation<N, N>>
     implements ReversibleOperation {
@@ -49,6 +50,9 @@ public class RemoveRelationFromGraphOperation<N extends Node, R extends Relation
   @Override
   public void restore() {
     if (graph != null) {
+      // Make sure the relation object does not have an existing ID label from being added
+      // previously.
+      relation.removeLabel(SaltUtil.LABEL_ID_QNAME);
       graph.addRelation(relation);
     }
   }
