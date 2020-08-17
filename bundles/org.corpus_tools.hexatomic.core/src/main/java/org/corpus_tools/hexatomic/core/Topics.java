@@ -40,7 +40,7 @@ public interface Topics {
    * Send after a consistent state has been restored.
    */
   public static final String ANNOTATION_CHECKPOINT_RESTORED =
-      "ANNOTATION_UPDATE/CHECKPOINT/RESTORED";
+      "ANNOTATION/CHECKPOINT/RESTORED";
 
   /**
    * An alias for all events where a checkpoint is created or restored and thus the annotations
