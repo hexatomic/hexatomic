@@ -48,21 +48,21 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
-    implements Layer<N, R>, NotifyingLabelableElement<Layer<?, ?>> {
+    implements Layer<N, R>, NotifyingLabelableElement<Layer<N, R>> {
 
 
   private static final long serialVersionUID = -4708308546018698463L;
 
-  private Layer<?, ?> typedDelegation;
+  private Layer<N, R> typedDelegation;
 
 
   @Override
-  public Layer<?, ?> getTypedDelegation() {
+  public Layer<N, R> getTypedDelegation() {
     return typedDelegation;
   }
 
   @Override
-  public void setTypedDelegation(Layer<?, ?> typedDelegation) {
+  public void setTypedDelegation(Layer<N, R> typedDelegation) {
     this.typedDelegation = typedDelegation;
   }
 
@@ -85,13 +85,16 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
   public void addNode(N node) {
     super.addNode(node);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new AddNodeToLayerOperation<N>(this, node));
+        new AddNodeToLayerOperation<N>(typedDelegation, node));
   }
 
   @Override
   public void removeNode(N node) {
-    super.removeNode(node);
-    sendEvent(Topics.ANNOTATION_OPERATION_ADDED, new RemoveNodeFromLayerOperation<N>(this, node));
+    if (this.getNodes().contains(node)) {
+      super.removeNode(node);
+      sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+          new RemoveNodeFromLayerOperation<N>(typedDelegation, node));
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -99,14 +102,17 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
   public void addRelation(Relation<? extends N, ? extends N> relation) {
     super.addRelation(relation);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new AddRelationToLayerOperation<N, R>(this, (R) relation));
+        new AddRelationToLayerOperation<N, R>(typedDelegation, (R) relation));
+
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    super.removeRelation(rel);
-    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new RemoveRelationFromLayerOperation<N, R>(this, (R) rel));
+    if (this.getRelations().contains(rel)) {
+      super.removeRelation(rel);
+      sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+          new RemoveRelationFromLayerOperation<N, R>(typedDelegation, (R) rel));
+    }
   }
 }

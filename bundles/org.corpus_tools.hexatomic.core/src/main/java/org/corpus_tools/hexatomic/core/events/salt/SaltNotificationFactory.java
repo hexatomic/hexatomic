@@ -207,10 +207,6 @@ public class SaltNotificationFactory implements ISaltFactory {
   }
 
 
-  private LayerNotifierImpl<Node, Relation<Node, Node>> createNotifierLayer() {
-    return new LayerNotifierImpl<>();
-  }
-
   private NodeNotifierImpl createNotifierNode() {
     return new NodeNotifierImpl();
   }
@@ -249,7 +245,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public Layer<Node, Relation<Node, Node>> createLayer() {
-    return createNotifierLayer();
+    return new LayerNotifierImpl<>();
   }
 
   @Override
@@ -310,7 +306,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SLayer createSLayer() {
-    LayerNotifierImpl<Node, Relation<Node, Node>> delegate = createNotifierLayer();
+    LayerNotifierImpl<SNode, SRelation<SNode, SNode>> delegate = new LayerNotifierImpl<>();
     SLayer result = new SLayerImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
