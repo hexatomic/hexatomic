@@ -467,4 +467,31 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(11));
   }
 
+
+  @Test
+  @Order(5)
+  void testUndoRedoRendered() {
+    openDefaultExample();
+    
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+    
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+
+    // Add a pointing relation between the two structures
+    enterCommand("e #structure3 -> #structure5");
+
+    // Pointing relations are shown initially and the new one should be visible now
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
+    
+    // Undo/Redo the changes and check that the view has been updated
+    bot.menu("Undo").click();
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+
+    bot.menu("Redo").click();
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
+
+
+  }
+
 }
