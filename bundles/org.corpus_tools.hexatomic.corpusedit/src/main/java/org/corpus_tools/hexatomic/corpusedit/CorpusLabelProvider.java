@@ -21,6 +21,8 @@
 package org.corpus_tools.hexatomic.corpusedit;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
@@ -29,15 +31,23 @@ import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wb.swt.ResourceManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
-public class CorpusLabelProvider extends LabelProvider {
+public class CorpusLabelProvider extends LabelProvider implements IFontProvider {
 
   private ImageDescriptor documentImage;
+  private final Set<String> dirtyElements = new HashSet<>();
+
+  public Set<String> getDirtyElements() {
+    return dirtyElements;
+  }
 
   @Override
   public Image getImage(Object element) {
@@ -78,6 +88,11 @@ public class CorpusLabelProvider extends LabelProvider {
       result = "<unknown>";
     }
 
+    if (element instanceof IdentifiableElement
+        && dirtyElements.contains(((IdentifiableElement) element).getId())) {
+      result = "* " + result;
+    }
+
     return result;
   }
 
@@ -90,5 +105,17 @@ public class CorpusLabelProvider extends LabelProvider {
       }
     }
     return documentImage;
+  }
+
+  @Override
+  public Font getFont(Object element) {
+    if (element instanceof IdentifiableElement
+        && dirtyElements.contains(((IdentifiableElement) element).getId())) {
+      Font defaultFont = JFaceResources.getDefaultFont();
+      Font boldFont =
+          JFaceResources.getFontRegistry().getBold(defaultFont.getFontData()[0].getName());
+      return boldFont;
+    }
+    return null;
   }
 }

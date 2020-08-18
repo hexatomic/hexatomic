@@ -43,6 +43,7 @@ import org.corpus_tools.salt.common.SCorpusDocumentRelation;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SCorpusRelation;
 import org.corpus_tools.salt.common.SDocument;
+import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.core.GraphTraverseHandler;
 import org.corpus_tools.salt.core.SGraph;
 import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
@@ -65,6 +66,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -182,6 +184,7 @@ public class CorpusStructureView {
   private ErrorService errorService;
 
   TreeViewer treeViewer;
+  // CorpusLabelProvider labelProvider;
 
   @PostConstruct
   private void createPartControl(Composite parent, EMenuService menuService,
@@ -596,8 +599,45 @@ public class CorpusStructureView {
   @org.eclipse.e4.core.di.annotations.Optional
   private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(element, SCorpusGraph.class);
+    Optional<SDocumentGraph> docGraph = SaltHelper.getGraphForObject(element, SDocumentGraph.class);
+    if (docGraph.isPresent()) {
+      SDocumentGraph docGraphObject = docGraph.get();
+      String id = docGraphObject.getId();
+      SDocument document = docGraphObject.getDocument();
+      if (document == null) {
+        Optional<SDocument> docOptional = projectManager.getDocument(id);
+        if (docOptional.isPresent() && docOptional.get() != null) {
+          document = docOptional.get();
+        }
+      }
+      updateViewItem(document, true);
+    }
     if (graph.isPresent()) {
       updateView();
+    }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeDocumentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String value) {
+    Optional<SDocument> document = projectManager.getDocument(value);
+    if (document.isPresent()) {
+      updateViewItem(document.get(), false);
+    }
+  }
+
+  private void updateViewItem(SDocument document, boolean addToChanged) {
+    IBaseLabelProvider provider = treeViewer.getLabelProvider();
+    if (provider instanceof CorpusLabelProvider) {
+      CorpusLabelProvider labelProvider = (CorpusLabelProvider) provider;
+      if (labelProvider != null) {
+        if (addToChanged) {
+          labelProvider.getDirtyElements().add(document.getId());
+        } else {
+          labelProvider.getDirtyElements().clear();
+        }
+        updateView();
+      }
     }
   }
 
