@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -107,10 +108,14 @@ public class TextViewer {
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
-    updateView();
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      if (changeSet.containsDocument(
+          part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+        updateView();
+      }
+    }
   }
-
-
 
   /**
    * Retrieve the edited document from the global and the internal persisted state.

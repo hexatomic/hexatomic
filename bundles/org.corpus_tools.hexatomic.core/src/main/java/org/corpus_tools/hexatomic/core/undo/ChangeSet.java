@@ -25,7 +25,10 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import org.corpus_tools.hexatomic.core.SaltHelper;
+import org.corpus_tools.salt.common.SDocumentGraph;
 
 public class ChangeSet {
 
@@ -69,6 +72,26 @@ public class ChangeSet {
     }
 
     return result;
+  }
+
+  /**
+   * Check if the given document is affected by this change set.
+   * 
+   * @param documentID The ID of the document to check.
+   * @return True if is contained in the document.
+   */
+  public boolean containsDocument(String documentID) {
+    if (documentID != null) {
+      for (Object element : getChangedElements()) {
+        Optional<SDocumentGraph> graph =
+            SaltHelper.getGraphForObject(element, SDocumentGraph.class);
+        if (graph.isPresent() && graph.get().getDocument() != null
+            && documentID.equals(graph.get().getDocument().getId())) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public List<ReversibleOperation> getChanges() {

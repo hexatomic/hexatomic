@@ -21,12 +21,15 @@
 
 package org.corpus_tools.hexatomic.grid;
 
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.configuration.CustomBodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.configuration.CustomHeaderMenuConfiguration;
@@ -181,9 +184,15 @@ public class GridEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onCheckpointRestored(
-      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
-    table.refresh();
+  private void onAnnotationChanged(
+      @UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      if (changeSet.containsDocument(
+          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+        table.refresh();
+      }
+    }
   }
 
 
