@@ -38,15 +38,15 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
-public class DisplayAnnotationRenameDialogCommandHandler
+public class DisplayAnnotationRenameDialogOnColumnCommandHandler
     extends AbstractLayerCommandHandler<DisplayColumnRenameDialogCommand> {
 
   private final ColumnHeaderLayer columnHeaderLayer;
 
   private static final Logger log =
-      LoggerFactory.getLogger(DisplayAnnotationRenameDialogCommandHandler.class);
+      LoggerFactory.getLogger(DisplayAnnotationRenameDialogOnColumnCommandHandler.class);
 
-  public DisplayAnnotationRenameDialogCommandHandler(ColumnHeaderLayer columnHeaderLayer) {
+  public DisplayAnnotationRenameDialogOnColumnCommandHandler(ColumnHeaderLayer columnHeaderLayer) {
     this.columnHeaderLayer = columnHeaderLayer;
   }
 
