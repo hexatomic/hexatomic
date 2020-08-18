@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -717,7 +718,34 @@ public class TestGridEditor {
     shiftClick(table, 5, 1);
     ctrlClick(table, 2, 3);
     ctrlClick(table, 4, 3);
-    tableBot.sleep(5000);
+    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 0)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(0, 0).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+  }
+
+  /**
+   * The popup menu "Change annotation name" should only be visible in the table body when non-token
+   * cells are selected exclusively. This tests whether the menu is visible on selection of a
+   * non-token cell and hidden otherwise.
+   */
+  @Test
+  void testChangeAnnotationNameOnSelectedCells() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    List<String> cellMenuItems = table.contextMenu(2, 2).menuItems();
+    assertFalse(cellMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    // Select cell for popup menu to be visible
+    table.click(2, 2);
+    cellMenuItems = table.contextMenu(2, 2).menuItems();
+    assertTrue(cellMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertTrue(table.contextMenu(2, 2)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
+    assertTrue(table.contextMenu(2, 2)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
   }
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
