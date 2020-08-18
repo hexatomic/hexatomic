@@ -33,13 +33,13 @@ public class RemoveLayerFromGraphOperation<L extends Layer<?, ?>> implements Rev
   /**
    * Create a undo operation for a layer that was removed from a graph.
    * 
+   * @param graph The graph the layer belonged to.
    * @param layer The layer that was removed.
    */
-  @SuppressWarnings("unchecked")
-  public RemoveLayerFromGraphOperation(L layer) {
+  public RemoveLayerFromGraphOperation(Graph<?, ?, L> graph, L layer) {
     super();
     this.layer = layer;
-    this.graph = layer.getGraph();
+    this.graph = graph;
   }
 
 

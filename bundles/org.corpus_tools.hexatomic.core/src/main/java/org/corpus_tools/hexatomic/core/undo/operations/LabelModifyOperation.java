@@ -87,13 +87,4 @@ public class LabelModifyOperation implements ReversibleOperation {
   public Object getValue() {
     return value;
   }
-
-  @Override
-  public String toString() {
-    return "LabelModifyOperation [container=" + container + ", label=" + label + ", namespace="
-        + namespace + ", name=" + name + ", value=" + value + "]";
-  }
-
-
-
 }

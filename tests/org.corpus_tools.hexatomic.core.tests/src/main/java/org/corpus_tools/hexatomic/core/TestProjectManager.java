@@ -26,9 +26,12 @@ import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
+import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -186,10 +189,22 @@ class TestProjectManager {
 
       token.get(0).getAnnotation(TEST_ANNO_QNAME).setValue("3");
       projectManager.addCheckpoint();
-
       assertEquals("3", token.get(0).getAnnotation(TEST_ANNO_QNAME).getValue());
 
+      
+      // Add the pointing relation to a layer
+      SLayer testLayer = SaltFactory.createSLayer();
+      testLayer.setName("test-layer");
+      docGraph.addLayer(testLayer);
+      SPointingRelation pointing = docGraph.getPointingRelations().get(0);
+      testLayer.addRelation(pointing);
+      projectManager.addCheckpoint();
+      assertEquals(3, docGraph.getLayers().size());
+
       // Undo the changes
+      projectManager.undo();
+      assertEquals(2, docGraph.getLayers().size());
+
       projectManager.undo();
       assertEquals("2", token.get(0).getAnnotation(TEST_ANNO_QNAME).getValue());
       assertTrue(projectManager.canUndo());
@@ -228,6 +243,11 @@ class TestProjectManager {
 
       projectManager.redo();
       assertEquals("3", token.get(0).getAnnotation(TEST_ANNO_QNAME).getValue());
+      assertTrue(projectManager.canUndo());
+      assertTrue(projectManager.canRedo());
+
+      projectManager.redo();
+      assertEquals(3, docGraph.getLayers().size());
       assertTrue(projectManager.canUndo());
       assertFalse(projectManager.canRedo());
     }

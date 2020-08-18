@@ -40,6 +40,7 @@ import org.corpus_tools.salt.graph.Relation;
 import org.corpus_tools.salt.graph.impl.GraphImpl;
 import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.corpus_tools.salt.graph.impl.RelationImpl;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
 /**
@@ -54,22 +55,23 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
-public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>> extends
-    GraphImpl<N, R, Layer<N, R>>
-    implements Graph<N, R, Layer<N, R>>,
-    NotifyingLabelableElement<Graph<N, R, ?>> {
+public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L extends Layer<N, R>>
+    extends
+    GraphImpl<N, R, L>
+    implements Graph<N, R, L>,
+    NotifyingLabelableElement<Graph<N, R, L>> {
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private Graph<N, R, ?> typedDelegation;
+  private Graph<N, R, L> typedDelegation;
 
   @Override
-  public Graph<N, R, ?> getTypedDelegation() {
+  public Graph<N, R, L> getTypedDelegation() {
     return typedDelegation;
   }
 
   @Override
-  public void setTypedDelegation(Graph<N, R, ?> typedDelegation) {
+  public void setTypedDelegation(Graph<N, R, L> typedDelegation) {
     this.typedDelegation = typedDelegation;
   }
 
@@ -143,16 +145,19 @@ public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>> extends
   }
 
   @Override
-  public void addLayer(Layer<N, R> layer) {
+  public void addLayer(L layer) {
+    // Make sure the layer object does not have an existing ID label from being added
+    // previously.
+    layer.removeLabel(SaltUtil.LABEL_ID_QNAME);
     super.addLayer(layer);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new AddLayerToGraphOperation<Layer<N, R>>(layer));
   }
 
   @Override
-  public void removeLayer(Layer<N, R> layer) {
+  public void removeLayer(L layer) {
     super.removeLayer(layer);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
-        new RemoveLayerFromGraphOperation<Layer<N, R>>(layer));
+        new RemoveLayerFromGraphOperation<L>(typedDelegation, layer));
   }
 }
