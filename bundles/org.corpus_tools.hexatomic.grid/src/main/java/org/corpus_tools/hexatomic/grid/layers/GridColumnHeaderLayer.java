@@ -26,7 +26,7 @@ import org.corpus_tools.hexatomic.grid.data.Column;
 import org.corpus_tools.hexatomic.grid.data.DataUtil;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.handlers.DisplayAnnotationRenameDialogOnColumnCommandHandler;
-import org.corpus_tools.hexatomic.grid.handlers.RenameAnnotationCommandHandler;
+import org.corpus_tools.hexatomic.grid.handlers.RenameAnnotationOnColumnCommandHandler;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.nebula.widgets.nattable.columnRename.event.RenameColumnHeaderEvent;
@@ -124,7 +124,7 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
 
   @Override
   protected void registerCommandHandlers() {
-    registerCommandHandler(new RenameAnnotationCommandHandler(this));
+    registerCommandHandler(new RenameAnnotationOnColumnCommandHandler(this));
     registerCommandHandler(new DisplayAnnotationRenameDialogOnColumnCommandHandler(this));
   }
 
