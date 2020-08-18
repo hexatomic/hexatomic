@@ -98,6 +98,7 @@ class TestProjectManager {
     }
 
     assertFalse(projectManager.isDirty());
+    assertFalse(bot.activeShell().getText().endsWith("*"));
 
     // Load a single document into memory
     SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
@@ -109,6 +110,7 @@ class TestProjectManager {
     doc1Graph.createSpan(tokens.get(0), tokens.get(1));
 
     assertTrue(projectManager.isDirty());
+    assertTrue(bot.activeShell().getText().endsWith("*"));
 
     // Save the project to a different location
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
@@ -119,6 +121,7 @@ class TestProjectManager {
     });
 
     assertFalse(projectManager.isDirty());
+    assertFalse(bot.activeShell().getText().endsWith("*"));
 
     // Compare the saved project with the one currently in memory
     SaltProject savedProject =
@@ -140,12 +143,14 @@ class TestProjectManager {
     doc1Graph.createSpan(tokens.get(2), tokens.get(3));
 
     assertTrue(projectManager.isDirty());
+    assertTrue(bot.activeShell().getText().endsWith("*"));
 
     UIThreadRunnable.syncExec(() -> {
       projectManager.save(bot.getDisplay().getActiveShell());
     });
 
     assertFalse(projectManager.isDirty());
+    assertFalse(bot.activeShell().getText().endsWith("*"));
 
     savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 

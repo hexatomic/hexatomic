@@ -452,7 +452,7 @@ public class ProjectManager {
 
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
-    
+
     events.send(Topics.PROJECT_LOADED, null);
   }
 
@@ -510,5 +510,6 @@ public class ProjectManager {
   @org.eclipse.e4.core.di.annotations.Optional
   private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     hasUnsavedChanges = true;
+    uiStatus.setDirty(true);
   }
 }
