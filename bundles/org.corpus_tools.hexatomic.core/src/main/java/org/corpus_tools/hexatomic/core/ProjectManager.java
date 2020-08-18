@@ -72,6 +72,8 @@ import org.eclipse.swt.widgets.Shell;
 @Singleton
 public class ProjectManager {
 
+  private static final int MAX_UNDO_HISTORY_SIZE = 25;
+
   private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
 
   private static final org.slf4j.Logger log =
@@ -523,6 +525,10 @@ public class ProjectManager {
       log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
       changes = new ChangeSet(uncommittedChanges);
       undoChangeSets.addFirst(changes);
+      // Limit the maximum number changesets the user can undo
+      while (undoChangeSets.size() > MAX_UNDO_HISTORY_SIZE) {
+        undoChangeSets.removeLast();
+      }
     }
 
     // All uncommitted changes have been handled: restore internal recored state to default:
