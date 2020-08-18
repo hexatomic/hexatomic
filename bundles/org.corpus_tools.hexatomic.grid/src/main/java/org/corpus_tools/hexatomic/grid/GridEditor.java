@@ -26,6 +26,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -47,9 +48,6 @@ import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
-import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -120,8 +118,6 @@ public class GridEditor {
 
   private STextualDS currentDs = null;
 
-  private ProjectChangeListener projectChangeListener;
-
   /**
    * Creates the grid that contains the data of the {@link SDocumentGraph}.
    * 
@@ -131,9 +127,6 @@ public class GridEditor {
   public void postConstruct(Composite parent) {
 
     log.debug("Starting Grid Editor for document '{}'.", getGraph().getDocument().getName());
-
-    projectChangeListener = new ProjectChangeListener();
-    projectManager.addListener(projectChangeListener);
 
     parent.setLayout(new GridLayout());
 
@@ -201,7 +194,6 @@ public class GridEditor {
 
   @PreDestroy
   void preDestroy() {
-    projectManager.removeListener(projectChangeListener);
     events.post(Topics.DOCUMENT_CLOSED,
         thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
@@ -294,6 +286,10 @@ public class GridEditor {
     return null;
   }
 
+  private String getDocumentId() {
+    return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
+  }
+
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void documentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String changedDocumentId) {
@@ -309,40 +305,25 @@ public class GridEditor {
     }
   }
 
-  private String getDocumentId() {
-    return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
-  }
-
-  /**
-   * Listens to changes in the corpus project and updates the table.
-   * 
-   * @author Thomas Krause (krauseto@hu-berlin.de)
-   * @author Stephan Druskat (mail@sdruskat.net)
-   */
-  private final class ProjectChangeListener implements Listener {
-    @Override
-    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-        Object newValue, Object container) {
-
-      // Check if the ID of the changed object points to the same document as our annotation graph
-      IdentifiableElement element = null;
-      if (container instanceof IdentifiableElement) {
-        element = (IdentifiableElement) container;
-      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
-        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
-      }
-      SDocumentGraph graph = getGraph();
-      if (graph == null) {
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+    // Use a helper function to get the graph the changed element is connected to
+    java.util.Optional<SDocumentGraph> changedGraph =
+        SaltHelper.getGraphForObject(element, SDocumentGraph.class);
+    if (changedGraph.isPresent()) {
+      SDocumentGraph ourGraph = getGraph();
+      if (ourGraph == null) {
         errors.showError("Unexpected error",
             "Annotation graph for subscribed document vanished. Please report this as a bug.",
             GridEditor.class);
         return;
       }
-      if (element == null || element.getId() == null) {
+      if (changedGraph.get().getId() == null) {
         return;
       } else {
-        URI elementUri = URI.createURI(element.getId());
-        if (!elementUri.path().equals(graph.getPath().path())) {
+        URI elementUri = URI.createURI(changedGraph.get().getId());
+        if (!elementUri.path().equals(ourGraph.getPath().path())) {
           return;
         }
       }
