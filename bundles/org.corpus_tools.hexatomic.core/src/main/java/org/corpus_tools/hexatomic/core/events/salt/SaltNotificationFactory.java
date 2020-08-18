@@ -64,7 +64,6 @@ import org.corpus_tools.salt.common.impl.STextualRelationImpl;
 import org.corpus_tools.salt.common.impl.STimelineImpl;
 import org.corpus_tools.salt.common.impl.STimelineRelationImpl;
 import org.corpus_tools.salt.common.impl.STokenImpl;
-import org.corpus_tools.salt.common.impl.SaltProjectImpl;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.core.SGraph;
@@ -314,7 +313,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SaltProject createSaltProject() {
-    return new SaltProjectImpl();
+    return new SaltProjectNotifierImpl();
   }
 
   @Override

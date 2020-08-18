@@ -146,4 +146,36 @@ class TestCorpusStructure {
     bot.textWithId(SWTBotPreferences.DEFAULT_KEY, "filter").setText("");
 
   }
+
+  @Test
+  @Order(3)
+  void testUndoRedo() {
+    // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
+    // editor part
+    bot.toolbarDropDownButton(0).click();
+    bot.tree().getTreeItem("corpus_graph_1").select();
+
+    // Add corpus 1
+    bot.toolbarDropDownButton(0).click();
+    bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").select();
+
+    // Add document_1
+    bot.toolbarDropDownButton(0).click();
+
+    bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+    
+    assertEquals(1, bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes().size());
+    
+    // Undo all changes and make sure the view has been updated
+    bot.menu("Undo").click();
+    assertEquals(0, bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes().size());
+    
+    bot.menu("Undo").click();
+    assertEquals(0, bot.tree().getTreeItem("corpus_graph_1").getNodes().size());
+
+    bot.menu("Undo").click();
+    assertEquals(0, bot.tree().getAllItems().length);
+
+
+  }
 }
