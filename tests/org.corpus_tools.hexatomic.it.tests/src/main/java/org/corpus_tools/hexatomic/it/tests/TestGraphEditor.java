@@ -55,6 +55,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
   private static final String GET_VIEWPORT = "getViewport";
 
@@ -350,7 +351,7 @@ class TestGraphEditor {
         "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
 
     // Add a pointing relation between the two structures
-    enterCommand("e #structure3 -> #structure5");
+    enterCommand(ADD_POINTING_COMMMAND);
 
     // Check that no exception was thrown/handled by UI
     assertFalse(errorService.getLastException().isPresent());
@@ -433,7 +434,7 @@ class TestGraphEditor {
     assertNotNull(g);
 
     // Add a pointing relation between the two structures
-    enterCommand("e #structure3 -> #structure5");
+    enterCommand(ADD_POINTING_COMMMAND);
 
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
@@ -479,7 +480,7 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfConnectionsCondition(22));
 
     // Add a pointing relation between the two structures
-    enterCommand("e #structure3 -> #structure5");
+    enterCommand(ADD_POINTING_COMMMAND);
 
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
