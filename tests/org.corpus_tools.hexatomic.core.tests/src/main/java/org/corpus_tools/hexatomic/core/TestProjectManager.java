@@ -1,6 +1,8 @@
 package org.corpus_tools.hexatomic.core;
 
 import static org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler.DOCUMENT_ID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,11 +18,14 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.common.SDocument;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SToken;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -52,6 +57,12 @@ class TestProjectManager {
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
     events = mock(IEventBroker.class);
+    when(events.send(anyString(), any()))
+        .then((invocation) -> {
+          projectManager.subscribeUndoOperationAdded(invocation.getArgument(1));
+          return true;
+        });
+    
     errorService = mock(ErrorService.class);
     partService = mock(EPartService.class);
     uiStatus = mock(UiStatusReport.class);
@@ -135,6 +146,84 @@ class TestProjectManager {
     projectManager.unloadDocumentGraphWhenClosed(documentID);
     // Document should have been unloaded from memory
     assertNull(document.get().getDocumentGraph());
+  }
+
+  @Test
+  public void testUndoRedo() {
+
+    projectManager.open(exampleProjectUri);
+    assertFalse(projectManager.canUndo());
+    assertFalse(projectManager.canRedo());
+
+
+    // Get the document graph and change the label of the first label a few times
+    String documentID = "salt:/rootCorpus/subCorpus2/doc3";
+    Optional<SDocument> document = projectManager.getDocument(documentID, true);
+    assertTrue(document.isPresent());
+    SDocumentGraph docGraph = document.get().getDocumentGraph();
+    assertNotNull(docGraph);
+
+    List<SToken> token = docGraph.getSortedTokenByText();
+    token.get(0).createAnnotation("test", "anno", "0");
+    assertFalse(projectManager.canRedo());
+    assertFalse(projectManager.canRedo());
+
+    projectManager.addCheckpoint();
+    assertTrue(projectManager.canUndo());
+    assertFalse(projectManager.canRedo());
+
+    token.get(0).getAnnotation("test::anno").setValue("1");
+    projectManager.addCheckpoint();
+
+    token.get(0).getAnnotation("test::anno").setValue("2");
+    projectManager.addCheckpoint();
+
+    token.get(0).getAnnotation("test::anno").setValue("3");
+    projectManager.addCheckpoint();
+
+    assertEquals("3", token.get(0).getAnnotation("test::anno").getValue());
+
+    // Undo the changes
+    projectManager.undo();
+    assertEquals("2", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    projectManager.undo();
+    assertEquals("1", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    projectManager.undo();
+    assertEquals("0", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    projectManager.undo();
+    assertEquals(null, token.get(0).getAnnotation("test::anno"));
+    assertFalse(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    // Redo the simple label changes
+    projectManager.redo();
+    assertEquals("0", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    projectManager.redo();
+    assertEquals("1", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    projectManager.redo();
+    assertEquals("2", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
+
+    projectManager.redo();
+    assertEquals("3", token.get(0).getAnnotation("test::anno").getValue());
+    assertTrue(projectManager.canUndo());
+    assertFalse(projectManager.canRedo());
   }
 
 

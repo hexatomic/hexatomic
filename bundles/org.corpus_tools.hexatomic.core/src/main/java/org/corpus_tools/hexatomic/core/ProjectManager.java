@@ -622,7 +622,7 @@ public class ProjectManager {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeUndoOperationAdded(
+  void subscribeUndoOperationAdded(
       @UIEventTopic(Topics.ANNOTATION_OPERATION_ADDED) Object element) {
     if (element instanceof ReversibleOperation) {
       uncommittedChanges.add((ReversibleOperation) element);
