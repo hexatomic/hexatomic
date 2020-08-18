@@ -491,8 +491,6 @@ class TestGraphEditor {
 
     bot.menu("Redo").click();
     bot.waitUntil(new NumberOfConnectionsCondition(23));
-
-
   }
 
 }

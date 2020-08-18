@@ -373,7 +373,8 @@ public class TestGridEditor {
   }
 
   /**
-   * Tests editing cells by activating the cell editor with a double-click on the cell.
+   * Tests editing cells by activating the cell editor with a double-click on the cell and that
+   * executing undo and redo restores the cell value.
    */
   @Test
   void testEditCellOnDoubleClick() {
@@ -382,8 +383,16 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
+    String oldValue = table.getCellDataValueByPosition(2, 2);
+
     table.doubleclick(2, 2);
     typeTextPressReturn(table);
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+
+    // Undo and redo
+    bot.menu("Undo").click();
+    assertEquals(oldValue, table.getCellDataValueByPosition(2, 2));
+    bot.menu("Redo").click();
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
   }
 
@@ -558,5 +567,4 @@ public class TestGridEditor {
     assertThrows(WidgetNotFoundException.class,
         () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
   }
-
 }
