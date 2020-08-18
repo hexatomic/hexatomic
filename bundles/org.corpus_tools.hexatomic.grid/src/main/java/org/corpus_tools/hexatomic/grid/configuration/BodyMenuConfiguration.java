@@ -129,7 +129,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          natTable.doCommand(new DisplayAnnotationRenameDialogCommand(natTable,
+          natTable.doCommand(new DisplayAnnotationRenameDialogCommand(natTable, selectionLayer,
               selectionLayer.getSelectedCellPositions()));
         }
       });

@@ -40,6 +40,7 @@ import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.layers.GridColumnHeaderLayer;
+import org.corpus_tools.hexatomic.grid.layers.GridSpanningDataLayer;
 import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -76,7 +77,6 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
-import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.swt.SWT;
@@ -143,7 +143,7 @@ public class GridEditor {
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
     NodeSpanningDataProvider spanningDataProvider =
         new NodeSpanningDataProvider(bodyDataProvider, false, true);
-    final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
+    final GridSpanningDataLayer bodyDataLayer = new GridSpanningDataLayer(spanningDataProvider);
 
     // Body
     final DefaultBodyLayerStack bodyLayerStack = new DefaultBodyLayerStack(bodyDataLayer);

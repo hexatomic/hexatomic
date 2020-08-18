@@ -21,33 +21,28 @@
 package org.corpus_tools.hexatomic.grid.commands;
 
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.command.ILayerCommand;
+import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
-import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 
 /**
- * Command to display an annotation rename dialog.
+ * Command to display an annotation rename dialog on .
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-public class DisplayAnnotationRenameDialogCommand implements ILayerCommand {
+public class DisplayAnnotationRenameDialogCommand extends AbstractContextFreeCommand {
 
-  public DisplayAnnotationRenameDialogCommand(NatTable natTable,
+  private final NatTable natTable;
+  private final SelectionLayer selectionLayer;
+  private final PositionCoordinate[] selectedCellPositions;
+
+  public DisplayAnnotationRenameDialogCommand(NatTable natTable, SelectionLayer selectionLayer,
       PositionCoordinate[] selectedCellPositions) {
-    // TODO Auto-generated constructor stub
+    this.natTable = natTable;
+    this.selectionLayer = selectionLayer;
+    this.selectedCellPositions = selectedCellPositions;
   }
 
-  @Override
-  public boolean convertToTargetLayer(ILayer targetLayer) {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
-  public ILayerCommand cloneCommand() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 }
