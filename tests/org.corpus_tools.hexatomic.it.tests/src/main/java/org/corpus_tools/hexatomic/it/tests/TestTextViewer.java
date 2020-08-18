@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +36,6 @@ class TestTextViewer {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  private EPartService partService;
 
   private ProjectManager projectManager;
 
@@ -57,7 +55,7 @@ class TestTextViewer {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
     
-    partService = ctx.get(EPartService.class);
+    EPartService partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
@@ -101,8 +99,7 @@ class TestTextViewer {
 
 
   @Test
-  void testShowSaltExample()
-      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+  void testShowSaltExample() {
 
     // Open example and maximize part
     openDefaultExample();
