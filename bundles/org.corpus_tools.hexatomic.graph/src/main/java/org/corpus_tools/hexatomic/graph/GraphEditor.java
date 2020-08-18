@@ -40,6 +40,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
@@ -56,16 +57,15 @@ import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
+import org.corpus_tools.salt.common.STextOverlappingRelation;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
 import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.util.DataSourceSequence;
-import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.draw2d.ScalableFigure;
@@ -76,7 +76,6 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -89,7 +88,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -98,7 +96,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -108,13 +105,24 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
-import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
 
+/**
+ * A part that allows to edit a graph. This includes a graph view and an interactive console for
+ * editing the graph.
+ * 
+ * @author Thomas Krause {@literal krauseto@hu-berlin.de}
+ *
+ */
 public class GraphEditor {
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
+
+  private static final String TEXT = "text";
+  private static final String RANGE = "range";
+  static final int DEFAULT_DIFF = 25;
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
 
@@ -130,10 +138,6 @@ public class GraphEditor {
   @Inject
   Shell shell;
 
-  @Inject
-  public GraphEditor() {
-
-  }
 
   private Button btnIncludeSpans;
   private Table textRangeTable;
@@ -152,10 +156,7 @@ public class GraphEditor {
   @Inject
   private IEventBroker events;
 
-  private ListenerImplementation projectChangeListener;
-
   private ConsoleView consoleView;
-
 
   private final Filter graphFilter = new Filter();
 
@@ -183,10 +184,6 @@ public class GraphEditor {
    */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part) {
-
-    projectChangeListener = new ListenerImplementation();
-    projectManager.addListener(projectChangeListener);
-
     parent.setLayout(new FillLayout(SWT.VERTICAL));
 
     SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
@@ -268,129 +265,15 @@ public class GraphEditor {
     GraphDragMoveAdapter.register(viewer.getGraphControl());
 
     // Disable the original scroll event when the mouse wheel is activated
-    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel,
-        new org.eclipse.swt.widgets.Listener() {
-
-          @Override
-          public void handleEvent(Event event) {
-            event.doit = false;
-          }
-        });
+    viewer.getGraphControl().addListener(SWT.MouseVerticalWheel, event -> event.doit = false);
 
     // Add a mouse wheel listener that zooms instead of scrolling
-    viewer.getGraphControl().addMouseWheelListener(new MouseWheelListener() {
-
-      @Override
-      public void mouseScrolled(MouseEvent e) {
-
-        // If Shift or Ctrl are pressed while srolling the mouse wheel, scroll rather than zoom
-        if (e.stateMask == SWT.SHIFT || e.stateMask == SWT.CTRL) {
-          Viewport viewPort = viewer.getGraphControl().getViewport();
-          Point loc = viewPort.getViewLocation();
-          int diff = 50;
-          if (e.stateMask == SWT.SHIFT) {
-            // Mouse wheel scrolled down
-            if (e.count < 0) {
-              // Scroll down
-              loc.translate(0, +diff);
-            } else {
-              // Scroll up
-              loc.translate(0, -diff);
-            }
-          } else if (e.stateMask == SWT.CTRL) {
-            if (e.count < 0) {
-              // Scroll left
-              loc.translate(+diff, 0);
-            } else {
-              // Scroll right
-              loc.translate(-diff, 0);
-            }
-          }
-          viewPort.setViewLocation(loc);
-          return;
-        }
-
-        ScalableFigure figure = viewer.getGraphControl().getRootLayer();
-        double oldScale = figure.getScale();
-        Optional<Double> newScale = Optional.empty();
-        if (e.count < 0) {
-          newScale = Optional.of(oldScale * 0.75);
-        } else {
-          newScale = Optional.of(oldScale * 1.25);
-        }
-
-        if (newScale.isPresent()) {
-          double clippedScale = Math.max(0.0625, Math.min(2.0, newScale.get()));
-
-          if (clippedScale != oldScale) {
-
-            Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
-
-            figure.setScale(clippedScale);
-            viewer.getGraphControl().getViewport().validate();
-
-            viewer.getGraphControl().getViewport()
-                .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
-            viewer.getGraphControl().getViewport().validate();
-
-            Point originallyClicked = new Point(e.x, e.y);
-            Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
-            centerViewportToPoint(scaledClicked);
-          }
-        }
-
-      }
-    });
+    viewer.getGraphControl().addMouseWheelListener(new MouseZoomOrScrollListener(this));
     // Center the view on the mouse cursor when it was double clicked
-    viewer.getGraphControl().addMouseListener(new MouseListener() {
+    viewer.getGraphControl().addMouseListener(new DoubleClickCenterListener());
 
-      @Override
-      public void mouseUp(MouseEvent e) {
-
-      }
-
-      @Override
-      public void mouseDown(MouseEvent e) {
-
-      }
-
-      @Override
-      public void mouseDoubleClick(MouseEvent e) {
-        Point clickedInViewport = new Point(e.x, e.y);
-        centerViewportToPoint(clickedInViewport);
-      }
-    });
-
-    // React to arrow keys to scroll the viewport
-    viewer.getGraphControl().addKeyListener(new KeyListener() {
-
-      @Override
-      public void keyReleased(KeyEvent e) {
-
-      }
-
-      @Override
-      public void keyPressed(KeyEvent e) {
-        int diff = 25;
-        if ((e.stateMask & SWT.SHIFT) != 0) {
-          diff = 250;
-        }
-        Viewport viewPort = viewer.getGraphControl().getViewport();
-        Point loc = viewPort.getViewLocation();
-
-        if (e.keyCode == SWT.ARROW_LEFT) {
-          loc.translate(-diff, 0);
-        } else if (e.keyCode == SWT.ARROW_RIGHT) {
-          loc.translate(+diff, 0);
-        } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
-          loc.translate(0, +diff);
-        } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
-          loc.translate(0, -diff);
-        }
-        viewPort.setViewLocation(loc);
-
-      }
-    });
+    // React to arrow keys to scroll the viewport or CTRL plus/minus to zoom
+    viewer.getGraphControl().addKeyListener(new ScrollAndZoomKeyListener());
   }
 
   /**
@@ -412,8 +295,6 @@ public class GraphEditor {
 
   @PreDestroy
   void preDestroy() {
-    projectManager.removeListener(projectChangeListener);
-
     events.post(Topics.DOCUMENT_CLOSED,
         thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
@@ -426,7 +307,6 @@ public class GraphEditor {
       consoleView.setGraph(getGraph());
     }
   }
-
 
   @SuppressWarnings("unchecked")
   private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
@@ -443,134 +323,161 @@ public class GraphEditor {
 
       final String segmentFilterText = txtSegmentFilter.getText();
       final boolean includeSpans = btnIncludeSpans.getSelection();
-      final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
+
       final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
+      final List<SegmentSelectionEntry> newSelectedSegments = new LinkedList<>();
 
       if (recalculateSegments) {
         // Store the old segment selection
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry entry = new SegmentSelectionEntry();
-          entry.range = (Range<Long>) item.getData("range");
-          entry.text = (STextualDS) item.getData("text");
+          entry.range = (Range<Long>) item.getData(RANGE);
+          entry.text = (STextualDS) item.getData(TEXT);
           oldSelectedSegments.add(entry);
         }
       } else {
-
         // The ranges that will be selected will be the same as the current ones
         for (TableItem item : textRangeTable.getSelection()) {
           SegmentSelectionEntry selection = new SegmentSelectionEntry();
-          selection.range = (Range<Long>) item.getData("range");
-          selection.text = (STextualDS) item.getData("text");
+          selection.range = (Range<Long>) item.getData(RANGE);
+          selection.text = (STextualDS) item.getData(TEXT);
           newSelectedSegments.add(selection);
         }
       }
 
-      Job job = Job.create("Update graph view", (ICoreRunnable) monitor -> {
-        monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
-
-        if (recalculateSegments) {
-          monitor.subTask("Recalculating available segments");
-          newSelectedSegments.clear();
-          ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
-
-          final Multimap<STextualDS, Range<Long>> segments =
-              calculateSegments(graph, currentFilter);
-
-          sync.syncExec(() -> {
-            textRangeTable.removeAll();
-            for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
-              TableItem item = new TableItem(textRangeTable, SWT.NONE);
-
-              long rangeStart = e.getValue().lowerEndpoint();
-              long rangeEnd = e.getValue().upperEndpoint();
-
-              String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
-
-              item.setText(coveredText);
-              item.setData("range", e.getValue());
-              item.setData("text", e.getKey());
-            }
-
-            textRangeTable.deselectAll();
-            textRangeTable.getColumn(0).pack();
-
-            boolean selectedSomeOld = false;
-            for (SegmentSelectionEntry oldSegment : oldSelectedSegments) {
-              for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
-                TableItem item = textRangeTable.getItem(idx);
-                Range<Long> itemRange = (Range<Long>) item.getData("range");
-                STextualDS itemText = (STextualDS) item.getData("text");
-                if (itemText == oldSegment.text &&   itemRange.isConnected(oldSegment.range)) {
-                  textRangeTable.select(idx);
-                  selectedSomeOld = true;
-
-                  SegmentSelectionEntry selection = new SegmentSelectionEntry();
-                  selection.range = itemRange;
-                  selection.text = itemText;
-                  newSelectedSegments.add(selection);
-                }
-              }
-            }
-            if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
-              textRangeTable.setSelection(0);
-              SegmentSelectionEntry selection = new SegmentSelectionEntry();
-              selection.range = (Range<Long>) textRangeTable.getItem(0).getData("range");
-              selection.text = (STextualDS) textRangeTable.getItem(0).getData("text");
-              newSelectedSegments.add(selection);
-            }
-          });
-        }
-
-        monitor.subTask("Showing selected segments in graph");
-
-        graphFilter.updateSelectedSegments(newSelectedSegments);
-
-        monitor.done();
-
-        sync.asyncExec(() -> {
-
-          // make sure the console view knows about the currently selected text
-          if (newSelectedSegments.isEmpty()) {
-            consoleView.setSelectedText(null);
-          } else {
-            consoleView.setSelectedText(newSelectedSegments.get(0).text);
-          }
-
-          // update the status check for each item
-          for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
-            textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
-          }
-
-          if (viewer.getInput() != graph) {
-            viewer.setInput(graph);
-          } else {
-            viewer.refresh();
-          }
-
-          if (scrollToFirstToken) {
-            viewer.getGraphControl().getRootLayer().setScale(0);
-            // We can only scroll to the first token after the layout has been applied, which can be
-            // asynchronous
-            viewer.getGraphControl().getLayoutAlgorithm()
-                .addProgressListener(this.scrollToFirstTokenListener);
-          } else {
-            viewer.getGraphControl().getLayoutAlgorithm()
-                .removeProgressListener(this.scrollToFirstTokenListener);
-          }
-
-          viewer.applyLayout();
-
-        });
-
-      });
-      job.schedule();
+      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+          includeSpans, graph, recalculateSegments, scrollToFirstToken);
 
 
-    } catch (Throwable ex) {
+    } catch (RuntimeException ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
           GraphEditor.class);
     }
   }
+
+  private void scheduleUpdateViewJob(List<SegmentSelectionEntry> newSelectedSegments,
+      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      boolean includeSpans, SDocumentGraph graph, boolean recalculateSegments,
+      boolean scrollToFirstToken) {
+
+    Job job = Job.create("Update graph view", monitor -> {
+      monitor.beginTask("Updating graph view", IProgressMonitor.UNKNOWN);
+
+      if (recalculateSegments) {
+        monitor.subTask("Recalculating available segments");
+        recalculateAvailableSegments(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+            includeSpans, graph);
+      }
+
+      monitor.subTask("Showing selected segments in graph");
+
+      graphFilter.updateSelectedSegments(newSelectedSegments);
+
+      monitor.done();
+
+      sync.asyncExec(() -> {
+
+        // make sure the console view knows about the currently selected text
+        if (newSelectedSegments.isEmpty()) {
+          consoleView.setSelectedText(null);
+        } else {
+          consoleView.setSelectedText(newSelectedSegments.get(0).text);
+        }
+
+        // update the status check for each item
+        for (int idx = 0; idx < textRangeTable.getItemCount(); idx++) {
+          textRangeTable.getItem(idx).setChecked(textRangeTable.isSelected(idx));
+        }
+
+        updateGraphViewer(graph, scrollToFirstToken);
+
+      });
+
+    });
+    job.schedule();
+  }
+
+
+  @SuppressWarnings("unchecked")
+  private List<SegmentSelectionEntry> recalculateAvailableSegments(
+      List<SegmentSelectionEntry> newSelectedSegments,
+      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      boolean includeSpans, SDocumentGraph graph) {
+
+    newSelectedSegments.clear();
+
+    ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
+
+    final Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
+
+    sync.syncExec(() -> {
+      textRangeTable.removeAll();
+      for (Map.Entry<STextualDS, Range<Long>> e : segments.entries()) {
+        TableItem item = new TableItem(textRangeTable, SWT.NONE);
+
+        long rangeStart = e.getValue().lowerEndpoint();
+        long rangeEnd = e.getValue().upperEndpoint();
+
+        String coveredText = e.getKey().getText().substring((int) rangeStart, (int) rangeEnd);
+
+        item.setText(coveredText);
+        item.setData(RANGE, e.getValue());
+        item.setData(TEXT, e.getKey());
+      }
+
+      textRangeTable.deselectAll();
+      textRangeTable.getColumn(0).pack();
+
+      boolean selectedSomeOld = false;
+      for (SegmentSelectionEntry oldSegment : oldSelectedSegments) {
+        for (int idx = 0; idx < textRangeTable.getItems().length; idx++) {
+          TableItem item = textRangeTable.getItem(idx);
+          Range<Long> itemRange = (Range<Long>) item.getData(RANGE);
+          STextualDS itemText = (STextualDS) item.getData(TEXT);
+          if (itemText == oldSegment.text && itemRange.isConnected(oldSegment.range)) {
+            textRangeTable.select(idx);
+            selectedSomeOld = true;
+
+            SegmentSelectionEntry selection = new SegmentSelectionEntry();
+            selection.range = itemRange;
+            selection.text = itemText;
+            newSelectedSegments.add(selection);
+          }
+        }
+      }
+      if (!selectedSomeOld && textRangeTable.getItemCount() > 0) {
+        textRangeTable.setSelection(0);
+        SegmentSelectionEntry selection = new SegmentSelectionEntry();
+        selection.range = (Range<Long>) textRangeTable.getItem(0).getData(RANGE);
+        selection.text = (STextualDS) textRangeTable.getItem(0).getData(TEXT);
+        newSelectedSegments.add(selection);
+      }
+    });
+
+    return newSelectedSegments;
+  }
+
+  private void updateGraphViewer(SDocumentGraph graph, boolean scrollToFirstToken) {
+    if (viewer.getInput() != graph) {
+      viewer.setInput(graph);
+    } else {
+      viewer.refresh();
+    }
+
+    if (scrollToFirstToken) {
+      viewer.getGraphControl().getRootLayer().setScale(0);
+      // We can only scroll to the first token after the layout has been applied, which can be
+      // asynchronous
+      viewer.getGraphControl().getLayoutAlgorithm()
+          .addProgressListener(this.scrollToFirstTokenListener);
+    } else {
+      viewer.getGraphControl().getLayoutAlgorithm()
+          .removeProgressListener(this.scrollToFirstTokenListener);
+    }
+
+    viewer.applyLayout();
+  }
+
 
 
   private static Range<Long> getRangeForToken(SToken tok) {
@@ -601,62 +508,60 @@ public class GraphEditor {
     List<STextualDS> allTexts = new ArrayList<>(graph.getTextualDSs());
     allTexts.sort(new STextualDataSourceComparator());
 
-
     for (STextualDS ds : graph.getTextualDSs()) {
-
       if (ds.getText() == null) {
         continue;
       }
-
-      TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
-
-
-      DataSourceSequence<Integer> textSeq = new DataSourceSequence<Integer>();
-      textSeq.setDataSource(ds);
-      textSeq.setStart(ds.getStart());
-      textSeq.setEnd(ds.getEnd());
-
-      List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
-
-
-      Optional<Long> rangeStart = Optional.empty();
-      Optional<Long> rangeEnd = Optional.empty();
-      SNode lastRoot = null;
-      for (SToken t : token) {
-        SNode currentRoot = RootTraverser.getRoot(t, filter);
-        Range<Long> tokenRange = getRangeForToken(t);
-        if (Objects.equal(lastRoot, currentRoot)) {
-          // extend range
-          if (!rangeStart.isPresent()) {
-            rangeStart = Optional.of(tokenRange.lowerEndpoint());
-          }
-          if (!rangeEnd.isPresent() || rangeEnd.get() < tokenRange.upperEndpoint()) {
-            rangeEnd = Optional.of(tokenRange.upperEndpoint());
-          }
-        } else {
-
-          // add the completed range
-          if (rangeStart.isPresent() && rangeEnd.isPresent()) {
-            sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
-          }
-
-          // begin new range
-          rangeStart = Optional.of(tokenRange.lowerEndpoint());
-          rangeEnd = Optional.of(tokenRange.upperEndpoint());
-        }
-
-        lastRoot = currentRoot;
-      }
-      // add the last range
-      if (rangeStart.isPresent() && rangeEnd.isPresent()) {
-        sortedRangesForDS.add(Range.closedOpen(rangeStart.get(), rangeEnd.get()));
-      }
-
-
-      result.putAll(ds, sortedRangesForDS);
+      result.putAll(ds, calculateSegmentsForText(ds, graph, filter));
     }
 
     return result;
+  }
+
+  private static TreeSet<Range<Long>> calculateSegmentsForText(STextualDS ds, SDocumentGraph graph,
+      ViewerFilter filter) {
+
+    TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
+
+
+    DataSourceSequence<Integer> textSeq = new DataSourceSequence<>();
+    textSeq.setDataSource(ds);
+    textSeq.setStart(ds.getStart());
+    textSeq.setEnd(ds.getEnd());
+
+    List<SToken> token = graph.getSortedTokenByText(graph.getTokensBySequence(textSeq));
+
+    Optional<Range<Long>> range = Optional.empty();
+    SNode lastRoot = null;
+    for (SToken t : token) {
+      SNode currentRoot = RootTraverser.getRoot(t, filter);
+      Range<Long> tokenRange = getRangeForToken(t);
+      if (tokenRange != null && Objects.equal(lastRoot, currentRoot)) {
+        if (range.isPresent()) {
+          // Extend existing range at the end
+          long upper = Math.max(range.get().upperEndpoint(), tokenRange.upperEndpoint());
+          range = Optional.of(Range.closedOpen(range.get().lowerEndpoint(), upper));
+        } else {
+          // Use initial token range
+          range = Optional.of(tokenRange);
+        }
+      } else {
+        // add the completed range
+        if (range.isPresent()) {
+          sortedRangesForDS.add(range.get());
+        }
+        // begin new range
+        range = Optional.of(tokenRange);
+      }
+
+      lastRoot = currentRoot;
+    }
+    // add the last range
+    if (range.isPresent()) {
+      sortedRangesForDS.add(range.get());
+    }
+
+    return sortedRangesForDS;
   }
 
 
@@ -664,21 +569,17 @@ public class GraphEditor {
 
     SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
 
-    org.eclipse.zest.layouts.Filter hierarchyFilter = new org.eclipse.zest.layouts.Filter() {
-
-      @Override
-      public boolean isObjectFiltered(LayoutItem object) {
-        IdentifiableElement data = SaltGraphContentProvider.getData(object);
-        if (data instanceof SStructuredNode || data instanceof SToken) {
+    org.eclipse.zest.layouts.Filter hierarchyFilter = object -> {
+      IdentifiableElement data = SaltGraphContentProvider.getData(object);
+      if (data instanceof SStructuredNode || data instanceof SToken) {
+        return false;
+      } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
+        SRelation<?, ?> rel = (SRelation<?, ?>) data;
+        if (rel.getTarget() instanceof SStructuredNode) {
           return false;
-        } else if (data instanceof SDominanceRelation || data instanceof SSpanningRelation) {
-          SRelation<?, ?> rel = (SRelation<?, ?>) data;
-          if (rel.getTarget() instanceof SStructuredNode) {
-            return false;
-          }
         }
-        return true;
       }
+      return true;
     };
 
     layout.setFilter(hierarchyFilter);
@@ -686,36 +587,154 @@ public class GraphEditor {
     return layout;
   }
 
-  private final class ListenerImplementation implements Listener {
-    @Override
-    public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-        Object newValue, Object container) {
-
-      // Check if the ID of the changed object points to the same document as our annotation graph
-      IdentifiableElement element = null;
-      if (container instanceof IdentifiableElement) {
-        element = (IdentifiableElement) container;
-      } else if (container instanceof org.corpus_tools.salt.graph.Label) {
-        element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
-      }
-      SDocumentGraph graph = getGraph();
-      if (graph == null) {
-        errors.showError("Unexpected error",
-            "Annotation graph for subscribed document vanished. Please report this as a bug.",
-            GraphEditor.class);
-        return;
-      }
-      if (element == null || element.getId() == null) {
-        return;
-      } else {
-        URI elementUri = URI.createURI(element.getId());
-        if (!elementUri.path().equals(graph.getPath().path())) {
-          return;
+  private static boolean hasMatchingAnnotation(SNode node, String segmentFilterText) {
+    if (segmentFilterText == null || segmentFilterText.isEmpty() || node instanceof SToken) {
+      // If no filter is set or the type of node should always be included, always return true
+      return true;
+    }
+    if (node.getAnnotations() != null) {
+      for (SAnnotation anno : node.getAnnotations()) {
+        if (anno.getName().contains(segmentFilterText)) {
+          // Annotation found
+          return true;
         }
       }
-
-      sync.syncExec(() -> updateView(true, false));
     }
+
+    // No matching annotation found
+    return false;
+  }
+
+  void zoomGraphView(double factor, Point originallyClicked) {
+    ScalableFigure figure = viewer.getGraphControl().getRootLayer();
+    double oldScale = figure.getScale();
+    double newScale = oldScale * factor;
+
+
+    double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
+
+    if (clippedScale != oldScale) {
+
+      Point originalViewLocation = viewer.getGraphControl().getViewport().getViewLocation();
+
+      figure.setScale(clippedScale);
+      viewer.getGraphControl().getViewport().validate();
+
+      viewer.getGraphControl().getViewport()
+          .setViewLocation(originalViewLocation.getScaled(clippedScale / oldScale));
+      viewer.getGraphControl().getViewport().validate();
+
+      Point scaledClicked = originallyClicked.getScaled(clippedScale / oldScale);
+      centerViewportToPoint(scaledClicked);
+    }
+  }
+
+
+  void scrollGraphView(int xoffset, int yoffset) {
+    Viewport viewPort = viewer.getGraphControl().getViewport();
+    Point loc = viewPort.getViewLocation();
+    loc.translate(xoffset, yoffset);
+    viewPort.setViewLocation(loc);
+  }
+
+  private final class DoubleClickCenterListener implements MouseListener {
+    @Override
+    public void mouseUp(MouseEvent e) {
+      // Only react to double clicks, ignore mouse up
+    }
+
+    @Override
+    public void mouseDown(MouseEvent e) {
+      // Only react to double clicks, ignore mouse down
+    }
+
+    @Override
+    public void mouseDoubleClick(MouseEvent e) {
+      Point clickedInViewport = new Point(e.x, e.y);
+      centerViewportToPoint(clickedInViewport);
+    }
+  }
+
+  private final class ScrollAndZoomKeyListener implements KeyListener {
+    @Override
+    public void keyReleased(KeyEvent e) {
+      // Only react to key pressed, but not the released event
+    }
+
+    private boolean isZoomInKey(KeyEvent e) {
+      return (e.character == '+' || e.keyCode == SWT.KEYPAD_ADD) && (e.stateMask & SWT.CTRL) != 0;
+    }
+
+    private boolean isZoomOutKey(KeyEvent e) {
+      return (e.character == '-' || e.keyCode == SWT.KEYPAD_SUBTRACT)
+          && (e.stateMask & SWT.CTRL) != 0;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+      Viewport viewPort = viewer.getGraphControl().getViewport();
+      Point loc = viewPort.getViewLocation();
+
+      if (isZoomInKey(e)) {
+        zoomGraphView(2.0, loc);
+      } else if (isZoomOutKey(e)) {
+        zoomGraphView(0.5, loc);
+      } else {
+        // Prepare scroll
+        int diff = DEFAULT_DIFF;
+        if ((e.stateMask & SWT.SHIFT) != 0) {
+          diff = DEFAULT_DIFF * 10;
+        }
+
+        if (e.keyCode == SWT.ARROW_LEFT) {
+          scrollGraphView(-diff, 0);
+        } else if (e.keyCode == SWT.ARROW_RIGHT) {
+          scrollGraphView(+diff, 0);
+        } else if (e.keyCode == SWT.ARROW_DOWN || e.keyCode == SWT.PAGE_DOWN) {
+          scrollGraphView(0, +diff);
+        } else if (e.keyCode == SWT.ARROW_UP || e.keyCode == SWT.PAGE_UP) {
+          scrollGraphView(0, -diff);
+        }
+      }
+    }
+  }
+
+  private void checkUpdateViewNecessary(Object element) {
+    SDocumentGraph loadedGraph = getGraph();
+    Optional<SDocumentGraph> changedGraph =
+        SaltHelper.getGraphForObject(element, SDocumentGraph.class);
+
+    if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
+      // Only relations with text coverage semantics can change the structure of the graph and
+      // modify segments
+      updateView(
+          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>,
+          false);
+    }
+  }
+
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
+    log.debug("Received ANNOTATION_ADDED event for element {}", element);
+    checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
+    log.debug("Received ANNOTATION_REMOVED event for element {}", element);
+    checkUpdateViewNecessary(element);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationModified(
+      @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
+    log.debug("Received ANNOTATION_AFTER_MODIFICATION event for element {}", element);
+    checkUpdateViewNecessary(element);
   }
 
   private class RootFilter extends ViewerFilter {
@@ -732,23 +751,9 @@ public class GraphEditor {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
 
       if (element instanceof SNode) {
-
-        boolean include = false;
-
         SNode node = (SNode) element;
 
-        if (segmentFilterText.isEmpty() || (node instanceof SToken)) {
-          include = true;
-        } else {
-          if (node.getAnnotations() != null) {
-            for (SAnnotation anno : node.getAnnotations()) {
-              if (anno.getName().contains(segmentFilterText)) {
-                include = true;
-                break;
-              }
-            }
-          }
-        }
+        boolean include = hasMatchingAnnotation(node, segmentFilterText);
 
         if (node instanceof SSpan) {
           include = include && includeSpans;
@@ -795,6 +800,17 @@ public class GraphEditor {
       }
     }
 
+
+    private boolean overlapsSelectedRange(SDocumentGraph graph, SNode node) {
+      List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
+      for (SToken t : overlappedTokens) {
+        if (coveredTokenIDs.contains(t.getId())) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
 
@@ -805,36 +821,17 @@ public class GraphEditor {
 
       if (element instanceof SNode) {
         SNode node = (SNode) element;
-        boolean include = false;
 
         // check if the node covers a currently selected range
-        List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
-        for (SToken t : overlappedTokens) {
-          if (coveredTokenIDs.contains(t.getId())) {
-            include = true;
-            break;
-          }
-        }
+        boolean include = overlapsSelectedRange(graph, node);
 
         if (node instanceof SSpan) {
+          // If this is a span, the inclusion must be explicitly requested by the user
           include = include && btnIncludeSpans.getSelection();
         }
+        // additionally check if the node has a matching annotation
+        return include && hasMatchingAnnotation(node, txtSegmentFilter.getText());
 
-        // additionally check for valid annotation
-        if (include && !txtSegmentFilter.getText().isEmpty() && !(node instanceof SToken)) {
-          if (node.getAnnotations() != null) {
-            boolean annoFound = false;
-            for (SAnnotation anno : node.getAnnotations()) {
-              if (anno.getName().contains(txtSegmentFilter.getText())) {
-                annoFound = true;
-                break;
-              }
-            }
-            include = annoFound;
-          }
-        }
-
-        return include;
       } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
         boolean include = true;
@@ -846,8 +843,9 @@ public class GraphEditor {
         return true;
       }
     }
-
   }
+
+
 
   private static class STextualDataSourceComparator implements Comparator<STextualDS> {
 
@@ -898,12 +896,14 @@ public class GraphEditor {
 
     @Override
     public void progressStarted(ProgressEvent e) {
-
+      // We only start to scroll after the task has ended, but we still have to implement all
+      // methods of the interface.
     }
 
     @Override
     public void progressUpdated(ProgressEvent e) {
-
+      // We only start to scroll after the task has ended, but we still have to implement all
+      // methods of the interface.
     }
 
     @Override
@@ -919,11 +919,7 @@ public class GraphEditor {
         viewer.getGraphControl().getViewport().setViewLocation(0, 0);
         viewer.getGraphControl().getViewport().validate();
       });
-
-
-
     }
-
   }
 
 }

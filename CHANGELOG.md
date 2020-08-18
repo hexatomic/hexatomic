@@ -6,22 +6,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2020-08-11
+
+### Fixed
+
+- Release artifacts where not created because Travis configuration contained bugs (#209)
+
+## [0.4.1] - 2020-08-11
+
+### Fixed
+
+- Release artifacts where not created because tagged release commits where not included in Travis configuration
+
+## [0.4.0] - 2020-08-11
+
 ### Added
 
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
 - Grid Editor for token and span annotations based on NatTable and using a similar interface to Excel
 - Salt Projects can be saved now
+- Annotation graph updates are propagated using the Eclipse RCP event bus
+- Added a process to merge non-reviewed code and triage these unreviewed PRs regulary
 
 ### Changed
 
 - Don't unload the Salt document graph when text viewer is closed, notify the project manager instead.
   This will only unload the document graph when no other editor has opened the document.
-- Updated the Eclipse platform to the 2020-03 release
+- Updated the Eclipse platform to the 2020-03 release.
+- Updated PR template so that every checkbox is an actual task and should be checked to pass quality control.
+
+## Removed
+
+- The Salt graphs are not using the insufficient Salt notification extension anymore
+- `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
 
 ### Fixed
 
 - Update views via notification even if the object that changed was created before the view.
 - Allow to run Hexatomic on Java 11 platforms
+- Set locale in UI tests to avoid issues with auto-detected keyboard layouts
+
 
 ## [0.3.1] - 2019-12-16
 
@@ -73,7 +97,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/hexatomic/hexatomic/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/hexatomic/hexatomic/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/hexatomic/hexatomic/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hexatomic/hexatomic/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hexatomic/hexatomic/compare/v0.1.3...v0.2.0
