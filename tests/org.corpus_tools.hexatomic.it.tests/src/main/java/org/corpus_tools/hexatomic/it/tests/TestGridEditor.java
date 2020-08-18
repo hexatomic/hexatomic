@@ -721,21 +721,20 @@ public class TestGridEditor {
   }
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
-    ILayer selectionLayer = getSelectionLayer(table);
-    Display.getDefault().syncExec(new Runnable() {
-      public void run() {
-        selectionLayer.doCommand(new SelectCellCommand(selectionLayer, columnPosition - 1,
-            rowPosition - 1, false, true));
-      }
-    });
+    clickWithMask(false, true, rowPosition, columnPosition, table);
   }
 
   private void shiftClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
+    clickWithMask(true, false, rowPosition, columnPosition, table);
+  }
+
+  private void clickWithMask(boolean shiftMask, boolean ctrlMask, int rowPosition,
+      int columnPosition, SWTBotNatTable table) {
     ILayer selectionLayer = getSelectionLayer(table);
     Display.getDefault().syncExec(new Runnable() {
       public void run() {
         selectionLayer.doCommand(new SelectCellCommand(selectionLayer, columnPosition - 1,
-            rowPosition - 1, true, false));
+            rowPosition - 1, shiftMask, ctrlMask));
       }
     });
   }
