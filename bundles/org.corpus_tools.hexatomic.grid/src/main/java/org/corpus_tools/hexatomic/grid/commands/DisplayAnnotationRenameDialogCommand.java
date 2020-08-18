@@ -26,7 +26,7 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 
 /**
- * Command to display an annotation rename dialog on .
+ * Command to display an annotation rename dialog on.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
@@ -37,6 +37,13 @@ public class DisplayAnnotationRenameDialogCommand extends AbstractContextFreeCom
   private final SelectionLayer selectionLayer;
   private final PositionCoordinate[] selectedCellPositions;
 
+  /**
+   * TODO.
+   * 
+   * @param natTable The natTable
+   * @param selectionLayer The selection layer
+   * @param selectedCellPositions The positions
+   */
   public DisplayAnnotationRenameDialogCommand(NatTable natTable, SelectionLayer selectionLayer,
       PositionCoordinate[] selectedCellPositions) {
     this.natTable = natTable;

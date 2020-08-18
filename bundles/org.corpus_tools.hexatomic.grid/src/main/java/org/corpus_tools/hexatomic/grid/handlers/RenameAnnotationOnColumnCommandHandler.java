@@ -37,7 +37,8 @@ import org.slf4j.LoggerFactory;
 public class RenameAnnotationOnColumnCommandHandler
     extends AbstractLayerCommandHandler<RenameColumnHeaderCommand> {
 
-  private static final Logger log = LoggerFactory.getLogger(RenameAnnotationOnColumnCommandHandler.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(RenameAnnotationOnColumnCommandHandler.class);
   private final GridColumnHeaderLayer customColumnHeaderLayer;
 
   public RenameAnnotationOnColumnCommandHandler(GridColumnHeaderLayer customColumnHeaderLayer) {
