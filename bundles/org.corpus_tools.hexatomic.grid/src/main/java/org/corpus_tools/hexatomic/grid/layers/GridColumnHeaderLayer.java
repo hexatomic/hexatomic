@@ -81,7 +81,7 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
     String name = DataUtil.splitNameFromQNameString(newQName);
     if (name == null || name.isEmpty()) {
       throw new RuntimeException(
-          "Annotation name is null! Compund qualified name is " + newQName + ".");
+          "Annotation name is null! Compound qualified name is " + newQName + ".");
     }
     log.debug("New qualified name: {}", newQName);
     IDataProvider columnHeaderDataProvider =
