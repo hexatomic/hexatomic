@@ -78,8 +78,7 @@
 							</goals>
 							<phase>process-sources</phase>
 							<configuration>
-								<organizationName>Stephan Druskat,
-									Thomas Krause</organizationName>
+								<organizationName>Stephan Druskat, Thomas Krause</organizationName>
 								<inceptionYear>2018</inceptionYear>
 								<licenseName>apache_v2</licenseName>
 								<roots>
