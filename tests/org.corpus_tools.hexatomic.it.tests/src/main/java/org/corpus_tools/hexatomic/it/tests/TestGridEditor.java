@@ -383,7 +383,7 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    String oldValue = table.getCellDataValueByPosition(2, 2);
+    final String oldValue = table.getCellDataValueByPosition(2, 2);
 
     table.doubleclick(2, 2);
     typeTextPressReturn(table);
