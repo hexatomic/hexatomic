@@ -94,6 +94,10 @@ public class GridEditor {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
 
+  public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
+
+  public static final String DELETE_CELLS_POPUP_MENU_LABEL = "Delete cell(s)";
+
   @Inject
   ErrorService errors;
 

@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.configuration;
 
+import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.commands.DisplayAnnotationRenameDialogCommand;
 import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -100,7 +101,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
       MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
-      item.setText("Delete cell(s)");
+      item.setText(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
       item.setEnabled(true);
       item.addSelectionListener(new SelectionAdapter() {
         @Override
@@ -123,7 +124,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
       MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
-      item.setText("Change annotation name");
+      item.setText(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL);
       item.setEnabled(true);
       item.addSelectionListener(new SelectionAdapter() {
         @Override

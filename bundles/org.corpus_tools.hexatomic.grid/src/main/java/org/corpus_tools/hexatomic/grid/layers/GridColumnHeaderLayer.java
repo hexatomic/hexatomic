@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 import org.corpus_tools.hexatomic.grid.data.Column;
 import org.corpus_tools.hexatomic.grid.data.DataUtil;
 import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
-import org.corpus_tools.hexatomic.grid.handlers.DisplayAnnotationRenameDialogCommandHandler;
+import org.corpus_tools.hexatomic.grid.handlers.DisplayAnnotationRenameDialogOnColumnCommandHandler;
 import org.corpus_tools.hexatomic.grid.handlers.RenameAnnotationCommandHandler;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -125,7 +125,7 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
   @Override
   protected void registerCommandHandlers() {
     registerCommandHandler(new RenameAnnotationCommandHandler(this));
-    registerCommandHandler(new DisplayAnnotationRenameDialogCommandHandler(this));
+    registerCommandHandler(new DisplayAnnotationRenameDialogOnColumnCommandHandler(this));
   }
 
 }
