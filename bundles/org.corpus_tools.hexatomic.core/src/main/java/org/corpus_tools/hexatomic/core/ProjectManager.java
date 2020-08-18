@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -93,6 +94,8 @@ public class ProjectManager {
   SaltNotificationFactory notificationFactory;
 
   private boolean hasUnsavedChanges;
+
+  private final Set<String> changedDocuments = new HashSet<>();
 
   @PostConstruct
   void postConstruct() {
@@ -348,6 +351,9 @@ public class ProjectManager {
                 }
               }
 
+              // Remove finished document from changed set
+              getChangedDocuments().remove(doc.getId());
+
               // Report one finished document
               monitor.worked(1);
             }
@@ -511,5 +517,9 @@ public class ProjectManager {
   private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
     hasUnsavedChanges = true;
     uiStatus.setDirty(true);
+  }
+
+  public Set<String> getChangedDocuments() {
+    return changedDocuments;
   }
 }

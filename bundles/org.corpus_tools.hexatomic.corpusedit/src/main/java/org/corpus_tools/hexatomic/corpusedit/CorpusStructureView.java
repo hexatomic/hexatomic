@@ -66,7 +66,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -226,7 +225,7 @@ public class CorpusStructureView {
     treeViewer.setColumnProperties(new String[] {"name"});
     treeViewer.setCellEditors(new CellEditor[] {new TextCellEditor(tree)});
 
-    CorpusLabelProvider labelProvider = new CorpusLabelProvider();
+    CorpusLabelProvider labelProvider = new CorpusLabelProvider(projectManager);
     treeViewer.setCellModifier(new ICellModifier() {
 
       @Override
@@ -601,16 +600,8 @@ public class CorpusStructureView {
     Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(element, SCorpusGraph.class);
     Optional<SDocumentGraph> docGraph = SaltHelper.getGraphForObject(element, SDocumentGraph.class);
     if (docGraph.isPresent()) {
-      SDocumentGraph docGraphObject = docGraph.get();
-      String id = docGraphObject.getId();
-      SDocument document = docGraphObject.getDocument();
-      if (document == null) {
-        Optional<SDocument> docOptional = projectManager.getDocument(id);
-        if (docOptional.isPresent() && docOptional.get() != null) {
-          document = docOptional.get();
-        }
-      }
-      updateViewItem(document, true);
+      projectManager.getChangedDocuments().add(docGraph.get().getId());
+      updateView();
     }
     if (graph.isPresent()) {
       updateView();
@@ -619,26 +610,8 @@ public class CorpusStructureView {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeDocumentLoaded(@UIEventTopic(Topics.DOCUMENT_LOADED) String value) {
-    Optional<SDocument> document = projectManager.getDocument(value);
-    if (document.isPresent()) {
-      updateViewItem(document.get(), false);
-    }
-  }
-
-  private void updateViewItem(SDocument document, boolean addToChanged) {
-    IBaseLabelProvider provider = treeViewer.getLabelProvider();
-    if (provider instanceof CorpusLabelProvider) {
-      CorpusLabelProvider labelProvider = (CorpusLabelProvider) provider;
-      if (labelProvider != null) {
-        if (addToChanged) {
-          labelProvider.getDirtyElements().add(document.getId());
-        } else {
-          labelProvider.getDirtyElements().clear();
-        }
-        updateView();
-      }
-    }
+  private void subscribeStatusUpdate(@UIEventTopic(Topics.STATUS_UPDATE) Object element) {
+    updateView();
   }
 
   private void registerEditors(EModelService modelService, MApplication application,

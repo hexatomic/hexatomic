@@ -21,8 +21,7 @@
 package org.corpus_tools.hexatomic.corpusedit;
 
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
@@ -43,10 +42,11 @@ import org.osgi.framework.FrameworkUtil;
 public class CorpusLabelProvider extends LabelProvider implements IFontProvider {
 
   private ImageDescriptor documentImage;
-  private final Set<String> dirtyElements = new HashSet<>();
 
-  public Set<String> getDirtyElements() {
-    return dirtyElements;
+  private final ProjectManager projectManager;
+
+  public CorpusLabelProvider(ProjectManager projectManager) {
+    this.projectManager = projectManager;
   }
 
   @Override
@@ -89,7 +89,7 @@ public class CorpusLabelProvider extends LabelProvider implements IFontProvider 
     }
 
     if (element instanceof IdentifiableElement
-        && dirtyElements.contains(((IdentifiableElement) element).getId())) {
+        && projectManager.getChangedDocuments().contains(((IdentifiableElement) element).getId())) {
       result = "* " + result;
     }
 
@@ -110,7 +110,7 @@ public class CorpusLabelProvider extends LabelProvider implements IFontProvider 
   @Override
   public Font getFont(Object element) {
     if (element instanceof IdentifiableElement
-        && dirtyElements.contains(((IdentifiableElement) element).getId())) {
+        && projectManager.getChangedDocuments().contains(((IdentifiableElement) element).getId())) {
       Font defaultFont = JFaceResources.getDefaultFont();
       Font boldFont =
           JFaceResources.getFontRegistry().getBold(defaultFont.getFontData()[0].getName());
