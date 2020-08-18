@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.core;
 import static org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler.DOCUMENT_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -268,6 +269,42 @@ class TestProjectManager {
 
       // Test that the graphs are equal again
       assertEquals(new HashSet<>(), docGraph1.findDiffs(docGraph3));
+    }
+  }
+
+  /**
+   * If a checkpoint was added due to user interaction, all "redo" operations should become invalid.
+   */
+  @Test
+  public void testNoRedoAfterManualCheckpoint() {
+    projectManager.open(exampleProjectUri);
+
+    Optional<SDocument> document = projectManager.getDocument(DOC1_ID, true);
+    assertTrue(document.isPresent());
+
+    if (document.isPresent()) {
+      SDocumentGraph docGraph = document.get().getDocumentGraph();
+      assertNotNull(docGraph);
+
+      String textBefore = docGraph.getTextualDSs().get(0).getText();
+      docGraph.insertTokenAt(docGraph.getTextualDSs().get(0), 0, "Before-Token", false);
+      projectManager.addCheckpoint();
+
+      assertNotEquals(textBefore, docGraph.getTextualDSs().get(0).getText());
+
+      assertTrue(projectManager.canUndo());
+      assertFalse(projectManager.canRedo());
+
+      projectManager.undo();
+      assertEquals(textBefore, docGraph.getTextualDSs().get(0).getText());
+
+      // Add a manual change
+      docGraph.createFeature("test", "feature", "somevalue");
+      projectManager.addCheckpoint();
+
+      assertFalse(projectManager.canRedo());
+      assertTrue(projectManager.canUndo());
+
     }
   }
 }

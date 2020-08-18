@@ -518,6 +518,10 @@ public class ProjectManager {
    * Adds a checkpoint. A user will be able to undo all changes made between checkpoints.
    */
   public void addCheckpoint() {
+    addCheckpoint(true);
+  }
+
+  private void addCheckpoint(boolean isManual) {
     ChangeSet changes = null;
     if (!uncommittedChanges.isEmpty()) {
       // All recorded changes are reversable without saving and loading the whole document, create
@@ -529,6 +533,11 @@ public class ProjectManager {
       while (undoChangeSets.size() > MAX_UNDO_HISTORY_SIZE) {
         undoChangeSets.removeLast();
       }
+    }
+
+    if (isManual) {
+      // Invalidate all redo operations when the graph was changed manually
+      redoChangeSets.clear();
     }
 
     // All uncommitted changes have been handled: restore internal recored state to default:
@@ -610,7 +619,7 @@ public class ProjectManager {
         op.restore();
       }
 
-      addCheckpoint();
+      addCheckpoint(false);
 
       // Performing an redo might unload documents, close the editors to avoid errors
       // and give the user a visually clue (s)he unloaded/removed a document.
