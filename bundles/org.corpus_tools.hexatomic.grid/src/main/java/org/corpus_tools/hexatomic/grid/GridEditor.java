@@ -146,18 +146,18 @@ public class GridEditor {
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
     // Body
-    final DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
+    final DefaultBodyLayerStack bodyLayerStack = new DefaultBodyLayerStack(bodyDataLayer);
 
     // Set accumulator for config labels for cells
     final LabelAccumulator labelAccumulator = new LabelAccumulator(bodyDataLayer, bodyDataProvider);
     bodyDataLayer.setConfigLabelAccumulator(labelAccumulator);
 
     // Selection
-    final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
+    final SelectionLayer selectionLayer = bodyLayerStack.getSelectionLayer();
     selectionLayer.addConfiguration(new SelectionStyleConfiguration());
     final FreezeLayer freezeLayer = new FreezeLayer(selectionLayer);
     final CompositeFreezeLayer compositeFreezeLayer =
-        new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
+        new CompositeFreezeLayer(freezeLayer, bodyLayerStack.getViewportLayer(), selectionLayer);
 
     // Column header
     final ColumnHeaderDataProvider columnHeaderDataProvider =
