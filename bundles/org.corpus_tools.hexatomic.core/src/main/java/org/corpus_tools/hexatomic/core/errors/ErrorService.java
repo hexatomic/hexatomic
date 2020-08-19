@@ -78,9 +78,9 @@ public class ErrorService {
     String bundleID = getBundleID(triggeringClass);
 
     IStatus status = createStatusFromException(message, bundleID, ex);
-    lastException = Optional.of(status);
 
     sync.syncExec(() -> {
+      lastException = Optional.of(status);
       ErrorDialog.openError(null, ERROR_OCCURED_MSG, message, status);
     });
 
@@ -124,7 +124,7 @@ public class ErrorService {
    * @param context Class to get the bundle for
    * @return The bundle ID or "unknown" if unable to get the actual ID.
    */
-  private String getBundleID(Class<?> context) {
+  private static String getBundleID(Class<?> context) {
     String bundleID = "unknown";
     if (context != null) {
       Bundle bundle = FrameworkUtil.getBundle(context);
@@ -157,7 +157,9 @@ public class ErrorService {
    * 
    */
   public void clearLastException() {
-    lastException = Optional.empty();
+    sync.syncExec(() -> {
+      lastException = Optional.empty();
+    });
   }
 
   /**
@@ -168,7 +170,8 @@ public class ErrorService {
    * @param ex The exception to create the status from.
    * @return A status with the stack-trace and the message.
    */
-  private MultiStatus createStatusFromException(String message, String bundleID, Throwable ex) {
+  private static MultiStatus createStatusFromException(String message, String bundleID,
+      Throwable ex) {
     List<Status> children = new ArrayList<>();
     StackTraceElement[] stackTrace = ex.getStackTrace();
 

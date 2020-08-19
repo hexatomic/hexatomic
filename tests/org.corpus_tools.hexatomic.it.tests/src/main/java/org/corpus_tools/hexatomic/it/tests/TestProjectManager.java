@@ -63,7 +63,7 @@ class TestProjectManager {
   private ErrorService errorService;
 
   @BeforeEach
-  void abc() {
+  void setup() {
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     bot = new SWTWorkbenchBot(ctx);
@@ -196,10 +196,10 @@ class TestProjectManager {
     assertFalse(errorService.getLastException().isPresent());
 
     // Use an URI which can't be saved to
-    Optional<IStatus> lastException = UIThreadRunnable.syncExec(() -> {
-      projectManager.saveTo(URI.createURI("http://localhost"), bot.getDisplay().getActiveShell());
-      return errorService.getLastException();
-    });
+    UIThreadRunnable.syncExec(() -> projectManager.saveTo(URI.createURI("http://localhost"),
+        bot.getDisplay().getActiveShell()));
+    Optional<IStatus> lastException =
+        UIThreadRunnable.syncExec(() -> errorService.getLastException());
     // Check the error has been recorded
     assertTrue(lastException.isPresent());
     if (lastException.isPresent()) {
@@ -227,12 +227,14 @@ class TestProjectManager {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    Optional<IStatus> lastException = UIThreadRunnable.syncExec(() -> {
+    UIThreadRunnable.syncExec(() -> {
       // Call saveTo which should show an error
       spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
           bot.getDisplay().getActiveShell());
-      return errorService.getLastException();
+
     });
+    Optional<IStatus> lastException =
+        UIThreadRunnable.syncExec(() -> errorService.getLastException());
     // Check the error has been recorded
     assertTrue(lastException.isPresent());
     if (lastException.isPresent()) {
