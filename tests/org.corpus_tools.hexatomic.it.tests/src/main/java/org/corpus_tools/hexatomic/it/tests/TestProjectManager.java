@@ -118,9 +118,14 @@ class TestProjectManager {
       // Save the project to a different location
       Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
+      // Programmatically start a new salt project to get a clean state
+      Map<String, String> params = new HashMap<>();
+      params.put(CommandParams.LOCATION, tmpDir.toString());
+      ParameterizedCommand cmd = commandService
+          .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
+
       UIThreadRunnable.syncExec(() -> {
-        projectManager.saveTo(URI.createFileURI(tmpDir.toString()),
-            bot.getDisplay().getActiveShell());
+        handlerService.executeHandler(cmd);
       });
 
       assertFalse(projectManager.isDirty());
