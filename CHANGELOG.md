@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed incorrect description of unreviewed hotfixes workflow in developer/maintainer documentation
+- Several potential bugs (e.g. null pointer exceptions) reported by static code analysis
 
 ## [0.4.2] - 2020-08-11
 
