@@ -170,9 +170,7 @@ class TestProjectManager {
         final ParameterizedCommand cmdSave = commandService
             .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project");
 
-        UIThreadRunnable.syncExec(() -> {
-          handlerService.executeHandler(cmdSave);
-        });
+        UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
 
         assertFalse(projectManager.isDirty());
 

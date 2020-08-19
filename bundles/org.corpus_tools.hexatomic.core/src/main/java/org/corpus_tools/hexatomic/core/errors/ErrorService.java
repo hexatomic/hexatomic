@@ -181,7 +181,7 @@ public class ErrorService {
     }
 
     return new MultiStatus(bundleID, IStatus.ERROR, children.toArray(new Status[] {}),
-        ex.toString(), ex);
+        message, ex);
 
   }
 
