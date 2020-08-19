@@ -384,8 +384,13 @@ public class ProjectManager {
       dialog.setCancelable(true);
       try {
         dialog.run(true, true, operation);
-      } catch (InvocationTargetException | InterruptedException ex) {
+      } catch (InvocationTargetException ex) {
         errorService.handleException("Could not save project", ex, ProjectManager.class);
+      } catch (InterruptedException ex) {
+        errorService.handleException("Could not save project because thread was interrupted", ex,
+            ProjectManager.class);
+        // Re-interrupt thread to restore the interrupted state
+        Thread.currentThread().interrupt();
       }
     }
   }
