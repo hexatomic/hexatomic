@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestSaveAsHandler {
 
+
   private SaveAsHandler fixture;
   private URI exampleProjectUri;
   private Shell shell;
@@ -28,7 +29,7 @@ public class TestSaveAsHandler {
 
   @BeforeEach
   private void setUp() {
-    this.fixture = new SaveAsHandler();
+    this.fixture = new CustomSaveAsHandler();
     File exampleProjectDirectory =
         new File("src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
@@ -40,7 +41,6 @@ public class TestSaveAsHandler {
     
     dialog = mock(DirectoryDialog.class);
     
-    this.fixture.setDialog(dialog);
     this.fixture.setProjectManager(projectManager);
 
   }
@@ -77,4 +77,18 @@ public class TestSaveAsHandler {
     verifyNoMoreInteractions(dialog);
     verifyNoMoreInteractions(projectManager);
   }
+
+  /**
+   * An implementation that returns the mock dialog instead of a real one.
+   * 
+   * @author Thomas Krause
+   *
+   */
+  private class CustomSaveAsHandler extends SaveAsHandler {
+    @Override
+    protected DirectoryDialog createDialog(Shell shell) {
+      return dialog;
+    }
+  }
+
 }
