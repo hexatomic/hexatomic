@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
@@ -26,11 +28,13 @@ import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.util.Difference;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -42,17 +46,23 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
 
+  private SWTWorkbenchBot bot;
+
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
 
   private ProjectManager projectManager;
+  private ErrorService errorService;
 
   @BeforeEach
   void setup() {
     IEclipseContext ctx = TestHelper.getEclipseContext();
+    
+    bot = new SWTWorkbenchBot(ctx);
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
+    errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -168,4 +178,25 @@ class TestProjectManager {
     }
 
   }
+
+  @Test
+  @Order(2)
+  public void testSaveToInvalidLocation()
+  {
+    
+    projectManager.open(exampleProjectUri);
+    assertFalse(errorService.getLastException().isPresent());
+
+    // Use an URI which can't be saved to
+    UIThreadRunnable.syncExec(() -> {
+      projectManager.saveTo(URI.createURI("http://localhost"), bot.getDisplay().getActiveShell());
+    });
+    // Check the error has been recorded
+    Optional<IStatus> lastException = errorService.getLastException();
+    assertTrue(lastException.isPresent());
+    if(lastException.isPresent()) {
+      assertTrue(lastException.get().getException() instanceof InvocationTargetException);
+    }
+  }
 }
+
