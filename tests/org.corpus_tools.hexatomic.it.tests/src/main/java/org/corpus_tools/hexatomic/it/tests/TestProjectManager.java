@@ -58,7 +58,7 @@ class TestProjectManager {
   @BeforeEach
   void setup() {
     IEclipseContext ctx = TestHelper.getEclipseContext();
-    
+
     bot = new SWTWorkbenchBot(ctx);
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
@@ -183,22 +183,21 @@ class TestProjectManager {
 
   @Test
   @Order(2)
-  public void testSaveToInvalidLocation()
-  {
-    
+  public void testSaveToInvalidLocation() {
+
     projectManager.open(exampleProjectUri);
     assertFalse(errorService.getLastException().isPresent());
 
     // Use an URI which can't be saved to
     UIThreadRunnable.syncExec(() -> {
       projectManager.saveTo(URI.createURI("http://localhost"), bot.getDisplay().getActiveShell());
+      // Check the error has been recorded
+      Optional<IStatus> lastException = errorService.getLastException();
+      assertTrue(lastException.isPresent());
+      if (lastException.isPresent()) {
+        assertTrue(lastException.get().getException() instanceof InvocationTargetException);
+      }
     });
-    // Check the error has been recorded
-    Optional<IStatus> lastException = errorService.getLastException();
-    assertTrue(lastException.isPresent());
-    if(lastException.isPresent()) {
-      assertTrue(lastException.get().getException() instanceof InvocationTargetException);
-    }
   }
 }
 
