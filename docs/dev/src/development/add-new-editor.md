@@ -78,6 +78,28 @@ String documentID = part.getPersistedState()
 Optional<SDocument> doc = projectManager.getDocument(documentID);
 ```
 
+See the [Data model](./data-model/#reacting-to-changes) section on how to listen to changes on the document.
+
+## Changing the document
+
+You can manipulate the document graph returned by the `ProjectManager` directly using the Salt API.
+Every change via the Salt API will automatically be recorded to enable undoing and redoing the changes.
+A user interaction that manipulates the document graph can consist of multiple Salt API calls and you must mark the end of a user interaction by calling the `addCheckpoint()` function of the injected `ProjectManager` instance.
+Undo and redo will use these checkpoints to restore to a consistent state.
+In addition, calling `addCheckpoint()` will notify all other registered editors that a consistent set of changes has been added.
+
+```java
+// Get the document graph for the document
+SDocumentGraph graph = doc.getDocumentGraph();
+// First change: create and add a primary text
+STextualDS anotherText = graph.createTextualDS("Another text");
+// Second change: create and add a token
+graph.createToken(anotherText, 0, 7);
+// Third change: create and add another token
+graph.createToken(anotherText, 8, 12);
+// Add a checkpoint for the three previous changes
+projectManager.addCheckpoint();
+```
 
 ## Cleaning up resources when closed
 
