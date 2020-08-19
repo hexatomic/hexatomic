@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.core;
+package org.corpus_tools.hexatomic.it.tests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.it.tests.TestHelper;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
@@ -50,7 +51,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-class TestProjectManagerIntegration {
+class TestProjectManager {
 
   private SWTWorkbenchBot bot;
 
