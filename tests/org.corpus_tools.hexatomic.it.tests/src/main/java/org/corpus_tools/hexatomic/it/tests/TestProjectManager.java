@@ -31,7 +31,6 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -43,8 +42,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
 
-  private SWTWorkbenchBot bot;
-
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
@@ -54,8 +51,6 @@ class TestProjectManager {
   @BeforeEach
   void setup() {
     IEclipseContext ctx = TestHelper.getEclipseContext();
-
-    bot = new SWTWorkbenchBot(ctx);
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
@@ -118,14 +113,13 @@ class TestProjectManager {
       // Save the project to a different location
       Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-      // Programmatically start a new salt project to get a clean state
       Map<String, String> params = new HashMap<>();
       params.put(CommandParams.LOCATION, tmpDir.toString());
-      ParameterizedCommand cmd = commandService
+      final ParameterizedCommand cmdSaveAs = commandService
           .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
 
       UIThreadRunnable.syncExec(() -> {
-        handlerService.executeHandler(cmd);
+        handlerService.executeHandler(cmdSaveAs);
       });
 
       assertFalse(projectManager.isDirty());
@@ -154,8 +148,11 @@ class TestProjectManager {
 
         assertTrue(projectManager.isDirty());
 
+        final ParameterizedCommand cmdSave = commandService
+            .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project");
+
         UIThreadRunnable.syncExec(() -> {
-          projectManager.save(bot.getDisplay().getActiveShell());
+          handlerService.executeHandler(cmdSave);
         });
 
         assertFalse(projectManager.isDirty());

@@ -92,16 +92,10 @@ public class ProjectManager {
   @Inject
   UISynchronize sync;
 
-  private SaltNotificationFactory notificationFactory;
-
   private final Set<Listener> allListeners = new LinkedHashSet<>();
   private boolean listenersActive = true;
 
   private boolean hasUnsavedChanges;
-
-  public ProjectManager() {
-
-  }
 
   @PostConstruct
   void postConstruct() {
@@ -113,7 +107,7 @@ public class ProjectManager {
     this.hasUnsavedChanges = false;
 
     // Allow to register a change listener with Salt
-    notificationFactory = new SaltNotificationFactory();
+    SaltNotificationFactory notificationFactory = new SaltNotificationFactory();
     SaltFactory.setFactory(notificationFactory);
     notificationFactory.addListener(new ProxyListener());
 
