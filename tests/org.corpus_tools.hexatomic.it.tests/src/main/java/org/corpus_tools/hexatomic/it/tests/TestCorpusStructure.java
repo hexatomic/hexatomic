@@ -115,9 +115,10 @@ class TestCorpusStructure {
     assertTrue(doc1.isPresent());
     assertTrue(doc2.isPresent());
 
-    assertEquals("abc", doc1.get().getName());
-    assertEquals("def", doc2.get().getName());
-
+    if (doc1.isPresent() && doc2.isPresent()) {
+      assertEquals("abc", doc1.get().getName());
+      assertEquals("def", doc2.get().getName());
+    }
   }
 
   @Test

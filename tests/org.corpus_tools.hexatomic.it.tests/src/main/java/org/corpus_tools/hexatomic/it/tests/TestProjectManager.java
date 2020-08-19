@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -100,60 +101,69 @@ class TestProjectManager {
     assertFalse(projectManager.isDirty());
 
     // Load a single document into memory
-    SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
-    SDocumentGraph doc1Graph = doc1.getDocumentGraph();
-    assertNotNull(doc1Graph);
+    Optional<SDocument> optionalDoc1 =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    assertTrue(optionalDoc1.isPresent());
+    if (optionalDoc1.isPresent()) {
+      SDocument doc1 = optionalDoc1.get();
+      SDocumentGraph doc1Graph = doc1.getDocumentGraph();
+      assertNotNull(doc1Graph);
 
-    // Apply some changes to the loaded document graph
-    List<SToken> tokens = doc1Graph.getSortedTokenByText();
-    doc1Graph.createSpan(tokens.get(0), tokens.get(1));
+      // Apply some changes to the loaded document graph
+      List<SToken> tokens = doc1Graph.getSortedTokenByText();
+      doc1Graph.createSpan(tokens.get(0), tokens.get(1));
 
-    assertTrue(projectManager.isDirty());
+      assertTrue(projectManager.isDirty());
 
-    // Save the project to a different location
-    Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
+      // Save the project to a different location
+      Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    UIThreadRunnable.syncExec(() -> {
-      projectManager.saveTo(URI.createFileURI(tmpDir.toString()),
-          bot.getDisplay().getActiveShell());
-    });
+      UIThreadRunnable.syncExec(() -> {
+        projectManager.saveTo(URI.createFileURI(tmpDir.toString()),
+            bot.getDisplay().getActiveShell());
+      });
 
-    assertFalse(projectManager.isDirty());
+      assertFalse(projectManager.isDirty());
 
-    // Compare the saved project with the one currently in memory
-    SaltProject savedProject =
-        SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+      // Compare the saved project with the one currently in memory
+      SaltProject savedProject =
+          SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
-    SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-        .getNode("salt:/rootCorpus/subCorpus1/doc1");
+      SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
+          .getNode("salt:/rootCorpus/subCorpus1/doc1");
 
-    Set<Difference> docDiff =
-        SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
-    assertThat(docDiff, is(empty()));
+      Set<Difference> docDiff =
+          SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+      assertThat(docDiff, is(empty()));
 
-    // Apply some more changes to the loaded document graph and save to same
-    // location
-    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
-    doc1Graph = doc1.getDocumentGraph();
-    assertNotNull(doc1Graph);
-    tokens = doc1Graph.getSortedTokenByText();
-    doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+      // Apply some more changes to the loaded document graph and save to same
+      // location
+      optionalDoc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+      assertTrue(optionalDoc1.isPresent());
+      if (optionalDoc1.isPresent()) {
+        doc1 = optionalDoc1.get();
+        doc1Graph = doc1.getDocumentGraph();
+        assertNotNull(doc1Graph);
+        tokens = doc1Graph.getSortedTokenByText();
+        doc1Graph.createSpan(tokens.get(2), tokens.get(3));
 
-    assertTrue(projectManager.isDirty());
+        assertTrue(projectManager.isDirty());
 
-    UIThreadRunnable.syncExec(() -> {
-      projectManager.save(bot.getDisplay().getActiveShell());
-    });
+        UIThreadRunnable.syncExec(() -> {
+          projectManager.save(bot.getDisplay().getActiveShell());
+        });
 
-    assertFalse(projectManager.isDirty());
+        assertFalse(projectManager.isDirty());
 
-    savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+        savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
-    savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-        .getNode("salt:/rootCorpus/subCorpus1/doc1");
+        savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
+            .getNode("salt:/rootCorpus/subCorpus1/doc1");
 
-    docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
-    assertThat(docDiff, is(empty()));
+        docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+        assertThat(docDiff, is(empty()));
+      }
+    }
 
   }
 }
