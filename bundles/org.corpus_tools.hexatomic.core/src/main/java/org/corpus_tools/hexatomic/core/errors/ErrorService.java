@@ -140,7 +140,7 @@ public class ErrorService {
    * {@link #handleException(String, Throwable, Class)}.
    * 
    * <p>
-   * This property can be used to check in unit tests if any error has occured and was handled in
+   * This property can be used to check in unit tests if any error has occurred and was handled in
    * the UI.
    * </p>
    * 
@@ -148,6 +148,16 @@ public class ErrorService {
    */
   public Optional<IStatus> getLastException() {
     return lastException;
+  }
+
+  /**
+   * Clear the last exception that has been handled with
+   * {@link #handleException(String, Throwable, Class)}. This means calls to
+   * {@link #getLastException()} will return an empty value.
+   * 
+   */
+  public void clearLastException() {
+    lastException = Optional.empty();
   }
 
   /**

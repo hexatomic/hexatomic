@@ -76,6 +76,8 @@ class TestProjectManager {
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
+    errorService.clearLastException();
+
     // Programmatically start a new salt project to get a clean state
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.FORCE_CLOSE, "true");
