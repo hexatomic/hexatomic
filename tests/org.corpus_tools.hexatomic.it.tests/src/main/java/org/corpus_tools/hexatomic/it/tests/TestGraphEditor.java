@@ -342,30 +342,35 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Get a reference to the open graph
-    SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
-    SDocumentGraph graph = doc.getDocumentGraph();
+    Optional<SDocument> optionalDocument =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    assertTrue(optionalDocument.isPresent());
+    if (optionalDocument.isPresent()) {
+      SDocument doc = optionalDocument.get();
+      SDocumentGraph graph = doc.getDocumentGraph();
 
-    // Before state: no edges between the two structures
-    assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
-        "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
+      // Before state: no edges between the two structures
+      assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
+          "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
 
-    // Add a pointing relation between the two structures
-    enterCommand("e #structure3 -> #structure5");
+      // Add a pointing relation between the two structures
+      enterCommand("e #structure3 -> #structure5");
 
-    // Check that no exception was thrown/handled by UI
-    assertFalse(errorService.getLastException().isPresent());
+      // Check that no exception was thrown/handled by UI
+      assertFalse(errorService.getLastException().isPresent());
 
-    // Check that the edge has been added to the graph
-    List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
-        "salt:/rootCorpus/subCorpus1/doc1#structure5");
-    assertEquals(1, rels.size());
-    assertTrue(rels.get(0) instanceof SPointingRelation);
+      // Check that the edge has been added to the graph
+      List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
+          "salt:/rootCorpus/subCorpus1/doc1#structure5");
+      assertEquals(1, rels.size());
+      assertTrue(rels.get(0) instanceof SPointingRelation);
 
-    Graph g = bot.widget(widgetOfType(Graph.class));
-    assertNotNull(g);
+      Graph g = bot.widget(widgetOfType(Graph.class));
+      assertNotNull(g);
 
-    // Check that the edge was also added as connection in the view
-    bot.waitUntil(new NumberOfConnectionsCondition(23));
+      // Check that the edge was also added as connection in the view
+      bot.waitUntil(new NumberOfConnectionsCondition(23));
+    }
   }
 
   /**
@@ -379,45 +384,49 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Get a reference to the opened document graph
-    SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
-    SDocumentGraph graph = doc.getDocumentGraph();
+    Optional<SDocument> optionalDoc =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    assertTrue(optionalDoc.isPresent());
+    if (optionalDoc.isPresent()) {
+      SDocument doc = optionalDoc.get();
+      SDocumentGraph graph = doc.getDocumentGraph();
 
-    STextualDS firstText = graph.getTextualDSs().get(0);
-    final String originalText = firstText.getText();
+      STextualDS firstText = graph.getTextualDSs().get(0);
+      final String originalText = firstText.getText();
 
-    // Add an additional data source to the document graph
-    STextualDS anotherText = graph.createTextualDS("Another text");
-    graph.createToken(anotherText, 0, 7);
-    graph.createToken(anotherText, 8, 12);
+      // Add an additional data source to the document graph
+      STextualDS anotherText = graph.createTextualDS("Another text");
+      graph.createToken(anotherText, 0, 7);
+      graph.createToken(anotherText, 8, 12);
 
-    // Select the new text
-    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-    textRangeTable.select("Another text");
+      // Select the new text
+      SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+      textRangeTable.select("Another text");
 
-    // Wait until the graph has been properly selected
-    bot.waitUntil(new DefaultCondition() {
+      // Wait until the graph has been properly selected
+      bot.waitUntil(new DefaultCondition() {
 
-      @Override
-      public boolean test() throws Exception {
-        return textRangeTable.getTableItem("Another text").isChecked();
-      }
+        @Override
+        public boolean test() throws Exception {
+          return textRangeTable.getTableItem("Another text").isChecked();
+        }
 
-      @Override
-      public String getFailureMessage() {
-        return "Second text segment was not checked";
-      }
-    }, 5000);
+        @Override
+        public String getFailureMessage() {
+          return "Second text segment was not checked";
+        }
+      }, 5000);
 
-    // Add a new tokenized text to the end
-    enterCommand("t has more tokens");
+      // Add a new tokenized text to the end
+      enterCommand("t has more tokens");
 
-    // Check that the right textual data source has been amended
-    assertEquals("Another text has more tokens", anotherText.getText());
+      // Check that the right textual data source has been amended
+      assertEquals("Another text has more tokens", anotherText.getText());
 
-    // Check the original text has not been altered and is displayed correctly
-    assertEquals(originalText, firstText.getText());
-    assertEquals(originalText, textRangeTable.cell(0, 0));
-
+      // Check the original text has not been altered and is displayed correctly
+      assertEquals(originalText, firstText.getText());
+      assertEquals(originalText, textRangeTable.cell(0, 0));
+    }
   }
 
   @Test
