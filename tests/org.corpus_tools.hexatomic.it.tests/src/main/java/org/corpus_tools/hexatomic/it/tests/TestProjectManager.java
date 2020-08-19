@@ -199,5 +199,37 @@ class TestProjectManager {
       }
     });
   }
+
+  @Test
+  @Order(3)
+  public void testSaveToInterrupted() throws IOException {
+
+    projectManager.open(exampleProjectUri);
+    assertFalse(errorService.getLastException().isPresent());
+    
+    Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
+
+    // Use an URI which can't be saved to
+    UIThreadRunnable.syncExec(() -> {
+      /*
+       * Interrupt thread before calling saveTo. This is somewhat controversial
+       * (https://stackoverflow.com/questions/3704747/how-to-write-unit-test-for-
+       * interruptedexception) and would have side effects if the interruption is not handled
+       * properly. Since this test shall ensure interrupting is handled correctly, it seems that the
+       * trade-of worthwhile. If there are any weird errors with interruption, we might just disable
+       * the code coverage for the affected catch block in saveTo()
+       */
+      Thread.currentThread().interrupt();
+      // Call saveTo which should show an error
+      projectManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
+          bot.getDisplay().getActiveShell());
+      // Check the error has been recorded
+      Optional<IStatus> lastException = errorService.getLastException();
+      assertTrue(lastException.isPresent());
+      if (lastException.isPresent()) {
+        assertTrue(lastException.get().getException() instanceof InterruptedException);
+      }
+    });
+  }
 }
 
