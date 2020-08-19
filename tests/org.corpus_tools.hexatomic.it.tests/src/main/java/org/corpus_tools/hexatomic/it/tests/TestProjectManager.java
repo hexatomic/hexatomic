@@ -196,11 +196,11 @@ class TestProjectManager {
     assertFalse(errorService.getLastException().isPresent());
 
     // Use an URI which can't be saved to
-    UIThreadRunnable.syncExec(() -> {
+    Optional<IStatus> lastException = UIThreadRunnable.syncExec(() -> {
       projectManager.saveTo(URI.createURI("http://localhost"), bot.getDisplay().getActiveShell());
+      return errorService.getLastException();
     });
     // Check the error has been recorded
-    Optional<IStatus> lastException = errorService.getLastException();
     assertTrue(lastException.isPresent());
     if (lastException.isPresent()) {
       assertTrue(lastException.get().getException() instanceof InvocationTargetException);
@@ -224,16 +224,16 @@ class TestProjectManager {
 
     // Check no error has been set yet
     assertFalse(errorService.getLastException().isPresent());
-    
+
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    UIThreadRunnable.syncExec(() -> {
+    Optional<IStatus> lastException = UIThreadRunnable.syncExec(() -> {
       // Call saveTo which should show an error
       spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
           bot.getDisplay().getActiveShell());
+      return errorService.getLastException();
     });
     // Check the error has been recorded
-    Optional<IStatus> lastException = errorService.getLastException();
     assertTrue(lastException.isPresent());
     if (lastException.isPresent()) {
       assertTrue(lastException.get().getException() instanceof InterruptedException);
