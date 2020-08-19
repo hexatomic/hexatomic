@@ -27,7 +27,7 @@ public class TestSaveAsHandler {
 
 
   @BeforeEach
-  public void setUp() throws Exception {
+  private void setUp() throws Exception {
     this.fixture = new SaveAsHandler();
     File exampleProjectDirectory =
         new File("src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
