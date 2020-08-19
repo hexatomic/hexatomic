@@ -60,10 +60,11 @@ public class SaveAsHandler {
     if (location == null) {
       DirectoryDialog dialog = new DirectoryDialog(shell);
 
-      if (lastPath == null && projectManager.getLocation().isPresent()) {
+      java.util.Optional<URI> originalLocation = projectManager.getLocation();
+      if (lastPath == null && originalLocation.isPresent()) {
         // The user did not specifically selected a path to save yet, but we can use the original
         // path from where the corpus was loaded.
-        lastPath = projectManager.getLocation().get().toFileString();
+        lastPath = originalLocation.get().toFileString();
       }
 
       if (lastPath != null) {
