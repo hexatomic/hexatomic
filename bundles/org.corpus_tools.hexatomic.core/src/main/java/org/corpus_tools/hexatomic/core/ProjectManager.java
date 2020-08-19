@@ -403,7 +403,7 @@ public class ProjectManager {
         }
       };
 
-      ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
+      ProgressMonitorDialog dialog = createProgressMonitorDialog(shell);
 
       dialog.setCancelable(true);
       try {
@@ -417,6 +417,18 @@ public class ProjectManager {
         Thread.currentThread().interrupt();
       }
     }
+  }
+
+
+  /**
+   * Helper method to create a new progress monitor.
+   * This is a method so it can be overwritten by other implementations.
+   * 
+   * @param shell A SWT shell.
+   * @return The newly created progress monitor.
+   */
+  public ProgressMonitorDialog createProgressMonitorDialog(Shell shell) {
+    return new ProgressMonitorDialog(shell);
   }
 
 

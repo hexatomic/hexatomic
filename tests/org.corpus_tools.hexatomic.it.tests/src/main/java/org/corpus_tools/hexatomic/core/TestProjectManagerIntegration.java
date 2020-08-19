@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.it.tests;
+package org.corpus_tools.hexatomic.core;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
@@ -7,6 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.corpus_tools.hexatomic.core.CommandParams;
-import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.it.tests.TestHelper;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
@@ -34,6 +39,7 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +50,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-class TestProjectManager {
+class TestProjectManagerIntegration {
 
   private SWTWorkbenchBot bot;
 
@@ -56,7 +62,7 @@ class TestProjectManager {
   private ErrorService errorService;
 
   @BeforeEach
-  void setup() {
+  void abc() {
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     bot = new SWTWorkbenchBot(ctx);
@@ -191,45 +197,46 @@ class TestProjectManager {
     // Use an URI which can't be saved to
     UIThreadRunnable.syncExec(() -> {
       projectManager.saveTo(URI.createURI("http://localhost"), bot.getDisplay().getActiveShell());
-      // Check the error has been recorded
-      Optional<IStatus> lastException = errorService.getLastException();
-      assertTrue(lastException.isPresent());
-      if (lastException.isPresent()) {
-        assertTrue(lastException.get().getException() instanceof InvocationTargetException);
-      }
     });
+    // Check the error has been recorded
+    Optional<IStatus> lastException = errorService.getLastException();
+    assertTrue(lastException.isPresent());
+    if (lastException.isPresent()) {
+      assertTrue(lastException.get().getException() instanceof InvocationTargetException);
+    }
   }
 
   @Test
   @Order(3)
-  public void testSaveToInterrupted() throws IOException {
+  public void testSaveToInterrupted()
+      throws IOException, InvocationTargetException, InterruptedException {
 
-    projectManager.open(exampleProjectUri);
+    // Mock a progress monitor dialog that interrupts and spy on the project manager
+    // to allow returning the mocked dialog instead of the real one.
+    ProjectManager spyingManager = spy(projectManager);
+    ProgressMonitorDialog dialog = mock(ProgressMonitorDialog.class);
+
+    when(spyingManager.createProgressMonitorDialog(any())).thenReturn(dialog);
+    // The mocked dialog should throw an exception when it is run
+    doThrow(InterruptedException.class).when(dialog).run(anyBoolean(), anyBoolean(), any());
+    spyingManager.open(exampleProjectUri);
+
+    // Check no error has been set yet
     assertFalse(errorService.getLastException().isPresent());
     
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    // Use an URI which can't be saved to
     UIThreadRunnable.syncExec(() -> {
-      /*
-       * Interrupt thread before calling saveTo. This is somewhat controversial
-       * (https://stackoverflow.com/questions/3704747/how-to-write-unit-test-for-
-       * interruptedexception) and would have side effects if the interruption is not handled
-       * properly. Since this test shall ensure interrupting is handled correctly, it seems that the
-       * trade-of worthwhile. If there are any weird errors with interruption, we might just disable
-       * the code coverage for the affected catch block in saveTo()
-       */
-      Thread.currentThread().interrupt();
       // Call saveTo which should show an error
-      projectManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
+      spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
           bot.getDisplay().getActiveShell());
-      // Check the error has been recorded
-      Optional<IStatus> lastException = errorService.getLastException();
-      assertTrue(lastException.isPresent());
-      if (lastException.isPresent()) {
-        assertTrue(lastException.get().getException() instanceof InterruptedException);
-      }
     });
+    // Check the error has been recorded
+    Optional<IStatus> lastException = errorService.getLastException();
+    assertTrue(lastException.isPresent());
+    if (lastException.isPresent()) {
+      assertTrue(lastException.get().getException() instanceof InterruptedException);
+    }
   }
 }
 
