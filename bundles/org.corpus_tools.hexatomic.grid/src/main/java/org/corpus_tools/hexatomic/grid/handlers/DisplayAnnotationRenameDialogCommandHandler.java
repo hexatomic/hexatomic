@@ -21,14 +21,15 @@
 package org.corpus_tools.hexatomic.grid.handlers;
 
 import org.corpus_tools.hexatomic.grid.commands.DisplayAnnotationRenameDialogCommand;
-import org.corpus_tools.hexatomic.grid.layers.GridSpanningDataLayer;
+import org.corpus_tools.hexatomic.grid.commands.RenameCellAnnotationCommand;
+import org.corpus_tools.hexatomic.grid.ui.AnnotationRenameDialog;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
+import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handles changes of annotation name on specific cells (as opposed to the column header which is
- * done via the {@link DisplayAnnotationRenameDialogOnColumnCommandHandler}).
+ * Displays an {@link AnnotationRenameDialog} on selected cells.
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
@@ -37,11 +38,6 @@ public class DisplayAnnotationRenameDialogCommandHandler
 
   private static final Logger log =
       LoggerFactory.getLogger(DisplayAnnotationRenameDialogCommandHandler.class);
-  private final GridSpanningDataLayer dataLayer;
-
-  public DisplayAnnotationRenameDialogCommandHandler(GridSpanningDataLayer gridSpanningDataLayer) {
-    this.dataLayer = gridSpanningDataLayer;
-  }
 
   @Override
   public Class<DisplayAnnotationRenameDialogCommand> getCommandClass() {
@@ -51,7 +47,18 @@ public class DisplayAnnotationRenameDialogCommandHandler
   @Override
   protected boolean doCommand(DisplayAnnotationRenameDialogCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
-    return true;
+    AnnotationRenameDialog dialog =
+        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), null, null);
+    dialog.open();
+
+    if (dialog.isCancelPressed()) {
+      log.debug("Execution of command {} cancelled.", getCommandClass().getSimpleName());
+      return true;
+    }
+
+    log.debug("Returning delegate command {}.", RenameCellAnnotationCommand.class.getSimpleName());
+    return command.getNatTable().doCommand(
+        new RenameCellAnnotationCommand(command.getSelectedCellPositions(), command.getNatTable()));
   }
 
 }
