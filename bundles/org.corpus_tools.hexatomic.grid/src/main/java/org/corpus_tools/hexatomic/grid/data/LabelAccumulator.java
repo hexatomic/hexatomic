@@ -19,12 +19,11 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.style;
+package org.corpus_tools.hexatomic.grid.data;
 
 import java.util.List;
-import org.corpus_tools.hexatomic.grid.data.Column;
 import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ColumnOverrideLabelAccumulator;
@@ -85,6 +84,10 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
         configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
       }
     }
+  }
+
+  String getQNameForColumn(int columnIndex) {
+    return bodyDataProvider.getColumns().get(columnIndex).getColumnValue();
   }
 
 }

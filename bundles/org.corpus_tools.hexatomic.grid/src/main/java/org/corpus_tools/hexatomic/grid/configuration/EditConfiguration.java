@@ -21,8 +21,11 @@
 
 package org.corpus_tools.hexatomic.grid.configuration;
 
-import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.data.AnnotationDisplayConverter;
+import org.corpus_tools.hexatomic.grid.data.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.data.TokenTextDisplayConverter;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
@@ -42,6 +45,8 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   private static final String CELL_EDITOR = "CELL_EDITOR";
   private static final String TOKEN_COLUMN_CONFIG_LABEL = "TOKEN_COLUMN_CONFIG_LABEL";
+  private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
+  private static final String CONVERTED_TOKEN_COLUMN_LABEL = "CONVERTED_TOKEN_COLUMN_LABEL";
   private final LabelAccumulator labelAccumulator;
   private final SelectionLayer selectionLayer;
 
@@ -52,16 +57,31 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   @Override
   public void configureRegistry(IConfigRegistry configRegistry) {
+    // Convert values in cells
     // Make cells editable
     configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
         IEditableRule.ALWAYS_EDITABLE);
     registerCellEditor(configRegistry);
     // Disable token text editing
     disableTokenTextEditing(configRegistry);
+    // Tag all columns with a label to mark them for value conversion
+    tagConvertedColumns(configRegistry);
+    configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
+        new TokenTextDisplayConverter(), DisplayMode.NORMAL, TOKEN_COLUMN_CONFIG_LABEL);
+    configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
+        new AnnotationDisplayConverter(labelAccumulator), DisplayMode.NORMAL,
+        CONVERTED_COLUMN_LABEL);
+  }
+
+  private void tagConvertedColumns(IConfigRegistry configRegistry) {
+    labelAccumulator.registerOverrides(CONVERTED_COLUMN_LABEL);
+    labelAccumulator.unregisterOverrides(0, CONVERTED_COLUMN_LABEL);
   }
 
   private void disableTokenTextEditing(IConfigRegistry configRegistry) {
+    // Tag token column with label
     labelAccumulator.registerOverrides(0, TOKEN_COLUMN_CONFIG_LABEL);
+    // Disable editing
     configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
         IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, TOKEN_COLUMN_CONFIG_LABEL);
   }
