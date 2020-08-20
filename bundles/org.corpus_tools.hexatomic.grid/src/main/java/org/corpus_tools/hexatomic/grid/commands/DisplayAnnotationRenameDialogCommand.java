@@ -23,7 +23,6 @@ package org.corpus_tools.hexatomic.grid.commands;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
-import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 
 /**
  * Command to display an annotation rename dialog on.
@@ -34,21 +33,28 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 public class DisplayAnnotationRenameDialogCommand extends AbstractContextFreeCommand {
 
   private final NatTable natTable;
-  private final SelectionLayer selectionLayer;
+
   private final PositionCoordinate[] selectedCellPositions;
 
   /**
-   * TODO.
+   * Constructor accepting NatTable and selected cells as parameters.
    * 
-   * @param natTable The natTable
-   * @param selectionLayer The selection layer
-   * @param selectedCellPositions The positions
+   * @param natTable The NatTable on which the command is called.
+   * @param selectedCellPositions The positions of the cells that are selected then the command is
+   *        called.
    */
-  public DisplayAnnotationRenameDialogCommand(NatTable natTable, SelectionLayer selectionLayer,
+  public DisplayAnnotationRenameDialogCommand(NatTable natTable,
       PositionCoordinate[] selectedCellPositions) {
     this.natTable = natTable;
-    this.selectionLayer = selectionLayer;
     this.selectedCellPositions = selectedCellPositions;
+  }
+
+  public NatTable getNatTable() {
+    return natTable;
+  }
+
+  public PositionCoordinate[] getSelectedCellPositions() {
+    return selectedCellPositions;
   }
 
 
