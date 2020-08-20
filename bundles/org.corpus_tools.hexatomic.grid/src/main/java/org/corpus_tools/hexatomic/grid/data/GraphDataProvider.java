@@ -268,7 +268,7 @@ public class GraphDataProvider implements IDataProvider {
    * </p>
    */
   @Override
-  public String getDataValue(int columnIndex, int rowIndex) {
+  public Object getDataValue(int columnIndex, int rowIndex) {
     if (dataSource == null) {
       if (columnIndex == 0 && rowIndex == 0) {
         return "Please select data source!";
@@ -284,7 +284,7 @@ public class GraphDataProvider implements IDataProvider {
           errors.handleException(e.getMessage(), e, GraphDataProvider.class);
           return null;
         }
-        return column.getDisplayText(rowIndex);
+        return column.getDataObject(rowIndex);
       }
     }
     return null;
