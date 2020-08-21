@@ -89,7 +89,7 @@ class TestGraphDataProvider {
     SDocumentGraph graph = mock(SDocumentGraph.class);
     fixture.setGraph(graph);
     fixture.setDsAndResolveGraph(ds);
-    assertEquals("Data source contains no tokens!", fixture.getDataValue(0, 0));
+    assertEquals(null, fixture.getDataValue(0, 0));
     assertEquals(null, fixture.getDataValue(0, 1));
     fixture.getDataValue(1, 1);
     fixture.getDataValue(1, 0);
