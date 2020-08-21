@@ -19,11 +19,11 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.configuration;
+package org.corpus_tools.hexatomic.grid.internal.configuration;
 
-import org.corpus_tools.hexatomic.grid.data.AnnotationDisplayConverter;
-import org.corpus_tools.hexatomic.grid.data.LabelAccumulator;
-import org.corpus_tools.hexatomic.grid.data.TokenTextDisplayConverter;
+import org.corpus_tools.hexatomic.grid.internal.data.AnnotationDisplayConverter;
+import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.data.TokenTextDisplayConverter;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;

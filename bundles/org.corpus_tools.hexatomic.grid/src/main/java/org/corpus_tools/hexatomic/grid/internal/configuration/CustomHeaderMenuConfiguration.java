@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.configuration;
+package org.corpus_tools.hexatomic.grid.internal.configuration;
 
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.freeze.command.FreezeColumnCommand;

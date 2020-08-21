@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.grid.data;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import java.io.File;
 import java.util.List;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
@@ -68,8 +68,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getDataValue(int, int)}.
+   * Test method for {@link GraphDataProvider#getDataValue(int, int)}.
    */
   @Test
   final void testGetDataValueEmptyGraph() {
@@ -80,8 +79,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getDataValue(int, int)}.
+   * Test method for {@link GraphDataProvider#getDataValue(int, int)}.
    */
   @Test
   final void testGetDataValueSetDsWithoutTokens() {
@@ -99,8 +97,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getDataValue(int, int)}.
+   * Test method for {@link GraphDataProvider#getDataValue(int, int)}.
    */
   @Test
   final void testGetDataValueDefaultExample() {
@@ -157,8 +154,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getDataValue(int, int)}.
+   * Test method for {@link GraphDataProvider#getDataValue(int, int)}.
    */
   @Test
   final void testGetDataValueOverlappingExample() {
@@ -221,8 +217,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getColumnCount()}.
+   * Test method for {@link GraphDataProvider#getColumnCount()}.
    */
   @Test
   final void testGetColumnCount() {
@@ -240,7 +235,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#getRowCount()}.
+   * Test method for {@link GraphDataProvider#getRowCount()}.
    */
   @Test
   final void testGetRowCount() {
@@ -258,8 +253,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#setDataValue(int, int, Object)}.
+   * Test method for {@link GraphDataProvider#setDataValue(int, int, Object)}.
    * 
    * <p>
    * This tests a successful change of value in an {@link SAnnotation}.
@@ -278,8 +272,7 @@ class TestGraphDataProvider {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.GraphDataProvider#setDataValue(int, int, Object)}.
+   * Test method for {@link GraphDataProvider#setDataValue(int, int, Object)}.
    * 
    * <p>
    * This tests whether an exception is thrown when trying to set a value to a cell that doesn't

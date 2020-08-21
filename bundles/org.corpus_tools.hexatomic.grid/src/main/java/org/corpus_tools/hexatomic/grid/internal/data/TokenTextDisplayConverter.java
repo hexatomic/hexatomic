@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.data;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import org.corpus_tools.salt.common.SToken;
 import org.eclipse.nebula.widgets.nattable.data.convert.DisplayConverter;

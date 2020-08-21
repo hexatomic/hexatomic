@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.style.StyleConfiguration;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;

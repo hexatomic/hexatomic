@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.data;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.salt.core.SAnnotation;

@@ -1,7 +1,8 @@
-package org.corpus_tools.hexatomic.grid.style;
+package org.corpus_tools.hexatomic.grid.internal.style;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.ConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
@@ -38,7 +39,7 @@ class TestSelectionStyleConfiguration {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
+   * {@link org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration#configureSelectionStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
    * 
    */
   @Test
@@ -58,7 +59,7 @@ class TestSelectionStyleConfiguration {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration#configureSelectionAnchorStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
+   * {@link org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration#configureSelectionAnchorStyle(org.eclipse.nebula.widgets.nattable.config.IConfigRegistry)}.
    */
   @Test
   final void testConfigureSelectionAnchorStyleIConfigRegistry() {

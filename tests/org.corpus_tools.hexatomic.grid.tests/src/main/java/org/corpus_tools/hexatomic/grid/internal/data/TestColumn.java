@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.grid.data;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
@@ -67,8 +67,7 @@ class TestColumn {
   }
 
   /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.data.Column#setRow(int, LabelableElement)}.
+   * Test method for {@link Column#setRow(int, LabelableElement)}.
    */
   @Test
   final void testSetRow() {
@@ -83,7 +82,7 @@ class TestColumn {
 
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.Column#getDataObject(int)}.
+   * Test method for {@link Column#getDataObject(int)}.
    */
   @Test
   final void testGetDataObject() {
@@ -92,7 +91,7 @@ class TestColumn {
   }
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.Column#isRowEmpty(int)}.
+   * Test method for {@link Column#isRowEmpty(int)}.
    */
   @Test
   final void testIsRowEmpty() {
@@ -101,7 +100,7 @@ class TestColumn {
   }
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.Column#areRowsEmpty(int, int)}.
+   * Test method for {@link Column#areRowsEmpty(int, int)}.
    */
   @Test
   final void testAreRowsEmpty() {
@@ -112,7 +111,7 @@ class TestColumn {
   }
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.Column#getDisplayText(int)}.
+   * Test method for {@link Column#getDisplayText(int)}.
    */
   @Test
   final void testGetDisplayText() {
@@ -123,9 +122,8 @@ class TestColumn {
   }
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.Column#getDisplayText(int)} which
-   * triggers a RuntimeException by adding the wrong type of data object to the token text type
-   * column.
+   * Test method for {@link Column#getDisplayText(int)} which triggers a RuntimeException by adding
+   * the wrong type of data object to the token text type column.
    */
   @Test
   final void testGetDisplayTextThrowsException() {
@@ -143,7 +141,7 @@ class TestColumn {
   }
 
   /**
-   * Test method for {@link org.corpus_tools.hexatomic.grid.data.Column#getHeader()}.
+   * Test method for {@link Column#getHeader()}.
    */
   @Test
   final void testGetHeader() {
