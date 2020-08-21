@@ -1,0 +1,75 @@
+package org.corpus_tools.hexatomic.formats;
+
+import java.io.File;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Text;
+
+public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
+  private Text txtDirectoryPath;
+
+  public enum Type {
+    Import, Export
+  }
+
+  protected CorpusPathSelectionPage(Type type) {
+    super("Select corpus directory");
+    switch (type) {
+      case Import:
+        setTitle("Select the directory that contains the corpus you want to import");
+        setDescription(
+            "Corpora are normally organized as collection of files and sub-directories of a parent directory.");
+        break;
+      case Export:
+        setTitle("Select the directory that contains the corpus you want to export");
+        break;
+    }
+  }
+
+  @Override
+  public void createControl(Composite parent) {
+    Composite container = new Composite(parent, SWT.NULL);
+    setControl(container);
+    container.setLayout(new GridLayout(2, false));
+
+    txtDirectoryPath = new Text(container, SWT.BORDER);
+    GridData gd_txtDirectoryPath = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+    gd_txtDirectoryPath.widthHint = 474;
+    txtDirectoryPath.setLayoutData(gd_txtDirectoryPath);
+
+    Button btnSelectDirectory = new Button(container, SWT.NONE);
+    btnSelectDirectory.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        DirectoryDialog corpusDir = new DirectoryDialog(parent.getShell());
+        corpusDir.setText("Select the corpus directory");
+        String result = corpusDir.open();
+        if (result != null) {
+          txtDirectoryPath.setText(result);
+          checkIfPageComplete();
+        }
+      }
+    });
+    btnSelectDirectory.setText("...");
+    setPageComplete(false);
+  }
+
+  protected void checkIfPageComplete() {
+    setPageComplete(false);
+    if (!txtDirectoryPath.getText().isEmpty()) {
+      // Check if the path exists and is a directory
+      File f = new File(txtDirectoryPath.getText());
+      if (f.isDirectory()) {
+        setPageComplete(true);
+      }
+    }
+  }
+}
