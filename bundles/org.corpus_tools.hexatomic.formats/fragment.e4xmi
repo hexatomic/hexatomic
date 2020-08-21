@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_vhXkUOOGEeqTD4EqyXMWvA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_wix-AOOGEeqTD4EqyXMWvA" featurename="menuContributions" parentElementId="xpath:/">
+    <elements xsi:type="menu:MenuContribution" xmi:id="_0lzukOOGEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.formats.menucontribution.0" positionInParent="after=org.corpus_tools.hexatomic.core.handledmenuitem.save_as_salt_project" parentId="org.corpus_tools.hexatomic.core.menu.file">
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_6NvncOOGEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.core.menu.import" label="Import" tooltip="Import a corpus project from a different file format" command="_m4R8sOOIEeqTD4EqyXMWvA"/>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_lCgt4OOIEeqTD4EqyXMWvA" featurename="commands" parentElementId="xpath:/">
+    <elements xsi:type="commands:Command" xmi:id="_m4R8sOOIEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.formats.command.import" commandName="Import"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rEEnsOOIEeqTD4EqyXMWvA" featurename="handlers" parentElementId="xpath:/">
+    <elements xsi:type="commands:Handler" xmi:id="_tOjiQOOIEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.formats.handler.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.formats/org.corpus_tools.hexatomic.formats.ImportHandler" command="_m4R8sOOIEeqTD4EqyXMWvA"/>
+  </fragments>
+</fragment:ModelFragments>
