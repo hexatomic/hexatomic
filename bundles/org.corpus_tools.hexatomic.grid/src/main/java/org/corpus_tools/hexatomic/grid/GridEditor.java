@@ -234,8 +234,6 @@ public class GridEditor {
 
 
     final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
-    Image errorImage = FieldDecorationRegistry.getDefault()
-        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
     deco.setShowOnlyOnFocus(false);
 
     viewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -261,6 +259,8 @@ public class GridEditor {
           // Set decoration depending on whether there are tokens in the data source.
           if (((STextualDS) selection.getFirstElement()).getInRelations().size() == 0) {
             deco.setDescriptionText(NO_TOKENS_MESSAGE);
+            Image errorImage = FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
             deco.setImage(errorImage);
             // Hide table
             table.setVisible(false);

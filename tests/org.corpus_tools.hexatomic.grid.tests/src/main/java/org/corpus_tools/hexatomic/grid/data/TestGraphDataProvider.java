@@ -190,29 +190,32 @@ class TestGraphDataProvider {
     assertEquals(tokens.get(4), fixture.getDataValue(1, 4));
     assertNotNull(fixture.getDataValue(1, 4).getAnnotation(qualifiedName));
 
-    SNode span1 = overlappingExampleGraph.getNodesByName("sSpan1").get(0);
-    SNode span2 = overlappingExampleGraph.getNodesByName("sSpan2").get(0);
-    SNode span3 = overlappingExampleGraph.getNodesByName("sSpan3").get(0);
-    SNode span4 = overlappingExampleGraph.getNodesByName("sSpan4").get(0);
-    SNode span5 = overlappingExampleGraph.getNodesByName("sSpan5").get(0);
-    SNode new1 = overlappingExampleGraph.getNodesByName("sSpan6").get(0);
-    SNode new2 = overlappingExampleGraph.getNodesByName("sSpan7").get(0);
 
+    SNode span1 = overlappingExampleGraph.getNodesByName("sSpan1").get(0);
     assertEquals(span1, fixture.getDataValue(2, 0));
+
+    SNode span2 = overlappingExampleGraph.getNodesByName("sSpan2").get(0);
     assertEquals(span2, fixture.getDataValue(2, 1));
     assertEquals(span2, fixture.getDataValue(2, 2));
     assertEquals(span2, fixture.getDataValue(2, 3));
     assertEquals(span2, fixture.getDataValue(2, 4));
 
+    SNode span3 = overlappingExampleGraph.getNodesByName("sSpan3").get(0);
     assertEquals(span3, fixture.getDataValue(3, 0));
     assertEquals(span3, fixture.getDataValue(3, 1));
+
+    SNode span4 = overlappingExampleGraph.getNodesByName("sSpan4").get(0);
     assertEquals(span4, fixture.getDataValue(3, 2));
+
+    SNode span5 = overlappingExampleGraph.getNodesByName("sSpan5").get(0);
     assertEquals(span5, fixture.getDataValue(3, 3));
     assertEquals(span5, fixture.getDataValue(3, 4));
 
     assertNull(fixture.getDataValue(4, 0));
+    SNode new1 = overlappingExampleGraph.getNodesByName("sSpan6").get(0);
     assertEquals(new1, fixture.getDataValue(4, 1));
     assertEquals(new1, fixture.getDataValue(4, 2));
+    SNode new2 = overlappingExampleGraph.getNodesByName("sSpan7").get(0);
     assertEquals(new2, fixture.getDataValue(4, 3));
     assertEquals(new2, fixture.getDataValue(4, 4));
   }
