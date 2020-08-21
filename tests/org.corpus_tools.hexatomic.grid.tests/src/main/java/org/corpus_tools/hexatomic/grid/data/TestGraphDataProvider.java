@@ -292,7 +292,7 @@ class TestGraphDataProvider {
     assertNull(fixture.getDataValue(4, 0));
     assertNull(fixture.getDataValue(4, 0));
     fixture.setDataValue(4, 0, "test");
-    SStructuredNode node = (SStructuredNode) fixture.getDataValue(4, 0);
+    SStructuredNode node = fixture.getDataValue(4, 0);
     assertNotNull(node);
     assertTrue(node instanceof SSpan);
     assertEquals(1, overlappingExampleGraph.getOverlappedTokens(node).size());
@@ -310,12 +310,10 @@ class TestGraphDataProvider {
     assertNull(fixture.getDataValue(1, 1));
     assertNull(fixture.getDataValue(1, 1));
     fixture.setDataValue(1, 1, "test");
-    SStructuredNode node = (SStructuredNode) fixture.getDataValue(1, 1);
+    SStructuredNode node = fixture.getDataValue(1, 1);
     assertNotNull(node);
     assertTrue(node instanceof SToken);
     assertSame(overlappingExampleGraph.getSortedTokenByText().get(1), node);
-    assertEquals("test", fixture.getDataValue(1, 1));
-
   }
 
   @Test
@@ -325,7 +323,7 @@ class TestGraphDataProvider {
 
     // Remove single cell span annotation and delete span
     assertEquals("val_span_1", fixture.getDataValue(2, 0));
-    final SStructuredNode originalNodeToRemove1 = (SStructuredNode) fixture.getDataValue(2, 0);
+    final SStructuredNode originalNodeToRemove1 = fixture.getDataValue(2, 0);
     fixture.setDataValue(2, 0, null);
     assertNull(fixture.getDataValue(2, 0));
     assertNull(fixture.getDataValue(2, 0));
