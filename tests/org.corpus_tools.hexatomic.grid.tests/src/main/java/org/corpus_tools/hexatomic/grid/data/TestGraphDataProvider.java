@@ -298,11 +298,11 @@ class TestGraphDataProvider {
     fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
-    assertEquals("contrast-focus", fixture.getDataValue(3, 0));
+    assertTrue(fixture.getDataValue(3, 0) instanceof SSpan);
     assertEquals(ColumnType.SPAN_ANNOTATION, fixture.getColumns().get(3).getColumnType());
-    assertEquals("Is", fixture.getDataValue(0, 0));
+    assertTrue(fixture.getDataValue(0, 0) instanceof SToken);
     assertEquals(ColumnType.TOKEN_TEXT, fixture.getColumns().get(0).getColumnType());
-    assertEquals("be", fixture.getDataValue(1, 0));
+    assertTrue(fixture.getDataValue(1, 0) instanceof SToken);
     assertEquals(ColumnType.TOKEN_ANNOTATION, fixture.getColumns().get(1).getColumnType());
   }
 
