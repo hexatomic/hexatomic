@@ -49,6 +49,9 @@ public class RowHeaderDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
+    if (provider.getColumns().isEmpty()) {
+      return 0;
+    }
     return 1;
   }
 

@@ -45,6 +45,8 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -70,6 +72,7 @@ import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -81,6 +84,9 @@ import org.eclipse.swt.widgets.Label;
  *
  */
 public class GridEditor {
+
+  private static final String NO_TOKENS_MESSAGE =
+      "The data source does not contain any tokens, and cannot be displayed.";
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
 
@@ -188,8 +194,6 @@ public class GridEditor {
       bodyDataProvider.setDsAndResolveGraph(ds);
       // Refresh all layers
       table.refresh();
-    } else {
-      // Do nothing
     }
   }
 
@@ -218,6 +222,7 @@ public class GridEditor {
    * @param parent The parent composite
    */
   private void addTextSelectionDropdown(Composite parent) {
+    final Label messageLabel = new Label(parent, SWT.NONE);
     Composite dropdownGroup = new Composite(parent, SWT.NONE);
     dropdownGroup.setLayout(new GridLayout(2, false));
     GridDataFactory.fillDefaults().grab(true, false).applyTo(dropdownGroup);
@@ -226,6 +231,13 @@ public class GridEditor {
     label.setText("Data source:");
 
     final ComboViewer viewer = new ComboViewer(dropdownGroup, SWT.READ_ONLY);
+
+
+    final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
+    Image errorImage = FieldDecorationRegistry.getDefault()
+        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+    deco.setShowOnlyOnFocus(false);
+
     viewer.setContentProvider(ArrayContentProvider.getInstance());
     viewer.setLabelProvider(new LabelProvider() {
       @Override
@@ -242,14 +254,36 @@ public class GridEditor {
       public void selectionChanged(SelectionChangedEvent event) {
         IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         if (selection.size() > 0 && selection.getFirstElement() instanceof STextualDS) {
-          selectionService.setSelection(
-              selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+          // Dispose select message, once a selection is made, selection can never be null or empty
+          // again.
+          messageLabel.dispose();
+          parent.layout();
+          // Set decoration depending on whether there are tokens in the data source.
+          if (((STextualDS) selection.getFirstElement()).getInRelations().size() == 0) {
+            deco.setDescriptionText(NO_TOKENS_MESSAGE);
+            deco.setImage(errorImage);
+            // Hide table
+            table.setVisible(false);
+            parent.layout();
+          } else {
+            deco.setDescriptionText(null);
+            deco.setImage(null);
+            selectionService.setSelection(
+                selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+            // Show table
+            table.setVisible(true);
+            parent.layout();
+          }
         }
       }
     });
     viewer.setInput(graph.getTextualDSs());
     if (graph.getTextualDSs().size() == 1) {
       viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
+    } else {
+      messageLabel.setText("Please select a data source!");
+      messageLabel.setVisible(true);
+      parent.layout();
     }
   }
 
