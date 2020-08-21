@@ -43,9 +43,9 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
     btnRadioButton.setText("EXMARaLDA format (*.exb)");
   }
 
-  public Optional<Format> getSelectedFormat() {
+  public Optional<ImportFormat> getSelectedFormat() {
     if(btnRadioButton.getSelection()) {
-      return Optional.of(Format.Exmaralda);
+      return Optional.of(ImportFormat.Exmaralda);
     }
     return Optional.empty();
   }

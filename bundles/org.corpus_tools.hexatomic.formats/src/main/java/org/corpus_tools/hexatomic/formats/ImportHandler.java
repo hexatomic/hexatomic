@@ -13,8 +13,7 @@ public class ImportHandler {
       WizardDialog dialog = new WizardDialog(shell, new ImportWizard(errorService));
       dialog.open();
     } catch (Exception e) {
-      errorService.handleException("Could not initialize Pepper modules", e,
-          PepperImportWorkflow.class);
+      errorService.handleException("Could not initialize Pepper modules", e, ImportHandler.class);
     }
   }
 }
