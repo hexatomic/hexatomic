@@ -1,6 +1,7 @@
 package org.corpus_tools.hexatomic.formats;
 
 import java.io.File;
+import java.util.Optional;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -54,7 +55,7 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
         String result = corpusDir.open();
         if (result != null) {
           txtDirectoryPath.setText(result);
-          checkIfPageComplete();
+          setPageComplete(getCorpusPath().isPresent());
         }
       }
     });
@@ -62,14 +63,14 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     setPageComplete(false);
   }
 
-  protected void checkIfPageComplete() {
-    setPageComplete(false);
+  public Optional<File> getCorpusPath() {
     if (!txtDirectoryPath.getText().isEmpty()) {
       // Check if the path exists and is a directory
       File f = new File(txtDirectoryPath.getText());
       if (f.isDirectory()) {
-        setPageComplete(true);
+        return Optional.of(f);
       }
     }
+    return Optional.empty();
   }
 }

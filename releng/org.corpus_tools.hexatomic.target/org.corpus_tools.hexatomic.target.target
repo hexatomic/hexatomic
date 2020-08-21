@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1592811653">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1598002376">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="4.15.0.I20200305-0155"/>
@@ -35,6 +35,11 @@
       <unit id="org.corpus-tools.salt-api" version="3.4.2"/>
       <unit id="org.corpus-tools.salt-extensions" version="3.4.2"/>
       <repository location="https://korpling.github.io/salt/p2/salt-3.4/"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
+      <unit id="org.corpus-tools.pepper-lib" version="3.4.0"/>
+      <unit id="org.corpus-tools.pepper-framework" version="3.4.0"/>
+      <repository location="https://korpling.github.io/pepper/p2/pepper-3.4"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="1.6.0.201909181823"/>
