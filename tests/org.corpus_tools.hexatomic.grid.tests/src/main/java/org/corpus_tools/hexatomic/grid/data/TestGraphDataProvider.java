@@ -73,7 +73,7 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetDataValueEmptyGraph() {
-    assertEquals("Please select data source!", fixture.getDataValue(0, 0));
+    assertEquals(null, fixture.getDataValue(0, 0));
     assertEquals(null, fixture.getDataValue(1, 1));
     assertEquals(null, fixture.getDataValue(1, 0));
     assertEquals(null, fixture.getDataValue(0, 1));
@@ -199,10 +199,10 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetColumnCount() {
-    assertEquals(1, fixture.getColumnCount());
+    assertEquals(0, fixture.getColumnCount());
 
     fixture.setGraph(exampleGraph);
-    assertEquals(1, fixture.getColumnCount());
+    assertEquals(0, fixture.getColumnCount());
 
     fixture.setDsAndResolveGraph(exampleText);
     assertEquals(4, fixture.getColumnCount());
@@ -217,10 +217,10 @@ class TestGraphDataProvider {
    */
   @Test
   final void testGetRowCount() {
-    assertEquals(1, fixture.getRowCount());
+    assertEquals(0, fixture.getRowCount());
 
     fixture.setGraph(exampleGraph);
-    assertEquals(1, fixture.getRowCount());
+    assertEquals(0, fixture.getRowCount());
 
     fixture.setDsAndResolveGraph(exampleText);
     assertEquals(11, fixture.getRowCount());
