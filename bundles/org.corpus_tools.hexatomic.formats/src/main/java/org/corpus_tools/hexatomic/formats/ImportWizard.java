@@ -11,10 +11,8 @@ import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
-import org.corpus_tools.pepper.common.PepperConfiguration;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
-import org.corpus_tools.pepper.core.PepperImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -22,18 +20,13 @@ public class ImportWizard extends Wizard {
 
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.Import);
   private final ImporterSelectionPage importerPage = new ImporterSelectionPage();
-  private final Pepper pepper;
+
   private final ErrorService errorService;
 
   public ImportWizard(ErrorService errorService) {
     super();
     this.errorService = errorService;
     setNeedsProgressMonitor(true);
-
-    PepperConfiguration pepperConf = new PepperConfiguration();
-    pepper = new PepperImpl();
-    pepper.setConfiguration(pepperConf);
-
   }
 
   @Override
@@ -52,9 +45,10 @@ public class ImportWizard extends Wizard {
   public boolean performFinish() {
     Optional<File> corpusPath = corpusPathPage.getCorpusPath();
     Optional<ImportFormat> selectedFormat = importerPage.getSelectedFormat();
-    if (corpusPath.isPresent() && selectedFormat.isPresent()) {
-      String jobId = pepper.createJob();
-      PepperJob job = pepper.getJob(jobId);
+    Optional<Pepper> pepper = Activator.getPepper();
+    if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
+      String jobId = pepper.get().createJob();
+      PepperJob job = pepper.get().getJob(jobId);
 
       // Create the import specification
       StepDesc importStep = selectedFormat.get().createJobSpec();
