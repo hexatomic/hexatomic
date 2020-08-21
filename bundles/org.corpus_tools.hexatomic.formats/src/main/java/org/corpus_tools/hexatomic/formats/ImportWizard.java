@@ -18,6 +18,7 @@ public class ImportWizard extends Wizard {
     @Override
     public void addPages() {
       addPage(new CorpusPathSelectionPage(Type.Import));
+      addPage(new ImporterSelectionPage());
     }
 
 	@Override
