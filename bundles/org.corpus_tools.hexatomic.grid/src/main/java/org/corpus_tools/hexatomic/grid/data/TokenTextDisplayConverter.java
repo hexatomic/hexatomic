@@ -36,7 +36,7 @@ public class TokenTextDisplayConverter extends DisplayConverter {
       SToken token = (SToken) canonicalValue;
       return token.getGraph().getText(token);
     } else {
-      throw new RuntimeException("Found a non-token in a column that is reserved for tokens!");
+      return null;
     }
   }
 

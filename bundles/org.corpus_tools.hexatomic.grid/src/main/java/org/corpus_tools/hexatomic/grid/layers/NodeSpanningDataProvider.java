@@ -87,9 +87,9 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
       }
 
       // Get underlying node for the given column
-      SStructuredNode current = graphDataProvider.getNode(columnPos, rowPosition);
+      SStructuredNode current = graphDataProvider.getDataValue(columnPos, rowPosition);
       // Get underlying node for the column left of the given column
-      SStructuredNode before = graphDataProvider.getNode(columnPos - 1, rowPosition);
+      SStructuredNode before = graphDataProvider.getDataValue(columnPos - 1, rowPosition);
 
       if (valuesNotEqual(current, before)) {
         // Values are not equal, so stop here and return the given column position
@@ -119,9 +119,9 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
       }
 
       // Get the underlying node of the given row
-      SStructuredNode current = graphDataProvider.getNode(columnPosition, rowPos);
+      SStructuredNode current = graphDataProvider.getDataValue(columnPosition, rowPos);
       // Get the underlying node of the row above
-      SStructuredNode before = graphDataProvider.getNode(columnPosition, rowPos - 1);
+      SStructuredNode before = graphDataProvider.getDataValue(columnPosition, rowPos - 1);
 
       if (valuesNotEqual(current, before)) {
         // Values are not equal, so stop here and return the given row position
@@ -145,8 +145,8 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
     int span = 1;
 
     while (columnPosition < getColumnCount() - 1
-        && !valuesNotEqual(graphDataProvider.getNode(columnPosition, rowPosition),
-            graphDataProvider.getNode(columnPosition + 1, rowPosition))) {
+        && !valuesNotEqual(graphDataProvider.getDataValue(columnPosition, rowPosition),
+            graphDataProvider.getDataValue(columnPosition + 1, rowPosition))) {
       span++;
       columnPosition++;
     }
@@ -167,8 +167,8 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
     int span = 1;
 
     while (rowPosition < getRowCount() - 1
-        && !valuesNotEqual(graphDataProvider.getNode(columnPosition, rowPosition),
-            graphDataProvider.getNode(columnPosition, rowPosition + 1))) {
+        && !valuesNotEqual(graphDataProvider.getDataValue(columnPosition, rowPosition),
+            graphDataProvider.getDataValue(columnPosition, rowPosition + 1))) {
       span++;
       rowPosition++;
     }
