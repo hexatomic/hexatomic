@@ -46,7 +46,6 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
   private static final String CELL_EDITOR = "CELL_EDITOR";
   private static final String TOKEN_COLUMN_CONFIG_LABEL = "TOKEN_COLUMN_CONFIG_LABEL";
   private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
-  private static final String CONVERTED_TOKEN_COLUMN_LABEL = "CONVERTED_TOKEN_COLUMN_LABEL";
   private final LabelAccumulator labelAccumulator;
   private final SelectionLayer selectionLayer;
 
@@ -57,7 +56,6 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   @Override
   public void configureRegistry(IConfigRegistry configRegistry) {
-    // Convert values in cells
     // Make cells editable
     configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
         IEditableRule.ALWAYS_EDITABLE);
@@ -75,6 +73,7 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   private void tagConvertedColumns(IConfigRegistry configRegistry) {
     labelAccumulator.registerOverrides(CONVERTED_COLUMN_LABEL);
+    // Unregister the token column, as this is handled via TOKEN_COLUMN_CONFIG_LABEL
     labelAccumulator.unregisterOverrides(0, CONVERTED_COLUMN_LABEL);
   }
 
