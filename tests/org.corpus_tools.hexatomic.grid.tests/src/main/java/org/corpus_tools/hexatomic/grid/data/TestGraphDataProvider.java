@@ -289,10 +289,10 @@ class TestGraphDataProvider {
     fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
-    assertNull(fixture.getNode(4, 0));
+    assertNull(fixture.getDataValue(4, 0));
     assertNull(fixture.getDataValue(4, 0));
     fixture.setDataValue(4, 0, "test");
-    SStructuredNode node = fixture.getNode(4, 0);
+    SStructuredNode node = (SStructuredNode) fixture.getDataValue(4, 0);
     assertNotNull(node);
     assertTrue(node instanceof SSpan);
     assertEquals(1, overlappingExampleGraph.getOverlappedTokens(node).size());
@@ -307,10 +307,10 @@ class TestGraphDataProvider {
     fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
-    assertNull(fixture.getNode(1, 1));
+    assertNull(fixture.getDataValue(1, 1));
     assertNull(fixture.getDataValue(1, 1));
     fixture.setDataValue(1, 1, "test");
-    SStructuredNode node = fixture.getNode(1, 1);
+    SStructuredNode node = (SStructuredNode) fixture.getDataValue(1, 1);
     assertNotNull(node);
     assertTrue(node instanceof SToken);
     assertSame(overlappingExampleGraph.getSortedTokenByText().get(1), node);
@@ -325,32 +325,27 @@ class TestGraphDataProvider {
 
     // Remove single cell span annotation and delete span
     assertEquals("val_span_1", fixture.getDataValue(2, 0));
-    final SStructuredNode originalNodeToRemove1 = fixture.getNode(2, 0);
+    final SStructuredNode originalNodeToRemove1 = (SStructuredNode) fixture.getDataValue(2, 0);
     fixture.setDataValue(2, 0, null);
     assertNull(fixture.getDataValue(2, 0));
-    assertNull(fixture.getNode(2, 0));
+    assertNull(fixture.getDataValue(2, 0));
     assertNull(overlappingExampleGraph.getNode(originalNodeToRemove1.getId()));
 
     // Remove data from one span cell in multi-cell annotation and remove span
     assertEquals("val_span_2", fixture.getDataValue(2, 1));
-    final SStructuredNode originalNodeToRemove2 = fixture.getNode(2, 1);
+    final SStructuredNode originalNodeToRemove2 = fixture.getDataValue(2, 1);
     fixture.setDataValue(2, 1, null);
     assertNull(fixture.getDataValue(2, 1));
-    assertNull(fixture.getNode(2, 1));
     assertNull(fixture.getDataValue(2, 2));
-    assertNull(fixture.getNode(2, 2));
     assertNull(fixture.getDataValue(2, 3));
-    assertNull(fixture.getNode(2, 3));
     assertNull(fixture.getDataValue(2, 4));
-    assertNull(fixture.getNode(2, 4));
     assertNull(overlappingExampleGraph.getNode(originalNodeToRemove2.getId()));
 
     // Remove token annotation but don't remove token
     assertEquals("six_tok_anno_3", fixture.getDataValue(1, 3));
-    final SStructuredNode nodeNotToRemove = fixture.getNode(1, 3);
+    final SStructuredNode nodeNotToRemove = fixture.getDataValue(1, 3);
     fixture.setDataValue(1, 3, null);
     assertNull(fixture.getDataValue(1, 3));
-    assertNull(fixture.getNode(1, 3));
     assertEquals(nodeNotToRemove, overlappingExampleGraph.getNode(nodeNotToRemove.getId()));
   }
 
