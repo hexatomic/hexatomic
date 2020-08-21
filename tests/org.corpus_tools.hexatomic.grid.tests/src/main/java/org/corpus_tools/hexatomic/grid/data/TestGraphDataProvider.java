@@ -13,7 +13,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
@@ -374,20 +373,15 @@ class TestGraphDataProvider {
     fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
+    assertNull(fixture.getDataValue(4, 0));
     fixture.setDataValue(4, 0, "ABC");
-    // Pick the span that's been created last, i.e., that has none of the known IDs
-    SSpan addedSpan = null;
-    for (SSpan span : overlappingExampleGraph.getSpans()) {
-      List<String> knownIds = Arrays.asList(
-          new String[] {"sSpan1", "sSpan2", "sSpan3", "sSpan4", "sSpan5", "sSpan6", "sSpan7"});
-      if (!knownIds.contains(span.getId())) {
-        addedSpan = span;
-      }
-    }
-    assertNotNull(addedSpan);
-    assertEquals("ABC", fixture.getDataValue(4, 0));
+    assertTrue(fixture.getDataValue(4, 0) instanceof SSpan);
+    SStructuredNode newSpan = fixture.getDataValue(4, 0);
     assertEquals(8, overlappingExampleGraph.getSpans().size());
-    SAnnotation annotation = addedSpan.getAnnotation("five", "span_2");
+    assertNotNull(overlappingExampleGraph.getNode(newSpan.getId()));
+    List<SToken> overlappedTokens = overlappingExampleGraph.getOverlappedTokens(newSpan);
+    assertEquals(1, overlappedTokens.size());
+    SAnnotation annotation = newSpan.getAnnotation("five", "span_2");
     assertNotNull(annotation);
     assertEquals("ABC", annotation.getValue());
   }
@@ -402,24 +396,18 @@ class TestGraphDataProvider {
     fixture.setGraph(exampleGraph);
     fixture.setDsAndResolveGraph(exampleText);
 
+    assertNull(fixture.getDataValue(3, 12));
     fixture.setDataValue(3, 12, "ABC");
-    assertEquals("ABC", fixture.getDataValue(3, 12));
+    assertTrue(fixture.getDataValue(3, 12) instanceof SSpan);
+    SStructuredNode newSpan = fixture.getDataValue(3, 12);
     assertEquals(4, exampleGraph.getSpans().size());
-    SSpan addedSpan = null;
-    for (SSpan span : exampleGraph.getSpans()) {
-      List<String> knownIds = Arrays.asList(new String[] {"IS_span1", "IS_span2", "sSpan3"});
-      if (!knownIds.contains(span.getId())) {
-        addedSpan = span;
-      }
-    }
-    assertNotNull(addedSpan);
-    List<SToken> overlappedTokens = exampleGraph.getOverlappedTokens(addedSpan);
+    assertNotNull(exampleGraph.getNode(newSpan.getId()));
+    List<SToken> overlappedTokens = exampleGraph.getOverlappedTokens(newSpan);
     assertEquals(1, overlappedTokens.size());
     assertEquals(token, overlappedTokens.get(0));
-    SAnnotation annotation = addedSpan.getAnnotation(null, "Inf-Struct");
+    SAnnotation annotation = newSpan.getAnnotation(null, "Inf-Struct");
     assertNotNull(annotation);
     assertEquals("ABC", annotation.getValue());
-
   }
 
   private SDocumentGraph retrieveGraph(String path) {
