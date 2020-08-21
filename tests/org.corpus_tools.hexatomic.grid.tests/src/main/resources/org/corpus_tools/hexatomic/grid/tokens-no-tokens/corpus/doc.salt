@@ -5,7 +5,7 @@
 	<nodes xsi:type="sDocumentStructure:STextualDS">
 		<labels xsi:type="saltCore:SFeature" namespace="saltCommon" name="SDATA" value="T::This is a birthday pony!"/>
 		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sText1"/>
-		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sText1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::No tokens"/>
 	</nodes>
 	<nodes xsi:type="sDocumentStructure:STextualDS">
 		<labels xsi:type="saltCore:SFeature" namespace="saltCommon" name="SDATA" value="T::Only token annotations."/>
