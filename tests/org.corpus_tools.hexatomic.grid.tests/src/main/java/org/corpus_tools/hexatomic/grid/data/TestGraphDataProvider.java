@@ -25,6 +25,7 @@ import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -162,35 +163,56 @@ class TestGraphDataProvider {
     fixture.setGraph(overlappingExampleGraph);
     fixture.setDsAndResolveGraph(overlappingExampleText);
 
-    assertEquals("Overlapping", fixture.getDataValue(0, 0));
-    assertEquals("spans", fixture.getDataValue(0, 1));
-    assertEquals(",", fixture.getDataValue(0, 2));
-    assertEquals("etc", fixture.getDataValue(0, 3));
-    assertEquals(".", fixture.getDataValue(0, 4));
+    List<SToken> tokens = overlappingExampleGraph.getSortedTokenByText();
 
-    assertEquals("six_tok_anno_0", fixture.getDataValue(1, 0));
+    assertEquals("Overlapping", overlappingExampleGraph.getText(fixture.getDataValue(0, 0)));
+    assertEquals(tokens.get(0), fixture.getDataValue(0, 0));
+    assertEquals("spans", overlappingExampleGraph.getText(fixture.getDataValue(0, 1)));
+    assertEquals(tokens.get(1), fixture.getDataValue(0, 1));
+    assertEquals(",", overlappingExampleGraph.getText(fixture.getDataValue(0, 2)));
+    assertEquals(tokens.get(2), fixture.getDataValue(0, 2));
+    assertEquals("etc", overlappingExampleGraph.getText(fixture.getDataValue(0, 3)));
+    assertEquals(tokens.get(3), fixture.getDataValue(0, 3));
+    assertEquals(".", overlappingExampleGraph.getText(fixture.getDataValue(0, 4)));
+    assertEquals(tokens.get(4), fixture.getDataValue(0, 4));
+
+    // Check that the tokens have the annotation as per column header
+    String qualifiedName = fixture.getColumns().get(1).getColumnValue();
+    assertEquals(tokens.get(0), fixture.getDataValue(1, 0));
+    assertNotNull(fixture.getDataValue(1, 0).getAnnotation(qualifiedName));
     assertNull(fixture.getDataValue(1, 1));
-    assertEquals("six_tok_anno_2", fixture.getDataValue(1, 2));
-    assertEquals("six_tok_anno_3", fixture.getDataValue(1, 3));
-    assertEquals("six_tok_anno_4", fixture.getDataValue(1, 4));
+    assertEquals(tokens.get(2), fixture.getDataValue(1, 2));
+    assertNotNull(fixture.getDataValue(1, 2).getAnnotation(qualifiedName));
+    assertEquals(tokens.get(3), fixture.getDataValue(1, 3));
+    assertNotNull(fixture.getDataValue(1, 3).getAnnotation(qualifiedName));
+    assertEquals(tokens.get(4), fixture.getDataValue(1, 4));
+    assertNotNull(fixture.getDataValue(1, 4).getAnnotation(qualifiedName));
 
-    assertEquals("val_span_1", fixture.getDataValue(2, 0));
-    assertEquals("val_span_2", fixture.getDataValue(2, 1));
-    assertEquals("val_span_2", fixture.getDataValue(2, 2));
-    assertEquals("val_span_2", fixture.getDataValue(2, 3));
-    assertEquals("val_span_2", fixture.getDataValue(2, 4));
+    SNode span1 = overlappingExampleGraph.getNodesByName("sSpan1").get(0);
+    SNode span2 = overlappingExampleGraph.getNodesByName("sSpan2").get(0);
+    SNode span3 = overlappingExampleGraph.getNodesByName("sSpan3").get(0);
+    SNode span4 = overlappingExampleGraph.getNodesByName("sSpan4").get(0);
+    SNode span5 = overlappingExampleGraph.getNodesByName("sSpan5").get(0);
+    SNode new1 = overlappingExampleGraph.getNodesByName("sSpan6").get(0);
+    SNode new2 = overlappingExampleGraph.getNodesByName("sSpan7").get(0);
 
-    assertEquals("val_span_3", fixture.getDataValue(3, 0));
-    assertEquals("val_span_3", fixture.getDataValue(3, 1));
-    assertEquals("val_span_4", fixture.getDataValue(3, 2));
-    assertEquals("val_span_5", fixture.getDataValue(3, 3));
-    assertEquals("val_span_5", fixture.getDataValue(3, 4));
+    assertEquals(span1, fixture.getDataValue(2, 0));
+    assertEquals(span2, fixture.getDataValue(2, 1));
+    assertEquals(span2, fixture.getDataValue(2, 2));
+    assertEquals(span2, fixture.getDataValue(2, 3));
+    assertEquals(span2, fixture.getDataValue(2, 4));
+
+    assertEquals(span3, fixture.getDataValue(3, 0));
+    assertEquals(span3, fixture.getDataValue(3, 1));
+    assertEquals(span4, fixture.getDataValue(3, 2));
+    assertEquals(span5, fixture.getDataValue(3, 3));
+    assertEquals(span5, fixture.getDataValue(3, 4));
 
     assertNull(fixture.getDataValue(4, 0));
-    assertEquals("val_span_new1", fixture.getDataValue(4, 1));
-    assertEquals("val_span_new1", fixture.getDataValue(4, 2));
-    assertEquals("val_span_new2", fixture.getDataValue(4, 3));
-    assertEquals("val_span_new2", fixture.getDataValue(4, 4));
+    assertEquals(new1, fixture.getDataValue(4, 1));
+    assertEquals(new1, fixture.getDataValue(4, 2));
+    assertEquals(new2, fixture.getDataValue(4, 3));
+    assertEquals(new2, fixture.getDataValue(4, 4));
   }
 
   /**
@@ -298,7 +320,7 @@ class TestGraphDataProvider {
     assertEquals(1, overlappingExampleGraph.getOverlappedTokens(node).size());
     assertEquals(0, overlappingExampleGraph.getSortedTokenByText()
         .indexOf(overlappingExampleGraph.getOverlappedTokens(node).get(0)));
-    assertEquals("test", fixture.getDataValue(4, 0));
+    assertEquals(node, fixture.getDataValue(4, 0));
 
   }
 
