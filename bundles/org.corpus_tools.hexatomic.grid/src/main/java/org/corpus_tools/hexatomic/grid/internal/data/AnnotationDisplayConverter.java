@@ -64,8 +64,9 @@ public class AnnotationDisplayConverter extends ContextualDisplayConverter {
   @Override
   public Object displayToCanonicalValue(ILayerCell cell, IConfigRegistry configRegistry,
       Object displayValue) {
-    // Not implemented
-    return null;
+    // Downstream consumers to handle "conversion",
+    // e.g., GraphDataProvider handles this anyway.
+    return displayValue;
   }
 
 
