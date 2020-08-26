@@ -262,17 +262,21 @@ public class GridEditor {
             Image errorImage = FieldDecorationRegistry.getDefault()
                 .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
             deco.setImage(errorImage);
-            // Hide table
-            table.setVisible(false);
-            parent.layout();
+            if (table != null) {
+              // Hide table
+              table.setVisible(false);
+              parent.layout();
+            }
           } else {
             deco.setDescriptionText(null);
             deco.setImage(null);
             selectionService.setSelection(
                 selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
-            // Show table
-            table.setVisible(true);
-            parent.layout();
+            if (table != null) {
+              // Show table
+              table.setVisible(true);
+              parent.layout();
+            }
           }
         }
       }
