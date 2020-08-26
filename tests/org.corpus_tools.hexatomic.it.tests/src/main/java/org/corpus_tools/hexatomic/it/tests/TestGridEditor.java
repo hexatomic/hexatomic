@@ -14,6 +14,8 @@ import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.internal.style.StyleConfiguration;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -212,12 +214,27 @@ public class TestGridEditor {
     assertEquals("Inf-Struct", table.getDataValueByPosition(4, 0));
 
     // Test cells
-    assertEquals("Is", table.getDataValueByPosition(1, 1));
-    assertEquals("?", table.getDataValueByPosition(1, 11));
-    assertEquals("be", table.getDataValueByPosition(2, 1));
-    assertEquals("contrast-focus", table.getDataValueByPosition(4, 1));
-    assertEquals("topic", table.getDataValueByPosition(4, 2));
-    assertEquals("topic", table.getDataValueByPosition(4, 11));
+    // Token text
+    Object token1Obj = table.getDataValueByPosition(1, 1);
+    assertTrue(token1Obj instanceof SToken);
+    SToken token1 = (SToken) token1Obj;
+    assertEquals("Is", (token1).getGraph().getText(token1));
+    Object token2Obj = table.getDataValueByPosition(1, 11);
+    assertTrue(token2Obj instanceof SToken);
+    SToken token2 = (SToken) token2Obj;
+    assertEquals("?", token2.getGraph().getText(token2));
+
+    // Annotations
+    String lemmaHeader = table.getDataValueByPosition(2, 0).toString();
+    assertEquals("be", ((SAnnotationContainer) table.getDataValueByPosition(2, 1))
+        .getAnnotation(lemmaHeader).getValue());
+    String infStructHeader = table.getDataValueByPosition(4, 0).toString();
+    assertEquals("contrast-focus", ((SAnnotationContainer) table.getDataValueByPosition(4, 1))
+        .getAnnotation(infStructHeader).getValue());
+    assertEquals("topic", ((SAnnotationContainer) table.getDataValueByPosition(4, 2))
+        .getAnnotation(infStructHeader).getValue());
+    assertEquals("topic", ((SAnnotationContainer) table.getDataValueByPosition(4, 11))
+        .getAnnotation(infStructHeader).getValue());
   }
 
   @Test
