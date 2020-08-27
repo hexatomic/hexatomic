@@ -557,8 +557,9 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    assertTrue(contextMenu.menuItems().isEmpty());
+    assertThrows(WidgetNotFoundException.class, () -> contextMenu.contextMenu());
   }
 
 }
