@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -246,29 +247,36 @@ public class TestGridEditor {
   void testShowOverlapSaltExample() {
     openOverlapExample();
 
-    NatTable table = bot.widget(widgetOfType(NatTable.class));
-    assertNotNull(table);
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
 
     // Check number of rows and columns (5 + 1 header row, 5 + 1 header column)
-    assertEquals(6, table.getRowCount());
-    assertEquals(6, table.getColumnCount());
-    //
-    // // Test headers
-    assertEquals(null, table.getDataValueByPosition(0, 0));
-    assertEquals(2, table.getDataValueByPosition(0, 2));
-    assertEquals(5, table.getDataValueByPosition(0, 5));
-    assertEquals("Token", table.getDataValueByPosition(1, 0));
-    assertEquals("five::span_1", table.getDataValueByPosition(3, 0));
-    assertEquals("five::span_1 (2)", table.getDataValueByPosition(4, 0));
-    assertEquals("five::span_2", table.getDataValueByPosition(5, 0));
-    //
-    // // Test cells
-    assertEquals("val_span_1", table.getDataValueByPosition(3, 1));
-    assertEquals("val_span_2", table.getDataValueByPosition(3, 2));
-    assertEquals("val_span_2", table.getDataValueByPosition(3, 5));
-    assertEquals("val_span_3", table.getDataValueByPosition(4, 1));
-    assertEquals("val_span_3", table.getDataValueByPosition(4, 2));
-    assertEquals(null, table.getDataValueByPosition(5, 1));
+    assertEquals(6, natTable.getRowCount());
+    assertEquals(6, natTable.getColumnCount());
+
+    // Test headers
+    assertEquals("", table.getCellDataValueByPosition(0, 0));
+    assertEquals("2", table.getCellDataValueByPosition(2, 0));
+    assertEquals("5", table.getCellDataValueByPosition(5, 0));
+    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+    assertEquals("five::span_1", table.getCellDataValueByPosition(0, 3));
+    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+
+    // Test cells
+    assertEquals("val_span_1", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 1))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_2", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 2))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_2", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 5))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_3", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_3", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("", table.getCellDataValueByPosition(1, 5));
+    assertNull(natTable.getDataValueByPosition(5, 1));
   }
 
   @Test
@@ -445,7 +453,12 @@ public class TestGridEditor {
     table.click(2, 2);
     keyboard.pressShortcut(Keystrokes.SPACE);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+    bot.sleep(3000);
   }
 
   @Test
