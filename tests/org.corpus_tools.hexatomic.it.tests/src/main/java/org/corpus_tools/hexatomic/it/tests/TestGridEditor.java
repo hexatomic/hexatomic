@@ -493,8 +493,11 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(2, 2));
     table.click(2, 2);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
-
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
