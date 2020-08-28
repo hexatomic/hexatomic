@@ -549,7 +549,7 @@ public class TestGridEditor {
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
     // No context menu should exist 
     assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, () -> contextMenu.contextMenu());
+    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
 
   @Test
