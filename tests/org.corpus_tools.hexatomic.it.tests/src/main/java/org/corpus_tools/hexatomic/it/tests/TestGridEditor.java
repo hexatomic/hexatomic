@@ -38,6 +38,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
@@ -600,8 +601,10 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    // No context menu should exist 
+    assertTrue(contextMenu.menuItems().isEmpty());
+    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
 
   @Test
@@ -610,8 +613,10 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    // No context menu should exist
+    assertTrue(contextMenu.menuItems().isEmpty());
+    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
 
 }
