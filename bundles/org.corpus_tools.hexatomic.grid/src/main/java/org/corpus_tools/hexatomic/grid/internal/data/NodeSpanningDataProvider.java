@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.internal.layers;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.Objects;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;

@@ -34,8 +34,8 @@ import org.corpus_tools.hexatomic.grid.internal.configuration.GridLayerConfigura
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.internal.layers.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
