@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,9 +33,9 @@ class TestAnnotationDisplayConverter {
   private ILayerCell nullCell;
 
   /**
-   * Sets up the environment for each unit test.
+   * Sets up the fixture for unit tests.
    * 
-   * @throws java.lang.Exception An exception that is thrown during setup.
+   * @throws java.lang.Exception Any exception during setup
    */
   @BeforeEach
   void setUp() throws Exception {
@@ -83,7 +84,7 @@ class TestAnnotationDisplayConverter {
    */
   @Test
   void testAnnotationDisplayConverter() {
-    new AnnotationDisplayConverter(null);
+    assertThrows(IllegalArgumentException.class, () -> new AnnotationDisplayConverter(null));
     new AnnotationDisplayConverter(dataProvider);
   }
 
