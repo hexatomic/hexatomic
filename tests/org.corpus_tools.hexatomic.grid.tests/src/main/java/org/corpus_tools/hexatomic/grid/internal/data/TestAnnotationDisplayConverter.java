@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.grid.internal.data;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -85,7 +86,7 @@ class TestAnnotationDisplayConverter {
   @Test
   void testAnnotationDisplayConverter() {
     assertThrows(IllegalArgumentException.class, () -> new AnnotationDisplayConverter(null));
-    new AnnotationDisplayConverter(dataProvider);
+    assertDoesNotThrow(() -> new AnnotationDisplayConverter(dataProvider));
   }
 
   /**
