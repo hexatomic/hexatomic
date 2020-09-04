@@ -7,17 +7,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
@@ -25,11 +34,13 @@ import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.util.Difference;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +60,7 @@ class TestProjectManager {
   private EHandlerService handlerService;
 
   private ProjectManager projectManager;
+  private ErrorService errorService;
 
   @BeforeEach
   void setup() {
@@ -57,6 +69,7 @@ class TestProjectManager {
     bot = new SWTWorkbenchBot(ctx);
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
+    errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -69,6 +82,8 @@ class TestProjectManager {
     assertTrue(exampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
+
+    errorService.clearLastException();
 
     // Programmatically start a new salt project to get a clean state
     Map<String, String> params = new HashMap<>();
@@ -100,60 +115,129 @@ class TestProjectManager {
     assertFalse(projectManager.isDirty());
 
     // Load a single document into memory
-    SDocument doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
-    SDocumentGraph doc1Graph = doc1.getDocumentGraph();
-    assertNotNull(doc1Graph);
+    Optional<SDocument> optionalDoc1 =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    assertTrue(optionalDoc1.isPresent());
+    if (optionalDoc1.isPresent()) {
+      SDocument doc1 = optionalDoc1.get();
+      SDocumentGraph doc1Graph = doc1.getDocumentGraph();
+      assertNotNull(doc1Graph);
 
-    // Apply some changes to the loaded document graph
-    List<SToken> tokens = doc1Graph.getSortedTokenByText();
-    doc1Graph.createSpan(tokens.get(0), tokens.get(1));
+      // Apply some changes to the loaded document graph
+      List<SToken> tokens = doc1Graph.getSortedTokenByText();
+      doc1Graph.createSpan(tokens.get(0), tokens.get(1));
 
-    assertTrue(projectManager.isDirty());
+      assertTrue(projectManager.isDirty());
 
-    // Save the project to a different location
+      // Save the project to a different location
+      Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
+
+      Map<String, String> params = new HashMap<>();
+      params.put(CommandParams.LOCATION, tmpDir.toString());
+      final ParameterizedCommand cmdSaveAs = commandService
+          .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
+
+      UIThreadRunnable.syncExec(() -> {
+        handlerService.executeHandler(cmdSaveAs);
+      });
+
+      assertFalse(projectManager.isDirty());
+
+      // Compare the saved project with the one currently in memory
+      SaltProject savedProject =
+          SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+
+      SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
+          .getNode("salt:/rootCorpus/subCorpus1/doc1");
+
+      Set<Difference> docDiff =
+          SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+      assertThat(docDiff, is(empty()));
+
+      // Apply some more changes to the loaded document graph and save to same
+      // location
+      optionalDoc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+      assertTrue(optionalDoc1.isPresent());
+      if (optionalDoc1.isPresent()) {
+        doc1 = optionalDoc1.get();
+        doc1Graph = doc1.getDocumentGraph();
+        assertNotNull(doc1Graph);
+        tokens = doc1Graph.getSortedTokenByText();
+        doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+        assertTrue(projectManager.isDirty());
+
+        final ParameterizedCommand cmdSave = commandService
+            .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project");
+
+        UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
+
+        assertFalse(projectManager.isDirty());
+
+        savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
+
+        savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
+            .getNode("salt:/rootCorpus/subCorpus1/doc1");
+
+        docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
+        assertThat(docDiff, is(empty()));
+      }
+    }
+
+  }
+
+  @Test
+  @Order(2)
+  public void testSaveToInvalidLocation() {
+
+    projectManager.open(exampleProjectUri);
+    assertFalse(errorService.getLastException().isPresent());
+
+    // Use an URI which can't be saved to
+    UIThreadRunnable.syncExec(() -> projectManager.saveTo(URI.createURI("http://localhost"),
+        bot.getDisplay().getActiveShell()));
+    Optional<IStatus> lastException =
+        UIThreadRunnable.syncExec(() -> errorService.getLastException());
+    // Check the error has been recorded
+    assertTrue(lastException.isPresent());
+    if (lastException.isPresent()) {
+      assertTrue(lastException.get().getException() instanceof InvocationTargetException);
+    }
+  }
+
+  @Test
+  @Order(3)
+  public void testSaveToInterrupted()
+      throws IOException, InvocationTargetException, InterruptedException {
+
+    // Mock a progress monitor dialog that interrupts and spy on the project manager
+    // to allow returning the mocked dialog instead of the real one.
+    ProjectManager spyingManager = spy(projectManager);
+    ProgressMonitorDialog dialog = mock(ProgressMonitorDialog.class);
+
+    when(spyingManager.createProgressMonitorDialog(any())).thenReturn(dialog);
+    // The mocked dialog should throw an exception when it is run
+    doThrow(InterruptedException.class).when(dialog).run(anyBoolean(), anyBoolean(), any());
+    spyingManager.open(exampleProjectUri);
+
+    // Check no error has been set yet
+    assertFalse(errorService.getLastException().isPresent());
+
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
     UIThreadRunnable.syncExec(() -> {
-      projectManager.saveTo(URI.createFileURI(tmpDir.toString()),
+      // Call saveTo which should show an error
+      spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
           bot.getDisplay().getActiveShell());
+
     });
-
-    assertFalse(projectManager.isDirty());
-
-    // Compare the saved project with the one currently in memory
-    SaltProject savedProject =
-        SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
-
-    SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-        .getNode("salt:/rootCorpus/subCorpus1/doc1");
-
-    Set<Difference> docDiff =
-        SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
-    assertThat(docDiff, is(empty()));
-
-    // Apply some more changes to the loaded document graph and save to same
-    // location
-    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true).get();
-    doc1Graph = doc1.getDocumentGraph();
-    assertNotNull(doc1Graph);
-    tokens = doc1Graph.getSortedTokenByText();
-    doc1Graph.createSpan(tokens.get(2), tokens.get(3));
-
-    assertTrue(projectManager.isDirty());
-
-    UIThreadRunnable.syncExec(() -> {
-      projectManager.save(bot.getDisplay().getActiveShell());
-    });
-
-    assertFalse(projectManager.isDirty());
-
-    savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
-
-    savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-        .getNode("salt:/rootCorpus/subCorpus1/doc1");
-
-    docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
-    assertThat(docDiff, is(empty()));
-
+    Optional<IStatus> lastException =
+        UIThreadRunnable.syncExec(() -> errorService.getLastException());
+    // Check the error has been recorded
+    assertTrue(lastException.isPresent());
+    if (lastException.isPresent()) {
+      assertTrue(lastException.get().getException() instanceof InterruptedException);
+    }
   }
 }
+

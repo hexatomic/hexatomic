@@ -92,16 +92,10 @@ public class ProjectManager {
   @Inject
   UISynchronize sync;
 
-  private SaltNotificationFactory notificationFactory;
-
   private final Set<Listener> allListeners = new LinkedHashSet<>();
   private boolean listenersActive = true;
 
   private boolean hasUnsavedChanges;
-
-  public ProjectManager() {
-
-  }
 
   @PostConstruct
   void postConstruct() {
@@ -113,7 +107,7 @@ public class ProjectManager {
     this.hasUnsavedChanges = false;
 
     // Allow to register a change listener with Salt
-    notificationFactory = new SaltNotificationFactory();
+    SaltNotificationFactory notificationFactory = new SaltNotificationFactory();
     SaltFactory.setFactory(notificationFactory);
     notificationFactory.addListener(new ProxyListener());
 
@@ -409,15 +403,32 @@ public class ProjectManager {
         }
       };
 
-      ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
+      ProgressMonitorDialog dialog = createProgressMonitorDialog(shell);
 
       dialog.setCancelable(true);
       try {
         dialog.run(true, true, operation);
-      } catch (InvocationTargetException | InterruptedException ex) {
+      } catch (InvocationTargetException ex) {
         errorService.handleException("Could not save project", ex, ProjectManager.class);
+      } catch (InterruptedException ex) {
+        errorService.handleException("Could not save project because thread was interrupted", ex,
+            ProjectManager.class);
+        // Re-interrupt thread to restore the interrupted state
+        Thread.currentThread().interrupt();
       }
     }
+  }
+
+
+  /**
+   * Helper method to create a new progress monitor.
+   * This is a method so it can be overwritten by other implementations.
+   * 
+   * @param shell A SWT shell.
+   * @return The newly created progress monitor.
+   */
+  public ProgressMonitorDialog createProgressMonitorDialog(Shell shell) {
+    return new ProgressMonitorDialog(shell);
   }
 
 
