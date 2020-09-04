@@ -2,7 +2,7 @@
 <feature
       id="org.corpus_tools.hexatomic"
       label="Hexatomic Core Feature"
-      version="0.5.0.qualifier"
+      version="0.4.3"
       provider-name="Hexatomic Research Project">
 
    <description url="http://www.example.com/description">
