@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -79,6 +81,16 @@ class TestColumn {
         () -> fixtureTokenTextColumn.setRow(0, mock(SToken.class)));
   }
 
+  /**
+   * Test method for {@link Column#setRow(int, LabelableElement)}.
+   */
+  @Test
+  final void testSetRowWithNullNode() {
+    fixtureTokenTextColumn.setRow(1, null);
+    assertNull(fixtureTokenTextColumn.getCells().get(1));
+    assertEquals(1, fixtureTokenTextColumn.getBits().cardinality());
+    assertFalse(fixtureTokenTextColumn.getBits().get(1));
+  }
 
 
   /**
@@ -119,6 +131,11 @@ class TestColumn {
     assertEquals("Test", fixtureTokenTextColumn.getDisplayText(1));
     assertEquals("anno1", fixtureAnnotationColumn.getDisplayText(0));
     assertEquals("anno2", fixtureAnnotationColumn.getDisplayText(1));
+    assertNull(fixtureAnnotationColumn.getDisplayText(2));
+    fixtureTokenTextColumn.setRow(2, null);
+    assertNull(fixtureTokenTextColumn.getDisplayText(2));
+    fixtureAnnotationColumn.setRow(2, mock(SSpan.class));
+    assertNull(fixtureAnnotationColumn.getDisplayText(2));
   }
 
   /**
@@ -151,6 +168,15 @@ class TestColumn {
     // Test indexed header
     Column indexedColumn = new Column(ColumnType.SPAN_ANNOTATION, "test", 2);
     assertEquals("test (2)", indexedColumn.getHeader());
+  }
+
+  /**
+   * Test method for {@link Column#getColumnValue()}.
+   */
+  @Test
+  final void testGetColumnValue() {
+    Column column = new Column(ColumnType.SPAN_ANNOTATION, "pass", 2);
+    assertEquals("pass", column.getColumnValue());
   }
 
 }
