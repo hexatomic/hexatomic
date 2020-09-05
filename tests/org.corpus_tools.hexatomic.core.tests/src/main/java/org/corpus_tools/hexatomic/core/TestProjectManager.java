@@ -35,6 +35,7 @@ import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,6 +112,7 @@ class TestProjectManager {
   public void testEventOnOpen() {
     projectManager.open(exampleProjectUri);
     verify(events).send(eq(Topics.PROJECT_LOADED), anyString());
+    verify(events).send(eq(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC), anyString());
     verifyNoMoreInteractions(events);
   }
 

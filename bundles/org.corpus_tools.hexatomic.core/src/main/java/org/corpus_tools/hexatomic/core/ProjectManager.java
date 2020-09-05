@@ -54,6 +54,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -134,16 +135,6 @@ public class ProjectManager {
    */
   public SaltProject getProject() {
     return project;
-  }
-
-  /**
-   * Sets the current project object without changing the on-disk location.
-   * 
-   * @param project The new project object.
-   */
-  public void setProject(SaltProject project) {
-    this.project = project;
-    events.send(Topics.PROJECT_LOADED, this.getLocation().orElse(null));
   }
 
   /*
@@ -247,6 +238,7 @@ public class ProjectManager {
     hasUnsavedChanges = false;
     uiStatus.setDirty(false);
     uiStatus.setLocation(path.toFileString());
+    updateCanExecute();
   }
 
   /**
@@ -397,6 +389,7 @@ public class ProjectManager {
             // Enable the listeners again
             notificationFactory.setSuppressingEvents(false);
             hasUnsavedChanges = false;
+            updateCanExecute();
 
           });
 
@@ -499,8 +492,8 @@ public class ProjectManager {
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
 
-
     events.send(Topics.PROJECT_LOADED, null);
+    updateCanExecute();
   }
 
 
@@ -536,6 +529,7 @@ public class ProjectManager {
     if (changes != null) {
       events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
     }
+    updateCanExecute();
   }
 
   /**
@@ -583,6 +577,7 @@ public class ProjectManager {
       closeEditorsForRemovedDocuments();
 
       events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
+      updateCanExecute();
     }
   }
 
@@ -703,5 +698,12 @@ public class ProjectManager {
   private void projectChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
     hasUnsavedChanges = true;
     uiStatus.setDirty(true);
+  }
+
+  /**
+   * Re-evaluate all @CanExecute methods.
+   */
+  private void updateCanExecute() {
+    events.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
   }
 }
