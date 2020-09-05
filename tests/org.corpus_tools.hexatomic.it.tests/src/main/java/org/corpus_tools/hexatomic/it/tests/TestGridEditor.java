@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
-import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -33,6 +32,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
@@ -59,8 +59,6 @@ public class TestGridEditor {
   private EHandlerService handlerService;
   private EPartService partService;
 
-  private ErrorService errorService = new ErrorService();
-
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   @BeforeEach
@@ -68,8 +66,6 @@ public class TestGridEditor {
     TestHelper.setKeyboardLayout();
 
     IEclipseContext ctx = TestHelper.getEclipseContext();
-
-    ctx.set(ErrorService.class, errorService);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -554,8 +550,10 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    // No context menu should exist 
+    assertTrue(contextMenu.menuItems().isEmpty());
+    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
 
   @Test
@@ -564,7 +562,9 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(1, 1).contextMenu("Delete cell(s)"));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    // No context menu should exist
+    assertTrue(contextMenu.menuItems().isEmpty());
+    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
 }

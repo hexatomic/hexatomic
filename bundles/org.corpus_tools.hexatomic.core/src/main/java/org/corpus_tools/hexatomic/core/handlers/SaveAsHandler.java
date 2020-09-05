@@ -44,7 +44,6 @@ public class SaveAsHandler {
 
   private String lastPath;
 
-
   /**
    * Saves the Salt project and all opened documents.
    * 
@@ -58,14 +57,14 @@ public class SaveAsHandler {
 
     String resultPath;
     if (location == null) {
-      DirectoryDialog dialog = new DirectoryDialog(shell);
-
-      if (lastPath == null && projectManager.getLocation().isPresent()) {
+      java.util.Optional<URI> originalLocation = projectManager.getLocation();
+      if (lastPath == null && originalLocation.isPresent()) {
         // The user did not specifically selected a path to save yet, but we can use the original
         // path from where the corpus was loaded.
-        lastPath = projectManager.getLocation().get().toFileString();
+        lastPath = originalLocation.get().toFileString();
       }
 
+      DirectoryDialog dialog = createDialog(shell);
       if (lastPath != null) {
         dialog.setFilterPath(lastPath);
       }
@@ -85,5 +84,13 @@ public class SaveAsHandler {
   @CanExecute
   public boolean canExecute() {
     return projectManager.isDirty() || projectManager.getLocation().isPresent();
+  }
+
+  public void setProjectManager(ProjectManager projectManager) {
+    this.projectManager = projectManager;
+  }
+
+  protected DirectoryDialog createDialog(Shell shell) {
+    return new DirectoryDialog(shell);
   }
 }

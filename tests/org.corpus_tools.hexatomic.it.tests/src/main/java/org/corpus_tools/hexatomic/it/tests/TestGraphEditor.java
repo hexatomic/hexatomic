@@ -161,7 +161,7 @@ class TestGraphEditor {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-    
+
     partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
@@ -171,12 +171,16 @@ class TestGraphEditor {
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
+
+    errorService.clearLastException();
+
     // Programmatically start a new salt project to get a clean state
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.FORCE_CLOSE, "true");
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
     handlerService.executeHandler(cmd);
+
   }
 
 
@@ -257,13 +261,13 @@ class TestGraphEditor {
     // Check all nodes and edges have been created
     bot.waitUntil(new NumberOfNodesCondition(23));
     bot.waitUntil(new NumberOfConnectionsCondition(22));
-    
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
     SWTUtils.display().syncExec(g::forceFocus);
 
     final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, GET_VIEWPORT);
-    
+
     Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
     // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
@@ -276,8 +280,7 @@ class TestGraphEditor {
 
     // Zoom in so we can move the view with the arrow keys
     // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad keys yet.
-    Keyboard mockKeyboadForGraph =
-        KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
+    Keyboard mockKeyboadForGraph = KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
     KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
     mockKeyboadForGraph.pressShortcut(strokesZoomIn);
 
@@ -285,11 +288,11 @@ class TestGraphEditor {
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x + 25, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.LEFT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
@@ -304,16 +307,14 @@ class TestGraphEditor {
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
-    bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort,
-            new Point(origLocation.x + 250, origLocation.y)));
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x + 250, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
-    bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort,
-            new Point(origLocation.x, origLocation.y + 250)));
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x, origLocation.y + 250)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
@@ -343,30 +344,35 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Get a reference to the open graph
-    SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
-    SDocumentGraph graph = doc.getDocumentGraph();
+    Optional<SDocument> optionalDocument =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    assertTrue(optionalDocument.isPresent());
+    if (optionalDocument.isPresent()) {
+      SDocument doc = optionalDocument.get();
+      SDocumentGraph graph = doc.getDocumentGraph();
 
-    // Before state: no edges between the two structures
-    assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
-        "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
+      // Before state: no edges between the two structures
+      assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
+          "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
 
-    // Add a pointing relation between the two structures
-    enterCommand(ADD_POINTING_COMMMAND);
+      // Add a pointing relation between the two structures
+      enterCommand(ADD_POINTING_COMMMAND);
 
-    // Check that no exception was thrown/handled by UI
-    assertFalse(errorService.getLastException().isPresent());
+      // Check that no exception was thrown/handled by UI
+      assertFalse(errorService.getLastException().isPresent());
 
-    // Check that the edge has been added to the graph
-    List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
-        "salt:/rootCorpus/subCorpus1/doc1#structure5");
-    assertEquals(1, rels.size());
-    assertTrue(rels.get(0) instanceof SPointingRelation);
+      // Check that the edge has been added to the graph
+      List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
+          "salt:/rootCorpus/subCorpus1/doc1#structure5");
+      assertEquals(1, rels.size());
+      assertTrue(rels.get(0) instanceof SPointingRelation);
 
-    Graph g = bot.widget(widgetOfType(Graph.class));
-    assertNotNull(g);
+      Graph g = bot.widget(widgetOfType(Graph.class));
+      assertNotNull(g);
 
-    // Check that the edge was also added as connection in the view
-    bot.waitUntil(new NumberOfConnectionsCondition(23));
+      // Check that the edge was also added as connection in the view
+      bot.waitUntil(new NumberOfConnectionsCondition(23));
+    }
   }
 
   /**
@@ -379,49 +385,54 @@ class TestGraphEditor {
 
     openDefaultExample();
 
+
     // Get a reference to the opened document graph
-    SDocument doc = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1").get();
-    SDocumentGraph graph = doc.getDocumentGraph();
+    Optional<SDocument> optionalDoc =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    assertTrue(optionalDoc.isPresent());
+    if (optionalDoc.isPresent()) {
+      SDocument doc = optionalDoc.get();
+      SDocumentGraph graph = doc.getDocumentGraph();
 
-    STextualDS firstText = graph.getTextualDSs().get(0);
-    final String originalText = firstText.getText();
+      STextualDS firstText = graph.getTextualDSs().get(0);
+      final String originalText = firstText.getText();
 
-    // Add an additional data source to the document graph
-    STextualDS anotherText = graph.createTextualDS("Another text");
-    graph.createToken(anotherText, 0, 7);
-    graph.createToken(anotherText, 8, 12);
+      // Add an additional data source to the document graph
+      STextualDS anotherText = graph.createTextualDS("Another text");
+      graph.createToken(anotherText, 0, 7);
+      graph.createToken(anotherText, 8, 12);
 
-    // Add a checkpoint so the changes are propagated to the view
-    projectManager.addCheckpoint();
+      // Add a checkpoint so the changes are propagated to the view
+      projectManager.addCheckpoint();
 
-    // Select the new text
-    SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-    textRangeTable.select("Another text");
+      // Select the new text
+      SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+      textRangeTable.select("Another text");
 
-    // Wait until the graph has been properly selected
-    bot.waitUntil(new DefaultCondition() {
+      // Wait until the graph has been properly selected
+      bot.waitUntil(new DefaultCondition() {
 
-      @Override
-      public boolean test() throws Exception {
-        return textRangeTable.getTableItem("Another text").isChecked();
-      }
+        @Override
+        public boolean test() throws Exception {
+          return textRangeTable.getTableItem("Another text").isChecked();
+        }
 
-      @Override
-      public String getFailureMessage() {
-        return "Second text segment was not checked";
-      }
-    }, 5000);
+        @Override
+        public String getFailureMessage() {
+          return "Second text segment was not checked";
+        }
+      }, 5000);
 
-    // Add a new tokenized text to the end
-    enterCommand("t has more tokens");
+      // Add a new tokenized text to the end
+      enterCommand("t has more tokens");
 
-    // Check that the right textual data source has been amended
-    assertEquals("Another text has more tokens", anotherText.getText());
+      // Check that the right textual data source has been amended
+      assertEquals("Another text has more tokens", anotherText.getText());
 
-    // Check the original text has not been altered and is displayed correctly
-    assertEquals(originalText, firstText.getText());
-    assertEquals(originalText, textRangeTable.cell(0, 0));
-
+      // Check the original text has not been altered and is displayed correctly
+      assertEquals(originalText, firstText.getText());
+      assertEquals(originalText, textRangeTable.cell(0, 0));
+    }
   }
 
   @Test
@@ -473,10 +484,10 @@ class TestGraphEditor {
   @Order(5)
   void testUndoRedoRendered() {
     openDefaultExample();
-    
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
-    
+
     bot.waitUntil(new NumberOfConnectionsCondition(22));
 
     // Add a pointing relation between the two structures
@@ -484,7 +495,7 @@ class TestGraphEditor {
 
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
-    
+
     // Undo/Redo the changes and check that the view has been updated
     bot.menu("Undo").click();
     bot.waitUntil(new NumberOfConnectionsCondition(22));
