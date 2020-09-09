@@ -46,7 +46,7 @@ class TestStyleConfiguration {
     IStyle spanAnnotationStyle = registry.getConfigAttribute(CellConfigAttributes.CELL_STYLE,
         DisplayMode.NORMAL, StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
     IStyle tokenTextStyle = registry.getConfigAttribute(CellConfigAttributes.CELL_STYLE,
-        DisplayMode.NORMAL, StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+        DisplayMode.NORMAL, StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
 
     assertEquals(GUIHelper.getColor(236, 236, 236),
         emptyCellStyle.getAttributeValue(CellStyleAttributes.BACKGROUND_COLOR));
