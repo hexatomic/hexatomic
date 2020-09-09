@@ -18,14 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
- * Unit tests for {@link AnnotationDisplayConverter}.
+ * Unit tests for {@link GridDisplayConverter}.
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
-class TestAnnotationDisplayConverter {
+class TestGridDisplayConverter {
 
-  private static AnnotationDisplayConverter fixture = null;
+  private static GridDisplayConverter fixture = null;
   private SToken token = null;
   private SSpan span = null;
   private GraphDataProvider dataProvider = null;
@@ -76,7 +76,7 @@ class TestAnnotationDisplayConverter {
     when(nullCell.getColumnIndex()).thenReturn(2);
     when(nullCell.getRowIndex()).thenReturn(0);
 
-    fixture = new AnnotationDisplayConverter(dataProvider);
+    fixture = new GridDisplayConverter(dataProvider);
   }
 
   /**
@@ -85,8 +85,8 @@ class TestAnnotationDisplayConverter {
    */
   @Test
   void testAnnotationDisplayConverter() {
-    assertThrows(IllegalArgumentException.class, () -> new AnnotationDisplayConverter(null));
-    assertDoesNotThrow(() -> new AnnotationDisplayConverter(dataProvider));
+    assertThrows(IllegalArgumentException.class, () -> new GridDisplayConverter(null));
+    assertDoesNotThrow(() -> new GridDisplayConverter(dataProvider));
   }
 
   /**
