@@ -84,7 +84,7 @@ class TestGridDisplayConverter {
    * {@link org.corpus_tools.hexatomic.grid.internal.data.AnnotationDisplayConverter#AnnotationDisplayConverter(org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator)}.
    */
   @Test
-  void testAnnotationDisplayConverter() {
+  void testGridDisplayConverter() {
     assertThrows(IllegalArgumentException.class, () -> new GridDisplayConverter(null));
     assertDoesNotThrow(() -> new GridDisplayConverter(dataProvider));
   }
