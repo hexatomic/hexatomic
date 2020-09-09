@@ -21,9 +21,9 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
-import org.corpus_tools.hexatomic.grid.internal.data.AnnotationDisplayConverter;
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.GridDisplayConverter;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
-import org.corpus_tools.hexatomic.grid.internal.data.TokenTextDisplayConverter;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
@@ -48,8 +48,18 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
   private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
   private final LabelAccumulator labelAccumulator;
   private final SelectionLayer selectionLayer;
+  private final GraphDataProvider bodyDataProvider;
 
-  public EditConfiguration(LabelAccumulator labelAccumulator, SelectionLayer selectionLayer) {
+  /**
+   * Constructor setting fields.
+   * 
+   * @param bodyDataProvider The current data provider for the table being configured
+   * @param labelAccumulator The current label accumulator
+   * @param selectionLayer The current selection layer
+   */
+  public EditConfiguration(GraphDataProvider bodyDataProvider, LabelAccumulator labelAccumulator,
+      SelectionLayer selectionLayer) {
+    this.bodyDataProvider = bodyDataProvider;
     this.labelAccumulator = labelAccumulator;
     this.selectionLayer = selectionLayer;
   }
@@ -63,18 +73,10 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
     // Disable token text editing
     disableTokenTextEditing(configRegistry);
     // Tag all columns with a label to mark them for value conversion
-    tagConvertedColumns(configRegistry);
-    configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
-        new TokenTextDisplayConverter(), DisplayMode.NORMAL, TOKEN_COLUMN_CONFIG_LABEL);
-    configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
-        new AnnotationDisplayConverter(labelAccumulator), DisplayMode.NORMAL,
-        CONVERTED_COLUMN_LABEL);
-  }
-
-  private void tagConvertedColumns(IConfigRegistry configRegistry) {
     labelAccumulator.registerOverrides(CONVERTED_COLUMN_LABEL);
-    // Unregister the token column, as this is handled via TOKEN_COLUMN_CONFIG_LABEL
-    labelAccumulator.unregisterOverrides(0, CONVERTED_COLUMN_LABEL);
+    configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
+        new GridDisplayConverter(this.bodyDataProvider), DisplayMode.NORMAL,
+        CONVERTED_COLUMN_LABEL);
   }
 
   private void disableTokenTextEditing(IConfigRegistry configRegistry) {
