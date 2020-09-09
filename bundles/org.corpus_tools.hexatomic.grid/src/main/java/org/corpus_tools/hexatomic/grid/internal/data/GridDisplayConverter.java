@@ -23,7 +23,6 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SSpan;
-import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
@@ -104,8 +103,7 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
   @Override
   public Object displayToCanonicalValue(ILayerCell cell, IConfigRegistry configRegistry,
       Object displayValue) {
-    SStructuredNode node = bodyDataProvider.getDataValue(cell.getColumnIndex(), cell.getRowIndex());
-    return node;
+    return displayValue;
   }
 
 }
