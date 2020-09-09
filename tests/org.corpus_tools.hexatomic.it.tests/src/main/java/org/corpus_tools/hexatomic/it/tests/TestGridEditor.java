@@ -464,7 +464,6 @@ public class TestGridEditor {
     SNode node = (SNode) nodeObj;
     assertEquals(TEST_ANNOTATION_VALUE,
         node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
-    bot.sleep(3000);
   }
 
   @Test
