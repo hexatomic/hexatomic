@@ -103,6 +103,7 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
   @Override
   public Object displayToCanonicalValue(ILayerCell cell, IConfigRegistry configRegistry,
       Object displayValue) {
+    // Conversion needs to be handled downstream in GraphDataProvider.
     return displayValue;
   }
 
