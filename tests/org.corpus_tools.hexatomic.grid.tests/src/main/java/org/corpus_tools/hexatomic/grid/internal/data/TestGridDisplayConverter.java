@@ -9,7 +9,11 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
+import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SStructure;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
@@ -32,6 +36,7 @@ class TestGridDisplayConverter {
   private ILayerCell tokenCell = null;
   private ILayerCell spanCell = null;
   private ILayerCell nullCell;
+  private ILayerCell tokenTextCell;
 
   /**
    * Sets up the fixture for unit tests.
@@ -42,6 +47,7 @@ class TestGridDisplayConverter {
   void setUp() throws Exception {
     dataProvider = mock(GraphDataProvider.class);
     Column tokenColumn = mock(Column.class);
+    Column textColumn = mock(Column.class);
     @SuppressWarnings("unchecked")
     List<Column> columns = mock(ArrayList.class);
     Column spanColumn = mock(Column.class);
@@ -49,6 +55,8 @@ class TestGridDisplayConverter {
     when(columns.get(0)).thenReturn(tokenColumn);
     when(columns.get(1)).thenReturn(spanColumn);
     when(columns.get(2)).thenReturn(nullColumn);
+    when(columns.get(3)).thenReturn(textColumn);
+    when(textColumn.getColumnType()).thenReturn(ColumnType.TOKEN_TEXT);
     when(tokenColumn.getColumnValue()).thenReturn("annotation:token");
     when(spanColumn.getColumnValue()).thenReturn("annotation:span");
     when(nullColumn.getColumnValue()).thenReturn("annotation:does_not_exist");
@@ -58,9 +66,15 @@ class TestGridDisplayConverter {
     SAnnotation tokenAnnotation = mock(SAnnotation.class);
     when(tokenAnnotation.getValue()).thenReturn("token_pass");
     when(token.getAnnotation("annotation:token")).thenReturn(tokenAnnotation);
-    tokenCell = Mockito.mock(ILayerCell.class);
+    SDocumentGraph graph = mock(SDocumentGraph.class);
+    when(graph.getText(token)).thenReturn("token_text");
+    when(token.getGraph()).thenReturn(graph);
+    tokenTextCell = mock(ILayerCell.class);
+    tokenCell = mock(ILayerCell.class);
     when(tokenCell.getColumnIndex()).thenReturn(0);
     when(tokenCell.getRowIndex()).thenReturn(0);
+    when(tokenTextCell.getColumnIndex()).thenReturn(3);
+    when(tokenTextCell.getRowIndex()).thenReturn(0);
 
     span = mock(SSpan.class);
     SAnnotation spanAnnotation = mock(SAnnotation.class);
@@ -98,7 +112,11 @@ class TestGridDisplayConverter {
     assertEquals("token_pass", fixture.canonicalToDisplayValue(tokenCell, null, token));
     assertEquals("span_pass", fixture.canonicalToDisplayValue(spanCell, null, span));
     assertNull(fixture.canonicalToDisplayValue(null, null, null));
+    assertNull(fixture.canonicalToDisplayValue(tokenCell, null, mock(STextualRelation.class)));
     assertNull(fixture.canonicalToDisplayValue(nullCell, null, token));
+    assertThrows(RuntimeException.class,
+        () -> fixture.canonicalToDisplayValue(tokenCell, null, mock(SStructure.class)));
+    assertEquals("token_text", fixture.canonicalToDisplayValue(tokenTextCell, null, token));
   }
 
   /**
