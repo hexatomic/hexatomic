@@ -233,22 +233,25 @@ public class GridEditor {
 
     final ComboViewer viewer = new ComboViewer(dropdownGroup, SWT.READ_ONLY);
 
-
     final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
     deco.setShowOnlyOnFocus(false);
 
     viewer.setContentProvider(ArrayContentProvider.getInstance());
-    viewer.setLabelProvider(new LabelProvider() {
-      @Override
-      public String getText(Object element) {
-        if (element instanceof STextualDS) {
-          STextualDS ds = (STextualDS) element;
-          return ds.getName();
-        }
-        return super.getText(element);
-      }
-    });
-    viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+    viewer.setLabelProvider(createLabelProvider());
+    viewer.addSelectionChangedListener(createSelectionChangeListener(messageLabel, parent, deco));
+    viewer.setInput(graph.getTextualDSs());
+    if (graph.getTextualDSs().size() == 1) {
+      viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
+    } else {
+      messageLabel.setText("Please select a data source!");
+      messageLabel.setVisible(true);
+      parent.layout();
+    }
+  }
+
+  private ISelectionChangedListener createSelectionChangeListener(Label messageLabel,
+      Composite parent, ControlDecoration deco) {
+    return new ISelectionChangedListener() {
       @Override
       public void selectionChanged(SelectionChangedEvent event) {
         IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -281,15 +284,20 @@ public class GridEditor {
           }
         }
       }
-    });
-    viewer.setInput(graph.getTextualDSs());
-    if (graph.getTextualDSs().size() == 1) {
-      viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
-    } else {
-      messageLabel.setText("Please select a data source!");
-      messageLabel.setVisible(true);
-      parent.layout();
-    }
+    };
+  }
+
+  private LabelProvider createLabelProvider() {
+    return new LabelProvider() {
+      @Override
+      public String getText(Object element) {
+        if (element instanceof STextualDS) {
+          STextualDS ds = (STextualDS) element;
+          return ds.getName();
+        }
+        return super.getText(element);
+      }
+    };
   }
 
   private SDocumentGraph getGraph() {
