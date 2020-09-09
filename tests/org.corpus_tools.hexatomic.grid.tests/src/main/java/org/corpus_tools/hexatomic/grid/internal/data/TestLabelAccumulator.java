@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.Assert.assertThrows;
@@ -97,9 +94,9 @@ class TestLabelAccumulator {
         thrownException.getMessage());
 
     // Test empty cell
-    LabelStack emptyStack = new LabelStack("");
-    LabelStack tokenStack = new LabelStack("");
-    LabelStack spanStack = new LabelStack("");
+    final LabelStack emptyStack = new LabelStack("");
+    final LabelStack tokenStack = new LabelStack("");
+    final LabelStack spanStack = new LabelStack("");
     fixture.accumulateConfigLabels(emptyStack, 0, 1);
     assertTrue(emptyStack.getLabels().contains(StyleConfiguration.EMPTY_CELL_STYLE));
     // Also has token text cell style and empty string

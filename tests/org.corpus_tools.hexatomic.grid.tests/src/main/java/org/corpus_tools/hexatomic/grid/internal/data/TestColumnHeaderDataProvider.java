@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.Assert.assertNull;
@@ -15,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
+ * Unit tests for {@link ColumnHeaderDataProvider}.
+ * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
@@ -25,7 +24,9 @@ class TestColumnHeaderDataProvider {
   private static List<Column> columns = null;
 
   /**
-   * @throws java.lang.Exception
+   * Sets up the fixture.
+   * 
+   * @throws java.lang.Exception Any exception thrown during execution.
    */
   @SuppressWarnings("unchecked")
   @BeforeEach

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.corpus_tools.hexatomic.grid.internal.bindings;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,15 +13,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
+ * Unit tests for {@link FreezeGridBindings}.
+ * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
- *
  */
 class TestFreezeGridBindings {
 
   private static FreezeGridBindings fixture = null;
 
   /**
-   * @throws java.lang.Exception
+   * Sets up the fixture.
+   * 
+   * @throws java.lang.Exception Any exception thrown during execution.
    */
   @BeforeEach
   void setUp() throws Exception {
