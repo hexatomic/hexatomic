@@ -20,12 +20,14 @@
 
 package org.corpus_tools.hexatomic.grid.internal.data;
 
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.graph.Node;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.data.convert.ContextualDisplayConverter;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
@@ -63,16 +65,23 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
       return null;
     }
     final Column column = bodyDataProvider.getColumns().get(cell.getColumnIndex());
-    if (canonicalValue instanceof SToken) {
-      SToken token = (SToken) canonicalValue;
+    SNode node = null;
+    if (canonicalValue instanceof Node) {
+      node = (SNode) SaltHelper.resolveDelegation(canonicalValue);
+    }
+    if (node == null) {
+      return null;
+    }
+    if (node instanceof SToken) {
+      SToken token = (SToken) node;
       // Check which column type the cell has
       if (column.getColumnType() == ColumnType.TOKEN_TEXT) {
         return token.getGraph().getText(token);
       } else {
         return getAnnotationForNode(token, column);
       }
-    } else if (canonicalValue instanceof SSpan) {
-      SSpan span = (SSpan) canonicalValue;
+    } else if (node instanceof SSpan) {
+      SSpan span = (SSpan) node;
       return getAnnotationForNode(span, column);
     } else {
       throw new RuntimeException("Cell " + cell + " must contain SNode. Contained: "
