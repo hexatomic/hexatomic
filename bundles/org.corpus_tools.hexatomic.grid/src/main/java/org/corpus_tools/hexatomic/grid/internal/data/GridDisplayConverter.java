@@ -60,15 +60,14 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
   @Override
   public Object canonicalToDisplayValue(ILayerCell cell, IConfigRegistry configRegistry,
       Object canonicalValue) {
-    if (cell == null) {
+    if (cell == null || canonicalValue == null) {
       return null;
     }
     final Column column = bodyDataProvider.getColumns().get(cell.getColumnIndex());
     SNode node = null;
     if (canonicalValue instanceof Node) {
       node = (SNode) SaltHelper.resolveDelegation(canonicalValue);
-    }
-    if (node == null) {
+    } else {
       return null;
     }
     if (node instanceof SToken) {
@@ -83,15 +82,12 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
       SSpan span = (SSpan) node;
       return getAnnotationForNode(span, column);
     } else {
-      throw new RuntimeException("Cell " + cell + " must contain SNode. Contained: "
+      throw new RuntimeException("Cell " + cell + " must contain SSpan or SToken. Contained: "
           + canonicalValue.getClass().getCanonicalName());
     }
   }
 
   private Object getAnnotationForNode(SNode node, Column column) {
-    if (node == null) {
-      return null;
-    }
     String qualifiedName = column.getColumnValue();
     SAnnotation annotation = node.getAnnotation(qualifiedName);
     if (annotation == null) {
