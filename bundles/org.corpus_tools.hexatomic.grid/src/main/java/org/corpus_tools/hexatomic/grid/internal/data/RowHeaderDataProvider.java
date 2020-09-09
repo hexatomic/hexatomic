@@ -33,7 +33,17 @@ public class RowHeaderDataProvider implements IDataProvider {
 
   private final GraphDataProvider provider;
 
+  /**
+   * Constructor setting the body data provider. Throws a {@link RuntimeException} if the passed
+   * argument is <code>null</code>.
+   * 
+   * @param bodyDataProvider The body data provider
+   */
   public RowHeaderDataProvider(GraphDataProvider bodyDataProvider) {
+    if (bodyDataProvider == null) {
+      throw new RuntimeException(
+          "Body data provider in " + this.getClass().getSimpleName() + " must not be null.");
+    }
     this.provider = bodyDataProvider;
   }
 
