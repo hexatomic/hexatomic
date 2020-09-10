@@ -263,7 +263,7 @@ public class GridEditor {
           messageLabel.dispose();
           parent.layout();
           // Set decoration depending on whether there are tokens in the data source.
-          if (((STextualDS) selection.getFirstElement()).getInRelations().size() == 0) {
+          if (((STextualDS) selection.getFirstElement()).getInRelations().isEmpty()) {
             deco.setDescriptionText(NO_TOKENS_MESSAGE);
             Image errorImage = FieldDecorationRegistry.getDefault()
                 .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
