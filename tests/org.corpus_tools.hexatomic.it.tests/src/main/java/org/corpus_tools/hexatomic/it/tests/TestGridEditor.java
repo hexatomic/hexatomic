@@ -65,8 +65,6 @@ public class TestGridEditor {
   private EHandlerService handlerService;
   private EPartService partService;
 
-  private ErrorService errorService = new ErrorService();
-
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   @BeforeEach
@@ -74,8 +72,6 @@ public class TestGridEditor {
     TestHelper.setKeyboardLayout();
 
     IEclipseContext ctx = TestHelper.getEclipseContext();
-
-    ctx.set(ErrorService.class, errorService);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);

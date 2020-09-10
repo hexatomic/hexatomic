@@ -118,7 +118,9 @@ public class GridEditor {
   public void postConstruct(Composite parent) {
     this.graph = getGraph();
     bodyDataProvider.setGraph(graph);
-    log.debug("Starting Grid Editor for document '{}'.", graph.getDocument().getName());
+    if (graph != null && graph.getDocument() != null) {
+      log.debug("Starting Grid Editor for document '{}'.", graph.getDocument().getName());
+    }
 
     parent.setLayout(new GridLayout());
 
