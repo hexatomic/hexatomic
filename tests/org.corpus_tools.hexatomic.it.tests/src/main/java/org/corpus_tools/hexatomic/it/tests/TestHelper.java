@@ -33,8 +33,13 @@ public class TestHelper {
     Bundle activatorBundle = FrameworkUtil.getBundle(Activator.class);
     final IEclipseContext serviceContext =
         EclipseContextFactory.getServiceContext(activatorBundle.getBundleContext());
-
-    return serviceContext.get(IWorkbench.class).getApplication().getContext();
+    IEclipseContext applicationContext =
+        serviceContext.get(IWorkbench.class).getApplication().getContext();
+    // Make sure the context is active which amongst other things also means the window is
+    // activated. For some environments like a virtual XVfb server, this is not always given
+    // automatically.
+    applicationContext.activate();
+    return applicationContext;
   }
 
   /**
