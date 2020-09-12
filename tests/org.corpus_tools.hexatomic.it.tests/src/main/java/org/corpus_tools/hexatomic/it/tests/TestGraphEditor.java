@@ -490,7 +490,7 @@ class TestGraphEditor {
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/220
    * 
-   * @throws IOException
+   * @throws IOException When the file is not a valid URI, this exception can be thrown.
    */
   @Test
   @Order(5)
