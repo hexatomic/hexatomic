@@ -64,8 +64,15 @@ class TestCorpusStructure {
     bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
   }
 
+  /**
+   * Create a minimal corpus structure with one corpus graph, a single corpus and a document.
+   * 
+   * @param bot The SWT bot used to perform the UI interactions.
+   */
+  protected static void createMinimalCorpusStructure(SWTWorkbenchBot bot) {
+    // Activate corpus structure editor
+    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
 
-  private void createExampleStructure() {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
     bot.toolbarDropDownButton(0).click();
@@ -78,6 +85,11 @@ class TestCorpusStructure {
     // Add document_1
     bot.toolbarDropDownButton(0).click();
     bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode(0).select();
+  }
+
+
+  private void createExampleStructure() {
+    createMinimalCorpusStructure(bot);
 
     // Add document_2
     bot.toolbarDropDownButton(0).click();

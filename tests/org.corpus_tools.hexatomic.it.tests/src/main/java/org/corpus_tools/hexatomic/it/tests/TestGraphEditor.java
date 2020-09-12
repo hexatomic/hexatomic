@@ -18,10 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.salt.SaltFactory;
-import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -33,7 +30,6 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -72,7 +68,6 @@ class TestGraphEditor {
   private ECommandService commandService;
   private EHandlerService handlerService;
   private EPartService partService;
-  private IEventBroker events;
 
   private ErrorService errorService;
   private ProjectManager projectManager;
@@ -82,14 +77,21 @@ class TestGraphEditor {
   private final class GraphLoadedCondition extends DefaultCondition {
 
     private final List<Integer> segmentIndexes;
+    private final String documentName;
 
     public GraphLoadedCondition(Integer... segmentIndexes) {
       this.segmentIndexes = Arrays.asList(segmentIndexes);
+      this.documentName = "doc1";
+    }
+
+    public GraphLoadedCondition(String documentName, Integer... segmentIndexes) {
+      this.segmentIndexes = Arrays.asList(segmentIndexes);
+      this.documentName = documentName;
     }
 
     @Override
     public boolean test() throws Exception {
-      SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
+      SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
         // Wait until the graph has been loaded
@@ -163,7 +165,6 @@ class TestGraphEditor {
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
-    events = ctx.get(IEventBroker.class);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -495,28 +496,17 @@ class TestGraphEditor {
   @Test
   @Order(5)
   void testTokenizeSaveTokenizeSave() throws IOException {
-
-    // Create a new project with a single document
-    projectManager.newProject();
-    SCorpusGraph cg = projectManager.getProject().createCorpusGraph();
-    SDocument doc1 = cg.createDocument(URI.createURI("salt:/root/doc1"));
-    SDocumentGraph graph = SaltFactory.createSDocumentGraph();
-    doc1.setDocumentGraph(graph);
-    
-    events.send(Topics.PROJECT_LOADED, null);
-
-    // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+    TestCorpusStructure.createMinimalCorpusStructure(bot);
 
     // Select the first example document
     SWTBotTreeItem docMenu =
-        bot.tree().expandNode("<unknown>").expandNode("root").expandNode("doc1");
+        bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
 
     // Select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
-    bot.waitUntil(new GraphLoadedCondition());
+    bot.waitUntil(new GraphLoadedCondition("document_1"));
 
 
     // Add the two tokens to the document graph
