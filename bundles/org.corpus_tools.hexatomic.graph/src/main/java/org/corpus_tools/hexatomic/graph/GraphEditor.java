@@ -302,7 +302,7 @@ public class GraphEditor {
   void preDestroy() {
     projectManager.removeListener(projectChangeListener);
 
-    events.send(Topics.DOCUMENT_CLOSED,
+    events.post(Topics.DOCUMENT_CLOSED,
         thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID));
   }
 

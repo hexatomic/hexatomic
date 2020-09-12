@@ -360,7 +360,7 @@ public class ProjectManager {
                     }
                   } catch (IOException ex) {
                     monitor.done();
-                    sync.syncExec(() -> {
+                    sync.asyncExec(() -> {
                       errorService.handleException("Could not copy Salt document " + doc.getId(),
                           ex, ProjectManager.class);
                     });
@@ -380,7 +380,7 @@ public class ProjectManager {
           location = Optional.of(path);
 
 
-          sync.syncExec(() -> {
+          sync.asyncExec(() -> {
             // Reload the originally loaded documents when there is an active editor
             for (String documentID : documentsToReload) {
               Optional<SDocument> document = getDocument(documentID, true);
