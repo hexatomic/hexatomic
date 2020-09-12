@@ -24,6 +24,7 @@ package org.corpus_tools.hexatomic.console;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -124,8 +125,25 @@ public class ConsoleController {
     return graph;
   }
 
+  /**
+   * Sets the used document graph. This also resets the selected text to point to the textual data
+   * source from the new graph that has the same name.
+   * 
+   * @param graph The graph to set.
+   */
   public void setGraph(SDocumentGraph graph) {
     this.graph = graph;
+    if (this.selectedText != null) {
+      // We need to update the selected text, since the old one might not be the same object
+      String selectedTextName = this.selectedText.getName();
+      this.selectedText = null;
+      for (STextualDS ds : this.graph.getTextualDSs()) {
+        if (Objects.equals(ds.getName(), selectedTextName)) {
+          this.selectedText = ds;
+          break;
+        }
+      }
+    }
   }
 
   public void setSelectedText(STextualDS selectedText) {
