@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +18,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -27,12 +33,14 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -64,6 +72,7 @@ class TestGraphEditor {
   private ECommandService commandService;
   private EHandlerService handlerService;
   private EPartService partService;
+  private IEventBroker events;
 
   private ErrorService errorService;
   private ProjectManager projectManager;
@@ -154,6 +163,7 @@ class TestGraphEditor {
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
+    events = ctx.get(IEventBroker.class);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -169,7 +179,6 @@ class TestGraphEditor {
     assertTrue(exampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
-
 
     errorService.clearLastException();
 
@@ -475,6 +484,71 @@ class TestGraphEditor {
     // Only tokens because annotation is non-existing
     annoFilter.setText("not actually there");
     bot.waitUntil(new NumberOfNodesCondition(11));
+  }
+
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/220
+   * 
+   * @throws IOException
+   */
+  @Test
+  @Order(5)
+  void testTokenizeSaveTokenizeSave() throws IOException {
+
+    // Create a new project with a single document
+    projectManager.newProject();
+    SCorpusGraph cg = projectManager.getProject().createCorpusGraph();
+    SDocument doc1 = cg.createDocument(URI.createURI("salt:/root/doc1"));
+    SDocumentGraph graph = SaltFactory.createSDocumentGraph();
+    doc1.setDocumentGraph(graph);
+    
+    events.send(Topics.PROJECT_LOADED, null);
+
+    // Activate corpus structure editor
+    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.tree().expandNode("<unknown>").expandNode("root").expandNode("doc1");
+
+    // Select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+
+    bot.waitUntil(new GraphLoadedCondition());
+
+
+    // Add the two tokens to the document graph
+    enterCommand("t Oi!");
+
+    // Save the corpus to a temporary location
+    Path tmpDir = Files.createTempDirectory("hexatomic-regression-test-220");
+
+    Map<String, String> params = new HashMap<>();
+    params.put(CommandParams.LOCATION, tmpDir.toString());
+    final ParameterizedCommand cmdSaveAs = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
+
+    UIThreadRunnable.syncExec(() -> {
+      handlerService.executeHandler(cmdSaveAs);
+    });
+
+    // Add two additional tokens
+    enterCommand("t Oioi!");
+
+    // Save to original location
+    params.put(CommandParams.LOCATION, tmpDir.toString());
+    final ParameterizedCommand cmdSave = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project",
+            new HashMap<>());
+
+    UIThreadRunnable.syncExec(() -> {
+      handlerService.executeHandler(cmdSave);
+    });
+
+    // The last save should not have triggered any errors
+    assertFalse(errorService.getLastException().isPresent());
   }
 
 }
