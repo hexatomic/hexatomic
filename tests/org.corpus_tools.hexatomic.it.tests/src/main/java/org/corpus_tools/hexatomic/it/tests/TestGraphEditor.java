@@ -254,71 +254,8 @@ class TestGraphEditor {
     }
   }
 
-  /**
-   * Regression test for https://github.com/hexatomic/hexatomic/issues/220
-   * 
-   * @throws IOException When the file is not a valid URI, this exception can be thrown.
-   */
   @Test
   @Order(1)
-  void testTokenizeSaveTokenizeSave() throws IOException {
-
-    // Create a new project with a single document
-    projectManager.newProject();
-    SCorpusGraph cg = projectManager.getProject().createCorpusGraph();
-    SDocument doc1 = cg.createDocument(URI.createURI("salt:/root/doc1"));
-    SDocumentGraph graph = SaltFactory.createSDocumentGraph();
-    doc1.setDocumentGraph(graph);
-
-    events.send(Topics.PROJECT_LOADED, null);
-
-    // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
-
-    // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.tree().expandNode("<unknown>").expandNode("root").expandNode("doc1");
-
-    // Select and open the editor
-    docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
-
-    bot.waitUntil(new GraphLoadedCondition());
-
-
-    // Add the two tokens to the document graph
-    enterCommand("t Oi!");
-
-    // Save the corpus to a temporary location
-    Path tmpDir = Files.createTempDirectory("hexatomic-regression-test-220");
-
-    Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.LOCATION, tmpDir.toString());
-    final ParameterizedCommand cmdSaveAs = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
-
-    UIThreadRunnable.syncExec(() -> {
-      handlerService.executeHandler(cmdSaveAs);
-    });
-
-    // Add two additional tokens
-    enterCommand("t Oioi!");
-
-    // Save to original location
-    params.put(CommandParams.LOCATION, tmpDir.toString());
-    final ParameterizedCommand cmdSave = commandService.createCommand(
-        "org.corpus_tools.hexatomic.core.command.save_salt_project", new HashMap<>());
-
-    UIThreadRunnable.syncExec(() -> {
-      handlerService.executeHandler(cmdSave);
-    });
-
-    // The last save should not have triggered any errors
-    assertFalse(errorService.getLastException().isPresent());
-  }
-
-  @Test
-  @Order(2)
   void testShowSaltExample()
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
@@ -412,7 +349,7 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(3)
+  @Order(2)
   void testAddPointingRelation() {
 
     openDefaultExample();
@@ -454,7 +391,7 @@ class TestGraphEditor {
    * is a regression test for https://github.com/hexatomic/hexatomic/issues/139.
    */
   @Test
-  @Order(4)
+  @Order(3)
   void testTokenizeSelectedTextualDS() {
 
     openDefaultExample();
@@ -506,7 +443,7 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(5)
+  @Order(4)
   void testFilterOptions() {
     openDefaultExample();
 
@@ -548,4 +485,70 @@ class TestGraphEditor {
     annoFilter.setText("not actually there");
     bot.waitUntil(new NumberOfNodesCondition(11));
   }
+
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/220
+   * 
+   * @throws IOException When the file is not a valid URI, this exception can be thrown.
+   */
+  @Test
+  @Order(5)
+  void testTokenizeSaveTokenizeSave() throws IOException {
+
+    // Create a new project with a single document
+    projectManager.newProject();
+    SCorpusGraph cg = projectManager.getProject().createCorpusGraph();
+    SDocument doc1 = cg.createDocument(URI.createURI("salt:/root/doc1"));
+    SDocumentGraph graph = SaltFactory.createSDocumentGraph();
+    doc1.setDocumentGraph(graph);
+    
+    events.send(Topics.PROJECT_LOADED, null);
+
+    // Activate corpus structure editor
+    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.tree().expandNode("<unknown>").expandNode("root").expandNode("doc1");
+
+    // Select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+
+    bot.waitUntil(new GraphLoadedCondition());
+
+
+    // Add the two tokens to the document graph
+    enterCommand("t Oi!");
+
+    // Save the corpus to a temporary location
+    Path tmpDir = Files.createTempDirectory("hexatomic-regression-test-220");
+
+    Map<String, String> params = new HashMap<>();
+    params.put(CommandParams.LOCATION, tmpDir.toString());
+    final ParameterizedCommand cmdSaveAs = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
+
+    UIThreadRunnable.syncExec(() -> {
+      handlerService.executeHandler(cmdSaveAs);
+    });
+
+    // Add two additional tokens
+    enterCommand("t Oioi!");
+
+    // Save to original location
+    params.put(CommandParams.LOCATION, tmpDir.toString());
+    final ParameterizedCommand cmdSave = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project",
+            new HashMap<>());
+
+    UIThreadRunnable.syncExec(() -> {
+      handlerService.executeHandler(cmdSave);
+    });
+
+    // The last save should not have triggered any errors
+    assertFalse(errorService.getLastException().isPresent());
+  }
+
 }
