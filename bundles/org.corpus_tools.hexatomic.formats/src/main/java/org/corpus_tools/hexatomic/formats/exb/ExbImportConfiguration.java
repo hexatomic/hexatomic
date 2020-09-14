@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class ExbImportConfiguration extends ConfigurationPage {
 
-  private Button btnCheckButton;
+  private Button btnAddSpaces;
 
   public ExbImportConfiguration() {
     super("Configure import");
@@ -27,17 +27,17 @@ public class ExbImportConfiguration extends ConfigurationPage {
     setControl(container);
     container.setLayout(new GridLayout(1, false));
 
-    btnCheckButton = new Button(container, SWT.CHECK);
-    btnCheckButton.setText("Add spaces between token");
-    btnCheckButton.setSelection(true);
-    btnCheckButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+    btnAddSpaces = new Button(container, SWT.CHECK);
+    btnAddSpaces.setText("Add spaces between token");
+    btnAddSpaces.setSelection(true);
+    btnAddSpaces.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
   }
 
   @Override
   public Properties getConfiguration() {
     Properties result = new Properties();
     
-    if (btnCheckButton.getSelection()) {
+    if (btnAddSpaces == null || btnAddSpaces.getSelection()) {
       result.setProperty("salt.tokenSeparator", "\" \"");
     }
     

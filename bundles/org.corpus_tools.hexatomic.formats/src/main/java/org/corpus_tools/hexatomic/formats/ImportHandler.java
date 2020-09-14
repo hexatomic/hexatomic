@@ -22,6 +22,7 @@ package org.corpus_tools.hexatomic.formats;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -37,5 +38,10 @@ public class ImportHandler {
     } catch (Exception e) {
       errorService.handleException("Could not initialize Pepper modules", e, ImportHandler.class);
     }
+  }
+  
+  @CanExecute
+  protected static boolean canExecute() {
+    return Activator.getPepper().isPresent();
   }
 }
