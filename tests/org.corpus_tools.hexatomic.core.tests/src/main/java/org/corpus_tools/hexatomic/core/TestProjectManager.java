@@ -101,41 +101,42 @@ class TestProjectManager {
     // Load document once
     Optional<SDocument> document = projectManager.getDocument(documentID, true);
     assertTrue(document.isPresent());
-    assertNotNull(document.get().getDocumentGraphLocation());
-    assertNotNull(document.get().getDocumentGraph());
+    if (document.isPresent()) {
+      assertNotNull(document.get().getDocumentGraphLocation());
+      assertNotNull(document.get().getDocumentGraph());
 
-    // Mock three open documents: two of them are the same
-    Map<String, String> state1 = new HashMap<>();
-    state1.put(DOCUMENT_ID, documentID);
+      // Mock three open documents: two of them are the same
+      Map<String, String> state1 = new HashMap<>();
+      state1.put(DOCUMENT_ID, documentID);
 
-    Map<String, String> state2 = new HashMap<>();
-    state2.put(DOCUMENT_ID, "salt:/rootCorpus/subCorpus2/doc4");
+      Map<String, String> state2 = new HashMap<>();
+      state2.put(DOCUMENT_ID, "salt:/rootCorpus/subCorpus2/doc4");
 
-    Map<String, String> state3 = new HashMap<>();
-    state3.put(DOCUMENT_ID, documentID);
+      Map<String, String> state3 = new HashMap<>();
+      state3.put(DOCUMENT_ID, documentID);
 
-    MPart editor1 = mock(MPart.class);
-    MPart editor2 = mock(MPart.class);
-    MPart editor3 = mock(MPart.class);
+      MPart editor1 = mock(MPart.class);
+      MPart editor2 = mock(MPart.class);
+      MPart editor3 = mock(MPart.class);
 
-    when(editor1.getPersistedState()).thenReturn(state1);
-    when(editor2.getPersistedState()).thenReturn(state2);
-    when(editor3.getPersistedState()).thenReturn(state3);
+      when(editor1.getPersistedState()).thenReturn(state1);
+      when(editor2.getPersistedState()).thenReturn(state2);
+      when(editor3.getPersistedState()).thenReturn(state3);
 
-    when(partService.getParts()).thenReturn(Arrays.asList(editor1, editor2, editor3));
+      when(partService.getParts()).thenReturn(Arrays.asList(editor1, editor2, editor3));
 
-    // Notify one of the documents was closed
-    projectManager.unloadDocumentGraphWhenClosed(documentID);
-    // Document must still be loaded in memory
-    assertNotNull(document.get().getDocumentGraph());
+      // Notify one of the documents was closed
+      projectManager.unloadDocumentGraphWhenClosed(documentID);
+      // Document must still be loaded in memory
+      assertNotNull(document.get().getDocumentGraph());
 
-    // Remove the one of the closed parts
-    when(partService.getParts()).thenReturn(Arrays.asList(editor2, editor3));
-    // Notify about closing one of the documents again
-    projectManager.unloadDocumentGraphWhenClosed(documentID);
-    // Document should have been unloaded from memory
-    assertNull(document.get().getDocumentGraph());
+      // Remove the one of the closed parts
+      when(partService.getParts()).thenReturn(Arrays.asList(editor2, editor3));
+      // Notify about closing one of the documents again
+      projectManager.unloadDocumentGraphWhenClosed(documentID);
+      // Document should have been unloaded from memory
+      assertNull(document.get().getDocumentGraph());
+    }
   }
-
 
 }

@@ -370,11 +370,13 @@ class TestGraphDataProvider {
       }
     }
     assertNotNull(addedSpan);
-    assertEquals("ABC", fixture.getDataValue(4, 0));
-    assertEquals(8, overlappingExampleGraph.getSpans().size());
-    SAnnotation annotation = addedSpan.getAnnotation("five", "span_2");
-    assertNotNull(annotation);
-    assertEquals("ABC", annotation.getValue());
+    if (addedSpan != null) {
+      assertEquals("ABC", fixture.getDataValue(4, 0));
+      assertEquals(8, overlappingExampleGraph.getSpans().size());
+      SAnnotation annotation = addedSpan.getAnnotation("five", "span_2");
+      assertNotNull(annotation);
+      assertEquals("ABC", annotation.getValue());
+    }
   }
 
   @Test
@@ -398,13 +400,14 @@ class TestGraphDataProvider {
       }
     }
     assertNotNull(addedSpan);
-    List<SToken> overlappedTokens = exampleGraph.getOverlappedTokens(addedSpan);
-    assertEquals(1, overlappedTokens.size());
-    assertEquals(token, overlappedTokens.get(0));
-    SAnnotation annotation = addedSpan.getAnnotation(null, "Inf-Struct");
-    assertNotNull(annotation);
-    assertEquals("ABC", annotation.getValue());
-
+    if (addedSpan != null) {
+      List<SToken> overlappedTokens = exampleGraph.getOverlappedTokens(addedSpan);
+      assertEquals(1, overlappedTokens.size());
+      assertEquals(token, overlappedTokens.get(0));
+      SAnnotation annotation = addedSpan.getAnnotation(null, "Inf-Struct");
+      assertNotNull(annotation);
+      assertEquals("ABC", annotation.getValue());
+    }
   }
 
   private SDocumentGraph retrieveGraph(String path) {
