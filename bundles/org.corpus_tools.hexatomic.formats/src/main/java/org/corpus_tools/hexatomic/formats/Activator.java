@@ -70,14 +70,13 @@ public class Activator implements BundleActivator {
     }
 
     // Add and start all required pepper module bundles in the correct order
-
-    String[] bundleLocationsToLoad = {
-        "exmaralda-emf-api-1.2.1.jar", "pepperModules-EXMARaLDAModules-1.3.0.jar"};
-    for (String location : bundleLocationsToLoad) {
-      URL fileUrl = thisBundle.getResource("pepper-plugins/" + location);
-      log.info("Installing Pepper module from {}", fileUrl);
-      Bundle b = context.installBundle(fileUrl.toExternalForm());
-      b.start();
+    for (Format format : Format.values()) {
+      for (String location : format.getBundleFiles()) {
+        URL fileUrl = thisBundle.getResource("pepper-plugins/" + location);
+        log.info("Installing Pepper module from {}", fileUrl);
+        Bundle b = context.installBundle(fileUrl.toExternalForm());
+        b.start();
+      }
     }
   }
 

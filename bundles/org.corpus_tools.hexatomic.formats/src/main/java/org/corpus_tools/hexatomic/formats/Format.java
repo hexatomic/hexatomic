@@ -24,13 +24,18 @@ import java.util.Optional;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.StepDesc;
 
-public enum ImportFormat {
-  Exmaralda("EXMARaLDAImporter");
+public enum Format {
+  Exmaralda("EXMARaLDAImporter",
+      new String[] {"exmaralda-emf-api-1.2.1.jar",
+          "pepperModules-EXMARaLDAModules-1.3.0.jar"}),
+  PaulaXML("PAULAImporter", new String[] {"pepperModules-PAULAModules-1.2.4.jar"});
 
   private final String importerName;
+  private final String[] bundleFiles;
 
-  ImportFormat(String importerName) {
+  Format(String importerName, String[] bundleFiles) {
     this.importerName = importerName;
+    this.bundleFiles = bundleFiles;
   }
 
   protected StepDesc createJobSpec() {
@@ -42,8 +47,12 @@ public enum ImportFormat {
     return result;
   }
 
-  protected static Optional<ImportFormat> getFormatByName(String name) {
-    for (ImportFormat f : ImportFormat.values()) {
+  protected String[] getBundleFiles() {
+    return bundleFiles;
+  }
+
+  protected static Optional<Format> getFormatByName(String name) {
+    for (Format f : Format.values()) {
       if(f.importerName.equals(name)) {
         return Optional.of(f);
       }

@@ -41,7 +41,9 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ImporterSelectionPage.class);
 
-  private Button btnRadioButton;
+  private Button btnExb;
+
+  private Button btnPaulaXML;
   protected ImporterSelectionPage() {
     super("Select import format");
     setTitle("Select import format");
@@ -52,7 +54,8 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
   protected void updateRecommendFormats(File corpusPath) {
 
     // Init selection to default
-    btnRadioButton.setSelection(false);
+    btnExb.setSelection(false);
+    btnPaulaXML.setSelection(false);
 
     Optional<Pepper> pepper = Activator.getPepper();
     File[] roots = File.listRoots();
@@ -67,10 +70,15 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
       try {
         for (String importerName : pepper.get()
             .findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))) {
-          Optional<ImportFormat> format = ImportFormat.getFormatByName(importerName);
-          if (format.isPresent() && format.get() == ImportFormat.Exmaralda) {
-            btnRadioButton.setSelection(true);
-            setPageComplete(true);
+          Optional<Format> format = Format.getFormatByName(importerName);
+          if (format.isPresent()) {
+            if (format.get() == Format.Exmaralda) {
+              btnExb.setSelection(true);
+              setPageComplete(true);
+            } else if (format.get() == Format.PaulaXML) {
+              btnPaulaXML.setSelection(true);
+              setPageComplete(true);
+            }
           }
         }
       } catch (FileNotFoundException ex) {
@@ -89,22 +97,29 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
     setControl(container);
     container.setLayout(new GridLayout(1, false));
 
-    btnRadioButton = new Button(container, SWT.RADIO);
-    btnRadioButton.addSelectionListener(new SelectionAdapter() {
+    SelectionAdapter checkboxSelectionAdapter = new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         setPageComplete(getSelectedFormat().isPresent());
       }
-    });
-    btnRadioButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-    btnRadioButton.setBounds(0, 0, 112, 17);
-    btnRadioButton.setText("EXMARaLDA format (*.exb)");
+    };
 
+    btnExb = new Button(container, SWT.RADIO);
+    btnExb.addSelectionListener(checkboxSelectionAdapter);
+    btnExb.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+    btnExb.setBounds(0, 0, 112, 17);
+    btnExb.setText("EXMARaLDA format (*.exb)");
+
+    btnPaulaXML = new Button(container, SWT.RADIO);
+    btnPaulaXML.addSelectionListener(checkboxSelectionAdapter);
+    btnPaulaXML.setText("PaulaXML format");
   }
 
-  protected Optional<ImportFormat> getSelectedFormat() {
-    if (btnRadioButton.getSelection()) {
-      return Optional.of(ImportFormat.Exmaralda);
+  protected Optional<Format> getSelectedFormat() {
+    if (btnExb.getSelection()) {
+      return Optional.of(Format.Exmaralda);
+    } else if (btnPaulaXML.getSelection()) {
+      return Optional.of(Format.PaulaXML);
     }
     return Optional.empty();
   }

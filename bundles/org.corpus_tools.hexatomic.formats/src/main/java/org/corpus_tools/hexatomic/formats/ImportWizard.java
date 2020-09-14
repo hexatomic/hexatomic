@@ -99,7 +99,7 @@ public class ImportWizard extends Wizard {
   @Override
   public boolean performFinish() {
     Optional<File> corpusPath = corpusPathPage.getCorpusPath();
-    Optional<ImportFormat> selectedFormat = importerPage.getSelectedFormat();
+    Optional<Format> selectedFormat = importerPage.getSelectedFormat();
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
       String jobId = pepper.get().createJob();
