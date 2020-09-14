@@ -536,5 +536,4 @@ class TestGraphEditor {
     // The last save should not have triggered any errors
     assertFalse(errorService.getLastException().isPresent());
   }
-
 }

@@ -137,10 +137,12 @@ public class ConsoleController {
       // We need to update the selected text, since the old one might not be the same object
       String selectedTextName = this.selectedText.getName();
       this.selectedText = null;
-      for (STextualDS ds : this.graph.getTextualDSs()) {
-        if (Objects.equals(ds.getName(), selectedTextName)) {
-          this.selectedText = ds;
-          break;
+      if (this.graph != null) {
+        for (STextualDS ds : this.graph.getTextualDSs()) {
+          if (Objects.equals(ds.getName(), selectedTextName)) {
+            this.selectedText = ds;
+            break;
+          }
         }
       }
     }
@@ -150,7 +152,7 @@ public class ConsoleController {
     this.selectedText = selectedText;
   }
 
-  private STextualDS getSelectedText() {
+  protected STextualDS getSelectedText() {
     if (this.selectedText == null) {
       // Find the first data source of the current graph
       if (this.graph != null) {

@@ -1,16 +1,20 @@
 package org.corpus_tools.hexatomic.console;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.samples.SampleGenerator;
 import org.corpus_tools.salt.util.DataSourceSequence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -311,6 +315,45 @@ class TestConsoleController {
     assertEquals(2, graph.getDominanceRelations().size());
     console.executeCommand("e #n1 > #t2 ns:n:a");
     assertEquals(3, graph.getDominanceRelations().size()); 
+  }
+
+  @Test
+  void testSetGraph() {
+    assertNotNull(console.getGraph());
+    assertNull(console.getSelectedText());
+
+    // Set the graph to a new non-null graph
+    SDocument newDocument = SaltFactory.createSDocument();
+    SDocumentGraph newGraph = SaltFactory.createSDocumentGraph();
+    newDocument.setDocumentGraph(newGraph);
+    STextualDS text = SampleGenerator.createPrimaryData(newDocument);
+
+    console.setGraph(newGraph);
+
+    // The selected text should be the first and only one
+    assertEquals(text, console.getSelectedText());
+
+    // Create a second text with a given name and select it
+    STextualDS namedText = newGraph.createTextualDS("ABC");
+    namedText.setName("just_a_text");
+    console.setSelectedText(namedText);
+    assertEquals(namedText, console.getSelectedText());
+
+    // Create a new document graph with the same primary texts and make sure it is also selected
+    newDocument = SaltFactory.createSDocument();
+    newGraph = SaltFactory.createSDocumentGraph();
+    newDocument.setDocumentGraph(newGraph);
+    text = SampleGenerator.createPrimaryData(newDocument);
+    namedText =  newGraph.createTextualDS("ABC");
+    namedText.setName("just_a_text");
+
+    console.setGraph(newGraph);
+    assertEquals(namedText, console.getSelectedText());
+
+    // When the graph is set to null, the selected text also should be null
+    console.setGraph(null);
+    assertNull(console.getGraph());
+    assertNull(console.getSelectedText());
   }
 
 }
