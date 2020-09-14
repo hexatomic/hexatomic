@@ -520,9 +520,7 @@ class TestGraphEditor {
     final ParameterizedCommand cmdSaveAs = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
 
-    UIThreadRunnable.syncExec(() -> {
-      handlerService.executeHandler(cmdSaveAs);
-    });
+    UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSaveAs));
 
     // Add two additional tokens
     enterCommand("t Oioi!");
@@ -533,9 +531,7 @@ class TestGraphEditor {
         .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project",
             new HashMap<>());
 
-    UIThreadRunnable.syncExec(() -> {
-      handlerService.executeHandler(cmdSave);
-    });
+    UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
 
     // The last save should not have triggered any errors
     assertFalse(errorService.getLastException().isPresent());
