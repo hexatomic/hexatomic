@@ -343,7 +343,7 @@ class TestConsoleController {
     newDocument = SaltFactory.createSDocument();
     newGraph = SaltFactory.createSDocumentGraph();
     newDocument.setDocumentGraph(newGraph);
-    text = SampleGenerator.createPrimaryData(newDocument);
+    SampleGenerator.createPrimaryData(newDocument);
     namedText =  newGraph.createTextualDS("ABC");
     namedText.setName("just_a_text");
 
