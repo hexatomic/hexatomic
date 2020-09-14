@@ -49,7 +49,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
@@ -185,12 +184,6 @@ class TestGraphEditor {
 
     TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
-
-  @AfterEach
-  void tearDownTestGroup() {
-    TestHelper.executeNewProjectCommand(commandService, handlerService);
-  }
-
 
   void openDefaultExample() {
 
