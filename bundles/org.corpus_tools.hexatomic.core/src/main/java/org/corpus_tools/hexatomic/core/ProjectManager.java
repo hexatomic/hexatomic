@@ -128,7 +128,16 @@ public class ProjectManager {
    * @param project The new current Salt project instance.
    */
   public void setProject(SaltProject project) {
+    closeOpenEditors();
+
     this.project = project;
+
+    this.location = Optional.empty();
+    hasUnsavedChanges = true;
+
+    uiStatus.setDirty(true);
+    uiStatus.setLocation(null);
+
     events.send(Topics.PROJECT_LOADED, null);
   }
 

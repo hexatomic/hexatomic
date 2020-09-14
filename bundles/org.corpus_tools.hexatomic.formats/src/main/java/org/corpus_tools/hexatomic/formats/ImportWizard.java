@@ -136,7 +136,6 @@ public class ImportWizard extends Wizard {
             Thread.sleep(500);
           }
           // set the corpus as current project
-          projectManager.newProject();
           projectManager.setProject(job.getSaltProject());
           monitor.done();
 
