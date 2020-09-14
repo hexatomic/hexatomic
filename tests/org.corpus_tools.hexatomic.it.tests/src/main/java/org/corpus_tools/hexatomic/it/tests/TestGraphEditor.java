@@ -50,6 +50,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -495,6 +496,7 @@ class TestGraphEditor {
    */
   @Test
   @Order(5)
+  @Disabled
   void testTokenizeSaveTokenizeSave() throws IOException {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 
