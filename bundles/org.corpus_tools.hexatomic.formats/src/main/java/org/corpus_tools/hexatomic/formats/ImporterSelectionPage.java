@@ -2,8 +2,7 @@
  * #%L
  * org.corpus_tools.hexatomic.formats
  * %%
- * Copyright (C) 2018 - 2020 Stephan Druskat,
- * 									Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat, Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,8 +63,8 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
     btnRadioButton.setText("EXMARaLDA format (*.exb)");
   }
 
-  public Optional<ImportFormat> getSelectedFormat() {
-    if(btnRadioButton.getSelection()) {
+  protected Optional<ImportFormat> getSelectedFormat() {
+    if (btnRadioButton.getSelection()) {
       return Optional.of(ImportFormat.Exmaralda);
     }
     return Optional.empty();

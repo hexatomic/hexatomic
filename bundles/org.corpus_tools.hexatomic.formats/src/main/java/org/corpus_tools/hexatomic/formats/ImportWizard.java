@@ -2,8 +2,7 @@
  * #%L
  * org.corpus_tools.hexatomic.formats
  * %%
- * Copyright (C) 2018 - 2020 Stephan Druskat,
- * 									Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat, Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +48,7 @@ public class ImportWizard extends Wizard {
   private final ErrorService errorService;
   private final ProjectManager projectManager;
 
-  public ImportWizard(ErrorService errorService, ProjectManager projectManager) {
+  protected ImportWizard(ErrorService errorService, ProjectManager projectManager) {
     super();
     this.errorService = errorService;
     this.projectManager = projectManager;
@@ -85,7 +84,7 @@ public class ImportWizard extends Wizard {
       importStep.setCorpusDesc(corpusDesc);
       // TODO: add properties for the importer
       job.addStepDesc(importStep);
-      
+
 
 
       try {
@@ -111,7 +110,7 @@ public class ImportWizard extends Wizard {
             // Check if any new document has been finished
             if (job instanceof PepperJobImpl) {
               PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
-              
+
               JOB_STATUS jobStatus = pepperJobImpl.getStatus();
               if (!numberOfJobs.isPresent()
                   && jobStatus == JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE) {
@@ -144,8 +143,8 @@ public class ImportWizard extends Wizard {
         });
 
       } catch (InvocationTargetException ex) {
-        errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(), ex,
-            ImportWizard.class);
+        errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(),
+            ex, ImportWizard.class);
       } catch (InterruptedException ex) {
         Thread.interrupted();
       }

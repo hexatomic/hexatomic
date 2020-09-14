@@ -2,8 +2,7 @@
  * #%L
  * org.corpus_tools.hexatomic.formats
  * %%
- * Copyright (C) 2018 - 2020 Stephan Druskat,
- * 									Thomas Krause
+ * Copyright (C) 2018 - 2020 Stephan Druskat, Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,10 +49,14 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
       case Import:
         setTitle("Select the directory that contains the corpus you want to import");
         setDescription(
-            "Corpora are normally organized as collection of files and sub-directories of a parent directory.");
+            "Corpora are normally organized as collection of files and "
+                + "sub-directories of a parent directory.");
         break;
       case Export:
         setTitle("Select the directory that contains the corpus you want to export");
+        break;
+      default:
+        setTitle("Invalid page");
         break;
     }
   }
@@ -70,9 +73,9 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
         setPageComplete(getCorpusPath().isPresent());
       }
     });
-    GridData gd_txtDirectoryPath = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-    gd_txtDirectoryPath.widthHint = 474;
-    txtDirectoryPath.setLayoutData(gd_txtDirectoryPath);
+    GridData txtDirectoryPathGridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+    txtDirectoryPathGridData.widthHint = 474;
+    txtDirectoryPath.setLayoutData(txtDirectoryPathGridData);
 
     Button btnSelectDirectory = new Button(container, SWT.NONE);
     btnSelectDirectory.addSelectionListener(new SelectionAdapter() {
@@ -90,7 +93,7 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     setPageComplete(false);
   }
 
-  public Optional<File> getCorpusPath() {
+  protected Optional<File> getCorpusPath() {
     if (!txtDirectoryPath.getText().isEmpty()) {
       // Check if the path exists and is a directory
       File f = new File(txtDirectoryPath.getText());
