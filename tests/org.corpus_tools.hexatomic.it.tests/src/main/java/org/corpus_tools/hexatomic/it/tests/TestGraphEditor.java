@@ -49,8 +49,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -184,13 +184,12 @@ class TestGraphEditor {
 
     errorService.clearLastException();
 
-    // Programmatically start a new salt project to get a clean state
-    Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.FORCE_CLOSE, "true");
-    ParameterizedCommand cmd = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
-    handlerService.executeHandler(cmd);
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
+  }
 
+  @AfterEach
+  void tearDownTestGroup() {
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
 
@@ -496,7 +495,6 @@ class TestGraphEditor {
    */
   @Test
   @Order(5)
-  @Disabled
   void testTokenizeSaveTokenizeSave() throws IOException {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 

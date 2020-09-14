@@ -4,14 +4,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocument;
-import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -53,12 +49,7 @@ class TestCorpusStructure {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
-    // Programmatically start a new salt project to get a clean state
-    Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.FORCE_CLOSE, "true");
-    ParameterizedCommand cmd = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
-    handlerService.executeHandler(cmd);
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
 
     // Make sure to activate the part to test before selecting SWT components
     bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
