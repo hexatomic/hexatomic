@@ -209,7 +209,8 @@ class TestGraphEditor {
     corpusStructurePart.show();
 
     // Select the first example document
-    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+        .expandNode("rootCorpus")
         .expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
