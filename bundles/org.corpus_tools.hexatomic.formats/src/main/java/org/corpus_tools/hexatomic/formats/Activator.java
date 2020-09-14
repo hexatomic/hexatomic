@@ -25,7 +25,6 @@ import java.net.URL;
 import java.util.Optional;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperConfiguration;
-import org.eclipse.core.runtime.FileLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -39,6 +38,15 @@ public class Activator implements BundleActivator {
 
   @Override
   public void start(BundleContext context) throws Exception {
+
+    Bundle thisBundle = context.getBundle();
+
+    File pluginsFolder = thisBundle.getDataFile("pepper-plugins");
+
+    System.getProperties().setProperty(PepperConfiguration.PROP_PEPPER_MODULE_RESOURCES,
+        pluginsFolder.getAbsolutePath());
+
+    log.info("Using {} as Pepper module resource folder", pluginsFolder.getAbsolutePath());
 
     Bundle[] bundles = context.getBundles();
     for (Bundle b : bundles) {
@@ -60,16 +68,13 @@ public class Activator implements BundleActivator {
     }
 
     // Add and start all required pepper module bundles in the correct order
-    File pluginsFolder =
-        new File(FileLocator.resolve(context.getBundle().getEntry("pepper-plugins")).toURI());
-    System.getProperties().setProperty(PepperConfiguration.PROP_PEPPER_MODULE_RESOURCES,
-        pluginsFolder.getAbsolutePath());
+
     String[] bundleLocationsToLoad = {
         "exmaralda-emf-api-1.2.1.jar", "pepperModules-EXMARaLDAModules-1.3.0.jar"};
     for (String location : bundleLocationsToLoad) {
-      URL fileUrl = context.getBundle().getEntry("pepper-plugins/" + location);
-      File f = new File(FileLocator.resolve(fileUrl).toURI());
-      Bundle b = context.installBundle("file:" + f.getAbsolutePath());
+      URL fileUrl = thisBundle.getResource("pepper-plugins/" + location);
+      log.info("Installing Pepper module from {}", fileUrl);
+      Bundle b = context.installBundle(fileUrl.toExternalForm());
       b.start();
     }
   }
