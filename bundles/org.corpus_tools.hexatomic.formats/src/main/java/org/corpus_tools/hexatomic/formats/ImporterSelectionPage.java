@@ -43,7 +43,8 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
 
   private Button btnExb;
 
-  private Button btnPaulaXML;
+  private Button btnPaulaXml;
+
   protected ImporterSelectionPage() {
     super("Select import format");
     setTitle("Select import format");
@@ -55,7 +56,7 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
 
     // Init selection to default
     btnExb.setSelection(false);
-    btnPaulaXML.setSelection(false);
+    btnPaulaXml.setSelection(false);
 
     Optional<Pepper> pepper = Activator.getPepper();
     File[] roots = File.listRoots();
@@ -76,7 +77,7 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
               btnExb.setSelection(true);
               setPageComplete(true);
             } else if (format.get() == Format.PaulaXML) {
-              btnPaulaXML.setSelection(true);
+              btnPaulaXml.setSelection(true);
               setPageComplete(true);
             }
           }
@@ -110,15 +111,15 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
     btnExb.setBounds(0, 0, 112, 17);
     btnExb.setText("EXMARaLDA format (*.exb)");
 
-    btnPaulaXML = new Button(container, SWT.RADIO);
-    btnPaulaXML.addSelectionListener(checkboxSelectionAdapter);
-    btnPaulaXML.setText("PaulaXML format");
+    btnPaulaXml = new Button(container, SWT.RADIO);
+    btnPaulaXml.addSelectionListener(checkboxSelectionAdapter);
+    btnPaulaXml.setText("PaulaXML format");
   }
 
   protected Optional<Format> getSelectedFormat() {
     if (btnExb.getSelection()) {
       return Optional.of(Format.Exmaralda);
-    } else if (btnPaulaXML.getSelection()) {
+    } else if (btnPaulaXml.getSelection()) {
       return Optional.of(Format.PaulaXML);
     }
     return Optional.empty();

@@ -86,7 +86,7 @@ public class ImportWizard extends Wizard {
 
     if (page == importerPage && importerPage.getSelectedFormat().isPresent()) {
       // Add a configuration page based on the selected importer
-      switch(importerPage.getSelectedFormat().get()) {
+      switch (importerPage.getSelectedFormat().get()) {
         case Exmaralda:
           ExbImportConfiguration configPage = new ExbImportConfiguration();
           configPage.setWizard(this);
@@ -106,9 +106,6 @@ public class ImportWizard extends Wizard {
     Optional<Format> selectedFormat = importerPage.getSelectedFormat();
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
-      String jobId = pepper.get().createJob();
-      PepperJob job = pepper.get().getJob(jobId);
-
       // Create the import specification
       StepDesc importStep = selectedFormat.get().createJobSpec();
       // Set the path to the selected directory
@@ -119,6 +116,9 @@ public class ImportWizard extends Wizard {
         // add properties for the importer
         importStep.setProps(configPage.get().getConfiguration());
       }
+
+      String jobId = pepper.get().createJob();
+      PepperJob job = pepper.get().getJob(jobId);
       job.addStepDesc(importStep);
 
       // Conversion is adding a load of events, suppress them first
@@ -141,6 +141,7 @@ public class ImportWizard extends Wizard {
 
           while (background.isAlive()) {
             if (monitor.isCanceled()) {
+              // TODO: set an abort condition in the Pepper Job
               background.interrupt();
             }
             // Check if any new document has been finished
@@ -169,10 +170,12 @@ public class ImportWizard extends Wizard {
                 }
               }
             }
-            Thread.sleep(500);
+            Thread.sleep(1000);
           }
           // set the corpus as current project
-          projectManager.setProject(job.getSaltProject());
+          if (!monitor.isCanceled()) {
+            projectManager.setProject(job.getSaltProject());
+          }
           monitor.done();
 
         });

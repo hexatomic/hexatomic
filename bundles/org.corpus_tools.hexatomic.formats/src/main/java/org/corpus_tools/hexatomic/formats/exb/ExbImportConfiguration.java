@@ -1,7 +1,28 @@
+/*-
+ * #%L
+ * org.corpus_tools.hexatomic.formats
+ * %%
+ * Copyright (C) 2018 - 2020 Stephan Druskat, Thomas Krause
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 package org.corpus_tools.hexatomic.formats.exb;
 
 import java.util.Properties;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
+import org.corpus_tools.hexatomic.formats.Format;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -12,11 +33,13 @@ public class ExbImportConfiguration extends ConfigurationPage {
 
   private Button btnAddSpaces;
 
+  /**
+   * Constructs a new import configuration for the {@link Format#Exmaralda} format.
+   */
   public ExbImportConfiguration() {
     super("Configure import");
     setTitle("Configure EXMARaLDA import");
-    setDescription(
-        "You can leave the default values or customize the import process.");
+    setDescription("You can leave the default values or customize the import process.");
   }
 
   @Override
@@ -36,11 +59,11 @@ public class ExbImportConfiguration extends ConfigurationPage {
   @Override
   public Properties getConfiguration() {
     Properties result = new Properties();
-    
+
     if (btnAddSpaces == null || btnAddSpaces.getSelection()) {
       result.setProperty("salt.tokenSeparator", "\" \"");
     }
-    
+
     return result;
   }
 

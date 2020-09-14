@@ -27,8 +27,8 @@ import org.corpus_tools.pepper.common.StepDesc;
 public enum Format {
   Exmaralda("EXMARaLDAImporter",
       new String[] {"exmaralda-emf-api-1.2.1.jar",
-          "pepperModules-EXMARaLDAModules-1.3.0.jar"}),
-  PaulaXML("PAULAImporter", new String[] {"pepperModules-PAULAModules-1.2.4.jar"});
+          "pepperModules-EXMARaLDAModules-1.3.0.jar"}), PaulaXML("PAULAImporter",
+              new String[] {"pepperModules-PAULAModules-1.2.4.jar"});
 
   private final String importerName;
   private final String[] bundleFiles;
@@ -40,10 +40,10 @@ public enum Format {
 
   protected StepDesc createJobSpec() {
     StepDesc result = new StepDesc();
-    
+
     result.setModuleType(MODULE_TYPE.IMPORTER);
     result.setName(this.importerName);
-    
+
     return result;
   }
 
@@ -53,7 +53,7 @@ public enum Format {
 
   protected static Optional<Format> getFormatByName(String name) {
     for (Format f : Format.values()) {
-      if(f.importerName.equals(name)) {
+      if (f.importerName.equals(name)) {
         return Optional.of(f);
       }
     }
