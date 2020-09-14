@@ -14,6 +14,7 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,18 +69,20 @@ class TestCorpusStructure {
     corpusStructurePart.restore();
     corpusStructurePart.show();
 
+    SWTBot partBot = corpusStructurePart.bot();
+
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
-    bot.toolbarDropDownButton(0).click();
-    bot.tree().getTreeItem("corpus_graph_1").select();
+    partBot.toolbarDropDownButton(0).click();
+    partBot.tree().getTreeItem("corpus_graph_1").select();
 
     // Add corpus 1
-    bot.toolbarDropDownButton(0).click();
-    bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").select();
+    partBot.toolbarDropDownButton(0).click();
+    partBot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").select();
 
     // Add document_1
-    bot.toolbarDropDownButton(0).click();
-    bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode(0).select();
+    partBot.toolbarDropDownButton(0).click();
+    partBot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNode(0).select();
   }
 
 

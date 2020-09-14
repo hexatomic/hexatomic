@@ -491,7 +491,8 @@ class TestGraphEditor {
 
     // Select the first example document
     SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
+            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
 
     // Select and open the editor
     docMenu.click();
