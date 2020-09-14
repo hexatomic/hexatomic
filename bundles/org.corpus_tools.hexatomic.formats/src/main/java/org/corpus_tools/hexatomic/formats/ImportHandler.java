@@ -22,6 +22,7 @@ package org.corpus_tools.hexatomic.formats;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -31,9 +32,10 @@ public class ImportHandler {
 
   @Execute
   protected static void execute(Shell shell, ErrorService errorService,
-      ProjectManager projectManager) {
+      ProjectManager projectManager, SaltNotificationFactory notificationFactory) {
     try {
-      WizardDialog dialog = new WizardDialog(shell, new ImportWizard(errorService, projectManager));
+      WizardDialog dialog = new WizardDialog(shell,
+          new ImportWizard(errorService, projectManager, notificationFactory));
       dialog.open();
     } catch (Exception e) {
       errorService.handleException("Could not initialize Pepper modules", e, ImportHandler.class);

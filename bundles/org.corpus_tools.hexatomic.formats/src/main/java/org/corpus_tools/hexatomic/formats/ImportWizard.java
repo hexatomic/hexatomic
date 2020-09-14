@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.corpus_tools.hexatomic.formats.exb.ExbImportConfiguration;
 import org.corpus_tools.pepper.common.CorpusDesc;
@@ -50,11 +51,14 @@ public class ImportWizard extends Wizard {
 
   private final ErrorService errorService;
   private final ProjectManager projectManager;
+  private final SaltNotificationFactory notificationFactory;
 
-  protected ImportWizard(ErrorService errorService, ProjectManager projectManager) {
+  protected ImportWizard(ErrorService errorService, ProjectManager projectManager,
+      SaltNotificationFactory notificationFactory) {
     super();
     this.errorService = errorService;
     this.projectManager = projectManager;
+    this.notificationFactory = notificationFactory;
     setNeedsProgressMonitor(true);
   }
 
@@ -117,6 +121,9 @@ public class ImportWizard extends Wizard {
       }
       job.addStepDesc(importStep);
 
+      // Conversion is adding a load of events, suppress them first
+      notificationFactory.setSuppressingEvents(true);
+
       try {
         // Execute the conversion as task that can be aborted
         getContainer().run(true, true, (monitor) -> {
@@ -175,6 +182,8 @@ public class ImportWizard extends Wizard {
             ex, ImportWizard.class);
       } catch (InterruptedException ex) {
         Thread.interrupted();
+      } finally {
+        notificationFactory.setSuppressingEvents(false);
       }
 
       return true;

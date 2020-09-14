@@ -26,4 +26,5 @@ Automatic-Module-Name: org.corpus_tools.hexatomic.core
 Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.errors,
  org.corpus_tools.hexatomic.core.handlers,
+ org.corpus_tools.hexatomic.core.events.salt,
  org.corpus_tools.hexatomic.core.ui;x-internal:=true
