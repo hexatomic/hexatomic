@@ -28,6 +28,7 @@ import java.util.Set;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
+import org.corpus_tools.hexatomic.formats.exb.ExbImportConfiguration;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
 import org.corpus_tools.pepper.common.JOB_STATUS;
@@ -38,12 +39,14 @@ import org.corpus_tools.pepper.core.PepperJobImpl;
 import org.corpus_tools.pepper.modules.DocumentController;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
 public class ImportWizard extends Wizard {
 
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.Import);
   private final ImporterSelectionPage importerPage = new ImporterSelectionPage();
+  private Optional<ConfigurationPage> configPage = Optional.empty();
 
   private final ErrorService errorService;
   private final ProjectManager projectManager;
@@ -64,7 +67,24 @@ public class ImportWizard extends Wizard {
   public void addPages() {
     addPage(corpusPathPage);
     addPage(importerPage);
+  }
 
+  @Override
+  public IWizardPage getNextPage(IWizardPage page) {
+    if (page == importerPage && importerPage.getSelectedFormat().isPresent()) {
+      // Add a configuration page based on the selected importer
+      switch(importerPage.getSelectedFormat().get()) {
+        case Exmaralda:
+          ExbImportConfiguration configPage = new ExbImportConfiguration();
+          configPage.setWizard(this);
+          this.configPage = Optional.of(configPage);
+          return configPage;
+        default:
+          return null;
+      }
+    } else {
+      return super.getNextPage(page);
+    }
   }
 
   @Override
@@ -82,10 +102,11 @@ public class ImportWizard extends Wizard {
       CorpusDesc corpusDesc = new CorpusDesc();
       corpusDesc.setCorpusPath(URI.createFileURI(corpusPath.get().getAbsolutePath()));
       importStep.setCorpusDesc(corpusDesc);
-      // TODO: add properties for the importer
+      if (configPage.isPresent()) {
+        // add properties for the importer
+        importStep.setProps(configPage.get().getConfiguration());
+      }
       job.addStepDesc(importStep);
-
-
 
       try {
         // Execute the conversion as task that can be aborted
@@ -101,7 +122,6 @@ public class ImportWizard extends Wizard {
           background.start();
 
           Optional<Integer> numberOfJobs = Optional.empty();
-
 
           while (background.isAlive()) {
             if (monitor.isCanceled()) {
