@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.formats;
 
+import java.util.Optional;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.StepDesc;
 
@@ -39,6 +40,15 @@ public enum ImportFormat {
     result.setName(this.importerName);
     
     return result;
+  }
+
+  protected static Optional<ImportFormat> getFormatByName(String name) {
+    for (ImportFormat f : ImportFormat.values()) {
+      if(f.importerName.equals(name)) {
+        return Optional.of(f);
+      }
+    }
+    return Optional.empty();
   }
 }
 

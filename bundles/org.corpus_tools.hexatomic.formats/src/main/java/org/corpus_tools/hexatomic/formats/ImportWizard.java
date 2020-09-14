@@ -71,6 +71,15 @@ public class ImportWizard extends Wizard {
 
   @Override
   public IWizardPage getNextPage(IWizardPage page) {
+
+    if (page == corpusPathPage) {
+      Optional<File> corpusPath = corpusPathPage.getCorpusPath();
+      if (corpusPath.isPresent()) {
+        // Update the importer page with the new current path
+        importerPage.updateRecommendFormats(corpusPath.get());
+      }
+    }
+
     if (page == importerPage && importerPage.getSelectedFormat().isPresent()) {
       // Add a configuration page based on the selected importer
       switch(importerPage.getSelectedFormat().get()) {
