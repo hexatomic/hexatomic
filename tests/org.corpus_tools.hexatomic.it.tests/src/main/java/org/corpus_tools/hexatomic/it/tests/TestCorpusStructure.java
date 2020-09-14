@@ -12,6 +12,7 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
@@ -62,7 +63,10 @@ class TestCorpusStructure {
    */
   protected static void createMinimalCorpusStructure(SWTWorkbenchBot bot) {
     // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+    SWTBotView corpusStructurePart =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    corpusStructurePart.restore();
+    corpusStructurePart.show();
 
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
