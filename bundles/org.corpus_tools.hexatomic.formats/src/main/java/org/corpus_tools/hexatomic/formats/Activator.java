@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.Optional;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperConfiguration;
+import org.corpus_tools.pepper.core.PepperOSGiRunner;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -43,8 +44,9 @@ public class Activator implements BundleActivator {
 
     File pluginsFolder = thisBundle.getDataFile("pepper-plugins");
 
-    System.getProperties().setProperty(PepperConfiguration.PROP_PEPPER_MODULE_RESOURCES,
+    System.setProperty(PepperConfiguration.PROP_PEPPER_MODULE_RESOURCES,
         pluginsFolder.getAbsolutePath());
+    System.setProperty(PepperOSGiRunner.PROP_TEST_DISABLED, Boolean.TRUE.toString());
 
     log.info("Using {} as Pepper module resource folder", pluginsFolder.getAbsolutePath());
 
