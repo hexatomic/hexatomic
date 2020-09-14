@@ -52,7 +52,6 @@ import org.eclipse.zest.core.widgets.Graph;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -256,7 +255,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(1)
   void testShowSaltExample()
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
@@ -350,7 +348,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(2)
   void testAddPointingRelation() {
 
     openDefaultExample();
@@ -392,7 +389,6 @@ class TestGraphEditor {
    * is a regression test for https://github.com/hexatomic/hexatomic/issues/139.
    */
   @Test
-  @Order(3)
   void testTokenizeSelectedTextualDS() {
 
     openDefaultExample();
@@ -444,7 +440,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(4)
   void testFilterOptions() {
     openDefaultExample();
 
@@ -494,7 +489,6 @@ class TestGraphEditor {
    * @throws IOException When the file is not a valid URI, this exception can be thrown.
    */
   @Test
-  @Order(5)
   void testTokenizeSaveTokenizeSave() throws IOException {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 
