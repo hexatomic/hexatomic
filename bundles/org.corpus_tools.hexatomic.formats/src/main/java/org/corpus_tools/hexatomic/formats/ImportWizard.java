@@ -1,15 +1,12 @@
 package org.corpus_tools.hexatomic.formats;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.corpus_tools.pepper.common.CorpusDesc;
-import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
@@ -22,10 +19,12 @@ public class ImportWizard extends Wizard {
   private final ImporterSelectionPage importerPage = new ImporterSelectionPage();
 
   private final ErrorService errorService;
+  private final ProjectManager projectManager;
 
-  public ImportWizard(ErrorService errorService) {
+  public ImportWizard(ErrorService errorService, ProjectManager projectManager) {
     super();
     this.errorService = errorService;
+    this.projectManager = projectManager;
     setNeedsProgressMonitor(true);
   }
 
@@ -59,28 +58,18 @@ public class ImportWizard extends Wizard {
       // TODO: add properties for the importer
       job.addStepDesc(importStep);
 
-      // Create the output step
-      StepDesc exportStep = new StepDesc();
-      exportStep.setModuleType(MODULE_TYPE.EXPORTER);
-      exportStep.setName("SaltXMLExporter");
-      CorpusDesc exportCorpusDesc = new CorpusDesc();
-      Path exportTmpPath;
       try {
-        exportTmpPath = Files.createTempDirectory("hexatomic-imported-corpus");
-        exportCorpusDesc.setCorpusPath(URI.createFileURI(exportTmpPath.toString()));
-        exportStep.setCorpusDesc(exportCorpusDesc);
-        job.addStepDesc(exportStep);
 
         // Execute the conversion as task that can be aborted
         getContainer().run(true, true, (monitor) -> {
-          job.convert();
+          job.convertFrom();
 
-          // TODO: set the corpus as current project
+          // set the corpus as current project
+          projectManager.newProject();
+          projectManager.setProject(job.getSaltProject());
+
         });
 
-      } catch (IOException ex) {
-        errorService.handleException("Could not create temporary directory for imported corpus", ex,
-            ImportWizard.class);
       } catch (InvocationTargetException ex) {
         errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(), ex,
             ImportWizard.class);
