@@ -203,7 +203,10 @@ class TestGraphEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+    SWTBotView corpusStructurePart =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    corpusStructurePart.restore();
+    corpusStructurePart.show();
 
     // Select the first example document
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
