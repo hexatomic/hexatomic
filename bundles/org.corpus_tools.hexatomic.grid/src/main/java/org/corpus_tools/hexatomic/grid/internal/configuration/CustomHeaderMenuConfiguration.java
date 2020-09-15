@@ -31,7 +31,6 @@ import org.eclipse.nebula.widgets.nattable.ui.menu.PopupMenuBuilder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 /**
@@ -83,40 +82,35 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
    * @return IMenuItemProvider An item provider for a menu item which toggles the freeze state
    */
   public static IMenuItemProvider withToggleColumnFreezeMenuItemProvider(final String typeSwitch) {
-    return new IMenuItemProvider() {
+    return (natTable, popupMenu) -> {
+      MenuItem menuItem = new MenuItem(popupMenu, SWT.PUSH);
+      menuItem.setText("Toggle freeze");
+      menuItem.setEnabled(true);
 
-      @Override
-      public void addMenuItem(final NatTable natTable, final Menu popupMenu) {
-        MenuItem menuItem = new MenuItem(popupMenu, SWT.PUSH);
-        menuItem.setText("Toggle freeze");
-        menuItem.setEnabled(true);
+      switch (typeSwitch) {
+        case COLUMN:
+          menuItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+              int columnPosition = MenuItemProviders.getNatEventData(e).getColumnPosition();
+              natTable.doCommand(new FreezeColumnCommand(natTable, columnPosition, true, false));
+            }
+          });
+          break;
 
-        switch (typeSwitch) {
-          case COLUMN:
-            menuItem.addSelectionListener(new SelectionAdapter() {
-              @Override
-              public void widgetSelected(SelectionEvent e) {
-                int columnPosition = MenuItemProviders.getNatEventData(e).getColumnPosition();
-                natTable.doCommand(new FreezeColumnCommand(natTable, columnPosition, true, false));
-              }
-            });
-            break;
+        case ROW:
+          menuItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+              int rowPosition = MenuItemProviders.getNatEventData(e).getRowPosition();
+              natTable.doCommand(new FreezeRowCommand(natTable, rowPosition, true, false));
+            }
+          });
+          break;
 
-          case ROW:
-            menuItem.addSelectionListener(new SelectionAdapter() {
-              @Override
-              public void widgetSelected(SelectionEvent e) {
-                int rowPosition = MenuItemProviders.getNatEventData(e).getRowPosition();
-                natTable.doCommand(new FreezeRowCommand(natTable, rowPosition, true, false));
-              }
-            });
-            break;
-
-          default:
-            break;
-        }
+        default:
+          break;
       }
     };
   }
-
 }
