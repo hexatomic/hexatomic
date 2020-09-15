@@ -141,8 +141,9 @@ public class ImportWizard extends Wizard {
 
           while (background.isAlive()) {
             if (monitor.isCanceled()) {
-              // TODO: set an abort condition in the Pepper Job
-              background.interrupt();
+              // Cancel the Pepper job
+              job.cancelConversion();
+              return;
             }
             // Check if any new document has been finished
             if (job instanceof PepperJobImpl) {
