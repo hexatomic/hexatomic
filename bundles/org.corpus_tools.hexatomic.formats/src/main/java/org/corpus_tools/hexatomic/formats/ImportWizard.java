@@ -20,9 +20,11 @@
 
 package org.corpus_tools.hexatomic.formats;
 
+import com.google.common.base.Joiner;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -34,6 +36,7 @@ import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
 import org.corpus_tools.pepper.common.JOB_STATUS;
 import org.corpus_tools.pepper.common.Pepper;
+import org.corpus_tools.pepper.common.PepperConfiguration;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
 import org.corpus_tools.pepper.core.PepperJobImpl;
@@ -106,6 +109,9 @@ public class ImportWizard extends Wizard {
     Optional<ImportFormat> selectedFormat = importerPage.getSelectedFormat();
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
+      // Limit the maximum number of parallel processed documents
+      pepper.get().getConfiguration().put(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS, "2");
+
       // Create the import specification
       StepDesc importStep = selectedFormat.get().createJobSpec();
       // Set the path to the selected directory
@@ -157,6 +163,13 @@ public class ImportWizard extends Wizard {
                 numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
                 monitor.beginTask("Importing " + numberOfJobs.get() + " documents",
                     numberOfJobs.get());
+              }
+
+              Set<DocumentController> activeDocuments =
+                  new LinkedHashSet<>(pepperJobImpl.getActiveDocuments());
+              if (!activeDocuments.isEmpty()) {
+                monitor.subTask(Joiner.on(", ")
+                    .join(activeDocuments.stream().map(d -> d.getDocument().getName()).iterator()));
               }
 
               if (numberOfJobs.isPresent()) {
