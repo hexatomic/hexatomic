@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix exception when adding tokens in the graph editor after saving the opened document (#220)
+- Fix exception when adding tokens across >1 instances of the graph editor after saving the opened document (#214)
 
 ## [0.4.3] - 2020-09-04
 
