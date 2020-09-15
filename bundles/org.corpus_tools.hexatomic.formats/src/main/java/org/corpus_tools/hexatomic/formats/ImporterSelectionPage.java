@@ -71,12 +71,12 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
       try {
         for (String importerName : pepper.get()
             .findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))) {
-          Optional<Format> format = Format.getFormatByName(importerName);
+          Optional<ImportFormat> format = ImportFormat.getFormatByName(importerName);
           if (format.isPresent()) {
-            if (format.get() == Format.Exmaralda) {
+            if (format.get() == ImportFormat.Exmaralda) {
               btnExb.setSelection(true);
               setPageComplete(true);
-            } else if (format.get() == Format.PaulaXML) {
+            } else if (format.get() == ImportFormat.PaulaXML) {
               btnPaulaXml.setSelection(true);
               setPageComplete(true);
             }
@@ -116,11 +116,11 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
     btnPaulaXml.setText("PaulaXML format");
   }
 
-  protected Optional<Format> getSelectedFormat() {
+  protected Optional<ImportFormat> getSelectedFormat() {
     if (btnExb.getSelection()) {
-      return Optional.of(Format.Exmaralda);
+      return Optional.of(ImportFormat.Exmaralda);
     } else if (btnPaulaXml.getSelection()) {
-      return Optional.of(Format.PaulaXML);
+      return Optional.of(ImportFormat.PaulaXML);
     }
     return Optional.empty();
   }

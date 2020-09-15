@@ -22,7 +22,7 @@ package org.corpus_tools.hexatomic.formats.exb;
 
 import java.util.Properties;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
-import org.corpus_tools.hexatomic.formats.Format;
+import org.corpus_tools.hexatomic.formats.ImportFormat;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,7 +34,7 @@ public class ExbImportConfiguration extends ConfigurationPage {
   private Button btnAddSpaces;
 
   /**
-   * Constructs a new import configuration for the {@link Format#Exmaralda} format.
+   * Constructs a new import configuration for the {@link ImportFormat#Exmaralda} format.
    */
   public ExbImportConfiguration() {
     super("Configure import");

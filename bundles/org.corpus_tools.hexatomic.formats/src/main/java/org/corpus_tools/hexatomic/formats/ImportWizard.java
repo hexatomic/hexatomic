@@ -103,7 +103,7 @@ public class ImportWizard extends Wizard {
   @Override
   public boolean performFinish() {
     Optional<File> corpusPath = corpusPathPage.getCorpusPath();
-    Optional<Format> selectedFormat = importerPage.getSelectedFormat();
+    Optional<ImportFormat> selectedFormat = importerPage.getSelectedFormat();
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
       // Create the import specification

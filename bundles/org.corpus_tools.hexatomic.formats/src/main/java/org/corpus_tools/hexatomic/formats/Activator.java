@@ -35,6 +35,9 @@ public class Activator implements BundleActivator {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Activator.class);
 
+  private static String[] BUNDLE_LOCATIONS = {"exmaralda-emf-api-1.2.1.jar",
+      "pepperModules-EXMARaLDAModules-1.3.0.jar", "pepperModules-PAULAModules-1.2.4.jar"};
+
   private static Optional<Pepper> pepper = Optional.empty();
 
   @Override
@@ -70,13 +73,11 @@ public class Activator implements BundleActivator {
     }
 
     // Add and start all required pepper module bundles in the correct order
-    for (Format format : Format.values()) {
-      for (String location : format.getBundleFiles()) {
-        URL fileUrl = thisBundle.getResource("pepper-plugins/" + location);
-        log.info("Installing Pepper module from {}", fileUrl);
-        Bundle b = context.installBundle(fileUrl.toExternalForm());
-        b.start();
-      }
+    for (String location : BUNDLE_LOCATIONS) {
+      URL fileUrl = thisBundle.getResource("pepper-plugins/" + location);
+      log.info("Installing Pepper module from {}", fileUrl);
+      Bundle b = context.installBundle(fileUrl.toExternalForm());
+      b.start();
     }
   }
 
