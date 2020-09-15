@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid;
 
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,6 +41,7 @@ import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -52,7 +54,6 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
@@ -253,36 +254,37 @@ public class GridEditor {
 
   private ISelectionChangedListener createSelectionChangeListener(Label messageLabel,
       Composite parent, ControlDecoration deco) {
-    return new ISelectionChangedListener() {
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        if (selection.size() > 0 && selection.getFirstElement() instanceof STextualDS) {
-          // Dispose select message, once a selection is made, selection can never be null or empty
-          // again.
-          messageLabel.dispose();
-          parent.layout();
-          // Set decoration depending on whether there are tokens in the data source.
-          if (((STextualDS) selection.getFirstElement()).getInRelations().isEmpty()) {
-            deco.setDescriptionText(NO_TOKENS_MESSAGE);
-            Image errorImage = FieldDecorationRegistry.getDefault()
-                .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
-            deco.setImage(errorImage);
-            if (table != null) {
-              // Hide table
-              table.setVisible(false);
-              parent.layout();
-            }
-          } else {
-            deco.setDescriptionText(null);
-            deco.setImage(null);
-            selectionService.setSelection(
-                selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
-            if (table != null) {
-              // Show table
-              table.setVisible(true);
-              parent.layout();
-            }
+    return event -> {
+      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+      if (selection.size() > 0 && selection.getFirstElement() instanceof STextualDS) {
+        // Dispose select message, once a selection is made, selection can never be null or empty
+        // again.
+        messageLabel.dispose();
+        parent.layout();
+        // Set decoration depending on whether there are tokens in the data source.
+        // This is found out by checking whether the data source has incoming relations of type
+        // STextualRelation.
+        if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
+            .filter(rel -> rel instanceof STextualRelation).collect(Collectors.toList())
+            .isEmpty()) {
+          deco.setDescriptionText(NO_TOKENS_MESSAGE);
+          Image errorImage = FieldDecorationRegistry.getDefault()
+              .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+          deco.setImage(errorImage);
+          if (table != null) {
+            // Hide table
+            table.setVisible(false);
+            parent.layout();
+          }
+        } else {
+          deco.setDescriptionText(null);
+          deco.setImage(null);
+          selectionService.setSelection(
+              selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+          if (table != null) {
+            // Show table
+            table.setVisible(true);
+            parent.layout();
           }
         }
       }
