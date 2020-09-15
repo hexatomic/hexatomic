@@ -23,7 +23,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
-import org.corpus_tools.hexatomic.grid.internal.style.StyleConfiguration;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ColumnOverrideLabelAccumulator;

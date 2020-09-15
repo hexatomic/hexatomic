@@ -36,7 +36,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
-import org.corpus_tools.hexatomic.grid.internal.style.StyleConfiguration;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
-import org.corpus_tools.hexatomic.grid.internal.style.StyleConfiguration;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SToken;

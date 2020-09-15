@@ -18,4 +18,4 @@ Require-Bundle: javax.inject,
  org.corpus-tools.salt-extensions
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.corpus_tools.hexatomic.grid.internal.style;x-internal:=true
+Export-Package: org.corpus_tools.hexatomic.grid.style
