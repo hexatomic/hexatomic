@@ -37,7 +37,6 @@ location 'https://korpling.github.io/salt/p2/salt-3.4/' {
 }
 
 location 'https://korpling.github.io/pepper/p2/pepper-3.4' {
-	org.corpus-tools.pepper-lib
 	org.corpus-tools.pepper-framework
 }
 
