@@ -35,6 +35,7 @@ import org.corpus_tools.hexatomic.grid.internal.configuration.GridLayerConfigura
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -56,7 +57,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
@@ -129,8 +129,7 @@ public class GridEditor {
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    AutomaticSpanningDataProvider spanningDataProvider =
-        new AutomaticSpanningDataProvider(bodyDataProvider, false, true);
+    NodeSpanningDataProvider spanningDataProvider = new NodeSpanningDataProvider(bodyDataProvider);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
     // Body
