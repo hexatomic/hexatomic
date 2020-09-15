@@ -22,7 +22,6 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.Objects;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
-import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 /**
  * A spanning data provider which spans automatically based on the condition that the underlying
@@ -34,13 +33,19 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
  */
 public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
 
-  public NodeSpanningDataProvider(IDataProvider underlyingDataProvider) {
+  /**
+   * Constructor checking if the data provider is null. Always passes <code>false</code> for
+   * autoColumnSpan and <code>true</code> for autoRowSpan to the superclass.
+   * 
+   * @param underlyingDataProvider The underlying data provider. Must be of type
+   *        {@link GraphDataProvider}.
+   * @throws IllegalArgumentException if the {@link GraphDataProvider} argument is null.
+   */
+  public NodeSpanningDataProvider(GraphDataProvider underlyingDataProvider) {
     super(underlyingDataProvider, false, true);
-    if (!(underlyingDataProvider instanceof GraphDataProvider)) {
-      throw new IllegalArgumentException("Error setting underlying data provider to an instance of "
-          + underlyingDataProvider.getClass().getCanonicalName() + ". Underlying data provider in "
-          + this.getClass().getCanonicalName() + " must be of type "
-          + GraphDataProvider.class.getCanonicalName() + ".");
+    if (underlyingDataProvider == null) {
+      throw new IllegalArgumentException(
+          "Data provider for " + this.getClass().getCanonicalName() + " must not be null.");
     }
   }
 

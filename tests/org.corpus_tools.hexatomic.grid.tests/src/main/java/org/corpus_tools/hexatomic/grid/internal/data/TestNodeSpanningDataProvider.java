@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -11,7 +8,6 @@ import static org.mockito.Mockito.mock;
 
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
-import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,9 +37,7 @@ class TestNodeSpanningDataProvider {
   @Test
   void testNodeSpanningDataProvider() {
     assertDoesNotThrow(() -> new NodeSpanningDataProvider(mock(GraphDataProvider.class)));
-    assertThrows(RuntimeException.class, () -> new NodeSpanningDataProvider(null));
-    assertThrows(RuntimeException.class,
-        () -> new NodeSpanningDataProvider(mock(IDataProvider.class)));
+    assertThrows(IllegalArgumentException.class, () -> new NodeSpanningDataProvider(null));
   }
 
   /**
