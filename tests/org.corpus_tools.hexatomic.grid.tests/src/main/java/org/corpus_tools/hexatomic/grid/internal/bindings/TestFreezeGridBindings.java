@@ -37,7 +37,6 @@ class TestFreezeGridBindings {
    */
   @Test
   void testConfigureUiBindings() {
-    // UiBindingRegistry registry = mock(UiBindingRegistry.class);
     UiBindingRegistry registry = new UiBindingRegistry(mock(NatTable.class));
     fixture.configureUiBindings(registry);
     Event event = new Event();
