@@ -2,7 +2,6 @@ package org.corpus_tools.hexatomic.grid.internal.style;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.ConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
