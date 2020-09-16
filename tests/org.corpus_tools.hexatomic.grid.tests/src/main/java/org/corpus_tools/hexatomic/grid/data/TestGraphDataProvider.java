@@ -37,6 +37,10 @@ import org.junit.jupiter.api.Test;
  */
 class TestGraphDataProvider {
 
+  private static final String SPAN_2_VALUE = "val_span_2";
+
+  private static final String TOPIC_VALUE = "topic";
+
   private ErrorService errorService;
 
   private GraphDataProvider fixture = null;
@@ -144,13 +148,13 @@ class TestGraphDataProvider {
     assertEquals(".", fixture.getDataValue(2, 10));
 
     assertEquals("contrast-focus", fixture.getDataValue(3, 0));
-    assertEquals("topic", fixture.getDataValue(3, 4));
-    assertEquals("topic", fixture.getDataValue(3, 5));
-    assertEquals("topic", fixture.getDataValue(3, 6));
-    assertEquals("topic", fixture.getDataValue(3, 7));
-    assertEquals("topic", fixture.getDataValue(3, 8));
-    assertEquals("topic", fixture.getDataValue(3, 9));
-    assertEquals("topic", fixture.getDataValue(3, 10));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 4));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 5));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 6));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 7));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 8));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 9));
+    assertEquals(TOPIC_VALUE, fixture.getDataValue(3, 10));
   }
 
   /**
@@ -175,10 +179,10 @@ class TestGraphDataProvider {
     assertEquals("six_tok_anno_4", fixture.getDataValue(1, 4));
 
     assertEquals("val_span_1", fixture.getDataValue(2, 0));
-    assertEquals("val_span_2", fixture.getDataValue(2, 1));
-    assertEquals("val_span_2", fixture.getDataValue(2, 2));
-    assertEquals("val_span_2", fixture.getDataValue(2, 3));
-    assertEquals("val_span_2", fixture.getDataValue(2, 4));
+    assertEquals(SPAN_2_VALUE, fixture.getDataValue(2, 1));
+    assertEquals(SPAN_2_VALUE, fixture.getDataValue(2, 2));
+    assertEquals(SPAN_2_VALUE, fixture.getDataValue(2, 3));
+    assertEquals(SPAN_2_VALUE, fixture.getDataValue(2, 4));
 
     assertEquals("val_span_3", fixture.getDataValue(3, 0));
     assertEquals("val_span_3", fixture.getDataValue(3, 1));
@@ -332,7 +336,7 @@ class TestGraphDataProvider {
     assertNull(overlappingExampleGraph.getNode(originalNodeToRemove1.getId()));
 
     // Remove data from one span cell in multi-cell annotation and remove span
-    assertEquals("val_span_2", fixture.getDataValue(2, 1));
+    assertEquals(SPAN_2_VALUE, fixture.getDataValue(2, 1));
     final SStructuredNode originalNodeToRemove2 = fixture.getNode(2, 1);
     fixture.setDataValue(2, 1, null);
     assertNull(fixture.getDataValue(2, 1));

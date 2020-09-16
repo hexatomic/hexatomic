@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
  */
 class TestColumn {
 
+  private static final String TEST_ANNO_QNAME = "test::anno";
   private Column fixtureTokenTextColumn = null;
   private Column fixtureAnnotationColumn = null;
   private SToken token1 = null;
@@ -52,10 +53,10 @@ class TestColumn {
     fixtureTokenTextColumn.setRow(1, token2);
 
     annotation1 = mock(SAnnotation.class);
-    when(annotation1.getQName()).thenReturn("test::anno");
+    when(annotation1.getQName()).thenReturn(TEST_ANNO_QNAME);
     when(annotation1.getValue()).thenReturn("anno1");
     annotation2 = mock(SAnnotation.class);
-    when(annotation2.getQName()).thenReturn("test::anno");
+    when(annotation2.getQName()).thenReturn(TEST_ANNO_QNAME);
     when(annotation2.getValue()).thenReturn("anno2");
 
     when(token1.getAnnotation(annotation1.getQName())).thenReturn(annotation1);
@@ -148,7 +149,7 @@ class TestColumn {
   @Test
   final void testGetHeader() {
     assertEquals("Header", fixtureTokenTextColumn.getHeader());
-    assertEquals("test::anno", fixtureAnnotationColumn.getHeader());
+    assertEquals(TEST_ANNO_QNAME, fixtureAnnotationColumn.getHeader());
 
     // Test indexed header
     Column indexedColumn = new Column(ColumnType.SPAN_ANNOTATION, "test", 2);

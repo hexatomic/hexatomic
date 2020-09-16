@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.graph.GraphEditor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -58,6 +59,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String ANOTHER_TEXT = "Another text";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
   private static final String GET_VIEWPORT = "getViewport";
 
@@ -92,7 +94,7 @@ class TestGraphEditor {
     public boolean test() throws Exception {
       SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
-        SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+        SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
         for (int i : segmentIndexes) {
           if (!textRangeTable.getTableItem(i).isChecked()) {
@@ -215,7 +217,7 @@ class TestGraphEditor {
 
   void enterCommand(String command) {
     SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
-    final SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    final SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
 
     // Remember the index of the currently selected segment
     Optional<Integer> firstSelectedRow = Optional.empty();
@@ -402,20 +404,20 @@ class TestGraphEditor {
       final String originalText = firstText.getText();
 
       // Add an additional data source to the document graph
-      STextualDS anotherText = graph.createTextualDS("Another text");
+      STextualDS anotherText = graph.createTextualDS(ANOTHER_TEXT);
       graph.createToken(anotherText, 0, 7);
       graph.createToken(anotherText, 8, 12);
 
       // Select the new text
-      SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-      textRangeTable.select("Another text");
+      SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
+      textRangeTable.select(ANOTHER_TEXT);
 
       // Wait until the graph has been properly selected
       bot.waitUntil(new DefaultCondition() {
 
         @Override
         public boolean test() throws Exception {
-          return textRangeTable.getTableItem("Another text").isChecked();
+          return textRangeTable.getTableItem(ANOTHER_TEXT).isChecked();
         }
 
         @Override

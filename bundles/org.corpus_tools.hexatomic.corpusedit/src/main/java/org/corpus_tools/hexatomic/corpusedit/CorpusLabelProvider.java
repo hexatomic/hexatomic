@@ -37,18 +37,19 @@ import org.osgi.framework.FrameworkUtil;
 
 public class CorpusLabelProvider extends LabelProvider {
 
+  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
   private ImageDescriptor documentImage;
 
   @Override
   public Image getImage(Object element) {
     if (element instanceof SDocument) {
-      return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+      return ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
           "icons/fontawesome/file-alt-regular.png");
     } else if (element instanceof SCorpusGraph) {
-      return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+      return ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
           "icons/fontawesome/project-diagram-solid.png");
     } else if (element instanceof SCorpus) {
-      return ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+      return ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
           "icons/fontawesome/folder-regular.png");
     } else {
       return super.getImage(element);

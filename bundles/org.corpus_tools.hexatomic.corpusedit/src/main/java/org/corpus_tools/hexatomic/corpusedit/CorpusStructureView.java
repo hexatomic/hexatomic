@@ -104,6 +104,8 @@ import org.eclipse.wb.swt.ResourceManager;
 
 public class CorpusStructureView {
 
+  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
+
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
   private static final String OPEN_WITH_PREFIX = "Open with ";
@@ -293,7 +295,7 @@ public class CorpusStructureView {
 
   private void createAddMenu(ToolBar toolBar) {
     ToolItem addToolItem = new ToolItem(toolBar, SWT.DROP_DOWN);
-    addToolItem.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addToolItem.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/plus-solid.png"));
     addToolItem.setText("Add");
     Menu addMenu = new Menu(addToolItem.getParent().getShell());
@@ -325,7 +327,7 @@ public class CorpusStructureView {
 
     MenuItem addCorpusGraph = new MenuItem(addMenu, SWT.NONE);
     addCorpusGraph.setText("Corpus Graph");
-    addCorpusGraph.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addCorpusGraph.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/project-diagram-solid.png"));
     addCorpusGraph.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -336,7 +338,7 @@ public class CorpusStructureView {
 
     MenuItem addCorpus = new MenuItem(addMenu, SWT.NONE);
     addCorpus.setText("(Sub-) Corpus");
-    addCorpus.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addCorpus.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/folder-regular.png"));
     addCorpus.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -347,7 +349,7 @@ public class CorpusStructureView {
 
     MenuItem addDocument = new MenuItem(addMenu, SWT.NONE);
     addDocument.setText("Document");
-    addDocument.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addDocument.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/file-alt-regular.png"));
     addDocument.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -526,7 +528,7 @@ public class CorpusStructureView {
         }
       }
     });
-    deleteToolItem.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    deleteToolItem.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/trash-alt-regular.png"));
     deleteToolItem.setText("Delete");
   }
