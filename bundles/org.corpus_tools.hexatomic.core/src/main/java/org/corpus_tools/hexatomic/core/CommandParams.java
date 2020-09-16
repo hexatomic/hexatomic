@@ -28,6 +28,10 @@ package org.corpus_tools.hexatomic.core;
  */
 public final class CommandParams {
 
+  private CommandParams() {
+    // Private (but empty) constructor to avoid instantiation of this utility class.
+  }
+
   public static final String EDITOR_ID =
       "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
   public static final String LOCATION = "org.corpus_tools.hexatomic.core.commandparameter.location";
