@@ -36,13 +36,9 @@ public class ImportHandler {
   protected static void execute(Shell shell, ErrorService errorService,
       ProjectManager projectManager, SaltNotificationFactory notificationFactory,
       UISynchronize sync) {
-    try {
-      WizardDialog dialog = new WizardDialog(shell,
-          new ImportWizard(errorService, projectManager, notificationFactory, sync));
-      dialog.open();
-    } catch (Exception e) {
-      errorService.handleException("Could not initialize Pepper modules", e, ImportHandler.class);
-    }
+    WizardDialog dialog = new WizardDialog(shell,
+        new ImportWizard(errorService, projectManager, notificationFactory, sync));
+    dialog.open();
   }
   
   @CanExecute
