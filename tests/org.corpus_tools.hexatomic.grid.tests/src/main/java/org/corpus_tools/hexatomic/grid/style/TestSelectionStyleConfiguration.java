@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  */
 class TestSelectionStyleConfiguration {
 
-  private static SelectionStyleConfiguration fixture = null;
+  private SelectionStyleConfiguration fixture = null;
 
   /**
    * Sets up the test fixture.

@@ -24,8 +24,8 @@ import org.junit.jupiter.api.Test;
  */
 class TestColumn {
 
-  private static Column fixtureTokenTextColumn = null;
-  private static Column fixtureAnnotationColumn = null;
+  private Column fixtureTokenTextColumn = null;
+  private Column fixtureAnnotationColumn = null;
   private SToken token1 = null;
   private SToken token2 = null;
   private SAnnotation annotation1 = null;

@@ -15,6 +15,8 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
+import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,11 +44,10 @@ class TestCorpusStructure {
 
   private ProjectManager projectManager;
 
+  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
   @BeforeEach
   void setup() {
-    org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_STRATEGY =
-        "org.eclipse.swtbot.swt.finder.keyboard.SWTKeyboardStrategy";
     TestHelper.setKeyboardLayout();
 
     IEclipseContext ctx = TestHelper.getEclipseContext();
@@ -106,13 +107,15 @@ class TestCorpusStructure {
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_1).select();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_1)
         .doubleClick();
-    bot.text(DOCUMENT_1).setText("abc").pressShortcut(Keystrokes.LF);
+    bot.text(DOCUMENT_1).setText("abc").setFocus();
+    keyboard.pressShortcut(Keystrokes.LF);
 
     bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_2);
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_2).select();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_2)
         .doubleClick();
-    bot.text(DOCUMENT_2).setText("def").pressShortcut(Keystrokes.LF);
+    bot.text(DOCUMENT_2).setText("def").setFocus();
+    keyboard.pressShortcut(Keystrokes.LF);
   }
 
   @Test
