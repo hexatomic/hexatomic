@@ -197,7 +197,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   @Override
   public void documentAboutToBeChanged(DocumentEvent event) {
-
+    // Do nothing: all relevant operations are done after the document has been changed.
   }
 
   @Override

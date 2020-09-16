@@ -154,7 +154,8 @@ public class CorpusStructureView {
                 @Override
                 public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                     SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-
+                  // No further action needed when leaving the node. All operations are already done
+                  // in nodeReached(...).
                 }
 
                 @Override
@@ -559,7 +560,8 @@ public class CorpusStructureView {
             @Override
             public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                 SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-
+              // No further action needed when leaving the node. All operations are already done
+              // in nodeReached(...).
             }
 
             @Override
