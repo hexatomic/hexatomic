@@ -82,18 +82,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     return true;
   }
 
-  @Override
-  protected void applyLayoutInternal(InternalNode[] entitiesToLayout,
-      InternalRelationship[] relationshipsToConsider, double boundsX, double boundsY,
-      double boundsWidth, double boundsHeight) {
-
-    fireProgressStarted(4);
-
-    List<SToken> tokens = new LinkedList<>();
-
-    fireProgressEvent(0, 4);
-
-    // 1. Assign an initial rank to each non-token
+  private Multimap<Integer, InternalNode> assignInitialRankToNonToken(List<SToken> tokens) {
     Map<InternalNode, Integer> rankForNode = new HashMap<>();
 
     // Get all nodes that are root nodes when only including the considered relations
@@ -119,10 +108,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (Map.Entry<InternalNode, Integer> entry : rankForNode.entrySet()) {
       nodesByRank.put(entry.getValue(), entry.getKey());
     }
+    return nodesByRank;
+  }
 
-    fireProgressEvent(1, 4);
-
-    // 2. Check if we can merge nodes to the same rank if they don't cover the same token
+  private LinkedHashMap<InternalNode, RankSubrank> mergeNodesToSameRank(
+      Multimap<Integer, InternalNode> nodesByRank) {
     LinkedHashMap<InternalNode, RankSubrank> mergedRanks = new LinkedHashMap<>();
     for (Integer rank : new LinkedList<>(nodesByRank.keySet())) {
       Collection<InternalNode> sameRankNodes = nodesByRank.get(rank);
@@ -185,8 +175,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    // re-create the ranks map but include the merged sub-ranks
-    rankForNode.clear();
+    return mergedRanks;
+  }
+
+  private int recreateRanksFromMerged(LinkedHashMap<InternalNode, RankSubrank> mergedRanks,
+      Map<InternalNode, Integer> rankForNode) {
     int flattenedRank = 0;
     RankSubrank previousRank = null;
     // Because mergedRanks is a linked hash map and the insertion order was by the original rank,
@@ -205,14 +198,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       previousRank = currentRank;
     }
 
-    fireProgressEvent(2, 4);
+    return flattenedRank;
+  }
 
-    // 3. layout tokens and put them one rank below the number of ranks
-    // TODO: check if any pointing relations are present and use +1 if not
-    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + 2);
-    fireProgressEvent(3, 4);
-
-    // 4. assign position based on (sub-) rank and the covered tokens
+  private void assignPositionsByRank(Map<InternalNode, Integer> rankForNode, double boundsX,
+      double boundsY) {
     for (Map.Entry<InternalNode, Integer> e : rankForNode.entrySet()) {
       int rank = e.getValue();
       InternalNode node = e.getKey();
@@ -238,11 +228,41 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
       }
     }
+  }
 
-    fireProgressEvent(4, 4);
+  @Override
+  protected void applyLayoutInternal(InternalNode[] entitiesToLayout,
+      InternalRelationship[] relationshipsToConsider, double boundsX, double boundsY,
+      double boundsWidth, double boundsHeight) {
+
+    fireProgressStarted(3);
+
+    // 1. Assign an initial rank to each non-token
+    List<SToken> tokens = new LinkedList<>();
+    Multimap<Integer, InternalNode> nodesByRank = assignInitialRankToNonToken(tokens);
+    fireProgressEvent(0, 3);
+
+    // 2. Check if we can merge nodes to the same rank if they don't cover the same token
+    LinkedHashMap<InternalNode, RankSubrank> mergedRanks = mergeNodesToSameRank(nodesByRank);
+
+    // re-create the ranks map but include the merged sub-ranks
+    Map<InternalNode, Integer> rankForNode = new HashMap<>();
+    int flattenedRank = recreateRanksFromMerged(mergedRanks, rankForNode);
+
+    fireProgressEvent(1, 3);
+
+    // 3. layout tokens and put them one rank below the number of ranks
+    // TODO: check if any pointing relations are present and use +1 if not
+    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + 2);
+    fireProgressEvent(2, 3);
+
+    // 4. assign position based on (sub-) rank and the covered tokens
+    assignPositionsByRank(rankForNode, boundsX, boundsY);
+
+    fireProgressEvent(3, 3);
 
     updateLayoutLocations(entitiesToLayout);
-    fireProgressEnded(4);
+    fireProgressEnded(3);
 
   }
 
