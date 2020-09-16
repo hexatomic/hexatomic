@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.formats;
+package org.corpus_tools.hexatomic.formats.importer;
 
 import java.util.Optional;
 import org.corpus_tools.pepper.common.MODULE_TYPE;

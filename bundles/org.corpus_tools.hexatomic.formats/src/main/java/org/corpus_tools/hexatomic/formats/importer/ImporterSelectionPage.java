@@ -18,11 +18,12 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.formats;
+package org.corpus_tools.hexatomic.formats.importer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.pepper.common.Pepper;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.IWizardPage;

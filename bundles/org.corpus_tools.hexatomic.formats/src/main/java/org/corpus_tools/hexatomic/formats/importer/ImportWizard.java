@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.formats;
+package org.corpus_tools.hexatomic.formats.importer;
 
 import com.google.common.base.Joiner;
 import java.io.File;
@@ -34,6 +34,9 @@ import java.util.concurrent.Future;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
+import org.corpus_tools.hexatomic.formats.Activator;
+import org.corpus_tools.hexatomic.formats.ConfigurationPage;
+import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.corpus_tools.hexatomic.formats.exb.ExbImportConfiguration;
 import org.corpus_tools.pepper.common.CorpusDesc;

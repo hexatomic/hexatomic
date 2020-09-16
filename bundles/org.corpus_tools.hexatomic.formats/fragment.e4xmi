@@ -9,6 +9,6 @@
     <elements xsi:type="commands:Command" xmi:id="_m4R8sOOIEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.formats.command.import" commandName="Import"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rEEnsOOIEeqTD4EqyXMWvA" featurename="handlers" parentElementId="xpath:/">
-    <elements xsi:type="commands:Handler" xmi:id="_tOjiQOOIEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.formats.handler.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.formats/org.corpus_tools.hexatomic.formats.ImportHandler" command="_m4R8sOOIEeqTD4EqyXMWvA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_tOjiQOOIEeqTD4EqyXMWvA" elementId="org.corpus_tools.hexatomic.formats.handler.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.formats/org.corpus_tools.hexatomic.formats.importer.ImportHandlerrtHandler" command="_m4R8sOOIEeqTD4EqyXMWvA"/>
   </fragments>
 </fragment:ModelFragments>

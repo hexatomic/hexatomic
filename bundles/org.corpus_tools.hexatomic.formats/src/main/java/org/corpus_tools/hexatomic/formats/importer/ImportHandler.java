@@ -18,11 +18,12 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.formats;
+package org.corpus_tools.hexatomic.formats.importer;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
+import org.corpus_tools.hexatomic.formats.Activator;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;

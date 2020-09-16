@@ -43,7 +43,12 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     Import, Export
   }
 
-  protected CorpusPathSelectionPage(Type type) {
+  /**
+   * Creates a new wizard page to select a corpus path.
+   * 
+   * @param type Choose whether this is an import or export wizard.
+   */
+  public CorpusPathSelectionPage(Type type) {
     super("Select corpus directory");
     switch (type) {
       case Import:
@@ -93,7 +98,12 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     setPageComplete(false);
   }
 
-  protected Optional<File> getCorpusPath() {
+  /**
+   * Get the directory selected by the user.
+   * 
+   * @return The path or {{@link Optional#empty()} if the selected path is not a directory.
+   */
+  public Optional<File> getCorpusPath() {
     if (!txtDirectoryPath.getText().isEmpty()) {
       // Check if the path exists and is a directory
       File f = new File(txtDirectoryPath.getText());
