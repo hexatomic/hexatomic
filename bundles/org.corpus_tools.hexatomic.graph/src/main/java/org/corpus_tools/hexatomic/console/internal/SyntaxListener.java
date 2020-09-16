@@ -369,6 +369,24 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   }
 
+  private List<String> newTokensTextFromContext(TokenizeAfterContext ctx) {
+    ListIterator<StringContext> itWords = ctx.string().listIterator();
+    List<String> newTokenTexts = new LinkedList<>();
+    while (itWords.hasNext()) {
+      String tokenValue = getString(itWords.next());
+      newTokenTexts.add(tokenValue);
+    }
+    return newTokenTexts;
+  }
+
+  private void appendTokens(STextualDS ds, int offset, List<String> newTokenTexts) {
+    int numberOfTokens = graph.getTokens().size();
+    List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
+    for (SToken t : newTokens) {
+      t.setName(getUnusedName("t", ++numberOfTokens));
+    }
+  }
+
   @Override
   public void exitTokenizeAfter(TokenizeAfterContext ctx) {
     SDocumentGraph graph = this.graph;
@@ -388,21 +406,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
           offset += 1;
         }
         if (seq.getDataSource() instanceof STextualDS) {
-          STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          appendTokens((STextualDS) seq.getDataSource(), offset, newTokensTextFromContext(ctx));
         }
       }
     } else {
