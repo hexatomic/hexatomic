@@ -472,7 +472,7 @@ public class CorpusStructureView {
     }
 
     Optional<SNode> parent =
-        selectedCorpus.getInRelations().stream().filter((rel) -> rel instanceof SCorpusRelation)
+        selectedCorpus.getInRelations().stream().filter(rel -> rel instanceof SCorpusRelation)
             .findFirst()
             .map(rel -> ((SCorpusRelation) rel).getSource());
     if (parent.isPresent()) {
@@ -491,7 +491,7 @@ public class CorpusStructureView {
   private void deleteDocument(SDocument selectedDocument) {
     Optional<SNode> parent =
         selectedDocument.getInRelations().stream()
-            .filter((rel) -> rel instanceof SCorpusDocumentRelation)
+            .filter(rel -> rel instanceof SCorpusDocumentRelation)
             .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
 
     // Attempt to find the previous sibling document of the one that is deleted
