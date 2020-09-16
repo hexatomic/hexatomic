@@ -17,3 +17,4 @@ Automatic-Module-Name: org.corpus.tools.hexatomic.formats
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator
 Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.e4.ui.di

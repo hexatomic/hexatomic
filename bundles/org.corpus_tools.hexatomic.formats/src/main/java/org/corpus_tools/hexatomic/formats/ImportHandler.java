@@ -25,6 +25,7 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -32,10 +33,11 @@ public class ImportHandler {
 
   @Execute
   protected static void execute(Shell shell, ErrorService errorService,
-      ProjectManager projectManager, SaltNotificationFactory notificationFactory) {
+      ProjectManager projectManager, SaltNotificationFactory notificationFactory,
+      UISynchronize sync) {
     try {
       WizardDialog dialog = new WizardDialog(shell,
-          new ImportWizard(errorService, projectManager, notificationFactory));
+          new ImportWizard(errorService, projectManager, notificationFactory, sync));
       dialog.open();
     } catch (Exception e) {
       errorService.handleException("Could not initialize Pepper modules", e, ImportHandler.class);

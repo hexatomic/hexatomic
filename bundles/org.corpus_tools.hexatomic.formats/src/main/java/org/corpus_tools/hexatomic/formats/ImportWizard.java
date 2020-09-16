@@ -27,6 +27,10 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
@@ -42,6 +46,7 @@ import org.corpus_tools.pepper.common.StepDesc;
 import org.corpus_tools.pepper.core.PepperJobImpl;
 import org.corpus_tools.pepper.modules.DocumentController;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -55,13 +60,15 @@ public class ImportWizard extends Wizard {
   private final ErrorService errorService;
   private final ProjectManager projectManager;
   private final SaltNotificationFactory notificationFactory;
+  private final UISynchronize sync;
 
   protected ImportWizard(ErrorService errorService, ProjectManager projectManager,
-      SaltNotificationFactory notificationFactory) {
+      SaltNotificationFactory notificationFactory, UISynchronize sync) {
     super();
     this.errorService = errorService;
     this.projectManager = projectManager;
     this.notificationFactory = notificationFactory;
+    this.sync = sync;
     setNeedsProgressMonitor(true);
   }
 
@@ -110,7 +117,8 @@ public class ImportWizard extends Wizard {
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
       // Limit the maximum number of parallel processed documents
-      pepper.get().getConfiguration().put(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS, "2");
+      pepper.get().getConfiguration().setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS,
+          "2");
 
       // Create the import specification
       StepDesc importStep = selectedFormat.get().createJobSpec();
@@ -140,12 +148,12 @@ public class ImportWizard extends Wizard {
           Set<String> completedDocuments = new HashSet<>();
 
           // Run conversion in a background thread so we can add regular status reports
-          Thread background = new Thread(job::convertFrom);
-          background.start();
+          ExecutorService serviceExec = Executors.newSingleThreadExecutor();
+          Future<?> background = serviceExec.submit(job::convertFrom);
 
           Optional<Integer> numberOfJobs = Optional.empty();
 
-          while (background.isAlive()) {
+          while (!background.isDone() && !background.isCancelled()) {
             if (monitor.isCanceled()) {
               // Cancel the Pepper job
               job.cancelConversion();
@@ -158,7 +166,7 @@ public class ImportWizard extends Wizard {
               JOB_STATUS jobStatus = pepperJobImpl.getStatus();
               if (!numberOfJobs.isPresent()
                   && jobStatus == JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE) {
-                // We don't know how many documents are present yet but since importing the
+                // We don't know how many documents are present previously but since importing the
                 // documents has started, we can get this number
                 numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
                 monitor.beginTask("Importing " + numberOfJobs.get() + " documents",
@@ -175,7 +183,9 @@ public class ImportWizard extends Wizard {
               if (numberOfJobs.isPresent()) {
                 for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
                   DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
-                  if (docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
+
+                  if (docStatus == DOCUMENT_STATUS.COMPLETED
+                      || docStatus == DOCUMENT_STATUS.DELETED
                       || docStatus == DOCUMENT_STATUS.FAILED) {
                     if (completedDocuments.add(controller.getGlobalId())) {
                       monitor.worked(1);
@@ -186,12 +196,22 @@ public class ImportWizard extends Wizard {
             }
             Thread.sleep(1000);
           }
-          // set the corpus as current project
-          if (!monitor.isCanceled()) {
-            projectManager.setProject(job.getSaltProject());
-          }
           monitor.done();
 
+          // Get the result of the conversion, if there has been any exception this should throw an
+          // exception
+          try {
+            background.get();
+            // Set the corpus as current project
+            if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
+              errorService.showError("Error during import", "Import was not successfull",
+                  ImportWizard.class);
+            } else if (!monitor.isCanceled()) {
+              sync.syncExec(() -> projectManager.setProject(job.getSaltProject()));
+            }
+          } catch (ExecutionException ex) {
+            errorService.handleException("Import was not successfull", ex, ImportWizard.class);
+          }
         });
 
       } catch (InvocationTargetException ex) {
