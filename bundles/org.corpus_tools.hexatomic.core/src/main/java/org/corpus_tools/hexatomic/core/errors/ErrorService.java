@@ -97,15 +97,15 @@ public class ErrorService {
    */
   public void showError(String title, String message, Class<?> context) {
 
-    if (title == null) {
-      title = ERROR_OCCURED_MSG;
-    }
+    final String titleOrDefault = title == null ? ERROR_OCCURED_MSG : title;
 
     // log error so whatever happens, it is visible in the log-file/console
     Logger log = getLogger(context);
-    log.error("{}: {}", title, message);
+    log.error("{}: {}", titleOrDefault, message);
 
-    MessageDialog.openError(null, title, message);
+    sync.syncExec(() -> {
+      MessageDialog.openError(null, titleOrDefault, message);
+    });
   }
 
   /**

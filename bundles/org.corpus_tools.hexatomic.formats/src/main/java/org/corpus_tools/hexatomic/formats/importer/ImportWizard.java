@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -162,11 +163,12 @@ public class ImportWizard extends Wizard {
               job.cancelConversion();
               return;
             }
-            // Check if any new document has been finished
+
             if (job instanceof PepperJobImpl) {
               PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
-
               JOB_STATUS jobStatus = pepperJobImpl.getStatus();
+              // Check if we can get the number of documents after the corpus structure has been
+              // imported
               if (!numberOfJobs.isPresent()
                   && jobStatus == JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE) {
                 // We don't know how many documents are present previously but since importing the
@@ -176,26 +178,11 @@ public class ImportWizard extends Wizard {
                     numberOfJobs.get());
               }
 
-              Set<DocumentController> activeDocuments =
-                  new LinkedHashSet<>(pepperJobImpl.getActiveDocuments());
-              if (!activeDocuments.isEmpty()) {
-                monitor.subTask(Joiner.on(", ")
-                    .join(activeDocuments.stream().map(d -> d.getDocument().getName()).iterator()));
-              }
-
               if (numberOfJobs.isPresent()) {
-                for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
-                  DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
-
-                  if (docStatus == DOCUMENT_STATUS.COMPLETED
-                      || docStatus == DOCUMENT_STATUS.DELETED
-                      || docStatus == DOCUMENT_STATUS.FAILED) {
-                    if (completedDocuments.add(controller.getGlobalId())) {
-                      monitor.worked(1);
-                    }
-                  }
-                }
+                // Report detailed status of the conversion progress of the documents
+                reportDocumentConversionProgress(pepperJobImpl, monitor, completedDocuments);
               }
+
             }
             Thread.sleep(1000);
           }
@@ -205,12 +192,40 @@ public class ImportWizard extends Wizard {
           // exception
           try {
             background.get();
-            // Set the corpus as current project
-            if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
-              errorService.showError("Error during import", "Import was not successfull",
-                  ImportWizard.class);
-            } else if (!monitor.isCanceled()) {
-              sync.syncExec(() -> projectManager.setProject(job.getSaltProject()));
+
+            if (!monitor.isCanceled()) {
+              // Check if the whole conversion was marked as error.
+              if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
+                errorService.showError("Error(s) during import",
+                    "Import was not successful for unknown reasons. Please check the log messages for any issues.",
+                    ImportWizard.class);
+              } else if (!monitor.isCanceled()) {
+                // Check for any documents with errors and report them
+                // error.
+                Set<String> failedDocuments = new TreeSet<>();
+                if (job instanceof PepperJobImpl) {
+                  PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
+                  for (DocumentController docController : pepperJobImpl.getDocumentControllers()) {
+
+                    DOCUMENT_STATUS status = docController.getGlobalStatus();
+                    if (status != DOCUMENT_STATUS.COMPLETED) {
+                      failedDocuments.add(docController.getGlobalId());
+                    }
+                  }
+                }
+                if (!failedDocuments.isEmpty()) {
+                  errorService.showError("Error(s) during import",
+                      "Could not import the following documents:\n\n"
+                          + Joiner.on("\n").join(failedDocuments)
+                          + "\n\nPlease check the log messages for any issues.",
+                      ImportWizard.class);
+                }
+
+                // No global error was reported and the process was not cancelled: set the corpus as
+                // current project
+                sync.syncExec(() -> projectManager.setProject(job.getSaltProject()));
+
+              }
             }
           } catch (ExecutionException ex) {
             errorService.handleException("Import was not successfull", ex, ImportWizard.class);
@@ -229,6 +244,30 @@ public class ImportWizard extends Wizard {
       return true;
     }
     return false;
+  }
+
+  private static void reportDocumentConversionProgress(PepperJobImpl pepperJobImpl,
+      IProgressMonitor monitor, Set<String> completedDocuments) {
+
+    Set<DocumentController> activeDocuments =
+        new LinkedHashSet<>(pepperJobImpl.getActiveDocuments());
+    if (!activeDocuments.isEmpty()) {
+      monitor.subTask(Joiner.on(", ")
+          .join(activeDocuments.stream().map(d -> d.getDocument().getName()).iterator()));
+    }
+
+    for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
+      DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
+
+      if (docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
+          || docStatus == DOCUMENT_STATUS.FAILED) {
+        if (completedDocuments.add(controller.getGlobalId())) {
+          monitor.worked(1);
+        }
+      }
+    }
+
+
   }
 
 }
