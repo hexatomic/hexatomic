@@ -172,25 +172,25 @@ class TestCorpusStructure {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
     bot.toolbarDropDownButton(0).click();
-    bot.tree().getTreeItem("corpus_graph_1").select();
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).select();
 
     // Add corpus 1
     bot.toolbarDropDownButton(0).click();
-    bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").select();
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
 
     // Add document_1
     bot.toolbarDropDownButton(0).click();
 
-    bot.tree().expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+    bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_1);
     
-    assertEquals(1, bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes().size());
+    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
     
     // Undo all changes and make sure the view has been updated
     bot.menu("Undo").click();
-    assertEquals(0, bot.tree().getTreeItem("corpus_graph_1").getNode("corpus_1").getNodes().size());
+    assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
     
     bot.menu("Undo").click();
-    assertEquals(0, bot.tree().getTreeItem("corpus_graph_1").getNodes().size());
+    assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
 
     bot.menu("Undo").click();
     assertEquals(0, bot.tree().getAllItems().length);
