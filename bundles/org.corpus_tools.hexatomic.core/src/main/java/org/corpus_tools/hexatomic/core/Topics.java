@@ -26,7 +26,7 @@ package org.corpus_tools.hexatomic.core;
  * 
  * @author Thomas Krause
  */
-public interface Topics {
+public final class Topics {
   
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
