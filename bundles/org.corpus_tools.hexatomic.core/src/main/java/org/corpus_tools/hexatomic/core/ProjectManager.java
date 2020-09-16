@@ -147,6 +147,42 @@ public class ProjectManager {
       monitor.done();
     }
 
+    private void clearSaltProjectFolder(Path outputDirectory) {
+      try {
+        // Parse any existing project file to get all document files that need to be deleted
+        SaltProject existingProject =
+            SaltUtil.loadSaltProject(URI.createFileURI(outputDirectory.toString()));
+
+        if (existingProject != null) {
+          List<URI> allDocuments =
+              existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+                  .filter(d -> d.getDocumentGraphLocation() != null)
+                  .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
+          // Delete the Salt XML files belonging to this document
+          for (URI doc : allDocuments) {
+            Path saltFile = Paths.get(doc.toFileString());
+            if (Files.exists(saltFile)) {
+              Files.delete(saltFile);
+            }
+          }
+        }
+      } catch (SaltResourceException ex) {
+        // This is not a valid salt project folder, don't delete any files
+      } catch (IOException ex) {
+        log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
+            ex);
+      }
+    }
+
+    private URI getOutputPathForDocument(URI saltProjectFolder, SDocument doc) {
+      URI docUri = saltProjectFolder;
+      for (String seg : doc.getPath().segments()) {
+        docUri = docUri.appendSegment(seg);
+      }
+      docUri = docUri.appendFileExtension(SaltUtil.FILE_ENDING_SALT_XML);
+      return docUri;
+    }
+
     private void loadAndPersistAllDocuments(List<SDocument> documents,
         boolean savingToCurrentLocation,
         IProgressMonitor monitor) {
@@ -421,43 +457,6 @@ public class ProjectManager {
    */
   public ProgressMonitorDialog createProgressMonitorDialog(Shell shell) {
     return new ProgressMonitorDialog(shell);
-  }
-
-
-  private void clearSaltProjectFolder(Path outputDirectory) {
-    try {
-      // Parse any existing project file to get all document files that need to be deleted
-      SaltProject existingProject =
-          SaltUtil.loadSaltProject(URI.createFileURI(outputDirectory.toString()));
-
-      if (existingProject != null) {
-        List<URI> allDocuments =
-            existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
-                .filter(d -> d.getDocumentGraphLocation() != null)
-                .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
-        // Delete the Salt XML files belonging to this document
-        for (URI doc : allDocuments) {
-          Path saltFile = Paths.get(doc.toFileString());
-          if (Files.exists(saltFile)) {
-            Files.delete(saltFile);
-          }
-        }
-      }
-    } catch (SaltResourceException ex) {
-      // This is not a valid salt project folder, don't delete any files
-    } catch (IOException ex) {
-      log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
-          ex);
-    }
-  }
-
-  private URI getOutputPathForDocument(URI saltProjectFolder, SDocument doc) {
-    URI docUri = saltProjectFolder;
-    for (String seg : doc.getPath().segments()) {
-      docUri = docUri.appendSegment(seg);
-    }
-    docUri = docUri.appendFileExtension(SaltUtil.FILE_ENDING_SALT_XML);
-    return docUri;
   }
 
   /**
