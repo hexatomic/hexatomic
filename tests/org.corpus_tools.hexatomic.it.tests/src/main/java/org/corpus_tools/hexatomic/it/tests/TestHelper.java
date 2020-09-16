@@ -1,5 +1,11 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.corpus_tools.hexatomic.core.CommandParams;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.IWorkbench;
@@ -14,6 +20,7 @@ import org.osgi.framework.FrameworkUtil;
  * @author Stephan Druskat
  *
  */
+@SuppressWarnings("restriction")
 public class TestHelper {
 
   private static final String SWTBOT_KEYBOARD_LAYOUT = "SWTBOT_KEYBOARD_LAYOUT";
@@ -54,6 +61,22 @@ public class TestHelper {
               + " because the security mananger is running and disallowed access",
           ex);
     }
+  }
+
+  /**
+   * Programmatically start a new salt project to get a clean state. This uses the Eclipse commands
+   * instead of the project manager directly.
+   * 
+   * @param commandService The service used to create Eclipse RCP commands.
+   * @param handlerService The service used to execute command handlers.
+   */
+  public static void executeNewProjectCommand(ECommandService commandService,
+      EHandlerService handlerService) {
+    Map<String, String> params = new HashMap<>();
+    params.put(CommandParams.FORCE_CLOSE, "true");
+    ParameterizedCommand cmd = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
+    handlerService.executeHandler(cmd);
   }
 
 }
