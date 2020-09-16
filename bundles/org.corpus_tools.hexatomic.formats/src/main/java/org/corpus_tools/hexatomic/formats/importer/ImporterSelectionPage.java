@@ -55,7 +55,7 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
 
   protected void updateRecommendFormats(File corpusPath) {
 
-    // Init selection to default
+    // Initialize selection to default
     btnExb.setSelection(false);
     btnPaulaXml.setSelection(false);
 
