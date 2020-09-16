@@ -82,6 +82,15 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     return true;
   }
 
+  private boolean isRootNode(SNode n) {
+    for (SRelation<?, ?> rel : n.getGraph().getInRelations(n.getId())) {
+      if (this.relations.containsValue(rel)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private Multimap<Integer, InternalNode> assignInitialRankToNonToken(List<SToken> tokens) {
     Map<InternalNode, Integer> rankForNode = new HashMap<>();
 
@@ -90,15 +99,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       if (n instanceof SToken) {
         tokens.add((SToken) n);
       } else if (n != null && n.getGraph() != null) {
-        boolean isRoot = true;
-        for (SRelation<?, ?> rel : n.getGraph().getInRelations(n.getId())) {
-          if (this.relations.containsValue(rel)) {
-            isRoot = false;
-            break;
-          }
-        }
-
-        if (isRoot) {
+        if (isRootNode(n)) {
           assignRankRecursively(this.nodes.inverse().get(n), rankForNode, 0);
         }
       }
