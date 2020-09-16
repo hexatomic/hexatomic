@@ -121,14 +121,7 @@ public class ProjectManager {
         // Store all documents and copy them from the original location if necessary.
         // When storing the same location, we can assume we did not change the document graph
         // and can skip copying it.
-        for (SDocument doc : documents) {
-          if (monitor.isCanceled()) {
-            monitor.done();
-            return;
-          }
-
-          loadAndPersistDocument(doc, savingToCurrentLocation, monitor);
-        }
+        loadAndPersistAllDocuments(documents, savingToCurrentLocation, monitor);
       }
 
       location = Optional.of(path);
@@ -154,7 +147,19 @@ public class ProjectManager {
       monitor.done();
     }
 
-    private void loadAndPersistDocument(SDocument doc, boolean savingToCurrentLocation,
+    private void loadAndPersistAllDocuments(List<SDocument> documents,
+        boolean savingToCurrentLocation,
+        IProgressMonitor monitor) {
+      for (SDocument doc : documents) {
+        if (monitor.isCanceled()) {
+          monitor.done();
+          return;
+        }
+        loadAndPersistSingleDocument(doc, savingToCurrentLocation, monitor);
+      }
+    }
+
+    private void loadAndPersistSingleDocument(SDocument doc, boolean savingToCurrentLocation,
         IProgressMonitor monitor) {
       monitor.subTask(doc.getPath().toString());
 
