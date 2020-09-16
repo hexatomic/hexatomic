@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +36,7 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -47,7 +51,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -73,14 +76,21 @@ class TestGraphEditor {
   private final class GraphLoadedCondition extends DefaultCondition {
 
     private final List<Integer> segmentIndexes;
+    private final String documentName;
 
     public GraphLoadedCondition(Integer... segmentIndexes) {
       this.segmentIndexes = Arrays.asList(segmentIndexes);
+      this.documentName = "doc1";
+    }
+
+    public GraphLoadedCondition(String documentName, Integer... segmentIndexes) {
+      this.segmentIndexes = Arrays.asList(segmentIndexes);
+      this.documentName = documentName;
     }
 
     @Override
     public boolean test() throws Exception {
-      SWTBotView view = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
+      SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
         // Wait until the graph has been loaded
@@ -170,18 +180,10 @@ class TestGraphEditor {
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
 
-
     errorService.clearLastException();
 
-    // Programmatically start a new salt project to get a clean state
-    Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.FORCE_CLOSE, "true");
-    ParameterizedCommand cmd = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
-    handlerService.executeHandler(cmd);
-
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
-
 
   void openDefaultExample() {
 
@@ -194,10 +196,14 @@ class TestGraphEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+    SWTBotView corpusStructurePart =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    corpusStructurePart.restore();
+    corpusStructurePart.show();
 
     // Select the first example document
-    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+        .expandNode("rootCorpus")
         .expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
@@ -246,7 +252,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(1)
   void testShowSaltExample()
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
@@ -340,7 +345,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(2)
   void testAddPointingRelation() {
 
     openDefaultExample();
@@ -382,7 +386,6 @@ class TestGraphEditor {
    * is a regression test for https://github.com/hexatomic/hexatomic/issues/139.
    */
   @Test
-  @Order(3)
   void testTokenizeSelectedTextualDS() {
 
     openDefaultExample();
@@ -434,7 +437,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @Order(4)
   void testFilterOptions() {
     openDefaultExample();
 
@@ -477,4 +479,53 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(11));
   }
 
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/220
+   * 
+   * @throws IOException When the file is not a valid URI, this exception can be thrown.
+   */
+  @Test
+  void testTokenizeSaveTokenizeSave() throws IOException {
+    TestCorpusStructure.createMinimalCorpusStructure(bot);
+
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
+            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+
+    // Select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+
+    bot.waitUntil(new GraphLoadedCondition("document_1"));
+
+
+    // Add the two tokens to the document graph
+    enterCommand("t Oi!");
+
+    // Save the corpus to a temporary location
+    Path tmpDir = Files.createTempDirectory("hexatomic-regression-test-220");
+
+    Map<String, String> params = new HashMap<>();
+    params.put(CommandParams.LOCATION, tmpDir.toString());
+    final ParameterizedCommand cmdSaveAs = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
+
+    UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSaveAs));
+
+    // Add two additional tokens
+    enterCommand("t Oioi!");
+
+    // Save to original location
+    params.put(CommandParams.LOCATION, tmpDir.toString());
+    final ParameterizedCommand cmdSave = commandService
+        .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project",
+            new HashMap<>());
+
+    UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
+
+    // The last save should not have triggered any errors
+    assertFalse(errorService.getLastException().isPresent());
+  }
 }
