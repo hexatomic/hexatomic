@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed incorrect description of unreviewed hotfixes workflow in developer/maintainer documentation
 
+## [0.4.4] - 2020-09-16
+
+### Fixed
+
+- Fix exception when adding tokens in the graph editor after saving the opened document (#220)
+- Fix exception when adding tokens across >1 instances of the graph editor after saving the opened document (#214)
+
 ## [0.4.3] - 2020-09-04
 
 ### Fixed
@@ -107,7 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.4.3...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.4.4...HEAD
+[0.4.4]: https://github.com/hexatomic/hexatomic/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/hexatomic/hexatomic/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hexatomic/hexatomic/compare/v0.4.0...v0.4.1

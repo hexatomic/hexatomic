@@ -138,5 +138,4 @@ class TestProjectManager {
       assertNull(document.get().getDocumentGraph());
     }
   }
-
 }
