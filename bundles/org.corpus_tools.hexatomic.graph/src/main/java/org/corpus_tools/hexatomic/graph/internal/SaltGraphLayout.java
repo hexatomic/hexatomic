@@ -118,7 +118,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
    *        regions.
    * @return
    */
-  private boolean overlapsExisting(@SuppressWarnings("rawtypes") List<DataSourceSequence> sequences,
+  private boolean overlapsExisting(List<DataSourceSequence<? extends Number>> sequences,
       Map<STextualDS, BitSet> occupiedByText) {
     for (DataSourceSequence<?> s : sequences) {
 
@@ -145,8 +145,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
    * @param occupiedByText The map of bitsets for each text which represent existing overlapped
    *        regions and will be updated to include the given sequences.
    */
-  private void updateOverlappedRegions(
-      @SuppressWarnings("rawtypes") List<DataSourceSequence> sequences,
+  private void updateOverlappedRegions(List<DataSourceSequence<? extends Number>> sequences,
       Map<STextualDS, BitSet> occupiedByText) {
     for (DataSourceSequence<?> s : sequences) {
       if (s.getDataSource() instanceof STextualDS) {
@@ -172,9 +171,10 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         SNode n = this.nodes.get(internal);
         if (n != null && n.getGraph() instanceof SDocumentGraph) {
           SDocumentGraph graph = (SDocumentGraph) n.getGraph();
-          @SuppressWarnings("rawtypes")
-          List<DataSourceSequence> sequences =
-              graph.getOverlappedDataSourceSequence(n, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+          List<DataSourceSequence<? extends Number>> sequences = new LinkedList<>(
+              graph.getOverlappedDataSourceSequence(n,
+              SALT_TYPE.STEXT_OVERLAPPING_RELATION));
+              ;
           if (sequences != null && overlapsExisting(sequences, occupiedByText)) {
             // assign a new sub-rank to this node
             subrank++;
