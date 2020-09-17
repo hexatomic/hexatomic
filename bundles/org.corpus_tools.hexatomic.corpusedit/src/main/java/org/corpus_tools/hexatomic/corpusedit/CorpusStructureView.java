@@ -113,7 +113,7 @@ public class CorpusStructureView {
 
   private static final String OPEN_DOCUMENT_POPUP_MENU_ID =
       "org.corpus_tools.hexatomic.corpusedit.popupmenu.documents";
-  private static final String ERROR_WHEN_DELETING_SUB_CORPUS_TITLE =
+  public static final String ERROR_WHEN_DELETING_SUB_CORPUS_TITLE =
       "Error when deleting (sub-) corpus";
   private static final String ERROR_WHEN_DELETING_SUB_CORPUS_MSG =
       "Before deleting a (sub-) corpus, first delete all its child elements.";
@@ -544,6 +544,7 @@ public class CorpusStructureView {
     deleteToolItem.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/trash-alt-regular.png"));
     deleteToolItem.setText("Delete");
+    deleteToolItem.setToolTipText("Delete the selected corpus structure element.");
   }
 
   /**
