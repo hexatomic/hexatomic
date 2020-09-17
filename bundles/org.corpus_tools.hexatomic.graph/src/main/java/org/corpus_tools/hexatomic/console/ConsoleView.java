@@ -248,6 +248,12 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           if (oldCommand != null) {
             setCommand(oldCommand);
           }
+          if (!itCommandHistory.hasNext() && itCommandHistory.hasPrevious()) {
+            // Last command in history reached, go back one item so if the user is going back in
+            // history, they get the correct entry. If we don't go back here, the user must press
+            // the arrow key twice.
+            itCommandHistory.previous();
+          }
         }
       }
     }
@@ -260,6 +266,12 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           String oldCommand = itCommandHistory.previous();
           if (oldCommand != null) {
             setCommand(oldCommand);
+          }
+          if (!itCommandHistory.hasPrevious() && itCommandHistory.hasNext()) {
+            // First command in history reached, go forward one item so if the user is going forward
+            // in history, they get the correct entry. If we don't go forward here, the user must
+            // press the arrow key twice.
+            itCommandHistory.next();
           }
         }
       }

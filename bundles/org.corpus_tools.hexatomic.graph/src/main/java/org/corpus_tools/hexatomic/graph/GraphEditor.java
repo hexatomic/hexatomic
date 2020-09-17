@@ -118,13 +118,18 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  */
 public class GraphEditor {
 
+
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   /**
    * The ID used as SWTBot widget key for the table of text ranges.
    */
   public static final String TEXT_RANGE_ID = "graph-editor/text-range";
-  
+  /**
+   * The ID used as SWTBot widget key for the console.
+   */
+  public static final String CONSOLE_ID = "graph-editor/text-console";
+
   private static final String TEXT = "text";
   private static final String RANGE = "range";
   static final int DEFAULT_DIFF = 25;
@@ -256,7 +261,7 @@ public class GraphEditor {
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
-        "graph-editor/text-console");
+        CONSOLE_ID);
     consoleView = new ConsoleView(consoleViewer, sync, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 

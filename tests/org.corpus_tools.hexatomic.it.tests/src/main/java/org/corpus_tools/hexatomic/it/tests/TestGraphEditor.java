@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -37,6 +38,7 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
@@ -44,6 +46,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.utils.WidgetTextDescription;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -74,6 +77,32 @@ class TestGraphEditor {
   private ProjectManager projectManager;
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+
+  private final class WaitForCurrentConsoleLine implements ICondition {
+    private final SWTBotStyledText console;
+    private final String expected;
+
+    private WaitForCurrentConsoleLine(String expected, SWTBotStyledText console) {
+      this.console = console;
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return Objects.equals(expected, console.getTextOnCurrentLine());
+    }
+
+    @Override
+    public void init(SWTBot bot) {
+
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Current line on console should have been \"" + expected + "\" but was \""
+          + console.getTextOnCurrentLine() + "\"";
+    }
+  }
 
   private final class GraphLoadedCondition extends DefaultCondition {
 
@@ -216,7 +245,7 @@ class TestGraphEditor {
   }
 
   void enterCommand(String command) {
-    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
+    SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
     final SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
 
     // Remember the index of the currently selected segment
@@ -529,5 +558,36 @@ class TestGraphEditor {
 
     // The last save should not have triggered any errors
     assertFalse(errorService.getLastException().isPresent());
+  }
+
+  @Test
+  void testHistory() {
+    openDefaultExample();
+
+    enterCommand("c1");
+    enterCommand("c2");
+    enterCommand("c3");
+
+    // Use arrow up key to navigate to the previous command
+    SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
+    console.setFocus();
+
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new WaitForCurrentConsoleLine("> c3", console));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new WaitForCurrentConsoleLine("> c2", console));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new WaitForCurrentConsoleLine("> c1", console));
+
+    // Go forward in history again
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(new WaitForCurrentConsoleLine("> c2", console));
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(new WaitForCurrentConsoleLine("> c3", console));
+
+    // Go back again, just to make sure the user does not need to click the arrow key twice
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new WaitForCurrentConsoleLine("> c2", console));
+
   }
 }
