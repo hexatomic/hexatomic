@@ -536,8 +536,10 @@ class TestGraphEditor {
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/224
    * 
+   * <p>
    * It checks that if you create new token in an empty document, that the zoom level is correct and
    * the tokens are actually shown.
+   * </p>
    */
   @Test
   void testShowNewlyCreatedToken() {
