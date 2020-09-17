@@ -19,27 +19,43 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.data;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
+import java.util.List;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 /**
- * Provides the data to be displayed in the row header, i.e., row count starting from 1.
+ * A data provider for column headers.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-public class RowHeaderDataProvider implements IDataProvider {
+public class ColumnHeaderDataProvider implements IDataProvider {
 
   private final GraphDataProvider provider;
 
-  public RowHeaderDataProvider(GraphDataProvider bodyDataProvider) {
+  /**
+   * Constructor setting the body data provider. Throws a {@link RuntimeException} if the passed
+   * argument is <code>null</code>.
+   * 
+   * @param bodyDataProvider The body data provider
+   */
+  public ColumnHeaderDataProvider(GraphDataProvider bodyDataProvider) {
+    if (bodyDataProvider == null) {
+      throw new RuntimeException(
+          "Body data provider in " + this.getClass().getSimpleName() + " must not be null.");
+    }
     this.provider = bodyDataProvider;
   }
 
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
-    return rowIndex + 1;
+    List<Column> columns = provider.getColumns();
+    if (columnIndex > -1 && columnIndex < columns.size()) {
+      return columns.get(columnIndex).getHeader();
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -49,12 +65,15 @@ public class RowHeaderDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
-    return 1;
+    return provider.getColumnCount();
   }
 
   @Override
   public int getRowCount() {
-    return provider.getRowCount();
+    if (provider.getColumns().isEmpty()) {
+      return 0;
+    }
+    return 1;
   }
 
 }

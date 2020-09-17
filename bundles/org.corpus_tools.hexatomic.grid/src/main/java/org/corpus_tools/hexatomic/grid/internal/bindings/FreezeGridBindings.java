@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.bindings;
+package org.corpus_tools.hexatomic.grid.internal.bindings;
 
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfiguration;

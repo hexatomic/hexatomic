@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sDocumentStructure:SDocumentGraph xmlns:sDocumentStructure="sDocumentStructure" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:saltCore="saltCore" xmi:version="2.0">
+	<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc"/>
+	
+	<nodes xsi:type="sDocumentStructure:STextualDS">
+		<labels xsi:type="saltCore:SFeature" namespace="saltCommon" name="SDATA" value="T::This is a birthday pony!"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sText1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::No tokens"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:STextualDS">
+		<labels xsi:type="saltCore:SFeature" namespace="saltCommon" name="SDATA" value="T::Only token annotations."/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#Token annotations only"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::Token annotations only"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok7"/>
+		<labels xsi:type="saltCore:SAnnotation" namespace="four" name="token" value="T::tok_anno_0"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok7"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok8"/>
+		<labels xsi:type="saltCore:SAnnotation" namespace="four" name="token" value="T::tok_anno_1"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok8"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok9"/>
+		<labels xsi:type="saltCore:SAnnotation" namespace="four" name="token" value="T::tok_anno_2"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok9"/>
+	</nodes>
+	<nodes xsi:type="sDocumentStructure:SToken">
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTok10"/>
+		<labels xsi:type="saltCore:SAnnotation" namespace="four" name="token" value="T::tok_anno_3"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTok10"/>
+	</nodes>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.2" target="//@nodes.1">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::4"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel7"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::0"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel7"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.3" target="//@nodes.1">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::10"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel8"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::5"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel8"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.4" target="//@nodes.1">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::22"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel9"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::11"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel9"/>
+	</edges>
+	<edges xsi:type="sDocumentStructure:STextualRelation" source="//@nodes.5" target="//@nodes.1">
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SEND" value="N::23"/>
+		<labels xsi:type="saltCore:SElementId" namespace="salt" name="id" value="T::salt:/corpus/doc#sTextRel10"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SSTART" value="N::22"/>
+		<labels xsi:type="saltCore:SFeature" namespace="salt" name="SNAME" value="T::sTextRel10"/>
+	</edges>
+</sDocumentStructure:SDocumentGraph>
