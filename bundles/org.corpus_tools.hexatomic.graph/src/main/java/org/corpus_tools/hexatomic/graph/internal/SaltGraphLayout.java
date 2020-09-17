@@ -98,10 +98,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (SNode n : this.nodes.values()) {
       if (n instanceof SToken) {
         tokens.add((SToken) n);
-      } else if (n != null && n.getGraph() != null) {
-        if (isRootNode(n)) {
-          assignRankRecursively(this.nodes.inverse().get(n), rankForNode, 0);
-        }
+      } else if (n != null && n.getGraph() != null && isRootNode(n)) {
+        assignRankRecursively(this.nodes.inverse().get(n), rankForNode, 0);
       }
     }
     // Group nodes with the same rank
