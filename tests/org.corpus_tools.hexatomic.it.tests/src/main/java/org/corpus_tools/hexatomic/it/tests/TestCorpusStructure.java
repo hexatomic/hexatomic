@@ -34,9 +34,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestCorpusStructure {
 
 
-  private static final String DOCUMENT_PATH_1 = "salt:/corpus_1/document_1";
-
-  private static final String DOCUMENT_PATH_2 = "salt:/corpus_1/document_2";
+  private static final String SALT_PREFIX = "salt:/";
 
   private static final String DELETE_BUTTON_TEXT = "Delete";
 
@@ -140,8 +138,10 @@ class TestCorpusStructure {
     assertNotNull(bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF));
 
     // also check the names and IDs of the data model
-    Optional<SDocument> doc1 = projectManager.getDocument(DOCUMENT_PATH_1);
-    Optional<SDocument> doc2 = projectManager.getDocument(DOCUMENT_PATH_2);
+    Optional<SDocument> doc1 =
+        projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_1);
+    Optional<SDocument> doc2 =
+        projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2);
     assertTrue(doc1.isPresent());
     assertTrue(doc2.isPresent());
 
@@ -188,8 +188,8 @@ class TestCorpusStructure {
     // Delete the first document
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(ABC).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
-    assertFalse(projectManager.getDocument(DOCUMENT_PATH_1).isPresent());
-    assertTrue(projectManager.getDocument(DOCUMENT_PATH_2).isPresent());
+    assertFalse(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_1).isPresent());
+    assertTrue(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
 
     // Test that we can't delete a corpus when there is still a sub-document
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
@@ -198,14 +198,14 @@ class TestCorpusStructure {
         Conditions.shellIsActive(CorpusStructureView.ERROR_WHEN_DELETING_SUB_CORPUS_TITLE));
     bot.button("OK").click();
 
-    assertTrue(projectManager.getDocument(DOCUMENT_PATH_2).isPresent());
+    assertTrue(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
     SaltProject project = projectManager.getProject();
     assertEquals(1, project.getCorpusGraphs().get(0).getCorpora().size());
 
     // Delete the second document
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
-    assertFalse(projectManager.getDocument(DOCUMENT_PATH_2).isPresent());
+    assertFalse(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
 
     // Delete the corpus which should be successful now
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
