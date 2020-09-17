@@ -624,17 +624,15 @@ class TestGraphEditor {
     // We can only access the widget in the SWT thread
     UIThreadRunnable
         .syncExec(() -> initialSize.set(console.widget.getFont().getFontData()[0].getHeight()));
-
-    KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
-    KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
-
     Keyboard mockKeyboadForGraph =
         KeyboardFactory.getMockKeyboard(console.widget, new WidgetTextDescription(console.widget));
 
     console.setFocus();
+    KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
     mockKeyboadForGraph.pressShortcut(strokesZoomIn);
     bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() + 1, console));
 
+    KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get(), console));
 
