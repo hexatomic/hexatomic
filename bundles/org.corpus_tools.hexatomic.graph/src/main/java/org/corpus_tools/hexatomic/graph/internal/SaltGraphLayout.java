@@ -174,8 +174,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           List<DataSourceSequence<? extends Number>> sequences = new LinkedList<>(
               graph.getOverlappedDataSourceSequence(n,
               SALT_TYPE.STEXT_OVERLAPPING_RELATION));
-              ;
-          if (sequences != null && overlapsExisting(sequences, occupiedByText)) {
+          if (overlapsExisting(sequences, occupiedByText)) {
             // assign a new sub-rank to this node
             subrank++;
 
