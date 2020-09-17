@@ -110,6 +110,56 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     return nodesByRank;
   }
 
+  /**
+   * Checks if any overlapped sequence is already occupied by another node in this rank.
+   * 
+   * @param sequences The sequences to to check if any of them overlaps an existing region.
+   * @param occupiedByText A map of bitsets for each text that represent existing overlapped
+   *        regions.
+   * @return
+   */
+  private boolean overlapsExisting(@SuppressWarnings("rawtypes") List<DataSourceSequence> sequences,
+      Map<STextualDS, BitSet> occupiedByText) {
+    for (DataSourceSequence<?> s : sequences) {
+
+      if (s.getDataSource() instanceof STextualDS) {
+        BitSet alreadyOccupied = occupiedByText.get(s.getDataSource());
+        if (alreadyOccupied == null) {
+          alreadyOccupied = new BitSet();
+          occupiedByText.put((STextualDS) s.getDataSource(), alreadyOccupied);
+        }
+        BitSet occupiedBySequence = new BitSet();
+        occupiedBySequence.set(s.getStart().intValue(), s.getEnd().intValue());
+        if (alreadyOccupied.intersects(occupiedBySequence)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Update the occupied region to include the new sequences.
+   * 
+   * @param sequences The new sequences to add
+   * @param occupiedByText The map of bitsets for each text which represent existing overlapped
+   *        regions and will be updated to include the given sequences.
+   */
+  private void updateOverlappedRegions(
+      @SuppressWarnings("rawtypes") List<DataSourceSequence> sequences,
+      Map<STextualDS, BitSet> occupiedByText) {
+    for (DataSourceSequence<?> s : sequences) {
+      if (s.getDataSource() instanceof STextualDS) {
+        BitSet occupied = occupiedByText.get(s.getDataSource());
+        if (occupied == null) {
+          occupied = new BitSet();
+          occupiedByText.put((STextualDS) s.getDataSource(), occupied);
+        }
+        occupied.set(s.getStart().intValue(), s.getEnd().intValue());
+      }
+    }
+  }
+
   private LinkedHashMap<InternalNode, RankSubrank> mergeNodesToSameRank(
       Multimap<Integer, InternalNode> nodesByRank) {
     LinkedHashMap<InternalNode, RankSubrank> mergedRanks = new LinkedHashMap<>();
@@ -125,48 +175,17 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           @SuppressWarnings("rawtypes")
           List<DataSourceSequence> sequences =
               graph.getOverlappedDataSourceSequence(n, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
-          if (sequences != null) {
+          if (sequences != null && overlapsExisting(sequences, occupiedByText)) {
+            // assign a new sub-rank to this node
+            subrank++;
 
-            // check if any overlapped sequence is already occupied by another node in this rank
-            boolean overlapsExisting = false;
-            for (DataSourceSequence<?> s : sequences) {
-
-              if (s.getDataSource() instanceof STextualDS) {
-                BitSet alreadyOccupied = occupiedByText.get(s.getDataSource());
-                if (alreadyOccupied == null) {
-                  alreadyOccupied = new BitSet();
-                  occupiedByText.put((STextualDS) s.getDataSource(), alreadyOccupied);
-                }
-                BitSet occupiedBySequence = new BitSet();
-                occupiedBySequence.set(s.getStart().intValue(), s.getEnd().intValue());
-                if (alreadyOccupied.intersects(occupiedBySequence)) {
-                  overlapsExisting = true;
-                  break;
-                }
-              }
-            }
-
-            if (overlapsExisting) {
-              // assign a new sub-rank to this node
-              subrank++;
-
-              // occupied needs to be updated to include the current node only (and forget the
-              // previous occupancy)
-              occupiedByText.clear();
-            }
+            // occupied needs to be updated to include the current node only (and forget the
+            // previous occupancy)
+            occupiedByText.clear();
           }
 
           // update the occupied region to include the new sequences
-          for (DataSourceSequence<?> s : sequences) {
-            if (s.getDataSource() instanceof STextualDS) {
-              BitSet occupied = occupiedByText.get(s.getDataSource());
-              if (occupied == null) {
-                occupied = new BitSet();
-                occupiedByText.put((STextualDS) s.getDataSource(), occupied);
-              }
-              occupied.set(s.getStart().intValue(), s.getEnd().intValue());
-            }
-          }
+          updateOverlappedRegions(sequences, occupiedByText);
 
           // remember the generated rank and sub-rank
           mergedRanks.put(internal, new RankSubrank(rank, subrank));
