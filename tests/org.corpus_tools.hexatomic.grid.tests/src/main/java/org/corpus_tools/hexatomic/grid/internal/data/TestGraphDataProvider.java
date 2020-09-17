@@ -39,7 +39,7 @@ class TestGraphDataProvider {
 
   private ErrorService errorService;
 
-  private static GraphDataProvider fixture = null;
+  private GraphDataProvider fixture = null;
   private SDocumentGraph exampleGraph;
   private STextualDS exampleText;
   private SDocumentGraph overlappingExampleGraph;

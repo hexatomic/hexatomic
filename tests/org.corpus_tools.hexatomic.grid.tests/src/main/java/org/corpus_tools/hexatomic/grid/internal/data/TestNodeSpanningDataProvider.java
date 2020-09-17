@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  */
 class TestNodeSpanningDataProvider {
 
-  private static NodeSpanningDataProvider fixture = null;
+  private NodeSpanningDataProvider fixture = null;
 
   /**
    * Sets up the fixture.

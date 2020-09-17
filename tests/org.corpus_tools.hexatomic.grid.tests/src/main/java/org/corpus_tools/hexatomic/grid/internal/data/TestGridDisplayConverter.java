@@ -29,7 +29,7 @@ import org.mockito.Mockito;
  */
 class TestGridDisplayConverter {
 
-  private static GridDisplayConverter fixture = null;
+  private GridDisplayConverter fixture = null;
   private SToken token = null;
   private SSpan span = null;
   private GraphDataProvider dataProvider = null;
