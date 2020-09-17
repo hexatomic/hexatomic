@@ -263,7 +263,7 @@ public class GridEditor {
         // This is found out by checking whether the data source has incoming relations of type
         // STextualRelation.
         if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
-            .anyMatch(rel -> rel instanceof STextualRelation)) {
+            .noneMatch(rel -> rel instanceof STextualRelation)) {
           deco.setDescriptionText(NO_TOKENS_MESSAGE);
           Image errorImage = FieldDecorationRegistry.getDefault()
               .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
