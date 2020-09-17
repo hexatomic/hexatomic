@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
@@ -187,7 +188,7 @@ class TestCorpusStructure {
     // Delete the first document
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(ABC).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
-    assertTrue(projectManager.getDocument(DOCUMENT_PATH_1).isEmpty());
+    assertFalse(projectManager.getDocument(DOCUMENT_PATH_1).isPresent());
     assertTrue(projectManager.getDocument(DOCUMENT_PATH_2).isPresent());
 
     // Test that we can't delete a corpus when there is still a sub-document
@@ -204,7 +205,7 @@ class TestCorpusStructure {
     // Delete the second document
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
-    assertTrue(projectManager.getDocument(DOCUMENT_PATH_2).isEmpty());
+    assertFalse(projectManager.getDocument(DOCUMENT_PATH_2).isPresent());
 
     // Delete the corpus which should be successful now
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
