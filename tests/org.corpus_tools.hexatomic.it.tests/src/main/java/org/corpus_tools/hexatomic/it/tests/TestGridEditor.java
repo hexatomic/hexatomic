@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,6 +14,10 @@ import java.util.Map;
 import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SAnnotationContainer;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -193,56 +198,81 @@ public class TestGridEditor {
   void testShowSaltExample() {
     openDefaultExample();
 
-    NatTable table = bot.widget(widgetOfType(NatTable.class));
-    assertNotNull(table);
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
 
     // Check number of rows and columns (11 + 1 header row, 4 + 1 header column)
-    assertEquals(12, table.getRowCount());
-    assertEquals(5, table.getColumnCount());
+    assertEquals(12, natTable.getRowCount());
+    assertEquals(5, natTable.getColumnCount());
 
     // Test headers
-    assertEquals(null, table.getDataValueByPosition(0, 0));
-    assertEquals(2, table.getDataValueByPosition(0, 2));
-    assertEquals(11, table.getDataValueByPosition(0, 11));
-    assertEquals("Token", table.getDataValueByPosition(1, 0));
-    assertEquals("Inf-Struct", table.getDataValueByPosition(4, 0));
+    assertEquals(null, natTable.getDataValueByPosition(0, 0));
+    assertEquals(2, natTable.getDataValueByPosition(0, 2));
+    assertEquals(11, natTable.getDataValueByPosition(0, 11));
+    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+    assertEquals("Token", natTable.getDataValueByPosition(1, 0));
+    assertEquals("Inf-Struct", table.getCellDataValueByPosition(0, 4));
+    assertEquals("Inf-Struct", natTable.getDataValueByPosition(4, 0));
 
     // Test cells
-    assertEquals("Is", table.getDataValueByPosition(1, 1));
-    assertEquals("?", table.getDataValueByPosition(1, 11));
-    assertEquals("be", table.getDataValueByPosition(2, 1));
-    assertEquals("contrast-focus", table.getDataValueByPosition(4, 1));
-    assertEquals("topic", table.getDataValueByPosition(4, 2));
-    assertEquals("topic", table.getDataValueByPosition(4, 11));
+    // Token text
+    Object token1Obj = natTable.getDataValueByPosition(1, 1);
+    assertTrue(token1Obj instanceof SToken);
+    SToken token1 = (SToken) token1Obj;
+    assertEquals("Is", (token1).getGraph().getText(token1));
+    Object token2Obj = natTable.getDataValueByPosition(1, 11);
+    assertTrue(token2Obj instanceof SToken);
+    SToken token2 = (SToken) token2Obj;
+    assertEquals("?", token2.getGraph().getText(token2));
+
+    // Annotations
+    String lemmaHeader = natTable.getDataValueByPosition(2, 0).toString();
+    assertEquals("be", ((SAnnotationContainer) natTable.getDataValueByPosition(2, 1))
+        .getAnnotation(lemmaHeader).getValue());
+    String infStructHeader = natTable.getDataValueByPosition(4, 0).toString();
+    assertEquals("contrast-focus", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
+        .getAnnotation(infStructHeader).getValue());
+    assertEquals("topic", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
+        .getAnnotation(infStructHeader).getValue());
+    assertEquals("topic", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 11))
+        .getAnnotation(infStructHeader).getValue());
   }
 
   @Test
   void testShowOverlapSaltExample() {
     openOverlapExample();
 
-    NatTable table = bot.widget(widgetOfType(NatTable.class));
-    assertNotNull(table);
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
 
     // Check number of rows and columns (5 + 1 header row, 5 + 1 header column)
-    assertEquals(6, table.getRowCount());
-    assertEquals(6, table.getColumnCount());
-    //
-    // // Test headers
-    assertEquals(null, table.getDataValueByPosition(0, 0));
-    assertEquals(2, table.getDataValueByPosition(0, 2));
-    assertEquals(5, table.getDataValueByPosition(0, 5));
-    assertEquals("Token", table.getDataValueByPosition(1, 0));
-    assertEquals("five::span_1", table.getDataValueByPosition(3, 0));
-    assertEquals("five::span_1 (2)", table.getDataValueByPosition(4, 0));
-    assertEquals("five::span_2", table.getDataValueByPosition(5, 0));
-    //
-    // // Test cells
-    assertEquals("val_span_1", table.getDataValueByPosition(3, 1));
-    assertEquals("val_span_2", table.getDataValueByPosition(3, 2));
-    assertEquals("val_span_2", table.getDataValueByPosition(3, 5));
-    assertEquals("val_span_3", table.getDataValueByPosition(4, 1));
-    assertEquals("val_span_3", table.getDataValueByPosition(4, 2));
-    assertEquals(null, table.getDataValueByPosition(5, 1));
+    assertEquals(6, natTable.getRowCount());
+    assertEquals(6, natTable.getColumnCount());
+
+    // Test headers
+    assertEquals("", table.getCellDataValueByPosition(0, 0));
+    assertEquals("2", table.getCellDataValueByPosition(2, 0));
+    assertEquals("5", table.getCellDataValueByPosition(5, 0));
+    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+    assertEquals("five::span_1", table.getCellDataValueByPosition(0, 3));
+    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+
+    // Test cells
+    assertEquals("val_span_1", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 1))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_2", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 2))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_2", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 5))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_3", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("val_span_3", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
+        .getAnnotation(table.getCellDataValueByPosition(0, 3)).getValue());
+    assertEquals("", table.getCellDataValueByPosition(1, 5));
+    assertNull(natTable.getDataValueByPosition(5, 1));
   }
 
   @Test
@@ -259,7 +289,8 @@ public class TestGridEditor {
 
     assertEquals(3, table.getColumnCount());
     assertEquals(7, table.getRowCount());
-    assertEquals("pony", table.getDataValueByPosition(1, 5));
+    assertEquals("pony", ((SDocumentGraph) ((SNode) table.getDataValueByPosition(1, 5)).getGraph())
+        .getText((SNode) table.getDataValueByPosition(1, 5)));
     assertEquals("one::span", table.getDataValueByPosition(2, 0));
 
     // Select second text
@@ -269,7 +300,9 @@ public class TestGridEditor {
 
     assertEquals(3, table.getColumnCount());
     assertEquals(5, table.getRowCount());
-    assertEquals("annotations", table.getDataValueByPosition(1, 3));
+    assertEquals("annotations",
+        ((SDocumentGraph) ((SNode) table.getDataValueByPosition(1, 3)).getGraph())
+            .getText((SNode) table.getDataValueByPosition(1, 3)));
     assertEquals("four::token", table.getDataValueByPosition(2, 0));
 
     // Select first text again
@@ -279,7 +312,8 @@ public class TestGridEditor {
 
     assertEquals(3, table.getColumnCount());
     assertEquals(7, table.getRowCount());
-    assertEquals("pony", table.getDataValueByPosition(1, 5));
+    assertEquals("pony", ((SDocumentGraph) ((SNode) table.getDataValueByPosition(1, 5)).getGraph())
+        .getText((SNode) table.getDataValueByPosition(1, 5)));
     assertEquals("one::span", table.getDataValueByPosition(2, 0));
   }
 
@@ -380,7 +414,12 @@ public class TestGridEditor {
 
     table.doubleclick(2, 2);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
@@ -395,7 +434,11 @@ public class TestGridEditor {
 
     table.click(2, 2);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
@@ -411,7 +454,11 @@ public class TestGridEditor {
     table.click(2, 2);
     keyboard.pressShortcut(Keystrokes.SPACE);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   @Test
@@ -424,7 +471,11 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(1, 5));
     table.click(1, 5);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(1, 5));
+    Object nodeObj = table.widget.getDataValueByPosition(5, 1);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 5)).getValue());
   }
 
   @Test
@@ -437,8 +488,11 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(2, 2));
     table.click(2, 2);
     typeTextPressReturn(table);
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(2, 2));
-
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
@@ -542,7 +596,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist 
+    // No context menu should exist
     assertTrue(contextMenu.menuItems().isEmpty());
     assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }

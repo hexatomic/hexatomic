@@ -19,10 +19,13 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.configuration;
+package org.corpus_tools.hexatomic.grid.internal.configuration;
 
-import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.GridDisplayConverter;
+import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
@@ -42,10 +45,21 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   private static final String CELL_EDITOR = "CELL_EDITOR";
   private static final String TOKEN_COLUMN_CONFIG_LABEL = "TOKEN_COLUMN_CONFIG_LABEL";
+  private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
   private final LabelAccumulator labelAccumulator;
   private final SelectionLayer selectionLayer;
+  private final GraphDataProvider bodyDataProvider;
 
-  public EditConfiguration(LabelAccumulator labelAccumulator, SelectionLayer selectionLayer) {
+  /**
+   * Constructor setting fields.
+   * 
+   * @param bodyDataProvider The current data provider for the table being configured
+   * @param labelAccumulator The current label accumulator
+   * @param selectionLayer The current selection layer
+   */
+  public EditConfiguration(GraphDataProvider bodyDataProvider, LabelAccumulator labelAccumulator,
+      SelectionLayer selectionLayer) {
+    this.bodyDataProvider = bodyDataProvider;
     this.labelAccumulator = labelAccumulator;
     this.selectionLayer = selectionLayer;
   }
@@ -58,10 +72,17 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
     registerCellEditor(configRegistry);
     // Disable token text editing
     disableTokenTextEditing(configRegistry);
+    // Tag all columns with a label to mark them for value conversion
+    labelAccumulator.registerOverrides(CONVERTED_COLUMN_LABEL);
+    configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
+        new GridDisplayConverter(this.bodyDataProvider), DisplayMode.NORMAL,
+        CONVERTED_COLUMN_LABEL);
   }
 
   private void disableTokenTextEditing(IConfigRegistry configRegistry) {
+    // Tag token column with label
     labelAccumulator.registerOverrides(0, TOKEN_COLUMN_CONFIG_LABEL);
+    // Disable editing
     configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
         IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, TOKEN_COLUMN_CONFIG_LABEL);
   }
