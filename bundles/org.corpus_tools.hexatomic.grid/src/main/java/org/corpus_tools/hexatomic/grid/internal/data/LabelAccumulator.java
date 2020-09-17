@@ -19,12 +19,11 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.style;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
-import org.corpus_tools.hexatomic.grid.data.Column;
-import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ColumnOverrideLabelAccumulator;
@@ -57,6 +56,10 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
    */
   public LabelAccumulator(SpanningDataLayer bodyDataLayer, GraphDataProvider bodyDataProvider) {
     super(bodyDataLayer);
+    if (bodyDataLayer == null || bodyDataProvider == null) {
+      throw new IllegalArgumentException(
+          "Arguments may not be null in " + this.getClass().getSimpleName() + ".");
+    }
     this.bodyDataLayer = bodyDataLayer;
     this.bodyDataProvider = bodyDataProvider;
   }
@@ -69,21 +72,26 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
     ILayerCell bodyCell = bodyDataLayer.getCellByPosition(columnPosition, rowPosition);
 
     // Assign the empty cell style iff the cell in the data body layer is null
-    if (bodyCell.getDataValue() == null) {
-      configLabels.addLabel(StyleConfiguration.EMPTY_CELL_STYLE);
-    }
-
-    int columnIndex = bodyDataLayer.getColumnIndexByPosition(columnPosition);
-    List<Column> columns = bodyDataProvider.getColumns();
-    if (!columns.isEmpty()) {
-      ColumnType columnType = columns.get(columnIndex).getColumnType();
-      if (columnType == ColumnType.SPAN_ANNOTATION) {
-        // Assign the span annotation style label to cells in columns with the respective flag.
-        configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
-      } else if (columnType == ColumnType.TOKEN_TEXT) {
-        // Assign the token text style label to cells in columns with the respective flag.
-        configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
+    if (bodyCell != null) {
+      if (bodyCell.getDataValue() == null) {
+        configLabels.addLabel(StyleConfiguration.EMPTY_CELL_STYLE);
       }
+
+      int columnIndex = bodyDataLayer.getColumnIndexByPosition(columnPosition);
+      List<Column> columns = bodyDataProvider.getColumns();
+      if (!columns.isEmpty()) {
+        ColumnType columnType = columns.get(columnIndex).getColumnType();
+        if (columnType == ColumnType.SPAN_ANNOTATION) {
+          // Assign the span annotation style label to cells in columns with the respective flag.
+          configLabels.addLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+        } else if (columnType == ColumnType.TOKEN_TEXT) {
+          // Assign the token text style label to cells in columns with the respective flag.
+          configLabels.addLabel(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
+        }
+      }
+    } else {
+      throw new RuntimeException("There is no cell at column position " + columnPosition
+          + ", row position " + rowPosition + ".");
     }
   }
 
