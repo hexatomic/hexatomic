@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
@@ -78,11 +79,39 @@ class TestGraphEditor {
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
-  private final class WaitForCurrentConsoleLine implements ICondition {
+  private final class ConsoleFontSizeCondition implements ICondition {
+    private final SWTBotStyledText console;
+    private final int expectedSize;
+
+    private ConsoleFontSizeCondition(int expectedSize, SWTBotStyledText console) {
+      this.expectedSize = expectedSize;
+      this.console = console;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      final AtomicInteger actualSize = new AtomicInteger();
+      UIThreadRunnable
+          .syncExec(() -> actualSize.set(console.widget.getFont().getFontData()[0].getHeight()));
+      return actualSize.get() == expectedSize;
+    }
+
+    @Override
+    public void init(SWTBot bot) {
+      // No initialization needed
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Console font size was not the expected size " + expectedSize;
+    }
+  }
+
+  private final class CurrentConsoleLineCondition implements ICondition {
     private final SWTBotStyledText console;
     private final String expected;
 
-    private WaitForCurrentConsoleLine(String expected, SWTBotStyledText console) {
+    private CurrentConsoleLineCondition(String expected, SWTBotStyledText console) {
       this.console = console;
       this.expected = expected;
     }
@@ -94,7 +123,7 @@ class TestGraphEditor {
 
     @Override
     public void init(SWTBot bot) {
-
+      // No initialization needed
     }
 
     @Override
@@ -201,7 +230,7 @@ class TestGraphEditor {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-    
+
     partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
@@ -234,8 +263,7 @@ class TestGraphEditor {
 
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
@@ -296,13 +324,13 @@ class TestGraphEditor {
     // Check all nodes and edges have been created
     bot.waitUntil(new NumberOfNodesCondition(23));
     bot.waitUntil(new NumberOfConnectionsCondition(22));
-    
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
     SWTUtils.display().syncExec(g::forceFocus);
 
     final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, GET_VIEWPORT);
-    
+
     Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
     // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
@@ -315,8 +343,7 @@ class TestGraphEditor {
 
     // Zoom in so we can move the view with the arrow keys
     // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad keys yet.
-    Keyboard mockKeyboadForGraph =
-        KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
+    Keyboard mockKeyboadForGraph = KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
     KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
     mockKeyboadForGraph.pressShortcut(strokesZoomIn);
 
@@ -324,11 +351,11 @@ class TestGraphEditor {
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x + 25, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.LEFT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
@@ -343,16 +370,14 @@ class TestGraphEditor {
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
-    bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort,
-            new Point(origLocation.x + 250, origLocation.y)));
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x + 250, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
-    bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort,
-            new Point(origLocation.x, origLocation.y + 250)));
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x, origLocation.y + 250)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
@@ -550,9 +575,8 @@ class TestGraphEditor {
 
     // Save to original location
     params.put(CommandParams.LOCATION, tmpDir.toString());
-    final ParameterizedCommand cmdSave = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project",
-            new HashMap<>());
+    final ParameterizedCommand cmdSave = commandService.createCommand(
+        "org.corpus_tools.hexatomic.core.command.save_salt_project", new HashMap<>());
 
     UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
 
@@ -573,21 +597,48 @@ class TestGraphEditor {
     console.setFocus();
 
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new WaitForCurrentConsoleLine("> c3", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new WaitForCurrentConsoleLine("> c2", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new WaitForCurrentConsoleLine("> c1", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c1", console));
 
     // Go forward in history again
     keyboard.pressShortcut(Keystrokes.DOWN);
-    bot.waitUntil(new WaitForCurrentConsoleLine("> c2", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
     keyboard.pressShortcut(Keystrokes.DOWN);
-    bot.waitUntil(new WaitForCurrentConsoleLine("> c3", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
 
     // Go back again, just to make sure the user does not need to click the arrow key twice
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new WaitForCurrentConsoleLine("> c2", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+  }
 
+  @Test
+  void testConsoleTextSize() {
+    openDefaultExample();
+
+    SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
+
+    final AtomicInteger initialSize = new AtomicInteger(12);
+    // We can only access the widget in the SWT thread
+    UIThreadRunnable
+        .syncExec(() -> initialSize.set(console.widget.getFont().getFontData()[0].getHeight()));
+
+    KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
+    KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
+
+    Keyboard mockKeyboadForGraph =
+        KeyboardFactory.getMockKeyboard(console.widget, new WidgetTextDescription(console.widget));
+
+    console.setFocus();
+    mockKeyboadForGraph.pressShortcut(strokesZoomIn);
+    bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() + 1, console));
+
+    mockKeyboadForGraph.pressShortcut(strokesZoomOut);
+    bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get(), console));
+
+    mockKeyboadForGraph.pressShortcut(strokesZoomOut);
+    bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() - 1, console));
   }
 }
