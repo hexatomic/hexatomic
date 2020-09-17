@@ -60,8 +60,6 @@ public class CorpusLabelProvider extends LabelProvider {
         // Try the ID
         if (element instanceof IdentifiableElement) {
           result = ((IdentifiableElement) element).getId();
-        } else {
-          result = "<unnamed " + element.getClass().getSimpleName() + ">";
         }
       } else {
         result = n.getName();
