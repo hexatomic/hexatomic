@@ -21,7 +21,6 @@
 
 package org.corpus_tools.hexatomic.grid;
 
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -264,8 +263,7 @@ public class GridEditor {
         // This is found out by checking whether the data source has incoming relations of type
         // STextualRelation.
         if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
-            .filter(rel -> rel instanceof STextualRelation).collect(Collectors.toList())
-            .isEmpty()) {
+            .noneMatch(rel -> rel instanceof STextualRelation)) {
           deco.setDescriptionText(NO_TOKENS_MESSAGE);
           Image errorImage = FieldDecorationRegistry.getDefault()
               .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();

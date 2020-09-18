@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.console.internal;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -370,6 +371,23 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   }
 
+  private List<String> newTokensTextFromContext(ListIterator<StringContext> itWords) {
+    List<String> newTokenTexts = new LinkedList<>();
+    while (itWords.hasNext()) {
+      String tokenValue = getString(itWords.next());
+      newTokenTexts.add(tokenValue);
+    }
+    return newTokenTexts;
+  }
+
+  private void addTokensToText(STextualDS ds, int offset, List<String> newTokenTexts) {
+    int numberOfTokens = graph.getTokens().size();
+    List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
+    for (SToken t : newTokens) {
+      t.setName(getUnusedName("t", ++numberOfTokens));
+    }
+  }
+
   @Override
   public void exitTokenizeAfter(TokenizeAfterContext ctx) {
     SDocumentGraph graph = this.graph;
@@ -390,20 +408,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          List<String> newTokenTexts = newTokensTextFromContext(ctx.string().listIterator());
+          addTokensToText(ds, offset, newTokenTexts);
         }
       }
     } else {
@@ -426,19 +432,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         int offset = seq.getStart().intValue();
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          List<String> newTokenTexts = newTokensTextFromContext(ctx.string().listIterator());
+          addTokensToText(ds, offset, newTokenTexts);
         }
       }
     } else {

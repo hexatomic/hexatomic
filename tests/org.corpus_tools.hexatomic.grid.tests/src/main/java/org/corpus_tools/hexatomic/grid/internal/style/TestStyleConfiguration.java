@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
  */
 class TestStyleConfiguration {
 
-  private static StyleConfiguration fixture = null;
+  private StyleConfiguration fixture = null;
 
   /**
    * Sets up the fixture.

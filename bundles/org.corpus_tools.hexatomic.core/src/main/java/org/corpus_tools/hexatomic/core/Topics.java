@@ -26,8 +26,12 @@ package org.corpus_tools.hexatomic.core;
  * 
  * @author Thomas Krause
  */
-public interface Topics {
+public final class Topics {
   
+  private Topics() {
+    // Private (but empty) constructor to avoid instantiation of this utility class.
+  }
+
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
 

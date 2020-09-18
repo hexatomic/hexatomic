@@ -53,6 +53,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
 
+  private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
+
   private SWTWorkbenchBot bot;
 
   private URI exampleProjectUri;
@@ -100,7 +102,7 @@ class TestProjectManager {
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
 
-    final String[] docIDs = {"salt:/rootCorpus/subCorpus1/doc1", "salt:/rootCorpus/subCorpus1/doc2",
+    final String[] docIDs = {DOC1_SALT_ID, "salt:/rootCorpus/subCorpus1/doc2",
         "salt:/rootCorpus/subCorpus2/doc3", "salt:/rootCorpus/subCorpus2/doc4"};
 
     for (String id : docIDs) {
@@ -111,7 +113,7 @@ class TestProjectManager {
 
     // Load a single document into memory
     Optional<SDocument> optionalDoc1 =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+        projectManager.getDocument(DOC1_SALT_ID, true);
     assertTrue(optionalDoc1.isPresent());
     if (optionalDoc1.isPresent()) {
       SDocument doc1 = optionalDoc1.get();
@@ -148,7 +150,7 @@ class TestProjectManager {
           SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
       SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-          .getNode("salt:/rootCorpus/subCorpus1/doc1");
+          .getNode(DOC1_SALT_ID);
 
       Set<Difference> docDiff =
           SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
@@ -156,7 +158,7 @@ class TestProjectManager {
 
       // Apply some more changes to the loaded document graph and save to same
       // location
-      optionalDoc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+      optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
       assertTrue(optionalDoc1.isPresent());
       if (optionalDoc1.isPresent()) {
         doc1 = optionalDoc1.get();
@@ -179,7 +181,7 @@ class TestProjectManager {
         savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
         savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-            .getNode("salt:/rootCorpus/subCorpus1/doc1");
+            .getNode(DOC1_SALT_ID);
 
         docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
         assertThat(docDiff, is(empty()));

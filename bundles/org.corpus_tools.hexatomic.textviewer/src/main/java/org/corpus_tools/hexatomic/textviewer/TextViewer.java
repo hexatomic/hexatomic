@@ -61,12 +61,6 @@ public class TextViewer {
   @Inject
   private Composite parent;
 
-  @Inject
-  public TextViewer() {
-
-  }
-
-
   /**
    * Creates a new text viewer.
    * 

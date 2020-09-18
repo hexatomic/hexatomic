@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Test;
  */
 class TestRowHeaderDataProvider {
 
-  private static RowHeaderDataProvider fixture = null;
-  private static GraphDataProvider fixtureProvider = null;
-  private static List<Column> columns = null;
+  private RowHeaderDataProvider fixture = null;
+  private GraphDataProvider fixtureProvider = null;
+  private List<Column> columns = null;
 
   /**
    * Sets up the fixture.

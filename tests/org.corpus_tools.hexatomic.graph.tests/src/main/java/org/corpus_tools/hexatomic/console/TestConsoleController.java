@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 class TestConsoleController {
 
+  private static final String EXAMPLE_SENTENCE_COMMAND = "t This is an example \".\"";
   private ConsoleController console;
   private SDocumentGraph graph;
 
@@ -35,7 +36,7 @@ class TestConsoleController {
   @Test
   void testExampleNewNode() {
     // Add initial tokens
-    console.executeCommand("t This is an example \".\"");
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     graph.sortTokenByText();
 
     // Add some annnotated nodes
@@ -75,7 +76,7 @@ class TestConsoleController {
   @Test
   void testExampleAddEdge() {
     // Add initial tokens
-    console.executeCommand("t This is an example \".\"");
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     graph.sortTokenByText();
 
     // Add some annnotated nodes
@@ -108,7 +109,7 @@ class TestConsoleController {
   @Test
   void testExampleAnnotate() {
     // Add initial tokens
-    console.executeCommand("t This is an example \".\"");
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     graph.sortTokenByText();
     
     // Add initial pointing relation
@@ -138,7 +139,7 @@ class TestConsoleController {
   void testExampleTokenize() {
 
     // Add initial tokens
-    console.executeCommand("t This is an example \".\"");
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     graph.sortTokenByText();
     List<SToken> tokens = graph.getTokens();
     assertEquals(5, tokens.size());
@@ -250,7 +251,7 @@ class TestConsoleController {
   @Test
   void testExampleDelete() {
     // Add initial tokens
-    console.executeCommand("t This is an example \".\"");
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     graph.sortTokenByText();
 
     // Add edges
@@ -296,7 +297,7 @@ class TestConsoleController {
   @Test
   void testInsertEdgeTwice() {
     // Add initial tokens 
-    console.executeCommand("t This is an example \".\"");
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     
     // Add first pointing relation
     console.executeCommand("e #t1 -> #t2 ns:n:a");
