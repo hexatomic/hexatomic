@@ -82,36 +82,24 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     return true;
   }
 
-  @Override
-  protected void applyLayoutInternal(InternalNode[] entitiesToLayout,
-      InternalRelationship[] relationshipsToConsider, double boundsX, double boundsY,
-      double boundsWidth, double boundsHeight) {
+  private boolean isRootNode(SNode n) {
+    for (SRelation<?, ?> rel : n.getGraph().getInRelations(n.getId())) {
+      if (this.relations.containsValue(rel)) {
+        return false;
+      }
+    }
+    return true;
+  }
 
-    fireProgressStarted(4);
-
-    List<SToken> tokens = new LinkedList<>();
-
-    fireProgressEvent(0, 4);
-
-    // 1. Assign an initial rank to each non-token
+  private Multimap<Integer, InternalNode> assignInitialRankToNonToken(List<SToken> tokens) {
     Map<InternalNode, Integer> rankForNode = new HashMap<>();
 
     // Get all nodes that are root nodes when only including the considered relations
     for (SNode n : this.nodes.values()) {
       if (n instanceof SToken) {
         tokens.add((SToken) n);
-      } else if (n != null && n.getGraph() != null) {
-        boolean isRoot = true;
-        for (SRelation<?, ?> rel : n.getGraph().getInRelations(n.getId())) {
-          if (this.relations.containsValue(rel)) {
-            isRoot = false;
-            break;
-          }
-        }
-
-        if (isRoot) {
-          assignRankRecursively(this.nodes.inverse().get(n), rankForNode, 0);
-        }
+      } else if (n != null && n.getGraph() != null && isRootNode(n)) {
+        assignRankRecursively(this.nodes.inverse().get(n), rankForNode, 0);
       }
     }
     // Group nodes with the same rank
@@ -119,10 +107,60 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     for (Map.Entry<InternalNode, Integer> entry : rankForNode.entrySet()) {
       nodesByRank.put(entry.getValue(), entry.getKey());
     }
+    return nodesByRank;
+  }
 
-    fireProgressEvent(1, 4);
+  /**
+   * Checks if any overlapped sequence is already occupied by another node in this rank.
+   * 
+   * @param sequences The sequences to to check if any of them overlaps an existing region.
+   * @param occupiedByText A map of bitsets for each text that represent existing overlapped
+   *        regions.
+   * @return
+   */
+  private boolean overlapsExisting(List<DataSourceSequence<? extends Number>> sequences,
+      Map<STextualDS, BitSet> occupiedByText) {
+    for (DataSourceSequence<?> s : sequences) {
 
-    // 2. Check if we can merge nodes to the same rank if they don't cover the same token
+      if (s.getDataSource() instanceof STextualDS) {
+        BitSet alreadyOccupied = occupiedByText.get(s.getDataSource());
+        if (alreadyOccupied == null) {
+          alreadyOccupied = new BitSet();
+          occupiedByText.put((STextualDS) s.getDataSource(), alreadyOccupied);
+        }
+        BitSet occupiedBySequence = new BitSet();
+        occupiedBySequence.set(s.getStart().intValue(), s.getEnd().intValue());
+        if (alreadyOccupied.intersects(occupiedBySequence)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Update the occupied region to include the new sequences.
+   * 
+   * @param sequences The new sequences to add
+   * @param occupiedByText The map of bitsets for each text which represent existing overlapped
+   *        regions and will be updated to include the given sequences.
+   */
+  private void updateOverlappedRegions(List<DataSourceSequence<? extends Number>> sequences,
+      Map<STextualDS, BitSet> occupiedByText) {
+    for (DataSourceSequence<?> s : sequences) {
+      if (s.getDataSource() instanceof STextualDS) {
+        BitSet occupied = occupiedByText.get(s.getDataSource());
+        if (occupied == null) {
+          occupied = new BitSet();
+          occupiedByText.put((STextualDS) s.getDataSource(), occupied);
+        }
+        occupied.set(s.getStart().intValue(), s.getEnd().intValue());
+      }
+    }
+  }
+
+  private LinkedHashMap<InternalNode, RankSubrank> mergeNodesToSameRank(
+      Multimap<Integer, InternalNode> nodesByRank) {
     LinkedHashMap<InternalNode, RankSubrank> mergedRanks = new LinkedHashMap<>();
     for (Integer rank : new LinkedList<>(nodesByRank.keySet())) {
       Collection<InternalNode> sameRankNodes = nodesByRank.get(rank);
@@ -133,51 +171,20 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         SNode n = this.nodes.get(internal);
         if (n != null && n.getGraph() instanceof SDocumentGraph) {
           SDocumentGraph graph = (SDocumentGraph) n.getGraph();
-          @SuppressWarnings("rawtypes")
-          List<DataSourceSequence> sequences =
-              graph.getOverlappedDataSourceSequence(n, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
-          if (sequences != null) {
+          List<DataSourceSequence<? extends Number>> sequences = new LinkedList<>(
+              graph.getOverlappedDataSourceSequence(n,
+              SALT_TYPE.STEXT_OVERLAPPING_RELATION));
+          if (overlapsExisting(sequences, occupiedByText)) {
+            // assign a new sub-rank to this node
+            subrank++;
 
-            // check if any overlapped sequence is already occupied by another node in this rank
-            boolean overlapsExisting = false;
-            for (DataSourceSequence<?> s : sequences) {
-
-              if (s.getDataSource() instanceof STextualDS) {
-                BitSet alreadyOccupied = occupiedByText.get(s.getDataSource());
-                if (alreadyOccupied == null) {
-                  alreadyOccupied = new BitSet();
-                  occupiedByText.put((STextualDS) s.getDataSource(), alreadyOccupied);
-                }
-                BitSet occupiedBySequence = new BitSet();
-                occupiedBySequence.set(s.getStart().intValue(), s.getEnd().intValue());
-                if (alreadyOccupied.intersects(occupiedBySequence)) {
-                  overlapsExisting = true;
-                  break;
-                }
-              }
-            }
-
-            if (overlapsExisting) {
-              // assign a new sub-rank to this node
-              subrank++;
-
-              // occupied needs to be updated to include the current node only (and forget the
-              // previous occupancy)
-              occupiedByText.clear();
-            }
+            // occupied needs to be updated to include the current node only (and forget the
+            // previous occupancy)
+            occupiedByText.clear();
           }
 
           // update the occupied region to include the new sequences
-          for (DataSourceSequence<?> s : sequences) {
-            if (s.getDataSource() instanceof STextualDS) {
-              BitSet occupied = occupiedByText.get(s.getDataSource());
-              if (occupied == null) {
-                occupied = new BitSet();
-                occupiedByText.put((STextualDS) s.getDataSource(), occupied);
-              }
-              occupied.set(s.getStart().intValue(), s.getEnd().intValue());
-            }
-          }
+          updateOverlappedRegions(sequences, occupiedByText);
 
           // remember the generated rank and sub-rank
           mergedRanks.put(internal, new RankSubrank(rank, subrank));
@@ -185,8 +192,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    // re-create the ranks map but include the merged sub-ranks
-    rankForNode.clear();
+    return mergedRanks;
+  }
+
+  private int recreateRanksFromMerged(LinkedHashMap<InternalNode, RankSubrank> mergedRanks,
+      Map<InternalNode, Integer> rankForNode) {
     int flattenedRank = 0;
     RankSubrank previousRank = null;
     // Because mergedRanks is a linked hash map and the insertion order was by the original rank,
@@ -205,14 +215,11 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       previousRank = currentRank;
     }
 
-    fireProgressEvent(2, 4);
+    return flattenedRank;
+  }
 
-    // 3. layout tokens and put them one rank below the number of ranks
-    // TODO: check if any pointing relations are present and use +1 if not
-    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + 2);
-    fireProgressEvent(3, 4);
-
-    // 4. assign position based on (sub-) rank and the covered tokens
+  private void assignPositionsByRank(Map<InternalNode, Integer> rankForNode, double boundsX,
+      double boundsY) {
     for (Map.Entry<InternalNode, Integer> e : rankForNode.entrySet()) {
       int rank = e.getValue();
       InternalNode node = e.getKey();
@@ -238,11 +245,41 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
       }
     }
+  }
 
-    fireProgressEvent(4, 4);
+  @Override
+  protected void applyLayoutInternal(InternalNode[] entitiesToLayout,
+      InternalRelationship[] relationshipsToConsider, double boundsX, double boundsY,
+      double boundsWidth, double boundsHeight) {
+
+    fireProgressStarted(3);
+
+    // 1. Assign an initial rank to each non-token
+    List<SToken> tokens = new LinkedList<>();
+    Multimap<Integer, InternalNode> nodesByRank = assignInitialRankToNonToken(tokens);
+    fireProgressEvent(0, 3);
+
+    // 2. Check if we can merge nodes to the same rank if they don't cover the same token
+    LinkedHashMap<InternalNode, RankSubrank> mergedRanks = mergeNodesToSameRank(nodesByRank);
+
+    // re-create the ranks map but include the merged sub-ranks
+    Map<InternalNode, Integer> rankForNode = new HashMap<>();
+    int flattenedRank = recreateRanksFromMerged(mergedRanks, rankForNode);
+
+    fireProgressEvent(1, 3);
+
+    // 3. layout tokens and put them one rank below the number of ranks
+    // TODO: check if any pointing relations are present and use +1 if not
+    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + 2);
+    fireProgressEvent(2, 3);
+
+    // 4. assign position based on (sub-) rank and the covered tokens
+    assignPositionsByRank(rankForNode, boundsX, boundsY);
+
+    fireProgressEvent(3, 3);
 
     updateLayoutLocations(entitiesToLayout);
-    fireProgressEnded(4);
+    fireProgressEnded(3);
 
   }
 

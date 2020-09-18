@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test;
  */
 class TestLabelAccumulator {
 
-  private static LabelAccumulator fixture = null;
-  private static GraphDataProvider fixtureProvider = null;
-  private static SpanningDataLayer fixtureLayer = null;
+  private LabelAccumulator fixture = null;
+  private GraphDataProvider fixtureProvider = null;
+  private SpanningDataLayer fixtureLayer = null;
 
   /**
    * Sets up the fixture for unit tests.

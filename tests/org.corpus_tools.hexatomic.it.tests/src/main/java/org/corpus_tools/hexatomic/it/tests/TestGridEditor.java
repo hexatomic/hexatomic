@@ -53,6 +53,10 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
+  private static final String TOKEN_VALUE = "Token";
+
+  private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
+
   private static final String TEST_ANNOTATION_VALUE = "TEST";
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
@@ -125,7 +129,7 @@ public class TestGridEditor {
 
     // select and open the editor
     docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
     SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
     assertNotNull(view);
@@ -147,7 +151,7 @@ public class TestGridEditor {
 
     // select and open the editor
     docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
     final SWTBotView view = bot.partByTitle("doc (Grid Editor)");
     assertNotNull(view);
@@ -169,7 +173,7 @@ public class TestGridEditor {
 
     // select and open the editor
     docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
     SWTBotView view = bot.partByTitle("doc (Grid Editor)");
     assertNotNull(view);
@@ -210,8 +214,8 @@ public class TestGridEditor {
     assertEquals(null, natTable.getDataValueByPosition(0, 0));
     assertEquals(2, natTable.getDataValueByPosition(0, 2));
     assertEquals(11, natTable.getDataValueByPosition(0, 11));
-    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
-    assertEquals("Token", natTable.getDataValueByPosition(1, 0));
+    assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
+    assertEquals(TOKEN_VALUE, natTable.getDataValueByPosition(1, 0));
     assertEquals("Inf-Struct", table.getCellDataValueByPosition(0, 4));
     assertEquals("Inf-Struct", natTable.getDataValueByPosition(4, 0));
 
@@ -255,7 +259,7 @@ public class TestGridEditor {
     assertEquals("", table.getCellDataValueByPosition(0, 0));
     assertEquals("2", table.getCellDataValueByPosition(2, 0));
     assertEquals("5", table.getCellDataValueByPosition(5, 0));
-    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+    assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
     assertEquals("five::span_1", table.getCellDataValueByPosition(0, 3));
     assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
     assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
@@ -380,7 +384,7 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+    assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
 
     // Hide token column
     table.contextMenu(0, 1).contextMenu("Hide column(s)").click();
@@ -388,7 +392,7 @@ public class TestGridEditor {
 
     // Show columns
     table.contextMenu(0, 1).contextMenu("Show all columns").click();
-    assertEquals("Token", table.getCellDataValueByPosition(0, 1));
+    assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
   }
 
   @Test

@@ -26,10 +26,16 @@ package org.corpus_tools.hexatomic.core;
  * 
  * @author Thomas Krause
  */
-public interface CommandParams {
+public final class CommandParams {
 
-  public static String EDITOR_ID = "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
-  public static String LOCATION = "org.corpus_tools.hexatomic.core.commandparameter.location";
-  public static String FORCE_CLOSE = "org.corpus_tools.hexatomic.core.commandparameter.force_close";
+  private CommandParams() {
+    // Private (but empty) constructor to avoid instantiation of this utility class.
+  }
+
+  public static final String EDITOR_ID =
+      "org.corpus_tools.hexatomic.core.commandparameter.editor-id";
+  public static final String LOCATION = "org.corpus_tools.hexatomic.core.commandparameter.location";
+  public static final String FORCE_CLOSE =
+      "org.corpus_tools.hexatomic.core.commandparameter.force_close";
 
 }

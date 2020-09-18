@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
  */
 class TestFreezeGridBindings {
 
-  private static FreezeGridBindings fixture = null;
+  private FreezeGridBindings fixture = null;
 
   /**
    * Sets up the fixture.

@@ -86,22 +86,22 @@ public class GraphDragMoveAdapter implements MouseMotionListener, MouseListener 
 
   @Override
   public void mouseEntered(MouseEvent me) {
-
+    // Do nothing when the mouse is entered
   }
 
   @Override
   public void mouseExited(MouseEvent me) {
- 
+    // Do nothing when the mouse is exited
   }
 
   @Override
   public void mouseHover(MouseEvent me) {
-
+    // Do nothing when the mouse is hovering over the viewport
   }
 
   @Override
   public void mouseMoved(MouseEvent me) {
-
+    // Do nothing when the mouse is moved over the viewport
   }
 
   @Override
@@ -120,7 +120,7 @@ public class GraphDragMoveAdapter implements MouseMotionListener, MouseListener 
 
   @Override
   public void mouseDoubleClicked(MouseEvent me) {
-
+    // Do nothing when there is a mouse double click
   }
 
 }

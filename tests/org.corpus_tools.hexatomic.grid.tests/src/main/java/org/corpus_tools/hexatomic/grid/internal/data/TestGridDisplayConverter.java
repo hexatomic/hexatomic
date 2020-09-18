@@ -29,7 +29,9 @@ import org.mockito.Mockito;
  */
 class TestGridDisplayConverter {
 
-  private static GridDisplayConverter fixture = null;
+  private static final String SPAN_PASS_VALUE = "span_pass";
+  private static final String TOKEN_PASS_VALUE = "token_pass";
+  private GridDisplayConverter fixture = null;
   private SToken token = null;
   private SSpan span = null;
   private GraphDataProvider dataProvider = null;
@@ -64,7 +66,7 @@ class TestGridDisplayConverter {
 
     token = mock(SToken.class);
     SAnnotation tokenAnnotation = mock(SAnnotation.class);
-    when(tokenAnnotation.getValue()).thenReturn("token_pass");
+    when(tokenAnnotation.getValue()).thenReturn(TOKEN_PASS_VALUE);
     when(token.getAnnotation("annotation:token")).thenReturn(tokenAnnotation);
     SDocumentGraph graph = mock(SDocumentGraph.class);
     when(graph.getText(token)).thenReturn("token_text");
@@ -78,7 +80,7 @@ class TestGridDisplayConverter {
 
     span = mock(SSpan.class);
     SAnnotation spanAnnotation = mock(SAnnotation.class);
-    when(spanAnnotation.getValue()).thenReturn("span_pass");
+    when(spanAnnotation.getValue()).thenReturn(SPAN_PASS_VALUE);
     when(span.getAnnotation("annotation:span")).thenReturn(spanAnnotation);
     spanCell = Mockito.mock(ILayerCell.class);
     when(spanCell.getColumnIndex()).thenReturn(1);
@@ -109,8 +111,8 @@ class TestGridDisplayConverter {
    */
   @Test
   void testCanonicalToDisplayValueILayerCell() {
-    assertEquals("token_pass", fixture.canonicalToDisplayValue(tokenCell, null, token));
-    assertEquals("span_pass", fixture.canonicalToDisplayValue(spanCell, null, span));
+    assertEquals(TOKEN_PASS_VALUE, fixture.canonicalToDisplayValue(tokenCell, null, token));
+    assertEquals(SPAN_PASS_VALUE, fixture.canonicalToDisplayValue(spanCell, null, span));
     assertNull(fixture.canonicalToDisplayValue(null, null, null));
     assertNull(fixture.canonicalToDisplayValue(tokenCell, null, mock(STextualRelation.class)));
     assertNull(fixture.canonicalToDisplayValue(nullCell, null, token));
@@ -127,8 +129,9 @@ class TestGridDisplayConverter {
   void testDisplayToCanonicalValueILayerCell() {
     // assertEquals(token, fixture.displayToCanonicalValue(tokenCell, null, "token_pass"));
     // assertEquals(span, fixture.displayToCanonicalValue(spanCell, null, "span_pass"));
-    assertEquals("token_pass", fixture.displayToCanonicalValue(tokenCell, null, "token_pass"));
-    assertEquals("span_pass", fixture.displayToCanonicalValue(spanCell, null, "span_pass"));
+    assertEquals(TOKEN_PASS_VALUE,
+        fixture.displayToCanonicalValue(tokenCell, null, TOKEN_PASS_VALUE));
+    assertEquals(SPAN_PASS_VALUE, fixture.displayToCanonicalValue(spanCell, null, SPAN_PASS_VALUE));
   }
 
 }

@@ -290,6 +290,30 @@ public class GraphDataProvider implements IDataProvider {
     return null;
   }
 
+  private void removeAnnotation(String annotationQName, SStructuredNode node, Column column,
+      int rowIndex) {
+    // Remove annotation from Salt model
+    if (node != null) {
+      node.removeLabel(column.getColumnValue());
+      log.debug("Removed annotation {} from node {}.", annotationQName, node);
+    }
+    // Remove annotation from all column cells
+    if (node instanceof SToken) {
+      // Annotation can only span a single token, i.e., a single row
+      column.setRow(rowIndex, null);
+    } else if (node instanceof SSpan) {
+      List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
+      for (SToken token : overlappedTokens) {
+        column.setRow(orderedDsTokens.indexOf(token), null);
+      }
+      // If, now, the span has no annotations, remove it
+      if (node.getAnnotations().isEmpty()) {
+        graph.removeNode(node);
+        log.debug("Removed empty span {} from graph {}.", node, graph);
+      }
+    }
+  }
+
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
     Column column = null;
@@ -305,26 +329,7 @@ public class GraphDataProvider implements IDataProvider {
 
     // If new value is empty, remove annotation
     if (newValue == null || newValue.equals("")) {
-      // Remove annotation from Salt model
-      if (node != null) {
-        node.removeLabel(column.getColumnValue());
-        log.debug("Removed annotation {} from node {}.", annotationQName, node);
-      }
-      // Remove annotation from all column cells
-      if (node instanceof SToken) {
-        // Annotation can only span a single token, i.e., a single row
-        column.setRow(rowIndex, null);
-      } else if (node instanceof SSpan) {
-        List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
-        for (SToken token : overlappedTokens) {
-          column.setRow(orderedDsTokens.indexOf(token), null);
-        }
-        // If, now, the span has no annotations, remove it
-        if (node.getAnnotations().isEmpty()) {
-          graph.removeNode(node);
-          log.debug("Removed empty span {} from graph {}.", node, graph);
-        }
-      }
+      removeAnnotation(annotationQName, node, column, rowIndex);
     } else { // Value is not empty or null
       if (columnType == ColumnType.TOKEN_TEXT) {
         log.debug("Action not implemented: Set token text");

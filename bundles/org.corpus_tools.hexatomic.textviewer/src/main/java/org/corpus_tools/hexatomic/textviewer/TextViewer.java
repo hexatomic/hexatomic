@@ -52,12 +52,6 @@ public class TextViewer {
   @Inject
   private IEventBroker events;
 
-  @Inject
-  public TextViewer() {
-
-  }
-
-
   /**
    * Creates a new text viewer.
    * 

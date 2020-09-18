@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.console.internal;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,6 +61,7 @@ import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
@@ -369,6 +371,23 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   }
 
+  private List<String> newTokensTextFromContext(ListIterator<StringContext> itWords) {
+    List<String> newTokenTexts = new LinkedList<>();
+    while (itWords.hasNext()) {
+      String tokenValue = getString(itWords.next());
+      newTokenTexts.add(tokenValue);
+    }
+    return newTokenTexts;
+  }
+
+  private void addTokensToText(STextualDS ds, int offset, List<String> newTokenTexts) {
+    int numberOfTokens = graph.getTokens().size();
+    List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
+    for (SToken t : newTokens) {
+      t.setName(getUnusedName("t", ++numberOfTokens));
+    }
+  }
+
   @Override
   public void exitTokenizeAfter(TokenizeAfterContext ctx) {
     SDocumentGraph graph = this.graph;
@@ -389,20 +408,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          List<String> newTokenTexts = newTokensTextFromContext(ctx.string().listIterator());
+          addTokensToText(ds, offset, newTokenTexts);
         }
       }
     } else {
@@ -425,19 +432,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         int offset = seq.getStart().intValue();
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          List<String> newTokenTexts = newTokensTextFromContext(ctx.string().listIterator());
+          addTokensToText(ds, offset, newTokenTexts);
         }
       }
     } else {
@@ -445,26 +441,23 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     }
   }
 
+  private void annotateAllElements(SAnnotation anno,
+      Collection<? extends SAnnotationContainer> elements) {
+    for (SAnnotationContainer container : elements) {
+      if (container.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
+        container.removeLabel(anno.getNamespace(), anno.getName());
+      }
+      if (anno.getValue() != null) {
+        container.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+      }
+    }
+  }
+
   @Override
   public void exitAnnotate(AnnotateContext ctx) {
     for (SAnnotation anno : this.attributes) {
-
-      for (SStructuredNode n : this.referencedNodes) {
-        if (n.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-          n.removeLabel(anno.getNamespace(), anno.getName());
-        }
-        if (anno.getValue() != null) {
-          n.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
-        }
-      }
-      for (SRelation<?, ?> rel : this.referencedEdges) {
-        if (rel.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-          rel.removeLabel(anno.getNamespace(), anno.getName());
-        }
-        if (anno.getValue() != null) {
-          rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
-        }
-      }
+      annotateAllElements(anno, this.referencedNodes);
+      annotateAllElements(anno, this.referencedEdges);
     }
   }
 

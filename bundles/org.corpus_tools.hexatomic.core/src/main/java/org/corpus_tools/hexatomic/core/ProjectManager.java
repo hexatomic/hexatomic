@@ -66,6 +66,177 @@ import org.eclipse.swt.widgets.Shell;
 @Singleton
 public class ProjectManager {
 
+  private final class SaveToRunnable implements IRunnableWithProgress {
+    private final Set<String> documentsToReload;
+    private final URI path;
+
+    private SaveToRunnable(Set<String> documentsToReload, URI path) {
+      this.documentsToReload = documentsToReload;
+      this.path = path;
+    }
+
+    @Override
+    public void run(IProgressMonitor monitor)
+        throws InvocationTargetException, InterruptedException {
+
+      boolean savingToCurrentLocation =
+          getLocation().isPresent() && getLocation().get().equals(path);
+
+      // Collect all documents that need to be saved
+      final List<SDocument> documents;
+      if (savingToCurrentLocation) {
+        // Only the loaded documents need to be saved
+        documents = project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+            .filter(d -> d.getDocumentGraph() != null).collect(Collectors.toList());
+      } else {
+        // All documents need to be saved
+        documents = project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+            .collect(Collectors.toList());
+      }
+
+      monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
+
+      // Disable listeners for document changes while performing massive amounts of temporary
+      // changes
+      notificationFactory.setSuppressingEvents(true);
+
+      Path outputDirectory = Paths.get(path.toFileString());
+      if (!savingToCurrentLocation) {
+        // Clear existing files from the folder, which is not the same as the current one
+        clearSaltProjectFolder(outputDirectory);
+      }
+
+      outputDirectory.toFile().mkdirs();
+
+      // Save the corpus structure file
+      monitor.subTask("Saving corpus structure");
+      URI saltProjectFile = path.appendSegment(SaltUtil.FILE_SALT_PROJECT);
+      SaltXML10Writer writer = new SaltXML10Writer(saltProjectFile);
+      writer.writeSaltProject(project);
+      monitor.worked(1);
+
+      // Load each document individually and persist it
+      if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
+
+        // Store all documents and copy them from the original location if necessary.
+        // When storing the same location, we can assume we did not change the document graph
+        // and can skip copying it.
+        loadAndPersistAllDocuments(documents, savingToCurrentLocation, monitor);
+      }
+
+      location = Optional.of(path);
+
+      sync.asyncExec(() -> {
+        // Reload the originally loaded documents when there is an active editor
+        for (String documentID : documentsToReload) {
+          Optional<SDocument> document = getDocument(documentID, true);
+          if (document.isPresent()) {
+            events.send(Topics.DOCUMENT_LOADED, document.get().getId());
+          }
+        }
+
+        uiStatus.setDirty(false);
+        uiStatus.setLocation(path.toFileString());
+
+        // Enable the listeners again
+        notificationFactory.setSuppressingEvents(false);
+        hasUnsavedChanges = false;
+
+      });
+
+      monitor.done();
+    }
+
+    private void clearSaltProjectFolder(Path outputDirectory) {
+      try {
+        // Parse any existing project file to get all document files that need to be deleted
+        SaltProject existingProject =
+            SaltUtil.loadSaltProject(URI.createFileURI(outputDirectory.toString()));
+
+        if (existingProject != null) {
+          List<URI> allDocuments =
+              existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
+                  .filter(d -> d.getDocumentGraphLocation() != null)
+                  .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
+          // Delete the Salt XML files belonging to this document
+          for (URI doc : allDocuments) {
+            Path saltFile = Paths.get(doc.toFileString());
+            if (Files.exists(saltFile)) {
+              Files.delete(saltFile);
+            }
+          }
+        }
+      } catch (SaltResourceException ex) {
+        // This is not a valid salt project folder, don't delete any files
+      } catch (IOException ex) {
+        log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
+            ex);
+      }
+    }
+
+    private URI getOutputPathForDocument(URI saltProjectFolder, SDocument doc) {
+      URI docUri = saltProjectFolder;
+      for (String seg : doc.getPath().segments()) {
+        docUri = docUri.appendSegment(seg);
+      }
+      docUri = docUri.appendFileExtension(SaltUtil.FILE_ENDING_SALT_XML);
+      return docUri;
+    }
+
+    private void loadAndPersistAllDocuments(List<SDocument> documents,
+        boolean savingToCurrentLocation,
+        IProgressMonitor monitor) {
+      for (SDocument doc : documents) {
+        if (monitor.isCanceled()) {
+          monitor.done();
+          return;
+        }
+        loadAndPersistSingleDocument(doc, savingToCurrentLocation, monitor);
+      }
+    }
+
+    private void loadAndPersistSingleDocument(SDocument doc, boolean savingToCurrentLocation,
+        IProgressMonitor monitor) {
+      monitor.subTask(doc.getPath().toString());
+
+      URI documentOutputUri = getOutputPathForDocument(path, doc);
+      Path documentOutputPath = Paths.get(documentOutputUri.toFileString());
+      if (savingToCurrentLocation) {
+        if (doc.getDocumentGraph() == null) {
+          // No need to save if not changed in memory
+          log.debug("Save: Skipping unchanged document {} in same directory", doc.getId());
+        } else {
+          // Save to new location
+          doc.saveDocumentGraph(documentOutputUri);
+        }
+      } else {
+        if (doc.getDocumentGraph() == null && doc.getDocumentGraphLocation() != null) {
+          // Copy the unchanged Salt XML file: this is much faster than deserializing and
+          // serializing it
+          try {
+            documentOutputPath.toFile().getParentFile().mkdirs();
+            Path sourceFile = Paths.get(doc.getDocumentGraphLocation().toFileString());
+            if (Files.exists(sourceFile)) {
+              Files.copy(sourceFile, documentOutputPath);
+            }
+          } catch (IOException ex) {
+            monitor.done();
+            sync.asyncExec(() -> {
+              errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
+                  ProjectManager.class);
+            });
+            return;
+          }
+        } else {
+          // Save to new location
+          doc.saveDocumentGraph(documentOutputUri);
+        }
+      }
+      // Report one finished document
+      monitor.worked(1);
+    }
+  }
+
   private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
 
   private static final org.slf4j.Logger log =
@@ -258,126 +429,7 @@ public class ProjectManager {
               .filter(d -> d.getDocumentGraph() != null).filter(d -> getNumberOfOpenEditors(d) > 0)
               .map(d -> d.getId()).collect(Collectors.toSet());
 
-      IRunnableWithProgress operation = new IRunnableWithProgress() {
-
-        @Override
-        public void run(IProgressMonitor monitor)
-            throws InvocationTargetException, InterruptedException {
-
-          boolean savingToCurrentLocation =
-              getLocation().isPresent() && getLocation().get().equals(path);
-
-          // Collect all documents that need to be saved
-          final List<SDocument> documents;
-          if (savingToCurrentLocation) {
-            // Only the loaded documents need to be saved
-            documents = project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
-                .filter(d -> d.getDocumentGraph() != null).collect(Collectors.toList());
-          } else {
-            // All documents need to be saved
-            documents = project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
-                .collect(Collectors.toList());
-          }
-
-          monitor.beginTask("Saving Salt project to " + path.toFileString(), documents.size() + 1);
-
-          // Disable listeners for document changes while performing massive amounts of temporary
-          // changes
-          notificationFactory.setSuppressingEvents(true);
-
-          Path outputDirectory = Paths.get(path.toFileString());
-          if (!savingToCurrentLocation) {
-            // Clear existing files from the folder, which is not the same as the current one
-            clearSaltProjectFolder(outputDirectory);
-          }
-
-          outputDirectory.toFile().mkdirs();
-
-          // Save the corpus structure file
-          monitor.subTask("Saving corpus structure");
-          URI saltProjectFile = path.appendSegment(SaltUtil.FILE_SALT_PROJECT);
-          SaltXML10Writer writer = new SaltXML10Writer(saltProjectFile);
-          writer.writeSaltProject(project);
-          monitor.worked(1);
-
-          // Load each document individually and persist it
-          if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
-
-            // Store all documents and copy them from the original location if necessary.
-            // When storing the same location, we can assume we did not change the document graph
-            // and can skip copying it.
-            for (SDocument doc : documents) {
-              if (monitor.isCanceled()) {
-                monitor.done();
-                return;
-              }
-
-              monitor.subTask(doc.getPath().toString());
-
-              URI documentOutputUri = getOutputPathForDocument(path, doc);
-              Path documentOutputPath = Paths.get(documentOutputUri.toFileString());
-              if (savingToCurrentLocation) {
-                if (doc.getDocumentGraph() == null) {
-                  // No need to save if not changed in memory
-                  log.debug("Save: Skipping unchanged document {} in same directory", doc.getId());
-                } else {
-                  // Save to new location
-                  doc.saveDocumentGraph(documentOutputUri);
-                }
-              } else {
-                if (doc.getDocumentGraph() == null && doc.getDocumentGraphLocation() != null) {
-                  // Copy the unchanged Salt XML file: this is much faster than deserializing and
-                  // serializing it
-                  try {
-                    documentOutputPath.toFile().getParentFile().mkdirs();
-                    Path sourceFile = Paths.get(doc.getDocumentGraphLocation().toFileString());
-                    if (Files.exists(sourceFile)) {
-                      Files.copy(sourceFile, documentOutputPath);
-                    }
-                  } catch (IOException ex) {
-                    monitor.done();
-                    sync.asyncExec(() -> {
-                      errorService.handleException("Could not copy Salt document " + doc.getId(),
-                          ex, ProjectManager.class);
-                    });
-                    return;
-                  }
-                } else {
-                  // Save to new location
-                  doc.saveDocumentGraph(documentOutputUri);
-                }
-              }
-
-              // Report one finished document
-              monitor.worked(1);
-            }
-          }
-
-          location = Optional.of(path);
-
-
-          sync.asyncExec(() -> {
-            // Reload the originally loaded documents when there is an active editor
-            for (String documentID : documentsToReload) {
-              Optional<SDocument> document = getDocument(documentID, true);
-              if (document.isPresent()) {
-                events.send(Topics.DOCUMENT_LOADED, document.get().getId());
-              }
-            }
-
-            uiStatus.setDirty(false);
-            uiStatus.setLocation(path.toFileString());
-
-            // Enable the listeners again
-            notificationFactory.setSuppressingEvents(false);
-            hasUnsavedChanges = false;
-
-          });
-
-          monitor.done();
-
-        }
-      };
+      IRunnableWithProgress operation = new SaveToRunnable(documentsToReload, path);
 
       ProgressMonitorDialog dialog = createProgressMonitorDialog(shell);
 
@@ -405,43 +457,6 @@ public class ProjectManager {
    */
   public ProgressMonitorDialog createProgressMonitorDialog(Shell shell) {
     return new ProgressMonitorDialog(shell);
-  }
-
-
-  private void clearSaltProjectFolder(Path outputDirectory) {
-    try {
-      // Parse any existing project file to get all document files that need to be deleted
-      SaltProject existingProject =
-          SaltUtil.loadSaltProject(URI.createFileURI(outputDirectory.toString()));
-
-      if (existingProject != null) {
-        List<URI> allDocuments =
-            existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
-                .filter(d -> d.getDocumentGraphLocation() != null)
-                .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
-        // Delete the Salt XML files belonging to this document
-        for (URI doc : allDocuments) {
-          Path saltFile = Paths.get(doc.toFileString());
-          if (Files.exists(saltFile)) {
-            Files.delete(saltFile);
-          }
-        }
-      }
-    } catch (SaltResourceException ex) {
-      // This is not a valid salt project folder, don't delete any files
-    } catch (IOException ex) {
-      log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
-          ex);
-    }
-  }
-
-  private URI getOutputPathForDocument(URI saltProjectFolder, SDocument doc) {
-    URI docUri = saltProjectFolder;
-    for (String seg : doc.getPath().segments()) {
-      docUri = docUri.appendSegment(seg);
-    }
-    docUri = docUri.appendFileExtension(SaltUtil.FILE_ENDING_SALT_XML);
-    return docUri;
   }
 
   /**
