@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed incorrect description of unreviewed hotfixes workflow in developer/maintainer documentation
+- When adding tokens in the graph editor to a previously empty document, you don't need to zoom in anymore (#224)
 
 ## [0.4.4] - 2020-09-16
 

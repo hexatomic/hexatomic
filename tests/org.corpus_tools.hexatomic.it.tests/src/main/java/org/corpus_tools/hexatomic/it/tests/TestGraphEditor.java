@@ -24,6 +24,7 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -212,6 +213,21 @@ class TestGraphEditor {
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
     bot.waitUntil(new GraphLoadedCondition(0));
+  }
+
+  void openMinimalProjectStructure() {
+    TestCorpusStructure.createMinimalCorpusStructure(bot);
+
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
+            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+
+    // Select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+
+    bot.waitUntil(new GraphLoadedCondition("document_1"));
   }
 
   void enterCommand(String command) {
@@ -512,19 +528,7 @@ class TestGraphEditor {
    */
   @Test
   void testTokenizeSaveTokenizeSave() throws IOException {
-    TestCorpusStructure.createMinimalCorpusStructure(bot);
-
-    // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
-            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
-
-    // Select and open the editor
-    docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
-
-    bot.waitUntil(new GraphLoadedCondition("document_1"));
-
+    openMinimalProjectStructure();
 
     // Add the two tokens to the document graph
     enterCommand("t Oi!");
@@ -552,5 +556,30 @@ class TestGraphEditor {
 
     // The last save should not have triggered any errors
     assertFalse(errorService.getLastException().isPresent());
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/224
+   * 
+   * <p>
+   * It checks that if you create new token in an empty document, that the zoom level is correct and
+   * the tokens are actually shown.
+   * </p>
+   */
+  @Test
+  void testShowNewlyCreatedToken() {
+    openMinimalProjectStructure();
+
+    // Add some token
+    enterCommand("t This is an example.");
+
+    // Make sure the token node boxes are large enough to be visible
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+    bot.waitUntil(new NumberOfNodesCondition(5));
+
+    ScalableFigure figure = g.getRootLayer();
+    assertEquals(1.0, figure.getScale());
+
   }
 }

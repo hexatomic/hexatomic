@@ -257,8 +257,9 @@ public class GraphEditor {
     consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
-    updateView(true, true);
-
+    SDocumentGraph graph = getGraph();
+    boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();
+    updateView(true, scrollToFirstToken);
   }
 
   private void registerGraphControlListeners() {
@@ -467,7 +468,7 @@ public class GraphEditor {
     }
 
     if (scrollToFirstToken) {
-      viewer.getGraphControl().getRootLayer().setScale(0);
+      viewer.getGraphControl().getRootLayer().setScale(0.0);
       // We can only scroll to the first token after the layout has been applied, which can be
       // asynchronous
       viewer.getGraphControl().getLayoutAlgorithm()
@@ -611,7 +612,6 @@ public class GraphEditor {
     ScalableFigure figure = viewer.getGraphControl().getRootLayer();
     double oldScale = figure.getScale();
     double newScale = oldScale * factor;
-
 
     double clippedScale = Math.max(0.0625, Math.min(2.0, newScale));
 
