@@ -44,6 +44,16 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
         "Corpora are stored in specific formats and you need to select the correct one.");
   }
 
+  private boolean givenPathIsRootPath(File corpusPath) {
+    File[] roots = File.listRoots();
+    for (File r : roots) {
+      if (r.equals(corpusPath)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   protected void updateRecommendFormats(File corpusPath) {
 
     // Initialize selection to default
@@ -51,15 +61,8 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
     btnPaulaXml.setSelection(false);
 
     Optional<Pepper> pepper = Activator.getPepper();
-    File[] roots = File.listRoots();
-    boolean pathIsRoot = false;
-    for (File r : roots) {
-      if (r.equals(corpusPath)) {
-        pathIsRoot = true;
-        break;
-      }
-    }
-    if (!pathIsRoot && pepper.isPresent()) {
+
+    if (!givenPathIsRootPath(corpusPath) && pepper.isPresent()) {
       try {
         for (String importerName : pepper.get()
             .findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))) {
