@@ -166,14 +166,13 @@ public class ImportWizard extends Wizard {
       Optional<ImportFormat> selectedFormat = importerPage.getSelectedFormat();
       if (selectedFormat.isPresent()) {
         // Add a configuration page based on the selected importer
-        switch (selectedFormat.get()) {
-          case EXB:
-            ExbImportConfiguration configPage = new ExbImportConfiguration();
-            configPage.setWizard(this);
-            this.configPage = Optional.of(configPage);
-            return configPage;
-          default:
-            return null;
+        if (selectedFormat.get() == ImportFormat.EXB) {
+          ExbImportConfiguration exbConfigPage = new ExbImportConfiguration();
+          exbConfigPage.setWizard(this);
+          this.configPage = Optional.of(exbConfigPage);
+          return exbConfigPage;
+        } else {
+          return null;
         }
       }
     }
