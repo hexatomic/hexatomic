@@ -36,11 +36,9 @@ class TestColumn {
 
   /**
    * Sets up the fixture for unit tests.
-   * 
-   * @throws java.lang.Exception Any exception during setup
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     SDocumentGraph graph = mock(SDocumentGraph.class);
 
     token1 = mock(SToken.class);

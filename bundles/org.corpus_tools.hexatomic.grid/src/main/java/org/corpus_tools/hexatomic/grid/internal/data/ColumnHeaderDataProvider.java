@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 /**
@@ -42,7 +43,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
    */
   public ColumnHeaderDataProvider(GraphDataProvider bodyDataProvider) {
     if (bodyDataProvider == null) {
-      throw new RuntimeException(
+      throw new HexatomicRuntimeException(
           "Body data provider in " + this.getClass().getSimpleName() + " must not be null.");
     }
     this.provider = bodyDataProvider;

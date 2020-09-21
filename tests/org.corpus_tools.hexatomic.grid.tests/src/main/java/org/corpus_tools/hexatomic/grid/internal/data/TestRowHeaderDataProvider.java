@@ -23,12 +23,10 @@ class TestRowHeaderDataProvider {
 
   /**
    * Sets up the fixture.
-   * 
-   * @throws java.lang.Exception Any exception thrown during execution.
    */
   @SuppressWarnings("unchecked")
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixtureProvider = mock(GraphDataProvider.class);
     when(fixtureProvider.getRowCount()).thenReturn(1);
     columns = mock(List.class);
