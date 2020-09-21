@@ -159,7 +159,7 @@ public class ImportWizard extends Wizard {
       if (!monitor.isCanceled()) {
         // Check if the whole conversion was marked as error.
         if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
-          errorService.showError(ERRORS_TITLE, "IMPORT was not successful for unknown reasons. "
+          errorService.showError(ERRORS_TITLE, "Import was not successful for unknown reasons. "
               + "Please check the log messages for any issues.", ImportWizard.class);
         } else if (!monitor.isCanceled()) {
           // Check for any documents with errors and report them
@@ -204,7 +204,7 @@ public class ImportWizard extends Wizard {
 
   @Override
   public String getWindowTitle() {
-    return "IMPORT a corpus project from a different file format";
+    return "Import a corpus project from a different file format";
   }
 
   @Override
