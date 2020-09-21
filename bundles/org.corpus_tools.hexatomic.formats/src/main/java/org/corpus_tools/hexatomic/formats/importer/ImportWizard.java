@@ -162,20 +162,22 @@ public class ImportWizard extends Wizard {
       }
     }
 
-    if (page == importerPage && importerPage.getSelectedFormat().isPresent()) {
-      // Add a configuration page based on the selected importer
-      switch (importerPage.getSelectedFormat().get()) {
-        case Exmaralda:
-          ExbImportConfiguration configPage = new ExbImportConfiguration();
-          configPage.setWizard(this);
-          this.configPage = Optional.of(configPage);
-          return configPage;
-        default:
-          return null;
+    if (page == importerPage) {
+      Optional<ImportFormat> selectedFormat = importerPage.getSelectedFormat();
+      if (selectedFormat.isPresent()) {
+        // Add a configuration page based on the selected importer
+        switch (selectedFormat.get()) {
+          case Exmaralda:
+            ExbImportConfiguration configPage = new ExbImportConfiguration();
+            configPage.setWizard(this);
+            this.configPage = Optional.of(configPage);
+            return configPage;
+          default:
+            return null;
+        }
       }
-    } else {
-      return super.getNextPage(page);
     }
+    return super.getNextPage(page);
   }
 
   @Override
