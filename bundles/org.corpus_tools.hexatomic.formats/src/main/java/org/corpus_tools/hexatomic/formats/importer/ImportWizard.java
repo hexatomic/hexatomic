@@ -139,6 +139,47 @@ public class ImportWizard extends Wizard {
         }
       }
     }
+
+    private Set<String> getFailedDocuments(PepperJob job) {
+      Set<String> failedDocuments = new TreeSet<>();
+      if (job instanceof PepperJobImpl) {
+        PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
+        for (DocumentController docController : pepperJobImpl.getDocumentControllers()) {
+
+          DOCUMENT_STATUS status = docController.getGlobalStatus();
+          if (status != DOCUMENT_STATUS.COMPLETED) {
+            failedDocuments.add(docController.getGlobalId());
+          }
+        }
+      }
+      return failedDocuments;
+    }
+
+    private boolean handleConversionResult(PepperJob job, IProgressMonitor monitor) {
+      if (!monitor.isCanceled()) {
+        // Check if the whole conversion was marked as error.
+        if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
+          errorService.showError(ERRORS_TITLE, "IMPORT was not successful for unknown reasons. "
+              + "Please check the log messages for any issues.", ImportWizard.class);
+        } else if (!monitor.isCanceled()) {
+          // Check for any documents with errors and report them
+          // error.
+          Set<String> failedDocuments = getFailedDocuments(job);
+          if (!failedDocuments.isEmpty()) {
+            errorService.showError(ERRORS_TITLE,
+                "Could not import the following documents:\n\n"
+                    + Joiner.on("\n").join(failedDocuments)
+                    + "\n\nPlease check the log messages for any issues.",
+                ImportWizard.class);
+          }
+
+          // No global error was reported and the process was not cancelled: set the corpus as
+          // current project
+          return true;
+        }
+      }
+      return false;
+    }
   }
 
   private static final String ERRORS_TITLE = "Error(s) during import";
@@ -245,41 +286,4 @@ public class ImportWizard extends Wizard {
     }
     return false;
   }
-
-  private boolean handleConversionResult(PepperJob job, IProgressMonitor monitor) {
-    if (!monitor.isCanceled()) {
-      // Check if the whole conversion was marked as error.
-      if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
-        errorService.showError(ERRORS_TITLE, "IMPORT was not successful for unknown reasons. "
-            + "Please check the log messages for any issues.", ImportWizard.class);
-      } else if (!monitor.isCanceled()) {
-        // Check for any documents with errors and report them
-        // error.
-        Set<String> failedDocuments = new TreeSet<>();
-        if (job instanceof PepperJobImpl) {
-          PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
-          for (DocumentController docController : pepperJobImpl.getDocumentControllers()) {
-
-            DOCUMENT_STATUS status = docController.getGlobalStatus();
-            if (status != DOCUMENT_STATUS.COMPLETED) {
-              failedDocuments.add(docController.getGlobalId());
-            }
-          }
-        }
-        if (!failedDocuments.isEmpty()) {
-          errorService.showError(ERRORS_TITLE,
-              "Could not import the following documents:\n\n"
-                  + Joiner.on("\n").join(failedDocuments)
-                  + "\n\nPlease check the log messages for any issues.",
-              ImportWizard.class);
-        }
-
-        // No global error was reported and the process was not cancelled: set the corpus as
-        // current project
-        return true;
-      }
-    }
-    return false;
-  }
-
 }
