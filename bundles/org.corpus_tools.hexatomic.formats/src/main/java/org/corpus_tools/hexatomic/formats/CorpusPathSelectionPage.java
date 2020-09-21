@@ -25,8 +25,6 @@ import java.util.Optional;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -73,11 +71,7 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     container.setLayout(new GridLayout(2, false));
 
     txtDirectoryPath = new Text(container, SWT.BORDER);
-    txtDirectoryPath.addModifyListener(new ModifyListener() {
-      public void modifyText(ModifyEvent e) {
-        setPageComplete(getCorpusPath().isPresent());
-      }
-    });
+    txtDirectoryPath.addModifyListener(e -> setPageComplete(getCorpusPath().isPresent()));
     GridData txtDirectoryPathGridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
     txtDirectoryPathGridData.widthHint = 474;
     txtDirectoryPath.setLayoutData(txtDirectoryPathGridData);
