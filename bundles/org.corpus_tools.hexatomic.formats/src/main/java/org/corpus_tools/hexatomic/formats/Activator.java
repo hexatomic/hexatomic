@@ -35,7 +35,7 @@ public class Activator implements BundleActivator {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Activator.class);
 
-  private static String[] BUNDLE_LOCATIONS = {"exmaralda-emf-api-1.2.1.jar",
+  private static final String[] BUNDLE_LOCATIONS = {"exmaralda-emf-api-1.2.1.jar",
       "pepperModules-EXMARaLDAModules-1.3.0.jar", "pepperModules-PAULAModules-1.2.4.jar"};
 
   private static Optional<Pepper> pepper = Optional.empty();
@@ -64,7 +64,7 @@ public class Activator implements BundleActivator {
         if (state == Bundle.ACTIVE) {
           ServiceReference<Pepper> pepperRef = context.getServiceReference(Pepper.class);
           if (pepperRef != null) {
-            pepper = Optional.ofNullable(context.getService(pepperRef));
+            setPepper(Optional.ofNullable(context.getService(pepperRef)));
           }
         } else {
           log.error("Could not start pepper bundle, status is {}", state);
@@ -86,8 +86,12 @@ public class Activator implements BundleActivator {
     pepper = Optional.empty();
   }
 
-  public static Optional<Pepper> getPepper() {
+  public static synchronized Optional<Pepper> getPepper() {
     return pepper;
+  }
+
+  private static synchronized void setPepper(Optional<Pepper> newPepper) {
+    pepper = newPepper;
   }
 
 }
