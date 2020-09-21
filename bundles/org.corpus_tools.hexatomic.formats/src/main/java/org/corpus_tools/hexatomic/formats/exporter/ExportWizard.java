@@ -20,9 +20,25 @@
 
 package org.corpus_tools.hexatomic.formats.exporter;
 
+import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
+import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.eclipse.jface.wizard.Wizard;
 
 public class ExportWizard extends Wizard {
+
+  private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.Export);
+  private final ExporterSelectionPage exporterPage = new ExporterSelectionPage();
+
+  @Override
+  public String getWindowTitle() {
+    return "Export a corpus project to a different file format";
+  }
+
+  @Override
+  public void addPages() {
+    addPage(corpusPathPage);
+    addPage(exporterPage);
+  }
 
   @Override
   public boolean performFinish() {

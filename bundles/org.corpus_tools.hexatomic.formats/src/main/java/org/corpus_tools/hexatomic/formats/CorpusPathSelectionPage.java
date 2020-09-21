@@ -58,7 +58,7 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
                 + "sub-directories of a parent directory.");
         break;
       case Export:
-        setTitle("Select the directory that contains the corpus you want to export");
+        setTitle("Select the directory to where you want to export the corpus to");
         break;
       default:
         setTitle("Invalid page");
