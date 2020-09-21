@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.data;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.grid.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
@@ -81,7 +81,6 @@ public class GraphDataProvider implements IDataProvider {
     columns.clear();
     spanTokenMap.clear();
 
-
     log.debug("Starting to resolve SDocumentGraph of {} for data source {}.", graph.getDocument(),
         dataSource);
 
@@ -93,6 +92,7 @@ public class GraphDataProvider implements IDataProvider {
         unorderedTokens.add((SToken) inRel.getSource());
       }
     }
+
     orderedDsTokens.addAll(graph.getSortedTokenByText(unorderedTokens));
 
     // Only consider spans spanning tokens in the selected data source.
@@ -268,14 +268,14 @@ public class GraphDataProvider implements IDataProvider {
    * </p>
    */
   @Override
-  public String getDataValue(int columnIndex, int rowIndex) {
+  public SStructuredNode getDataValue(int columnIndex, int rowIndex) {
     if (dataSource == null) {
       if (columnIndex == 0 && rowIndex == 0) {
-        return "Please select data source!";
+        return null;
       }
     } else {
       if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
-        return "Data source contains no tokens!";
+        return null;
       } else {
         Column column = null;
         try {
@@ -284,29 +284,34 @@ public class GraphDataProvider implements IDataProvider {
           errors.handleException(e.getMessage(), e, GraphDataProvider.class);
           return null;
         }
-        return column.getDisplayText(rowIndex);
+        return column.getDataObject(rowIndex);
       }
     }
     return null;
   }
 
-  /**
-   * Returns the underlying {@link SStructuredNode} for the given cell, as identified by column and
-   * row index.
-   * 
-   * @param columnIndex the column index for which the node should be retrieved
-   * @param rowIndex the row index for which the node should be retrieved
-   * @return The node that underlies the cell at the given column and row index
-   */
-  public SStructuredNode getNode(int columnIndex, int rowIndex) {
-    Column column = null;
-    try {
-      column = columns.get(columnIndex);
-    } catch (IndexOutOfBoundsException e) {
-      errors.handleException(e.getMessage(), e, GraphDataProvider.class);
-      return null;
+  private void removeAnnotation(String annotationQName, SStructuredNode node, Column column,
+      int rowIndex) {
+    // Remove annotation from Salt model
+    if (node != null) {
+      node.removeLabel(column.getColumnValue());
+      log.debug("Removed annotation {} from node {}.", annotationQName, node);
     }
-    return column.getDataObject(rowIndex);
+    // Remove annotation from all column cells
+    if (node instanceof SToken) {
+      // Annotation can only span a single token, i.e., a single row
+      column.setRow(rowIndex, null);
+    } else if (node instanceof SSpan) {
+      List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
+      for (SToken token : overlappedTokens) {
+        column.setRow(orderedDsTokens.indexOf(token), null);
+      }
+      // If, now, the span has no annotations, remove it
+      if (node.getAnnotations().isEmpty()) {
+        graph.removeNode(node);
+        log.debug("Removed empty span {} from graph {}.", node, graph);
+      }
+    }
   }
 
   @Override
@@ -324,26 +329,7 @@ public class GraphDataProvider implements IDataProvider {
 
     // If new value is empty, remove annotation
     if (newValue == null || newValue.equals("")) {
-      // Remove annotation from Salt model
-      if (node != null) {
-        node.removeLabel(column.getColumnValue());
-        log.debug("Removed annotation {} from node {}.", annotationQName, node);
-      }
-      // Remove annotation from all column cells
-      if (node instanceof SToken) {
-        // Annotation can only span a single token, i.e., a single row
-        column.setRow(rowIndex, null);
-      } else if (node instanceof SSpan) {
-        List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
-        for (SToken token : overlappedTokens) {
-          column.setRow(orderedDsTokens.indexOf(token), null);
-        }
-        // If, now, the span has no annotations, remove it
-        if (node.getAnnotations().isEmpty()) {
-          graph.removeNode(node);
-          log.debug("Removed empty span {} from graph {}.", node, graph);
-        }
-      }
+      removeAnnotation(annotationQName, node, column, rowIndex);
     } else { // Value is not empty or null
       if (columnType == ColumnType.TOKEN_TEXT) {
         log.debug("Action not implemented: Set token text");
@@ -396,21 +382,11 @@ public class GraphDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
-    if (dataSource == null) {
-      return 1;
-    } else if (orderedDsTokens.size() == 0) {
-      return 1;
-    }
     return columns.size();
   }
 
   @Override
   public int getRowCount() {
-    if (dataSource == null) {
-      return 1;
-    } else if (orderedDsTokens.size() == 0) {
-      return 1;
-    }
     return orderedDsTokens.size();
   }
 

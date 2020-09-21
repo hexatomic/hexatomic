@@ -185,7 +185,7 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
   @Override
   public void selfStyleNode(Object element, GraphNode node) {
-
+    // No custom graph node styling yet
   }
 
   @Override

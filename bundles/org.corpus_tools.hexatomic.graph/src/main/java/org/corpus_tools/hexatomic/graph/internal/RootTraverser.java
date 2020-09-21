@@ -59,7 +59,7 @@ public class RootTraverser implements GraphTraverseHandler {
   @Override
   public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
       SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-
+    // Do nothing: only entering the node upwards should set the root node.
   }
 
   @Override

@@ -37,9 +37,9 @@ public class TestHelper {
    * @return The context.
    */
   public static IEclipseContext getEclipseContext() {
-    Bundle activatorBundle = FrameworkUtil.getBundle(Activator.class);
+    Bundle testBundle = FrameworkUtil.getBundle(TestHelper.class);
     final IEclipseContext serviceContext =
-        EclipseContextFactory.getServiceContext(activatorBundle.getBundleContext());
+        EclipseContextFactory.getServiceContext(testBundle.getBundleContext());
 
     return serviceContext.get(IWorkbench.class).getApplication().getContext();
   }

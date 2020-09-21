@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.configuration;
+package org.corpus_tools.hexatomic.grid.internal.configuration;
 
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -70,8 +70,7 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
     builder.withVisibleState(DELETE_CELL_ITEM, new ValidSelectionState());
-    Menu popUpMenu = builder.build();
-    return popUpMenu;
+    return builder.build();
   }
 
   @Override

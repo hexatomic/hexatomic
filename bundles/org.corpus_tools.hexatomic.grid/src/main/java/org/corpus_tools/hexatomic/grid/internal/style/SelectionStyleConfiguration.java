@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.style;
+package org.corpus_tools.hexatomic.grid.internal.style;
 
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
@@ -30,7 +30,6 @@ import org.eclipse.nebula.widgets.nattable.style.SelectionStyleLabels;
 import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 
 /**
@@ -41,9 +40,15 @@ import org.eclipse.swt.graphics.FontData;
  */
 public class SelectionStyleConfiguration extends DefaultSelectionStyleConfiguration {
 
-  private final Color selectionBgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
-  private final Color anchorBgColor = GUIHelper.COLOR_DARK_GRAY;
-  private final Color anchorFgColor = GUIHelper.COLOR_WHITE;
+  /**
+   * Constructs a new instance with default values.
+   */
+  public SelectionStyleConfiguration() {
+    this.selectionBgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
+    this.anchorBgColor = GUIHelper.COLOR_DARK_GRAY;
+    this.anchorFgColor = GUIHelper.COLOR_WHITE;
+  }
+
 
   @Override
   protected void configureSelectionStyle(IConfigRegistry configRegistry) {
