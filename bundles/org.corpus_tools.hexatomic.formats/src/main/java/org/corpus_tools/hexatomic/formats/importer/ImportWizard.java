@@ -132,11 +132,10 @@ public class ImportWizard extends Wizard {
       for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
         DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
 
-        if (docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
-            || docStatus == DOCUMENT_STATUS.FAILED) {
-          if (completedDocuments.add(controller.getGlobalId())) {
-            monitor.worked(1);
-          }
+        if ((docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
+            || docStatus == DOCUMENT_STATUS.FAILED)
+            && completedDocuments.add(controller.getGlobalId())) {
+          monitor.worked(1);
         }
       }
     }
@@ -251,10 +250,8 @@ public class ImportWizard extends Wizard {
     if (!monitor.isCanceled()) {
       // Check if the whole conversion was marked as error.
       if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
-        errorService.showError(ERRORS_TITLE,
-            "IMPORT was not successful for unknown reasons. "
-                + "Please check the log messages for any issues.",
-            ImportWizard.class);
+        errorService.showError(ERRORS_TITLE, "IMPORT was not successful for unknown reasons. "
+            + "Please check the log messages for any issues.", ImportWizard.class);
       } else if (!monitor.isCanceled()) {
         // Check for any documents with errors and report them
         // error.
