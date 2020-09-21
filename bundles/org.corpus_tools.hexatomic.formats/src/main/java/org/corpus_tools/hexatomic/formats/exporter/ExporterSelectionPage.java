@@ -82,14 +82,14 @@ public class ExporterSelectionPage extends WizardPage implements IWizardPage {
 
     btnPaulaXml = new Button(container, SWT.RADIO);
     btnPaulaXml.addSelectionListener(checkboxSelectionAdapter);
-    btnPaulaXml.setText("PaulaXML format");
+    btnPaulaXml.setText("PAULA format");
   }
 
   protected Optional<ImportFormat> getSelectedFormat() {
     if (btnExb.getSelection()) {
-      return Optional.of(ImportFormat.Exmaralda);
+      return Optional.of(ImportFormat.EXB);
     } else if (btnPaulaXml.getSelection()) {
-      return Optional.of(ImportFormat.PaulaXML);
+      return Optional.of(ImportFormat.PAULA);
     }
     return Optional.empty();
   }

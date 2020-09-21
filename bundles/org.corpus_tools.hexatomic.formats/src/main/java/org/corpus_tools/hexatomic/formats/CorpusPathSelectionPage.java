@@ -40,7 +40,7 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
   private Text txtDirectoryPath;
 
   public enum Type {
-    Import, Export
+    IMPORT, EXPORT
   }
 
   /**
@@ -51,13 +51,13 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
   public CorpusPathSelectionPage(Type type) {
     super("Select corpus directory");
     switch (type) {
-      case Import:
+      case IMPORT:
         setTitle("Select the directory that contains the corpus you want to import");
         setDescription(
             "Corpora are normally organized as collection of files and "
                 + "sub-directories of a parent directory.");
         break;
-      case Export:
+      case EXPORT:
         setTitle("Select the directory to where you want to export the corpus to");
         break;
       default:

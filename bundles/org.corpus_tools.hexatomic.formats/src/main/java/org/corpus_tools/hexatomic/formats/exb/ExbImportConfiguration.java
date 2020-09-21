@@ -34,7 +34,7 @@ public class ExbImportConfiguration extends ConfigurationPage {
   private Button btnAddSpaces;
 
   /**
-   * Constructs a new import configuration for the {@link ImportFormat#Exmaralda} format.
+   * Constructs a new import configuration for the {@link ImportFormat#EXB} format.
    */
   public ExbImportConfiguration() {
     super("Configure import");

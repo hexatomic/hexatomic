@@ -26,12 +26,12 @@ import org.eclipse.jface.wizard.Wizard;
 
 public class ExportWizard extends Wizard {
 
-  private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.Export);
+  private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.EXPORT);
   private final ExporterSelectionPage exporterPage = new ExporterSelectionPage();
 
   @Override
   public String getWindowTitle() {
-    return "Export a corpus project to a different file format";
+    return "EXPORT a corpus project to a different file format";
   }
 
   @Override

@@ -25,7 +25,7 @@ import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.StepDesc;
 
 public enum ImportFormat {
-  Exmaralda("EXMARaLDAImporter"), PaulaXML("PAULAImporter");
+  EXB("EXMARaLDAImporter"), PAULA("PAULAImporter");
 
   private final String importerName;
 

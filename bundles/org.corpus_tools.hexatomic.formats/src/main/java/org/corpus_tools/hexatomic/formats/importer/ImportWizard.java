@@ -121,7 +121,7 @@ public class ImportWizard extends Wizard {
   }
 
   private static final String ERRORS_TITLE = "Error(s) during import";
-  private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.Import);
+  private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.IMPORT);
   private final ImporterSelectionPage importerPage = new ImporterSelectionPage();
   private Optional<ConfigurationPage> configPage = Optional.empty();
 
@@ -142,7 +142,7 @@ public class ImportWizard extends Wizard {
 
   @Override
   public String getWindowTitle() {
-    return "Import a corpus project from a different file format";
+    return "IMPORT a corpus project from a different file format";
   }
 
   @Override
@@ -167,7 +167,7 @@ public class ImportWizard extends Wizard {
       if (selectedFormat.isPresent()) {
         // Add a configuration page based on the selected importer
         switch (selectedFormat.get()) {
-          case Exmaralda:
+          case EXB:
             ExbImportConfiguration configPage = new ExbImportConfiguration();
             configPage.setWizard(this);
             this.configPage = Optional.of(configPage);
@@ -253,7 +253,7 @@ public class ImportWizard extends Wizard {
       // Check if the whole conversion was marked as error.
       if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
         errorService.showError(ERRORS_TITLE,
-            "Import was not successful for unknown reasons. "
+            "IMPORT was not successful for unknown reasons. "
                 + "Please check the log messages for any issues.",
             ImportWizard.class);
       } else if (!monitor.isCanceled()) {

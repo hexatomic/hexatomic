@@ -74,10 +74,10 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
             .findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))) {
           Optional<ImportFormat> format = ImportFormat.getFormatByName(importerName);
           if (format.isPresent()) {
-            if (format.get() == ImportFormat.Exmaralda) {
+            if (format.get() == ImportFormat.EXB) {
               btnExb.setSelection(true);
               setPageComplete(true);
-            } else if (format.get() == ImportFormat.PaulaXML) {
+            } else if (format.get() == ImportFormat.PAULA) {
               btnPaulaXml.setSelection(true);
               setPageComplete(true);
             }
@@ -114,14 +114,14 @@ public class ImporterSelectionPage extends WizardPage implements IWizardPage {
 
     btnPaulaXml = new Button(container, SWT.RADIO);
     btnPaulaXml.addSelectionListener(checkboxSelectionAdapter);
-    btnPaulaXml.setText("PaulaXML format");
+    btnPaulaXml.setText("PAULA format");
   }
 
   protected Optional<ImportFormat> getSelectedFormat() {
     if (btnExb.getSelection()) {
-      return Optional.of(ImportFormat.Exmaralda);
+      return Optional.of(ImportFormat.EXB);
     } else if (btnPaulaXml.getSelection()) {
-      return Optional.of(ImportFormat.PaulaXML);
+      return Optional.of(ImportFormat.PAULA);
     }
     return Optional.empty();
   }
