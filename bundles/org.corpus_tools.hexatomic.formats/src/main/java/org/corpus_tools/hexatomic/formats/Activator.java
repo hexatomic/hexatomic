@@ -83,7 +83,7 @@ public class Activator implements BundleActivator {
 
   @Override
   public void stop(BundleContext context) throws Exception {
-    pepper = Optional.empty();
+    setPepper(Optional.empty());
   }
 
   public static synchronized Optional<Pepper> getPepper() {
