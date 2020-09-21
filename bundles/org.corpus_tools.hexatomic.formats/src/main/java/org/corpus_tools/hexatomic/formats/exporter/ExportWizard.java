@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.formats.exporter;
 
+import org.corpus_tools.hexatomic.formats.CorpusFormatSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.eclipse.jface.wizard.Wizard;
@@ -27,7 +28,7 @@ import org.eclipse.jface.wizard.Wizard;
 public class ExportWizard extends Wizard {
 
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.EXPORT);
-  private final ExporterSelectionPage exporterPage = new ExporterSelectionPage();
+  private final CorpusFormatSelectionPage exporterPage = new ExporterSelectionPage();
 
   @Override
   public String getWindowTitle() {
