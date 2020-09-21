@@ -103,9 +103,7 @@ public class ErrorService {
     Logger log = getLogger(context);
     log.error("{}: {}", titleOrDefault, message);
 
-    sync.syncExec(() -> {
-      MessageDialog.openError(null, titleOrDefault, message);
-    });
+    sync.syncExec(() -> MessageDialog.openError(null, titleOrDefault, message));
   }
 
   /**
