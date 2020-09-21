@@ -53,11 +53,9 @@ class TestGraphDataProvider {
 
   /**
    * Set up the fixture and models for each test.
-   * 
-   * @throws java.lang.Exception Any exception that is thrown during the setup phase.
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixture = new GraphDataProvider();
     exampleGraph = retrieveGraph(examplePath);
     overlappingExampleGraph = retrieveGraph(overlappingExamplePath);

@@ -42,11 +42,9 @@ class TestGridDisplayConverter {
 
   /**
    * Sets up the fixture for unit tests.
-   * 
-   * @throws java.lang.Exception Any exception during setup
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     dataProvider = mock(GraphDataProvider.class);
     Column tokenColumn = mock(Column.class);
     Column textColumn = mock(Column.class);

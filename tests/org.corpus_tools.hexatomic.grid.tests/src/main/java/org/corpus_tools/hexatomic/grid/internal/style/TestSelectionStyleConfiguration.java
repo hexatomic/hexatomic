@@ -28,11 +28,9 @@ class TestSelectionStyleConfiguration {
 
   /**
    * Sets up the test fixture.
-   * 
-   * @throws java.lang.Exception Any old exception that may be thrown
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixture = new SelectionStyleConfiguration();
   }
 

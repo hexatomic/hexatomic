@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
@@ -366,12 +367,11 @@ public class GraphDataProvider implements IDataProvider {
         node.getClass().getSimpleName(), node.hashCode(), node);
   }
 
-  private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject)
-      throws RuntimeException {
+  private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject) {
     SStructuredNode node = (SStructuredNode) dataObject;
     SAnnotation anno = node.getAnnotation(column.getColumnValue());
     if (anno == null) {
-      throw new RuntimeException(
+      throw new HexatomicRuntimeException(
           "Failed to retrieve annotation to set the value for on node " + node.toString() + ".");
     } else {
       log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
