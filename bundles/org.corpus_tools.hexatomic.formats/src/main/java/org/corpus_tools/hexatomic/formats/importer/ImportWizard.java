@@ -251,7 +251,8 @@ public class ImportWizard extends Wizard {
       // Check if the whole conversion was marked as error.
       if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
         errorService.showError(ERRORS_TITLE,
-            "Import was not successful for unknown reasons. Please check the log messages for any issues.",
+            "Import was not successful for unknown reasons. "
+                + "Please check the log messages for any issues.",
             ImportWizard.class);
       } else if (!monitor.isCanceled()) {
         // Check for any documents with errors and report them
