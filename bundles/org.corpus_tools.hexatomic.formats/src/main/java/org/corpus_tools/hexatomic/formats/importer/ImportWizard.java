@@ -214,7 +214,7 @@ public class ImportWizard extends Wizard {
         errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(),
             ex, ImportWizard.class);
       } catch (InterruptedException ex) {
-        Thread.interrupted();
+        Thread.currentThread().interrupt();
       } finally {
         notificationFactory.setSuppressingEvents(false);
       }
