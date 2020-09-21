@@ -137,8 +137,7 @@ public class Column {
    * 
    * @param rowIndex The index of the row cell to set the data object to
    * @param node The node data object to set to the cell
-   * @throws {@link HexatomicRuntimeException} if the row cell to set the data object to is already
-   *         set
+   * @throws HexatomicRuntimeException if the row cell to set the data object to is already set
    */
   void setRow(int rowIndex, SStructuredNode node) {
     if (isRowEmpty(rowIndex)) {
