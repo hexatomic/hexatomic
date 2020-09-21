@@ -118,6 +118,28 @@ public class ImportWizard extends Wizard {
         errorService.handleException(ERRORS_TITLE, ex, ImportWizard.class);
       }
     }
+
+    private void reportDocumentConversionProgress(PepperJobImpl pepperJobImpl,
+        IProgressMonitor monitor, Set<String> completedDocuments) {
+
+      Set<DocumentController> activeDocuments =
+          new LinkedHashSet<>(pepperJobImpl.getActiveDocuments());
+      if (!activeDocuments.isEmpty()) {
+        monitor.subTask(Joiner.on(", ")
+            .join(activeDocuments.stream().map(d -> d.getDocument().getName()).iterator()));
+      }
+
+      for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
+        DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
+
+        if (docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
+            || docStatus == DOCUMENT_STATUS.FAILED) {
+          if (completedDocuments.add(controller.getGlobalId())) {
+            monitor.worked(1);
+          }
+        }
+      }
+    }
   }
 
   private static final String ERRORS_TITLE = "Error(s) during import";
@@ -223,28 +245,6 @@ public class ImportWizard extends Wizard {
       return true;
     }
     return false;
-  }
-
-  private void reportDocumentConversionProgress(PepperJobImpl pepperJobImpl,
-      IProgressMonitor monitor, Set<String> completedDocuments) {
-
-    Set<DocumentController> activeDocuments =
-        new LinkedHashSet<>(pepperJobImpl.getActiveDocuments());
-    if (!activeDocuments.isEmpty()) {
-      monitor.subTask(Joiner.on(", ")
-          .join(activeDocuments.stream().map(d -> d.getDocument().getName()).iterator()));
-    }
-
-    for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
-      DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
-
-      if (docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
-          || docStatus == DOCUMENT_STATUS.FAILED) {
-        if (completedDocuments.add(controller.getGlobalId())) {
-          monitor.worked(1);
-        }
-      }
-    }
   }
 
   private boolean handleConversionResult(PepperJob job, IProgressMonitor monitor) {
