@@ -31,14 +31,14 @@ import org.eclipse.swt.widgets.Shell;
 public class ExportHandler {
 
   @Execute
-  protected static void execute(Shell shell, ErrorService errorService) {
+  protected void execute(Shell shell, ErrorService errorService) {
     WizardDialog dialog = new WizardDialog(shell,
         new ExportWizard());
     dialog.open();
   }
 
   @CanExecute
-  protected static boolean canExecute(ProjectManager projectManager) {
+  protected boolean canExecute(ProjectManager projectManager) {
     return Activator.getPepper().isPresent()
         && !projectManager.getProject().getCorpusGraphs().isEmpty();
   }

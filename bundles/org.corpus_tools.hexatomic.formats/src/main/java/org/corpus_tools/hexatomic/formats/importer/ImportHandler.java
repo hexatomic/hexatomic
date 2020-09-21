@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ImportHandler {
 
   @Execute
-  protected static void execute(Shell shell, ErrorService errorService,
+  protected void execute(Shell shell, ErrorService errorService,
       ProjectManager projectManager, SaltNotificationFactory notificationFactory,
       UISynchronize sync) {
     WizardDialog dialog = new WizardDialog(shell,
@@ -42,7 +42,7 @@ public class ImportHandler {
   }
   
   @CanExecute
-  protected static boolean canExecute() {
+  protected boolean canExecute() {
     return Activator.getPepper().isPresent();
   }
 }
