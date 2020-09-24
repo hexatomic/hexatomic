@@ -30,6 +30,9 @@ The generated report will be located under `tests/org.corpus_tools.hexatomic.tes
 
 To learn more about the Maven build lifecycle, read the [Maven Lifecycles Reference](http://web.archive.org/web/20191128092924/https://maven.apache.org/ref/3.6.2/maven-core/lifecycles.html).
 
+You can also generate a test code coverage report by executing `mvn verify site -Pcoverage`. 
+The generated report will be located under `tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/index.html`.
+
 ## Execute tests in Eclipse
 
 Open the corresponding test bundle project for the bundle you want to test.
