@@ -23,3 +23,7 @@ If you close an editor, the changes are not lost as long as you save the project
 To start a new and empty project in the same application window, choose *Start New Salt Project*.
 
 If an action would discard unsaved changes, you are always given the choice to cancel it.
+
+You can undo and redo changes with the menu entries *Undo* and *Redo* in the *Edit* menu or by clicking on the toolbar buttons.
+
+![Toolbar items with undo and redo](toolbar.png)

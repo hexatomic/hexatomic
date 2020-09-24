@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Implement undoing and redoing changes (#38)
+
 ### Fixed
 
 - Fixed incorrect description of unreviewed hotfixes workflow in developer/maintainer documentation

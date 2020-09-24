@@ -37,18 +37,24 @@ public class MyClass {
 }
 ```
 
-You can register for any changes on the Salt project (e.g., added annotations to a document), by subscribing to the `Topics.ANNOTATION_ANY_UPDATE` topic, which will be sent by the [Eclipse RCP `IEventBroker` service](http://web.archive.org/web/20200427021644/https://www.vogella.com/tutorials/Eclipse4EventSystem/article.html).
+## Reacting to changes
+
+You can register for any changes on the Salt project (e.g., added annotations to a document), by subscribing to the `Topics.ANNOTATION_CHANGED` topic, which will be sent by the [Eclipse RCP `IEventBroker` service](http://web.archive.org/web/20200427021644/https://www.vogella.com/tutorials/Eclipse4EventSystem/article.html).
+After registering your listener, you will receive *all* updates for *all* documents and *all* changes to the project structure.
+You have to decide in your own code if you need to handle an update, e.g., because it is related to a document you are editing for which the event should trigger redrawing the editor you are implementing.
+The argument for the `Topics.ANNOTATION_CHANGED` event is of the type `org.corpus_tools.hexatomic.core.undo.ChangeSet` and contains a list of all changes.
+It also has a helper function to test if a given document is affected by its changes.
+
 ```java
 @Inject
 @org.eclipse.e4.core.di.annotations.Optional
-private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
-  // Use a helper function to get the graph the changed element is connected to
-  Optional<Graph<?, ?, ?>> changedGraph = SaltHelper.getGraphForObject(element);
-  if (changedGraph.isPresent()) {
-    // TODO: check graph update is relevant for this editor and update UI
+private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+  if (element instanceof ChangeSet) {
+    ChangeSet changeSet = (ChangeSet) element;
+    if (changeSet.containsDocument(
+        part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+      // TODO: check graph update is relevant for this editor and update UI
+    }
   }
 }
 ```
-After registering your listener, you will receive *all* updates for *all* documents and *all* changes to the project structure.
-The changed element will be given as argument.
-You have to decide in your own code if you need to handle an update, e.g., because it is related to a document you are editing for which the event should trigger redrawing the editor you are implementing.

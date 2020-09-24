@@ -44,6 +44,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -166,6 +167,7 @@ public class GraphEditor {
   @Inject
   private IEventBroker events;
 
+
   private ConsoleView consoleView;
 
   private final Filter graphFilter = new Filter();
@@ -262,7 +264,7 @@ public class GraphEditor {
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
         CONSOLE_ID);
-    consoleView = new ConsoleView(consoleViewer, sync, getGraph());
+    consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
     SDocumentGraph graph = getGraph();
@@ -710,7 +712,7 @@ public class GraphEditor {
     }
   }
 
-  private void checkUpdateViewNecessary(Object element) {
+  private boolean checkUpdateViewNecessary(Object element) {
     SDocumentGraph loadedGraph = getGraph();
     Optional<SDocumentGraph> changedGraph =
         SaltHelper.getGraphForObject(element, SDocumentGraph.class);
@@ -718,34 +720,38 @@ public class GraphEditor {
     if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
       // Only relations with text coverage semantics can change the structure of the graph and
       // modify segments
-      updateView(
-          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>,
-          false);
+      boolean recalculateSegments =
+          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>;
+      updateView(recalculateSegments, false);
+      return recalculateSegments;
+    }
+
+    return false;
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onCheckpointCreated(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_CREATED) Object element) {
+
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
+      for (Object changed : changeSet.getChangedElements()) {
+        if (checkUpdateViewNecessary(changed)) {
+          break;
+        }
+      }
     }
   }
 
-
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationAdded(@UIEventTopic(Topics.ANNOTATION_ADDED) Object element) {
-    log.debug("Received ANNOTATION_ADDED event for element {}", element);
-    checkUpdateViewNecessary(element);
+  private void onCheckpointRestored(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
+    updateView(true, false);
   }
 
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationRemoved(@UIEventTopic(Topics.ANNOTATION_REMOVED) Object element) {
-    log.debug("Received ANNOTATION_REMOVED event for element {}", element);
-    checkUpdateViewNecessary(element);
-  }
-
-  @Inject
-  @org.eclipse.e4.core.di.annotations.Optional
-  private void onAnnotationModified(
-      @UIEventTopic(Topics.ANNOTATION_AFTER_MODIFICATION) Object element) {
-    log.debug("Received ANNOTATION_AFTER_MODIFICATION event for element {}", element);
-    checkUpdateViewNecessary(element);
-  }
 
   private class RootFilter extends ViewerFilter {
 

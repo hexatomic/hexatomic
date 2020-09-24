@@ -35,6 +35,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
 import org.corpus_tools.salt.SaltFactory;
@@ -123,6 +124,7 @@ public class CorpusStructureView {
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_TITLE = "Error when adding (sub-) corpus";
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG =
       "You can only create a (sub-) corpus when a corpus graph or another corpus is selected.";
+
 
   static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
@@ -234,8 +236,10 @@ public class CorpusStructureView {
         if (element instanceof TreeItem) {
           TreeItem item = (TreeItem) element;
           if (item.getData() instanceof SNamedElement) {
+
             SNamedElement n = (SNamedElement) item.getData();
             n.setName(value.toString());
+            projectManager.addCheckpoint();
           }
         }
 
@@ -367,12 +371,15 @@ public class CorpusStructureView {
 
     SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
     newGraph.setName("corpus_graph_" + (oldSize + 1));
+    projectManager.addCheckpoint();
 
     selectSaltObject(newGraph, true);
+
 
   }
 
   private void addCorpus(Shell shell) {
+
 
     SCorpusGraph g = null;
     SCorpus parent = null;
@@ -404,6 +411,9 @@ public class CorpusStructureView {
       } else {
         newCorpus = g.createCorpus(parent, newCorpusName);
       }
+
+      projectManager.addCheckpoint();
+
       if (newCorpus != null) {
         selectSaltObject(newCorpus, true);
       }
@@ -431,11 +441,15 @@ public class CorpusStructureView {
     }
 
     if (parent != null) {
+
       int oldSize =
           parent.getGraph().getDocuments() == null ? 0 : parent.getGraph().getDocuments().size();
       SDocument newDocument = parent.getGraph().createDocument(parent, "document_" + (oldSize + 1));
+      projectManager.addCheckpoint();
+
       log.debug("Selecting created document");
       selectSaltObject(newDocument, true);
+
     }
 
   }
@@ -612,10 +626,17 @@ public class CorpusStructureView {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
-    Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(element, SCorpusGraph.class);
-    if (graph.isPresent()) {
-      updateView();
+  private void subscribeProjectChanged(
+      @UIEventTopic(Topics.ANNOTATION_CHANGED) Object changeSetRaw) {
+    if (changeSetRaw instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) changeSetRaw;
+      for (Object container : changeSet.getChangedContainers()) {
+        Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(container, SCorpusGraph.class);
+        if (graph.isPresent()) {
+          updateView();
+          break;
+        }
+      }
     }
   }
 

@@ -56,7 +56,7 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingLabelab
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -66,6 +66,6 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingLabelab
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 }

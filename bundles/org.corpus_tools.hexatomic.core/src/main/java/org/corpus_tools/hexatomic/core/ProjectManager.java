@@ -25,7 +25,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,6 +38,8 @@ import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -49,6 +54,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -126,6 +132,7 @@ public class ProjectManager {
 
       location = Optional.of(path);
 
+
       sync.asyncExec(() -> {
         // Reload the originally loaded documents when there is an active editor
         for (String documentID : documentsToReload) {
@@ -141,10 +148,12 @@ public class ProjectManager {
         // Enable the listeners again
         notificationFactory.setSuppressingEvents(false);
         hasUnsavedChanges = false;
+        updateCanExecute();
 
       });
 
       monitor.done();
+
     }
 
     private void clearSaltProjectFolder(Path outputDirectory) {
@@ -184,8 +193,7 @@ public class ProjectManager {
     }
 
     private void loadAndPersistAllDocuments(List<SDocument> documents,
-        boolean savingToCurrentLocation,
-        IProgressMonitor monitor) {
+        boolean savingToCurrentLocation, IProgressMonitor monitor) {
       for (SDocument doc : documents) {
         if (monitor.isCanceled()) {
           monitor.done();
@@ -232,10 +240,13 @@ public class ProjectManager {
           doc.saveDocumentGraph(documentOutputUri);
         }
       }
+
       // Report one finished document
       monitor.worked(1);
     }
   }
+
+  private static final int MAX_UNDO_HISTORY_SIZE = 25;
 
   private static final String LOAD_ERROR_MSG = "Could not load salt project from ";
 
@@ -265,6 +276,12 @@ public class ProjectManager {
 
   private boolean hasUnsavedChanges;
 
+  private final Deque<ChangeSet> undoChangeSets = new LinkedList<>();
+  private final Deque<ChangeSet> redoChangeSets = new LinkedList<>();
+
+  private final List<ReversibleOperation> uncommittedChanges = new LinkedList<>();
+
+
   @PostConstruct
   void postConstruct() {
     log.debug("Starting Project Manager");
@@ -293,10 +310,11 @@ public class ProjectManager {
     return project;
   }
 
-  /**
+  /*
    * Return a document by its ID. The document graph might not be loaded.
    * 
    * @param documentID The Salt ID
+   * 
    * @return An optional document.
    * 
    * @see ProjectManager#getDocument(String, boolean)
@@ -393,6 +411,7 @@ public class ProjectManager {
     hasUnsavedChanges = false;
     uiStatus.setDirty(false);
     uiStatus.setLocation(path.toFileString());
+    updateCanExecute();
   }
 
   /**
@@ -411,6 +430,7 @@ public class ProjectManager {
       // Ignore, this can happen when the application is closing
     }
   }
+
 
   /**
    * Saves all documents and the corpus structure as Salt project to a new location.
@@ -449,8 +469,8 @@ public class ProjectManager {
 
 
   /**
-   * Helper method to create a new progress monitor.
-   * This is a method so it can be overwritten by other implementations.
+   * Helper method to create a new progress monitor. This is a method so it can be overwritten by
+   * other implementations.
    * 
    * @param shell A SWT shell.
    * @return The newly created progress monitor.
@@ -481,11 +501,162 @@ public class ProjectManager {
     this.location = Optional.empty();
     this.project = SaltFactory.createSaltProject();
     hasUnsavedChanges = false;
+    this.uncommittedChanges.clear();
+    this.undoChangeSets.clear();
+    this.redoChangeSets.clear();
 
     uiStatus.setDirty(false);
     uiStatus.setLocation(null);
-    
+
     events.send(Topics.PROJECT_LOADED, null);
+    updateCanExecute();
+  }
+
+
+  /**
+   * Adds a checkpoint. A user will be able to undo all changes made between checkpoints.
+   */
+  public void addCheckpoint() {
+    addCheckpoint(true);
+  }
+
+  private void addCheckpoint(boolean isManual) {
+    ChangeSet changes = null;
+    if (!uncommittedChanges.isEmpty()) {
+      // All recorded changes are reversable without saving and loading the whole document, create
+      // a different kind of checkpoint using a copy of all uncomitted changes
+      log.debug("Adding {} changes as checkpoint to undo list", uncommittedChanges.size());
+      changes = new ChangeSet(uncommittedChanges);
+      undoChangeSets.addFirst(changes);
+      // Limit the maximum number changesets the user can undo
+      while (undoChangeSets.size() > MAX_UNDO_HISTORY_SIZE) {
+        undoChangeSets.removeLast();
+      }
+    }
+
+    if (isManual) {
+      // Invalidate all redo operations when the graph was changed manually
+      redoChangeSets.clear();
+    }
+
+    // All uncommitted changes have been handled: restore internal recored state to default:
+    uncommittedChanges.clear();
+
+    if (changes != null) {
+      events.send(Topics.ANNOTATION_CHECKPOINT_CREATED, changes);
+    }
+    updateCanExecute();
+  }
+
+  /**
+   * Checks whether it is possible to perform an undo.
+   * 
+   * @return True if undo is possible.
+   */
+  public boolean canUndo() {
+    return !undoChangeSets.isEmpty();
+  }
+
+  /**
+   * Undoes all changes made in the last checkpoint.
+   */
+  public void undo() {
+
+    // Make sure the last uncommitted changes are added as a checkpoint, but don't fire an event
+    if (!uncommittedChanges.isEmpty()) {
+      log.warn("Adding checkpoint for {} uncommited changes before performing undo.",
+          uncommittedChanges.size());
+      undoChangeSets.add(new ChangeSet(uncommittedChanges));
+      uncommittedChanges.clear();
+    }
+
+    if (canUndo()) {
+      // Restore all documents from the last checkpoint
+      ChangeSet lastChangeSet = this.undoChangeSets.pop();
+      // Iterate over the elements in reversed order
+      ListIterator<ReversibleOperation> itLastChangeSet =
+          lastChangeSet.getChanges().listIterator(lastChangeSet.getChanges().size());
+      while (itLastChangeSet.hasPrevious()) {
+        ReversibleOperation op = itLastChangeSet.previous();
+        op.restore();
+      }
+
+      // All uncommitted changes recorded when restoring the previous state should be added
+      // to the "redo" stack instead of the undo one.
+      if (!uncommittedChanges.isEmpty()) {
+        redoChangeSets.addFirst(new ChangeSet(uncommittedChanges));
+        uncommittedChanges.clear();
+      }
+
+      // Performing an undo might unload documents, close the editors to avoid errors
+      // and give the user a visually clue (s)he unloaded/removed a document.
+      closeEditorsForRemovedDocuments();
+
+      events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
+      updateCanExecute();
+    }
+  }
+
+  /**
+   * Checks whether it is possible to perform an redo.
+   * 
+   * @return True if redo is possible.
+   */
+  public boolean canRedo() {
+    return !redoChangeSets.isEmpty();
+  }
+
+  /**
+   * Redo all changes made in the last undo.
+   */
+  public void redo() {
+    if (canRedo()) {
+      ChangeSet lastChangeSet = this.redoChangeSets.pop();
+      // Iterate over the elements in reversed order
+      ListIterator<ReversibleOperation> itLastChangeSet =
+          lastChangeSet.getChanges().listIterator(lastChangeSet.getChanges().size());
+      while (itLastChangeSet.hasPrevious()) {
+        ReversibleOperation op = itLastChangeSet.previous();
+        op.restore();
+      }
+
+      addCheckpoint(false);
+
+      // Performing an redo might unload documents, close the editors to avoid errors
+      // and give the user a visually clue (s)he unloaded/removed a document.
+      closeEditorsForRemovedDocuments();
+
+      events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, lastChangeSet);
+    }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  void subscribeUndoOperationAdded(
+      @UIEventTopic(Topics.ANNOTATION_OPERATION_ADDED) Object element) {
+    if (element instanceof ReversibleOperation) {
+      uncommittedChanges.add((ReversibleOperation) element);
+    }
+  }
+
+  /**
+   * Close all open editors where the document has been unloaded or removed by the undo action.
+   */
+  private void closeEditorsForRemovedDocuments() {
+
+    try {
+      for (MPart part : partService.getParts()) {
+        String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+        if (docID != null && !docID.isEmpty()) {
+          Optional<SDocument> document = this.getDocument(docID);
+          if (!document.isPresent() || document.get().getDocumentGraph() == null) {
+            partService.hidePart(part);
+          }
+        }
+      }
+    } catch (IllegalStateException ex) {
+      // Ignore, this can happen when the application is closing
+    }
   }
 
   /**
@@ -540,7 +711,15 @@ public class ProjectManager {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_ANY_UPDATE) Object element) {
+  private void projectChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
     hasUnsavedChanges = true;
+    uiStatus.setDirty(true);
+  }
+
+  /**
+   * Re-evaluate all @CanExecute methods.
+   */
+  private void updateCanExecute() {
+    events.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
   }
 }

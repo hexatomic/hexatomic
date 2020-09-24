@@ -124,7 +124,12 @@ class TestProjectManager {
       List<SToken> tokens = doc1Graph.getSortedTokenByText();
       doc1Graph.createSpan(tokens.get(0), tokens.get(1));
 
+      projectManager.addCheckpoint();
+
       assertTrue(projectManager.isDirty());
+      // Also check that the undo toolbar item has been enabled
+      assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
+      assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
 
       // Save the project to a different location
       Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
@@ -161,6 +166,8 @@ class TestProjectManager {
         assertNotNull(doc1Graph);
         tokens = doc1Graph.getSortedTokenByText();
         doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+        projectManager.addCheckpoint();
 
         assertTrue(projectManager.isDirty());
 
