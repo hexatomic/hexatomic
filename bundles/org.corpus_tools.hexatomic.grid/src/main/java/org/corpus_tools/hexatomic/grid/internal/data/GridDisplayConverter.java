@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import org.corpus_tools.hexatomic.core.SaltHelper;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
@@ -82,7 +83,8 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
       SSpan span = (SSpan) node;
       return getAnnotationForNode(span, column);
     } else {
-      throw new RuntimeException("Cell " + cell + " must contain SSpan or SToken. Contained: "
+      throw new HexatomicRuntimeException(
+          "Cell " + cell + " must contain SSpan or SToken. Contained: "
           + canonicalValue.getClass().getCanonicalName());
     }
   }

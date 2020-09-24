@@ -62,7 +62,7 @@ class TestProjectManager {
 
 
   @BeforeEach
-  public void setUp() throws Exception {
+  public void setUp() {
     File exampleProjectDirectory =
         new File("src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());

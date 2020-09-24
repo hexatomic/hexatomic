@@ -23,11 +23,9 @@ class TestFreezeGridBindings {
 
   /**
    * Sets up the fixture.
-   * 
-   * @throws java.lang.Exception Any exception thrown during execution.
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixture = new FreezeGridBindings();
   }
 

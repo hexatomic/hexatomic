@@ -25,12 +25,10 @@ class TestColumnHeaderDataProvider {
 
   /**
    * Sets up the fixture.
-   * 
-   * @throws java.lang.Exception Any exception thrown during execution.
    */
   @SuppressWarnings("unchecked")
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixtureProvider = mock(GraphDataProvider.class);
     columns = mock(List.class);
     Column tokenColumn = mock(Column.class);

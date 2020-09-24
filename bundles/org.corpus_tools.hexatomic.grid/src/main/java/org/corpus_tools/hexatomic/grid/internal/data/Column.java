@@ -24,6 +24,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
@@ -136,9 +137,9 @@ public class Column {
    * 
    * @param rowIndex The index of the row cell to set the data object to
    * @param node The node data object to set to the cell
-   * @throws RuntimeException if the row cell to set the data object to is already set
+   * @throws HexatomicRuntimeException if the row cell to set the data object to is already set
    */
-  void setRow(int rowIndex, SStructuredNode node) throws RuntimeException {
+  void setRow(int rowIndex, SStructuredNode node) {
     if (isRowEmpty(rowIndex)) {
       rowCells.put(rowIndex, node);
       bits.set(rowIndex);
@@ -146,7 +147,8 @@ public class Column {
       rowCells.remove(rowIndex);
       bits.clear(rowIndex);
     } else {
-      throw new RuntimeException("Cannot add " + node + " to " + this.getHeader() + "::" + rowIndex
+      throw new HexatomicRuntimeException("Cannot add " + node + " to " + this.getHeader() + "::"
+          + rowIndex
           + ": cell not empty (" + rowCells.get(rowIndex) + ")!");
     }
   }
@@ -168,7 +170,7 @@ public class Column {
         // As is the case when the first cell is used to display a message
         return null;
       } else {
-        throw new RuntimeException(
+        throw new HexatomicRuntimeException(
             "A column of type " + ColumnType.TOKEN_TEXT + " can only contain data objects of type "
                 + SToken.class.getName() + ". Encountered: " + dataObject.getClass() + ".");
       }

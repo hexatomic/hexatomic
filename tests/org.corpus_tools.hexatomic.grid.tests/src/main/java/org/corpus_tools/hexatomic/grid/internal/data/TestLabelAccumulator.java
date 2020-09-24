@@ -33,11 +33,9 @@ class TestLabelAccumulator {
 
   /**
    * Sets up the fixture for unit tests.
-   * 
-   * @throws java.lang.Exception Any exception during setup
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixtureProvider = mock(GraphDataProvider.class);
     fixtureLayer = mock(SpanningDataLayer.class);
     SToken token = mock(SToken.class);

@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
@@ -90,7 +91,7 @@ public class LabelAccumulator extends ColumnOverrideLabelAccumulator {
         }
       }
     } else {
-      throw new RuntimeException("There is no cell at column position " + columnPosition
+      throw new HexatomicRuntimeException("There is no cell at column position " + columnPosition
           + ", row position " + rowPosition + ".");
     }
   }

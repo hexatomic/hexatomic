@@ -27,7 +27,7 @@ class TestConsoleController {
 
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
 
     graph = SaltFactory.createSDocumentGraph();
     console = new ConsoleController(graph);
