@@ -44,6 +44,7 @@ After registering your listener, you will receive *all* updates for *all* docume
 You have to decide in your own code if you need to handle an update, e.g., because it is related to a document you are editing for which the event should trigger redrawing the editor you are implementing.
 The argument for the `Topics.ANNOTATION_CHANGED` event is of the type `org.corpus_tools.hexatomic.core.undo.ChangeSet` and contains a list of all changes.
 It also has a helper function to test if a given document is affected by its changes.
+
 ```java
 @Inject
 @org.eclipse.e4.core.di.annotations.Optional

@@ -220,7 +220,7 @@ class TestCorpusStructure {
 
   @Test
   @Order(3)
-  void testUndoRedo() {
+  void testUndo() {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
     bot.toolbarDropDownButton(0).click();

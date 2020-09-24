@@ -84,7 +84,7 @@ See the [Data model](./data-model/#reacting-to-changes) section on how to listen
 
 You can manipulate the document graph returned by the `ProjectManager` directly using the Salt API.
 Every change via the Salt API will automatically be recorded to enable undoing and redoing the changes.
-A user interaction that manipulates the document graph can consist of multiple Salt API calls and you must mark the end of a user interaction by calling the `addCheckpoint()` function of the injected `ProjectManager` instance.
+A user interaction that manipulates the document graph can consist of multiple Salt API calls, each one of which may potentially lead to inconsistent states. You must therefore mark the end of a user interaction by calling the `addCheckpoint()` function of an injected `ProjectManager` instance.
 Undo and redo will use these checkpoints to restore to a consistent state.
 In addition, calling `addCheckpoint()` will notify all other registered editors that a consistent set of changes has been added.
 
