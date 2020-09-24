@@ -20,7 +20,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal;
 
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
