@@ -19,7 +19,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.internal.style;
+package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
 import org.corpus_tools.hexatomic.grid.internal.data.Column;

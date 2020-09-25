@@ -21,7 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
-import org.corpus_tools.hexatomic.grid.internal.style.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
