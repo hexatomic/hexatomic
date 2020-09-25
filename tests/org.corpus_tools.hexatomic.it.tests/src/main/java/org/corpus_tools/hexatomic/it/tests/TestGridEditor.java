@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
@@ -586,8 +587,8 @@ public class TestGridEditor {
 
     table.click(1, 4);
     List<String> columnItems = table.contextMenu(2, 3).menuItems();
-    assertTrue(columnItems.get(0).contains("Delete cell(s)"));
-    table.contextMenu(2, 3).contextMenu("Delete cell(s)").click();
+    assertTrue(columnItems.get(0).contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+    table.contextMenu(2, 3).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
     assertEquals("", table.getCellDataValueByPosition(1, 4));
     assertNotNull(table.getCellDataValueByPosition(2, 3));
   }
@@ -616,5 +617,197 @@ public class TestGridEditor {
     assertTrue(contextMenu.menuItems().isEmpty());
     assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
+  
+  @Test
+  void testDeleteCellsPopupMenuInvisibleOnNoSelection() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(1, 1).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+  }
+
+  @Test
+  void testChangeAnnotatioNamePopupMenuInvisibleOnSelectedTokenText() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    table.click(1, 1);
+    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(1, 1)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+  }
+
+  @Test
+  void testChangeAnnotationNamePopupMenuInvisibleOnNoSelection() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(1, 1)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+  }
+
+  @Test
+  void testRenameColumnByContextMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    List<String> columnHeaderMenuItems = table.contextMenu(0, 2).menuItems();
+    assertTrue(columnHeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertTrue(table.contextMenu(0, 2)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
+    assertTrue(table.contextMenu(0, 2)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
+  }
+
+  @Test
+  void testRenameColumnMenuNotVisibleInIdxAndTokenTextColumn() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 0)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 1)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+  }
+
+  @Test
+  void testAnnotationChangeDialogWithOkButton() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell("Rename annotation");
+    keyboard.typeText("TEST");
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals("salt::TEST", table.getCellDataValueByPosition(0, 2));
+  }
+
+  @Test
+  void testAnnotationChangeDialogWithReturn() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell("Rename annotation");
+    keyboard.typeText("TEST");
+    keyboard.pressShortcut(Keystrokes.CR);
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals("salt::TEST", table.getCellDataValueByPosition(0, 2));
+  }
+
+  @Test
+  void testAnnotationChangeDialogCancel() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell("Rename annotation");
+    keyboard.typeText("TEST");
+    tableBot.button("Cancel").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+  }
+
+  /**
+   * The popup menus for "Delete cell(s)" and "Change annotation name" should only be visible when
+   * no token cells are selected. This tests whether the menu is hidden with a mixed selection of
+   * token and non-token cells.
+   */
+  @Test
+  void testMenusVisibleOnNoTokenSelection() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 1);
+    shiftClick(table, 5, 1);
+    ctrlClick(table, 2, 3);
+    ctrlClick(table, 4, 3);
+    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 0)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertThrows(WidgetNotFoundException.class,
+        () -> table.contextMenu(0, 0).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+  }
+
+  /**
+   * The popup menu "Change annotation name" should only be visible in the table body when non-token
+   * cells are selected exclusively. This tests whether the menu is visible on selection of a
+   * non-token cell and hidden otherwise.
+   */
+  @Test
+  void testChangeAnnotationNameOnSelectedCells() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    List<String> cellMenuItems = table.contextMenu(2, 2).menuItems();
+    assertFalse(cellMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    // Select cell for popup menu to be visible
+    table.click(2, 2);
+    cellMenuItems = table.contextMenu(2, 2).menuItems();
+    assertTrue(cellMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertTrue(table.contextMenu(2, 2)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
+    assertTrue(table.contextMenu(2, 2)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
+  }
+
+  private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
+    clickWithMask(false, true, rowPosition, columnPosition, table);
+  }
+
+  private void shiftClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
+    clickWithMask(true, false, rowPosition, columnPosition, table);
+  }
+
+  private void clickWithMask(boolean shiftMask, boolean ctrlMask, int rowPosition,
+      int columnPosition, SWTBotNatTable table) {
+    ILayer selectionLayer = getSelectionLayer(table);
+    Display.getDefault().syncExec(new Runnable() {
+      public void run() {
+        selectionLayer.doCommand(new SelectCellCommand(selectionLayer, columnPosition - 1,
+            rowPosition - 1, shiftMask, ctrlMask));
+      }
+    });
+  }
+
+  private ILayer getSelectionLayer(SWTBotNatTable table) {
+    NatTable nattable = table.widget;
+
+    // Loop through the layers in the stack until the selection layer is hit
+    ILayer layer = nattable.getLayer();
+
+    ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
+    assertEquals(CompositeFreezeLayer.class, layerUl.getClass());
+    CompositeFreezeLayer freezeLayer = (CompositeFreezeLayer) layerUl;
+
+    ILayer freezeLayerUll = freezeLayer.getUnderlyingLayerByPosition(1, 1);
+    assertEquals(ViewportLayer.class, freezeLayerUll.getClass());
+    ViewportLayer viewPortLayer = (ViewportLayer) freezeLayerUll;
+
+    ILayer viewPortLayerUll = viewPortLayer.getUnderlyingLayerByPosition(1, 1);
+    assertEquals(SelectionLayer.class, viewPortLayerUll.getClass());
+    SelectionLayer selectionLayer = (SelectionLayer) viewPortLayerUll;
+    return selectionLayer;
+  }
+
+
+}
 
 }

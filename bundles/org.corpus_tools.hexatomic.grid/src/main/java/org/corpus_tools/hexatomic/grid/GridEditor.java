@@ -90,6 +90,8 @@ public class GridEditor {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
 
+  public static final String DELETE_CELLS_POPUP_MENU_LABEL = "Delete cell(s)";
+
   @Inject
   ErrorService errors;
 
