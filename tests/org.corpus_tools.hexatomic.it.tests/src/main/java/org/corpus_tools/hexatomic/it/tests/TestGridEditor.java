@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,7 +28,13 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
+import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
+import org.eclipse.nebula.widgets.nattable.selection.command.SelectCellCommand;
+import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
@@ -36,9 +43,11 @@ import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
@@ -617,15 +626,16 @@ public class TestGridEditor {
     assertTrue(contextMenu.menuItems().isEmpty());
     assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
   }
-  
+
   @Test
   void testDeleteCellsPopupMenuInvisibleOnNoSelection() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(1, 1).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+
+    List<String> column0HeaderMenuItems = table.contextMenu(1, 1).menuItems();
+    assertFalse(column0HeaderMenuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
   }
 
   @Test
@@ -635,8 +645,9 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
-    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(1, 1)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    List<String> column0HeaderMenuItems = table.contextMenu(1, 1).menuItems();
+    assertFalse(
+        column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
   }
 
   @Test
@@ -645,8 +656,10 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(1, 1)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+
+    List<String> column0HeaderMenuItems = table.contextMenu(1, 1).menuItems();
+    assertFalse(
+        column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
   }
 
   @Test
@@ -671,10 +684,12 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 0)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 1)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    List<String> column0HeaderMenuItems = table.contextMenu(0, 0).menuItems();
+    assertFalse(
+        column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    List<String> column1HeaderMenuItems = table.contextMenu(0, 1).menuItems();
+    assertFalse(
+        column1HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
   }
 
   @Test
@@ -738,10 +753,11 @@ public class TestGridEditor {
     shiftClick(table, 5, 1);
     ctrlClick(table, 2, 3);
     ctrlClick(table, 4, 3);
-    assertThrows(WidgetNotFoundException.class, () -> table.contextMenu(0, 0)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    assertThrows(WidgetNotFoundException.class,
-        () -> table.contextMenu(0, 0).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+
+    List<String> column0HeaderMenuItems = table.contextMenu(0, 0).menuItems();
+    assertFalse(
+        column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    assertFalse(column0HeaderMenuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
   }
 
   /**
@@ -807,7 +823,5 @@ public class TestGridEditor {
     return selectionLayer;
   }
 
-
-}
 
 }
