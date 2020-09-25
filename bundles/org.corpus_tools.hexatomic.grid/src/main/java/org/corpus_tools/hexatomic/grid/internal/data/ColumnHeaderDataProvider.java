@@ -24,6 +24,8 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 import java.util.List;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A data provider for column headers.
@@ -32,6 +34,8 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
  *
  */
 public class ColumnHeaderDataProvider implements IDataProvider {
+
+  private static final Logger log = LoggerFactory.getLogger(ColumnHeaderDataProvider.class);
 
   private final GraphDataProvider provider;
 
@@ -59,9 +63,22 @@ public class ColumnHeaderDataProvider implements IDataProvider {
     }
   }
 
+  /**
+   * Returns the value of the underlying {@link Column} at the specified index.
+   * 
+   * @param columnIndex the index of the Column in the underlying data model for which the value
+   *        should be set.
+   * @return the value of the Column specified via the passed index
+   */
+  public String getColumnValue(int columnIndex) {
+    return provider.getColumns().get(columnIndex).getColumnValue();
+  }
+
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    // Left unimplemented, as header data shouldn't be settable
+    log.debug("Setting new value '{}' to value of column {}.", newValue, columnIndex);
+    Column column = provider.getColumns().get(columnIndex);
+    column.setColumnValue(newValue.toString());
   }
 
   @Override
@@ -71,9 +88,6 @@ public class ColumnHeaderDataProvider implements IDataProvider {
 
   @Override
   public int getRowCount() {
-    if (provider.getColumns().isEmpty()) {
-      return 0;
-    }
     return 1;
   }
 
