@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.MenuItem;
  */
 public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfiguration {
 
-  private static final String COLUMN = "column";
-  private static final String ROW = "row";
+  private static final String COLUMN = "column"; //$NON-NLS-1$
+  private static final String ROW = "row"; //$NON-NLS-1$
 
   /**
    * Generic constructor calling
@@ -62,7 +62,9 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
         .withShowAllColumnsMenuItem("Show all columns").withSeparator()
         .withAutoResizeSelectedColumnsMenuItem("Auto-resize column(s)").withSeparator()
         .withFreezeColumnMenuItem("Set column freeze")
-        .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN));
+        .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN)).withSeparator()
+        .withColumnRenameDialog("Change annotation name")
+        .withVisibleState(PopupMenuBuilder.COLUMN_RENAME_MENU_ITEM_ID, new AnnotationHeaderState());
   }
 
   @Override
