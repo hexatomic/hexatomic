@@ -92,6 +92,8 @@ public class GridEditor {
 
   public static final String DELETE_CELLS_POPUP_MENU_LABEL = "Delete cell(s)";
 
+  public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
+
   @Inject
   ErrorService errors;
 
