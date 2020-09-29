@@ -62,10 +62,7 @@ public class GridHelper {
       positionToCheck = columnPosition + 1;
     }
     ILayerCell cell = natTable.getCellByPosition(positionToCheck, 0);
-    if (!cell.getDataValue().equals(GraphDataProvider.TOKEN_TEXT_COLUMN_LABEL)) {
-      return false;
-    }
-    return true;
+    return cell.getDataValue().equals(GraphDataProvider.TOKEN_TEXT_COLUMN_LABEL);
   }
 
 }
