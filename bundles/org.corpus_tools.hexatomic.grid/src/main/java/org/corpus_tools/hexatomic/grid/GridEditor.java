@@ -346,6 +346,8 @@ public class GridEditor {
   }
 
   /**
+   * Returns the currently active textual data source.
+   * 
    * @return the currently active textual data source
    */
   private STextualDS getActiveDs() {

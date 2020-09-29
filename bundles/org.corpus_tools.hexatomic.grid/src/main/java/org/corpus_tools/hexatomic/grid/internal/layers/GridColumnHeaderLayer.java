@@ -47,7 +47,6 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
    * @param horizontalLayerDependency The layer to link the horizontal dimension to, typically the
    *        body layer
    * @param selectionLayer The SelectionLayer needed to respond to selection events
-   * @param graphDataProvider The body data provider for the NatTable
    */
   public GridColumnHeaderLayer(IUniqueIndexLayer baseLayer, ILayer horizontalLayerDependency,
       SelectionLayer selectionLayer) {
