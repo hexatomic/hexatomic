@@ -120,8 +120,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
   private void setOkButtonActive(boolean enableButton) {
     if (this.okButton != null) {
-        this.okButton.setEnabled(enableButton);
-      }
+      this.okButton.setEnabled(enableButton);
     }
   }
 
@@ -136,6 +135,9 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
     /**
      * Creates a modify listener with a field decoration.
+     * 
+     * @param nameField The text field holding the annotation name
+     * @param okButton The ok button of the parent panel
      */
     public DecoratedModifyListener() {
       decoration = new ControlDecoration(nameField, SWT.LEFT | SWT.TOP);
@@ -162,5 +164,8 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
         setOkButtonActive(true);
       }
     }
+
   }
 }
+
+
