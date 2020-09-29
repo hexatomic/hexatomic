@@ -90,7 +90,7 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
     fillGridData.horizontalAlignment = GridData.FILL;
     panel.setLayoutData(fillGridData);
 
-    this.columnLabelPanel = new AnnotationLabelPanel(panel, this.oldQName, this.newQName);
+    this.columnLabelPanel = new AnnotationLabelPanel(panel, this.newQName);
     try {
       this.columnLabelPanel.edit(this.oldQName);
     } catch (Exception e) {

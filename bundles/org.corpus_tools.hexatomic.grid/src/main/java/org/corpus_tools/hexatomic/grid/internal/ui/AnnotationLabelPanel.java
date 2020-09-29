@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Text;
  */
 public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
-  private final String oldQName;
   private Text namespaceField;
   private Text nameField;
   private Button okButton;
@@ -58,18 +57,14 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
    * @param oldQName the old qualified annotation name
    * @param newQName the new qualified annotation name
    */
-  public AnnotationLabelPanel(Composite parent, String oldQName, String newQName) {
+  public AnnotationLabelPanel(Composite parent, String newQName) {
     super(parent, SWT.NONE);
-    this.oldQName = oldQName;
     init();
   }
 
   private void init() {
     GridLayout gridLayout = new GridLayout(2, false);
     setLayout(gridLayout);
-
-    String oldNamespace = DataUtil.splitNamespaceFromQNameString(this.oldQName);
-    String oldName = DataUtil.splitNameFromQNameString(this.oldQName);
 
     // Namespace
     Label namespaceLabel = new Label(this, SWT.NONE);
