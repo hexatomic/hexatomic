@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class TestColumnHeaderDataProvider {
     when(fixtureProvider.getColumns()).thenReturn(columns);
     when(fixtureProvider.getColumnCount()).thenReturn(2);
     when(fixtureProvider.getRowCount()).thenReturn(3);
-    fixture = new ColumnHeaderDataProvider(fixtureProvider);
+    fixture = new ColumnHeaderDataProvider(fixtureProvider, mock(ProjectManager.class));
   }
 
   /**
@@ -51,8 +52,10 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testColumnHeaderDataProvider() {
-    assertDoesNotThrow(() -> new ColumnHeaderDataProvider(fixtureProvider));
-    assertThrows(RuntimeException.class, () -> new ColumnHeaderDataProvider(null));
+    assertDoesNotThrow(
+        () -> new ColumnHeaderDataProvider(fixtureProvider, mock(ProjectManager.class)));
+    assertThrows(HexatomicRuntimeException.class,
+        () -> new ColumnHeaderDataProvider(null, mock(ProjectManager.class)));
   }
 
   /**
