@@ -70,12 +70,6 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
     String oldNamespace = DataUtil.splitNamespaceFromQNameString(this.oldQName);
     String oldName = DataUtil.splitNameFromQNameString(this.oldQName);
-    if (oldNamespace == null) {
-      oldNamespace = "";
-    }
-    if (oldName == null) {
-      oldName = "";
-    }
 
     // Namespace
     Label namespaceLabel = new Label(this, SWT.NONE);
