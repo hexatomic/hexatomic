@@ -32,6 +32,10 @@ import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
  */
 public class GridHelper {
 
+  private GridHelper() {
+    // Should not be initiated.
+  }
+
   /**
    * Determines whether the column in the {@link NatTable} as determined per the passed
    * columnPosition integer is a column containing token text values.
