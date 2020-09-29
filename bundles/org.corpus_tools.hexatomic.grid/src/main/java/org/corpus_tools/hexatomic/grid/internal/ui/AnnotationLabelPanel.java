@@ -152,7 +152,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     public void modifyText(ModifyEvent e) {
       Text source = (Text) e.getSource();
       String name = source.getText();
-      if (name.isEmpty() || name == null) {
+      if (name.isEmpty()) {
         decoration.setDescriptionText("Annotation name can not be empty!");
         decoration.show();
         setOkButtonActive(false);
