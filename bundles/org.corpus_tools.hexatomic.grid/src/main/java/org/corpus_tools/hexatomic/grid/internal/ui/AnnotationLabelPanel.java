@@ -83,35 +83,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     this.nameField = new Text(this, SWT.BORDER);
     this.nameField.setLayoutData(gridData);
 
-    this.nameField.addModifyListener(new ModifyListener() {
-      ControlDecoration decoration;
-
-      {
-        decoration = new ControlDecoration(nameField, SWT.LEFT | SWT.TOP);
-        decoration.setDescriptionText("Please enter a valid annotation name.");
-        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
-            .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
-        decoration.setImage(fieldDecoration.getImage());
-      }
-
-      @Override
-      public void modifyText(ModifyEvent e) {
-        Text source = (Text) e.getSource();
-        String name = source.getText();
-        if (name.isEmpty() || name == null) {
-          decoration.setDescriptionText("Annotation name can not be empty!");
-          decoration.show();
-          setOkButtonActive(false);
-        } else if (name.contains(" ")) {
-          decoration.setDescriptionText("Annotation name can not contain whitespaces!");
-          decoration.show();
-          setOkButtonActive(false);
-        } else {
-          decoration.hide();
-          setOkButtonActive(true);
-        }
-      }
-    });
+    this.nameField.addModifyListener(new DecoratedModifyListener());
   }
 
   @Override
@@ -156,4 +128,42 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     }
   }
 
+  /**
+   * A modify listener controlling a field decoration.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private final class DecoratedModifyListener implements ModifyListener {
+
+    private final ControlDecoration decoration;
+
+    /**
+     * Creates a modify listener with a field decoration.
+     */
+    public DecoratedModifyListener() {
+      decoration = new ControlDecoration(nameField, SWT.LEFT | SWT.TOP);
+      decoration.setDescriptionText("Please enter a valid annotation name.");
+      FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+          .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+      decoration.setImage(fieldDecoration.getImage());
+    }
+
+    @Override
+    public void modifyText(ModifyEvent e) {
+      Text source = (Text) e.getSource();
+      String name = source.getText();
+      if (name.isEmpty() || name == null) {
+        decoration.setDescriptionText("Annotation name can not be empty!");
+        decoration.show();
+        setOkButtonActive(false);
+      } else if (name.contains(" ")) {
+        decoration.setDescriptionText("Annotation name can not contain whitespaces!");
+        decoration.show();
+        setOkButtonActive(false);
+      } else {
+        decoration.hide();
+        setOkButtonActive(true);
+      }
+    }
+  }
 }
