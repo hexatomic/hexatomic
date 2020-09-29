@@ -52,7 +52,7 @@ public class RenameAnnotationOnColumnCommandHandler
 
   @Override
   protected boolean doCommand(RenameColumnHeaderCommand command) {
-    log.debug("Executing command {0}.", command);
+    log.trace("Executing command to rename column header.");
     return this.customColumnHeaderLayer.renameColumnPosition(command.getColumnPosition(),
         command.getCustomColumnName());
   }
