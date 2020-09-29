@@ -361,7 +361,6 @@ public class GraphDataProvider implements IDataProvider {
         log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString(), newValue);
       }
     }
-
     projectManager.addCheckpoint();
 
   }

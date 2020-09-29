@@ -150,7 +150,8 @@ public class GridEditor {
         new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
 
     // Column header
-    final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
+    final IDataProvider columnHeaderDataProvider =
+        new ColumnHeaderDataProvider(bodyDataProvider, projectManager);
     final GridColumnHeaderLayer columnHeaderLayer =
         new GridColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
             compositeFreezeLayer, selectionLayer);

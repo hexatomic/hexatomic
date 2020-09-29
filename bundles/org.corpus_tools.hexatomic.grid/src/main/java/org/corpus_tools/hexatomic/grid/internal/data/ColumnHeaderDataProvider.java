@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
 import java.util.Map.Entry;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -41,14 +42,18 @@ public class ColumnHeaderDataProvider implements IDataProvider {
   private static final Logger log = LoggerFactory.getLogger(ColumnHeaderDataProvider.class);
 
   private final GraphDataProvider provider;
+  private final ProjectManager projectManager;
 
   /**
    * Constructor setting the body data provider. Throws a {@link RuntimeException} if the passed
    * argument is <code>null</code>.
    * 
    * @param bodyDataProvider The body data provider
+   * @param projectManager The project manager to notify on changes
    */
-  public ColumnHeaderDataProvider(GraphDataProvider bodyDataProvider) {
+  public ColumnHeaderDataProvider(GraphDataProvider bodyDataProvider,
+      ProjectManager projectManager) {
+    this.projectManager = projectManager;
     if (bodyDataProvider == null) {
       throw new HexatomicRuntimeException(
           "Body data provider in " + this.getClass().getSimpleName() + " must not be null.");
@@ -89,6 +94,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
       throw new HexatomicRuntimeException("New annotation name must not be null.");
     }
     column.setColumnValue(newValue.toString());
+    projectManager.addCheckpoint();
   }
 
   @Override
