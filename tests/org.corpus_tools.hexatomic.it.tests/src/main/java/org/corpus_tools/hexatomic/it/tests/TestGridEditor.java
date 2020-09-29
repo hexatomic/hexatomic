@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -24,6 +25,7 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
@@ -85,6 +87,8 @@ public class TestGridEditor {
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
+  private ProjectManager projectManager;
+
   @BeforeEach
   void setup() {
     TestHelper.setKeyboardLayout();
@@ -99,6 +103,8 @@ public class TestGridEditor {
 
     partService = ctx.get(EPartService.class);
     assertNotNull(partService);
+
+    projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -805,6 +811,29 @@ public class TestGridEditor {
     assertTrue(table.contextMenu(2, 2)
         .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
   }
+
+  /**
+   * Tests whether changing the annotation name registers as making the project saveable.
+   */
+  @Test
+  void testAnnotationNameChangeRegistered() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertTrue(projectManager.isDirty());
+    // Also check that the undo toolbar item has been enabled
+    assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
+    assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
+  }
+
+
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
     clickWithMask(false, true, rowPosition, columnPosition, table);

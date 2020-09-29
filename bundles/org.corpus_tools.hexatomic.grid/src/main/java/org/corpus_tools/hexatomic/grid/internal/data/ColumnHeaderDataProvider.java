@@ -156,6 +156,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
           // annotation.setName(name);
           log.debug("Renamed annotation on node {} from {} to '{}'.", node.getName(),
               annotation.getQName(), newAnnotation.getQName());
+          projectManager.addCheckpoint();
         }
       }
     }
