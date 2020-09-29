@@ -108,7 +108,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
   public String getNewValue() {
     // Both fields are enabled, and neither field is null (i.e., contains at least the empty string)
     if (this.namespaceField.isEnabled() && this.nameField.isEnabled()
-        && this.namespaceField.getText() != null && this.nameField != null) {
+        && this.namespaceField.getText() != null) {
       return DataUtil.buildQName(this.namespaceField.getText(), this.nameField.getText());
     }
     return null;
