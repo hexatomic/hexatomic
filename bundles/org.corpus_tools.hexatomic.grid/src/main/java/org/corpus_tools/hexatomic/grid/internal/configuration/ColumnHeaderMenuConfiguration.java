@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfiguration {
+public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfiguration {
 
   private static final String COLUMN = "column"; //$NON-NLS-1$
   private static final String ROW = "row"; //$NON-NLS-1$
@@ -51,7 +51,7 @@ public class CustomHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
    * 
    * @param natTable The NatTable to configure
    */
-  public CustomHeaderMenuConfiguration(NatTable natTable) {
+  public ColumnHeaderMenuConfiguration(NatTable natTable) {
     super(natTable);
   }
 

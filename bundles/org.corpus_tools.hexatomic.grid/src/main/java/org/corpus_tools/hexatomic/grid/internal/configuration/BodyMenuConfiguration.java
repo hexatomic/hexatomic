@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.MenuItem;
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
-public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration {
+public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   private static final String DELETE_CELL_ITEM = "DELETE_CELL_ITEM"; //$NON-NLS-1$
   private Menu menu;
@@ -65,7 +65,7 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
    * @param selectionLayer The SelectionLayer to be used for configuring menu item states based on
    *        selection
    */
-  public CustomBodyMenuConfiguration(NatTable table, SelectionLayer selectionLayer) {
+  public BodyMenuConfiguration(NatTable table, SelectionLayer selectionLayer) {
     this.table = table;
     this.selectionLayer = selectionLayer;
     this.menu = createMenu();
@@ -79,8 +79,7 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
     builder.withMenuItemProvider(CHANGE_CELL_ANNOTATION_NAME_ITEM,
         new ChangeAnnotationNameItemProvider());
     builder.withVisibleState(CHANGE_CELL_ANNOTATION_NAME_ITEM, validSelectionState);
-    Menu popUpMenu = builder.build();
-    return popUpMenu;
+    return builder.build();
   }
 
   @Override
