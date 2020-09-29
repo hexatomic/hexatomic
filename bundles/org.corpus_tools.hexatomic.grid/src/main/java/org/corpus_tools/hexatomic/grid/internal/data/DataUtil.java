@@ -86,12 +86,7 @@ public class DataUtil {
    * @return Whether the string is valid
    */
   public static boolean isValidQName(String qualifiedNameString) {
-    if (qualifiedNameString.contains(" ")) {
-      return false;
-    } else if (qualifiedNameString.split("::").length > 2) {
-      return false;
-    }
-    return true;
+    return !(qualifiedNameString.contains(" ") || qualifiedNameString.split("::").length > 2);
   }
 
   /**
