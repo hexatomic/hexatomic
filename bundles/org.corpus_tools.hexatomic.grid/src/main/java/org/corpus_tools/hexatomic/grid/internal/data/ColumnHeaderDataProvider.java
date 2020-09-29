@@ -124,7 +124,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
   public boolean renameColumnPosition(int idx, String newQName) {
     String name = DataUtil.splitNameFromQNameString(newQName);
     if (name == null || name.isEmpty()) {
-      throw new RuntimeException(
+      throw new HexatomicRuntimeException(
           "Annotation name is null! Compound qualified name is " + newQName + ".");
     }
     log.debug("New qualified name: {}", newQName);
@@ -146,14 +146,10 @@ public class ColumnHeaderDataProvider implements IDataProvider {
         SAnnotation annotation = node.getAnnotation(oldQName);
         if (annotation != null) {
           Object value = annotation.getValue();
-          log.debug("Renaming annotation '{}' on node '{}'.", annotation.toString(),
-              node.getName());
+          log.debug("Renaming annotation '{0}' on node '{1}'.", annotation, node.getName());
           node.removeLabel(oldQName);
           SAnnotation newAnnotation =
               node.createAnnotation(DataUtil.splitNamespaceFromQNameString(newQName), name, value);
-          // Should ideally work like this:
-          // annotation.setNamespace(namespace);
-          // annotation.setName(name);
           log.debug("Renamed annotation on node {} from {} to '{}'.", node.getName(),
               annotation.getQName(), newAnnotation.getQName());
           projectManager.addCheckpoint();
