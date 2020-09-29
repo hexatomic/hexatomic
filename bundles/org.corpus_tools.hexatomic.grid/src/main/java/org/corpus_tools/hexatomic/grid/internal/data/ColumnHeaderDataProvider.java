@@ -22,7 +22,10 @@
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.List;
+import java.util.Map.Entry;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.salt.common.SStructuredNode;
+import org.corpus_tools.salt.core.SAnnotation;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +81,13 @@ public class ColumnHeaderDataProvider implements IDataProvider {
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
     log.debug("Setting new value '{}' to value of column {}.", newValue, columnIndex);
     Column column = provider.getColumns().get(columnIndex);
+    if (column == null) {
+      throw new HexatomicRuntimeException(
+          "Column at " + columnIndex + " is null. Please report this as a bug.");
+    }
+    if (newValue == null || (newValue instanceof String && ((String) newValue).isEmpty())) {
+      throw new HexatomicRuntimeException("New annotation name must not be null.");
+    }
     column.setColumnValue(newValue.toString());
   }
 
@@ -89,6 +99,62 @@ public class ColumnHeaderDataProvider implements IDataProvider {
   @Override
   public int getRowCount() {
     return 1;
+  }
+
+  /**
+   * Renames the column in the data model.
+   * 
+   * <p>
+   * This (1) changes the underlying {@link Column}'s value (from which the header label is
+   * computed), and (2) changes the qualified names of all annotations in the underlying
+   * {@link Column} cells to the namespace::name combination computed from the <code>newQName</code>
+   * parameter.
+   * </p>
+   * 
+   * @param idx The index of the column that is being renamed
+   * @param newQName The qualified annotation name to which the column should be renamed
+   * @return <code>true</code> if the new qualified column name differs from the current one
+   */
+  public boolean renameColumnPosition(int idx, String newQName) {
+    String name = DataUtil.splitNameFromQNameString(newQName);
+    if (name == null || name.isEmpty()) {
+      throw new RuntimeException(
+          "Annotation name is null! Compound qualified name is " + newQName + ".");
+    }
+    log.debug("New qualified name: {}", newQName);
+
+    // Get the respective Column object from the underlying data model.
+    // Note that this is the NatTable's column index as the empty corner "column" is discounted.
+    Column column = provider.getColumns().get(idx);
+    String oldQName = column.getColumnValue();
+
+    boolean renamed = (!oldQName.equals(newQName));
+    if (renamed) {
+      // Set the new qName in the column header
+      setDataValue(idx, 0, newQName);
+      log.debug("Set column value at index {} (old value: '{}') to '{}'.", idx, oldQName, newQName);
+
+      // Rename annotations in the column
+      for (Entry<Integer, SStructuredNode> cellEntry : column.getRowCells().entrySet()) {
+        SStructuredNode node = cellEntry.getValue();
+        SAnnotation annotation = node.getAnnotation(oldQName);
+        if (annotation != null) {
+          Object value = annotation.getValue();
+          log.debug("Renaming annotation '{}' on node '{}'.", annotation.toString(),
+              node.getName());
+          node.removeLabel(oldQName);
+          SAnnotation newAnnotation =
+              node.createAnnotation(DataUtil.splitNamespaceFromQNameString(newQName), name, value);
+          // Should ideally work like this:
+          // annotation.setNamespace(namespace);
+          // annotation.setName(name);
+          log.debug("Renamed annotation on node {} from {} to '{}'.", node.getName(),
+              annotation.getQName(), newAnnotation.getQName());
+        }
+      }
+    }
+    return renamed;
+
   }
 
 }

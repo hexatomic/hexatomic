@@ -153,7 +153,7 @@ public class GridEditor {
     final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
     final GridColumnHeaderLayer columnHeaderLayer =
         new GridColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
-            compositeFreezeLayer, selectionLayer, bodyDataProvider);
+            compositeFreezeLayer, selectionLayer);
 
     // Row header
     final IDataProvider rowHeaderDataProvider = new RowHeaderDataProvider(bodyDataProvider);
