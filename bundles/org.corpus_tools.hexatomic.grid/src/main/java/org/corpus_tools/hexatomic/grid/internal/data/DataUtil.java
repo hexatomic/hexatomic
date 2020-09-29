@@ -30,6 +30,10 @@ import org.corpus_tools.salt.util.SaltUtil;
  */
 public class DataUtil {
 
+  private DataUtil() {
+    // Should not be initiated.
+  }
+
   /**
    * Checks whether the passed string can be split at Salt's namespace separator and returns the
    * namespace part of the original string, i.e., the string preceding the separator.
