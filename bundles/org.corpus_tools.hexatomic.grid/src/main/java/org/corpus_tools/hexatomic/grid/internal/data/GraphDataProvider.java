@@ -366,10 +366,10 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private void createAnnotation(Object newValue, int columnIndex, SStructuredNode node) {
-    node.createAnnotation(getAnnotationNamespace(columnIndex), getAnnotationName(columnIndex),
-        newValue);
-    log.debug("Created new annotation with value '{}' on {} ({}, '{}').", newValue,
-        node.getClass().getSimpleName(), node.hashCode(), node);
+    SAnnotation annotation = node.createAnnotation(getAnnotationNamespace(columnIndex),
+        getAnnotationName(columnIndex), newValue);
+    log.debug("Created new annotation {} with value '{}' on {} ({}, '{}').", annotation.getQName(),
+        newValue, node.getClass().getSimpleName(), node.hashCode(), node);
   }
 
   private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject) {
@@ -379,8 +379,8 @@ public class GraphDataProvider implements IDataProvider {
       throw new HexatomicRuntimeException(
           "Failed to retrieve annotation to set the value for on node " + node.toString() + ".");
     } else {
-      log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
-          dataObject.hashCode(), dataObject, newValue);
+      log.debug("Setting value on annotation {} on {} ({}, '{}') to '{}'.", anno.getQName(),
+          dataObject.getClass().getSimpleName(), dataObject.hashCode(), dataObject, newValue);
       anno.setValue(newValue);
     }
   }
