@@ -54,7 +54,6 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
    * construction of the panel.
    * 
    * @param parent The parent widget
-   * @param oldQName the old qualified annotation name
    * @param newQName the new qualified annotation name
    */
   public AnnotationLabelPanel(Composite parent, String newQName) {
