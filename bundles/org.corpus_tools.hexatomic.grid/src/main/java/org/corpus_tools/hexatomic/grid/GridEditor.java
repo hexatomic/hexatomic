@@ -28,6 +28,8 @@ import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.grid.internal.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.internal.configuration.CustomBodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.configuration.CustomHeaderMenuConfiguration;
@@ -47,6 +49,7 @@ import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -118,6 +121,8 @@ public class GridEditor {
   private SDocumentGraph graph;
 
   private NatTable table;
+
+  private STextualDS activeDs = null;
 
   /**
    * Creates the grid that contains the data of the {@link SDocumentGraph}.
@@ -200,6 +205,18 @@ public class GridEditor {
         part.getPersistedState().get("org.corpus_tools.hexatomic.document-id"));
   }
 
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      if (changeSet.containsDocument(
+          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+        setSelection(getActiveDs());
+      }
+    }
+  }
+
   /**
    * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.
    * 
@@ -209,6 +226,7 @@ public class GridEditor {
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
+      setActiveDS(ds);
       bodyDataProvider.setDsAndResolveGraph(ds);
       // Refresh all layers
       table.refresh();
@@ -315,6 +333,23 @@ public class GridEditor {
         return super.getText(element);
       }
     };
+  }
+
+  /**
+   * Sets the active textual data source the table displays.
+   * 
+   * @param ds The active data source.
+   */
+  private void setActiveDS(STextualDS ds) {
+    this.activeDs = ds;
+
+  }
+
+  /**
+   * @return the currently active textual data source
+   */
+  private STextualDS getActiveDs() {
+    return this.activeDs;
   }
 
   private SDocumentGraph getGraph() {
