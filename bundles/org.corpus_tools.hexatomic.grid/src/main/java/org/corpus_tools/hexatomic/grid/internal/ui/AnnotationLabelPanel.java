@@ -120,10 +120,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
   private void setOkButtonActive(boolean enableButton) {
     if (this.okButton != null) {
-      if (enableButton) {
-        this.okButton.setEnabled(true);
-      } else {
-        this.okButton.setEnabled(false);
+        this.okButton.setEnabled(enableButton);
       }
     }
   }
