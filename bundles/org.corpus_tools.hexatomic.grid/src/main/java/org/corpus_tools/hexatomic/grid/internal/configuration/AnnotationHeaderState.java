@@ -36,9 +36,8 @@ class AnnotationHeaderState implements IMenuItemState {
 
   @Override
   public boolean isActive(NatEventData natEventData) {
-    boolean ret = !GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
+    return !GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
         natEventData.getColumnPosition(), true);
-    return ret;
   }
 
 }
