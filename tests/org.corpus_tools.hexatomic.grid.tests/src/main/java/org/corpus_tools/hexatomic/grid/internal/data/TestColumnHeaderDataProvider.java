@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +74,10 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testSetDataValue() {
-    assertDoesNotThrow(() -> fixture.setDataValue(-1, -1, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(-1, -1, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, ""));
+    assertDoesNotThrow(() -> fixture.setDataValue(1, 0, "test"));
   }
 
   /**
@@ -92,8 +96,6 @@ class TestColumnHeaderDataProvider {
   @Test
   void testGetRowCount() {
     assertEquals(1, fixture.getRowCount());
-    when(columns.isEmpty()).thenReturn(true);
-    assertEquals(0, fixture.getRowCount());
   }
 
 }

@@ -20,6 +20,7 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -68,6 +69,10 @@ public class TestGridEditor {
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
   private static final String TEST_ANNOTATION_VALUE = "TEST";
+
+  private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
+
+  private static final String RENAME_DIALOG_TITLE = "Rename annotation";
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
@@ -398,7 +403,7 @@ public class TestGridEditor {
 
     // Hide token column
     table.contextMenu(0, 1).contextMenu("Hide column(s)").click();
-    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 1));
+    assertEquals(NAMESPACE + "lemma", table.getCellDataValueByPosition(0, 1));
 
     // Show columns
     table.contextMenu(0, 1).contextMenu("Show all columns").click();
@@ -580,11 +585,17 @@ public class TestGridEditor {
     table.click(2, 4);
     keyboard.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
+    NatTable natTable = table.widget;
     assertEquals("", table.getCellDataValueByPosition(3, 4));
+    assertNull(natTable.getDataValueByPosition(4, 3));
     assertEquals("", table.getCellDataValueByPosition(4, 4));
+    assertNull(natTable.getDataValueByPosition(4, 4));
     assertEquals("", table.getCellDataValueByPosition(5, 4));
+    assertNull(natTable.getDataValueByPosition(4, 5));
     assertEquals("", table.getCellDataValueByPosition(6, 4));
+    assertNull(natTable.getDataValueByPosition(4, 6));
     assertEquals("", table.getCellDataValueByPosition(7, 4));
+    assertNull(natTable.getDataValueByPosition(4, 7));
   }
 
   @Test
@@ -599,6 +610,7 @@ public class TestGridEditor {
     assertTrue(columnItems.get(0).contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
     table.contextMenu(2, 3).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
     assertEquals("", table.getCellDataValueByPosition(1, 4));
+    assertNull(table.widget.getDataValueByPosition(4, 1));
     assertNotNull(table.getCellDataValueByPosition(2, 3));
   }
 
@@ -700,11 +712,16 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
-    SWTBotShell dialog = tableBot.shell("Rename annotation");
-    keyboard.typeText("TEST");
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
-    assertEquals("salt::TEST", table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    // Also check if annotation name has changed for all cells in column
+    for (int i = 1; i < 11; i++) {
+      Object nodeObj = table.widget.getDataValueByPosition(2, i);
+      assertNotNull(((SToken) nodeObj).getAnnotation(NAMESPACE + TEST_ANNOTATION_VALUE));
+    }
   }
 
   @Test
@@ -715,11 +732,16 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
-    SWTBotShell dialog = tableBot.shell("Rename annotation");
-    keyboard.typeText("TEST");
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(Conditions.shellCloses(dialog));
-    assertEquals("salt::TEST", table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    // Also check if annotation name has changed for all cells in column
+    for (int i = 1; i < 11; i++) {
+      Object nodeObj = table.widget.getDataValueByPosition(2, i);
+      assertNotNull(((SToken) nodeObj).getAnnotation(NAMESPACE + TEST_ANNOTATION_VALUE));
+    }
   }
 
   @Test
@@ -730,11 +752,11 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
-    SWTBotShell dialog = tableBot.shell("Rename annotation");
-    keyboard.typeText("TEST");
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("Cancel").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
-    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACE + "lemma", table.getCellDataValueByPosition(0, 2));
   }
 
   /**
