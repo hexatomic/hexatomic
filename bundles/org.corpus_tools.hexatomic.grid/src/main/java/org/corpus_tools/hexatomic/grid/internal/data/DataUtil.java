@@ -97,10 +97,10 @@ public class DataUtil {
    * @return The qualified annotation name
    */
   public static String buildQName(String namespace, String name) {
-    if (namespace.isEmpty()) {
+    if (namespace == null || namespace.isEmpty()) {
       namespace = null;
     }
-    if (name.isEmpty()) {
+    if (name == null || name.isEmpty()) {
       name = null;
     }
     if (namespace == null && name == null) {
