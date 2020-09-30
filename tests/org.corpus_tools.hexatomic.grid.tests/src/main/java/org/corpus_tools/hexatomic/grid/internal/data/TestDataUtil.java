@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.corpus_tools.hexatomic.grid.internal.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
