@@ -868,8 +868,7 @@ public class TestGridEditor {
 
     ILayer viewPortLayerUll = viewPortLayer.getUnderlyingLayerByPosition(1, 1);
     assertEquals(SelectionLayer.class, viewPortLayerUll.getClass());
-    SelectionLayer selectionLayer = (SelectionLayer) viewPortLayerUll;
-    return selectionLayer;
+    return (SelectionLayer) viewPortLayerUll;
   }
 
 
