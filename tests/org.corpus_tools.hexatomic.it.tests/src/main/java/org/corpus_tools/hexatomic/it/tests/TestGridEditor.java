@@ -846,10 +846,9 @@ public class TestGridEditor {
   private void clickWithMask(boolean shiftMask, boolean ctrlMask, int rowPosition,
       int columnPosition, SWTBotNatTable table) {
     ILayer selectionLayer = getSelectionLayer(table);
-    Display.getDefault().syncExec(() -> {
-      selectionLayer.doCommand(new SelectCellCommand(selectionLayer, columnPosition - 1,
-          rowPosition - 1, shiftMask, ctrlMask));
-    });
+    Display.getDefault()
+        .syncExec(() -> selectionLayer.doCommand(new SelectCellCommand(selectionLayer,
+            columnPosition - 1, rowPosition - 1, shiftMask, ctrlMask)));
   }
 
   private ILayer getSelectionLayer(SWTBotNatTable table) {
