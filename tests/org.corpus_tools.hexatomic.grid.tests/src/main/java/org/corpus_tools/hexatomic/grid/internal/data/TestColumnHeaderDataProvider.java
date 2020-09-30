@@ -23,7 +23,6 @@ class TestColumnHeaderDataProvider {
 
   private ColumnHeaderDataProvider fixture = null;
   private GraphDataProvider fixtureProvider;
-  private List<Column> columns = null;
 
   /**
    * Sets up the fixture.
@@ -32,7 +31,7 @@ class TestColumnHeaderDataProvider {
   @BeforeEach
   void setUp() {
     fixtureProvider = mock(GraphDataProvider.class);
-    columns = mock(List.class);
+    List<Column> columns = mock(List.class);
     Column tokenColumn = mock(Column.class);
     Column spanColumn = mock(Column.class);
     when(tokenColumn.getHeader()).thenReturn("ZERO");
