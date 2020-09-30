@@ -51,6 +51,8 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testColumnHeaderDataProvider() {
+    assertDoesNotThrow(
+        () -> new ColumnHeaderDataProvider(fixtureProvider, mock(ProjectManager.class)));
     assertThrows(HexatomicRuntimeException.class,
         () -> new ColumnHeaderDataProvider(null, mock(ProjectManager.class)));
   }
