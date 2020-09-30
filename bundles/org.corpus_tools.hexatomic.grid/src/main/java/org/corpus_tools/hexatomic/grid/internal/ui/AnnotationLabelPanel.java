@@ -38,7 +38,13 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Provides a panel with two input fields, one for the new namespace value, and one for the new name
- * value. Despite this, it works on a single string, the compund qualified annotation name.
+ * value. Despite this, it works on a single string, the compound qualified annotation name.
+ * 
+ * <p>
+ * Warnings for this class on breaking Sonar rule <code>java:S110</code> ("Inheritance tree of
+ * classes should not be too deep") are being suppressed, as the parent of this class is an abstract
+ * class of the Nebula NatTable framework, and implementations cannot avoid breaking this rule.
+ * </p>
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
