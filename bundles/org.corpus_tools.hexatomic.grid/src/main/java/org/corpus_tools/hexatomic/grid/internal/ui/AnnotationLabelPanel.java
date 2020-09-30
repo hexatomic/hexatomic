@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
+@SuppressWarnings("java:S110")
 public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
 
   private Text namespaceField;
