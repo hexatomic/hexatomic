@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,7 @@ class TestColumnHeaderDataProvider {
     when(tokenColumn.getHeader()).thenReturn("ZERO");
     when(columns.get(0)).thenReturn(tokenColumn);
     when(spanColumn.getHeader()).thenReturn("ONE");
+    when(spanColumn.getColumnValue()).thenReturn("OLD");
     when(columns.get(1)).thenReturn(spanColumn);
     when(columns.size()).thenReturn(2);
     when(fixtureProvider.getColumns()).thenReturn(columns);
@@ -97,6 +99,16 @@ class TestColumnHeaderDataProvider {
   @Test
   void testGetRowCount() {
     assertEquals(1, fixture.getRowCount());
+  }
+
+  /**
+   * Test method for {@link ColumnHeaderDataProvider#renameColumnPosition(int, String)}.
+   */
+  @Test
+  void testRenameColumnPosition() {
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.renameColumnPosition(-1, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.renameColumnPosition(-1, ""));
+    assertFalse(fixture.renameColumnPosition(1, "OLD"));
   }
 
 }
