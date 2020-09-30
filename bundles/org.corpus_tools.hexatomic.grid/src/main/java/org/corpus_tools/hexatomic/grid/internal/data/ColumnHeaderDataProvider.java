@@ -146,7 +146,7 @@ public class ColumnHeaderDataProvider implements IDataProvider {
         SAnnotation annotation = node.getAnnotation(oldQName);
         if (annotation != null) {
           Object value = annotation.getValue();
-          log.debug("Renaming annotation {0} on node {1}.", annotation, node.getName());
+          log.debug("Renaming annotation {} on node {}.", annotation, node.getName());
           node.removeLabel(oldQName);
           SAnnotation newAnnotation =
               node.createAnnotation(DataUtil.splitNamespaceFromQNameString(newQName), name, value);
