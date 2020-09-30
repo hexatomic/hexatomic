@@ -809,7 +809,24 @@ public class TestGridEditor {
     assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
   }
 
+  /**
+   * Test that annotation name editing is cancelled when the dialog is closed.
+   */
+  @Test
+  void testAnnotationFormClosed() {
+    openDefaultExample();
 
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+    table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    dialog.close();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertTrue(dialog.widget.isDisposed());
+    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+  }
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
     clickWithMask(false, true, rowPosition, columnPosition, table);
