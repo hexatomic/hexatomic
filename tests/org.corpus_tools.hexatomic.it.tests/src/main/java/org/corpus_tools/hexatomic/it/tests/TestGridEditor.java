@@ -789,30 +789,6 @@ public class TestGridEditor {
   }
 
   /**
-   * The popup menu "Change annotation name" should only be visible in the table body when non-token
-   * cells are selected exclusively. This tests whether the menu is visible on selection of a
-   * non-token cell and hidden otherwise.
-   */
-  @Test
-  void testChangeAnnotationNameOnSelectedCells() {
-    openDefaultExample();
-
-    SWTNatTableBot tableBot = new SWTNatTableBot();
-    SWTBotNatTable table = tableBot.nattable();
-
-    List<String> cellMenuItems = table.contextMenu(2, 2).menuItems();
-    assertFalse(cellMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    // Select cell for popup menu to be visible
-    table.click(2, 2);
-    cellMenuItems = table.contextMenu(2, 2).menuItems();
-    assertTrue(cellMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    assertTrue(table.contextMenu(2, 2)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
-    assertTrue(table.contextMenu(2, 2)
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
-  }
-
-  /**
    * Tests whether changing the annotation name registers as making the project saveable.
    */
   @Test

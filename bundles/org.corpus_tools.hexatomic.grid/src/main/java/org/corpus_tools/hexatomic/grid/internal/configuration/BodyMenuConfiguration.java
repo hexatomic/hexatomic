@@ -23,7 +23,6 @@ package org.corpus_tools.hexatomic.grid.internal.configuration;
 
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.internal.GridHelper;
-import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogCommand;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -76,8 +75,6 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
     builder.withVisibleState(DELETE_CELL_ITEM, validSelectionState);
-    builder.withMenuItemProvider(CHANGE_CELL_ANNOTATION_NAME_ITEM,
-        new ChangeAnnotationNameItemProvider());
     builder.withVisibleState(CHANGE_CELL_ANNOTATION_NAME_ITEM, validSelectionState);
     return builder.build();
   }
@@ -113,29 +110,29 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   }
 
-  /**
-   * Provides a menu item for changing the qualified annotation names for annotations in cells.
-   * 
-   * @author Stephan Druskat (mail@sdruskat.net)
-   *
-   */
-  public class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
-
-    @Override
-    public void addMenuItem(NatTable natTable, Menu popupMenu) {
-      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
-      item.setText(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL);
-      item.setEnabled(true);
-      item.addSelectionListener(new SelectionAdapter() {
-        @Override
-        public void widgetSelected(SelectionEvent event) {
-          natTable.doCommand(new DisplayAnnotationRenameDialogCommand(natTable,
-              selectionLayer.getSelectedCellPositions()));
-        }
-      });
-    }
-
-  }
+  // /**
+  // * Provides a menu item for changing the qualified annotation names for annotations in cells.
+  // *
+  // * @author Stephan Druskat (mail@sdruskat.net)
+  // *
+  // */
+  // public class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
+  //
+  // @Override
+  // public void addMenuItem(NatTable natTable, Menu popupMenu) {
+  // MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+  // item.setText(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL);
+  // item.setEnabled(true);
+  // item.addSelectionListener(new SelectionAdapter() {
+  // @Override
+  // public void widgetSelected(SelectionEvent event) {
+  // natTable.doCommand(new DisplayAnnotationRenameDialogCommand(natTable,
+  // selectionLayer.getSelectedCellPositions()));
+  // }
+  // });
+  // }
+  //
+  // }
 
   /**
    * A menu item state based on valid selection of cells.

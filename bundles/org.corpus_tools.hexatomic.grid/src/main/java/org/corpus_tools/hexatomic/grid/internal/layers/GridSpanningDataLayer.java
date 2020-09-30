@@ -21,8 +21,6 @@
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
 import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
-import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogCommandHandler;
-import org.corpus_tools.hexatomic.grid.internal.handlers.RenameCellAnnotationCommandHandler;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 
 /**
@@ -40,8 +38,6 @@ public class GridSpanningDataLayer extends SpanningDataLayer {
   @Override
   protected void registerCommandHandlers() {
     super.registerCommandHandlers();
-    registerCommandHandler(new DisplayAnnotationRenameDialogCommandHandler());
-    registerCommandHandler(new RenameCellAnnotationCommandHandler());
   }
 
 }
