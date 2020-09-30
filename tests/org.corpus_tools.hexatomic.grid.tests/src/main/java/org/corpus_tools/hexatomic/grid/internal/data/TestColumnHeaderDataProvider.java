@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 class TestColumnHeaderDataProvider {
 
   private ColumnHeaderDataProvider fixture = null;
-  private GraphDataProvider fixtureProvider;
 
   /**
    * Sets up the fixture.
@@ -30,7 +29,7 @@ class TestColumnHeaderDataProvider {
   @SuppressWarnings("unchecked")
   @BeforeEach
   void setUp() {
-    fixtureProvider = mock(GraphDataProvider.class);
+    GraphDataProvider fixtureProvider = mock(GraphDataProvider.class);
     List<Column> columns = mock(List.class);
     Column tokenColumn = mock(Column.class);
     Column spanColumn = mock(Column.class);
@@ -51,8 +50,8 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testColumnHeaderDataProvider() {
-    assertDoesNotThrow(
-        () -> new ColumnHeaderDataProvider(fixtureProvider, mock(ProjectManager.class)));
+    assertDoesNotThrow(() -> new ColumnHeaderDataProvider(mock(GraphDataProvider.class),
+        mock(ProjectManager.class)));
     assertThrows(HexatomicRuntimeException.class,
         () -> new ColumnHeaderDataProvider(null, mock(ProjectManager.class)));
   }
