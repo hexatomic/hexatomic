@@ -118,12 +118,6 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     this.okButton = okButton;
   }
 
-  private void setOkButtonActive(boolean enableButton) {
-    if (this.okButton != null) {
-      this.okButton.setEnabled(enableButton);
-    }
-  }
-
   /**
    * A modify listener controlling a field decoration.
    * 
@@ -145,6 +139,12 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
       FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
           .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
       decoration.setImage(fieldDecoration.getImage());
+    }
+
+    private void setOkButtonActive(boolean enableButton) {
+      if (okButton != null) {
+        okButton.setEnabled(enableButton);
+      }
     }
 
     @Override
