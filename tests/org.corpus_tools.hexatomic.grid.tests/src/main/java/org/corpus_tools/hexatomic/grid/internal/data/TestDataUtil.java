@@ -15,13 +15,18 @@ import org.junit.jupiter.api.Test;
  */
 class TestDataUtil {
 
+  private static final String NAMESPACE = "namespace";
+  private static final String NAMESPACE_NAME = "namespace::name";
+  private static final String NAME = "name";
+  private static final String NAMESPACE_ = "namespace::";
+
   /**
    * Test method for
    * {@link org.corpus_tools.hexatomic.grid.internal.data.DataUtil#splitNamespaceFromQNameString(java.lang.String)}.
    */
   @Test
   void testSplitNamespaceFromQNameString() {
-    assertEquals("namespace", DataUtil.splitNamespaceFromQNameString("namespace::name"));
+    assertEquals(NAMESPACE, DataUtil.splitNamespaceFromQNameString(NAMESPACE_NAME));
     assertNull(DataUtil.splitNamespaceFromQNameString(null));
     assertNull(DataUtil.splitNamespaceFromQNameString("namespace::name::something_else"));
   }
@@ -32,9 +37,9 @@ class TestDataUtil {
    */
   @Test
   void testSplitNameFromQNameString() {
-    assertEquals("name", DataUtil.splitNameFromQNameString("namespace::name"));
-    assertEquals("name", DataUtil.splitNameFromQNameString("name"));
-    assertNull(DataUtil.splitNameFromQNameString("namespace::"));
+    assertEquals(NAME, DataUtil.splitNameFromQNameString(NAMESPACE_NAME));
+    assertEquals(NAME, DataUtil.splitNameFromQNameString(NAME));
+    assertNull(DataUtil.splitNameFromQNameString(NAMESPACE_));
     assertNull(DataUtil.splitNameFromQNameString(null));
   }
 
@@ -44,7 +49,7 @@ class TestDataUtil {
    */
   @Test
   void testIsValidQName() {
-    assertTrue(DataUtil.isValidQName("namespace::name"));
+    assertTrue(DataUtil.isValidQName(NAMESPACE_NAME));
     assertFalse(DataUtil.isValidQName("namespace :: name"));
     assertFalse(DataUtil.isValidQName("namespace::name::something_else"));
   }
@@ -55,11 +60,11 @@ class TestDataUtil {
    */
   @Test
   void testBuildQName() {
-    assertEquals("namespace::name", DataUtil.buildQName("namespace", "name"));
-    assertEquals("namespace::", DataUtil.buildQName("namespace", null));
-    assertEquals("namespace::", DataUtil.buildQName("namespace", ""));
-    assertEquals("name", DataUtil.buildQName(null, "name"));
-    assertEquals("name", DataUtil.buildQName("", "name"));
+    assertEquals(NAMESPACE_NAME, DataUtil.buildQName(NAMESPACE, NAME));
+    assertEquals(NAMESPACE_, DataUtil.buildQName(NAMESPACE, null));
+    assertEquals(NAMESPACE_, DataUtil.buildQName(NAMESPACE, ""));
+    assertEquals(NAME, DataUtil.buildQName(null, NAME));
+    assertEquals(NAME, DataUtil.buildQName("", NAME));
     assertNull(DataUtil.buildQName(null, null));
   }
 
