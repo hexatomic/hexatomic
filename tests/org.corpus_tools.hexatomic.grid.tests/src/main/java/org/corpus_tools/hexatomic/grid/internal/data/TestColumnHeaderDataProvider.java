@@ -106,8 +106,8 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testRenameColumnPosition() {
-    assertThrows(HexatomicRuntimeException.class, () -> fixture.renameColumnPosition(-1, null));
-    assertThrows(HexatomicRuntimeException.class, () -> fixture.renameColumnPosition(-1, ""));
+    assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, null));
+    assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, ""));
     assertFalse(fixture.renameColumnPosition(1, "OLD"));
   }
 

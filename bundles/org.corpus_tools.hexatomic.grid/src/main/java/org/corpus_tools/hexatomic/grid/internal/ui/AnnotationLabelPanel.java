@@ -21,7 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.ui;
 
-import org.corpus_tools.hexatomic.grid.internal.data.DataUtil;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -88,8 +88,8 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
   @Override
   public void edit(String oldQName) throws Exception {
     if (oldQName != null && oldQName.length() > 0) {
-      this.namespaceField.setText(DataUtil.splitNamespaceFromQNameString(oldQName));
-      this.nameField.setText(DataUtil.splitNameFromQNameString(oldQName));
+      this.namespaceField.setText(SaltUtil.splitQName(oldQName).getLeft());
+      this.nameField.setText(SaltUtil.splitQName(oldQName).getRight());
       this.nameField.setFocus();
       this.nameField.selectAll();
     }
@@ -108,7 +108,7 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
     // Both fields are enabled, and neither field is null (i.e., contains at least the empty string)
     if (this.namespaceField.isEnabled() && this.nameField.isEnabled()
         && this.namespaceField.getText() != null) {
-      return DataUtil.buildQName(this.namespaceField.getText(), this.nameField.getText());
+      return SaltUtil.createQName(this.namespaceField.getText(), this.nameField.getText());
     }
     return null;
   }
