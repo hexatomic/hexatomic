@@ -18,6 +18,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SNode;
@@ -862,10 +863,14 @@ public class TestGridEditor {
     // Also check if annotation name has changed for all cells in column
     for (int i = 1; i < 11; i++) {
       Object nodeObjFirstColumn = table.widget.getDataValueByPosition(3, i);
-      assertNotNull(((SToken) nodeObjFirstColumn).getAnnotation(NAMESPACE + TEST_ANNOTATION_VALUE));
+      if (nodeObjFirstColumn != null) {
+        assertNotNull(((SSpan) nodeObjFirstColumn).getAnnotation("five::" + TEST_ANNOTATION_VALUE));
+      }
       Object nodeObjSecondColumn = table.widget.getDataValueByPosition(4, i);
-      assertNotNull(
-          ((SToken) nodeObjSecondColumn).getAnnotation(NAMESPACE + TEST_ANNOTATION_VALUE));
+      if (nodeObjSecondColumn != null) {
+        assertNotNull(
+            ((SSpan) nodeObjSecondColumn).getAnnotation("five::" + TEST_ANNOTATION_VALUE));
+      }
     }
 
 

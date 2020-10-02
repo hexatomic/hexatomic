@@ -21,7 +21,9 @@
 
 package org.corpus_tools.hexatomic.grid.internal.data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
@@ -139,23 +141,38 @@ public class ColumnHeaderDataProvider implements IDataProvider {
 
     boolean renamed = (!oldQName.equals(newQName));
     if (renamed) {
-      // Set the new qName in the column header
-      setDataValue(idx, 0, newQName);
-      log.debug("Set column value at index {} (old value: '{}') to '{}'.", idx, oldQName, newQName);
+      // Get all columns to rename
+      Map<Integer, Column> columnsToRename = new HashMap<>();
+      for (Column renameCandidate : provider.getColumns()) {
+        if (renameCandidate.getColumnValue().equals(oldQName)) {
+          columnsToRename.put(provider.getColumns().indexOf(renameCandidate), renameCandidate);
+        }
+      }
 
-      // Rename annotations in the column
-      for (Entry<Integer, SStructuredNode> cellEntry : column.getRowCells().entrySet()) {
-        SStructuredNode node = cellEntry.getValue();
-        SAnnotation annotation = node.getAnnotation(oldQName);
-        if (annotation != null) {
-          Object value = annotation.getValue();
-          log.debug("Renaming annotation {} on node {}.", annotation, node.getName());
-          node.removeLabel(oldQName);
-          SAnnotation newAnnotation =
-              node.createAnnotation(SaltUtil.splitQName(newQName).getLeft(), name, value);
-          log.debug("Renamed annotation on node {} from {} to '{}'.", node.getName(),
-              annotation.getQName(), newAnnotation.getQName());
-          projectManager.addCheckpoint();
+      // Rename all columns to rename
+      for (Entry<Integer, Column> entry : columnsToRename.entrySet()) {
+        Integer renameIdx = entry.getKey();
+        Column columnToRename = entry.getValue();
+
+        // Set the new qName in the column header
+        setDataValue(renameIdx, 0, newQName);
+        log.debug("Set column value at index {} (old value: '{}') to '{}'.", renameIdx, oldQName,
+            newQName);
+
+        // Rename annotations in the column
+        for (Entry<Integer, SStructuredNode> cellEntry : columnToRename.getRowCells().entrySet()) {
+          SStructuredNode node = cellEntry.getValue();
+          SAnnotation annotation = node.getAnnotation(oldQName);
+          if (annotation != null) {
+            Object value = annotation.getValue();
+            log.debug("Renaming annotation {} on node {}.", annotation, node.getName());
+            node.removeLabel(oldQName);
+            SAnnotation newAnnotation =
+                node.createAnnotation(SaltUtil.splitQName(newQName).getLeft(), name, value);
+            log.debug("Renamed annotation on node {} from {} to '{}'.", node.getName(),
+                annotation.getQName(), newAnnotation.getQName());
+            projectManager.addCheckpoint();
+          }
         }
       }
     }
