@@ -59,7 +59,6 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
    * 
    * @param activeShell the active SWT shell widget
    * @param oldQName the old qualified annotation name
-   * @param newQName the new qualified annotation name
    */
   public AnnotationRenameDialog(Shell activeShell, String oldQName) {
     super(activeShell);
