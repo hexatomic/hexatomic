@@ -55,10 +55,9 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
     int columnPosition = command.getColumnPosition();
     String originalQName = this.columnHeaderLayer.getOriginalColumnLabel(columnPosition);
-    String newQName = this.columnHeaderLayer.getRenamedColumnLabel(columnPosition);
 
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), originalQName, newQName);
+        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), originalQName);
     Rectangle colHeaderBounds = this.columnHeaderLayer.getBoundsByPosition(columnPosition, 0);
     Point point = new Point(colHeaderBounds.x, colHeaderBounds.y + colHeaderBounds.height);
     dialog.setLocation(command.toDisplayCoordinates(point));

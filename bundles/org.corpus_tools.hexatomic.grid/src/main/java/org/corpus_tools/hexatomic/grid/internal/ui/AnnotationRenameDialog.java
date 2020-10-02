@@ -61,10 +61,9 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
    * @param oldQName the old qualified annotation name
    * @param newQName the new qualified annotation name
    */
-  public AnnotationRenameDialog(Shell activeShell, String oldQName, String newQName) {
+  public AnnotationRenameDialog(Shell activeShell, String oldQName) {
     super(activeShell);
     this.oldQName = oldQName;
-    this.newQName = newQName;
   }
 
   @Override
