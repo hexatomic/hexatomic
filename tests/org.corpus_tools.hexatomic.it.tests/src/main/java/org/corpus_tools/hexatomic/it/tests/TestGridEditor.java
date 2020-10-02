@@ -681,7 +681,7 @@ public class TestGridEditor {
   }
 
   @Test
-  void testRenameColumnByContextMenu() {
+  void testRenameColumnByContextMenuPresent() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -826,6 +826,50 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertTrue(dialog.widget.isDisposed());
     assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+  }
+
+  /**
+   * Tests that for overlapping columns (whose cells share the same annotation name), a change of
+   * annotation in one column also changes the name in the other columns.
+   */
+  @Test
+  void testChangeAnnotationNamesForOverlappingColumns() {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Check number of rows and columns (5 + 1 header row, 5 + 1 header column)
+    assertEquals(6, natTable.getRowCount());
+    assertEquals(6, natTable.getColumnCount());
+
+    // Test headers
+    assertEquals("five::span_1", table.getCellDataValueByPosition(0, 3));
+    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+
+    // Change annotation name in first overlapping column (currently at position 3)
+    table.contextMenu(0, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    // Assert names and positions have changed
+    assertEquals("five::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals("five::" + TEST_ANNOTATION_VALUE + " (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+    // Also check if annotation name has changed for all cells in column
+    for (int i = 1; i < 11; i++) {
+      Object nodeObjFirstColumn = table.widget.getDataValueByPosition(3, i);
+      assertNotNull(((SToken) nodeObjFirstColumn).getAnnotation(NAMESPACE + TEST_ANNOTATION_VALUE));
+      Object nodeObjSecondColumn = table.widget.getDataValueByPosition(4, i);
+      assertNotNull(
+          ((SToken) nodeObjSecondColumn).getAnnotation(NAMESPACE + TEST_ANNOTATION_VALUE));
+    }
+
+
+
   }
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
