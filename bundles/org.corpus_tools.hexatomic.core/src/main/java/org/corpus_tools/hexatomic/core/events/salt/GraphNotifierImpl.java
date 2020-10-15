@@ -160,4 +160,9 @@ public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L exten
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new RemoveLayerFromGraphOperation<L>(typedDelegation, layer));
   }
+
+  @Override
+  public void setId(String id) {
+    setNotficiationAwareId(this, id);
+  }
 }

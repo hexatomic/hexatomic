@@ -239,6 +239,14 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public Identifier createIdentifier(IdentifiableElement container, String id) {
+    if (container instanceof NotifyingElement<?>) {
+      NotifyingElement<?> notifyingElement = (NotifyingElement<?>) container;
+      Object typedDelegation = notifyingElement.getTypedDelegation();
+      if (typedDelegation instanceof IdentifiableElement) {
+        // Use the typed container instead of our wrapping notification implementation
+        return new IdentifierImpl((IdentifiableElement) typedDelegation, id);
+      }
+    }
     return new IdentifierImpl(container, id);
   }
 

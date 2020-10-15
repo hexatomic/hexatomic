@@ -39,7 +39,6 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
-import org.corpus_tools.hexatomic.formats.importer.ImportWizard;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
 import org.corpus_tools.pepper.common.JOB_STATUS;
@@ -92,10 +91,10 @@ public class ExportWizard extends Wizard {
           // Check if we can get the number of documents after the corpus structure has been
           // imported
           if (!numberOfJobs.isPresent() && jobStatus == JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE) {
-            // We don't know how many documents are present previously but since importing the
+            // We don't know how many documents are present previously but since exported the
             // documents has started, we can get this number
             numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
-            monitor.beginTask("Importing " + numberOfJobs.get() + " documents", numberOfJobs.get());
+            monitor.beginTask("Exporting " + numberOfJobs.get() + " documents", numberOfJobs.get());
           }
 
           if (numberOfJobs.isPresent()) {
@@ -112,7 +111,7 @@ public class ExportWizard extends Wizard {
         background.get();
         handleConversionResult(job, monitor);
       } catch (ExecutionException ex) {
-        errorService.handleException(ERRORS_TITLE, ex, ImportWizard.class);
+        errorService.handleException(ERRORS_TITLE, ex, ExportWizard.class);
       }
     }
 
@@ -157,7 +156,7 @@ public class ExportWizard extends Wizard {
         // Check if the whole conversion was marked as error.
         if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
           errorService.showError(ERRORS_TITLE, "Export was not successful for unknown reasons. "
-              + "Please check the log messages for any issues.", ImportWizard.class);
+              + "Please check the log messages for any issues.", ExportWizard.class);
         } else if (!monitor.isCanceled()) {
           // Check for any documents with errors and report them
           // error.
@@ -221,20 +220,20 @@ public class ExportWizard extends Wizard {
       pepper.get().getConfiguration().setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS,
           "2");
 
-      // Create the import specification
-      StepDesc importStep = selectedFormat.get().createJobSpec();
+      // Create the export specification
+      StepDesc exportStep = selectedFormat.get().createJobSpec();
       // Set the path to the selected directory
       CorpusDesc corpusDesc = new CorpusDesc();
       corpusDesc.setCorpusPath(URI.createFileURI(corpusPath.get().getAbsolutePath()));
-      importStep.setCorpusDesc(corpusDesc);
+      exportStep.setCorpusDesc(corpusDesc);
       if (configPage.isPresent()) {
-        // add properties for the importer
-        importStep.setProps(configPage.get().getConfiguration());
+        // add properties for the exporter
+        exportStep.setProps(configPage.get().getConfiguration());
       }
 
       String jobId = pepper.get().createJob();
       PepperJob job = pepper.get().getJob(jobId);
-      job.addStepDesc(importStep);
+      job.addStepDesc(exportStep);
 
       // Conversion is adding a load of events, suppress them first
       notificationFactory.setSuppressingEvents(true);
@@ -248,8 +247,8 @@ public class ExportWizard extends Wizard {
         getContainer().run(true, true, new ExportRunner(job));
 
       } catch (InvocationTargetException ex) {
-        errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(),
-            ex, ImportWizard.class);
+        errorService.handleException("Unexpected error when exporting corpus: " + ex.getMessage(),
+            ex, ExportWizard.class);
       } catch (InterruptedException ex) {
         Thread.currentThread().interrupt();
       } finally {

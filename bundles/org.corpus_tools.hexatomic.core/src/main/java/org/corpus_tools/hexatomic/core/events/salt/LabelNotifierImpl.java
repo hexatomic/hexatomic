@@ -98,5 +98,4 @@ public class LabelNotifierImpl extends LabelImpl
       action.apply();
     }
   }
-
 }
