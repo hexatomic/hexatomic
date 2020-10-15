@@ -64,6 +64,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
   private static final String GET_VIEWPORT = "getViewport";
@@ -434,7 +435,7 @@ class TestGraphEditor {
           "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
 
       // Add a pointing relation between the two structures
-      enterCommand("e #structure3 -> #structure5");
+      enterCommand(ADD_POINTING_COMMMAND);
 
       // Check that no exception was thrown/handled by UI
       assertFalse(errorService.getLastException().isPresent());
@@ -462,6 +463,7 @@ class TestGraphEditor {
 
     openDefaultExample();
 
+
     // Get a reference to the opened document graph
     Optional<SDocument> optionalDoc =
         projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
@@ -477,6 +479,9 @@ class TestGraphEditor {
       STextualDS anotherText = graph.createTextualDS(ANOTHER_TEXT);
       graph.createToken(anotherText, 0, 7);
       graph.createToken(anotherText, 8, 12);
+
+      // Add a checkpoint so the changes are propagated to the view
+      projectManager.addCheckpoint();
 
       // Select the new text
       SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
@@ -517,7 +522,7 @@ class TestGraphEditor {
     assertNotNull(g);
 
     // Add a pointing relation between the two structures
-    enterCommand("e #structure3 -> #structure5");
+    enterCommand(ADD_POINTING_COMMMAND);
 
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
@@ -551,6 +556,29 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(11));
   }
 
+
+  @Test
+  void testUndoRedoRendered() {
+    openDefaultExample();
+
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+
+    // Add a pointing relation between the two structures
+    enterCommand(ADD_POINTING_COMMMAND);
+
+    // Pointing relations are shown initially and the new one should be visible now
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
+
+    // Undo/Redo the changes and check that the view has been updated
+    bot.menu("Undo").click();
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+
+    bot.menu("Redo").click();
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
+  }
 
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/220

@@ -64,7 +64,6 @@ import org.corpus_tools.salt.common.impl.STextualRelationImpl;
 import org.corpus_tools.salt.common.impl.STimelineImpl;
 import org.corpus_tools.salt.common.impl.STimelineRelationImpl;
 import org.corpus_tools.salt.common.impl.STokenImpl;
-import org.corpus_tools.salt.common.impl.SaltProjectImpl;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.core.SGraph;
@@ -201,18 +200,11 @@ public class SaltNotificationFactory implements ISaltFactory {
     }
   }
 
-  private GraphNotifierImpl createNotifierGraph() {
-    return new GraphNotifierImpl();
-  }
 
   private LabelNotifierImpl createNotifierLabel() {
     return new LabelNotifierImpl();
   }
 
-
-  private LayerNotifierImpl<Node, Relation<Node, Node>> createNotifierLayer() {
-    return new LayerNotifierImpl<>();
-  }
 
   private NodeNotifierImpl createNotifierNode() {
     return new NodeNotifierImpl();
@@ -231,7 +223,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>> createGraph() {
-    return createNotifierGraph();
+    return new GraphNotifierImpl<>();
   }
 
 
@@ -252,12 +244,13 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public Layer<Node, Relation<Node, Node>> createLayer() {
-    return createNotifierLayer();
+    return new LayerNotifierImpl<>();
   }
 
   @Override
   public SGraph createSGraph() {
-    GraphNotifierImpl delegate = createNotifierGraph();
+    GraphNotifierImpl<SNode, SRelation<SNode, SNode>, SLayer> delegate =
+        new GraphNotifierImpl<>();
     SGraphImpl result = new SGraphImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
@@ -313,7 +306,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SLayer createSLayer() {
-    LayerNotifierImpl<Node, Relation<Node, Node>> delegate = createNotifierLayer();
+    LayerNotifierImpl<SNode, SRelation<SNode, SNode>> delegate = new LayerNotifierImpl<>();
     SLayer result = new SLayerImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
@@ -321,7 +314,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SaltProject createSaltProject() {
-    return new SaltProjectImpl();
+    return new SaltProjectNotifierImpl();
   }
 
   @Override
@@ -342,7 +335,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SCorpusGraph createSCorpusGraph() {
-    GraphNotifierImpl delegate = createNotifierGraph();
+    GraphNotifierImpl<SNode, SRelation<SNode, SNode>, SLayer> delegate = new GraphNotifierImpl<>();
     SCorpusGraphImpl result = new SCorpusGraphImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;
@@ -350,7 +343,7 @@ public class SaltNotificationFactory implements ISaltFactory {
 
   @Override
   public SDocumentGraph createSDocumentGraph() {
-    GraphNotifierImpl delegate = createNotifierGraph();
+    GraphNotifierImpl<SNode, SRelation<SNode, SNode>, SLayer> delegate = new GraphNotifierImpl<>();
     SDocumentGraphImpl result = new SDocumentGraphImpl(delegate);
     delegate.setTypedDelegation(result);
     return result;

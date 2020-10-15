@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.util.List;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.SaltFactory;
@@ -53,11 +54,9 @@ class TestGraphDataProvider {
 
   /**
    * Set up the fixture and models for each test.
-   * 
-   * @throws java.lang.Exception Any exception that is thrown during the setup phase.
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixture = new GraphDataProvider();
     exampleGraph = retrieveGraph(examplePath);
     overlappingExampleGraph = retrieveGraph(overlappingExamplePath);
@@ -65,6 +64,7 @@ class TestGraphDataProvider {
     overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);
     fixture.errors = errorService;
+    fixture.projectManager = mock(ProjectManager.class);
   }
 
   /**

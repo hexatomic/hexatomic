@@ -3,11 +3,14 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,30 +23,27 @@ import org.junit.jupiter.api.Test;
 class TestColumnHeaderDataProvider {
 
   private ColumnHeaderDataProvider fixture = null;
-  private GraphDataProvider fixtureProvider;
-  private List<Column> columns = null;
 
   /**
    * Sets up the fixture.
-   * 
-   * @throws java.lang.Exception Any exception thrown during execution.
    */
   @SuppressWarnings("unchecked")
   @BeforeEach
-  void setUp() throws Exception {
-    fixtureProvider = mock(GraphDataProvider.class);
-    columns = mock(List.class);
+  void setUp() {
+    GraphDataProvider fixtureProvider = mock(GraphDataProvider.class);
+    List<Column> columns = mock(List.class);
     Column tokenColumn = mock(Column.class);
     Column spanColumn = mock(Column.class);
     when(tokenColumn.getHeader()).thenReturn("ZERO");
     when(columns.get(0)).thenReturn(tokenColumn);
     when(spanColumn.getHeader()).thenReturn("ONE");
+    when(spanColumn.getColumnValue()).thenReturn("OLD");
     when(columns.get(1)).thenReturn(spanColumn);
     when(columns.size()).thenReturn(2);
     when(fixtureProvider.getColumns()).thenReturn(columns);
     when(fixtureProvider.getColumnCount()).thenReturn(2);
     when(fixtureProvider.getRowCount()).thenReturn(3);
-    fixture = new ColumnHeaderDataProvider(fixtureProvider);
+    fixture = new ColumnHeaderDataProvider(fixtureProvider, mock(ProjectManager.class));
   }
 
   /**
@@ -52,8 +52,10 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testColumnHeaderDataProvider() {
-    assertDoesNotThrow(() -> new ColumnHeaderDataProvider(fixtureProvider));
-    assertThrows(RuntimeException.class, () -> new ColumnHeaderDataProvider(null));
+    assertDoesNotThrow(() -> new ColumnHeaderDataProvider(mock(GraphDataProvider.class),
+        mock(ProjectManager.class)));
+    assertThrows(HexatomicRuntimeException.class,
+        () -> new ColumnHeaderDataProvider(null, mock(ProjectManager.class)));
   }
 
   /**
@@ -75,7 +77,10 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testSetDataValue() {
-    assertDoesNotThrow(() -> fixture.setDataValue(-1, -1, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(-1, -1, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, null));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, ""));
+    assertDoesNotThrow(() -> fixture.setDataValue(1, 0, "test"));
   }
 
   /**
@@ -94,8 +99,16 @@ class TestColumnHeaderDataProvider {
   @Test
   void testGetRowCount() {
     assertEquals(1, fixture.getRowCount());
-    when(columns.isEmpty()).thenReturn(true);
-    assertEquals(0, fixture.getRowCount());
+  }
+
+  /**
+   * Test method for {@link ColumnHeaderDataProvider#renameColumnPosition(int, String)}.
+   */
+  @Test
+  void testRenameColumnPosition() {
+    assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, null));
+    assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, ""));
+    assertFalse(fixture.renameColumnPosition(1, "OLD"));
   }
 
 }

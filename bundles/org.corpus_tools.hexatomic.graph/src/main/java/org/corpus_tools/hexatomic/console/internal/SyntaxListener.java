@@ -21,7 +21,6 @@
 
 package org.corpus_tools.hexatomic.console.internal;
 
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -441,23 +440,33 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     }
   }
 
-  private void annotateAllElements(SAnnotation anno,
-      Collection<? extends SAnnotationContainer> elements) {
-    for (SAnnotationContainer container : elements) {
-      if (container.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-        container.removeLabel(anno.getNamespace(), anno.getName());
-      }
+  private void updateAnnotationForElement(SAnnotationContainer element, SAnnotation anno) {
+    SAnnotation existingAnnotation = element.getAnnotation(anno.getNamespace(), anno.getName());
+    if (existingAnnotation == null) {
       if (anno.getValue() != null) {
-        container.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+        // Create a new one
+        element.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
       }
+    } else if (anno.getValue() == null) {
+      // Remove the existing annotation
+      element.removeLabel(anno.getNamespace(), anno.getName());
+    } else if (anno.getValue() != null) {
+      // Update the value of the annotation: this causes fever update events than deleting and (re-)
+      // adding it
+      existingAnnotation.setValue(anno.getValue());
     }
   }
 
   @Override
   public void exitAnnotate(AnnotateContext ctx) {
     for (SAnnotation anno : this.attributes) {
-      annotateAllElements(anno, this.referencedNodes);
-      annotateAllElements(anno, this.referencedEdges);
+
+      for (SStructuredNode n : this.referencedNodes) {
+        updateAnnotationForElement(n, anno);
+      }
+      for (SRelation<?, ?> rel : this.referencedEdges) {
+        updateAnnotationForElement(rel, anno);
+      }
     }
   }
 

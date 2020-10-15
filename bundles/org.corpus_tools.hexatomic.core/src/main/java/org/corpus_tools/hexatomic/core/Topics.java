@@ -35,29 +35,30 @@ public final class Topics {
   public static final String PROJECT_LOADED = "PROJECT_LOADED";
 
 
-  /** Send when there is a any change to the Salt annotations (including project structure). */
-  public static final String ANNOTATION_ANY_UPDATE = "ANNOTATION_UPDATE/*";
+  /**
+   * Send after a collection of Salt elements is modified and a consistent state is reached.
+   */
+  public static final String ANNOTATION_CHECKPOINT_CREATED = "ANNOTATION/CHECKPOINT/CREATED";
 
   /**
-   * Send when a Salt element has been added.
+   * Send after a consistent state has been restored.
    */
-  public static final String ANNOTATION_ADDED = "ANNOTATION_UPDATE/ADDED";
+  public static final String ANNOTATION_CHECKPOINT_RESTORED =
+      "ANNOTATION/CHECKPOINT/RESTORED";
 
   /**
-   * Send when a Salt element has been removed.
+   * An alias for all events where a checkpoint is created or restored and thus the annotations
+   * changed.
    */
-  public static final String ANNOTATION_REMOVED = "ANNOTATION_UPDATE/REMOVED";
+  public static final String ANNOTATION_CHANGED = "ANNOTATION/CHECKPOINT/*";
 
   /**
-   * Send before a Salt element is modified (e.g. if a label gets a new value).
+   * Send as event when the annotation graph is modified but this single change can be reversed with
+   * an undo operation.
    */
-  public static final String ANNOTATION_BEFORE_MODIFICATION =
-      "ANNOTATION_UPDATE/BEFORE_MODIFICATION";
+  public static final String ANNOTATION_OPERATION_ADDED =
+      "ANNOTATION/OPERATION/ADDED";
 
-  /**
-   * Send after a Salt element is modified (e.g. if a label gets a new value).
-   */
-  public static final String ANNOTATION_AFTER_MODIFICATION = "ANNOTATION_UPDATE/AFTER_MODIFICATION";
 
   public static final String DOCUMENT_CLOSED = "DOCUMENT_CLOSED";
   

@@ -22,13 +22,17 @@
 package org.corpus_tools.hexatomic.grid;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.grid.internal.bindings.FreezeGridBindings;
-import org.corpus_tools.hexatomic.grid.internal.configuration.CustomBodyMenuConfiguration;
-import org.corpus_tools.hexatomic.grid.internal.configuration.CustomHeaderMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.configuration.ColumnHeaderMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.configuration.EditConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.configuration.GridLayerConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
@@ -36,6 +40,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
@@ -43,6 +48,8 @@ import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -60,7 +67,6 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
-import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultColumnHeaderDataLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultRowHeaderDataLayer;
@@ -90,8 +96,15 @@ public class GridEditor {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
 
+  public static final String DELETE_CELLS_POPUP_MENU_LABEL = "Delete cell(s)";
+
+  public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
+
   @Inject
   ErrorService errors;
+
+  @Inject
+  private IEventBroker events;
 
   @Inject
   private ESelectionService selectionService;
@@ -108,6 +121,8 @@ public class GridEditor {
   private SDocumentGraph graph;
 
   private NatTable table;
+
+  private STextualDS activeDs = null;
 
   /**
    * Creates the grid that contains the data of the {@link SDocumentGraph}.
@@ -146,9 +161,10 @@ public class GridEditor {
         new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
 
     // Column header
-    final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
-    final ILayer columnHeaderLayer =
-        new ColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
+    final IDataProvider columnHeaderDataProvider =
+        new ColumnHeaderDataProvider(bodyDataProvider, projectManager);
+    final GridColumnHeaderLayer columnHeaderLayer =
+        new GridColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
             compositeFreezeLayer, selectionLayer);
 
     // Row header
@@ -171,17 +187,34 @@ public class GridEditor {
 
     // Configuration
     table.addConfiguration(new StyleConfiguration());
-    table.addConfiguration(new CustomHeaderMenuConfiguration(table));
+    table.addConfiguration(new ColumnHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
     table.addConfiguration(
         new EditConfiguration(bodyDataProvider, labelAccumulator, selectionLayer));
-    table.addConfiguration(new CustomBodyMenuConfiguration(table, selectionLayer));
+    table.addConfiguration(new BodyMenuConfiguration(table, selectionLayer));
 
     table.configure();
 
     // Configure grid layout generically
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
+  }
 
+  @PreDestroy
+  public void cleanup(MPart part) {
+    events.post(Topics.DOCUMENT_CLOSED,
+        part.getPersistedState().get("org.corpus_tools.hexatomic.document-id"));
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      if (changeSet.containsDocument(
+          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+        setSelection(getActiveDs());
+      }
+    }
   }
 
   /**
@@ -193,6 +226,7 @@ public class GridEditor {
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
+      setActiveDS(ds);
       bodyDataProvider.setDsAndResolveGraph(ds);
       // Refresh all layers
       table.refresh();
@@ -299,6 +333,25 @@ public class GridEditor {
         return super.getText(element);
       }
     };
+  }
+
+  /**
+   * Sets the active textual data source the table displays.
+   * 
+   * @param ds The active data source.
+   */
+  private void setActiveDS(STextualDS ds) {
+    this.activeDs = ds;
+
+  }
+
+  /**
+   * Returns the currently active textual data source.
+   * 
+   * @return the currently active textual data source
+   */
+  private STextualDS getActiveDs() {
+    return this.activeDs;
   }
 
   private SDocumentGraph getGraph() {

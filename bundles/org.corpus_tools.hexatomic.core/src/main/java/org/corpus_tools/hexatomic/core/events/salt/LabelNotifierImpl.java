@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.LabelModifyOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.impl.LabelImpl;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -58,7 +60,7 @@ public class LabelNotifierImpl extends LabelImpl
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -68,21 +70,33 @@ public class LabelNotifierImpl extends LabelImpl
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 
   @Override
   public void setNamespace(String namespace) {
-    applyModification(() -> super.setNamespace(namespace));
+    modified(() -> super.setNamespace(namespace));
   }
 
   @Override
   public void setName(String name) {
-    applyModification(() -> super.setName(name));
+    modified(() -> super.setName(name));
   }
 
   @Override
   public void setValue(Object value) {
-    applyModification(() -> super.setValue(value));
+    modified(() -> super.setValue(value));
   }
+
+  protected void modified(GraphModificationAction action) {
+    if (this.getContainer() != null) {
+      LabelModifyOperation op =
+          new LabelModifyOperation(this, this.getNamespace(), this.getName(), this.getValue());
+      action.apply();
+      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED, op);
+    } else {
+      action.apply();
+    }
+  }
+
 }

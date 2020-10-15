@@ -21,45 +21,30 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.LabelAddOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.LabelRemoveOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 
 public interface NotifyingLabelableElement<T extends LabelableElement>
     extends NotifyingElement<T>, LabelableElement {
 
-  /**
-   * Applies an action that modifies this element but sends notifications before and after the
-   * action.
-   * 
-   * @param action The action to execute
-   */
-  default void applyModification(GraphModificationAction action) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_BEFORE_MODIFICATION, this);
-    action.apply();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_AFTER_MODIFICATION, this);
-  }
 
   /**
-   * Applies an action that adds an annotation and sends a notifications after adding it.
+   * Applies an action that adds an label to a container and sends a notifications after adding it.
    * 
    * @param action The action to execute
-   * @param element The element that is added and will the the argument of the notification event
+   * @param container The container the label is added to
+   * @param label The label that is added to the container
    */
-  default void applyAdd(GraphModificationAction action, Object element) {
+  default void applyAddLabel(GraphModificationAction action, LabelableElement container,
+      Label label) {
     action.apply();
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, element);
-  }
-
-  /**
-   * Applies an action that removes an annotation and sends a notifications before removing it.
-   * 
-   * @param action The action to execute
-   * @param element The element that is removed and will the the argument of the notification event
-   */
-  default void applyRemove(GraphModificationAction action, Object element) {
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, element);
-    action.apply();
+    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new LabelAddOperation(this, label.getQName()));
   }
 
 
@@ -71,8 +56,31 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
   default void applyRemoveLabelIfExisting(GraphModificationAction action, String qname) {
     if (qname != null) {
       Label label = getLabel(qname);
-      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_REMOVED, label);
-      action.apply();
+      if (label != null) {
+        SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+            new LabelRemoveOperation(label, label.getContainer()));
+        action.apply();
+      }
+    }
+  }
+
+  /**
+   * Applies an action that removes all label from the container and sends the undo operation
+   * events.
+   * 
+   * @param container The container the labels are removed from.
+   */
+  default void applyRemoveAllLabels(GraphModificationAction action, LabelableElement container) {
+    Collection<Label> labels = container.getLabels();
+    if (labels != null) {
+      labels = new LinkedList<>(labels);
+    } else {
+      labels = new LinkedList<>();
+    }
+    action.apply();
+    for (Label l : labels) {
+      SaltNotificationFactory.sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+          new LabelRemoveOperation(l, container));
     }
   }
 

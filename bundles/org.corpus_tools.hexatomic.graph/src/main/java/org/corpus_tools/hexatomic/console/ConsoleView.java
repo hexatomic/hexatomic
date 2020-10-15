@@ -24,6 +24,7 @@ import com.google.common.collect.Range;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -51,6 +52,8 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   private final UISynchronize sync;
 
+  private final ProjectManager projectManager;
+
   private final ConsoleController controller;
 
   private final SourceViewer view;
@@ -60,12 +63,16 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
    * 
    * @param view The view widget the console view is using
    * @param sync An Eclipse synchronization object.
+   * @param projectManager An project manager object.
    * @param graph The Salt graph to edit.
    */
-  public ConsoleView(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
+  public ConsoleView(SourceViewer view, UISynchronize sync,
+      ProjectManager projectManager,
+      SDocumentGraph graph) {
     this.document = view.getDocument();
     this.sync = sync;
     this.view = view;
+    this.projectManager = projectManager;
     this.controller = new ConsoleController(graph);
 
     this.document.addDocumentListener(this);
@@ -148,7 +155,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           for (String l : output) {
             writeLine(l);
           }
-
+          projectManager.addCheckpoint();
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);

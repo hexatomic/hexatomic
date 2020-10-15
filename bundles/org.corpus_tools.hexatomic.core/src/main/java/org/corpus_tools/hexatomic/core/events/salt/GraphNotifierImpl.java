@@ -21,7 +21,17 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory.sendEvent;
+
+import java.util.LinkedList;
+import java.util.List;
 import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.AddLayerToGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.AddRelationToGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveLayerFromGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveNodeFromGraphOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveRelationFromGraphOperation;
 import org.corpus_tools.salt.graph.Graph;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
@@ -30,6 +40,7 @@ import org.corpus_tools.salt.graph.Relation;
 import org.corpus_tools.salt.graph.impl.GraphImpl;
 import org.corpus_tools.salt.graph.impl.NodeImpl;
 import org.corpus_tools.salt.graph.impl.RelationImpl;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.services.events.IEventBroker;
 
 /**
@@ -44,28 +55,29 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
-public class GraphNotifierImpl extends
-    GraphImpl<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>
-    implements Graph<Node, Relation<Node, Node>, Layer<Node, Relation<Node, Node>>>,
-    NotifyingLabelableElement<Graph<?, ?, ?>> {
+public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L extends Layer<N, R>>
+    extends
+    GraphImpl<N, R, L>
+    implements Graph<N, R, L>,
+    NotifyingLabelableElement<Graph<N, R, L>> {
 
   private static final long serialVersionUID = 2590632940284255617L;
 
-  private Graph<?, ?, ?> typedDelegation;
+  private Graph<N, R, L> typedDelegation;
 
   @Override
-  public Graph<?, ?, ?> getTypedDelegation() {
+  public Graph<N, R, L> getTypedDelegation() {
     return typedDelegation;
   }
 
   @Override
-  public void setTypedDelegation(Graph<?, ?, ?> typedDelegation) {
+  public void setTypedDelegation(Graph<N, R, L> typedDelegation) {
     this.typedDelegation = typedDelegation;
   }
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -75,11 +87,11 @@ public class GraphNotifierImpl extends
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 
   @Override
-  public void addNode(Node node) {
+  public void addNode(N node) {
     super.addNode(node);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
@@ -87,16 +99,20 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && node instanceof NodeImpl) {
       ((NodeImpl) node).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, node);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new AddNodeToGraphOperation<Node>(node));
   }
 
   @Override
-  public void removeNode(Node node) {
-    applyRemove(() -> super.removeNode(node), node);
+  public void removeNode(N node) {
+    super.removeNode(node);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new RemoveNodeFromGraphOperation<N>(node, typedDelegation));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void addRelation(Relation<? extends Node, ? extends Node> relation) {
+  public void addRelation(Relation<? extends N, ? extends N> relation) {
     super.addRelation(relation);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
@@ -104,26 +120,44 @@ public class GraphNotifierImpl extends
     if (typedDelegation != null && relation instanceof RelationImpl<?, ?>) {
       ((RelationImpl<?, ?>) relation).basicSetGraph_WithoutRemoving(typedDelegation);
     }
-    SaltNotificationFactory.sendEvent(Topics.ANNOTATION_ADDED, relation);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new AddRelationToGraphOperation<Node, Relation<Node, Node>>(
+            (Relation<Node, Node>) relation));
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public void removeRelation(Relation<? extends Node, ? extends Node> rel) {
-    applyRemove(() -> super.removeRelation(rel), rel);
+  public void removeRelation(Relation<? extends N, ? extends N> rel) {
+    super.removeRelation(rel);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new RemoveRelationFromGraphOperation<N, R>((R) rel,
+            typedDelegation));
   }
 
   @Override
   public void removeRelations() {
-    applyModification(super::removeRelations);
+    List<R> relations = new LinkedList<>(getRelations());
+    super.removeRelations();
+    for (R rel : relations) {
+      sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+          new RemoveRelationFromGraphOperation<N, R>(rel, typedDelegation));
+    }
   }
 
   @Override
-  public void addLayer(Layer<Node, Relation<Node, Node>> layer) {
-    applyAdd(() -> super.addLayer(layer), layer);
+  public void addLayer(L layer) {
+    // Make sure the layer object does not have an existing ID label from being added
+    // previously.
+    layer.removeLabel(SaltUtil.LABEL_ID_QNAME);
+    super.addLayer(layer);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new AddLayerToGraphOperation<Layer<N, R>>(layer));
   }
 
   @Override
-  public void removeLayer(Layer<Node, Relation<Node, Node>> layer) {
-    applyRemove(() -> super.removeLayer(layer), layer);
+  public void removeLayer(L layer) {
+    super.removeLayer(layer);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new RemoveLayerFromGraphOperation<L>(typedDelegation, layer));
   }
 }

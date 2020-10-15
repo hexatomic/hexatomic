@@ -21,6 +21,13 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
+import static org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory.sendEvent;
+
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.undo.operations.AddNodeToLayerOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.AddRelationToLayerOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveNodeFromLayerOperation;
+import org.corpus_tools.hexatomic.core.undo.operations.RemoveRelationFromLayerOperation;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.Layer;
 import org.corpus_tools.salt.graph.Node;
@@ -41,27 +48,27 @@ import org.eclipse.e4.core.services.events.IEventBroker;
  *
  */
 public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends LayerImpl<N, R>
-    implements Layer<N, R>, NotifyingLabelableElement<Layer<?, ?>> {
+    implements Layer<N, R>, NotifyingLabelableElement<Layer<N, R>> {
 
 
   private static final long serialVersionUID = -4708308546018698463L;
 
-  private Layer<?, ?> typedDelegation;
+  private Layer<N, R> typedDelegation;
 
 
   @Override
-  public Layer<?, ?> getTypedDelegation() {
+  public Layer<N, R> getTypedDelegation() {
     return typedDelegation;
   }
 
   @Override
-  public void setTypedDelegation(Layer<?, ?> typedDelegation) {
+  public void setTypedDelegation(Layer<N, R> typedDelegation) {
     this.typedDelegation = typedDelegation;
   }
 
   @Override
   public void addLabel(Label label) {
-    applyAdd(() -> super.addLabel(label), label);
+    applyAddLabel(() -> super.addLabel(label), this, label);
   }
 
   @Override
@@ -71,26 +78,41 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
 
   @Override
   public void removeAll() {
-    applyModification(super::removeAll);
+    applyRemoveAllLabels(super::removeAll, this);
   }
 
   @Override
   public void addNode(N node) {
-    applyAdd(() -> super.addNode(node), node);
+    super.addNode(node);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new AddNodeToLayerOperation<N>(typedDelegation, node));
   }
 
   @Override
   public void removeNode(N node) {
-    applyRemove(() -> super.removeNode(node), node);
+    if (this.getNodes().contains(node)) {
+      super.removeNode(node);
+      sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+          new RemoveNodeFromLayerOperation<N>(typedDelegation, node));
+    }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
-    applyAdd(() -> super.addRelation(relation), relation);
+    super.addRelation(relation);
+    sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+        new AddRelationToLayerOperation<N, R>(typedDelegation, (R) relation));
+
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void removeRelation(Relation<? extends N, ? extends N> rel) {
-    applyRemove(() -> super.removeRelation(rel), rel);
+    if (this.getRelations().contains(rel)) {
+      super.removeRelation(rel);
+      sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
+          new RemoveRelationFromLayerOperation<N, R>(typedDelegation, (R) rel));
+    }
   }
 }

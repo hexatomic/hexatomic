@@ -12,14 +12,28 @@
       </children>
     </children>
     <mainMenu xmi:id="_tiknoMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.0">
-      <children xsi:type="menu:Menu" xmi:id="_ufSukMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.file" label="File">
+      <children xsi:type="menu:Menu" xmi:id="_ufSukMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.menu.file" label="&amp;File">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_8J_rwEy3EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.newproject" label="Start New Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/file-regular.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_wCaHIMsLEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.opensaltproject" label="Open Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/folder-open-regular.png" command="_pA7BYMsLEemUdItNeSusZw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_P-HZsEy8EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_salt_project" label="Save Salt Project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" mnemonics="" command="_o-7oQEy7EeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_xiM4wEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.save_as_salt_project" label="Save Salt Project As..." iconURI="" command="_mqJxIEzaEeqppqV5eQIggg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_ZKoIMFPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.exit" label="Exit" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/times-solid.png" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
       </children>
+      <children xsi:type="menu:Menu" xmi:id="_c2kBYJ6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.menu.edit" label="&amp;Edit">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_lQqf4J6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.undo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/undo.png" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
+      </children>
     </mainMenu>
+    <trimBars xmi:id="_ZPTWQOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.trimbar.tools">
+      <children xsi:type="menu:ToolBar" xmi:id="_cmxBUOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.toolbar.0">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_omg7YOCvEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.new_salt_project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/file-regular.png" command="_kj2CcEmZEeqbxMjDv0hhTg"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_g5ek8OC0EeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.open_salt_project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/folder-open-regular.png" command="_pA7BYMsLEemUdItNeSusZw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_yLmNAOC0EeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.save_salt_project" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/save-regular.png" command="_o-7oQEy7EeqppqV5eQIggg"/>
+        <children xsi:type="menu:ToolBarSeparator" xmi:id="_9uH1AOC0EeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.toolbarseparator.0"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_daWaYOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.undo" label="" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/undo.png" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_WKd20OCvEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledtoolitem.redo" label="" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
+      </children>
+    </trimBars>
     <trimBars xmi:id="_c05WAFVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.trimbar.status" side="Bottom">
       <children xsi:type="menu:ToolControl" xmi:id="_fZh18FVbEeq7npMexD8QGw" elementId="org.corpus_tools.hexatomic.core.toolcontrol.0" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.ui.StatusBar">
         <tags>stretch</tags>
@@ -32,6 +46,8 @@
   <handlers xmi:id="_nNYLEEy7EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveHandler" command="_o-7oQEy7EeqppqV5eQIggg"/>
   <handlers xmi:id="_rG0JsEzaEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.handler.save_as_salt_project" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.SaveAsHandler" command="_mqJxIEzaEeqppqV5eQIggg"/>
   <handlers xmi:id="_TH7l8FPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handler.exit" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.ExitHandler" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
+  <handlers xmi:id="_4evMYJ6EEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handler.undo" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.UndoHandler" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
+  <handlers xmi:id="_1pA7oOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handler.redo" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.RedoHandler" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
   <bindingTables xmi:id="_oI0WcEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.bindingtable.windows" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_qIQeoEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.0" keySequence="M1+M2+S" command="_mqJxIEzaEeqppqV5eQIggg">
       <tags>type:user</tags>
@@ -68,6 +84,8 @@
     <parameters xmi:id="_IV2hoEzZEeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.commandparameter.location" name="location"/>
   </commands>
   <commands xmi:id="_HVy0oFPxEeq55bpbFwb6CQ" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
+  <commands xmi:id="_uhiOUJ6CEeqcNd4BgS8ZlA" elementId="org.eclipse.ui.edit.undo" commandName="Undo"/>
+  <commands xmi:id="_tXJzIOCfEeqWdLUQSqXLVA" elementId="org.eclipse.ui.edit.redo" commandName="Redo"/>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

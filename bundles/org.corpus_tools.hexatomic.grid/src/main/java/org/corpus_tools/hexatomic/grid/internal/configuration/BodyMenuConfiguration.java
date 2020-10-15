@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
+import org.corpus_tools.hexatomic.grid.GridEditor;
+import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -45,12 +47,14 @@ import org.eclipse.swt.widgets.MenuItem;
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
-public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration {
+public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   private static final String DELETE_CELL_ITEM = "DELETE_CELL_ITEM"; //$NON-NLS-1$
   private Menu menu;
   private final NatTable table;
   private final SelectionLayer selectionLayer;
+
+  private static final String CHANGE_CELL_ANNOTATION_NAME_ITEM = "CHNG_ANNO_NAME"; //$NON-NLS-1$
 
   /**
    * Constructor setting the table and selection layer fields, and creating the menu via
@@ -60,16 +64,18 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
    * @param selectionLayer The SelectionLayer to be used for configuring menu item states based on
    *        selection
    */
-  public CustomBodyMenuConfiguration(NatTable table, SelectionLayer selectionLayer) {
+  public BodyMenuConfiguration(NatTable table, SelectionLayer selectionLayer) {
     this.table = table;
     this.selectionLayer = selectionLayer;
     this.menu = createMenu();
   }
 
   private Menu createMenu() {
+    ValidSelectionState validSelectionState = new ValidSelectionState();
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
-    builder.withVisibleState(DELETE_CELL_ITEM, new ValidSelectionState());
+    builder.withVisibleState(DELETE_CELL_ITEM, validSelectionState);
+    builder.withVisibleState(CHANGE_CELL_ANNOTATION_NAME_ITEM, validSelectionState);
     return builder.build();
   }
 
@@ -92,7 +98,7 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
       MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
-      item.setText("Delete cell(s)");
+      item.setText(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
       item.setEnabled(true);
       item.addSelectionListener(new SelectionAdapter() {
         @Override
@@ -124,8 +130,9 @@ public class CustomBodyMenuConfiguration extends AbstractUiBindingConfiguration 
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
 
         for (PositionCoordinate coord : selectedCellCoordinates) {
-          // The first column is reserved for token text
-          if (coord.getColumnPosition() == 0) {
+          // Check whether the column at the position is the token column
+          if (GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
+              coord.getColumnPosition(), false)) {
             return false;
           }
         }

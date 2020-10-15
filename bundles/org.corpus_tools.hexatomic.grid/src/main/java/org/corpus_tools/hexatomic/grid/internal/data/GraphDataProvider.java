@@ -29,7 +29,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
@@ -72,6 +74,9 @@ public class GraphDataProvider implements IDataProvider {
 
   @Inject
   ErrorService errors;
+
+  @Inject
+  ProjectManager projectManager;
 
   private void resolveGraph() {
     // Reset data
@@ -356,26 +361,26 @@ public class GraphDataProvider implements IDataProvider {
         log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString(), newValue);
       }
     }
+    projectManager.addCheckpoint();
 
   }
 
   private void createAnnotation(Object newValue, int columnIndex, SStructuredNode node) {
-    node.createAnnotation(getAnnotationNamespace(columnIndex), getAnnotationName(columnIndex),
-        newValue);
-    log.debug("Created new annotation with value '{}' on {} ({}, '{}').", newValue,
-        node.getClass().getSimpleName(), node.hashCode(), node);
+    SAnnotation annotation = node.createAnnotation(getAnnotationNamespace(columnIndex),
+        getAnnotationName(columnIndex), newValue);
+    log.debug("Created new annotation {} with value '{}' on {} ({}, '{}').", annotation.getQName(),
+        newValue, node.getClass().getSimpleName(), node.hashCode(), node);
   }
 
-  private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject)
-      throws RuntimeException {
+  private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject) {
     SStructuredNode node = (SStructuredNode) dataObject;
     SAnnotation anno = node.getAnnotation(column.getColumnValue());
     if (anno == null) {
-      throw new RuntimeException(
+      throw new HexatomicRuntimeException(
           "Failed to retrieve annotation to set the value for on node " + node.toString() + ".");
     } else {
-      log.debug("Setting value on {} ({}, '{}') to '{}'.", dataObject.getClass().getSimpleName(),
-          dataObject.hashCode(), dataObject, newValue);
+      log.debug("Setting value on annotation {} on {} ({}, '{}') to '{}'.", anno.getQName(),
+          dataObject.getClass().getSimpleName(), dataObject.hashCode(), dataObject, newValue);
       anno.setValue(newValue);
     }
   }
