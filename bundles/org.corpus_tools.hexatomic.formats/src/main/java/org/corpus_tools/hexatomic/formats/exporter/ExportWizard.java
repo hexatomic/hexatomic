@@ -42,6 +42,7 @@ import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
 import org.corpus_tools.pepper.common.JOB_STATUS;
+import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperConfiguration;
 import org.corpus_tools.pepper.common.PepperJob;
@@ -49,7 +50,6 @@ import org.corpus_tools.pepper.common.StepDesc;
 import org.corpus_tools.pepper.core.PepperJobImpl;
 import org.corpus_tools.pepper.modules.DocumentController;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
@@ -74,7 +74,7 @@ public class ExportWizard extends Wizard {
 
       // Run conversion in a background thread so we can add regular status reports
       ExecutorService serviceExec = Executors.newSingleThreadExecutor();
-      Future<?> background = serviceExec.submit(job::convertTo);
+      Future<?> background = serviceExec.submit(job::convert);
 
       Optional<Integer> numberOfJobs = Optional.empty();
 
@@ -187,15 +187,13 @@ public class ExportWizard extends Wizard {
   private final ErrorService errorService;
   private final ProjectManager projectManager;
   private final SaltNotificationFactory notificationFactory;
-  private final UISynchronize sync;
 
   protected ExportWizard(ErrorService errorService, ProjectManager projectManager,
-      SaltNotificationFactory notificationFactory, UISynchronize sync) {
+      SaltNotificationFactory notificationFactory) {
     super();
     this.errorService = errorService;
     this.projectManager = projectManager;
     this.notificationFactory = notificationFactory;
-    this.sync = sync;
     setNeedsProgressMonitor(true);
   }
 
@@ -220,12 +218,20 @@ public class ExportWizard extends Wizard {
       pepper.get().getConfiguration().setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS,
           "2");
 
+      // Add an import step for the Salt corpus (on-disk)
+      StepDesc importStep = new StepDesc();
+      importStep.setModuleType(MODULE_TYPE.IMPORTER);
+      importStep.setName("SaltXMLImporter");
+      CorpusDesc importCorpusDesc = new CorpusDesc();
+      importCorpusDesc.setCorpusPath(projectManager.getLocation().get());
+      importStep.setCorpusDesc(importCorpusDesc);
+
       // Create the export specification
       StepDesc exportStep = selectedFormat.get().createJobSpec();
       // Set the path to the selected directory
-      CorpusDesc corpusDesc = new CorpusDesc();
-      corpusDesc.setCorpusPath(URI.createFileURI(corpusPath.get().getAbsolutePath()));
-      exportStep.setCorpusDesc(corpusDesc);
+      CorpusDesc exportCorpusDesc = new CorpusDesc();
+      exportCorpusDesc.setCorpusPath(URI.createFileURI(corpusPath.get().getAbsolutePath()));
+      exportStep.setCorpusDesc(exportCorpusDesc);
       if (configPage.isPresent()) {
         // add properties for the exporter
         exportStep.setProps(configPage.get().getConfiguration());
@@ -233,6 +239,7 @@ public class ExportWizard extends Wizard {
 
       String jobId = pepper.get().createJob();
       PepperJob job = pepper.get().getJob(jobId);
+      job.addStepDesc(importStep);
       job.addStepDesc(exportStep);
 
       // Conversion is adding a load of events, suppress them first
@@ -240,10 +247,6 @@ public class ExportWizard extends Wizard {
 
       try {
         // Execute the conversion as task that can be aborted
-        if (job instanceof PepperJobImpl) {
-          PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
-          pepperJobImpl.setSaltProject(projectManager.getProject());
-        }
         getContainer().run(true, true, new ExportRunner(job));
 
       } catch (InvocationTargetException ex) {
