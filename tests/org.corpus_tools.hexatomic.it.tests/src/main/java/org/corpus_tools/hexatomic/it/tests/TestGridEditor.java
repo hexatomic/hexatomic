@@ -872,10 +872,37 @@ public class TestGridEditor {
             ((SSpan) nodeObjSecondColumn).getAnnotation("five::" + TEST_ANNOTATION_VALUE));
       }
     }
-
-
-
   }
+
+  /**
+   * Tests that when a single cell is selected and its annotation name changed, that a new column
+   * for the new annotation name is created, and that the cell is moved into that column.
+   */
+  @Test
+  void testChangeAnnotationNameSingleCell() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
+    SToken token = (SToken) table.widget.getDataValueByPosition(2, 3);
+    assertEquals("example", token.getAnnotation("salt", "lemma").getValue());
+    // Select and change name
+    table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    // Assert names and positions have changed
+    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
+    assertTrue(table.widget.getDataValueByPosition(4, 2) instanceof SToken);
+    assertEquals(token, table.widget.getDataValueByPosition(4, 2));
+    assertEquals("example", token.getAnnotation("salt", TEST_ANNOTATION_VALUE).getValue());
+    // Old cell should now be null
+    assertNull(table.widget.getDataValueByPosition(2, 3));
+  }
+
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
     clickWithMask(false, true, rowPosition, columnPosition, table);
