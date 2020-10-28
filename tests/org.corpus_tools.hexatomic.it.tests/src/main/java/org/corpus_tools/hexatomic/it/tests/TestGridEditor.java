@@ -889,6 +889,7 @@ public class TestGridEditor {
     SToken token = (SToken) table.widget.getDataValueByPosition(2, 3);
     assertEquals("example", token.getAnnotation("salt", "lemma").getValue());
     // Select and change name
+    table.click(3, 2);
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
