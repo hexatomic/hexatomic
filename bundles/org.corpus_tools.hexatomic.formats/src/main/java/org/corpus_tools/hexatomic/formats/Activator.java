@@ -46,7 +46,8 @@ public class Activator implements BundleActivator {
 
     Bundle thisBundle = context.getBundle();
 
-    File pluginsFolder = thisBundle.getDataFile("pepper-plugins");
+    File pluginsFolder =
+        new File(FileLocator.toFileURL(thisBundle.getResource("pepper-plugins")).getFile());
 
     System.setProperty(PepperConfiguration.PROP_PEPPER_MODULE_RESOURCES,
         pluginsFolder.getAbsolutePath());
