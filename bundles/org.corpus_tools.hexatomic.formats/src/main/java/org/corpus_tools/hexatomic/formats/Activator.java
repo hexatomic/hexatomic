@@ -26,6 +26,7 @@ import java.util.Optional;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperConfiguration;
 import org.corpus_tools.pepper.core.PepperOSGiRunner;
+import org.eclipse.core.runtime.FileLocator;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -35,8 +36,8 @@ public class Activator implements BundleActivator {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Activator.class);
 
-  private static final String[] BUNDLE_LOCATIONS = {"exmaralda-emf-api-1.2.1.jar",
-      "pepperModules-EXMARaLDAModules-1.3.0.jar", "pepperModules-PAULAModules-1.2.4.jar"};
+  private static final String[] BUNDLE_LOCATIONS = {"exmaralda-emf-api-1.2.2.jar",
+      "pepperModules-EXMARaLDAModules-1.3.1.jar", "pepperModules-PAULAModules-1.2.4.jar"};
 
   private static Optional<Pepper> pepper = Optional.empty();
 
@@ -74,7 +75,8 @@ public class Activator implements BundleActivator {
 
     // Add and start all required pepper module bundles in the correct order
     for (String location : BUNDLE_LOCATIONS) {
-      URL fileUrl = thisBundle.getResource("pepper-plugins/" + location);
+      URL resourceUrl = thisBundle.getResource("pepper-plugins/" + location);
+      URL fileUrl = FileLocator.toFileURL(resourceUrl);
       log.info("Installing Pepper module from {}", fileUrl);
       Bundle b = context.installBundle(fileUrl.toExternalForm());
       b.start();
