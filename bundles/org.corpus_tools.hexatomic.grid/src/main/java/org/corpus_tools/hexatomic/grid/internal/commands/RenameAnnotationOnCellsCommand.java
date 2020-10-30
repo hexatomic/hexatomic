@@ -1,36 +1,63 @@
 package org.corpus_tools.hexatomic.grid.internal.commands;
 
-import org.eclipse.nebula.widgets.nattable.command.AbstractPositionCommand;
-import org.eclipse.nebula.widgets.nattable.command.ILayerCommand;
-import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import java.util.Set;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
+import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
 /**
- * An {@link AbstractPositionCommand} that is used to change the annotation names on a cell at the
- * given position.
+ * An {@link AbstractContextFreeCommand} that is used to trigger a change of annotation names on a
+ * set of table cells.
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
-public class ChangeAnnotationNameSelectionCommand extends AbstractPositionCommand {
+public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
+
+  private final GridFreezeLayer gridFreezeLayer;
+  private final Set<PositionCoordinate> selectedNonTokenCells;
+  private final String newQName;
 
   /**
-   * Creates a new {@link ChangeAnnotationNameSelectionCommand}.
+   * Creates a new {@link RenameAnnotationOnCellsCommand}.
    * 
-   * @param layer The {@link ILayer} to which the column and row position correlate.
-   * @param columnPosition The column position for which the command should be processed.
-   * @param rowPosition The row position for which the command should be processed.
+   * @param gridFreezeLayer the freeze layer this command operates on.
+   * @param selectedNonTokenCells the set of position coordinates this command operates on.
+   * @param newQName the new annotation name that all cell value annotations this command operates
+   *        on should be renamed to.
    */
-  public ChangeAnnotationNameSelectionCommand(ILayer layer, int columnPosition, int rowPosition) {
-    super(layer, columnPosition, rowPosition);
+  public RenameAnnotationOnCellsCommand(GridFreezeLayer gridFreezeLayer,
+      Set<PositionCoordinate> selectedNonTokenCells, String newQName) {
+    this.gridFreezeLayer = gridFreezeLayer;
+    this.selectedNonTokenCells = selectedNonTokenCells;
+    this.newQName = newQName;
   }
 
-  private ChangeAnnotationNameSelectionCommand(
-      ChangeAnnotationNameSelectionCommand changeAnnotationNameSelectionCommand) {
-    super(changeAnnotationNameSelectionCommand);
+  /**
+   * Returns the freeze layer this command operates on.
+   * 
+   * @return the gridFreezeLayer the freeze layer this command operates on.
+   */
+  public final GridFreezeLayer getGridFreezeLayer() {
+    return gridFreezeLayer;
   }
 
-  @Override
-  public ILayerCommand cloneCommand() {
-    return new ChangeAnnotationNameSelectionCommand(this);
+  /**
+   * Return the set of position coordinates this command operates on.
+   * 
+   * @return the selectedNonTokenCells the set of position coordinates this command operates on.
+   */
+  public final Set<PositionCoordinate> getSelectedNonTokenCells() {
+    return selectedNonTokenCells;
+  }
+
+  /**
+   * Returns the new annotation name that all cell value annotations this command operates on should
+   * be renamed to.
+   * 
+   * @return the newQName the new qualified annotation name.
+   */
+  public final String getNewQName() {
+    return newQName;
   }
 
 }
