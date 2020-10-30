@@ -928,7 +928,7 @@ public class TestGridEditor {
     ILayer layer = nattable.getLayer();
 
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
-    assertEquals(CompositeFreezeLayer.class, layerUl.getClass());
+    assertTrue(layerUl instanceof CompositeFreezeLayer);
     CompositeFreezeLayer freezeLayer = (CompositeFreezeLayer) layerUl;
 
     ILayer freezeLayerUll = freezeLayer.getUnderlyingLayerByPosition(1, 1);
