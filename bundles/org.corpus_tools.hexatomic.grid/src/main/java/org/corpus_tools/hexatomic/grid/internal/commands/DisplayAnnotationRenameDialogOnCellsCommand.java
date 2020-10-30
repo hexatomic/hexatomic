@@ -1,6 +1,7 @@
 package org.corpus_tools.hexatomic.grid.internal.commands;
 
 import java.util.Set;
+import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
@@ -13,6 +14,7 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContextFreeCommand {
 
   private final Set<PositionCoordinate> selectedNonTokenCells;
+  private final NatTable natTable;
 
   /**
    * Creates a new {@link DisplayAnnotationRenameDialogOnCellsCommand}, which in turn triggers a
@@ -20,9 +22,11 @@ public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContext
    * 
    * @param selectedNonTokenCells the cells that this command should trigger a
    *        {@link RenameAnnotationOnCellsCommand} on.
+   * @param natTable the NatTable.
    */
-  public DisplayAnnotationRenameDialogOnCellsCommand(
+  public DisplayAnnotationRenameDialogOnCellsCommand(NatTable natTable,
       Set<PositionCoordinate> selectedNonTokenCells) {
+    this.natTable = natTable;
     this.selectedNonTokenCells = selectedNonTokenCells;
 
   }
@@ -34,6 +38,15 @@ public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContext
    */
   public final Set<PositionCoordinate> getSelectedNonTokenCells() {
     return selectedNonTokenCells;
+  }
+
+  /**
+   * Returns the NatTable.
+   * 
+   * @return the natTable
+   */
+  public final NatTable getNatTable() {
+    return natTable;
   }
 
 }

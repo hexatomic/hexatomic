@@ -1,7 +1,7 @@
 package org.corpus_tools.hexatomic.grid.internal.commands;
 
 import java.util.Set;
-import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
+import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
@@ -13,32 +13,23 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
  */
 public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
 
-  private final GridFreezeLayer gridFreezeLayer;
   private final Set<PositionCoordinate> selectedNonTokenCells;
   private final String newQName;
+  private final NatTable natTable;
 
   /**
    * Creates a new {@link RenameAnnotationOnCellsCommand}.
    * 
-   * @param gridFreezeLayer the freeze layer this command operates on.
+   * @param natTable the NatTable.
    * @param selectedNonTokenCells the set of position coordinates this command operates on.
    * @param newQName the new annotation name that all cell value annotations this command operates
    *        on should be renamed to.
    */
-  public RenameAnnotationOnCellsCommand(GridFreezeLayer gridFreezeLayer,
+  public RenameAnnotationOnCellsCommand(NatTable natTable,
       Set<PositionCoordinate> selectedNonTokenCells, String newQName) {
-    this.gridFreezeLayer = gridFreezeLayer;
+    this.natTable = natTable;
     this.selectedNonTokenCells = selectedNonTokenCells;
     this.newQName = newQName;
-  }
-
-  /**
-   * Returns the freeze layer this command operates on.
-   * 
-   * @return the gridFreezeLayer the freeze layer this command operates on.
-   */
-  public final GridFreezeLayer getFreezeLayer() {
-    return gridFreezeLayer;
   }
 
   /**
@@ -58,6 +49,15 @@ public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
    */
   public final String getNewQName() {
     return newQName;
+  }
+
+  /**
+   * Returns the NatTable.
+   * 
+   * @return the natTable
+   */
+  public final NatTable getNatTable() {
+    return natTable;
   }
 
 }
