@@ -26,15 +26,13 @@ import org.eclipse.nebula.widgets.nattable.columnRename.DisplayColumnRenameDialo
 import org.eclipse.nebula.widgets.nattable.columnRename.RenameColumnHeaderCommand;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handles the display of a dialog to change annotation names, and spawns a command to rename the
- * annotation, if the OK button in the dialog is pressed.
+ * An {@link AbstractLayerCommandHandler} that handles the display of a dialog to change annotation
+ * names, and spawns a command to rename the annotation, if the OK button in the dialog is pressed.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
@@ -58,9 +56,6 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
 
     AnnotationRenameDialog dialog =
         new AnnotationRenameDialog(Display.getDefault().getActiveShell(), originalQName);
-    Rectangle colHeaderBounds = this.columnHeaderLayer.getBoundsByPosition(columnPosition, 0);
-    Point point = new Point(colHeaderBounds.x, colHeaderBounds.y + colHeaderBounds.height);
-    dialog.setLocation(command.toDisplayCoordinates(point));
     dialog.open();
 
     if (dialog.isCancelPressed()) {
