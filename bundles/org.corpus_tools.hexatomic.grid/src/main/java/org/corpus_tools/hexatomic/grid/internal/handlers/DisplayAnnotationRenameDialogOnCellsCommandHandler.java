@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An {@link AbstractLayerCommandHandler} that handles the display of a dialog to change annotation
  * names, and spawns a command to rename the annotation, if the OK button in the dialog is pressed.
+ * Registered with the {@link GridFreezeLayer} on which it calls the rename command.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
