@@ -20,11 +20,11 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 
@@ -36,16 +36,21 @@ import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
  */
 public class GridFreezeLayer extends CompositeFreezeLayer {
 
+  private final GraphDataProvider bodyDataProvider;
+
   /**
    * Creates a {@link GridFreezeLayer}.
    * 
    * @param freezeLayer the underlying freeze layer.
    * @param viewportLayer the viewport layer.
    * @param selectionLayer the selection layer.
+   * @param bodyDataProvider the body data layer.
    */
   public GridFreezeLayer(FreezeLayer freezeLayer, ViewportLayer viewportLayer,
-      SelectionLayer selectionLayer) {
+      SelectionLayer selectionLayer, GraphDataProvider bodyDataProvider) {
     super(freezeLayer, viewportLayer, selectionLayer);
+    this.bodyDataProvider = bodyDataProvider;
+
   }
 
 
@@ -61,10 +66,8 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    */
   public boolean renameCellPosition(int columnPosition, int rowPosition, String currentQName,
       String newQName) {
-    ILayerCell cellToEdit = getCellByPosition(columnPosition, rowPosition);
-    Object nodeToEdit = cellToEdit.getDataValue();
-    // TODO Missing implementation
-    return true;
+    return this.bodyDataProvider.changeAnnotationQName(columnPosition, rowPosition, currentQName,
+        newQName);
   }
 
   /**
