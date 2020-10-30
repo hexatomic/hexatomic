@@ -157,8 +157,8 @@ public class GridEditor {
     final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
     selectionLayer.addConfiguration(new SelectionStyleConfiguration());
     final FreezeLayer freezeLayer = new FreezeLayer(selectionLayer);
-    final GridFreezeLayer compositeFreezeLayer =
-        new GridFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
+    final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
+        bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
     // Column header
     final IDataProvider columnHeaderDataProvider =
