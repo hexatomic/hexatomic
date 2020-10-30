@@ -31,7 +31,8 @@ public class ChangeAnnotationNameSelectionAction implements IKeyAction {
 
   @Override
   public void run(NatTable natTable, KeyEvent event) {
-    natTable.doCommand(new DisplayAnnotationRenameDialogOnCellsCommand(this.selectedNonTokenCells));
+    natTable.doCommand(
+        new DisplayAnnotationRenameDialogOnCellsCommand(natTable, this.selectedNonTokenCells));
   }
 
 }
