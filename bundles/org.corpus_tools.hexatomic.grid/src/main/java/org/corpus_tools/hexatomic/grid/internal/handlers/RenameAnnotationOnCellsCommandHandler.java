@@ -22,12 +22,12 @@
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
-import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
-import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,30 +52,11 @@ public class RenameAnnotationOnCellsCommandHandler
   protected boolean doCommand(RenameAnnotationOnCellsCommand command) {
     log.trace("Executing command to rename annotations in cells.");
 
-    // Get the required layers
-    ILayer underlyingLayer = command.getNatTable().getUnderlyingLayerByPosition(0, 0);
-    GridLayer gridLayer = null;
-    if (!(underlyingLayer instanceof GridLayer)) {
-      throw new HexatomicRuntimeException("Underlying layer of NatTable is not of type "
-          + GridLayer.class.getSimpleName() + "! Please report this as a bug.");
-    } else {
-      gridLayer = (GridLayer) underlyingLayer;
-    }
-    // We can be certain that the column header layer is of the correct type, as only one column
-    // header layer can be registered.
-    ILayer columnHeaderLayer = gridLayer.getColumnHeaderLayer();
-    // We should make sure that this is actually a GridFreezeLayer,otherwise the body layer will not
-    // provide the right API we want to call later on.
-    ILayer freezeLayerCandidate = gridLayer.getBodyLayer();
-    GridFreezeLayer freezeLayer = null;
-    if (!(freezeLayerCandidate instanceof GridFreezeLayer)) {
-      throw new HexatomicRuntimeException("Freeze layer is not of expected type "
-          + GridFreezeLayer.class.getSimpleName() + "! Please report this as a bug.");
-    } else {
-      freezeLayer = (GridFreezeLayer) freezeLayerCandidate;
-    }
     // Run the rename for all cells
     for (PositionCoordinate cellPosition : command.getSelectedNonTokenCells()) {
+      GridColumnHeaderLayer columnHeaderLayer =
+          GridHelper.getColumnHeaderLayer(command.getNatTable());
+      GridFreezeLayer freezeLayer = GridHelper.getBodyLayer(command.getNatTable());
       // Get the old qualified name from the column header
       Object columnValue =
           columnHeaderLayer.getDataValueByPosition(cellPosition.getColumnPosition(), 0);
