@@ -21,8 +21,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
+import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.ui.AnnotationRenameDialog;
 import org.eclipse.nebula.widgets.nattable.columnRename.RenameColumnHeaderCommand;
@@ -48,8 +50,18 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
   protected boolean doCommand(DisplayAnnotationRenameDialogOnCellsCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
 
+    // If only cells from one column have been selected, get the current qualified annotation name,
+    // so that it can be displayed.
+    String oldQName = null;
+    if (command.displayOldQName()) {
+      GridColumnHeaderLayer columnHeaderLayer =
+          GridHelper.getColumnHeaderLayer(command.getNatTable());
+      oldQName = (String) columnHeaderLayer.getDataValueByPosition(
+          command.getSelectedNonTokenCells().iterator().next().getColumnPosition(), 0);
+    }
+
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), null);
+        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), oldQName);
     dialog.open();
 
     if (dialog.isCancelPressed()) {
