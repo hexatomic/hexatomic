@@ -43,8 +43,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
       String newQName) {
     ILayerCell cellToEdit = getCellByPosition(columnPosition, rowPosition);
     Object nodeToEdit = cellToEdit.getDataValue();
-    System.err.println("DO THE HEAVY LIFHTING HERE WITH " + currentQName + " > " + newQName + " at "
-        + columnPosition + ":" + rowPosition);
+    // TODO Missing implementation
     return true;
   }
 
@@ -54,7 +53,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   @Override
   protected void registerCommandHandlers() {
     super.registerCommandHandlers();
-    registerCommandHandler(new RenameAnnotationOnCellsCommandHandler(this));
+    registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
   }
 }
