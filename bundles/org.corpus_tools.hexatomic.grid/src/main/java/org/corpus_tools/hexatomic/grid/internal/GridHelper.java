@@ -20,8 +20,13 @@
 
 package org.corpus_tools.hexatomic.grid.internal;
 
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
+import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 
@@ -63,6 +68,51 @@ public class GridHelper {
     }
     ILayerCell cell = natTable.getCellByPosition(positionToCheck, 0);
     return cell.getDataValue().equals(GraphDataProvider.TOKEN_TEXT_COLUMN_LABEL);
+  }
+
+  /**
+   * Returns the column header layer (of type {@link GridColumnHeaderLayer}) for the given NatTable.
+   * 
+   * @param natTable the NatTable to get the column header layer for.
+   * @return the {@link GridColumnHeaderLayer} of the NatTable.
+   */
+  public static GridColumnHeaderLayer getColumnHeaderLayer(NatTable natTable) {
+    GridLayer gridLayer = getGridLayerForNatTable(natTable);
+    ILayer columnHeaderLayer = gridLayer.getColumnHeaderLayer();
+    if (!(columnHeaderLayer instanceof GridColumnHeaderLayer)) {
+      throw new HexatomicRuntimeException(
+          "Column header layer is not of type " + GridColumnHeaderLayer.class.getSimpleName()
+              + " as expected! Please report this as a bug.");
+    } else {
+      return (GridColumnHeaderLayer) columnHeaderLayer;
+    }
+  }
+
+  /**
+   * Returns the body layer (of type {@link GridFreezeLayer}) for the given NatTable.
+   * 
+   * @param natTable the NatTable to get the body layer for.
+   * @return the {@link GridFreezeLayer} of the NatTable.
+   */
+  public static GridFreezeLayer getBodyLayer(NatTable natTable) {
+    GridLayer gridLayer = getGridLayerForNatTable(natTable);
+    ILayer bodyLayer = gridLayer.getBodyLayer();
+    if (!(bodyLayer instanceof GridFreezeLayer)) {
+      throw new HexatomicRuntimeException("Body layer is not of type "
+          + GridFreezeLayer.class.getSimpleName() + " as expected! Please report this as a bug.");
+    } else {
+      return (GridFreezeLayer) bodyLayer;
+    }
+  }
+
+  private static GridLayer getGridLayerForNatTable(NatTable natTable) {
+    ILayer underlyingLayer = natTable.getUnderlyingLayerByPosition(0, 0);
+    if (!(underlyingLayer instanceof GridLayer)) {
+      throw new HexatomicRuntimeException("Underlying layer of NatTable is not of type "
+          + GridLayer.class.getSimpleName() + " as expected! Please report this as a bug.");
+    } else {
+      return (GridLayer) underlyingLayer;
+    }
   }
 
 }
