@@ -37,7 +37,7 @@ public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
    * 
    * @return the gridFreezeLayer the freeze layer this command operates on.
    */
-  public final GridFreezeLayer getGridFreezeLayer() {
+  public final GridFreezeLayer getFreezeLayer() {
     return gridFreezeLayer;
   }
 
