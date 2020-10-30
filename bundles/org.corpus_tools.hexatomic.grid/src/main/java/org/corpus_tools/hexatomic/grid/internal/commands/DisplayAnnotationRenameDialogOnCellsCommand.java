@@ -35,20 +35,23 @@ public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContext
 
   private final Set<PositionCoordinate> selectedNonTokenCells;
   private final NatTable natTable;
+  private final boolean displayOldQName;
 
   /**
+   * 
    * Creates a new {@link DisplayAnnotationRenameDialogOnCellsCommand}, which in turn triggers a
    * {@link RenameAnnotationOnCellsCommand} for all cells that have been passed it.
    * 
+   * @param natTable the NatTable.
    * @param selectedNonTokenCells the cells that this command should trigger a
    *        {@link RenameAnnotationOnCellsCommand} on.
-   * @param natTable the NatTable.
+   * @param allSelectedCellsInSameColumn whether all selected cells are in the same column
    */
   public DisplayAnnotationRenameDialogOnCellsCommand(NatTable natTable,
-      Set<PositionCoordinate> selectedNonTokenCells) {
+      Set<PositionCoordinate> selectedNonTokenCells, boolean allSelectedCellsInSameColumn) {
     this.natTable = natTable;
     this.selectedNonTokenCells = selectedNonTokenCells;
-
+    this.displayOldQName = allSelectedCellsInSameColumn;
   }
 
   /**
@@ -67,6 +70,15 @@ public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContext
    */
   public final NatTable getNatTable() {
     return natTable;
+  }
+
+  /**
+   * Returns whether the old gualified name should be displayed in the dialog.
+   * 
+   * @return whether the old qualified name should be displayed.
+   */
+  public final boolean displayOldQName() {
+    return displayOldQName;
   }
 
 }
