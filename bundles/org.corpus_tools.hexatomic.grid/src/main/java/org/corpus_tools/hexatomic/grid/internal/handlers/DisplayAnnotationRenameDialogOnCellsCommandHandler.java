@@ -44,17 +44,6 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
   private static final Logger log =
       LoggerFactory.getLogger(DisplayAnnotationRenameDialogOnCellsCommandHandler.class);
 
-  private final GridFreezeLayer gridFreezeLayer;
-
-  /**
-   * Creates a new {@link DisplayAnnotationRenameDialogOnCellsCommandHandler}.
-   * 
-   * @param gridFreezeLayer the freeze layer this handler operates on.
-   */
-  public DisplayAnnotationRenameDialogOnCellsCommandHandler(GridFreezeLayer gridFreezeLayer) {
-    this.gridFreezeLayer = gridFreezeLayer;
-  }
-
   @Override
   protected boolean doCommand(DisplayAnnotationRenameDialogOnCellsCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
@@ -69,7 +58,7 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
     }
 
     log.debug("Returning delegate command {}.", RenameColumnHeaderCommand.class.getSimpleName());
-    return this.gridFreezeLayer.doCommand(new RenameAnnotationOnCellsCommand(this.gridFreezeLayer,
+    return command.getNatTable().doCommand(new RenameAnnotationOnCellsCommand(command.getNatTable(),
         command.getSelectedNonTokenCells(), dialog.getNewQName()));
   }
 
