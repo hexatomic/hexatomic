@@ -56,8 +56,8 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
     if (command.displayOldQName()) {
       GridColumnHeaderLayer columnHeaderLayer =
           GridHelper.getColumnHeaderLayer(command.getNatTable());
-      oldQName = (String) columnHeaderLayer.getDataValueByPosition(
-          command.getSelectedNonTokenCells().iterator().next().getColumnPosition(), 0);
+      oldQName = (String) columnHeaderLayer
+          .getDataValueByPosition(command.getCellMapByColumn().keySet().iterator().next(), 0);
     }
 
     AnnotationRenameDialog dialog =
@@ -71,7 +71,7 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
 
     log.debug("Returning delegate command {}.", RenameColumnHeaderCommand.class.getSimpleName());
     return command.getNatTable().doCommand(new RenameAnnotationOnCellsCommand(command.getNatTable(),
-        command.getSelectedNonTokenCells(), dialog.getNewQName()));
+        command.getCellMapByColumn(), dialog.getNewQName()));
   }
 
   @Override

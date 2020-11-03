@@ -21,13 +21,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
-import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
-import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
-import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,24 +48,9 @@ public class RenameAnnotationOnCellsCommandHandler
   @Override
   protected boolean doCommand(RenameAnnotationOnCellsCommand command) {
     log.trace("Executing command to rename annotations in cells.");
-
-    // Run the rename for all cells
-    for (PositionCoordinate cellPosition : command.getSelectedNonTokenCells()) {
-      GridColumnHeaderLayer columnHeaderLayer =
-          GridHelper.getColumnHeaderLayer(command.getNatTable());
-      GridFreezeLayer freezeLayer = GridHelper.getBodyLayer(command.getNatTable());
-      // Get the old qualified name from the column header
-      Object columnValue =
-          columnHeaderLayer.getDataValueByPosition(cellPosition.getColumnPosition(), 0);
-      if (columnValue == null || !(columnValue instanceof String)) {
-        throw new HexatomicRuntimeException("Column value is null or not an instance of String!");
-      } else {
-        // Call the actual rename
-        return freezeLayer.renameCellPosition(cellPosition.getColumnPosition(),
-            cellPosition.getRowPosition(), (String) columnValue, command.getNewQName());
-      }
-    }
-    return false;
+    GridFreezeLayer freezeLayer = GridHelper.getBodyLayer(command.getNatTable());
+    freezeLayer.bulkRenameCellPositions(command.getCellMapByColumn(), command.getNewQName());
+    return true;
   }
 
 }
