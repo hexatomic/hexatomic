@@ -20,6 +20,8 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
+import java.util.Map;
+import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
@@ -53,21 +55,14 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
 
   }
 
-
   /**
-   * Triggers a rename of the cell value in the underlying data model.
+   * Triggers a bulk rename of cell values in the underlying data model.
    * 
-   * @param columnPosition the column position of the edited cell in this layer.
-   * @param rowPosition the row position of the edited cell in this layer.
-   * @param currentQName the current (to be changed) qualified annotation name of the cell value.
-   * @param newQName the new qualified annotation name that the annotation of the cell value should
-   *        be renamed to.
-   * @return whether the cell value has successfully been renamed.
+   * @param cellMapByColumn a map of column positions to sets of row positions.
+   * @param newQName the new qualified annotation name.
    */
-  public boolean renameCellPosition(int columnPosition, int rowPosition, String currentQName,
-      String newQName) {
-    return this.bodyDataProvider.changeAnnotationQName(columnPosition, rowPosition, currentQName,
-        newQName);
+  public void bulkRenameCellPositions(Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
+    bodyDataProvider.bulkRenameAnnotations(cellMapByColumn, newQName);
   }
 
   /**
