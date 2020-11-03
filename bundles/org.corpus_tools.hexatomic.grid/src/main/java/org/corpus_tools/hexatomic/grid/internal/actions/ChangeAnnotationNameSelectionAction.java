@@ -20,10 +20,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.actions;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -51,16 +51,22 @@ public class ChangeAnnotationNameSelectionAction implements IKeyAction {
 
   @Override
   public void run(NatTable natTable, KeyEvent event) {
-    // Check whether all selected cells are in the same column, and trigger the command respectively
-    long distinctColumns = selectedNonTokenCells.stream()
-        .filter(distinctValue(PositionCoordinate::getColumnPosition)).count();
+    // Map the selected cells by column.
+    Map<Integer, Set<Integer>> cellMapByColumn = new HashMap<>();
+    for (PositionCoordinate cellCoordinate : this.selectedNonTokenCells) {
+      Set<Integer> columnCells =
+          cellMapByColumn.get(cellCoordinate.getColumnPosition());
+      if (columnCells == null) {
+        columnCells = new HashSet<>();
+      }
+      columnCells.add(cellCoordinate.getRowPosition());
+      cellMapByColumn.put(cellCoordinate.getColumnPosition(), columnCells);
+    }
+    // Trigger the command to display the annotation rename dialog, passing whether there is not
+    // more than one entry, which is the case if all selected cells are in the same column.
+    boolean allCellsInSameColumn = !(cellMapByColumn.size() > 1);
     natTable.doCommand(new DisplayAnnotationRenameDialogOnCellsCommand(natTable,
-        this.selectedNonTokenCells, !(distinctColumns > 1)));
-  }
-
-  private static <T> Predicate<T> distinctValue(Function<? super T, ?> keyExtractor) {
-    Set<Object> seen = ConcurrentHashMap.newKeySet();
-    return t -> seen.add(keyExtractor.apply(t));
+        cellMapByColumn, allCellsInSameColumn));
   }
 
 }
