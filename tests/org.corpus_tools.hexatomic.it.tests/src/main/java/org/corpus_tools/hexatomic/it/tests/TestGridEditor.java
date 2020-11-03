@@ -896,12 +896,14 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
-    assertTrue(table.widget.getDataValueByPosition(4, 2) instanceof SToken);
-    assertEquals(token, table.widget.getDataValueByPosition(4, 2));
+    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 3));
+    assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
+    // Old cell should now be null, old column has been pushed from col position 2 to 3
+    assertNull(table.widget.getDataValueByPosition(3, 3));
+    // token should be the same as before
+    assertEquals(token, table.widget.getDataValueByPosition(2, 3));
     assertEquals("example", token.getAnnotation("salt", TEST_ANNOTATION_VALUE).getValue());
-    // Old cell should now be null
-    assertNull(table.widget.getDataValueByPosition(2, 3));
   }
 
 
