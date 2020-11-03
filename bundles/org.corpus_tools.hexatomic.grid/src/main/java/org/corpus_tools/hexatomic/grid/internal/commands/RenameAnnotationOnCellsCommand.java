@@ -20,10 +20,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.commands;
 
+import java.util.Map;
 import java.util.Set;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
-import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
 /**
  * An {@link AbstractContextFreeCommand} that is used to trigger a change of annotation names on a
@@ -33,7 +33,7 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
  */
 public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
 
-  private final Set<PositionCoordinate> selectedNonTokenCells;
+  private final Map<Integer, Set<Integer>> cellMapByColumn;
   private final String newQName;
   private final NatTable natTable;
 
@@ -41,24 +41,15 @@ public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
    * Creates a new {@link RenameAnnotationOnCellsCommand}.
    * 
    * @param natTable the NatTable.
-   * @param selectedNonTokenCells the set of position coordinates this command operates on.
+   * @param cellMapByColumn a map of cells from column position to row position within that column.
    * @param newQName the new annotation name that all cell value annotations this command operates
    *        on should be renamed to.
    */
   public RenameAnnotationOnCellsCommand(NatTable natTable,
-      Set<PositionCoordinate> selectedNonTokenCells, String newQName) {
+      Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
     this.natTable = natTable;
-    this.selectedNonTokenCells = selectedNonTokenCells;
+    this.cellMapByColumn = cellMapByColumn;
     this.newQName = newQName;
-  }
-
-  /**
-   * Return the set of position coordinates this command operates on.
-   * 
-   * @return the selectedNonTokenCells the set of position coordinates this command operates on.
-   */
-  public final Set<PositionCoordinate> getSelectedNonTokenCells() {
-    return selectedNonTokenCells;
   }
 
   /**
@@ -78,6 +69,15 @@ public class RenameAnnotationOnCellsCommand extends AbstractContextFreeCommand {
    */
   public final NatTable getNatTable() {
     return natTable;
+  }
+
+  /**
+   * Returns cells as a map of column positions to row positions within that column.
+   * 
+   * @return the cellMapByColumn
+   */
+  public final Map<Integer, Set<Integer>> getCellMapByColumn() {
+    return cellMapByColumn;
   }
 
 }

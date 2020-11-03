@@ -20,10 +20,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.commands;
 
+import java.util.Map;
 import java.util.Set;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
-import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
 /**
  * An {@link AbstractContextFreeCommand} that is used to display a dialog to the user where they can
@@ -33,34 +33,23 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
  */
 public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContextFreeCommand {
 
-  private final Set<PositionCoordinate> selectedNonTokenCells;
+  private final Map<Integer, Set<Integer>> cellMapByColumn;
   private final NatTable natTable;
   private final boolean displayOldQName;
 
   /**
-   * 
    * Creates a new {@link DisplayAnnotationRenameDialogOnCellsCommand}, which in turn triggers a
    * {@link RenameAnnotationOnCellsCommand} for all cells that have been passed it.
    * 
    * @param natTable the NatTable.
-   * @param selectedNonTokenCells the cells that this command should trigger a
-   *        {@link RenameAnnotationOnCellsCommand} on.
+   * @param cellMapByColumn a map of cells from column position to row position within that column.
    * @param allSelectedCellsInSameColumn whether all selected cells are in the same column
    */
   public DisplayAnnotationRenameDialogOnCellsCommand(NatTable natTable,
-      Set<PositionCoordinate> selectedNonTokenCells, boolean allSelectedCellsInSameColumn) {
+      Map<Integer, Set<Integer>> cellMapByColumn, boolean allSelectedCellsInSameColumn) {
     this.natTable = natTable;
-    this.selectedNonTokenCells = selectedNonTokenCells;
+    this.cellMapByColumn = cellMapByColumn;
     this.displayOldQName = allSelectedCellsInSameColumn;
-  }
-
-  /**
-   * Returns the selected cells, which do not contain token text.
-   * 
-   * @return the selectedNonTokenCells
-   */
-  public final Set<PositionCoordinate> getSelectedNonTokenCells() {
-    return selectedNonTokenCells;
   }
 
   /**
@@ -79,6 +68,15 @@ public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContext
    */
   public final boolean displayOldQName() {
     return displayOldQName;
+  }
+
+  /**
+   * Returns cells as a map of column positions to row positions within that column.
+   * 
+   * @return the cellMapByColumn
+   */
+  public final Map<Integer, Set<Integer>> getCellMapByColumn() {
+    return cellMapByColumn;
   }
 
 }
