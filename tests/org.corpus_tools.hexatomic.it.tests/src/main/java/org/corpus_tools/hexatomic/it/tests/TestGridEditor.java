@@ -930,7 +930,6 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    NatTable natTable = table.widget;
 
     // Assert model elements
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
@@ -944,12 +943,13 @@ public class TestGridEditor {
     SToken token3 = (SToken) table.widget.getDataValueByPosition(2, 7);
     assertEquals("it", token3.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     // Select and change name of lemma annotations
+    NatTable natTable = table.widget;
     Display.getDefault().asyncExec(() -> {
       // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
       // within the table widget.
-      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false)); // more
-      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 4, false, true)); // complicated
-      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 6, false, true)); // it
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false));
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 4, false, true));
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 6, false, true));
     });
 
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
@@ -991,7 +991,6 @@ public class TestGridEditor {
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    NatTable natTable = table.widget;
 
     // Assert model elements
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
@@ -1004,12 +1003,13 @@ public class TestGridEditor {
     SSpan infSpan = (SSpan) table.widget.getDataValueByPosition(4, 1);
     assertEquals("contrast-focus", infSpan.getAnnotation(null, INF_STRUCT_NAME).getValue());
     // Select and change name of lemma annotations
+    NatTable natTable = table.widget;
     Display.getDefault().asyncExec(() -> {
       // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
       // within the table widget.
-      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false)); // more
-      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 2, 4, false, true)); // JJ
-      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 3, 0, false, true)); // contrast-focus
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false));
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 2, 4, false, true));
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 3, 0, false, true));
     });
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
