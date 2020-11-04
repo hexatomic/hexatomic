@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.command.SelectCellCommand;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
@@ -76,6 +78,10 @@ public class TestGridEditor {
   private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
+
+  private static final String LEMMA_NAME = "lemma";
+
+  private static final String NAMESPACED_LEMMA_NAME = NAMESPACE + LEMMA_NAME;
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
@@ -410,7 +416,7 @@ public class TestGridEditor {
 
     // Hide token column
     table.contextMenu(0, 1).contextMenu("Hide column(s)").click();
-    assertEquals(NAMESPACE + "lemma", table.getCellDataValueByPosition(0, 1));
+    assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 1));
 
     // Show columns
     table.contextMenu(0, 1).contextMenu("Show all columns").click();
@@ -763,7 +769,7 @@ public class TestGridEditor {
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("Cancel").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
-    assertEquals(NAMESPACE + "lemma", table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
   }
 
   /**
@@ -820,13 +826,13 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     dialog.close();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertTrue(dialog.widget.isDisposed());
-    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
   }
 
   /**
@@ -887,24 +893,72 @@ public class TestGridEditor {
 
     assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
     SToken token = (SToken) table.widget.getDataValueByPosition(2, 3);
-    assertEquals("example", token.getAnnotation("salt", "lemma").getValue());
+    assertEquals("example", token.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     // Select and change name
     table.click(3, 2);
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    // Check that the fields are pre-filled
+    Control[] children = dialog.widget.getChildren();
+    fail();
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
     assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals("salt::lemma", table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
     assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
     // Old cell should now be null, old column has been pushed from col position 2 to 3
     assertNull(table.widget.getDataValueByPosition(3, 3));
     // token should be the same as before
     assertEquals(token, table.widget.getDataValueByPosition(2, 3));
-    assertEquals("example", token.getAnnotation("salt", TEST_ANNOTATION_VALUE).getValue());
+    assertEquals("example",
+        token.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
+
+  /**
+   * Tests that when multiple cells in the same column are selected, that the annotation renaming
+   * works for all of these cells.
+   */
+  @Test
+  void testChangeAnnotationNameMultipleCellsInOneColumn() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+    SelectionLayer selectionLayer = getSelectionLayer(table);
+
+    // Select and change name of lemma annotations
+    Display.getDefault().asyncExec(() -> {
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false)); // more
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 4, false, true)); // complicated
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 6, false, true)); // it
+    });
+
+    table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    bot.sleep(5000);
+    fail();
+    // Assert names and positions have changed
+    // assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    // assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
+    // assertTrue(table.widget.getDataValueByPosition(1, 3) instanceof SToken);
+    // assertTrue(table.widget.getDataValueByPosition(1, 4) instanceof SToken);
+    // assertTrue(table.widget.getDataValueByPosition(1, 6) instanceof SToken);
+    // assertNull(table.widget.getDataValueByPosition(1, 2));
+    // assertNull(table.widget.getDataValueByPosition(1, 5));
+    // assertNull(table.widget.getDataValueByPosition(1, 7));
+    // // Old cell should now be null, old column has been pushed from col position 2 to 3
+    // assertNull(table.widget.getDataValueByPosition(2, 3));
+    // token should be the same as before
+    // assertEquals(token, table.widget.getDataValueByPosition(2, 3));
+    // assertEquals("example", token.getAnnotation("salt", TEST_ANNOTATION_VALUE).getValue());
+  }
+
 
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
@@ -923,7 +977,18 @@ public class TestGridEditor {
             columnPosition - 1, rowPosition - 1, shiftMask, ctrlMask)));
   }
 
-  private ILayer getSelectionLayer(SWTBotNatTable table) {
+  private SelectionLayer getSelectionLayer(SWTBotNatTable table) {
+    CompositeFreezeLayer freezeLayer = getBodyLayer(table);
+    ILayer freezeLayerUll = freezeLayer.getUnderlyingLayerByPosition(1, 1);
+    assertEquals(ViewportLayer.class, freezeLayerUll.getClass());
+    ViewportLayer viewPortLayer = (ViewportLayer) freezeLayerUll;
+
+    ILayer viewPortLayerUll = viewPortLayer.getUnderlyingLayerByPosition(1, 1);
+    assertEquals(SelectionLayer.class, viewPortLayerUll.getClass());
+    return (SelectionLayer) viewPortLayerUll;
+  }
+
+  private CompositeFreezeLayer getBodyLayer(SWTBotNatTable table) {
     NatTable nattable = table.widget;
 
     // Loop through the layers in the stack until the selection layer is hit
@@ -932,14 +997,7 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     CompositeFreezeLayer freezeLayer = (CompositeFreezeLayer) layerUl;
-
-    ILayer freezeLayerUll = freezeLayer.getUnderlyingLayerByPosition(1, 1);
-    assertEquals(ViewportLayer.class, freezeLayerUll.getClass());
-    ViewportLayer viewPortLayer = (ViewportLayer) freezeLayerUll;
-
-    ILayer viewPortLayerUll = viewPortLayer.getUnderlyingLayerByPosition(1, 1);
-    assertEquals(SelectionLayer.class, viewPortLayerUll.getClass());
-    return viewPortLayerUll;
+    return freezeLayer;
   }
 
 
