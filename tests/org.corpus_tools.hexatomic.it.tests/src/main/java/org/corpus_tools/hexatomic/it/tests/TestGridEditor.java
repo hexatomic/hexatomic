@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.apache.commons.lang3.tuple.Pair;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.grid.GridEditor;
@@ -41,6 +41,7 @@ import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
@@ -80,8 +81,12 @@ public class TestGridEditor {
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
 
   private static final String LEMMA_NAME = "lemma";
+  private static final String POS_NAME = "pos";
+  private static final String INF_STRUCT_NAME = "Inf-Struct";
 
   private static final String NAMESPACED_LEMMA_NAME = NAMESPACE + LEMMA_NAME;
+
+
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
@@ -899,13 +904,12 @@ public class TestGridEditor {
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     // Check that the fields are pre-filled
-    Control[] children = dialog.widget.getChildren();
-    fail();
+    assertDialogTexts(dialog, null);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
     assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
     assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
     // Old cell should now be null, old column has been pushed from col position 2 to 3
@@ -927,10 +931,22 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     NatTable natTable = table.widget;
-    SelectionLayer selectionLayer = getSelectionLayer(table);
 
+    // Assert model elements
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    SToken token1 = (SToken) table.widget.getDataValueByPosition(2, 4);
+    assertEquals("more", token1.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
+    SToken token2 = (SToken) table.widget.getDataValueByPosition(2, 5);
+    assertEquals("complicated",
+        token2.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertTrue(table.widget.getDataValueByPosition(2, 7) instanceof SToken);
+    SToken token3 = (SToken) table.widget.getDataValueByPosition(2, 7);
+    assertEquals("it", token3.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     // Select and change name of lemma annotations
     Display.getDefault().asyncExec(() -> {
+      // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
+      // within the table widget.
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false)); // more
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 4, false, true)); // complicated
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 6, false, true)); // it
@@ -938,28 +954,121 @@ public class TestGridEditor {
 
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    // Check that the fields are pre-filled
+    assertDialogTexts(dialog, NAMESPACED_LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
-    bot.sleep(5000);
-    fail();
     // Assert names and positions have changed
-    // assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    // assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    // assertTrue(table.widget.getDataValueByPosition(1, 3) instanceof SToken);
-    // assertTrue(table.widget.getDataValueByPosition(1, 4) instanceof SToken);
-    // assertTrue(table.widget.getDataValueByPosition(1, 6) instanceof SToken);
-    // assertNull(table.widget.getDataValueByPosition(1, 2));
-    // assertNull(table.widget.getDataValueByPosition(1, 5));
-    // assertNull(table.widget.getDataValueByPosition(1, 7));
-    // // Old cell should now be null, old column has been pushed from col position 2 to 3
-    // assertNull(table.widget.getDataValueByPosition(2, 3));
-    // token should be the same as before
-    // assertEquals(token, table.widget.getDataValueByPosition(2, 3));
-    // assertEquals("example", token.getAnnotation("salt", TEST_ANNOTATION_VALUE).getValue());
+    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(2, 7) instanceof SToken);
+    // Old cell should now be null, old column has been pushed from col position 2 to 3
+    assertNull(table.widget.getDataValueByPosition(3, 4));
+    assertNull(table.widget.getDataValueByPosition(3, 5));
+    assertNull(table.widget.getDataValueByPosition(3, 7));
+    // Tokens should be the same as before
+    assertEquals(token1, table.widget.getDataValueByPosition(2, 4));
+    assertEquals("more",
+        token1.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(token2, table.widget.getDataValueByPosition(2, 5));
+    assertEquals("complicated",
+        token2.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(token3, table.widget.getDataValueByPosition(2, 7));
+    assertEquals("it",
+        token3.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
+  }
+
+  /**
+   * Tests that when multiple cells from multiple different columns are selected, that the
+   * annotation renaming works for all of these cells.
+   */
+  @Test
+  void testChangeAnnotationNameMultipleCellsInDifferentColumns() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert model elements
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    SToken lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
+    assertEquals("more", lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertTrue(table.widget.getDataValueByPosition(3, 5) instanceof SToken);
+    SToken posToken = (SToken) table.widget.getDataValueByPosition(3, 5);
+    assertEquals("JJ", posToken.getAnnotation(SaltUtil.SALT_NAMESPACE, POS_NAME).getValue());
+    assertTrue(table.widget.getDataValueByPosition(4, 1) instanceof SSpan);
+    SSpan infSpan = (SSpan) table.widget.getDataValueByPosition(4, 1);
+    assertEquals("contrast-focus", infSpan.getAnnotation(null, INF_STRUCT_NAME).getValue());
+    // Select and change name of lemma annotations
+    Display.getDefault().asyncExec(() -> {
+      // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
+      // within the table widget.
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false)); // more
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 2, 4, false, true)); // JJ
+      natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 3, 0, false, true)); // contrast-focus
+    });
+    table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    // Check that the fields are pre-filled
+    assertDialogTexts(dialog, null);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    // Assert names and positions have changed, the span annotation is added to a second new column
+    // with the name TEST, as columns are specific to model element types.
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
+    assertEquals(SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + POS_NAME,
+        table.getCellDataValueByPosition(0, 4));
+    assertEquals(INF_STRUCT_NAME, table.getCellDataValueByPosition(0, 5));
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 6));
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(6, 1) instanceof SSpan);
+    // Old cells should now be null
+    assertNull(table.widget.getDataValueByPosition(3, 4));
+    assertNull(table.widget.getDataValueByPosition(4, 5));
+    assertNull(table.widget.getDataValueByPosition(5, 1));
+    // Model elements should be the same as before
+    assertEquals(lemmaToken, table.widget.getDataValueByPosition(2, 4));
+    assertEquals("more", lemmaToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(posToken, table.widget.getDataValueByPosition(2, 5));
+    assertEquals("JJ", posToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(infSpan, table.widget.getDataValueByPosition(6, 1));
+    assertEquals("contrast-focus", infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
   }
 
 
+  private void assertDialogTexts(SWTBotShell dialog, String qualifiedName) {
+    Display.getDefault().asyncExec(() -> {
+      Control[] children = dialog.widget.getChildren();
+      String namespace = null;
+      String name = null;
+      if (qualifiedName != null) {
+        Pair<String, String> namespaceNamePair = SaltUtil.splitQName(qualifiedName);
+        namespace = namespaceNamePair.getLeft();
+        name = namespaceNamePair.getRight();
+      } else {
+        namespace = "";
+        name = "";
+      }
+      boolean checkedFirstText = false;
+      for (int i = 0; i < children.length; i++) {
+        Control child = children[i];
+        if (child instanceof Text) {
+          if (!checkedFirstText) {
+            assertEquals(namespace, ((Text) child).getText());
+          } else {
+            assertEquals(name, ((Text) child).getText());
+          }
+        }
+      }
+    });
+  }
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
     clickWithMask(false, true, rowPosition, columnPosition, table);
