@@ -14,7 +14,7 @@ Please go through the sections on this page to see if one is what you are lookin
 
 This user documentation is the one-stop source of information on using Hexatomic, and can hopefully help you.
 
-If you have read through it and haven't found an answer to your question, you can join the Hexatomic User Mailing List (to be announced) and ask your question there.
+If you have read through it and haven't found an answer to your question, you can write to the <nobr>[**<i class="fa fa-envelope"></i> Hexatomic User Mailing List**](https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users)</nobr> and ask your question there. (Please don't use the mailing list to report bugs, see [*I've found a bug!*](#ive-found-a-bug) instead.)
 
 If you have an idea how we could make the documentation better so that the next person with your question can get it answered in the documentation, please let us know! "[The documentation didn't help me!](#the-documentation-didnt-help-me)" below shows you how to do this.
 
