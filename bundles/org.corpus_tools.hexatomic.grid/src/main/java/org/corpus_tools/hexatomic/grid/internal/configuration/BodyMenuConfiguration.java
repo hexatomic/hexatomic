@@ -135,6 +135,17 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       });
     }
 
+    private Set<PositionCoordinate> getSelectedNonTokenCells() {
+      Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
+      PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
+      for (PositionCoordinate cellPosition : selectedCellCoordinates) {
+        if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
+          selectedNonTokenCells.add(cellPosition);
+        }
+      }
+      return selectedNonTokenCells;
+    }
+
   }
 
   /**
@@ -166,17 +177,6 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return true;
       }
     }
-  }
-
-  private Set<PositionCoordinate> getSelectedNonTokenCells() {
-    Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
-    PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-    for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-      if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
-        selectedNonTokenCells.add(cellPosition);
-      }
-    }
-    return selectedNonTokenCells;
   }
 
 }
