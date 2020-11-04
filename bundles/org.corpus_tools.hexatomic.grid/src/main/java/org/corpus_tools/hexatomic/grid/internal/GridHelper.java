@@ -81,8 +81,7 @@ public class GridHelper {
     ILayer columnHeaderLayer = gridLayer.getColumnHeaderLayer();
     if (!(columnHeaderLayer instanceof GridColumnHeaderLayer)) {
       throw new HexatomicRuntimeException(
-          "Column header layer is not of type " + GridColumnHeaderLayer.class.getSimpleName()
-              + " as expected! Please report this as a bug.");
+          createWrongTypeMessage("Column header layer", GridColumnHeaderLayer.class));
     } else {
       return (GridColumnHeaderLayer) columnHeaderLayer;
     }
@@ -98,8 +97,8 @@ public class GridHelper {
     GridLayer gridLayer = getGridLayerForNatTable(natTable);
     ILayer bodyLayer = gridLayer.getBodyLayer();
     if (!(bodyLayer instanceof GridFreezeLayer)) {
-      throw new HexatomicRuntimeException("Body layer is not of type "
-          + GridFreezeLayer.class.getSimpleName() + " as expected! Please report this as a bug.");
+      throw new HexatomicRuntimeException(
+          createWrongTypeMessage("Body layer", GridFreezeLayer.class));
     } else {
       return (GridFreezeLayer) bodyLayer;
     }
@@ -108,11 +107,16 @@ public class GridHelper {
   private static GridLayer getGridLayerForNatTable(NatTable natTable) {
     ILayer underlyingLayer = natTable.getUnderlyingLayerByPosition(0, 0);
     if (!(underlyingLayer instanceof GridLayer)) {
-      throw new HexatomicRuntimeException("Underlying layer of NatTable is not of type "
-          + GridLayer.class.getSimpleName() + " as expected! Please report this as a bug.");
+      throw new HexatomicRuntimeException(
+          createWrongTypeMessage("Underlying layer of NatTable", GridLayer.class));
     } else {
       return (GridLayer) underlyingLayer;
     }
+  }
+
+  private static String createWrongTypeMessage(String object, Class<?> expectedClass) {
+    return object + " is not of type " + expectedClass.getSimpleName()
+        + " as expected! Please report this as a bug";
   }
 
 }
