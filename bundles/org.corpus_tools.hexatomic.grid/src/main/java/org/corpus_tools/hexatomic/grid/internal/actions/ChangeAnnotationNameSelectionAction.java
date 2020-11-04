@@ -54,8 +54,7 @@ public class ChangeAnnotationNameSelectionAction implements IKeyAction {
     // Map the selected cells by column.
     Map<Integer, Set<Integer>> cellMapByColumn = new HashMap<>();
     for (PositionCoordinate cellCoordinate : this.selectedNonTokenCells) {
-      Set<Integer> columnCells =
-          cellMapByColumn.get(cellCoordinate.getColumnPosition());
+      Set<Integer> columnCells = cellMapByColumn.get(cellCoordinate.getColumnPosition());
       if (columnCells == null) {
         columnCells = new HashSet<>();
       }
@@ -64,9 +63,9 @@ public class ChangeAnnotationNameSelectionAction implements IKeyAction {
     }
     // Trigger the command to display the annotation rename dialog, passing whether there is not
     // more than one entry, which is the case if all selected cells are in the same column.
-    boolean allCellsInSameColumn = !(cellMapByColumn.size() > 1);
-    natTable.doCommand(new DisplayAnnotationRenameDialogOnCellsCommand(natTable,
-        cellMapByColumn, allCellsInSameColumn));
+    boolean allCellsInSameColumn = cellMapByColumn.size() == 1;
+    natTable.doCommand(new DisplayAnnotationRenameDialogOnCellsCommand(natTable, cellMapByColumn,
+        allCellsInSameColumn));
   }
 
 }
