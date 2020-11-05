@@ -931,6 +931,39 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests that when a single cell is selected and the annotation rename dialog is cancelled, that
+   * everything has stayed the same.
+   */
+  @Test
+  void testCancelChangeAnnotationNameSingleCell() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
+    SToken token = (SToken) table.widget.getDataValueByPosition(2, 3);
+    assertEquals(EXAMPLE_VALUE,
+        token.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    // Select and change name
+    table.click(3, 2);
+    table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    // Check that the fields are pre-filled
+    assertDialogTexts(dialog, null);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("Cancel").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    // Assert names and positions have not changed
+    assertEquals(token, table.widget.getDataValueByPosition(2, 3));
+    token = (SToken) table.widget.getDataValueByPosition(2, 3);
+    assertEquals(EXAMPLE_VALUE,
+        token.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+
+  }
+
+
+  /**
    * Tests that when multiple cells in the same column are selected, that the annotation renaming
    * works for all of these cells.
    */
