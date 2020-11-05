@@ -70,11 +70,19 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
+
+
   private static final String TOKEN_VALUE = "Token";
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
   private static final String TEST_ANNOTATION_VALUE = "TEST";
+  private static final String CONTRAST_FOCUS_VALUE = "contrast-focus";
+  private static final String MORE_VALUE = "more";
+  private static final String COMPLICATED_VALUE = "complicated";
+  private static final String IT_VALUE = "it";
+  private static final String JJ_VALUE = "JJ";
+  private static final String EXAMPLE_VALUE = "example";
 
   private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
 
@@ -249,8 +257,8 @@ public class TestGridEditor {
     assertEquals(11, natTable.getDataValueByPosition(0, 11));
     assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
     assertEquals(TOKEN_VALUE, natTable.getDataValueByPosition(1, 0));
-    assertEquals("Inf-Struct", table.getCellDataValueByPosition(0, 4));
-    assertEquals("Inf-Struct", natTable.getDataValueByPosition(4, 0));
+    assertEquals(INF_STRUCT_NAME, table.getCellDataValueByPosition(0, 4));
+    assertEquals(INF_STRUCT_NAME, natTable.getDataValueByPosition(4, 0));
 
     // Test cells
     // Token text
@@ -268,8 +276,9 @@ public class TestGridEditor {
     assertEquals("be", ((SAnnotationContainer) natTable.getDataValueByPosition(2, 1))
         .getAnnotation(lemmaHeader).getValue());
     String infStructHeader = natTable.getDataValueByPosition(4, 0).toString();
-    assertEquals("contrast-focus", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
-        .getAnnotation(infStructHeader).getValue());
+    assertEquals(CONTRAST_FOCUS_VALUE,
+        ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
+            .getAnnotation(infStructHeader).getValue());
     assertEquals("topic", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
         .getAnnotation(infStructHeader).getValue());
     assertEquals("topic", ((SAnnotationContainer) natTable.getDataValueByPosition(4, 11))
@@ -898,7 +907,8 @@ public class TestGridEditor {
 
     assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
     SToken token = (SToken) table.widget.getDataValueByPosition(2, 3);
-    assertEquals("example", token.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertEquals(EXAMPLE_VALUE,
+        token.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     // Select and change name
     table.click(3, 2);
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
@@ -916,7 +926,7 @@ public class TestGridEditor {
     assertNull(table.widget.getDataValueByPosition(3, 3));
     // token should be the same as before
     assertEquals(token, table.widget.getDataValueByPosition(2, 3));
-    assertEquals("example",
+    assertEquals(EXAMPLE_VALUE,
         token.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
 
@@ -934,14 +944,14 @@ public class TestGridEditor {
     // Assert model elements
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
     SToken token1 = (SToken) table.widget.getDataValueByPosition(2, 4);
-    assertEquals("more", token1.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertEquals(MORE_VALUE, token1.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
     SToken token2 = (SToken) table.widget.getDataValueByPosition(2, 5);
-    assertEquals("complicated",
+    assertEquals(COMPLICATED_VALUE,
         token2.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     assertTrue(table.widget.getDataValueByPosition(2, 7) instanceof SToken);
     SToken token3 = (SToken) table.widget.getDataValueByPosition(2, 7);
-    assertEquals("it", token3.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertEquals(IT_VALUE, token3.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     // Select and change name of lemma annotations
     NatTable natTable = table.widget;
     Display.getDefault().asyncExec(() -> {
@@ -971,13 +981,13 @@ public class TestGridEditor {
     assertNull(table.widget.getDataValueByPosition(3, 7));
     // Tokens should be the same as before
     assertEquals(token1, table.widget.getDataValueByPosition(2, 4));
-    assertEquals("more",
+    assertEquals(MORE_VALUE,
         token1.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
     assertEquals(token2, table.widget.getDataValueByPosition(2, 5));
-    assertEquals("complicated",
+    assertEquals(COMPLICATED_VALUE,
         token2.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
     assertEquals(token3, table.widget.getDataValueByPosition(2, 7));
-    assertEquals("it",
+    assertEquals(IT_VALUE,
         token3.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
 
@@ -995,13 +1005,14 @@ public class TestGridEditor {
     // Assert model elements
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
     SToken lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
-    assertEquals("more", lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+    assertEquals(MORE_VALUE,
+        lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
     assertTrue(table.widget.getDataValueByPosition(3, 5) instanceof SToken);
     SToken posToken = (SToken) table.widget.getDataValueByPosition(3, 5);
-    assertEquals("JJ", posToken.getAnnotation(SaltUtil.SALT_NAMESPACE, POS_NAME).getValue());
+    assertEquals(JJ_VALUE, posToken.getAnnotation(SaltUtil.SALT_NAMESPACE, POS_NAME).getValue());
     assertTrue(table.widget.getDataValueByPosition(4, 1) instanceof SSpan);
     SSpan infSpan = (SSpan) table.widget.getDataValueByPosition(4, 1);
-    assertEquals("contrast-focus", infSpan.getAnnotation(null, INF_STRUCT_NAME).getValue());
+    assertEquals(CONTRAST_FOCUS_VALUE, infSpan.getAnnotation(null, INF_STRUCT_NAME).getValue());
     // Select and change name of lemma annotations
     NatTable natTable = table.widget;
     Display.getDefault().asyncExec(() -> {
@@ -1035,11 +1046,11 @@ public class TestGridEditor {
     assertNull(table.widget.getDataValueByPosition(5, 1));
     // Model elements should be the same as before
     assertEquals(lemmaToken, table.widget.getDataValueByPosition(2, 4));
-    assertEquals("more", lemmaToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(MORE_VALUE, lemmaToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
     assertEquals(posToken, table.widget.getDataValueByPosition(2, 5));
-    assertEquals("JJ", posToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(JJ_VALUE, posToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
     assertEquals(infSpan, table.widget.getDataValueByPosition(6, 1));
-    assertEquals("contrast-focus", infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
+    assertEquals(CONTRAST_FOCUS_VALUE, infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
   }
 
 
@@ -1105,8 +1116,7 @@ public class TestGridEditor {
 
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
-    CompositeFreezeLayer freezeLayer = (CompositeFreezeLayer) layerUl;
-    return freezeLayer;
+    return (CompositeFreezeLayer) layerUl;
   }
 
 
