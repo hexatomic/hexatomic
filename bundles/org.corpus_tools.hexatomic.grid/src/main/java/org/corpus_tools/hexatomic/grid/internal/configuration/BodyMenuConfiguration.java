@@ -97,7 +97,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat (mail@sdruskat.net)
    */
-  public class DeleteItemProvider implements IMenuItemProvider {
+  private class DeleteItemProvider implements IMenuItemProvider {
 
 
     @Override
@@ -120,7 +120,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  public class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
+  private class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
