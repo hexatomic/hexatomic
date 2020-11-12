@@ -98,9 +98,6 @@ public class ColumnHeaderDataProvider implements IDataProvider {
               + provider.getColumns().size() + " columns. Please report this as a bug.",
           e);
     }
-    if (column == null) {
-
-    }
     if (newValue == null || (newValue instanceof String && ((String) newValue).isEmpty())) {
       throw new HexatomicRuntimeException("New annotation name must not be null.");
     }
