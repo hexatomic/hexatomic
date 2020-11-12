@@ -77,6 +77,7 @@ class TestColumnHeaderDataProvider {
   void testSetDataValue() {
     assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, null));
     assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, ""));
+    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(10, 0, ""));
     assertDoesNotThrow(() -> fixture.setDataValue(1, 0, "test"));
   }
 
