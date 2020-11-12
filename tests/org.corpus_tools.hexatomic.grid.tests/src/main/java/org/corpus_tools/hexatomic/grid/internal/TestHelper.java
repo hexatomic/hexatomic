@@ -6,11 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.salt.SaltFactory;
-import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SaltProject;
-import org.corpus_tools.salt.samples.SampleGenerator;
 import org.eclipse.emf.common.util.URI;
 
 /**
@@ -24,23 +22,40 @@ public class TestHelper {
   private static final String examplePath =
       "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
           + "org/corpus_tools/hexatomic/core/example-corpus/";
+  private static final String overlappingPath =
+      "src/main/resources/" + "org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
   /**
-   * Creates a {@link GraphDataProvider} with fully resolved example data provided by the
-   * {@link SampleGenerator}.
+   * Creates a {@link GraphDataProvider} with fully resolved example data.
    * 
    * @return the graph data provider with fully resolved example data.
    */
   public static GraphDataProvider createDataProvider() {
-    SDocument newDocument = SaltFactory.createSDocument();
-    newDocument.setName("TEST_DOCUMENT");
-    SampleGenerator.createDocumentStructure(newDocument);
-    SDocumentGraph newGraph = newDocument.getDocumentGraph();
+    return createExampleDataProvider(false);
+  }
+
+  private static GraphDataProvider createExampleDataProvider(boolean useOverlappingData) {
     GraphDataProvider fixtureProvider = new GraphDataProvider();
-    fixtureProvider.setGraph(newGraph);
-    STextualDS text = newGraph.getTextualDSs().get(0);
+    SDocumentGraph graph = null;
+    if (useOverlappingData) {
+      graph = retrieveOverlappingGraph();
+    } else {
+      graph = retrieveGraph();
+    }
+    fixtureProvider.setGraph(graph);
+    STextualDS text = graph.getTextualDSs().get(0);
     fixtureProvider.setDsAndResolveGraph(text);
     return fixtureProvider;
+  }
+
+  /**
+   * Creates a {@link GraphDataProvider} with fully resolved example data, including overlapping
+   * spans.
+   * 
+   * @return the graph data provider with fully resolved example data.
+   */
+  public static GraphDataProvider createOverlappingDataProvider() {
+    return createExampleDataProvider(true);
   }
 
   /**
@@ -62,6 +77,15 @@ public class TestHelper {
    */
   public static SDocumentGraph retrieveGraph() {
     return retrieveGraph(examplePath);
+  }
+
+  /**
+   * Loads an {@link SDocumentGraph} with example data including overlapping spans.
+   * 
+   * @return the document graph with example data
+   */
+  public static SDocumentGraph retrieveOverlappingGraph() {
+    return retrieveGraph(overlappingPath);
   }
 
   /**
