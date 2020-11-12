@@ -22,12 +22,15 @@ import org.junit.jupiter.api.Test;
  */
 class TestColumnHeaderDataProvider {
 
+  private static final String INF_STRUCT = "Inf-Struct";
+  private static final String SALT_POS = "salt::pos";
+  private static final String SALT_LEMMA = "salt::lemma";
+  private static final String TOKEN = "Token";
   private ColumnHeaderDataProvider fixture = null;
 
   /**
    * Sets up the fixture.
    */
-  @SuppressWarnings("unchecked")
   @BeforeEach
   void setUp() {
     fixture =
@@ -57,12 +60,12 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testGetDataValue() {
-    assertEquals("Token", fixture.getDataValue(0, 0));
-    assertEquals("salt::lemma", fixture.getDataValue(1, 0));
-    assertEquals("salt::pos", fixture.getDataValue(2, 0));
-    assertEquals("Inf-Struct", fixture.getDataValue(3, 0));
+    assertEquals(TOKEN, fixture.getDataValue(0, 0));
+    assertEquals(SALT_LEMMA, fixture.getDataValue(1, 0));
+    assertEquals(SALT_POS, fixture.getDataValue(2, 0));
+    assertEquals(INF_STRUCT, fixture.getDataValue(3, 0));
     assertNull(fixture.getDataValue(-1, 0));
-    assertEquals("Token", fixture.getDataValue(0, 2));
+    assertEquals(TOKEN, fixture.getDataValue(0, 2));
     assertNull(fixture.getDataValue(-1, 10));
   }
 
@@ -88,6 +91,16 @@ class TestColumnHeaderDataProvider {
 
   /**
    * Test method for
+   * {@link org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider#getColumnValue()}.
+   */
+  @Test
+  void testGetColumnValue() {
+    assertEquals(TOKEN, fixture.getColumnValue(0));
+    assertEquals(SALT_LEMMA, fixture.getColumnValue(1));
+  }
+
+  /**
+   * Test method for
    * {@link org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider#getRowCount()}.
    */
   @Test
@@ -102,7 +115,7 @@ class TestColumnHeaderDataProvider {
   void testRenameColumnPosition() {
     assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, null));
     assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, ""));
-    assertFalse(fixture.renameColumnPosition(1, "salt::lemma"));
+    assertFalse(fixture.renameColumnPosition(1, SALT_LEMMA));
     assertTrue(fixture.renameColumnPosition(1, "TEST"));
   }
 
