@@ -34,6 +34,16 @@ public class TestHelper {
     return createExampleDataProvider(false);
   }
 
+  /**
+   * Creates a {@link GraphDataProvider} with fully resolved example data, including overlapping
+   * spans.
+   * 
+   * @return the graph data provider with fully resolved example data.
+   */
+  public static GraphDataProvider createOverlappingDataProvider() {
+    return createExampleDataProvider(true);
+  }
+
   private static GraphDataProvider createExampleDataProvider(boolean useOverlappingData) {
     GraphDataProvider fixtureProvider = new GraphDataProvider();
     SDocumentGraph graph = null;
@@ -49,16 +59,6 @@ public class TestHelper {
   }
 
   /**
-   * Creates a {@link GraphDataProvider} with fully resolved example data, including overlapping
-   * spans.
-   * 
-   * @return the graph data provider with fully resolved example data.
-   */
-  public static GraphDataProvider createOverlappingDataProvider() {
-    return createExampleDataProvider(true);
-  }
-
-  /**
    * Retrieves the first in the list of {@link STextualDS} in the given graph.
    * 
    * @param graph the document graph for which to retrieve the first {@link STextualDS}.
@@ -71,21 +71,21 @@ public class TestHelper {
   }
 
   /**
-   * Loads an {@link SDocumentGraph} with example data.
-   * 
-   * @return the document graph with example data
-   */
-  public static SDocumentGraph retrieveGraph() {
-    return retrieveGraph(examplePath);
-  }
-
-  /**
    * Loads an {@link SDocumentGraph} with example data including overlapping spans.
    * 
    * @return the document graph with example data
    */
   public static SDocumentGraph retrieveOverlappingGraph() {
     return retrieveGraph(overlappingPath);
+  }
+
+  /**
+   * Loads an {@link SDocumentGraph} with example data.
+   * 
+   * @return the document graph with example data
+   */
+  public static SDocumentGraph retrieveGraph() {
+    return retrieveGraph(examplePath);
   }
 
   /**
