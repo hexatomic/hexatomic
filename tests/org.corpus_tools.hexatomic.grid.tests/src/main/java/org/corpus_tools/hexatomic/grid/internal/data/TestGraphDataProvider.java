@@ -12,21 +12,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.io.File;
 import java.util.List;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.grid.internal.TestHelper;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
-import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
-import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,9 +43,6 @@ class TestGraphDataProvider {
   private SDocumentGraph overlappingExampleGraph;
   private STextualDS overlappingExampleText;
 
-  private static final String examplePath =
-      "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
-          + "org/corpus_tools/hexatomic/core/example-corpus/";
   private static final String overlappingExamplePath =
       "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
@@ -58,10 +52,10 @@ class TestGraphDataProvider {
   @BeforeEach
   void setUp() {
     fixture = new GraphDataProvider();
-    exampleGraph = retrieveGraph(examplePath);
-    overlappingExampleGraph = retrieveGraph(overlappingExamplePath);
-    exampleText = getFirstTextFromGraph(exampleGraph);
-    overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
+    exampleGraph = TestHelper.retrieveGraph();
+    overlappingExampleGraph = TestHelper.retrieveGraph(overlappingExamplePath);
+    exampleText = TestHelper.getFirstTextFromGraph(exampleGraph);
+    overlappingExampleText = TestHelper.getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);
     fixture.errors = errorService;
     fixture.projectManager = mock(ProjectManager.class);
@@ -406,22 +400,9 @@ class TestGraphDataProvider {
     assertEquals("ABC", annotation.getValue());
   }
 
-  private SDocumentGraph retrieveGraph(String path) {
-    File exampleProjectDirectory = new File(path);
-    assertTrue(exampleProjectDirectory.isDirectory());
-    URI exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
-    SaltProject project = SaltFactory.createSaltProject();
-    project.loadSaltProject(exampleProjectUri);
-    SDocumentGraph graph =
-        project.getCorpusGraphs().get(0).getDocuments().get(0).getDocumentGraph();
-    assertNotNull(graph);
-    return graph;
-  }
+  @Test
+  final void testBulkRenameAnnotations() {
 
-  private STextualDS getFirstTextFromGraph(SDocumentGraph graph) {
-    STextualDS text = graph.getTextualDSs().get(0);
-    assertNotNull(text);
-    return text;
   }
 
 }

@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.util.List;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.hexatomic.grid.internal.TestHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,20 +30,13 @@ class TestColumnHeaderDataProvider {
   @SuppressWarnings("unchecked")
   @BeforeEach
   void setUp() {
-    GraphDataProvider fixtureProvider = mock(GraphDataProvider.class);
-    List<Column> columns = mock(List.class);
-    Column tokenColumn = mock(Column.class);
-    Column spanColumn = mock(Column.class);
-    when(tokenColumn.getHeader()).thenReturn("ZERO");
-    when(columns.get(0)).thenReturn(tokenColumn);
-    when(spanColumn.getHeader()).thenReturn("ONE");
-    when(spanColumn.getColumnValue()).thenReturn("OLD");
-    when(columns.get(1)).thenReturn(spanColumn);
-    when(columns.size()).thenReturn(2);
-    when(fixtureProvider.getColumns()).thenReturn(columns);
-    when(fixtureProvider.getColumnCount()).thenReturn(2);
-    when(fixtureProvider.getRowCount()).thenReturn(3);
-    fixture = new ColumnHeaderDataProvider(fixtureProvider, mock(ProjectManager.class));
+    fixture =
+        new ColumnHeaderDataProvider(TestHelper.createDataProvider(), mock(ProjectManager.class));
+  }
+
+  @Test
+  void test() {
+
   }
 
   /**
@@ -64,11 +57,13 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testGetDataValue() {
-    assertEquals("ZERO", fixture.getDataValue(0, 0));
-    assertEquals("ONE", fixture.getDataValue(1, 0));
+    assertEquals("Token", fixture.getDataValue(0, 0));
+    assertEquals("salt::lemma", fixture.getDataValue(1, 0));
+    assertEquals("salt::pos", fixture.getDataValue(2, 0));
+    assertEquals("Inf-Struct", fixture.getDataValue(3, 0));
     assertNull(fixture.getDataValue(-1, 0));
-    assertEquals("ZERO", fixture.getDataValue(0, 2));
-    assertNull(fixture.getDataValue(-1, 2));
+    assertEquals("Token", fixture.getDataValue(0, 2));
+    assertNull(fixture.getDataValue(-1, 10));
   }
 
   /**
@@ -77,7 +72,6 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testSetDataValue() {
-    assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(-1, -1, null));
     assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, null));
     assertThrows(HexatomicRuntimeException.class, () -> fixture.setDataValue(1, 0, ""));
     assertDoesNotThrow(() -> fixture.setDataValue(1, 0, "test"));
@@ -89,7 +83,7 @@ class TestColumnHeaderDataProvider {
    */
   @Test
   void testGetColumnCount() {
-    assertEquals(2, fixture.getColumnCount());
+    assertEquals(4, fixture.getColumnCount());
   }
 
   /**
@@ -108,7 +102,8 @@ class TestColumnHeaderDataProvider {
   void testRenameColumnPosition() {
     assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, null));
     assertThrows(NullPointerException.class, () -> fixture.renameColumnPosition(-1, ""));
-    assertFalse(fixture.renameColumnPosition(1, "OLD"));
+    assertFalse(fixture.renameColumnPosition(1, "salt::lemma"));
+    assertTrue(fixture.renameColumnPosition(1, "TEST"));
   }
 
 }
