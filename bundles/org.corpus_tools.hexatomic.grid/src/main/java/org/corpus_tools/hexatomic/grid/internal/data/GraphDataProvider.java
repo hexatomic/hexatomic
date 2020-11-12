@@ -406,6 +406,10 @@ public class GraphDataProvider implements IDataProvider {
       String currentQName = column.getColumnValue();
       for (Integer rowPosition : columnCoordinates.getValue()) {
         SStructuredNode node = column.getDataObject(rowPosition);
+        if (node == null) {
+          // There can be no annotations to rename, so continue with the next cell
+          continue;
+        }
         SAnnotation currentAnnotation = node.getAnnotation(currentQName);
         Object annotationValue = currentAnnotation.getValue();
         node.removeLabel(currentQName);
