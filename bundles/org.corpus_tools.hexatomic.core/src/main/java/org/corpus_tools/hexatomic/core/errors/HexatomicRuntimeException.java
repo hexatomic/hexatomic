@@ -40,4 +40,16 @@ public class HexatomicRuntimeException extends RuntimeException {
     super(msg);
   }
 
+  /**
+   * Constructs a runtime exception with the given detailed message which passes on the cause for
+   * this exception.
+   * 
+   * @param msg The message for this exception.
+   * @param cause The cause for this exception.
+   */
+  public HexatomicRuntimeException(String msg, Throwable cause) {
+    super(msg, cause);
+  }
+
+
 }
