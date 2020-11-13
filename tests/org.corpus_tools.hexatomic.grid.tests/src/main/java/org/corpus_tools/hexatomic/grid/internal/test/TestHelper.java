@@ -19,6 +19,10 @@ import org.eclipse.emf.common.util.URI;
  */
 public class TestHelper {
 
+  private TestHelper() {
+    // Should not be initiated.
+  }
+
   private static final String examplePath =
       "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
           + "org/corpus_tools/hexatomic/core/example-corpus/";
