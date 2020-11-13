@@ -58,9 +58,8 @@ class TestGridHelper {
     when(gridLayer.getColumnHeaderLayer()).thenReturn(mock(ColumnHeaderLayer.class));
     HexatomicRuntimeException exception = assertThrows(HexatomicRuntimeException.class,
         () -> GridHelper.getColumnHeaderLayer(natTable));
-    assertEquals(
-        "Column header layer is not of type GridColumnHeaderLayer as expected! Please report this as a bug.",
-        exception.getMessage());
+    assertEquals("Column header layer is not of type GridColumnHeaderLayer as expected! "
+        + "Please report this as a bug.", exception.getMessage());
   }
 
   /**
@@ -75,9 +74,8 @@ class TestGridHelper {
     when(natTable.getUnderlyingLayerByPosition(0, 0)).thenReturn(mock(ColumnHeaderLayer.class));
     HexatomicRuntimeException exception = assertThrows(HexatomicRuntimeException.class,
         () -> GridHelper.getColumnHeaderLayer(natTable));
-    assertEquals(
-        "Underlying layer of NatTable is not of type GridLayer as expected! Please report this as a bug.",
-        exception.getMessage());
+    assertEquals("Underlying layer of NatTable is not of type GridLayer as expected! "
+        + "Please report this as a bug.", exception.getMessage());
   }
 
   /**

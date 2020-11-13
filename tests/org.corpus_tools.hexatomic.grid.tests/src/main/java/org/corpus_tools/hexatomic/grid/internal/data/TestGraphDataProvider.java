@@ -425,12 +425,12 @@ class TestGraphDataProvider {
     assertTrue(span.getAnnotation(INF_STRUCT) != null);
 
     // Prepare map
-    Map<Integer, Set<Integer>> map = new HashMap<>();
     Set<Integer> col1Rows = new HashSet<>();
     col1Rows.add(2);
     col1Rows.add(4);
     Set<Integer> col3Rows = new HashSet<>();
     col3Rows.add(0);
+    Map<Integer, Set<Integer>> map = new HashMap<>();
     map.put(1, col1Rows);
     map.put(3, col3Rows);
 
