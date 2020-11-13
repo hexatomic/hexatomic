@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.corpus_tools.hexatomic.grid.internal.TestHelper;
+import org.corpus_tools.hexatomic.grid.internal.test.TestHelper;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.STextualRelation;

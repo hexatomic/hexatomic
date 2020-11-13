@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
-import org.corpus_tools.hexatomic.grid.internal.TestHelper;
+import org.corpus_tools.hexatomic.grid.internal.test.TestHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

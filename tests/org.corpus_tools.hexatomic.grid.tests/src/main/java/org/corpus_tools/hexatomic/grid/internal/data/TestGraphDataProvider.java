@@ -12,11 +12,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.grid.internal.TestHelper;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.internal.test.TestHelper;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructuredNode;
@@ -34,6 +38,12 @@ import org.junit.jupiter.api.Test;
  *
  */
 class TestGraphDataProvider {
+
+  private static final String NAMESPACE_TEST = "namespace::test";
+
+  private static final String INF_STRUCT = "Inf-Struct";
+
+  private static final String SALT_LEMMA = "salt::lemma";
 
   private ErrorService errorService;
 
@@ -395,14 +405,45 @@ class TestGraphDataProvider {
     List<SToken> overlappedTokens = exampleGraph.getOverlappedTokens(newSpan);
     assertEquals(1, overlappedTokens.size());
     assertEquals(token, overlappedTokens.get(0));
-    SAnnotation annotation = newSpan.getAnnotation(null, "Inf-Struct");
+    SAnnotation annotation = newSpan.getAnnotation(null, INF_STRUCT);
     assertNotNull(annotation);
     assertEquals("ABC", annotation.getValue());
   }
 
   @Test
   final void testBulkRenameAnnotations() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
 
+    SStructuredNode token1 = fixture.getDataValue(1, 2);
+    SStructuredNode token2 = fixture.getDataValue(1, 4);
+    SStructuredNode span = fixture.getDataValue(3, 0);
+
+    // Make initial assertions
+    assertTrue(token1.getAnnotation(SALT_LEMMA) != null);
+    assertTrue(token2.getAnnotation(SALT_LEMMA) != null);
+    assertTrue(span.getAnnotation(INF_STRUCT) != null);
+
+    // Prepare map
+    Map<Integer, Set<Integer>> map = new HashMap<>();
+    Set<Integer> col1Rows = new HashSet<>();
+    col1Rows.add(2);
+    col1Rows.add(4);
+    Set<Integer> col3Rows = new HashSet<>();
+    col3Rows.add(0);
+    map.put(1, col1Rows);
+    map.put(3, col3Rows);
+
+    fixture.bulkRenameAnnotations(map, NAMESPACE_TEST);
+
+    // Original annotations should be null
+    assertTrue(token1.getAnnotation(SALT_LEMMA) == null);
+    assertTrue(token2.getAnnotation(SALT_LEMMA) == null);
+    assertTrue(span.getAnnotation(INF_STRUCT) == null);
+    // New annotation should exist
+    assertEquals("example", token1.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals("complicated", token2.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals("contrast-focus", span.getAnnotation(NAMESPACE_TEST).getValue());
   }
 
 }

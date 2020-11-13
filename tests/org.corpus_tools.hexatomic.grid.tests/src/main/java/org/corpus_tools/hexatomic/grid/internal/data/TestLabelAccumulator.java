@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.corpus_tools.hexatomic.grid.internal.TestHelper;
+import org.corpus_tools.hexatomic.grid.internal.test.TestHelper;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
