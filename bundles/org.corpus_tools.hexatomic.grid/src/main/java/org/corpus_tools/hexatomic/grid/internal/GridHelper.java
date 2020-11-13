@@ -116,7 +116,7 @@ public class GridHelper {
 
   private static String createWrongTypeMessage(String object, Class<?> expectedClass) {
     return object + " is not of type " + expectedClass.getSimpleName()
-        + " as expected! Please report this as a bug";
+        + " as expected! Please report this as a bug.";
   }
 
 }
