@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.grid.internal;
+package org.corpus_tools.hexatomic.grid.internal.test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
