@@ -38,7 +38,7 @@ location 'https://korpling.github.io/salt/p2/salt-3.4/' {
 }
 
 location 'https://korpling.github.io/pepper/p2/pepper-3.5' {
-	org.corpus-tools.pepper-framework
+	org.corpus-tools.pepper-framework [3.5.0,4.0.0)
 }
 
 // NatTable (Eclipse Nebula table widget)
