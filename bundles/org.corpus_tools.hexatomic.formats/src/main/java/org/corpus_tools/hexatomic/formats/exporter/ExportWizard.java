@@ -215,8 +215,8 @@ public class ExportWizard extends Wizard {
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
       // Limit the maximum number of parallel processed documents
-      // pepper.get().getConfiguration().setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS,
-      // "2");
+      // pepper.get().getConfiguration()
+      // .setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS, "2");
 
       // Add an import step for the Salt corpus (on-disk)
       StepDesc importStep = new StepDesc();
