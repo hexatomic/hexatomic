@@ -138,4 +138,60 @@ class TestImportExport {
 
   }
 
+  @Test
+  void testExportPaula() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu("Export").isEnabled());
+
+    // Open example corpus
+    openDefaultExample();
+    assertTrue(bot.menu("Export").isEnabled());
+
+    // Click on the export menu add fill out the wizard
+    bot.menu("Export").click();
+
+    SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    Path tmpDir = Files.createTempDirectory("hexatomic-export-test");
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    wizard.bot().button("Next >").click();
+
+    wizard.bot().radio("PAULA format").click();
+    wizard.bot().button("Finish").click();
+
+    // Wait until wizard is finished
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return wizard.widget.isDisposed();
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Export wizard was not closed";
+      }
+    }, 30000);
+
+    // Check that the exmaralda files have been created
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc1/doc1.text.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc1/doc1.tok.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc1/doc1.tok_pos.xml").toFile().isFile());
+
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc2/doc2.text.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc2/doc2.tok.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc2/doc2.tok_pos.xml").toFile().isFile());
+
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc3/doc3.text.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc3/doc3.tok.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc3/doc3.tok_pos.xml").toFile().isFile());
+
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.text.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.tok.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc5/doc4.tok_pos.xml").toFile().isFile());
+
+  }
+
 }
