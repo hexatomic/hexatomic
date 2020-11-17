@@ -44,7 +44,6 @@ import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
 import org.corpus_tools.pepper.common.JOB_STATUS;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
-import org.corpus_tools.pepper.common.PepperConfiguration;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
 import org.corpus_tools.pepper.core.PepperJobImpl;
@@ -94,7 +93,8 @@ public class ExportWizard extends Wizard {
             // We don't know how many documents are present previously but since exported the
             // documents has started, we can get this number
             numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
-            monitor.beginTask("Exporting " + numberOfJobs.get() + " documents", numberOfJobs.get());
+            monitor.beginTask("Exporting " + numberOfJobs.get() / 2 + " documents",
+                numberOfJobs.get() / 2);
           }
 
           if (numberOfJobs.isPresent()) {
@@ -215,8 +215,8 @@ public class ExportWizard extends Wizard {
     Optional<Pepper> pepper = Activator.getPepper();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
       // Limit the maximum number of parallel processed documents
-      pepper.get().getConfiguration().setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS,
-          "2");
+      // pepper.get().getConfiguration().setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS,
+      // "2");
 
       // Add an import step for the Salt corpus (on-disk)
       StepDesc importStep = new StepDesc();
