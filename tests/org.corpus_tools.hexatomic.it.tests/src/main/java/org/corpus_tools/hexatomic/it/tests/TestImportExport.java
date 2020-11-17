@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import org.corpus_tools.hexatomic.core.CommandParams;
-import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -21,8 +20,6 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
-import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +31,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestImportExport {
 
-  private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
-  private static final String ANOTHER_TEXT = "Another text";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
-  private static final String GET_VIEWPORT = "getViewport";
-
-  private static final String GET_VIEW_LOCATION = "getViewLocation";
 
   private URI exampleProjectUri;
   private ECommandService commandService;
@@ -47,9 +39,6 @@ class TestImportExport {
   private EPartService partService;
 
   private ErrorService errorService;
-  private ProjectManager projectManager;
-
-  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
 
   @BeforeEach
@@ -59,7 +48,6 @@ class TestImportExport {
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
-    projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -130,6 +118,9 @@ class TestImportExport {
       }
     }, 30000);
 
+    // Check no errors have been handled
+    assertFalse(errorService.getLastException().isPresent());
+
     // Check that the exmaralda files have been created
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc1.exb").toFile().isFile());
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc2.exb").toFile().isFile());
@@ -174,6 +165,9 @@ class TestImportExport {
         return "Export wizard was not closed";
       }
     }, 30000);
+
+    // Check no errors have been handled
+    assertFalse(errorService.getLastException().isPresent());
 
     // Check that the exmaralda files have been created
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc1/doc1.text.xml").toFile().isFile());
