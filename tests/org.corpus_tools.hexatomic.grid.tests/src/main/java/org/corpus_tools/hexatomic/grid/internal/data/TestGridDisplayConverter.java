@@ -24,6 +24,9 @@ import org.junit.jupiter.api.Test;
  */
 class TestGridDisplayConverter {
 
+  private static final String BE = "be";
+  private static final String IS = "Is";
+  private static final String CONTRAST_FOCUS = "contrast-focus";
   private GridDisplayConverter fixture = null;
   private SToken token = null;
   private SSpan span = null;
@@ -74,14 +77,14 @@ class TestGridDisplayConverter {
     when(spanCell.getRowIndex()).thenReturn(0);
     token = (SToken) dataProvider.getDataValue(0, 0);
     span = (SSpan) dataProvider.getDataValue(3, 0);
-    assertEquals("be", fixture.canonicalToDisplayValue(tokenCell, null, token));
-    assertEquals("contrast-focus", fixture.canonicalToDisplayValue(spanCell, null, span));
+    assertEquals(BE, fixture.canonicalToDisplayValue(tokenCell, null, token));
+    assertEquals(CONTRAST_FOCUS, fixture.canonicalToDisplayValue(spanCell, null, span));
     assertNull(fixture.canonicalToDisplayValue(null, null, null));
     assertNull(fixture.canonicalToDisplayValue(tokenCell, null, mock(STextualRelation.class)));
     assertNull(fixture.canonicalToDisplayValue(nullCell, null, token));
     assertThrows(RuntimeException.class,
         () -> fixture.canonicalToDisplayValue(tokenCell, null, mock(SStructure.class)));
-    assertEquals("Is", fixture.canonicalToDisplayValue(tokenTextCell, null, token));
+    assertEquals(IS, fixture.canonicalToDisplayValue(tokenTextCell, null, token));
   }
 
   /**
@@ -92,10 +95,10 @@ class TestGridDisplayConverter {
   void testDisplayToCanonicalValueILayerCell() {
     // assertEquals(token, fixture.displayToCanonicalValue(tokenCell, null, "token_pass"));
     // assertEquals(span, fixture.displayToCanonicalValue(spanCell, null, "span_pass"));
-    assertEquals("be", fixture.displayToCanonicalValue(tokenCell, null, "be"));
-    assertEquals("contrast-focus",
-        fixture.displayToCanonicalValue(spanCell, null, "contrast-focus"));
-    assertEquals("Is", fixture.displayToCanonicalValue(tokenTextCell, null, "Is"));
+    assertEquals(BE, fixture.displayToCanonicalValue(tokenCell, null, BE));
+    assertEquals(CONTRAST_FOCUS,
+        fixture.displayToCanonicalValue(spanCell, null, CONTRAST_FOCUS));
+    assertEquals(IS, fixture.displayToCanonicalValue(tokenTextCell, null, IS));
   }
 
 }

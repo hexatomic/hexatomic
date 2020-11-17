@@ -37,11 +37,6 @@ class TestColumnHeaderDataProvider {
         new ColumnHeaderDataProvider(TestHelper.createDataProvider(), mock(ProjectManager.class));
   }
 
-  @Test
-  void test() {
-
-  }
-
   /**
    * Test method for
    * {@link org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider#ColumnHeaderDataProvider(org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider)}.

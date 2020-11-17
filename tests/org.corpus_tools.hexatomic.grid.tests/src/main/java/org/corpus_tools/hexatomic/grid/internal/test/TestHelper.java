@@ -23,10 +23,10 @@ public class TestHelper {
     // Should not be initiated.
   }
 
-  private static final String examplePath =
+  private static final String EXAMPLE_PATH =
       "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
           + "org/corpus_tools/hexatomic/core/example-corpus/";
-  private static final String overlappingPath =
+  private static final String OVERLAPPING_PATH =
       "src/main/resources/" + "org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
   /**
@@ -80,7 +80,7 @@ public class TestHelper {
    * @return the document graph with example data
    */
   public static SDocumentGraph retrieveOverlappingGraph() {
-    return retrieveGraph(overlappingPath);
+    return retrieveGraph(OVERLAPPING_PATH);
   }
 
   /**
@@ -89,7 +89,7 @@ public class TestHelper {
    * @return the document graph with example data
    */
   public static SDocumentGraph retrieveGraph() {
-    return retrieveGraph(examplePath);
+    return retrieveGraph(EXAMPLE_PATH);
   }
 
   /**
