@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -465,7 +465,7 @@ class TestGraphDataProvider {
 
     // Prepare map
     Set<Integer> col3Rows = new HashSet<>();
-    col3Rows.addAll(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+    Collections.addAll(col3Rows, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     Map<Integer, Set<Integer>> map = new HashMap<>();
     map.put(3, col3Rows);
 
