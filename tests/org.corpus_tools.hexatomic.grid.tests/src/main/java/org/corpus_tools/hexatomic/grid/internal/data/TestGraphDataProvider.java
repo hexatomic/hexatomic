@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +39,14 @@ import org.junit.jupiter.api.Test;
  *
  */
 class TestGraphDataProvider {
+
+  private static final String EXAMPLE = "example";
+
+  private static final String COMPLICATED = "complicated";
+
+  private static final String CONTRAST_FOCUS = "contrast-focus";
+
+  private static final String TOPIC = "topic";
 
   private static final String NAMESPACE_TEST = "namespace::test";
 
@@ -417,12 +426,12 @@ class TestGraphDataProvider {
 
     SStructuredNode token1 = fixture.getDataValue(1, 2);
     SStructuredNode token2 = fixture.getDataValue(1, 4);
-    SStructuredNode span = fixture.getDataValue(3, 0);
+    SStructuredNode singleCellSpan = fixture.getDataValue(3, 0);
 
     // Make initial assertions
     assertTrue(token1.getAnnotation(SALT_LEMMA) != null);
     assertTrue(token2.getAnnotation(SALT_LEMMA) != null);
-    assertTrue(span.getAnnotation(INF_STRUCT) != null);
+    assertTrue(singleCellSpan.getAnnotation(INF_STRUCT) != null);
 
     // Prepare map
     Set<Integer> col1Rows = new HashSet<>();
@@ -439,11 +448,34 @@ class TestGraphDataProvider {
     // Original annotations should be null
     assertTrue(token1.getAnnotation(SALT_LEMMA) == null);
     assertTrue(token2.getAnnotation(SALT_LEMMA) == null);
-    assertTrue(span.getAnnotation(INF_STRUCT) == null);
+    assertTrue(singleCellSpan.getAnnotation(INF_STRUCT) == null);
     // New annotation should exist
-    assertEquals("example", token1.getAnnotation(NAMESPACE_TEST).getValue());
-    assertEquals("complicated", token2.getAnnotation(NAMESPACE_TEST).getValue());
-    assertEquals("contrast-focus", span.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals(EXAMPLE, token1.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals(COMPLICATED, token2.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals(CONTRAST_FOCUS, singleCellSpan.getAnnotation(NAMESPACE_TEST).getValue());
   }
+
+  @Test
+  final void testBulkRenameAnnotationsForMultiCellSpan() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
+
+    SStructuredNode multiCellSpan = fixture.getDataValue(3, 1);
+    assertEquals(TOPIC, multiCellSpan.getAnnotation(INF_STRUCT).getValue());
+
+    // Prepare map
+    Set<Integer> col3Rows = new HashSet<>();
+    col3Rows.addAll(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+    Map<Integer, Set<Integer>> map = new HashMap<>();
+    map.put(3, col3Rows);
+
+    fixture.bulkRenameAnnotations(map, NAMESPACE_TEST);
+
+    // Original annotations should be null
+    assertTrue(multiCellSpan.getAnnotation(INF_STRUCT) == null);
+    // New annotation should exist
+    assertEquals(TOPIC, multiCellSpan.getAnnotation(NAMESPACE_TEST).getValue());
+  }
+
 
 }

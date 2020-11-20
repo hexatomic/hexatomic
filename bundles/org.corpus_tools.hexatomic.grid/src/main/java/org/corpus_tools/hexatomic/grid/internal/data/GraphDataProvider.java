@@ -399,6 +399,7 @@ public class GraphDataProvider implements IDataProvider {
    * @param newQName the new qualified annotation name for the annotations to be renamed
    */
   public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
+    Set<SStructuredNode> changedNodes = new HashSet<>();
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       Integer columnPosition = columnCoordinates.getKey();
@@ -406,8 +407,10 @@ public class GraphDataProvider implements IDataProvider {
       String currentQName = column.getColumnValue();
       for (Integer rowPosition : columnCoordinates.getValue()) {
         SStructuredNode node = column.getDataObject(rowPosition);
-        if (node == null) {
-          // There can be no annotations to rename, so continue with the next cell
+        if (node == null || changedNodes.contains(node)) {
+          // If the nodes is null, there can be no annotations to rename, and if the node has
+          // already been changed, the annotation to change doesn't exist
+          // anymore, so continue with the next cell.
           continue;
         }
         SAnnotation currentAnnotation = node.getAnnotation(currentQName);
@@ -417,6 +420,8 @@ public class GraphDataProvider implements IDataProvider {
         String namespace = namespaceNamePair.getLeft();
         String name = namespaceNamePair.getRight();
         node.createAnnotation(namespace, name, annotationValue);
+        // Remember that the node has already been changed.
+        changedNodes.add(node);
       }
     }
     projectManager.addCheckpoint();
