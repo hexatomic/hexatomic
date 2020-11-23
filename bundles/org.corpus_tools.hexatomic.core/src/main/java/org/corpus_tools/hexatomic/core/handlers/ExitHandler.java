@@ -70,11 +70,7 @@ public class ExitHandler implements IWindowCloseHandler {
           "Discard unsaved changes?",
           "There are unsaved changes in the project that will be lost if you close the "
           + "application. Do you really want to close Hexatomic?");
-      if (confirmed) {
-        return true;
-      } else {
-        return false;
-      }
+      return confirmed;
     }
     return true;
   }
