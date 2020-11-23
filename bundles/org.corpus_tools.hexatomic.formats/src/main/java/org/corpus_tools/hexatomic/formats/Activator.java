@@ -37,7 +37,7 @@ public class Activator implements BundleActivator {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Activator.class);
 
   private static final String[] BUNDLE_LOCATIONS = {"exmaralda-emf-api-1.2.2.jar",
-      "pepperModules-EXMARaLDAModules-1.3.1.jar", "pepperModules-PAULAModules-1.2.4.jar"};
+      "pepperModules-EXMARaLDAModules-1.3.1.jar", "pepperModules-PAULAModules-1.3.0.jar"};
 
   private static Optional<Pepper> pepper = Optional.empty();
 
