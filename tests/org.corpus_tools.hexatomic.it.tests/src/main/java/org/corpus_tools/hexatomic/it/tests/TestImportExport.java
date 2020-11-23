@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,7 +12,9 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.salt.common.SaltProject;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -39,6 +42,7 @@ class TestImportExport {
   private EPartService partService;
 
   private ErrorService errorService;
+  private ProjectManager projectManager;
 
 
   @BeforeEach
@@ -48,6 +52,7 @@ class TestImportExport {
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
+    projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -136,6 +141,9 @@ class TestImportExport {
 
     // Open example corpus
     openDefaultExample();
+    SaltProject p = projectManager.getProject();
+    assertEquals(1, p.getCorpusGraphs().size());
+    assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
     assertTrue(bot.menu("Export").isEnabled());
 
     // Click on the export menu add fill out the wizard
@@ -166,6 +174,9 @@ class TestImportExport {
       }
     }, 30000);
 
+    assertEquals(1, p.getCorpusGraphs().size());
+    assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
+
     // Check no errors have been handled
     assertFalse(errorService.getLastException().isPresent());
 
@@ -180,11 +191,11 @@ class TestImportExport {
 
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc3/doc3.text.xml").toFile().isFile());
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc3/doc3.tok.xml").toFile().isFile());
-    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc3/doc3.tok_pos.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc3/doc3.tok_pos.xml").toFile().isFile());
 
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.text.xml").toFile().isFile());
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.tok.xml").toFile().isFile());
-    assertTrue(tmpDir.resolve("rootCorpus/subCorpus1/doc5/doc4.tok_pos.xml").toFile().isFile());
+    assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.tok_pos.xml").toFile().isFile());
 
   }
 
