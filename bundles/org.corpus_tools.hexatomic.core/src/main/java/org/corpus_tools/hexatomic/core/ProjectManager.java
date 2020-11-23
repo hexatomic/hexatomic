@@ -122,7 +122,7 @@ public class ProjectManager {
       monitor.worked(1);
 
       // Load each document individually and persist it
-      if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
+      if ((project.getCorpusGraphs() != null) && (!project.getCorpusGraphs().isEmpty())) {
 
         // Store all documents and copy them from the original location if necessary.
         // When storing the same location, we can assume we did not change the document graph
