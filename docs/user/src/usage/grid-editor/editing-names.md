@@ -14,7 +14,7 @@ In this case, you can add a name.
 
 ## Changing annotation names
 
-You can change annotation names either for all cells in one column, or only for selected cells frmo one or more columns.
+You can change annotation names either for all cells in one column, or only for selected cells from one or more columns.
 
 - To change the qualified annotation name for *all cells in a column*, right-click the respective column header to bring up the popup menu.
 In the popup menu, click **Change annotation name**.
@@ -31,4 +31,3 @@ To change the annotations, confirm by clicking **OK**.
 You can cancel the change by clicking **Cancel** or closing the dialog.
 
 ![Open the editor for changing qualified annotation names via the popup menu.](./change-annotation-name.png)
-
