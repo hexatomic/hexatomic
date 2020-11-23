@@ -63,7 +63,7 @@ public class GraphDataProvider implements IDataProvider {
   private STextualDS dataSource = null;
   private SDocumentGraph graph;
 
-  private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
+  private final List<SToken> orderedDsTokens = new ArrayList<>();
   private final LinkedHashMap<SSpan, Set<SToken>> spanTokenMap = new LinkedHashMap<>();
 
   // Alphabetically ordered maps of column titles to columns for the two annotated types
@@ -90,7 +90,7 @@ public class GraphDataProvider implements IDataProvider {
         dataSource);
 
     // Only consider tokens that are based on the selected data source.
-    List<SToken> unorderedTokens = new ArrayList<SToken>();
+    List<SToken> unorderedTokens = new ArrayList<>();
     for (SRelation<?, ?> inRel : dataSource.getInRelations()) {
       if (inRel instanceof STextualRelation) {
         // Source of STextualRelation can only be token
@@ -137,7 +137,7 @@ public class GraphDataProvider implements IDataProvider {
     if (set != null) {
       set.add(token);
     } else {
-      set = new HashSet<SToken>();
+      set = new HashSet<>();
       set.add(token);
     }
     spanTokenMap.put(span, set);
