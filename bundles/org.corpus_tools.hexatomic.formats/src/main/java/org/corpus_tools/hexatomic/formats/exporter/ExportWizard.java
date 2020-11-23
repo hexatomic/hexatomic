@@ -90,11 +90,10 @@ public class ExportWizard extends Wizard {
           // Check if we can get the number of documents after the corpus structure has been
           // imported
           if (!numberOfJobs.isPresent() && jobStatus == JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE) {
-            // We don't know how many documents are present previously but since exported the
-            // documents has started, we can get this number
+            // We don't know how many documents are present previously but since exporting the
+            // documents has started, we can get this number now
             numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
-            monitor.beginTask("Exporting " + numberOfJobs.get() / 2 + " documents",
-                numberOfJobs.get() / 2);
+            monitor.beginTask("Exporting " + numberOfJobs.get() + " documents", numberOfJobs.get());
           }
 
           if (numberOfJobs.isPresent()) {
