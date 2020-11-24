@@ -423,7 +423,8 @@ public class GraphDataProvider implements IDataProvider {
         // Check if target annotation already exists
         if (node.getAnnotation(newQName) != null) {
           log.debug(
-              "The following node already has an annotation with the qualified name '{}'. Ignoring it to avoid throwing {}:\n{}",
+              "The following node already has an annotation with the qualified name '{}'. "
+                  + "Ignoring it to avoid throwing {}:\n{}",
               newQName, SaltInsertionException.class.getSimpleName(), node.toString());
           unchangedNodes.add(node);
           continue;
