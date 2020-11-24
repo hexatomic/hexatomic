@@ -20,12 +20,9 @@
 
 package org.corpus_tools.hexatomic.formats.importer;
 
-import com.google.common.base.Joiner;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
@@ -33,18 +30,12 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
-import org.corpus_tools.hexatomic.formats.PepperJobRunner;
 import org.corpus_tools.hexatomic.formats.exb.ExbImportConfiguration;
 import org.corpus_tools.pepper.common.CorpusDesc;
-import org.corpus_tools.pepper.common.JOB_STATUS;
-import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperConfiguration;
 import org.corpus_tools.pepper.common.PepperJob;
-import org.corpus_tools.pepper.common.PepperUtil;
 import org.corpus_tools.pepper.common.StepDesc;
-import org.corpus_tools.pepper.modules.coreModules.DoNothingExporter;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -52,62 +43,7 @@ import org.eclipse.jface.wizard.Wizard;
 
 public class ImportWizard extends Wizard {
 
-  private final class ImportRunner extends PepperJobRunner {
-
-    private ImportRunner(PepperJob job) {
-      super(job);
-    }
-
-    @Override
-    public void run(IProgressMonitor monitor)
-        throws InvocationTargetException, InterruptedException {
-
-      monitor.beginTask("Importing corpus structure", IProgressMonitor.UNKNOWN);
-
-      // Add a dummy export step so we can read the imported result
-      getJob().addStepDesc(new StepDesc().setName(DoNothingExporter.MODULE_NAME)
-          .setModuleType(MODULE_TYPE.EXPORTER).setCorpusDesc(new CorpusDesc()
-              .setCorpusPath(URI.createFileURI(PepperUtil.getTempFile().getAbsolutePath()))));
-
-      try {
-        runJob(monitor);
-        if (handleConversionResult(monitor)) {
-          sync.syncExec(() -> projectManager.setProject(getJob().getSaltProject()));
-        }
-      } catch (ExecutionException ex) {
-        errorService.handleException(ERRORS_TITLE, ex, ImportWizard.class);
-      }
-    }
-
-
-    private boolean handleConversionResult(IProgressMonitor monitor) {
-      if (!monitor.isCanceled()) {
-        // Check if the whole conversion was marked as error.
-        if (getJob().getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
-          errorService.showError(ERRORS_TITLE, "Import was not successful for unknown reasons. "
-              + "Please check the log messages for any issues.", ImportWizard.class);
-        } else if (!monitor.isCanceled()) {
-          // Check for any documents with errors and report them
-          // error.
-          Set<String> failedDocuments = getFailedDocuments();
-          if (!failedDocuments.isEmpty()) {
-            errorService.showError(ERRORS_TITLE,
-                "Could not import the following documents:\n\n"
-                    + Joiner.on("\n").join(failedDocuments)
-                    + "\n\nPlease check the log messages for any issues.",
-                ImportWizard.class);
-          }
-
-          // No global error was reported and the process was not cancelled: set the corpus as
-          // current project
-          return true;
-        }
-      }
-      return false;
-    }
-  }
-
-  private static final String ERRORS_TITLE = "Error(s) during import";
+  static final String ERRORS_TITLE = "Error(s) during import";
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.IMPORT);
   private final ImporterSelectionPage importerPage = new ImporterSelectionPage();
   private Optional<ConfigurationPage> configPage = Optional.empty();
@@ -115,7 +51,7 @@ public class ImportWizard extends Wizard {
   private final ErrorService errorService;
   private final ProjectManager projectManager;
   private final SaltNotificationFactory notificationFactory;
-  private final UISynchronize sync;
+  final UISynchronize sync;
 
   protected ImportWizard(ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
@@ -196,7 +132,7 @@ public class ImportWizard extends Wizard {
 
       try {
         // Execute the conversion as task that can be aborted
-        getContainer().run(true, true, new ImportRunner(job));
+        getContainer().run(true, true, new ImportRunner(job, projectManager, errorService, sync));
 
       } catch (InvocationTargetException ex) {
         errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(),

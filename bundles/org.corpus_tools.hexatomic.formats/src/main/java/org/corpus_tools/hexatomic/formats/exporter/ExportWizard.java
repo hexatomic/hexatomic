@@ -20,12 +20,9 @@
 
 package org.corpus_tools.hexatomic.formats.exporter;
 
-import com.google.common.base.Joiner;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
@@ -33,64 +30,17 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
-import org.corpus_tools.hexatomic.formats.PepperJobRunner;
 import org.corpus_tools.pepper.common.CorpusDesc;
-import org.corpus_tools.pepper.common.JOB_STATUS;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.Wizard;
 
 public class ExportWizard extends Wizard {
 
-  private final class ExportRunner extends PepperJobRunner {
-
-    private ExportRunner(PepperJob job) {
-      super(job);
-    }
-
-    @Override
-    public void run(IProgressMonitor monitor)
-        throws InvocationTargetException, InterruptedException {
-
-      monitor.beginTask("Exporting corpus structure", IProgressMonitor.UNKNOWN);
-
-      try {
-        runJob(monitor);
-        handleConversionResult(monitor);
-
-      } catch (ExecutionException ex) {
-        errorService.handleException(ERRORS_TITLE, ex, ExportWizard.class);
-      }
-    }
-
-
-    private void handleConversionResult(IProgressMonitor monitor) {
-      if (!monitor.isCanceled()) {
-        // Check if the whole conversion was marked as error.
-        if (getJob().getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
-          errorService.showError(ERRORS_TITLE, "Export was not successful for unknown reasons. "
-              + "Please check the log messages for any issues.", ExportWizard.class);
-        } else if (!monitor.isCanceled()) {
-          // Check for any documents with errors and report them
-          // error.
-          Set<String> failedDocuments = getFailedDocuments();
-          if (!failedDocuments.isEmpty()) {
-            errorService.showError(ERRORS_TITLE,
-                "Could not export the following documents:\n\n"
-                    + Joiner.on("\n").join(failedDocuments)
-                    + "\n\nPlease check the log messages for any issues.",
-                ExportWizard.class);
-          }
-        }
-      }
-    }
-  }
-
-  private static final String ERRORS_TITLE = "Error(s) during export";
+  static final String ERRORS_TITLE = "Error(s) during export";
 
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.EXPORT);
   private final ExporterSelectionPage exporterPage = new ExporterSelectionPage();
@@ -157,7 +107,7 @@ public class ExportWizard extends Wizard {
 
       try {
         // Execute the conversion as task that can be aborted
-        getContainer().run(true, true, new ExportRunner(job));
+        getContainer().run(true, true, new ExportRunner(job, errorService));
 
       } catch (InvocationTargetException ex) {
         errorService.handleException("Unexpected error when exporting corpus: " + ex.getMessage(),
