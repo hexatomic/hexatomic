@@ -38,7 +38,7 @@ class PepperJobRunnerTest {
   private PepperJobImpl job;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     job = mock(PepperJobImpl.class);
   }
 
