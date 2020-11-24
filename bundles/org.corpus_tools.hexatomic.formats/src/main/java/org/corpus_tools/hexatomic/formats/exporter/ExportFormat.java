@@ -20,7 +20,6 @@
 
 package org.corpus_tools.hexatomic.formats.exporter;
 
-import java.util.Optional;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.StepDesc;
 
@@ -40,15 +39,6 @@ public enum ExportFormat {
     result.setName(this.exportName);
 
     return result;
-  }
-
-  protected static Optional<ExportFormat> getFormatByName(String name) {
-    for (ExportFormat f : ExportFormat.values()) {
-      if (f.exportName.equals(name)) {
-        return Optional.of(f);
-      }
-    }
-    return Optional.empty();
   }
 }
 
