@@ -279,7 +279,7 @@ public class GraphDataProvider implements IDataProvider {
         return null;
       }
     } else {
-      if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
+      if (orderedDsTokens.isEmpty() && columnIndex == 0 && rowIndex == 0) {
         return null;
       } else {
         Column column = null;
