@@ -146,6 +146,7 @@ class TestImportExport {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-export-test");
     wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
 
     wizard.bot().radio(EXMARALDA_FORMAT_EXB).click();
@@ -262,8 +263,10 @@ class TestImportExport {
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
     Path tmpDir = Files.createTempDirectory("hexatomic-export-test");
     wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
 
     wizard.bot().radio(PAULA_FORMAT).click();
@@ -301,7 +304,12 @@ class TestImportExport {
     wizard = bot.shell("Import a corpus project from a different file format");
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
 
     wizard.bot().radio(PAULA_FORMAT).click();

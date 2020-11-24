@@ -41,6 +41,8 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     IMPORT, EXPORT
   }
 
+  private final Type type;
+
   /**
    * Creates a new wizard page to select a corpus path.
    * 
@@ -48,12 +50,12 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
    */
   public CorpusPathSelectionPage(Type type) {
     super("Select corpus directory");
+    this.type = type;
     switch (type) {
       case IMPORT:
         setTitle("Select the directory that contains the corpus you want to import");
-        setDescription(
-            "Corpora are normally organized as collection of files and "
-                + "sub-directories of a parent directory.");
+        setDescription("Corpora are normally organized as collection of files and "
+            + "sub-directories of a parent directory.");
         break;
       case EXPORT:
         setTitle("Select the directory to where you want to export the corpus to");
@@ -99,9 +101,9 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
    */
   public Optional<File> getCorpusPath() {
     if (!txtDirectoryPath.getText().isEmpty()) {
-      // Check if the path exists and is a directory
       File f = new File(txtDirectoryPath.getText());
-      if (f.isDirectory()) {
+      // For export we can choose any (non-existing) path, otherwise the file should exit
+      if (type == Type.EXPORT || f.exists()) {
         return Optional.of(f);
       }
     }
