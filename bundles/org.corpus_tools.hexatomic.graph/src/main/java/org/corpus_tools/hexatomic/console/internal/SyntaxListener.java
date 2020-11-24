@@ -80,7 +80,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
   private final Set<SRelation<?, ?>> referencedEdges = new LinkedHashSet<>();
   private final Set<SAnnotation> attributes = new LinkedHashSet<>();
   private Optional<String> layer = Optional.empty();
-  private final List<String> outputLines = new LinkedList<String>();
+  private final List<String> outputLines = new LinkedList<>();
 
   /**
    * Creates a new ANTLR listener.
@@ -302,7 +302,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
       if (layer.isPresent()) {
         List<SLayer> matchingLayers = this.graph.getLayerByName(layer.get());
         if (matchingLayers == null || matchingLayers.isEmpty()) {
-          matchingLayers = new LinkedList<SLayer>();
+          matchingLayers = new LinkedList<>();
           matchingLayers.add(SaltFactory.createSLayer());
           matchingLayers.get(0).setName(layer.get());
           this.graph.addLayer(matchingLayers.get(0));
@@ -481,7 +481,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
       if (layer.isPresent()) {
         List<SLayer> matchingLayers = this.graph.getLayerByName(layer.get());
         if (matchingLayers == null || matchingLayers.isEmpty()) {
-          matchingLayers = new LinkedList<SLayer>();
+          matchingLayers = new LinkedList<>();
           matchingLayers.add(SaltFactory.createSLayer());
           matchingLayers.get(0).setName(layer.get());
           this.graph.addLayer(matchingLayers.get(0));
