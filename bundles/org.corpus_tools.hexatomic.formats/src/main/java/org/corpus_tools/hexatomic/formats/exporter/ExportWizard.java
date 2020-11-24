@@ -212,7 +212,9 @@ public class ExportWizard extends Wizard {
     Optional<File> corpusPath = corpusPathPage.getCorpusPath();
     Optional<ExportFormat> selectedFormat = exporterPage.getSelectedFormat();
     Optional<Pepper> pepper = Activator.getPepper();
-    if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()) {
+    Optional<URI> projectLocation = projectManager.getLocation();
+    if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()
+        && projectLocation.isPresent()) {
       // Limit the maximum number of parallel processed documents
       // pepper.get().getConfiguration()
       // .setProperty(PepperConfiguration.PROP_MAX_AMOUNT_OF_SDOCUMENTS, "2");
@@ -222,7 +224,7 @@ public class ExportWizard extends Wizard {
       importStep.setModuleType(MODULE_TYPE.IMPORTER);
       importStep.setName("SaltXMLImporter");
       CorpusDesc importCorpusDesc = new CorpusDesc();
-      importCorpusDesc.setCorpusPath(projectManager.getLocation().get());
+      importCorpusDesc.setCorpusPath(projectLocation.get());
       importStep.setCorpusDesc(importCorpusDesc);
 
       // Create the export specification
