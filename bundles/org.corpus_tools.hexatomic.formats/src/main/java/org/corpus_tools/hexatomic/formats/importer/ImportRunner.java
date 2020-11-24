@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.formats.PepperJobRunner;
 import org.corpus_tools.pepper.common.CorpusDesc;
@@ -52,6 +53,7 @@ class ImportRunner extends PepperJobRunner {
     this.sync = sync;
   }
 
+
   @Override
   public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
@@ -65,6 +67,15 @@ class ImportRunner extends PepperJobRunner {
     try {
       runJob(monitor);
       if (handleConversionResult(monitor)) {
+
+        if (!getJob().getStepDescs().isEmpty()) {
+          // Add a feature annotation with the original location to each corpus graph
+          URI importLocation = getJob().getStepDescs().get(0).getCorpusDesc().getCorpusPath();
+          SaltHelper.setOriginalCorpusLocation(getJob().getSaltProject(),
+              importLocation.toFileString(), false);
+        }
+
+        // Set the imported project in the project manager
         sync.syncExec(() -> projectManager.setProject(getJob().getSaltProject()));
       }
     } catch (ExecutionException ex) {

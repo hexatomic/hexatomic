@@ -22,6 +22,8 @@ package org.corpus_tools.hexatomic.formats;
 
 import java.io.File;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.core.SaltHelper;
+import org.corpus_tools.salt.common.SaltProject;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -35,7 +37,13 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Text;
 
 public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
+
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(CorpusPathSelectionPage.class);
+
+
   private Text txtDirectoryPath;
+  private File presetCorpusPath;
 
   public enum Type {
     IMPORT, EXPORT
@@ -71,9 +79,16 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
     Composite container = new Composite(parent, SWT.NULL);
     setControl(container);
     container.setLayout(new GridLayout(2, false));
+    setPageComplete(false);
 
     txtDirectoryPath = new Text(container, SWT.BORDER);
     txtDirectoryPath.addModifyListener(e -> setPageComplete(getCorpusPath().isPresent()));
+
+    if (presetCorpusPath != null) {
+      txtDirectoryPath.setText(presetCorpusPath.getAbsolutePath());
+      setPageComplete(getCorpusPath().isPresent());
+    }
+
     GridData txtDirectoryPathGridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
     txtDirectoryPathGridData.widthHint = 474;
     txtDirectoryPath.setLayoutData(txtDirectoryPathGridData);
@@ -84,6 +99,10 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
       public void widgetSelected(SelectionEvent e) {
         DirectoryDialog corpusDir = new DirectoryDialog(parent.getShell());
         corpusDir.setText("Select the corpus directory");
+        Optional<File> path = getCorpusPath();
+        if (path.isPresent()) {
+          corpusDir.setFilterPath(path.get().getAbsolutePath());
+        }
         String result = corpusDir.open();
         if (result != null) {
           txtDirectoryPath.setText(result);
@@ -91,8 +110,43 @@ public class CorpusPathSelectionPage extends WizardPage implements IWizardPage {
       }
     });
     btnSelectDirectory.setText("...");
-    setPageComplete(false);
   }
+
+  /**
+   * Sets a pre-selected corpus path from the "corpus-origin" feature annotation if it exists.
+   * 
+   * @param saltProject The Salt project to get the feature annotation from.
+   */
+  public void setCorpusPathFromProject(SaltProject saltProject) {
+    Optional<String> originalLocation =
+        SaltHelper.getOriginalCorpusLocation(saltProject);
+
+    if (originalLocation.isPresent()) {
+      File f = new File(originalLocation.get());
+      if (f.exists()) {
+
+        if (type == Type.EXPORT) {
+          // We use the parent folder when exporting, since the root corpus name is a sub-folder of
+          // this path
+          f = f.getParentFile();
+        }
+
+        log.debug("Setting {} as pre-set original corpus location in wizard",
+            f.getAbsolutePath());
+        presetCorpusPath = f.getAbsoluteFile();
+        if (txtDirectoryPath != null) {
+          txtDirectoryPath.setText(f.getAbsolutePath());
+        }
+      } else {
+        log.debug("Non-existing original location ignored as pre-set wizard location {}",
+            f.getAbsolutePath());
+      }
+    } else {
+      log.debug("No original location set for current corpus");
+    }
+  }
+
+
 
   /**
    * Get the directory selected by the user.

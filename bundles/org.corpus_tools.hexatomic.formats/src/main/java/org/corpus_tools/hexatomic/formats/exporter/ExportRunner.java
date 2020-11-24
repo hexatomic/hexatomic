@@ -24,20 +24,32 @@ import com.google.common.base.Joiner;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.formats.PepperJobRunner;
 import org.corpus_tools.pepper.common.JOB_STATUS;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.emf.common.util.URI;
 
 class ExportRunner extends PepperJobRunner {
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExportRunner.class);
+
+
+  private final ProjectManager projectManager;
   private final ErrorService errorService;
+  private final UISynchronize sync;
 
 
-  ExportRunner(PepperJob job, ErrorService errorService) {
+  ExportRunner(PepperJob job, ProjectManager projectManager, ErrorService errorService,
+      UISynchronize sync) {
     super(job);
     this.errorService = errorService;
+    this.sync = sync;
+    this.projectManager = projectManager;
   }
 
   @Override
@@ -48,6 +60,16 @@ class ExportRunner extends PepperJobRunner {
     try {
       runJob(monitor);
       handleConversionResult(monitor);
+
+      sync.syncExec(() -> {
+        // Add a processing annotation with the original location to each corpus graph
+        URI exportLocation = getJob().getStepDescs().get(getJob().getStepDescs().size() - 1)
+            .getCorpusDesc().getCorpusPath();
+        SaltHelper.setOriginalCorpusLocation(projectManager.getProject(),
+            exportLocation.toFileString(), true);
+        log.debug("Setting {} as original location for exported corpus",
+            exportLocation.toFileString());
+      });
 
     } catch (ExecutionException ex) {
       errorService.handleException(ExportWizard.ERRORS_TITLE, ex, ExportWizard.class);

@@ -35,10 +35,14 @@ import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.Wizard;
 
 public class ExportWizard extends Wizard {
+
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExportWizard.class);
+
 
   static final String ERRORS_TITLE = "Error(s) during export";
 
@@ -49,14 +53,18 @@ public class ExportWizard extends Wizard {
   private final ErrorService errorService;
   private final ProjectManager projectManager;
   private final SaltNotificationFactory notificationFactory;
+  private final UISynchronize sync;
 
   protected ExportWizard(ErrorService errorService, ProjectManager projectManager,
-      SaltNotificationFactory notificationFactory) {
+      SaltNotificationFactory notificationFactory, UISynchronize sync) {
     super();
     this.errorService = errorService;
     this.projectManager = projectManager;
     this.notificationFactory = notificationFactory;
+    this.sync = sync;
     setNeedsProgressMonitor(true);
+
+    corpusPathPage.setCorpusPathFromProject(projectManager.getProject());
   }
 
   @Override
@@ -107,7 +115,7 @@ public class ExportWizard extends Wizard {
 
       try {
         // Execute the conversion as task that can be aborted
-        getContainer().run(true, true, new ExportRunner(job, errorService));
+        getContainer().run(true, true, new ExportRunner(job, projectManager, errorService, sync));
 
       } catch (InvocationTargetException ex) {
         errorService.handleException("Unexpected error when exporting corpus: " + ex.getMessage(),

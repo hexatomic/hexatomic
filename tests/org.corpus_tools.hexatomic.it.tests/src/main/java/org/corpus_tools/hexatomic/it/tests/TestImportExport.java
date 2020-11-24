@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SaltProject;
@@ -170,7 +171,9 @@ class TestImportExport {
     wizard = bot.shell("Import a corpus project from a different file format");
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
-    wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    // The path should have been pre-set and the same as the one we exported the corpus to
+    assertEquals(tmpDir.resolve("rootCorpus").toAbsolutePath().toString(),
+        wizard.bot().text().getText());
     wizard.bot().button(NEXT).click();
 
     wizard.bot().radio(EXMARALDA_FORMAT_EXB).click();
@@ -188,6 +191,16 @@ class TestImportExport {
     // Check all documents exist again
     assertEquals(1, projectManager.getProject().getCorpusGraphs().size());
     assertEquals(4, projectManager.getProject().getCorpusGraphs().get(0).getDocuments().size());
+
+    // The corpus must have a special feature annotation marking its original location from the
+    // import path
+    Optional<String> originalCorpusLocation =
+        SaltHelper.getOriginalCorpusLocation(projectManager.getProject());
+    assertTrue(originalCorpusLocation.isPresent());
+    if (originalCorpusLocation.isPresent()) {
+      assertEquals(tmpDir.resolve("rootCorpus").toAbsolutePath().toString(),
+          originalCorpusLocation.get());
+    }
 
     doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
     assertTrue(doc1.isPresent());
@@ -306,6 +319,7 @@ class TestImportExport {
     assertTrue(wizard.isOpen());
 
     // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
     assertFalse(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
     // Valid path was selected, this should enable the next button

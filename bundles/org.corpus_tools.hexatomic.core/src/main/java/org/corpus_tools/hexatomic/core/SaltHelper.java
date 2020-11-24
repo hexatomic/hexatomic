@@ -21,10 +21,16 @@
 
 package org.corpus_tools.hexatomic.core;
 
+import java.io.File;
+import java.util.List;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.events.salt.NotifyingElement;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.core.SGraph;
+import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.Node;
@@ -37,7 +43,19 @@ import org.corpus_tools.salt.graph.Relation;
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
 public class SaltHelper {
-  
+
+  /**
+   * A namespace use for (processing) annotations used by Hexatomic.
+   */
+  public static final String HEXATOMIC_NAMESPACE = "hexatomic";
+
+  /**
+   * The name for the processing annotation that contains the original location of an imported or
+   * exported corpus.
+   */
+  public static final String CORPUS_ORIGIN = "corpus-origin";
+
+
   private SaltHelper() {
     // Should not be initiated
   }
@@ -101,5 +119,50 @@ public class SaltHelper {
     }
 
     return Optional.empty();
+  }
+
+  /**
+   * Checks if any of the corpus graphs has a special feature annotation that stores the path from
+   * where the project was originally imported from or exported to.
+   * 
+   * @param project The Salt project to check
+   * @return If the feature annotation exists, the location as string.
+   */
+  public static Optional<String> getOriginalCorpusLocation(SaltProject project) {
+
+    for (SCorpusGraph cg : project.getCorpusGraphs()) {
+      SFeature anno = cg.getFeature(HEXATOMIC_NAMESPACE, CORPUS_ORIGIN);
+      if (anno != null) {
+        return Optional.ofNullable(anno.getValue_STEXT());
+      }
+    }
+
+    return Optional.empty();
+  }
+
+  /**
+   * Set a special feature annotation that stores the path from where the project was imported from
+   * or exported to.
+   * 
+   * @param project The Salt project to extend
+   * @param location The location which should be remembered.
+   * @param appendCorpusName If true, append the corpus name to the project
+   */
+
+  public static void setOriginalCorpusLocation(SaltProject project, String location,
+      boolean appendCorpusName) {
+    for (SCorpusGraph cg : project.getCorpusGraphs()) {
+      File f = new File(location);
+      if (appendCorpusName) {
+        // Get the name of the root corpus
+        List<SNode> roots = cg.getRoots();
+        if (roots.size() == 1) {
+          f = new File(f, roots.get(0).getName());
+        }
+      }
+      cg.removeLabel(SaltHelper.HEXATOMIC_NAMESPACE, SaltHelper.CORPUS_ORIGIN);
+      cg.createFeature(SaltHelper.HEXATOMIC_NAMESPACE, SaltHelper.CORPUS_ORIGIN,
+          f.getAbsolutePath());
+    }
   }
 }

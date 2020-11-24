@@ -51,7 +51,7 @@ public class ImportWizard extends Wizard {
   private final ErrorService errorService;
   private final ProjectManager projectManager;
   private final SaltNotificationFactory notificationFactory;
-  final UISynchronize sync;
+  private final UISynchronize sync;
 
   protected ImportWizard(ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
@@ -61,6 +61,8 @@ public class ImportWizard extends Wizard {
     this.notificationFactory = notificationFactory;
     this.sync = sync;
     setNeedsProgressMonitor(true);
+
+    corpusPathPage.setCorpusPathFromProject(projectManager.getProject());
   }
 
   @Override

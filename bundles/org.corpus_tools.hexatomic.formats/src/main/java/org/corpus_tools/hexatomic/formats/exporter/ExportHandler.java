@@ -36,7 +36,7 @@ public class ExportHandler {
   protected void execute(Shell shell, ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
     WizardDialog dialog = new WizardDialog(shell,
-        new ExportWizard(errorService, projectManager, notificationFactory));
+        new ExportWizard(errorService, projectManager, notificationFactory, sync));
     dialog.open();
   }
 
