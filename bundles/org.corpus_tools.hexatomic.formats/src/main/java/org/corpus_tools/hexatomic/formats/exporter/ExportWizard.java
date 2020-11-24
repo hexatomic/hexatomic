@@ -41,9 +41,6 @@ import org.eclipse.jface.wizard.Wizard;
 
 public class ExportWizard extends Wizard {
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ExportWizard.class);
-
-
   static final String ERRORS_TITLE = "Error(s) during export";
 
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.EXPORT);

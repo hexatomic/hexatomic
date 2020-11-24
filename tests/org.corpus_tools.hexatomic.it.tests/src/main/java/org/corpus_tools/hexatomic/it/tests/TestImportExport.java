@@ -37,6 +37,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestImportExport {
 
+  private static final String ROOT_CORPUS = "rootCorpus";
+  private static final String WIZARD_CAPTION =
+      "Import a corpus project from a different file format";
+  private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String EXMARALDA_FORMAT_EXB = "EXMARaLDA format (*.exb)";
   private static final String PAULA_FORMAT = "PAULA format";
   private static final String FINISH = "Finish";
@@ -124,12 +128,9 @@ class TestImportExport {
    */
   @Test
   void testExportAndImportExmaralda() throws IOException {
-    // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT).isEnabled());
-
     // Open example corpus
     openDefaultExample();
-    Optional<SDocument> doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
       // This document should have some pointing relations
@@ -168,11 +169,11 @@ class TestImportExport {
     // Re-import the just created exb files
     assertTrue(bot.menu(IMPORT).isEnabled());
     bot.menu(IMPORT).click();
-    wizard = bot.shell("Import a corpus project from a different file format");
+    wizard = bot.shell(WIZARD_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
     // The path should have been pre-set and the same as the one we exported the corpus to
-    assertEquals(tmpDir.resolve("rootCorpus").toAbsolutePath().toString(),
+    assertEquals(tmpDir.resolve(ROOT_CORPUS).toAbsolutePath().toString(),
         wizard.bot().text().getText());
     wizard.bot().button(NEXT).click();
 
@@ -198,11 +199,11 @@ class TestImportExport {
         SaltHelper.getOriginalCorpusLocation(projectManager.getProject());
     assertTrue(originalCorpusLocation.isPresent());
     if (originalCorpusLocation.isPresent()) {
-      assertEquals(tmpDir.resolve("rootCorpus").toAbsolutePath().toString(),
+      assertEquals(tmpDir.resolve(ROOT_CORPUS).toAbsolutePath().toString(),
           originalCorpusLocation.get());
     }
 
-    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
       // Exporting to Exmaralda should have removed pointing annotations
@@ -215,10 +216,10 @@ class TestImportExport {
 
     // Import again, but this time with spaces
     bot.menu(IMPORT).click();
-    wizard = bot.shell("Import a corpus project from a different file format");
+    wizard = bot.shell(WIZARD_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
-    wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    wizard.bot().text().setText(tmpDir.resolve(ROOT_CORPUS).toAbsolutePath().toString());
     wizard.bot().button(NEXT).click();
 
     wizard.bot().radio(EXMARALDA_FORMAT_EXB).click();
@@ -230,7 +231,7 @@ class TestImportExport {
     // Wait until wizard is finished
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
-    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
       // Because of the import configuration, the text should contain spaces between all tokens
@@ -250,9 +251,6 @@ class TestImportExport {
    */
   @Test
   void testExportImportPaula() throws IOException {
-    // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT).isEnabled());
-
     // Open example corpus
     openDefaultExample();
     SaltProject p = projectManager.getProject();
@@ -260,7 +258,7 @@ class TestImportExport {
     assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
     assertTrue(bot.menu(EXPORT).isEnabled());
 
-    Optional<SDocument> doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     int numberOfPointingRelations = 0;
     if (doc1.isPresent()) {
@@ -314,14 +312,14 @@ class TestImportExport {
     // Import the just exported corpus
     bot.menu(IMPORT).click();
 
-    wizard = bot.shell("Import a corpus project from a different file format");
+    wizard = bot.shell(WIZARD_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
     // Next button is not enabled when importing an invalid path (e.g. when empty)
     wizard.bot().text().setText("");
     assertFalse(wizard.bot().button(NEXT).isEnabled());
-    wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    wizard.bot().text().setText(tmpDir.resolve(ROOT_CORPUS).toAbsolutePath().toString());
     // Valid path was selected, this should enable the next button
     assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
@@ -330,14 +328,30 @@ class TestImportExport {
     wizard.bot().button(FINISH).click();
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
-    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
       // Exporting to PAULA should keep the pointing relations
       assertEquals(numberOfPointingRelations,
           doc1.get().getDocumentGraph().getPointingRelations().size());
     }
+  }
 
+  @Test
+  void testNoExportOnUnsaved() {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+    openDefaultExample();
+    assertTrue(bot.menu(EXPORT).isEnabled());
+
+    // Make a manual change
+    Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      doc1.get().getDocumentGraph().createFeature("hexatomic-test", "test", "somechange");
+    }
+    projectManager.addCheckpoint();
+    assertFalse(bot.menu(EXPORT).isEnabled());
   }
 
 }

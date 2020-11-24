@@ -44,7 +44,7 @@ public class ExportHandler {
   protected boolean canExecute(ProjectManager projectManager) {
     return Activator.getPepper().isPresent()
         && !projectManager.getProject().getCorpusGraphs().isEmpty()
-        && projectManager.getLocation().isPresent();
+        && projectManager.getLocation().isPresent() && !projectManager.isDirty();
   }
 
 }
