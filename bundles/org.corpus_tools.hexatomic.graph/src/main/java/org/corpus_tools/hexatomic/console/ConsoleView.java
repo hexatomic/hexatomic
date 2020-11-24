@@ -215,8 +215,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   private boolean isOffsetPartOfCmd(int offset) {
     Optional<Range<Integer>> promptOffset = getPromptRange();
     if (promptOffset.isPresent()) {
-      boolean result = promptOffset.get().contains(offset);
-      return result;
+      return promptOffset.get().contains(offset);
     }
     return false;
   }
