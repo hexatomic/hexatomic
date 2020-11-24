@@ -20,7 +20,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal;
 
-import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.hexatomic.grid.LayerSetupException;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
@@ -80,8 +80,8 @@ public class GridHelper {
     GridLayer gridLayer = getGridLayerForNatTable(natTable);
     ILayer columnHeaderLayer = gridLayer.getColumnHeaderLayer();
     if (!(columnHeaderLayer instanceof GridColumnHeaderLayer)) {
-      throw new HexatomicRuntimeException(
-          createWrongTypeMessage("Column header layer", GridColumnHeaderLayer.class));
+      throw new LayerSetupException("Column header layer", columnHeaderLayer,
+          GridColumnHeaderLayer.class);
     } else {
       return (GridColumnHeaderLayer) columnHeaderLayer;
     }
@@ -97,8 +97,9 @@ public class GridHelper {
     GridLayer gridLayer = getGridLayerForNatTable(natTable);
     ILayer bodyLayer = gridLayer.getBodyLayer();
     if (!(bodyLayer instanceof GridFreezeLayer)) {
-      throw new HexatomicRuntimeException(
-          createWrongTypeMessage("Body layer", GridFreezeLayer.class));
+      throw new LayerSetupException(
+          // createWrongTypeMessage("Body layer", GridFreezeLayer.class));
+          "Body layer", bodyLayer, GridFreezeLayer.class);
     } else {
       return (GridFreezeLayer) bodyLayer;
     }
@@ -107,16 +108,12 @@ public class GridHelper {
   private static GridLayer getGridLayerForNatTable(NatTable natTable) {
     ILayer underlyingLayer = natTable.getUnderlyingLayerByPosition(0, 0);
     if (!(underlyingLayer instanceof GridLayer)) {
-      throw new HexatomicRuntimeException(
-          createWrongTypeMessage("Underlying layer of NatTable", GridLayer.class));
+      throw new LayerSetupException(
+          // createWrongTypeMessage("Underlying layer of NatTable", GridLayer.class));
+          "Underlying layer of NatTable", underlyingLayer, GridLayer.class);
     } else {
       return (GridLayer) underlyingLayer;
     }
-  }
-
-  private static String createWrongTypeMessage(String object, Class<?> expectedClass) {
-    return object + " is not of type " + expectedClass.getSimpleName()
-        + " as expected! Please report this as a bug.";
   }
 
 }
