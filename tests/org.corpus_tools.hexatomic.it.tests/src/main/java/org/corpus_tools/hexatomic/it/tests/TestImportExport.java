@@ -52,7 +52,7 @@ class TestImportExport {
     }
 
     @Override
-    public boolean test() throws Exception {
+    public boolean test() {
       return wizard.widget.isDisposed();
     }
 
