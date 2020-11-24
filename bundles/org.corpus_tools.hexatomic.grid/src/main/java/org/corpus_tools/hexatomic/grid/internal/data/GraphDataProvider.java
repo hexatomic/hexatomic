@@ -373,7 +373,7 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject) {
-    SStructuredNode node = (SStructuredNode) dataObject;
+    SStructuredNode node = dataObject;
     SAnnotation anno = node.getAnnotation(column.getColumnValue());
     if (anno == null) {
       throw new HexatomicRuntimeException(
