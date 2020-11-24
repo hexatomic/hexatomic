@@ -23,15 +23,9 @@ package org.corpus_tools.hexatomic.formats.exporter;
 import com.google.common.base.Joiner;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
@@ -39,27 +33,23 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
+import org.corpus_tools.hexatomic.formats.PepperJobRunner;
 import org.corpus_tools.pepper.common.CorpusDesc;
-import org.corpus_tools.pepper.common.DOCUMENT_STATUS;
 import org.corpus_tools.pepper.common.JOB_STATUS;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
-import org.corpus_tools.pepper.core.PepperJobImpl;
-import org.corpus_tools.pepper.modules.DocumentController;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
 public class ExportWizard extends Wizard {
 
-  private final class ExportRunner implements IRunnableWithProgress {
-    private final PepperJob job;
+  private final class ExportRunner extends PepperJobRunner {
 
     private ExportRunner(PepperJob job) {
-      this.job = job;
+      super(job);
     }
 
     @Override
@@ -68,98 +58,26 @@ public class ExportWizard extends Wizard {
 
       monitor.beginTask("Exporting corpus structure", IProgressMonitor.UNKNOWN);
 
-      // Create a set of already finished documents
-      Set<String> completedDocuments = new HashSet<>();
-
-      // Run conversion in a background thread so we can add regular status reports
-      ExecutorService serviceExec = Executors.newSingleThreadExecutor();
-      Future<?> background = serviceExec.submit(job::convert);
-
-      Optional<Integer> numberOfJobs = Optional.empty();
-
-      while (!background.isDone() && !background.isCancelled()) {
-        if (monitor.isCanceled()) {
-          // Cancel the Pepper job
-          job.cancelConversion();
-          return;
-        }
-
-        if (job instanceof PepperJobImpl) {
-          PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
-          JOB_STATUS jobStatus = pepperJobImpl.getStatus();
-          // Check if we can get the number of documents after the corpus structure has been
-          // imported
-          if (!numberOfJobs.isPresent() && jobStatus == JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE) {
-            // We don't know how many documents are present previously but since exporting the
-            // documents has started, we can get this number now
-            numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
-            monitor.beginTask("Exporting " + numberOfJobs.get() + " documents", numberOfJobs.get());
-          }
-
-          if (numberOfJobs.isPresent()) {
-            // Report detailed status of the conversion progress of the documents
-            reportDocumentConversionProgress(pepperJobImpl, monitor, completedDocuments);
-          }
-
-        }
-        Thread.sleep(1000);
-      }
-      monitor.done();
-
       try {
-        background.get();
-        handleConversionResult(job, monitor);
+        runJob(monitor);
+        handleConversionResult(monitor);
+
       } catch (ExecutionException ex) {
         errorService.handleException(ERRORS_TITLE, ex, ExportWizard.class);
       }
     }
 
-    private void reportDocumentConversionProgress(PepperJobImpl pepperJobImpl,
-        IProgressMonitor monitor, Set<String> completedDocuments) {
 
-      Set<DocumentController> activeDocuments =
-          new LinkedHashSet<>(pepperJobImpl.getActiveDocuments());
-      if (!activeDocuments.isEmpty()) {
-        monitor.subTask(Joiner.on(", ")
-            .join(activeDocuments.stream().map(d -> d.getDocument().getName()).iterator()));
-      }
-
-      for (DocumentController controller : pepperJobImpl.getDocumentControllers()) {
-        DOCUMENT_STATUS docStatus = controller.getGlobalStatus();
-
-        if ((docStatus == DOCUMENT_STATUS.COMPLETED || docStatus == DOCUMENT_STATUS.DELETED
-            || docStatus == DOCUMENT_STATUS.FAILED)
-            && completedDocuments.add(controller.getGlobalId())) {
-          monitor.worked(1);
-        }
-      }
-    }
-
-    private Set<String> getFailedDocuments(PepperJob job) {
-      Set<String> failedDocuments = new TreeSet<>();
-      if (job instanceof PepperJobImpl) {
-        PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
-        for (DocumentController docController : pepperJobImpl.getDocumentControllers()) {
-
-          DOCUMENT_STATUS status = docController.getGlobalStatus();
-          if (status != DOCUMENT_STATUS.COMPLETED) {
-            failedDocuments.add(docController.getGlobalId());
-          }
-        }
-      }
-      return failedDocuments;
-    }
-
-    private boolean handleConversionResult(PepperJob job, IProgressMonitor monitor) {
+    private void handleConversionResult(IProgressMonitor monitor) {
       if (!monitor.isCanceled()) {
         // Check if the whole conversion was marked as error.
-        if (job.getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
+        if (getJob().getStatus() == JOB_STATUS.ENDED_WITH_ERRORS) {
           errorService.showError(ERRORS_TITLE, "Export was not successful for unknown reasons. "
               + "Please check the log messages for any issues.", ExportWizard.class);
         } else if (!monitor.isCanceled()) {
           // Check for any documents with errors and report them
           // error.
-          Set<String> failedDocuments = getFailedDocuments(job);
+          Set<String> failedDocuments = getFailedDocuments();
           if (!failedDocuments.isEmpty()) {
             errorService.showError(ERRORS_TITLE,
                 "Could not export the following documents:\n\n"
@@ -167,13 +85,8 @@ public class ExportWizard extends Wizard {
                     + "\n\nPlease check the log messages for any issues.",
                 ExportWizard.class);
           }
-
-          // No global error was reported and the process was not cancelled: set the corpus as
-          // current project
-          return true;
         }
       }
-      return false;
     }
   }
 
