@@ -36,6 +36,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestImportExport {
 
+  private static final String EXMARALDA_FORMAT_EXB = "EXMARaLDA format (*.exb)";
+  private static final String PAULA_FORMAT = "PAULA format";
   private static final String FINISH = "Finish";
   private static final String NEXT = "Next >";
   private static final String EXPORT = "Export";
@@ -146,7 +148,7 @@ class TestImportExport {
     wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
     wizard.bot().button(NEXT).click();
 
-    wizard.bot().radio("EXMARaLDA format (*.exb)").click();
+    wizard.bot().radio(EXMARALDA_FORMAT_EXB).click();
     wizard.bot().button(FINISH).click();
 
     // Wait until wizard is finished
@@ -170,7 +172,7 @@ class TestImportExport {
     wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
     wizard.bot().button(NEXT).click();
 
-    wizard.bot().radio("EXMARaLDA format (*.exb)").click();
+    wizard.bot().radio(EXMARALDA_FORMAT_EXB).click();
     wizard.bot().button(NEXT).click();
 
     // Uncheck the add spaces option
@@ -205,7 +207,7 @@ class TestImportExport {
     wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
     wizard.bot().button(NEXT).click();
 
-    wizard.bot().radio("EXMARaLDA format (*.exb)").click();
+    wizard.bot().radio(EXMARALDA_FORMAT_EXB).click();
     wizard.bot().button(NEXT).click();
 
     assertTrue(wizard.bot().checkBox(ADD_SPACES_BETWEEN_TOKEN).isChecked());
@@ -224,8 +226,16 @@ class TestImportExport {
 
   }
 
+
+  /**
+   * This test first opens the default sample in the Salt format and then export and imports it
+   * again. Using the exporter allows us to test the import without storing the PAULA XML files as
+   * test resource.
+   * 
+   * @throws IOException Might throw an exception when there are no temporary directories to create
+   */
   @Test
-  void testExportPaula() throws IOException {
+  void testExportImportPaula() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
     assertFalse(bot.menu(EXPORT).isEnabled());
 
@@ -235,6 +245,15 @@ class TestImportExport {
     assertEquals(1, p.getCorpusGraphs().size());
     assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
     assertTrue(bot.menu(EXPORT).isEnabled());
+
+    Optional<SDocument> doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    assertTrue(doc1.isPresent());
+    int numberOfPointingRelations = 0;
+    if (doc1.isPresent()) {
+      // This document should have some pointing relations
+      numberOfPointingRelations = doc1.get().getDocumentGraph().getPointingRelations().size();
+      assertTrue(numberOfPointingRelations > 0);
+    }
 
     // Click on the export menu add fill out the wizard
     bot.menu(EXPORT).click();
@@ -247,7 +266,7 @@ class TestImportExport {
     wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
     wizard.bot().button(NEXT).click();
 
-    wizard.bot().radio("PAULA format").click();
+    wizard.bot().radio(PAULA_FORMAT).click();
     wizard.bot().button(FINISH).click();
 
     // Wait until wizard is finished
@@ -275,6 +294,27 @@ class TestImportExport {
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.text.xml").toFile().isFile());
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.tok.xml").toFile().isFile());
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.tok_pos.xml").toFile().isFile());
+
+    // Import the just exported corpus
+    bot.menu(IMPORT).click();
+
+    wizard = bot.shell("Import a corpus project from a different file format");
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+    wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    wizard.bot().button(NEXT).click();
+
+    wizard.bot().radio(PAULA_FORMAT).click();
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // Exporting to PAULA should keep the pointing relations
+      assertEquals(numberOfPointingRelations,
+          doc1.get().getDocumentGraph().getPointingRelations().size());
+    }
 
   }
 
