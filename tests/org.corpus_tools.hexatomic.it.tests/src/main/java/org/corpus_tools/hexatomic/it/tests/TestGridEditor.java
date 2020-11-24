@@ -84,7 +84,6 @@ public class TestGridEditor {
   private URI twoDsExampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  private EPartService partService;
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
@@ -102,7 +101,7 @@ public class TestGridEditor {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
-    partService = ctx.get(EPartService.class);
+    EPartService partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
