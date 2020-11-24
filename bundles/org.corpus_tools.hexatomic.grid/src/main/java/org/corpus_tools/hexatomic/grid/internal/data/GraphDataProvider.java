@@ -36,6 +36,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.internal.ui.UnrenamedAnnotationsDialog;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
@@ -45,6 +46,7 @@ import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.exceptions.SaltInsertionException;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -399,7 +401,11 @@ public class GraphDataProvider implements IDataProvider {
    * @param newQName the new qualified annotation name for the annotations to be renamed
    */
   public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
-    Set<SStructuredNode> changedNodes = new HashSet<>();
+    Set<SStructuredNode> touchedNodes = new HashSet<>();
+    Set<SStructuredNode> unchangedNodes = new HashSet<>();
+    Pair<String, String> namespaceNamePair = SaltUtil.splitQName(newQName);
+    final String namespace = namespaceNamePair.getLeft();
+    final String name = namespaceNamePair.getRight();
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       Integer columnPosition = columnCoordinates.getKey();
@@ -407,22 +413,30 @@ public class GraphDataProvider implements IDataProvider {
       String currentQName = column.getColumnValue();
       for (Integer rowPosition : columnCoordinates.getValue()) {
         SStructuredNode node = column.getDataObject(rowPosition);
-        if (node == null || changedNodes.contains(node)) {
+        if (node == null || touchedNodes.contains(node)) {
           // If the nodes is null, there can be no annotations to rename, and if the node has
           // already been changed, the annotation to change doesn't exist
           // anymore, so continue with the next cell.
           continue;
         }
         SAnnotation currentAnnotation = node.getAnnotation(currentQName);
+        // Check if target annotation already exists
+        if (node.getAnnotation(newQName) != null) {
+          log.debug(
+              "The following node already has an annotation with the qualified name '{}'. Ignoring it to avoid throwing {}:\n{}",
+              newQName, SaltInsertionException.class.getSimpleName(), node.toString());
+          unchangedNodes.add(node);
+          continue;
+        }
         Object annotationValue = currentAnnotation.getValue();
         node.removeLabel(currentQName);
-        Pair<String, String> namespaceNamePair = SaltUtil.splitQName(newQName);
-        String namespace = namespaceNamePair.getLeft();
-        String name = namespaceNamePair.getRight();
         node.createAnnotation(namespace, name, annotationValue);
-        // Remember that the node has already been changed.
-        changedNodes.add(node);
+        // Remember that the node has already been touched.
+        touchedNodes.add(node);
       }
+    }
+    if (!unchangedNodes.isEmpty()) {
+      UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes);
     }
     projectManager.addCheckpoint();
 
