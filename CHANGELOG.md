@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Implement undoing and redoing changes (#38)
 - Implement changing annotation names for whole annotation columns (#97)
+- Implement import and export using Pepper (#111) for PAULA XML (#114) and EXMARaLDA files (#115)
 - Add link to mailing list to user documentation
 
 ### Fixed
