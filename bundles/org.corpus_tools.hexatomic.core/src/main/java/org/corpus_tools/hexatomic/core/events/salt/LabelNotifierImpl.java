@@ -94,9 +94,9 @@ public class LabelNotifierImpl extends LabelImpl
     LabelableElement container = super.getContainer();
     if (container instanceof NotifyingElement<?>) {
       NotifyingElement<?> notifyingContainer = (NotifyingElement<?>) container;
-      Object typedDelegation = notifyingContainer.getTypedDelegation();
-      if (typedDelegation instanceof LabelableElement) {
-        return (LabelableElement) typedDelegation;
+      Object typedContainerDelegation = notifyingContainer.getTypedDelegation();
+      if (typedContainerDelegation instanceof LabelableElement) {
+        return (LabelableElement) typedContainerDelegation;
       }
     }
     return super.getContainer();

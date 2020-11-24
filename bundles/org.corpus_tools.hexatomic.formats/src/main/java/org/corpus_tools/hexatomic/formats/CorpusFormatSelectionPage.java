@@ -38,11 +38,11 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
   protected Button btnExb;
   protected Button btnPaulaXml;
 
-  public CorpusFormatSelectionPage(String pageName) {
+  protected CorpusFormatSelectionPage(String pageName) {
     super(pageName);
   }
 
-  public CorpusFormatSelectionPage(String pageName, String title, ImageDescriptor titleImage) {
+  protected CorpusFormatSelectionPage(String pageName, String title, ImageDescriptor titleImage) {
     super(pageName, title, titleImage);
   }
 

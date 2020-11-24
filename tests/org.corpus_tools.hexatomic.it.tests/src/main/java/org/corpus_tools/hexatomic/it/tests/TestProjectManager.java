@@ -138,6 +138,7 @@ class TestProjectManager {
         
         @Override
         public void init(SWTBot bot) {
+          // No initialization needed
         }
         
         @Override

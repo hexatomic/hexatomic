@@ -34,12 +34,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestImportExport {
 
+  private static final String EXPORT_LABEL_TEXT = "Export";
+
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  private EPartService partService;
 
   private ErrorService errorService;
   private ProjectManager projectManager;
@@ -60,7 +61,7 @@ class TestImportExport {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
-    partService = ctx.get(EPartService.class);
+    EPartService partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
@@ -89,14 +90,14 @@ class TestImportExport {
   @Test
   void testExportExmaralda() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu("Export").isEnabled());
+    assertFalse(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
 
     // Open example corpus
     openDefaultExample();
-    assertTrue(bot.menu("Export").isEnabled());
+    assertTrue(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
 
     // Click on the export menu add fill out the wizard
-    bot.menu("Export").click();
+    bot.menu(EXPORT_LABEL_TEXT).click();
     
     SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
     assertNotNull(wizard);
@@ -137,17 +138,17 @@ class TestImportExport {
   @Test
   void testExportPaula() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu("Export").isEnabled());
+    assertFalse(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
 
     // Open example corpus
     openDefaultExample();
     SaltProject p = projectManager.getProject();
     assertEquals(1, p.getCorpusGraphs().size());
     assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
-    assertTrue(bot.menu("Export").isEnabled());
+    assertTrue(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
 
     // Click on the export menu add fill out the wizard
-    bot.menu("Export").click();
+    bot.menu(EXPORT_LABEL_TEXT).click();
 
     SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
     assertNotNull(wizard);
