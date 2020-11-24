@@ -36,6 +36,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestImportExport {
 
+  private static final String FINISH = "Finish";
+  private static final String NEXT = "Next >";
+  private static final String EXPORT = "Export";
+  private static final String IMPORT = "Import";
+  private static final String ADD_SPACES_BETWEEN_TOKEN = "Add spaces between token";
+
   private final class WizardClosedCondition extends DefaultCondition {
     private final SWTBotShell wizard;
 
@@ -54,8 +60,6 @@ class TestImportExport {
     }
   }
 
-  private static final String EXPORT_LABEL_TEXT = "Export";
-  private static final String IMPORT_LABEL_TEXT = "Import";
 
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
@@ -108,10 +112,17 @@ class TestImportExport {
   }
 
 
+  /**
+   * This test first opens the default sample in the Salt format and then export and imports it
+   * again. Using the exporter allows us to test the import without storing the exmaralda files as
+   * test resource.
+   * 
+   * @throws IOException Might throw an exception when there are no temporary directories to create
+   */
   @Test
   void testExportAndImportExmaralda() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
+    assertFalse(bot.menu(EXPORT).isEnabled());
 
     // Open example corpus
     openDefaultExample();
@@ -122,25 +133,24 @@ class TestImportExport {
       assertFalse(doc1.get().getDocumentGraph().getPointingRelations().isEmpty());
     }
 
-    assertTrue(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
+    assertTrue(bot.menu(EXPORT).isEnabled());
 
     // Click on the export menu add fill out the wizard
-    bot.menu(EXPORT_LABEL_TEXT).click();
+    bot.menu(EXPORT).click();
 
-    final SWTBotShell exportWizard =
-        bot.shell("Export a corpus project to a different file format");
-    assertNotNull(exportWizard);
-    assertTrue(exportWizard.isOpen());
+    SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
 
     Path tmpDir = Files.createTempDirectory("hexatomic-export-test");
-    exportWizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
-    exportWizard.bot().button("Next >").click();
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    wizard.bot().button(NEXT).click();
 
-    exportWizard.bot().radio("EXMARaLDA format (*.exb)").click();
-    exportWizard.bot().button("Finish").click();
+    wizard.bot().radio("EXMARaLDA format (*.exb)").click();
+    wizard.bot().button(FINISH).click();
 
     // Wait until wizard is finished
-    bot.waitUntil(new WizardClosedCondition(exportWizard), 30000);
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
     // Check no errors have been handled
     assertFalse(errorService.getLastException().isPresent());
@@ -152,28 +162,64 @@ class TestImportExport {
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4.exb").toFile().isFile());
 
     // Re-import the just created exb files
-    assertTrue(bot.menu(IMPORT_LABEL_TEXT).isEnabled());
-    bot.menu(IMPORT_LABEL_TEXT).click();
-    final SWTBotShell importWizard =
-        bot.shell("Import a corpus project from a different file format");
-    assertNotNull(importWizard);
-    assertTrue(importWizard.isOpen());
-    importWizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
-    importWizard.bot().button("Next >").click();
-    importWizard.bot().radio("EXMARaLDA format (*.exb)").click();
-    importWizard.bot().button("Finish").click();
+    assertTrue(bot.menu(IMPORT).isEnabled());
+    bot.menu(IMPORT).click();
+    wizard = bot.shell("Import a corpus project from a different file format");
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+    wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    wizard.bot().button(NEXT).click();
+
+    wizard.bot().radio("EXMARaLDA format (*.exb)").click();
+    wizard.bot().button(NEXT).click();
+
+    // Uncheck the add spaces option
+    assertTrue(wizard.bot().checkBox(ADD_SPACES_BETWEEN_TOKEN).isChecked());
+    wizard.bot().checkBox(ADD_SPACES_BETWEEN_TOKEN).click();
+    assertFalse(wizard.bot().checkBox(ADD_SPACES_BETWEEN_TOKEN).isChecked());
+
+    wizard.bot().button(FINISH).click();
     // Wait until wizard is finished
-    bot.waitUntil(new WizardClosedCondition(importWizard), 30000);
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
     // Check all documents exist again
     assertEquals(1, projectManager.getProject().getCorpusGraphs().size());
     assertEquals(4, projectManager.getProject().getCorpusGraphs().get(0).getDocuments().size());
 
-    // Exporting to Exmaralda should have removed pointing annotations
     doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
+      // Exporting to Exmaralda should have removed pointing annotations
       assertEquals(0, doc1.get().getDocumentGraph().getPointingRelations().size());
+      // Because of the import configuration, the text should not contain artificially generated
+      // spaces
+      assertEquals("Isthisexamplemorecomplicatedthanitappearstobe?",
+          doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
+    }
+
+    // Import again, but this time with spaces
+    bot.menu(IMPORT).click();
+    wizard = bot.shell("Import a corpus project from a different file format");
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+    wizard.bot().text().setText(tmpDir.resolve("rootCorpus").toAbsolutePath().toString());
+    wizard.bot().button(NEXT).click();
+
+    wizard.bot().radio("EXMARaLDA format (*.exb)").click();
+    wizard.bot().button(NEXT).click();
+
+    assertTrue(wizard.bot().checkBox(ADD_SPACES_BETWEEN_TOKEN).isChecked());
+
+    wizard.bot().button(FINISH).click();
+    // Wait until wizard is finished
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    doc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // Because of the import configuration, the text should contain spaces between all tokens
+      assertEquals("Is this example more complicated than it appears to be ? ",
+          doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
     }
 
   }
@@ -181,17 +227,17 @@ class TestImportExport {
   @Test
   void testExportPaula() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
+    assertFalse(bot.menu(EXPORT).isEnabled());
 
     // Open example corpus
     openDefaultExample();
     SaltProject p = projectManager.getProject();
     assertEquals(1, p.getCorpusGraphs().size());
     assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
-    assertTrue(bot.menu(EXPORT_LABEL_TEXT).isEnabled());
+    assertTrue(bot.menu(EXPORT).isEnabled());
 
     // Click on the export menu add fill out the wizard
-    bot.menu(EXPORT_LABEL_TEXT).click();
+    bot.menu(EXPORT).click();
 
     SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
     assertNotNull(wizard);
@@ -199,10 +245,10 @@ class TestImportExport {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-export-test");
     wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
-    wizard.bot().button("Next >").click();
+    wizard.bot().button(NEXT).click();
 
     wizard.bot().radio("PAULA format").click();
-    wizard.bot().button("Finish").click();
+    wizard.bot().button(FINISH).click();
 
     // Wait until wizard is finished
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
