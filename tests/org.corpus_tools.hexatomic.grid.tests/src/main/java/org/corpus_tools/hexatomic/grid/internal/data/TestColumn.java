@@ -31,9 +31,7 @@ class TestColumn {
   private Column fixtureAnnotationColumn = null;
   private SToken token1 = null;
   private SToken token2 = null;
-  private SAnnotation annotation1 = null;
-  private SAnnotation annotation2 = null;
-
+  
   /**
    * Sets up the fixture for unit tests.
    */
@@ -52,10 +50,10 @@ class TestColumn {
     fixtureTokenTextColumn.setRow(0, token1);
     fixtureTokenTextColumn.setRow(1, token2);
 
-    annotation1 = mock(SAnnotation.class);
+    SAnnotation annotation1 = mock(SAnnotation.class);
     when(annotation1.getQName()).thenReturn(TEST_ANNO_QNAME);
     when(annotation1.getValue()).thenReturn("anno1");
-    annotation2 = mock(SAnnotation.class);
+    SAnnotation annotation2 = mock(SAnnotation.class);
     when(annotation2.getQName()).thenReturn(TEST_ANNO_QNAME);
     when(annotation2.getValue()).thenReturn("anno2");
 
