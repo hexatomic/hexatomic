@@ -58,9 +58,6 @@ class TestProjectManager {
 
   private EPartService partService;
 
-  private UiStatusReport uiStatus;
-
-
   @BeforeEach
   public void setUp() {
     File exampleProjectDirectory =
@@ -77,7 +74,7 @@ class TestProjectManager {
 
     errorService = mock(ErrorService.class);
     partService = mock(EPartService.class);
-    uiStatus = mock(UiStatusReport.class);
+    UiStatusReport uiStatus = mock(UiStatusReport.class);
 
 
     DummySync sync = new DummySync();
