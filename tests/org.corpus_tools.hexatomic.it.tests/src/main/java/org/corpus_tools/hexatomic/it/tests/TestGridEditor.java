@@ -7,12 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import org.apache.commons.lang3.tuple.Pair;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -37,10 +41,13 @@ import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.command.SelectCellCommand;
+import org.eclipse.nebula.widgets.nattable.style.editor.AbstractEditorPanel;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
@@ -70,7 +77,8 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
-
+  private static final String UNRENAMED_ANNOTATIONS_DIALOG_TITLE =
+      "Some annotations were not renamed!";
 
   private static final String TOKEN_VALUE = "Token";
 
@@ -913,8 +921,9 @@ public class TestGridEditor {
     table.click(3, 2);
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
     // Check that the fields are pre-filled
-    assertDialogTexts(dialog, null);
+    assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
@@ -949,8 +958,9 @@ public class TestGridEditor {
     table.click(3, 2);
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
     // Check that the fields are pre-filled
-    assertDialogTexts(dialog, null);
+    assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("Cancel").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
@@ -997,6 +1007,7 @@ public class TestGridEditor {
 
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, NAMESPACED_LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
@@ -1057,6 +1068,7 @@ public class TestGridEditor {
     });
     table.contextMenu(3, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, null);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
@@ -1086,33 +1098,101 @@ public class TestGridEditor {
     assertEquals(CONTRAST_FOCUS_VALUE, infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
   }
 
+  /**
+   * Tests that when annotations with the qualified target annotation name already exist on a node
+   * during a rename action, the cells and nodes remain unchanged, and a dialog is displayed
+   * notifying the user of these unchanged annotations.
+   */
+  @Test
+  void testAnnotationsRemainUnchanged() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Assert model elements
+    assertEquals(5, table.columnCount());
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    SToken lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
+    assertEquals(MORE_VALUE,
+        lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+
+    // Start renaming action to existing annotation
+    table.click(4, 2);
+    table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(POS_NAME);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Assert model elements unchanged
+    assertEquals(5, table.columnCount());
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
+    assertEquals(MORE_VALUE,
+        lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+
+    // Assert that dialog is displayed
+    SWTBotShell infoDialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
+    assertNotNull(infoDialog);
+    // Check that the displayed text is correct
+    LabelTextExtractor uq = new LabelTextExtractor(infoDialog);
+    FutureTask<String> labelTextFuture = new FutureTask<String>(uq);
+    Display.getDefault().syncExec(labelTextFuture);
+    try {
+      assertEquals(
+          "Could not rename some annotations, as annotations with the qualified target name 'pos'"
+              + " already exist on the respective nodes:\n- Token with text 'more'",
+          labelTextFuture.get());
+    } catch (InterruptedException | ExecutionException e) {
+      fail();
+    }
+    // assertDialogLabelEndsWith(infoDialog, "- Token with text 'mode'");
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(infoDialog));
+
+  }
+
+  /**
+   * Tests that when during a renaming action for annotations the current qualified annotation name
+   * and the new one are the same, that no information dialog is presented to the user.
+   */
+  @Test
+  void testDialogNotDisplayedOnSameQNameValues() {
+    fail();
+  }
+
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName) {
-    Display.getDefault().asyncExec(() -> {
-      Control[] children = dialog.widget.getChildren();
-      String namespace = null;
-      String name = null;
-      if (qualifiedName != null) {
-        Pair<String, String> namespaceNamePair = SaltUtil.splitQName(qualifiedName);
-        namespace = namespaceNamePair.getLeft();
-        name = namespaceNamePair.getRight();
-      } else {
-        namespace = "";
-        name = "";
-      }
-      boolean checkedFirstText = false;
-      for (int i = 0; i < children.length; i++) {
-        Control child = children[i];
-        if (child instanceof Text) {
-          if (!checkedFirstText) {
-            assertEquals(namespace, ((Text) child).getText());
-          } else {
-            assertEquals(name, ((Text) child).getText());
-          }
-        }
-      }
-    });
+    String namespace = null;
+    String name = null;
+    if (qualifiedName != null) {
+      Pair<String, String> namespaceNamePair = SaltUtil.splitQName(qualifiedName);
+      namespace = namespaceNamePair.getLeft();
+      name = namespaceNamePair.getRight();
+    } else {
+      namespace = "";
+      name = "";
+    }
+    PanelTextsTextExtractor extractor = new PanelTextsTextExtractor(dialog);
+    FutureTask<Pair<String, String>> textTextFuture =
+        new FutureTask<Pair<String, String>>(extractor);
+    Pair<String, String> extractedNamePair = null;
+    String extractedNamespace = null;
+    String extractedName = null;
+    Display.getDefault().syncExec(textTextFuture);
+    try {
+      extractedNamePair = textTextFuture.get();
+      extractedNamespace = extractedNamePair.getLeft();
+      extractedName = extractedNamePair.getRight();
+    } catch (InterruptedException | ExecutionException e) {
+      // fail();
+      e.printStackTrace();
+    }
+    assertEquals(namespace, extractedNamespace);
+    assertEquals(name, extractedName);
   }
+
 
   private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
     clickWithMask(false, true, rowPosition, columnPosition, table);
@@ -1150,6 +1230,86 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     return (CompositeFreezeLayer) layerUl;
+  }
+
+  /**
+   * A {@link Callable} which, when called, extracts the text of the first two {@link Text} fields
+   * it finds in the first child of type {@link AbstractEditorPanel} in the given
+   * {@link SWTBotShell} and returns them as {@link Pair}.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class PanelTextsTextExtractor implements Callable<Pair<String, String>> {
+
+    private final SWTBotShell dialog;
+
+    PanelTextsTextExtractor(SWTBotShell dialog) {
+      this.dialog = dialog;
+    }
+
+    @Override
+    public Pair<String, String> call() throws Exception {
+      Control[] children = dialog.widget.getChildren();
+      String namespace = null;
+      String name = null;
+      boolean checkedFirstText = false;
+      // Constraint: There may only be one panel in the dialog, and it must contain two texts
+      AbstractEditorPanel<?> panel = findFirstPanel(children);
+      Control[] panelChildren = panel.getChildren();
+      for (int i = 0; i < panelChildren.length; i++) {
+        // Iterate through the children tree until we find the AnnotationLabelPanel
+        Control child = panelChildren[i];
+        if (child instanceof Text) {
+          if (!checkedFirstText) {
+            namespace = ((Text) child).getText();
+            checkedFirstText = true;
+          } else {
+            name = ((Text) child).getText();
+          }
+        }
+      }
+      return Pair.of(namespace, name);
+    }
+
+    private AbstractEditorPanel<?> findFirstPanel(Control[] children) {
+      for (int i = 0; i < children.length; i++) {
+        Control control = children[i];
+        if (control instanceof Composite) {
+          // Can potentially contain the panel we're looking for
+          for (Control compositeChild : ((Composite) control).getChildren()) {
+            if (compositeChild instanceof AbstractEditorPanel<?>) {
+              return (AbstractEditorPanel<?>) compositeChild;
+            }
+          }
+        }
+      }
+      return null;
+    }
+  }
+
+  /**
+   * A {@link Callable} which, when called, extracts the text of the first non-empty {@link Label}
+   * it finds in the given {@link SWTBotShell} and returns it.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class LabelTextExtractor implements Callable<String> {
+
+    private final SWTBotShell dialog;
+
+    LabelTextExtractor(SWTBotShell infoDialog) {
+      this.dialog = infoDialog;
+    }
+
+    public String call() throws Exception {
+      for (Control child : dialog.widget.getChildren()) {
+        if (child instanceof Label && !((Label) child).getText().isEmpty()) {
+          Label label = (Label) child;
+          return label.getText();
+        }
+      }
+      return null;
+    }
   }
 
 
