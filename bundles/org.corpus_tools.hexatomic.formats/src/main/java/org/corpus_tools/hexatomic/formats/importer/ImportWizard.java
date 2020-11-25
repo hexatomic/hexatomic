@@ -30,6 +30,7 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
+import org.corpus_tools.hexatomic.formats.PepperWizard;
 import org.corpus_tools.hexatomic.formats.exb.ExbImportConfiguration;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.Pepper;
@@ -39,29 +40,24 @@ import org.corpus_tools.pepper.common.StepDesc;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
 
-public class ImportWizard extends Wizard {
+/**
+ * Wizard to import a corpus from a non-Salt format using Pepper.
+ *
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
+public class ImportWizard extends PepperWizard {
 
   static final String ERRORS_TITLE = "Error(s) during import";
   private final CorpusPathSelectionPage corpusPathPage = new CorpusPathSelectionPage(Type.IMPORT);
   private final ImporterSelectionPage importerPage = new ImporterSelectionPage();
   private Optional<ConfigurationPage> configPage = Optional.empty();
 
-  private final ErrorService errorService;
-  private final ProjectManager projectManager;
-  private final SaltNotificationFactory notificationFactory;
-  private final UISynchronize sync;
 
   protected ImportWizard(ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
-    super();
-    this.errorService = errorService;
-    this.projectManager = projectManager;
-    this.notificationFactory = notificationFactory;
-    this.sync = sync;
-    setNeedsProgressMonitor(true);
-
+    super(errorService, projectManager, notificationFactory, sync);
     corpusPathPage.setCorpusPathFromProject(projectManager.getProject());
   }
 
@@ -130,19 +126,20 @@ public class ImportWizard extends Wizard {
       job.addStepDesc(importStep);
 
       // Conversion is adding a load of events, suppress them first
-      notificationFactory.setSuppressingEvents(true);
+      getNotificationFactory().setSuppressingEvents(true);
 
       try {
         // Execute the conversion as task that can be aborted
-        getContainer().run(true, true, new ImportRunner(job, projectManager, errorService, sync));
+        getContainer().run(true, true,
+            new ImportRunner(job, getProjectManager(), getErrorService(), getSync()));
 
       } catch (InvocationTargetException ex) {
-        errorService.handleException("Unexpected error when importing corpus: " + ex.getMessage(),
-            ex, ImportWizard.class);
+        getErrorService().handleException(
+            "Unexpected error when importing corpus: " + ex.getMessage(), ex, ImportWizard.class);
       } catch (InterruptedException ex) {
         Thread.currentThread().interrupt();
       } finally {
-        notificationFactory.setSuppressingEvents(false);
+        getNotificationFactory().setSuppressingEvents(false);
       }
 
       return true;

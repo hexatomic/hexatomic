@@ -30,6 +30,7 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
+import org.corpus_tools.hexatomic.formats.PepperWizard;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.MODULE_TYPE;
 import org.corpus_tools.pepper.common.Pepper;
@@ -37,9 +38,14 @@ import org.corpus_tools.pepper.common.PepperJob;
 import org.corpus_tools.pepper.common.StepDesc;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jface.wizard.Wizard;
 
-public class ExportWizard extends Wizard {
+/**
+ * Wizard to export the Salt project to other formats using Pepper.
+ * 
+ * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
+ *
+ */
+public class ExportWizard extends PepperWizard {
 
   static final String ERRORS_TITLE = "Error(s) during export";
 
@@ -47,20 +53,10 @@ public class ExportWizard extends Wizard {
   private final ExporterSelectionPage exporterPage = new ExporterSelectionPage();
   private Optional<ConfigurationPage> configPage = Optional.empty();
 
-  private final ErrorService errorService;
-  private final ProjectManager projectManager;
-  private final SaltNotificationFactory notificationFactory;
-  private final UISynchronize sync;
 
   protected ExportWizard(ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
-    super();
-    this.errorService = errorService;
-    this.projectManager = projectManager;
-    this.notificationFactory = notificationFactory;
-    this.sync = sync;
-    setNeedsProgressMonitor(true);
-
+    super(errorService, projectManager, notificationFactory, sync);
     corpusPathPage.setCorpusPathFromProject(projectManager.getProject());
   }
 
@@ -80,7 +76,7 @@ public class ExportWizard extends Wizard {
     Optional<File> corpusPath = corpusPathPage.getCorpusPath();
     Optional<ExportFormat> selectedFormat = exporterPage.getSelectedFormat();
     Optional<Pepper> pepper = Activator.getPepper();
-    Optional<URI> projectLocation = projectManager.getLocation();
+    Optional<URI> projectLocation = getProjectManager().getLocation();
     if (corpusPath.isPresent() && selectedFormat.isPresent() && pepper.isPresent()
         && projectLocation.isPresent()) {
       // Add an import step for the Salt corpus (on-disk)
@@ -108,19 +104,20 @@ public class ExportWizard extends Wizard {
       job.addStepDesc(exportStep);
 
       // Conversion is adding a load of events, suppress them first
-      notificationFactory.setSuppressingEvents(true);
+      getNotificationFactory().setSuppressingEvents(true);
 
       try {
         // Execute the conversion as task that can be aborted
-        getContainer().run(true, true, new ExportRunner(job, projectManager, errorService, sync));
+        getContainer().run(true, true,
+            new ExportRunner(job, getProjectManager(), getErrorService(), getSync()));
 
       } catch (InvocationTargetException ex) {
-        errorService.handleException("Unexpected error when exporting corpus: " + ex.getMessage(),
-            ex, ExportWizard.class);
+        getErrorService().handleException(
+            "Unexpected error when exporting corpus: " + ex.getMessage(), ex, ExportWizard.class);
       } catch (InterruptedException ex) {
         Thread.currentThread().interrupt();
       } finally {
-        notificationFactory.setSuppressingEvents(false);
+        getNotificationFactory().setSuppressingEvents(false);
       }
       return true;
     }
