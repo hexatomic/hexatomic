@@ -40,6 +40,10 @@ public class UnrenamedAnnotationsDialog {
   private static final String SOME_ANNOTATIONS_WERE_NOT_RENAMED =
       "Some annotations were not renamed!";
 
+  private UnrenamedAnnotationsDialog() {
+    // Constructor should not be called
+  }
+
   /**
    * Opens the dialog with a message listing the unchanged nodes by the text they are representing
    * (in case they are tokens) or covering (in case they are spans).
