@@ -420,27 +420,24 @@ public class GraphDataProvider implements IDataProvider {
       }
       for (Integer rowPosition : columnCoordinates.getValue()) {
         SStructuredNode node = column.getDataObject(rowPosition);
-        if (node == null || touchedNodes.contains(node)) {
-          // If the nodes is null, there can be no annotations to rename, and if the node has
-          // already been changed, the annotation to change doesn't exist
-          // anymore, so continue with the next cell.
-          continue;
+        if (node != null && !touchedNodes.contains(node)) {
+          // Only proceed if the node is not null and if the node hasn't been touched yet.
+          SAnnotation currentAnnotation = node.getAnnotation(currentQName);
+          // Check if target annotation already exists
+          if (node.getAnnotation(newQName) != null) {
+            log.debug(
+                "The following node already has an annotation with the qualified name '{}'. "
+                    + "Ignoring it to avoid throwing {}:\n{}",
+                newQName, SaltInsertionException.class.getSimpleName(), node);
+            unchangedNodes.add(node);
+            continue;
+          }
+          Object annotationValue = currentAnnotation.getValue();
+          node.removeLabel(currentQName);
+          node.createAnnotation(namespace, name, annotationValue);
+          // Remember that the node has already been touched.
+          touchedNodes.add(node);
         }
-        SAnnotation currentAnnotation = node.getAnnotation(currentQName);
-        // Check if target annotation already exists
-        if (node.getAnnotation(newQName) != null) {
-          log.debug(
-              "The following node already has an annotation with the qualified name '{}'. "
-                  + "Ignoring it to avoid throwing {}:\n{}",
-              newQName, SaltInsertionException.class.getSimpleName(), node.toString());
-          unchangedNodes.add(node);
-          continue;
-        }
-        Object annotationValue = currentAnnotation.getValue();
-        node.removeLabel(currentQName);
-        node.createAnnotation(namespace, name, annotationValue);
-        // Remember that the node has already been touched.
-        touchedNodes.add(node);
       }
     }
     if (!unchangedNodes.isEmpty()) {
