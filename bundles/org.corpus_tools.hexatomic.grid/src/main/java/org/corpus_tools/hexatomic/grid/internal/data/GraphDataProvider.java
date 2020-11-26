@@ -413,9 +413,9 @@ public class GraphDataProvider implements IDataProvider {
       String currentQName = column.getColumnValue();
       if (currentQName.equals(newQName)) {
         // Simply ignore this column, as the name is the same
-        log.debug(
-            "Ignoring rename operation on column {}, as the current and new qualified annotation names are the same: [current: {}]..[new: {}].",
-            columnPosition, currentQName, newQName);
+        log.debug("Ignoring rename operation on column {}, "
+            + "as the current and new qualified annotation names are the same: "
+            + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
         continue;
       }
       for (Integer rowPosition : columnCoordinates.getValue()) {
