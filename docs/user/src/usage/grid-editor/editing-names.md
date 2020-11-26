@@ -31,3 +31,13 @@ To change the annotations, confirm by clicking **OK**.
 You can cancel the change by clicking **Cancel** or closing the dialog.
 
 ![Open the editor for changing qualified annotation names via the popup menu.](./change-annotation-name.png)
+
+### Cases where renaming annotations doesn't work
+
+There are two cases in which changing an annotation name will not work.
+
+1. When the new qualified annotation name is the same as the current one, the rename operation is simply ignored.
+2. When there already is an annotation with the new qualified annotation name on a token or a span, the rename operation is not completed.
+Instead you will be shown an information dialog notifying you of this.
+
+![Edited screenshot of Hexatomic showing what happens when you try to rename an annotation, and an annotation with the new name already exists on the node.](./unrenamed.png).
