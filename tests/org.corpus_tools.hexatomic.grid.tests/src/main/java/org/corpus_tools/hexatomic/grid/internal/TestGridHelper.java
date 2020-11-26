@@ -24,6 +24,9 @@ import org.junit.jupiter.api.Test;
  */
 class TestGridHelper {
 
+  private static final String WRONG_LAYER_TYPE_LOG_MESSAGE =
+      "Column header layer is not of type GridColumnHeaderLayer as expected! "
+          + "Please report this as a bug.\nOffending layer: ";
   private final NatTable natTable = mock(NatTable.class);
   private final GridColumnHeaderLayer columnHeaderLayer = mock(GridColumnHeaderLayer.class);
   private final GridFreezeLayer freezeLayer = mock(GridFreezeLayer.class);
@@ -59,10 +62,7 @@ class TestGridHelper {
     when(gridLayer.getColumnHeaderLayer()).thenReturn(offendingLayer);
     HexatomicRuntimeException exception = assertThrows(HexatomicRuntimeException.class,
         () -> GridHelper.getColumnHeaderLayer(natTable));
-    assertEquals(
-        "Column header layer is not of type GridColumnHeaderLayer as expected! "
-            + "Please report this as a bug.\nOffending layer: " + offendingLayer.toString(),
-        exception.getMessage());
+    assertEquals(WRONG_LAYER_TYPE_LOG_MESSAGE + offendingLayer.toString(), exception.getMessage());
   }
 
   /**
@@ -78,10 +78,7 @@ class TestGridHelper {
     when(natTable.getUnderlyingLayerByPosition(0, 0)).thenReturn(offendingLayer);
     HexatomicRuntimeException exception = assertThrows(HexatomicRuntimeException.class,
         () -> GridHelper.getColumnHeaderLayer(natTable));
-    assertEquals(
-        "Underlying layer of NatTable is not of type GridLayer as expected! "
-            + "Please report this as a bug.\nOffending layer: " + offendingLayer.toString(),
-        exception.getMessage());
+    assertEquals(WRONG_LAYER_TYPE_LOG_MESSAGE + offendingLayer.toString(), exception.getMessage());
   }
 
   /**
@@ -98,10 +95,7 @@ class TestGridHelper {
     when(gridLayer.getBodyLayer()).thenReturn(offendingLayer);
     HexatomicRuntimeException exception =
         assertThrows(HexatomicRuntimeException.class, () -> GridHelper.getBodyLayer(natTable));
-    assertEquals(
-        "Body layer is not of type GridFreezeLayer as expected! "
-            + "Please report this as a bug.\nOffending layer: " + offendingLayer.toString(),
-        exception.getMessage());
+    assertEquals(WRONG_LAYER_TYPE_LOG_MESSAGE + offendingLayer.toString(), exception.getMessage());
   }
 
 }

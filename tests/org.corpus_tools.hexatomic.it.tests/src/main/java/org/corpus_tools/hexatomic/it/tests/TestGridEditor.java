@@ -1139,7 +1139,7 @@ public class TestGridEditor {
     assertNotNull(infoDialog);
     // Check that the displayed text is correct
     LabelTextExtractor uq = new LabelTextExtractor(infoDialog);
-    FutureTask<String> labelTextFuture = new FutureTask<String>(uq);
+    FutureTask<String> labelTextFuture = new FutureTask<>(uq);
     Display.getDefault().syncExec(labelTextFuture);
     try {
       assertEquals(
@@ -1147,9 +1147,8 @@ public class TestGridEditor {
               + " already exist on the respective nodes:\n- Token with text 'more'",
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
-      fail();
+      fail(e);
     }
-    // assertDialogLabelEndsWith(infoDialog, "- Token with text 'mode'");
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(infoDialog));
 
@@ -1210,8 +1209,7 @@ public class TestGridEditor {
       name = "";
     }
     PanelTextsTextExtractor extractor = new PanelTextsTextExtractor(dialog);
-    FutureTask<Pair<String, String>> textTextFuture =
-        new FutureTask<Pair<String, String>>(extractor);
+    FutureTask<Pair<String, String>> textTextFuture = new FutureTask<>(extractor);
     Pair<String, String> extractedNamePair = null;
     String extractedNamespace = null;
     String extractedName = null;
@@ -1221,8 +1219,7 @@ public class TestGridEditor {
       extractedNamespace = extractedNamePair.getLeft();
       extractedName = extractedNamePair.getRight();
     } catch (InterruptedException | ExecutionException e) {
-      // fail();
-      e.printStackTrace();
+      fail(e);
     }
     assertEquals(namespace, extractedNamespace);
     assertEquals(name, extractedName);
@@ -1290,6 +1287,9 @@ public class TestGridEditor {
       boolean checkedFirstText = false;
       // Constraint: There may only be one panel in the dialog, and it must contain two texts
       AbstractEditorPanel<?> panel = findFirstPanel(children);
+      if (panel == null) {
+        fail("AbstractEditorPanel not found but should be there!");
+      }
       Control[] panelChildren = panel.getChildren();
       for (int i = 0; i < panelChildren.length; i++) {
         // Iterate through the children tree until we find the AnnotationLabelPanel
