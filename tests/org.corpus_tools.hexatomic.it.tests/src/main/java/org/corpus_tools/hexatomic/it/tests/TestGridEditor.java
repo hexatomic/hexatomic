@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
@@ -1159,7 +1161,40 @@ public class TestGridEditor {
    */
   @Test
   void testDialogNotDisplayedOnSameQNameValues() {
-    fail();
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Assert model elements
+    assertEquals(5, table.columnCount());
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    SToken lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
+    assertEquals(MORE_VALUE,
+        lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+
+    // Start renaming action to existing annotation
+    table.click(4, 2);
+    table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(LEMMA_NAME);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Assert model elements unchanged
+    assertEquals(5, table.columnCount());
+    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
+    lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
+    assertEquals(MORE_VALUE,
+        lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+
+    // Assert that dialog is NOT displayed
+    Display.getDefault().syncExec(() -> {
+      Shell[] shells = Display.getDefault().getShells();
+      for (int i = 0; i < shells.length; i++) {
+        assertNotEquals(UNRENAMED_ANNOTATIONS_DIALOG_TITLE, shells[i].getText());
+      }
+    });
   }
 
 
