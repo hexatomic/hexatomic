@@ -1121,12 +1121,12 @@ public class TestGridEditor {
    * during a rename action, the cells and nodes remain unchanged, and a dialog is displayed
    * notifying the user of these unchanged annotations.
    * 
-   * @throws Exception If the thread extracting the label text in the given dialog is interrupted,
-   *         or if there is an error during execution. Can be either {@link InterruptedException} or
-   *         {@link ExecutionException}.
+   * @throws InterruptedException If the thread extracting the label text in the given dialog is
+   *         interrupted, or if there is an error during execution.
+   * @throws ExecutionException see InterruptedException
    */
   @Test
-  void testAnnotationsRemainUnchanged() throws Exception {
+  void testAnnotationsRemainUnchanged() throws InterruptedException, ExecutionException {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -1218,7 +1218,8 @@ public class TestGridEditor {
   }
 
 
-  private void assertDialogTexts(SWTBotShell dialog, String qualifiedName) throws Exception {
+  private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
+      throws InterruptedException, ExecutionException {
     String namespace = null;
     String name = null;
     if (qualifiedName != null) {
