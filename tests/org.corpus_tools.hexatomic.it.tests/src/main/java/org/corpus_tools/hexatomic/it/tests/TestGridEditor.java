@@ -1148,6 +1148,7 @@ public class TestGridEditor {
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
+      throw new RuntimeException(e);
     }
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(infoDialog));
@@ -1220,6 +1221,7 @@ public class TestGridEditor {
       extractedName = extractedNamePair.getRight();
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
+      throw new RuntimeException(e);
     }
     assertEquals(namespace, extractedNamespace);
     assertEquals(name, extractedName);
@@ -1289,6 +1291,7 @@ public class TestGridEditor {
       AbstractEditorPanel<?> panel = findFirstPanel(children);
       if (panel == null) {
         fail("AbstractEditorPanel not found but should be there!");
+        return null;
       }
       Control[] panelChildren = panel.getChildren();
       for (int i = 0; i < panelChildren.length; i++) {

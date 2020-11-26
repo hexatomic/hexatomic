@@ -27,8 +27,8 @@ class TestGridHelper {
   private final NatTable natTable = mock(NatTable.class);
   private final GridColumnHeaderLayer columnHeaderLayer = mock(GridColumnHeaderLayer.class);
   private final GridFreezeLayer freezeLayer = mock(GridFreezeLayer.class);
-  private static final String LOG_MESSAGE__WRONG_LAYER_TYPE_1 = " is not of type ";
-  private static final String LOG_MESSAGE__WRONG_LAYER_TYPE_2 =
+  private static final String LOG_MESSAGE_WRONG_LAYER_TYPE_1 = " is not of type ";
+  private static final String LOG_MESSAGE_WRONG_LAYER_TYPE_2 =
       " as expected! Please report this as a bug.\nOffending layer: ";
 
 
@@ -63,8 +63,8 @@ class TestGridHelper {
     when(gridLayer.getColumnHeaderLayer()).thenReturn(offendingLayer);
     HexatomicRuntimeException exception = assertThrows(HexatomicRuntimeException.class,
         () -> GridHelper.getColumnHeaderLayer(natTable));
-    assertEquals("Column header layer" + LOG_MESSAGE__WRONG_LAYER_TYPE_1 + "GridColumnHeaderLayer"
-        + LOG_MESSAGE__WRONG_LAYER_TYPE_2 + offendingLayer.toString(), exception.getMessage());
+    assertEquals("Column header layer" + LOG_MESSAGE_WRONG_LAYER_TYPE_1 + "GridColumnHeaderLayer"
+        + LOG_MESSAGE_WRONG_LAYER_TYPE_2 + offendingLayer.toString(), exception.getMessage());
   }
 
   /**
@@ -80,8 +80,8 @@ class TestGridHelper {
     when(natTable.getUnderlyingLayerByPosition(0, 0)).thenReturn(offendingLayer);
     HexatomicRuntimeException exception = assertThrows(HexatomicRuntimeException.class,
         () -> GridHelper.getColumnHeaderLayer(natTable));
-    assertEquals("Underlying layer of NatTable" + LOG_MESSAGE__WRONG_LAYER_TYPE_1 + "GridLayer"
-        + LOG_MESSAGE__WRONG_LAYER_TYPE_2 + offendingLayer.toString(), exception.getMessage());
+    assertEquals("Underlying layer of NatTable" + LOG_MESSAGE_WRONG_LAYER_TYPE_1 + "GridLayer"
+        + LOG_MESSAGE_WRONG_LAYER_TYPE_2 + offendingLayer.toString(), exception.getMessage());
   }
 
   /**
@@ -98,8 +98,8 @@ class TestGridHelper {
     when(gridLayer.getBodyLayer()).thenReturn(offendingLayer);
     HexatomicRuntimeException exception =
         assertThrows(HexatomicRuntimeException.class, () -> GridHelper.getBodyLayer(natTable));
-    assertEquals("Body layer" + LOG_MESSAGE__WRONG_LAYER_TYPE_1 + "GridFreezeLayer"
-        + LOG_MESSAGE__WRONG_LAYER_TYPE_2 + offendingLayer.toString(), exception.getMessage());
+    assertEquals("Body layer" + LOG_MESSAGE_WRONG_LAYER_TYPE_1 + "GridFreezeLayer"
+        + LOG_MESSAGE_WRONG_LAYER_TYPE_2 + offendingLayer.toString(), exception.getMessage());
   }
 
 }
