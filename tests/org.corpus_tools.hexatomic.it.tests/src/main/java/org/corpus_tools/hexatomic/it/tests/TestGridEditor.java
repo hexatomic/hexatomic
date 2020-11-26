@@ -907,9 +907,13 @@ public class TestGridEditor {
   /**
    * Tests that when a single cell is selected and its annotation name changed, that a new column
    * for the new annotation name is created, and that the cell is moved into that column.
+   * 
+   * @throws Exception if the thread extracting the information from a given dialog is interrupted,
+   *         or if there is an error during execution. Can be either {@link InterruptedException} or
+   *         {@link ExecutionException}.
    */
   @Test
-  void testChangeAnnotationNameSingleCell() {
+  void testChangeAnnotationNameSingleCell() throws Exception {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -944,9 +948,13 @@ public class TestGridEditor {
   /**
    * Tests that when a single cell is selected and the annotation rename dialog is cancelled, that
    * everything has stayed the same.
+   * 
+   * @throws Exception if the thread extracting the information from a given dialog is interrupted,
+   *         or if there is an error during execution. Can be either {@link InterruptedException} or
+   *         {@link ExecutionException}.
    */
   @Test
-  void testCancelChangeAnnotationNameSingleCell() {
+  void testCancelChangeAnnotationNameSingleCell() throws Exception {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -978,9 +986,13 @@ public class TestGridEditor {
   /**
    * Tests that when multiple cells in the same column are selected, that the annotation renaming
    * works for all of these cells.
+   * 
+   * @throws Exception if the thread extracting the information from a given dialog is interrupted,
+   *         or if there is an error during execution. Can be either {@link InterruptedException} or
+   *         {@link ExecutionException}.
    */
   @Test
-  void testChangeAnnotationNameMultipleCellsInOneColumn() {
+  void testChangeAnnotationNameMultipleCellsInOneColumn() throws Exception {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -1040,9 +1052,13 @@ public class TestGridEditor {
   /**
    * Tests that when multiple cells from multiple different columns are selected, that the
    * annotation renaming works for all of these cells.
+   * 
+   * @throws Exception if the thread extracting the information from a given dialog is interrupted,
+   *         or if there is an error during execution. Can be either {@link InterruptedException} or
+   *         {@link ExecutionException}.
    */
   @Test
-  void testChangeAnnotationNameMultipleCellsInDifferentColumns() {
+  void testChangeAnnotationNameMultipleCellsInDifferentColumns() throws Exception {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -1104,9 +1120,13 @@ public class TestGridEditor {
    * Tests that when annotations with the qualified target annotation name already exist on a node
    * during a rename action, the cells and nodes remain unchanged, and a dialog is displayed
    * notifying the user of these unchanged annotations.
+   * 
+   * @throws Exception If the thread extracting the label text in the given dialog is interrupted,
+   *         or if there is an error during execution. Can be either {@link InterruptedException} or
+   *         {@link ExecutionException}.
    */
   @Test
-  void testAnnotationsRemainUnchanged() {
+  void testAnnotationsRemainUnchanged() throws Exception {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -1148,7 +1168,7 @@ public class TestGridEditor {
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
-      throw new RuntimeException(e);
+      throw e;
     }
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(infoDialog));
@@ -1198,7 +1218,7 @@ public class TestGridEditor {
   }
 
 
-  private void assertDialogTexts(SWTBotShell dialog, String qualifiedName) {
+  private void assertDialogTexts(SWTBotShell dialog, String qualifiedName) throws Exception {
     String namespace = null;
     String name = null;
     if (qualifiedName != null) {
@@ -1221,7 +1241,7 @@ public class TestGridEditor {
       extractedName = extractedNamePair.getRight();
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
-      throw new RuntimeException(e);
+      throw e;
     }
     assertEquals(namespace, extractedNamespace);
     assertEquals(name, extractedName);
