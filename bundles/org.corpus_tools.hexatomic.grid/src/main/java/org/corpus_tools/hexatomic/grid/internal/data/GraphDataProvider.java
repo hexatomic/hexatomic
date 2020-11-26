@@ -411,6 +411,13 @@ public class GraphDataProvider implements IDataProvider {
       Integer columnPosition = columnCoordinates.getKey();
       Column column = getColumns().get(columnPosition);
       String currentQName = column.getColumnValue();
+      if (currentQName.equals(newQName)) {
+        // Simply ignore this column, as the name is the same
+        log.debug(
+            "Ignoring rename operation on column {}, as the current and new qualified annotation names are the same: [current: {}]..[new: {}].",
+            columnPosition, currentQName, newQName);
+        continue;
+      }
       for (Integer rowPosition : columnCoordinates.getValue()) {
         SStructuredNode node = column.getDataObject(rowPosition);
         if (node == null || touchedNodes.contains(node)) {
