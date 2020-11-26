@@ -913,7 +913,7 @@ public class TestGridEditor {
    *         {@link ExecutionException}.
    */
   @Test
-  void testChangeAnnotationNameSingleCell() throws Exception {
+  void testChangeAnnotationNameSingleCell() throws InterruptedException, ExecutionException {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -954,7 +954,7 @@ public class TestGridEditor {
    *         {@link ExecutionException}.
    */
   @Test
-  void testCancelChangeAnnotationNameSingleCell() throws Exception {
+  void testCancelChangeAnnotationNameSingleCell() throws InterruptedException, ExecutionException {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -992,7 +992,8 @@ public class TestGridEditor {
    *         {@link ExecutionException}.
    */
   @Test
-  void testChangeAnnotationNameMultipleCellsInOneColumn() throws Exception {
+  void testChangeAnnotationNameMultipleCellsInOneColumn()
+      throws InterruptedException, ExecutionException {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
@@ -1058,7 +1059,8 @@ public class TestGridEditor {
    *         {@link ExecutionException}.
    */
   @Test
-  void testChangeAnnotationNameMultipleCellsInDifferentColumns() throws Exception {
+  void testChangeAnnotationNameMultipleCellsInDifferentColumns()
+      throws InterruptedException, ExecutionException {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
