@@ -26,13 +26,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
+import org.apache.commons.lang3.tuple.Pair;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
+import org.corpus_tools.hexatomic.grid.internal.ui.UnrenamedAnnotationsDialog;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SSpanningRelation;
@@ -42,8 +46,11 @@ import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SRelation;
+import org.corpus_tools.salt.exceptions.SaltInsertionException;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 /**
@@ -383,6 +390,61 @@ public class GraphDataProvider implements IDataProvider {
           dataObject.getClass().getSimpleName(), dataObject.hashCode(), dataObject, newValue);
       anno.setValue(newValue);
     }
+  }
+
+  /**
+   * Renames annotation on a set of given cells in bulk. The cells are identified by their
+   * {@link PositionCoordinate}s, which are provided as a map of cell positions to sets of row
+   * positions.
+   * 
+   * @param cellMapByColumn a map of cells from column positions to sets of row positions.
+   * @param newQName the new qualified annotation name for the annotations to be renamed
+   */
+  public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
+    Set<SStructuredNode> touchedNodes = new HashSet<>();
+    Set<SStructuredNode> unchangedNodes = new HashSet<>();
+    Pair<String, String> namespaceNamePair = SaltUtil.splitQName(newQName);
+    final String namespace = namespaceNamePair.getLeft();
+    final String name = namespaceNamePair.getRight();
+    // Run the rename for all cells by column
+    for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
+      Integer columnPosition = columnCoordinates.getKey();
+      Column column = getColumns().get(columnPosition);
+      String currentQName = column.getColumnValue();
+      if (currentQName.equals(newQName)) {
+        // Simply ignore this column, as the name is the same
+        log.debug("Ignoring rename operation on column {}, "
+            + "as the current and new qualified annotation names are the same: "
+            + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
+        continue;
+      }
+      for (Integer rowPosition : columnCoordinates.getValue()) {
+        SStructuredNode node = column.getDataObject(rowPosition);
+        if (node != null && !touchedNodes.contains(node)) {
+          // Only proceed if the node is not null and if the node hasn't been touched yet.
+          SAnnotation currentAnnotation = node.getAnnotation(currentQName);
+          // Check if target annotation already exists
+          if (node.getAnnotation(newQName) != null) {
+            log.debug(
+                "The following node already has an annotation with the qualified name '{}'. "
+                    + "Ignoring it to avoid throwing {}:\n{}",
+                newQName, SaltInsertionException.class.getSimpleName(), node);
+            unchangedNodes.add(node);
+            continue;
+          }
+          Object annotationValue = currentAnnotation.getValue();
+          node.removeLabel(currentQName);
+          node.createAnnotation(namespace, name, annotationValue);
+          // Remember that the node has already been touched.
+          touchedNodes.add(node);
+        }
+      }
+    }
+    if (!unchangedNodes.isEmpty()) {
+      UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes);
+    }
+    projectManager.addCheckpoint();
+
   }
 
   @Override

@@ -88,8 +88,14 @@ public class AnnotationLabelPanel extends AbstractEditorPanel<String> {
   @Override
   public void edit(String oldQName) throws Exception {
     if (oldQName != null && oldQName.length() > 0) {
-      this.namespaceField.setText(SaltUtil.splitQName(oldQName).getLeft());
-      this.nameField.setText(SaltUtil.splitQName(oldQName).getRight());
+      String left = SaltUtil.splitQName(oldQName).getLeft();
+      String right = SaltUtil.splitQName(oldQName).getRight();
+      if (left != null) {
+        this.namespaceField.setText(left);
+      }
+      if (right != null) {
+        this.nameField.setText(SaltUtil.splitQName(oldQName).getRight());
+      }
       this.nameField.setFocus();
       this.nameField.selectAll();
     }

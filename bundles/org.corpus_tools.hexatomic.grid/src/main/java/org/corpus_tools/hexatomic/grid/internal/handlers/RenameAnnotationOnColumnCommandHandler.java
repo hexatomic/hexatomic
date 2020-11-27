@@ -28,9 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Handles renaming of annotations - and thus column headers - on behalf of NatTable's generic
- * {@link RenameColumnHeaderCommand}. Registered with the {@link GridColumnHeaderLayer} to which it
- * forwards the new annotation name.
+ * An {@link AbstractLayerCommandHandler} that handles renaming of annotations - and thus column
+ * headers - on behalf of NatTable's generic {@link RenameColumnHeaderCommand}. Registered with the
+ * {@link GridColumnHeaderLayer} to which it forwards the new annotation name.
  *
  * @author Stephan Druskat (mail@sdruskat.net)
  */
@@ -41,6 +41,11 @@ public class RenameAnnotationOnColumnCommandHandler
       LoggerFactory.getLogger(RenameAnnotationOnColumnCommandHandler.class);
   private final GridColumnHeaderLayer customColumnHeaderLayer;
 
+  /**
+   * Creates a new {@link RenameAnnotationOnCellsCommandHandler}.
+   * 
+   * @param customColumnHeaderLayer the column header layer this handler operates on.
+   */
   public RenameAnnotationOnColumnCommandHandler(GridColumnHeaderLayer customColumnHeaderLayer) {
     this.customColumnHeaderLayer = customColumnHeaderLayer;
   }
