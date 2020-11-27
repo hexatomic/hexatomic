@@ -12,21 +12,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
-import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.hexatomic.grid.internal.test.TestHelper;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
-import org.eclipse.emf.common.util.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,6 +40,20 @@ import org.junit.jupiter.api.Test;
  */
 class TestGraphDataProvider {
 
+  private static final String EXAMPLE = "example";
+
+  private static final String COMPLICATED = "complicated";
+
+  private static final String CONTRAST_FOCUS = "contrast-focus";
+
+  private static final String TOPIC = "topic";
+
+  private static final String NAMESPACE_TEST = "namespace::test";
+
+  private static final String INF_STRUCT = "Inf-Struct";
+
+  private static final String SALT_LEMMA = "salt::lemma";
+
   private ErrorService errorService;
 
   private GraphDataProvider fixture = null;
@@ -46,9 +62,6 @@ class TestGraphDataProvider {
   private SDocumentGraph overlappingExampleGraph;
   private STextualDS overlappingExampleText;
 
-  private static final String examplePath =
-      "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
-          + "org/corpus_tools/hexatomic/core/example-corpus/";
   private static final String overlappingExamplePath =
       "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
@@ -58,10 +71,10 @@ class TestGraphDataProvider {
   @BeforeEach
   void setUp() {
     fixture = new GraphDataProvider();
-    exampleGraph = retrieveGraph(examplePath);
-    overlappingExampleGraph = retrieveGraph(overlappingExamplePath);
-    exampleText = getFirstTextFromGraph(exampleGraph);
-    overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
+    exampleGraph = TestHelper.retrieveGraph();
+    overlappingExampleGraph = TestHelper.retrieveGraph(overlappingExamplePath);
+    exampleText = TestHelper.getFirstTextFromGraph(exampleGraph);
+    overlappingExampleText = TestHelper.getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);
     fixture.errors = errorService;
     fixture.projectManager = mock(ProjectManager.class);
@@ -401,27 +414,68 @@ class TestGraphDataProvider {
     List<SToken> overlappedTokens = exampleGraph.getOverlappedTokens(newSpan);
     assertEquals(1, overlappedTokens.size());
     assertEquals(token, overlappedTokens.get(0));
-    SAnnotation annotation = newSpan.getAnnotation(null, "Inf-Struct");
+    SAnnotation annotation = newSpan.getAnnotation(null, INF_STRUCT);
     assertNotNull(annotation);
     assertEquals("ABC", annotation.getValue());
   }
 
-  private SDocumentGraph retrieveGraph(String path) {
-    File exampleProjectDirectory = new File(path);
-    assertTrue(exampleProjectDirectory.isDirectory());
-    URI exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
-    SaltProject project = SaltFactory.createSaltProject();
-    project.loadSaltProject(exampleProjectUri);
-    SDocumentGraph graph =
-        project.getCorpusGraphs().get(0).getDocuments().get(0).getDocumentGraph();
-    assertNotNull(graph);
-    return graph;
+  @Test
+  final void testBulkRenameAnnotations() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
+
+    SStructuredNode token1 = fixture.getDataValue(1, 2);
+    SStructuredNode token2 = fixture.getDataValue(1, 4);
+    SStructuredNode singleCellSpan = fixture.getDataValue(3, 0);
+
+    // Make initial assertions
+    assertTrue(token1.getAnnotation(SALT_LEMMA) != null);
+    assertTrue(token2.getAnnotation(SALT_LEMMA) != null);
+    assertTrue(singleCellSpan.getAnnotation(INF_STRUCT) != null);
+
+    // Prepare map
+    Set<Integer> col1Rows = new HashSet<>();
+    col1Rows.add(2);
+    col1Rows.add(4);
+    Set<Integer> col3Rows = new HashSet<>();
+    col3Rows.add(0);
+    Map<Integer, Set<Integer>> map = new HashMap<>();
+    map.put(1, col1Rows);
+    map.put(3, col3Rows);
+
+    fixture.bulkRenameAnnotations(map, NAMESPACE_TEST);
+
+    // Original annotations should be null
+    assertTrue(token1.getAnnotation(SALT_LEMMA) == null);
+    assertTrue(token2.getAnnotation(SALT_LEMMA) == null);
+    assertTrue(singleCellSpan.getAnnotation(INF_STRUCT) == null);
+    // New annotation should exist
+    assertEquals(EXAMPLE, token1.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals(COMPLICATED, token2.getAnnotation(NAMESPACE_TEST).getValue());
+    assertEquals(CONTRAST_FOCUS, singleCellSpan.getAnnotation(NAMESPACE_TEST).getValue());
   }
 
-  private STextualDS getFirstTextFromGraph(SDocumentGraph graph) {
-    STextualDS text = graph.getTextualDSs().get(0);
-    assertNotNull(text);
-    return text;
+  @Test
+  final void testBulkRenameAnnotationsForMultiCellSpan() {
+    fixture.setGraph(exampleGraph);
+    fixture.setDsAndResolveGraph(exampleText);
+
+    SStructuredNode multiCellSpan = fixture.getDataValue(3, 1);
+    assertEquals(TOPIC, multiCellSpan.getAnnotation(INF_STRUCT).getValue());
+
+    // Prepare map
+    Set<Integer> col3Rows = new HashSet<>();
+    Collections.addAll(col3Rows, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    Map<Integer, Set<Integer>> map = new HashMap<>();
+    map.put(3, col3Rows);
+
+    fixture.bulkRenameAnnotations(map, NAMESPACE_TEST);
+
+    // Original annotations should be null
+    assertTrue(multiCellSpan.getAnnotation(INF_STRUCT) == null);
+    // New annotation should exist
+    assertEquals(TOPIC, multiCellSpan.getAnnotation(NAMESPACE_TEST).getValue());
   }
+
 
 }

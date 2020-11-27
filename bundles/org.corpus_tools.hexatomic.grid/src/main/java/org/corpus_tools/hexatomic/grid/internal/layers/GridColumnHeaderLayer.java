@@ -40,8 +40,7 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 public class GridColumnHeaderLayer extends ColumnHeaderLayer {
 
   /**
-   * Constructor setting {@link #graphDataProvider} and delegating to a ColumnHeaderLayer
-   * constructor.
+   * Constructor delegating to a ColumnHeaderLayer constructor.
    * 
    * @param baseLayer The unique index layer for this layer, typically a DataLayer
    * @param horizontalLayerDependency The layer to link the horizontal dimension to, typically the

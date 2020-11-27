@@ -21,8 +21,11 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.internal.GridHelper;
+import org.corpus_tools.hexatomic.grid.internal.actions.ChangeAnnotationNameSelectionAction;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -75,6 +78,8 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
     builder.withVisibleState(DELETE_CELL_ITEM, validSelectionState);
+    builder.withMenuItemProvider(CHANGE_CELL_ANNOTATION_NAME_ITEM,
+        new ChangeAnnotationNameItemProvider());
     builder.withVisibleState(CHANGE_CELL_ANNOTATION_NAME_ITEM, validSelectionState);
     return builder.build();
   }
@@ -92,7 +97,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat (mail@sdruskat.net)
    */
-  public class DeleteItemProvider implements IMenuItemProvider {
+  private class DeleteItemProvider implements IMenuItemProvider {
 
 
     @Override
@@ -106,6 +111,39 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
           new DeleteSelectionAction().run(natTable, null);
         }
       });
+    }
+
+  }
+
+  /**
+   * Provides a menu item for changing annotation names on selected cells.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL);
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          new ChangeAnnotationNameSelectionAction(getSelectedNonTokenCells()).run(natTable, null);
+        }
+      });
+    }
+
+    private Set<PositionCoordinate> getSelectedNonTokenCells() {
+      Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
+      PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
+      for (PositionCoordinate cellPosition : selectedCellCoordinates) {
+        if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
+          selectedNonTokenCells.add(cellPosition);
+        }
+      }
+      return selectedNonTokenCells;
     }
 
   }

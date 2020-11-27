@@ -21,11 +21,14 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
+import org.corpus_tools.hexatomic.grid.internal.GridHelper;
+import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.ui.AnnotationRenameDialog;
-import org.eclipse.nebula.widgets.nattable.columnRename.DisplayColumnRenameDialogCommand;
 import org.eclipse.nebula.widgets.nattable.columnRename.RenameColumnHeaderCommand;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
-import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,29 +36,32 @@ import org.slf4j.LoggerFactory;
 /**
  * An {@link AbstractLayerCommandHandler} that handles the display of a dialog to change annotation
  * names, and spawns a command to rename the annotation, if the OK button in the dialog is pressed.
+ * Registered with the {@link GridFreezeLayer} on which it calls the rename command.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
  */
-public class DisplayAnnotationRenameDialogOnColumnCommandHandler
-    extends AbstractLayerCommandHandler<DisplayColumnRenameDialogCommand> {
-
-  private final ColumnHeaderLayer columnHeaderLayer;
+public class DisplayAnnotationRenameDialogOnCellsCommandHandler
+    extends AbstractLayerCommandHandler<DisplayAnnotationRenameDialogOnCellsCommand> {
 
   private static final Logger log =
-      LoggerFactory.getLogger(DisplayAnnotationRenameDialogOnColumnCommandHandler.class);
-
-  public DisplayAnnotationRenameDialogOnColumnCommandHandler(ColumnHeaderLayer columnHeaderLayer) {
-    this.columnHeaderLayer = columnHeaderLayer;
-  }
+      LoggerFactory.getLogger(DisplayAnnotationRenameDialogOnCellsCommandHandler.class);
 
   @Override
-  protected boolean doCommand(DisplayColumnRenameDialogCommand command) {
+  protected boolean doCommand(DisplayAnnotationRenameDialogOnCellsCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
-    int columnPosition = command.getColumnPosition();
-    String originalQName = this.columnHeaderLayer.getOriginalColumnLabel(columnPosition);
+
+    // If only cells from one column have been selected, get the current qualified annotation name,
+    // so that it can be displayed.
+    String oldQName = null;
+    if (command.displayOldQName()) {
+      GridColumnHeaderLayer columnHeaderLayer =
+          GridHelper.getColumnHeaderLayer(command.getNatTable());
+      oldQName = (String) columnHeaderLayer
+          .getDataValueByPosition(command.getCellMapByColumn().keySet().iterator().next(), 0);
+    }
 
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), originalQName);
+        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), oldQName);
     dialog.open();
 
     if (dialog.isCancelPressed()) {
@@ -64,13 +70,13 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
     }
 
     log.debug("Returning delegate command {}.", RenameColumnHeaderCommand.class.getSimpleName());
-    return this.columnHeaderLayer.doCommand(new RenameColumnHeaderCommand(this.columnHeaderLayer,
-        columnPosition, dialog.getNewQName()));
+    return command.getNatTable().doCommand(new RenameAnnotationOnCellsCommand(command.getNatTable(),
+        command.getCellMapByColumn(), dialog.getNewQName()));
   }
 
   @Override
-  public Class<DisplayColumnRenameDialogCommand> getCommandClass() {
-    return DisplayColumnRenameDialogCommand.class;
+  public Class<DisplayAnnotationRenameDialogOnCellsCommand> getCommandClass() {
+    return DisplayAnnotationRenameDialogOnCellsCommand.class;
   }
 
 }

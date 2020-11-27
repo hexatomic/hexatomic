@@ -88,10 +88,15 @@ public class ColumnHeaderDataProvider implements IDataProvider {
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
     log.debug("Setting new value '{}' to value of column {}.", newValue, columnIndex);
-    Column column = provider.getColumns().get(columnIndex);
-    if (column == null) {
+    Column column = null;
+    try {
+      column = provider.getColumns().get(columnIndex);
+
+    } catch (IndexOutOfBoundsException e) {
       throw new HexatomicRuntimeException(
-          "Column at " + columnIndex + " is null. Please report this as a bug.");
+          "There is no column at " + columnIndex + ", as there are only "
+              + provider.getColumns().size() + " columns. Please report this as a bug.",
+          e);
     }
     if (newValue == null || (newValue instanceof String && ((String) newValue).isEmpty())) {
       throw new HexatomicRuntimeException("New annotation name must not be null.");
