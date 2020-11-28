@@ -147,10 +147,9 @@ public class CorpusStructureView {
                 @Override
                 public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                     SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-                  if (currNode.getName() != null) {
-                    if (currNode.getName().toLowerCase().contains(filterText)) {
-                      found.set(true);
-                    }
+                  if (currNode.getName() != null 
+                      && currNode.getName().toLowerCase().contains(filterText)) {
+                    found.set(true);
                   }
 
                 }
