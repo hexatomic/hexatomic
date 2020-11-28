@@ -693,18 +693,16 @@ public class ProjectManager {
     // Check if any other editor is open for this document
     if (documentID != null) {
       Optional<SDocument> document = getDocument(documentID, false);
-      if (document.isPresent()) {
-        if (getNumberOfOpenEditors(document.get()) <= 1) {
-          // No other editor found, unload document graph if it can be located on disk
-          if (document.get().getDocumentGraphLocation() != null
-              && document.get().getDocumentGraph() != null) {
-            log.debug("Unloading document {}", documentID);
-            // Suppress superfluous notifications
-            notificationFactory.setSuppressingEvents(true);
-            document.get().setDocumentGraph(null);
-            notificationFactory.setSuppressingEvents(false);
-          }
-        }
+      if (document.isPresent()
+           && getNumberOfOpenEditors(document.get()) <= 1
+           // No other editor found, unload document graph if it can be located on disk
+           && document.get().getDocumentGraphLocation() != null
+           && document.get().getDocumentGraph() != null) {
+        log.debug("Unloading document {}", documentID);
+        // Suppress superfluous notifications
+        notificationFactory.setSuppressingEvents(true);
+        document.get().setDocumentGraph(null);
+        notificationFactory.setSuppressingEvents(false);
       }
     }
   }
