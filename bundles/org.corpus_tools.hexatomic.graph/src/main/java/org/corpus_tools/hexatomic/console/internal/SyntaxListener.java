@@ -158,8 +158,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     for (SNode n : new LinkedList<>(graph.getNodes())) {
       graph.removeNode(n);
     }
-    for (SLayer layer : new LinkedList<>(graph.getLayers())) {
-      graph.removeLayer(layer);
+    for (SLayer currLayer : new LinkedList<>(graph.getLayers())) {
+      graph.removeLayer(currLayer);
     }
   }
 
@@ -332,14 +332,14 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   @Override
   public void exitTokenize(TokenizeContext ctx) {
-    SDocumentGraph graph = this.graph;
+    SDocumentGraph currGraph = this.graph;
 
     STextualDS ds;
     StringBuilder sb;
-    if (graph.getTextualDSs() == null || graph.getTextualDSs().isEmpty()) {
+    if (currGraph.getTextualDSs() == null || currGraph.getTextualDSs().isEmpty()) {
       // Create a new textual data source
       ds = SaltFactory.createSTextualDS();
-      graph.addNode(ds);
+      currGraph.addNode(ds);
       sb = new StringBuilder();
 
     } else {
@@ -352,13 +352,13 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         sb.append(' ');
       }
     }
-    int numberOfTokens = graph.getTokens().size();
+    int numberOfTokens = currGraph.getTokens().size();
     ListIterator<StringContext> itWords = ctx.string().listIterator();
     while (itWords.hasNext()) {
       String tokenValue = getString(itWords.next());
       int start = sb.length();
       sb.append(tokenValue);
-      SToken t = graph.createToken(ds, start, sb.length());
+      SToken t = currGraph.createToken(ds, start, sb.length());
       t.setName(getUnusedName("t", ++numberOfTokens));
 
       if (itWords.hasNext()) {
@@ -389,14 +389,14 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   @Override
   public void exitTokenizeAfter(TokenizeAfterContext ctx) {
-    SDocumentGraph graph = this.graph;
+    SDocumentGraph currGraph = this.graph;
     SStructuredNode n = referencedNodes.iterator().next();
     if (n instanceof SToken) {
       SToken referencedToken = (SToken) n;
 
       @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences = graph.getOverlappedDataSourceSequence(referencedToken,
-          SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      List<DataSourceSequence> allSequences = currGraph.getOverlappedDataSourceSequence(
+          referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
         int offset = seq.getEnd().intValue();
@@ -418,14 +418,14 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   @Override
   public void exitTokenizeBefore(TokenizeBeforeContext ctx) {
-    SDocumentGraph graph = this.graph;
+    SDocumentGraph currGraph = this.graph;
     SStructuredNode n = referencedNodes.iterator().next();
     if (n instanceof SToken) {
       SToken referencedToken = (SToken) n;
 
       @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences = graph.getOverlappedDataSourceSequence(referencedToken,
-          SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      List<DataSourceSequence> allSequences = currGraph.getOverlappedDataSourceSequence(
+          referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
         int offset = seq.getStart().intValue();
