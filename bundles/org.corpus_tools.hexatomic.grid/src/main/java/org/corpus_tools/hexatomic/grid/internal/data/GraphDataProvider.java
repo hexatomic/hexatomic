@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.inject.Inject;
@@ -144,14 +145,15 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private void resolveSpanAnnotations(List<SToken> orderedTokens) {
-    for (SSpan span : spanTokenMap.keySet()) {
-      Set<SToken> overlappedTokens = spanTokenMap.get(span);
+    for (Entry<SSpan, Set<SToken>> entry : spanTokenMap.entrySet()) {
+      Set<SToken> overlappedTokens = entry.getValue();
       List<Integer> tokenIndices = new ArrayList<>();
       // Build token index list, i.e., row indices covered by this span
       for (SToken token : overlappedTokens) {
         tokenIndices.add(orderedTokens.indexOf(token));
       }
       Collections.sort(tokenIndices);
+      SSpan span = entry.getKey();
       for (SAnnotation annotation : span.getAnnotations()) {
         resolveAnnotationRecursively(tokenIndices, span, annotation, 1);
       }
