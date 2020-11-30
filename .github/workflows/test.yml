@@ -6,13 +6,6 @@ jobs:
     name: OpenJDK 8
     runs-on: ubuntu-20.04
     steps:
-      # install additional packages
-      - run: sudo apt-get update && sudo apt-get install -y openjdk-8-jdk metacity
-      # Start virtual X server in background and also a window manager (metacity)
-      - run: Xvfb :99 -ac -screen 0 1920x1080x16 &
-      - run: sleep 5
-      - run: echo DISPLAY=:99 >> $GITHUB_ENV
-      - run: metacity --sm-disable --replace &
       - name: Checkout
         uses: actions/checkout@v2
       - name: Cache local Maven repository
@@ -23,22 +16,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-8-
       - name: Set JAVA_HOME to OpenJDK 8
-        run: echo JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ >> $GITHUB_ENV
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+        run: echo JAVA_HOME=$JAVA_HOME_8_X64 >> $GITHUB_ENV
       - name: Run Maven install (includes tests)
-        run: mvn verify
+        run: xvfb-run mvn verify
+        env:
+          LANG: en_US.UTF-8
   test_jdk11:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
     steps:
-      # install additional packages
-      - run: sudo apt-get update && sudo apt-get install -y openjdk-11-jdk metacity
-      # Start virtual X server in background and also a window manager (metacity)
-      - run: Xvfb :99 -ac -screen 0 1920x1080x16 &
-      - run: sleep 5
-      - run: echo DISPLAY=:99 >> $GITHUB_ENV
-      - run: metacity --sm-disable --replace &
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -52,12 +38,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-11-
       - name: Set JAVA_HOME to OpenJDK 11
-        run: echo JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/ >> $GITHUB_ENV
+        run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
       - name: Run Maven Tests with enabled code coverage and upload results to SonarCloud
-        run: mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        run: xvfb-run mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          LANG: en_US.UTF-8
 
   test_docs:
     name: Test documentation
