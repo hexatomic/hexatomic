@@ -24,6 +24,8 @@ jobs:
             ${{ runner.os }}-maven-8-
       - name: Set JAVA_HOME to OpenJDK 8
         run: echo JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ >> $GITHUB_ENV
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
       - name: Run Maven install (includes tests)
         run: mvn verify
   test_jdk11:
