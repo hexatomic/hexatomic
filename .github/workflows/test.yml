@@ -6,6 +6,7 @@ jobs:
     name: OpenJDK 8
     runs-on: ubuntu-20.04
     steps:
+      - run: sudo apt install openjdk-8-jre-headless
       - name: Checkout
         uses: actions/checkout@v2
       - name: Cache local Maven repository
@@ -23,6 +24,7 @@ jobs:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
     steps:
+      - run: sudo apt install openjdk-11-jre-headless
       - name: Checkout
         uses: actions/checkout@v2
         with:
