@@ -1,0 +1,54 @@
+name: Automated tests
+on: push
+
+jobs:
+  test_jdk8:
+    name: OpenJDK 8
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-8-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-8-
+      - name: Run Maven install (includes tests)
+        run: mvn verify
+  test_jdk11:
+    name: OpenJDK 11 + SonarCloud code analysis
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Otherwise the new code can't be determined or code coverage is less informing
+          fetch-depth: 0
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-11-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-11-
+      - name: Set JAVA_HOME to included JDK 11
+        run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+      - name: Run Maven Tests with enabled code coverage and upload results to SonarCloud
+        run: mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  test_docs:
+    name: Test documentation
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - run: misc/download-mdbook.sh 0.4.4
+        env:
+          OS_NAME: linux
+      - run: mdbook test docs/user/
+      - run: mdbook test docs/dev/
