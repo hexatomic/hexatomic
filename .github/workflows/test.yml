@@ -15,7 +15,6 @@ jobs:
           key: ${{ runner.os }}-maven-8-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-8-
-      - run: sudo apt-get install xvfb
       - name: Run Maven install (includes tests)
         run: xvfb-run mvn verify
       - name: Cleanup xvfb processes
@@ -38,7 +37,6 @@ jobs:
             ${{ runner.os }}-maven-11-
       - name: Set JAVA_HOME to included JDK 11
         run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
-      - run: sudo apt-get install xvfb
       - name: Run Maven Tests with enabled code coverage and upload results to SonarCloud
         run: xvfb-run mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
