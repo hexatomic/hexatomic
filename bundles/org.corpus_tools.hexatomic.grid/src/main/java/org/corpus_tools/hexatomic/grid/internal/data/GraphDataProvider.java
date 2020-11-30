@@ -358,7 +358,7 @@ public class GraphDataProvider implements IDataProvider {
           log.debug("Action not implemented: Create token.");
         }
       } else {
-        log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString(), newValue);
+        log.debug("Action not implemented: Set text on '{}' to '{}'.", node, newValue);
       }
     }
     projectManager.addCheckpoint();
