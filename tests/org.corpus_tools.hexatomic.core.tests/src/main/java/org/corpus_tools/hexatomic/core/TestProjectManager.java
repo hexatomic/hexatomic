@@ -72,11 +72,6 @@ class TestProjectManager {
       return true;
     });
 
-    errorService = mock(ErrorService.class);
-    partService = mock(EPartService.class);
-    UiStatusReport uiStatus = mock(UiStatusReport.class);
-
-
     DummySync sync = new DummySync();
 
     SaltNotificationFactory factory = new SaltNotificationFactory();
@@ -85,9 +80,16 @@ class TestProjectManager {
 
     projectManager = new ProjectManager();
     projectManager.events = events;
+    
+    errorService = mock(ErrorService.class);
     projectManager.errorService = errorService;
+    
+    partService = mock(EPartService.class);
     projectManager.partService = partService;
+
+    UiStatusReport uiStatus = mock(UiStatusReport.class);
     projectManager.uiStatus = uiStatus;
+    
     projectManager.sync = sync;
     projectManager.notificationFactory = factory;
 
