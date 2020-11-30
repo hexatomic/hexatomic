@@ -44,7 +44,7 @@ public class SaltObjectTreeDropTarget extends ViewerDropAdapter {
   public boolean performDrop(Object data) {
 
     SCorpus newParent = (SCorpus) getCurrentTarget();
-    log.info("Trying to drop {} into", data, newParent.getId());
+    log.info("Trying to drop {} into {}", data, newParent.getId());
 
     // get the document which is referred by the dropped ID
     String docID = (String) data;
