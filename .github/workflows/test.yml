@@ -11,6 +11,8 @@ jobs:
       # Start virtual X server in background and also a window manager (metacity)
       - run: "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
       - run: sleep 5 && metacity --sm-disable --replace 2> metacity.err &
+        env:
+          DISPLAY: :99.0
       - name: Checkout
         uses: actions/checkout@v2
       - name: Cache local Maven repository
@@ -23,7 +25,7 @@ jobs:
       - name: Run Maven install (includes tests)
         run: mvn verify
         env:
-          DISPLAY: :99
+          DISPLAY: :99.0
   test_jdk11:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
@@ -33,6 +35,8 @@ jobs:
       # Start virtual X server in background and also a window manager (metacity)
       - run: "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
       - run: sleep 5 && metacity --sm-disable --replace 2> metacity.err &
+        env:
+          DISPLAY: :99.0
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -52,7 +56,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          DISPLAY: :99
+          DISPLAY: :99.0
 
   test_docs:
     name: Test documentation
