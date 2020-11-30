@@ -178,8 +178,7 @@ public class ProjectManager {
       } catch (SaltResourceException ex) {
         // This is not a valid salt project folder, don't delete any files
       } catch (IOException ex) {
-        log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
-            ex);
+        log.warn("Could not delete output directory of Salt project {}", outputDirectory, ex);
       }
     }
 
