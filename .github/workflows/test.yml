@@ -47,8 +47,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - run: misc/download-mdbook.sh 0.4.4
+      - name: Download and install mdBook 
+        run: curl -L -o mdbook.tar.gz https://github.com/rust-lang-nursery/mdBook/releases/download/v$MDBOOK_VERSION/mdbook-v$MDBOOK_VERSION-x86_64-unknown-linux-gnu.tar.gz && tar -C $HOME/.cargo/bin/ -zvxf mdbook.tar.gz
         env:
-          OS_NAME: linux
+          MDBOOK_VERSION: 0.3.1
       - run: mdbook test docs/user/
       - run: mdbook test docs/dev/
