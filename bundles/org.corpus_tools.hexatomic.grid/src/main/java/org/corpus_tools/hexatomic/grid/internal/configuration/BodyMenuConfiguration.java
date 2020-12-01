@@ -26,6 +26,7 @@ import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.ChangeAnnotationNameSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
@@ -76,8 +77,8 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   private Menu createMenu() {
     ValidSelectionState validSelectionState = new ValidSelectionState();
-    ValidSingleSpanColumnSelectionState validSingleSpanColumnSelectionState =
-        new ValidSingleSpanColumnSelectionState();
+    ValidSingleSpanColumnEmptySelectionState validSingleSpanColumnEmptySelectionState =
+        new ValidSingleSpanColumnEmptySelectionState();
     PopupMenuBuilder builder = new PopupMenuBuilder(this.table);
     builder.withMenuItemProvider(DELETE_CELL_ITEM, new DeleteItemProvider());
     builder.withVisibleState(DELETE_CELL_ITEM, validSelectionState);
@@ -85,7 +86,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         new ChangeAnnotationNameItemProvider());
     builder.withVisibleState(CHANGE_CELL_ANNOTATION_NAME_ITEM, validSelectionState);
     builder.withMenuItemProvider(CREATE_SPAN_ITEM, new CreateSpanItemProvider());
-    builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnSelectionState);
+    builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
     return builder.build();
   }
 
@@ -168,7 +169,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          // new CreateSpanSelectionAction(getSelectedNonTokenCells()).run(natTable, null);
+          new CreateSpanSelectionAction(getSelectedNonTokenCells()).run(natTable, null);
         }
       });
     }
@@ -222,12 +223,12 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * <p>
    * {@link #isActive(NatEventData)} returns <code>true</code> only when all selected cells are
-   * within a single span column.
+   * within a single span column, and all cells are empty.
    * </p>
    * 
    * @author Stephan Druskat (mail@sdruskat.net)
    */
-  private class ValidSingleSpanColumnSelectionState implements IMenuItemState {
+  private class ValidSingleSpanColumnEmptySelectionState implements IMenuItemState {
 
     @Override
     public boolean isActive(NatEventData natEventData) {
@@ -240,12 +241,17 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         int arbitraryRowPosition = -1;
         for (PositionCoordinate coord : selectedCellCoordinates) {
           int columnPosition = coord.getColumnPosition();
+          int rowPosition = coord.getRowPosition();
           // Check for each coordinate pair whether it has the same column position as the first
           // pair (otherwise the cell is in a different column).
           if (singleColumnPosition == -1) {
             singleColumnPosition = columnPosition;
-            arbitraryRowPosition = coord.getRowPosition();
+            arbitraryRowPosition = rowPosition;
           } else if (columnPosition != singleColumnPosition) {
+            return false;
+          }
+          if (GridHelper.getBodyLayer(natEventData.getNatTable())
+              .getDataValueByPosition(columnPosition, rowPosition) != null) {
             return false;
           }
         }
