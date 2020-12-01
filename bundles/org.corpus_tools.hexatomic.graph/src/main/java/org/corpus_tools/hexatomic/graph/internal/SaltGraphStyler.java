@@ -97,18 +97,10 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
       if (saltSource instanceof SToken && saltTarget instanceof SToken) {
         // Make sure the pointing relation is routed above the tokens with two bend points
-        Bendpoint bpSource = new Bendpoint() {
-          @Override
-          public Point getLocation() {
-            return getBendpointLocation(connection, false);
-          }
-        };
-        Bendpoint bpTarget = new Bendpoint() {
-          @Override
-          public Point getLocation() {
-            return getBendpointLocation(connection, true);
-          }
-        };
+        Bendpoint bpSource = () -> getBendpointLocation(connection, false);
+        
+        Bendpoint bpTarget = () -> getBendpointLocation(connection, true);
+              
         this.pointingConnectionRouter.setConstraint(connection.getConnectionFigure(),
             Arrays.asList(bpSource, bpTarget));
       }
