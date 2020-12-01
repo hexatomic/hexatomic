@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When adding tokens in the graph editor to a previously empty document, you don't need to zoom in anymore (#224)
 - UI Integration tests can be run in Eclipse without depending on the JUnit runtime that's packaged with the IDE
 
+### Changed
+
+- Using GitHub Actions instead of Travis CI for testing the pull requests
+
 ## [0.4.4] - 2020-09-16
 
 ### Fixed
