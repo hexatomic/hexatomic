@@ -228,10 +228,9 @@ public class ProjectManager {
             }
           } catch (IOException ex) {
             monitor.done();
-            sync.asyncExec(() -> {
-              errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
-                  ProjectManager.class);
-            });
+            sync.asyncExec(() -> 
+                errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
+                  ProjectManager.class));
             return;
           }
         } else {

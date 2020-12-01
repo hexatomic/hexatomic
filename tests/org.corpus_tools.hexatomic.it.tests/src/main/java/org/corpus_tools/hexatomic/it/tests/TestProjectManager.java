@@ -139,9 +139,7 @@ class TestProjectManager {
       final ParameterizedCommand cmdSaveAs = commandService
           .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
 
-      UIThreadRunnable.syncExec(() -> {
-        handlerService.executeHandler(cmdSaveAs);
-      });
+      UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSaveAs));
 
       assertFalse(projectManager.isDirty());
 
@@ -229,12 +227,11 @@ class TestProjectManager {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    UIThreadRunnable.syncExec(() -> {
-      // Call saveTo which should show an error
-      spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
-          bot.getDisplay().getActiveShell());
-
-    });
+    UIThreadRunnable.syncExec(() -> 
+        // Call saveTo which should show an error
+        spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
+          bot.getDisplay().getActiveShell()));
+    
     Optional<IStatus> lastException =
         UIThreadRunnable.syncExec(() -> errorService.getLastException());
     // Check the error has been recorded
