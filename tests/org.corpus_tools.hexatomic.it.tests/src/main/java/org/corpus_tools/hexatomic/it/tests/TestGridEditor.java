@@ -1223,10 +1223,10 @@ public class TestGridEditor {
 
 
   /**
-   * Tests the creation of spans over consecutive empty cells in an existing span column.
+   * Tests the creation of spans over continuous empty cells in an existing span column.
    */
   @Test
-  void testCreateConsecutiveSpan() {
+  void testCreateContinuousSpan() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
