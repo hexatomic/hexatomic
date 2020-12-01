@@ -191,9 +191,9 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   @Override
   public IFigure getFigure(Object element) {
     if (element instanceof SNode) {
-      NodeFigure figure = new NodeFigure((SNode) element);
-      figure.setSize(figure.getPreferredSize());
-      return figure;
+      NodeFigure currFigure = new NodeFigure((SNode) element);
+      currFigure.setSize(currFigure.getPreferredSize());
+      return currFigure;
     }
     return null;
   }
