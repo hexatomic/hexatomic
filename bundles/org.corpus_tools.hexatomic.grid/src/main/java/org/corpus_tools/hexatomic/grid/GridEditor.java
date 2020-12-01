@@ -100,6 +100,8 @@ public class GridEditor {
 
   public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
 
+  public static final String CREATE_SPAN_POPUP_MENU_LABEL = "Create span";
+
   @Inject
   ErrorService errors;
 
