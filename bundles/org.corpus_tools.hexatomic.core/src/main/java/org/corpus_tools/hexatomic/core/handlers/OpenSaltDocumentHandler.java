@@ -72,7 +72,7 @@ public class OpenSaltDocumentHandler {
     if (selection instanceof SDocument) {
 
       String id = ((SDocument) selection).getId();
-      Job job = Job.create("Loading document " + id, (monitor) -> {
+      Job job = Job.create("Loading document " + id, monitor -> {
         monitor.beginTask("Loading document " + id, 0);
         Optional<SDocument> document = projectManager.getDocument(id, true);
 

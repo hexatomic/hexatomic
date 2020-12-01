@@ -643,7 +643,7 @@ public class CorpusStructureView {
       MPart thisPart) {
     // Find all descriptors with the correct category
     List<MPartDescriptor> editorParts = application.getDescriptors().stream()
-        .filter((p) -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
+        .filter(p -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
         .collect(Collectors.toList());
 
     for (MPartDescriptor desc : editorParts) {
