@@ -23,7 +23,8 @@ Section [*Downloading the source code to your computer*](../getting-the-source-c
     - source files for user and developer/maintainer documentation
 - **`releng`**
     - configuration and release engineering files
-- **`.github`** GitHub specific configuration, like issue templates and workflows of the GitHub Actions CI
+- **`.github`** 
+    - GitHub specific configuration, such as issue templates and workflows of the GitHub Actions CI
 
 ### Setup details
 
