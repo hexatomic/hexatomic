@@ -1,1 +1,1 @@
-{"version":1,"ops":[{"type":4,"author":{"id":"725ac77188b9c2093ea4100ba878cd5190f5dc34"},"timestamp":1606829912,"status":2}]}
+{"version":1,"ops":[{"type":8,"author":{"id":"725ac77188b9c2093ea4100ba878cd5190f5dc34"},"timestamp":1606829950,"target":"477fde5bdc79f0a855330661901cf4a122ac663688e001ec5b2da536ae7cf9e8","new_metadata":{"github-id":"MDU6SXNzdWU0NzgwNjc1ODk=","github-url":"https://github.com/hexatomic/hexatomic/issues/16"}}]}
