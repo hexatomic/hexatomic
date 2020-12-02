@@ -84,7 +84,7 @@ public abstract class PepperJobRunner implements IRunnableWithProgress {
   /**
    * Checks for documents with non-completed status after pepper job has been executed.
    * 
-   * @return
+   * @return A set of failed document IDs
    */
   protected Set<String> getFailedDocuments() {
     Set<String> failedDocuments = new TreeSet<>();
@@ -99,6 +99,26 @@ public abstract class PepperJobRunner implements IRunnableWithProgress {
       }
     }
     return failedDocuments;
+  }
+
+  /**
+   * Checks for documents with completed status after pepper job has been executed.
+   * 
+   * @return A set of completed document IDs
+   */
+  protected Set<String> getCompletedDocuments() {
+    Set<String> completedDocuments = new TreeSet<>();
+    if (job instanceof PepperJobImpl) {
+      PepperJobImpl pepperJobImpl = (PepperJobImpl) job;
+      for (DocumentController docController : pepperJobImpl.getDocumentControllers()) {
+
+        DOCUMENT_STATUS status = docController.getGlobalStatus();
+        if (status == DOCUMENT_STATUS.COMPLETED) {
+          completedDocuments.add(docController.getGlobalId());
+        }
+      }
+    }
+    return completedDocuments;
   }
 
   /**

@@ -97,11 +97,22 @@ class ImportRunner extends PepperJobRunner {
         // error.
         Set<String> failedDocuments = getFailedDocuments();
         if (!failedDocuments.isEmpty()) {
-          errorService.showError(ImportWizard.ERRORS_TITLE,
-              "Could not import the following documents:\n\n"
-                  + Joiner.on("\n").join(failedDocuments)
-                  + "\n\nPlease check the log messages for any issues.",
-              ImportWizard.class);
+          // Distinguish between partial and complete failure
+          if (getCompletedDocuments().isEmpty()) {
+            errorService.showError(ImportWizard.ERRORS_TITLE,
+                "Corpus was not imported due to errors. "
+                    + "Please check the log messages for any issues "
+                    + "and make sure you have selected the correct format.",
+                ImportWizard.class);
+            // If no corpus was imported at all, don't overwrite the previous state.
+            return false;
+          } else {
+            errorService.showError(ImportWizard.ERRORS_TITLE,
+                "Could not import the following " + failedDocuments.size() + " documents:\n\n"
+                    + Joiner.on("\n").join(failedDocuments)
+                    + "\n\nPlease check the log messages for any issues.",
+                ImportWizard.class);
+          }
         }
 
         // No global error was reported and the process was not cancelled: set the corpus as
