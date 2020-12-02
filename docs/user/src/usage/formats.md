@@ -13,7 +13,7 @@ Currently, Hexatomic supports the following external file formats:
 ## Import an existing corpus
 
 To import existing corpora, which are not stored in Salt, choose the *Import* entry in the *File* menu.
-This will start a wizard, which will guide you through all necessary configuration steps.
+This will start a wizard, which will guide you through all necessary import steps.
 
 First, select the directory that contains the corpus files you want to import.
 For most corpus formats, the selected directory name will become the root corpus name.
