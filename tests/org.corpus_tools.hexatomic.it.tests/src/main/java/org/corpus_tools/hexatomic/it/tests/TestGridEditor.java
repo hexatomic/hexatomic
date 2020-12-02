@@ -76,6 +76,10 @@ public class TestGridEditor {
   private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
+  
+  private static final String SPAN_1 = "span_1";
+  
+  private static final String FIVE = "five::";
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
@@ -281,9 +285,9 @@ public class TestGridEditor {
     assertEquals("2", table.getCellDataValueByPosition(2, 0));
     assertEquals("5", table.getCellDataValueByPosition(5, 0));
     assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
-    assertEquals("five::span_1", table.getCellDataValueByPosition(0, 3));
-    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
-    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+    assertEquals(FIVE + SPAN_1, table.getCellDataValueByPosition(0, 3));
+    assertEquals(FIVE + SPAN_1 + " (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals(FIVE + "span_2", table.getCellDataValueByPosition(0, 5));
 
     // Test cells
     assertEquals("val_span_1", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 1))
@@ -527,7 +531,7 @@ public class TestGridEditor {
    * @param table The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
-  private void typeTextPressReturn(SWTBotNatTable table){
+  private void typeTextPressReturn(SWTBotNatTable table) {
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new DefaultCondition() {
@@ -845,9 +849,9 @@ public class TestGridEditor {
     assertEquals(6, natTable.getColumnCount());
 
     // Test headers
-    assertEquals("five::span_1", table.getCellDataValueByPosition(0, 3));
-    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
-    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+    assertEquals(FIVE + SPAN_1, table.getCellDataValueByPosition(0, 3));
+    assertEquals(FIVE + SPAN_1 + " (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals(FIVE + "span_2", table.getCellDataValueByPosition(0, 5));
 
     // Change annotation name in first overlapping column (currently at position 3)
     table.contextMenu(0, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
@@ -856,19 +860,19 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals("five::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
-    assertEquals("five::" + TEST_ANNOTATION_VALUE + " (2)", table.getCellDataValueByPosition(0, 4));
-    assertEquals("five::span_2", table.getCellDataValueByPosition(0, 5));
+    assertEquals(FIVE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(FIVE + TEST_ANNOTATION_VALUE + " (2)", table.getCellDataValueByPosition(0, 4));
+    assertEquals(FIVE + "span_2", table.getCellDataValueByPosition(0, 5));
     // Also check if annotation name has changed for all cells in column
     for (int i = 1; i < 11; i++) {
       Object nodeObjFirstColumn = table.widget.getDataValueByPosition(3, i);
       if (nodeObjFirstColumn != null) {
-        assertNotNull(((SSpan) nodeObjFirstColumn).getAnnotation("five::" + TEST_ANNOTATION_VALUE));
+        assertNotNull(((SSpan) nodeObjFirstColumn).getAnnotation(FIVE + TEST_ANNOTATION_VALUE));
       }
       Object nodeObjSecondColumn = table.widget.getDataValueByPosition(4, i);
       if (nodeObjSecondColumn != null) {
         assertNotNull(
-            ((SSpan) nodeObjSecondColumn).getAnnotation("five::" + TEST_ANNOTATION_VALUE));
+            ((SSpan) nodeObjSecondColumn).getAnnotation(FIVE + TEST_ANNOTATION_VALUE));
       }
     }
 
