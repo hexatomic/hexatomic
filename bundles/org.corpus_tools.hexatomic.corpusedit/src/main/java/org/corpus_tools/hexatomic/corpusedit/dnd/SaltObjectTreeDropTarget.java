@@ -63,12 +63,6 @@ public class SaltObjectTreeDropTarget extends ViewerDropAdapter {
   @Override
   public boolean validateDrop(Object target, int operation, TransferData transferType) {
 
-    if (target instanceof SCorpus) {
-      return true;
-    } else {
-      return false;
-    }
-
+    return target instanceof SCorpus;
   }
-
 }
