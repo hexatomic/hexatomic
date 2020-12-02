@@ -1,4 +1,4 @@
-# File format support
+# Importing and exporting corpora
 
 Per default, Hexatomic will store its project in its native data format Salt.
 You can, however, import corpora from different formats, or export them to another one.
