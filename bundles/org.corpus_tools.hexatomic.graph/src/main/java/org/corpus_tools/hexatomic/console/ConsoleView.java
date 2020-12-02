@@ -180,28 +180,6 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
     return Optional.empty();
   }
 
-
-  private void setCommand(String cmd) {
-    if (cmd == null) {
-      return;
-    }
-    cmd = cmd.trim();
-
-    // get the current command as text ran
-    Optional<Range<Integer>> promptRange = getPromptRange();
-    if (promptRange.isPresent()) {
-      try {
-        document.replace(promptRange.get().lowerEndpoint(),
-            promptRange.get().upperEndpoint() - promptRange.get().lowerEndpoint(), cmd);
-        view.getTextWidget().setCaretOffset(document.getLength());
-      } catch (BadLocationException ex) {
-        log.error("Something went wrong when setting the history entry", ex);
-      }
-    }
-
-  }
-
-
   @Override
   public void documentAboutToBeChanged(DocumentEvent event) {
     // Do nothing: all relevant operations are done after the document has been changed.
@@ -243,6 +221,26 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
         fd[0].setHeight(fd[0].getHeight() - 1);
       }
       styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+    }
+    
+    private void setCommand(String cmd) {
+      if (cmd == null) {
+        return;
+      }
+      cmd = cmd.trim();
+
+      // get the current command as text ran
+      Optional<Range<Integer>> promptRange = getPromptRange();
+      if (promptRange.isPresent()) {
+        try {
+          document.replace(promptRange.get().lowerEndpoint(),
+              promptRange.get().upperEndpoint() - promptRange.get().lowerEndpoint(), cmd);
+          view.getTextWidget().setCaretOffset(document.getLength());
+        } catch (BadLocationException ex) {
+          log.error("Something went wrong when setting the history entry", ex);
+        }
+      }
+
     }
 
     private void verifyArrowUpKey(VerifyEvent e) {
