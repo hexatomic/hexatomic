@@ -156,7 +156,7 @@ public abstract class PepperJobRunner implements IRunnableWithProgress {
           // We don't know how many documents are present previously but since exporting the
           // documents has started, we can get this number now
           numberOfJobs = Optional.of(pepperJobImpl.getDocumentControllers().size());
-          monitor.beginTask("Exporting " + numberOfJobs.get() + " documents", numberOfJobs.get());
+          monitor.beginTask("Processing " + numberOfJobs.get() + " documents", numberOfJobs.get());
         }
 
         if (numberOfJobs.isPresent()) {
