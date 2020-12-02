@@ -67,7 +67,7 @@ class PepperJobRunnerTest {
     runner.runJob(monitor);
     
     verify(monitor).isCanceled();
-    verify(monitor).beginTask(eq("Exporting 12 documents"), eq(TEST_NUMBER_OF_DOCUMENTS));
+    verify(monitor).beginTask(eq("Processing 12 documents"), eq(TEST_NUMBER_OF_DOCUMENTS));
     for (int i = 0; i < TEST_NUMBER_OF_DOCUMENTS; i++) {
       verify(monitor).worked(1);
     }
