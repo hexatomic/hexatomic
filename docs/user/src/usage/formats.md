@@ -3,7 +3,9 @@
 Per default, Hexatomic will store its project in its native data format Salt.
 You can, however, import and export corpora from and to different formats.
 
-Currently, Hexatomic supports the following additional file formats:
+## Supported file formats
+
+Currently, Hexatomic supports the following external file formats:
 
 - [PAULA XML](https://github.com/korpling/paula-xml)
 - [EXMARaLDA files](https://exmaralda.org)
