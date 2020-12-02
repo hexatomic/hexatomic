@@ -527,7 +527,7 @@ public class TestGridEditor {
    * @param table The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
-  private void typeTextPressReturn(SWTBotNatTable table) throws TimeoutException {
+  private void typeTextPressReturn(SWTBotNatTable table){
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new DefaultCondition() {
