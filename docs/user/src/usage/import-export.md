@@ -40,7 +40,7 @@ You can also abort the import process by clicking on the red squared stop button
 
 ## Export to a different format
 
-Exporting a corpus is similar to importing one.
+Exporting a corpus project is similar to importing one.
 You select *Export* from the *File* menu, select an output path and the output format and finish the wizard.
 The output path should not contain the root corpus name, since this will be appended automatically.
 
