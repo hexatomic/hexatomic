@@ -46,10 +46,10 @@ class TestGraphDataProvider {
   private SDocumentGraph overlappingExampleGraph;
   private STextualDS overlappingExampleText;
 
-  private static final String examplePath =
+  private static final String EXAMPLE_PATH =
       "../org.corpus_tools.hexatomic.core.tests/src/main/resources/"
           + "org/corpus_tools/hexatomic/core/example-corpus/";
-  private static final String overlappingExamplePath =
+  private static final String OVERLAPPING_EXAMPLE_PATH =
       "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
   /**
@@ -58,8 +58,8 @@ class TestGraphDataProvider {
   @BeforeEach
   void setUp() {
     fixture = new GraphDataProvider();
-    exampleGraph = retrieveGraph(examplePath);
-    overlappingExampleGraph = retrieveGraph(overlappingExamplePath);
+    exampleGraph = retrieveGraph(EXAMPLE_PATH);
+    overlappingExampleGraph = retrieveGraph(OVERLAPPING_EXAMPLE_PATH);
     exampleText = getFirstTextFromGraph(exampleGraph);
     overlappingExampleText = getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);
