@@ -128,8 +128,14 @@ class TestImportExport {
    */
   @Test
   void testExportAndImportExmaralda() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+
     // Open example corpus
     openDefaultExample();
+    assertTrue(bot.menu(EXPORT).isEnabled());
+
+
     Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
@@ -251,6 +257,9 @@ class TestImportExport {
    */
   @Test
   void testExportImportPaula() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+
     // Open example corpus
     openDefaultExample();
     SaltProject p = projectManager.getProject();
@@ -335,23 +344,6 @@ class TestImportExport {
       assertEquals(numberOfPointingRelations,
           doc1.get().getDocumentGraph().getPointingRelations().size());
     }
-  }
-
-  @Test
-  void testNoExportOnUnsaved() {
-    // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT).isEnabled());
-    openDefaultExample();
-    assertTrue(bot.menu(EXPORT).isEnabled());
-
-    // Make a manual change
-    Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
-    assertTrue(doc1.isPresent());
-    if (doc1.isPresent()) {
-      doc1.get().getDocumentGraph().createFeature("hexatomic-test", "test", "somechange");
-    }
-    projectManager.addCheckpoint();
-    assertFalse(bot.menu(EXPORT).isEnabled());
   }
 
 }
