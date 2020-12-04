@@ -143,11 +143,11 @@ public class ColumnHeaderDataProvider implements IDataProvider {
     if (renamed) {
       // Get all columns to rename
       Map<Integer, Column> columnsToRename = new HashMap<>();
-      for (Column renameCandidate : provider.getColumns()) {
+      provider.getColumns().forEach(renameCandidate -> { 
         if (renameCandidate.getColumnValue().equals(oldQName)) {
           columnsToRename.put(provider.getColumns().indexOf(renameCandidate), renameCandidate);
         }
-      }
+      });
 
       // Rename all columns to rename
       for (Entry<Integer, Column> entry : columnsToRename.entrySet()) {
