@@ -458,9 +458,9 @@ public class GraphDataProvider implements IDataProvider {
   public void createEmptyAnnotationSpan(Set<PositionCoordinate> selectedCoordinates) {
     // Get tokens
     List<Integer> selectedRows = selectedCoordinates.parallelStream()
-        .map(coord -> coord.getRowPosition()).collect(Collectors.toUnmodifiableList());
+        .map(coord -> coord.getRowPosition()).collect(Collectors.toList());
     List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
-        .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toUnmodifiableList());
+        .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
     // Check that all potentialTokens are in fact tokens
     List<SToken> tokens = potentialTokens.parallelStream().map(n -> {
       if (n instanceof SToken) {
@@ -469,7 +469,7 @@ public class GraphDataProvider implements IDataProvider {
         throw new RuntimeException("Expected an object of type " + SToken.class.getSimpleName()
             + " in the first column, but found a " + n.getClass().getSimpleName());
       }
-    }).collect(Collectors.toUnmodifiableList());
+    }).collect(Collectors.toList());
     SSpan span = graph.createSpan(tokens);
     log.debug("Created new span {}.", span);
     int columnIndex = selectedCoordinates.iterator().next().getColumnPosition();
