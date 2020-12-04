@@ -1249,7 +1249,7 @@ public class TestGridEditor {
     List<String> contextMenuItems = table.contextMenu(5, 4).menuItems();
     assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
     table.contextMenu(5, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
-    // bot.waitUntil needed?
+    typeTextPressReturn(table);
     assertNull(natTable.getDataValueByPosition(4, 2));
     Object potentialSpan = natTable.getDataValueByPosition(4, 3);
     assertTrue(potentialSpan instanceof SSpan);
@@ -1259,6 +1259,52 @@ public class TestGridEditor {
     assertEquals(span, natTable.getDataValueByPosition(4, 6));
     assertEquals(span, natTable.getDataValueByPosition(4, 7));
     assertNull(natTable.getDataValueByPosition(4, 8));
+    assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+  }
+
+  /**
+   * Tests the creation of spans over discontinuous empty cells in an existing span column.
+   */
+  @Test
+  void testCreateDiscontinuousSpan() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Remove large existing span
+    assertEquals(TOPIC_VALUE, ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
+        .getAnnotation(INF_STRUCT_NAME).getValue());
+    table.click(2, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
+    assertNull(natTable.getDataValueByPosition(4, 2));
+
+    // Select cells for new span
+    table.click(3, 4);
+    shiftClick(table, 5, 4);
+    ctrlClick(table, 7, 4);
+    ctrlClick(table, 9, 4);
+    ctrlClick(table, 10, 4);
+
+    // Create span and assert
+    List<String> contextMenuItems = table.contextMenu(5, 4).menuItems();
+    assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+    table.contextMenu(5, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
+    typeTextPressReturn(table);
+    assertNull(natTable.getDataValueByPosition(4, 2));
+    Object potentialSpan = natTable.getDataValueByPosition(4, 3);
+    assertTrue(potentialSpan instanceof SSpan);
+    SSpan span = (SSpan) potentialSpan;
+    assertEquals(span, natTable.getDataValueByPosition(4, 4));
+    assertEquals(span, natTable.getDataValueByPosition(4, 5));
+    assertNull(natTable.getDataValueByPosition(4, 6));
+    assertEquals(span, natTable.getDataValueByPosition(4, 7));
+    assertNull(natTable.getDataValueByPosition(4, 8));
+    assertEquals(span, natTable.getDataValueByPosition(4, 9));
+    assertEquals(span, natTable.getDataValueByPosition(4, 10));
+    assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
