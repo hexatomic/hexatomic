@@ -1307,6 +1307,40 @@ public class TestGridEditor {
     assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
 
+  /**
+   * Tests the creation of spans over discontinuous empty cells in an existing span column.
+   */
+  @Test
+  void testCreateSingleCellSpan() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Remove existing single cell span
+    assertEquals(CONTRAST_FOCUS_VALUE,
+        ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
+            .getAnnotation(INF_STRUCT_NAME).getValue());
+    table.click(1, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new CellDataValueCondition(tableBot, 1, 4, ""));
+    assertNull(natTable.getDataValueByPosition(4, 1));
+
+    // Select single cell for new span
+    table.click(1, 4);
+
+    // Create span and assert
+    List<String> contextMenuItems = table.contextMenu(1, 4).menuItems();
+    assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+    table.contextMenu(1, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
+    typeTextPressReturn(table);
+    Object potentialSpan = natTable.getDataValueByPosition(4, 1);
+    assertTrue(potentialSpan instanceof SSpan);
+    SSpan span = (SSpan) potentialSpan;
+    assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+  }
+
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
     String namespace = null;
