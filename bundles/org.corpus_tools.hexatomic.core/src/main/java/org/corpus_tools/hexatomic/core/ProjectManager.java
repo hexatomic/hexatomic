@@ -166,7 +166,7 @@ public class ProjectManager {
           List<URI> allDocuments =
               existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
                   .filter(d -> d.getDocumentGraphLocation() != null)
-                  .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
+                  .map(SDocument::getDocumentGraphLocation).collect(Collectors.toList());
           // Delete the Salt XML files belonging to this document
           for (URI doc : allDocuments) {
             Path saltFile = Paths.get(doc.toFileString());
@@ -445,7 +445,7 @@ public class ProjectManager {
       final Set<String> documentsToReload =
           project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
               .filter(d -> d.getDocumentGraph() != null).filter(d -> getNumberOfOpenEditors(d) > 0)
-              .map(d -> d.getId()).collect(Collectors.toSet());
+              .map(SDocument::getId).collect(Collectors.toSet());
 
       IRunnableWithProgress operation = new SaveToRunnable(documentsToReload, path);
 
