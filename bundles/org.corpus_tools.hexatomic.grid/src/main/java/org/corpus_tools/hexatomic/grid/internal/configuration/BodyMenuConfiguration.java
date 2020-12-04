@@ -136,7 +136,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new ChangeAnnotationNameSelectionAction(getSelectedNonTokenCells()).run(natTable, null);
+          new ChangeAnnotationNameSelectionAction(getSelectedNonTokenCells()).run(natTable);
         }
       });
     }
@@ -169,7 +169,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new CreateSpanSelectionAction(getSelectedNonTokenCells()).run(natTable, null);
+          new CreateSpanSelectionAction(getSelectedNonTokenCells()).run(natTable);
         }
       });
     }
