@@ -458,7 +458,7 @@ public class GraphDataProvider implements IDataProvider {
   public void createEmptyAnnotationSpan(Set<PositionCoordinate> selectedCoordinates) {
     // Get tokens
     List<Integer> selectedRows = selectedCoordinates.parallelStream()
-        .map(coord -> coord.getRowPosition()).collect(Collectors.toList());
+        .map(PositionCoordinate::getRowPosition).collect(Collectors.toList());
     List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
         .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
     // Check that all potentialTokens are in fact tokens
