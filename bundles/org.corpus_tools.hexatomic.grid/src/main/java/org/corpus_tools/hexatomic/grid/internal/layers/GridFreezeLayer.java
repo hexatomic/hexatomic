@@ -26,6 +26,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
@@ -67,6 +68,17 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   }
 
   /**
+   * Triggers the creation of a new span annotated with a <code>null</code> value in the underlying
+   * data model.
+   * 
+   * @param selectedCoordinates a set of the {@link PositionCoordinate}s of the currently selected
+   *        cells
+   */
+  public void createEmptyAnnotationSpan(Set<PositionCoordinate> selectedCoordinates) {
+    bodyDataProvider.createEmptyAnnotationSpan(selectedCoordinates);
+  }
+
+  /**
    * Registers custom command handlers.
    */
   @Override
@@ -74,6 +86,6 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     super.registerCommandHandlers();
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler());
-    registerCommandHandler(new CreateSpanCommandHandler());
+    registerCommandHandler(new CreateSpanCommandHandler(this));
   }
 }
