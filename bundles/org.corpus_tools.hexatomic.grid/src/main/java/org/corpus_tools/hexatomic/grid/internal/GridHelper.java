@@ -74,7 +74,7 @@ public class GridHelper {
   /**
    * Determines whether the column in the {@link NatTable} as determined per the passed
    * columnPosition integer is a column containing span annotation values, based on the config label
-   * for span cells of an arbitrary row position within the column.
+   * for span cells of the last row position within the column.
    * 
    * <p>
    * Note that if the column position is not got from a {@link NatEventData} object, it must be
@@ -84,22 +84,21 @@ public class GridHelper {
    * @param natTable The NatTable for which the column position is passed
    * @param columnPosition The column position to determine for whether it contains span annotation
    *        values
-   * @param arbitraryRowPosition An arbitrary row position for which to check if the respective cell
-   *        within the given column has a configuration label for span annotation cells, which all
-   *        cells in a span column have.
    * @param columnPositionDerivedFromNatEventData Whether the column position passed into this
    *        method is directly derived from a {@link NatEventData} object. If <code>true</code>, the
    *        column position can be used without adding 1, if not, 1 must be added to it.
    * @return whether the given column position covers a span column
    */
   public static boolean isSpanColumnAtPosition(NatTable natTable, int columnPosition,
-      int arbitraryRowPosition, boolean columnPositionDerivedFromNatEventData) {
+      boolean columnPositionDerivedFromNatEventData) {
     int positionToCheck = -1;
     if (columnPositionDerivedFromNatEventData) {
       positionToCheck = columnPosition;
     } else {
       positionToCheck = columnPosition + 1;
     }
+    // Use the last row in the table to check for row style
+    int arbitraryRowPosition = natTable.getRowCount() - 1;
     ILayerCell cell = natTable.getCellByPosition(positionToCheck, arbitraryRowPosition);
     return cell.getConfigLabels().hasLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
   }
