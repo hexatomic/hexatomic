@@ -26,13 +26,21 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
 /**
+ * An {@link IContextFreeAction} that triggers a {@link CreateSpanCommand} for the currently
+ * selected empty cells in an existing span column.
+ * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
- *
  */
 public class CreateSpanSelectionAction implements IContextFreeAction {
 
   private final Set<PositionCoordinate> selectedNonTokenCells;
 
+  /**
+   * Creates a new {@link CreateSpanSelectionAction}.
+   * 
+   * @param selectedNonTokenCells a set of {@link PositionCoordinate}s of the currently selected
+   *        cells.
+   */
   public CreateSpanSelectionAction(Set<PositionCoordinate> selectedNonTokenCells) {
     this.selectedNonTokenCells = selectedNonTokenCells;
   }

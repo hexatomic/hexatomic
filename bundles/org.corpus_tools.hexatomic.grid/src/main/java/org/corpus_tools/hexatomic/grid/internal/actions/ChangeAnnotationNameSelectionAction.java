@@ -27,11 +27,10 @@ import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
-import org.eclipse.nebula.widgets.nattable.ui.action.IKeyAction;
 
 /**
- * An {@link IKeyAction} that triggers a {@link DisplayAnnotationRenameDialogOnCellsCommand} for all
- * selected non-token cells of this instance at once.
+ * An {@link IContextFreeAction} that triggers a {@link DisplayAnnotationRenameDialogOnCellsCommand}
+ * for all selected non-token cells of this instance at once.
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */

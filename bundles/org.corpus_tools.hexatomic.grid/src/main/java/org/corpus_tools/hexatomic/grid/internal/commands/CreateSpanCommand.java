@@ -26,6 +26,9 @@ import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
 /**
+ * An {@link AbstractContextFreeCommand} that is used to create a new annotated span on a set of
+ * selected empty cells in an existing span column.
+ * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
@@ -34,12 +37,21 @@ public class CreateSpanCommand extends AbstractContextFreeCommand {
   private final NatTable natTable;
   private final Set<PositionCoordinate> selectedNonTokenCells;
 
+  /**
+   * Creates a new {@link CreateSpanCommand}.
+   * 
+   * @param natTable the {@link NatTable} for which this command is valid
+   * @param selectedNonTokenCells a set of the {@link PositionCoordinate}s of the currently selected
+   *        cells
+   */
   public CreateSpanCommand(NatTable natTable, Set<PositionCoordinate> selectedNonTokenCells) {
     this.natTable = natTable;
     this.selectedNonTokenCells = selectedNonTokenCells;
   }
 
   /**
+   * Returns the NatTable.
+   * 
    * @return the natTable
    */
   public final NatTable getNatTable() {
@@ -47,6 +59,8 @@ public class CreateSpanCommand extends AbstractContextFreeCommand {
   }
 
   /**
+   * Returns the set of {@link PositionCoordinate}s of the currently selected cells.
+   * 
    * @return the selectedNonTokenCells
    */
   public final Set<PositionCoordinate> getSelectedNonTokenCells() {
