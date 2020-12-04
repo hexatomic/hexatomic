@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.grid.internal.layers;
 import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
@@ -73,5 +74,6 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     super.registerCommandHandlers();
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler());
+    registerCommandHandler(new CreateSpanCommandHandler());
   }
 }
