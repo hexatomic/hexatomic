@@ -20,14 +20,36 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
+import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.commands.CreateSpanCommand;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
+import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
+import org.eclipse.nebula.widgets.nattable.edit.EditController;
+import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * An {@link AbstractLayerCommandHandler} that handles {@link CreateSpanCommand}s, i.e., the
+ * creation of new spans over empty cells in an existing span column..
+ * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
- *
  */
 public class CreateSpanCommandHandler extends AbstractLayerCommandHandler<CreateSpanCommand> {
+
+  private final GridFreezeLayer layer;
+  private Logger log = LoggerFactory.getLogger(CreateSpanCommandHandler.class);
+
+  /**
+   * Creates a {@link CreateSpanCommandHandler} and sets the {@link #layer} field.
+   * 
+   * @param gridFreezeLayer the {@link GridFreezeLayer} where this handler is registered.
+   */
+  public CreateSpanCommandHandler(GridFreezeLayer gridFreezeLayer) {
+    this.layer = gridFreezeLayer;
+  }
 
   @Override
   public Class<CreateSpanCommand> getCommandClass() {
@@ -36,8 +58,19 @@ public class CreateSpanCommandHandler extends AbstractLayerCommandHandler<Create
 
   @Override
   protected boolean doCommand(CreateSpanCommand command) {
-    System.err.println("HELLLO FROM CREATE SPAN HANDLER");
-    return false;
+    log.debug("Executing command {}.", getCommandClass().getSimpleName());
+    NatTable natTable = command.getNatTable();
+    Set<PositionCoordinate> selectedCoordinates = command.getSelectedNonTokenCells();
+    PositionCoordinate firstCoordinate = selectedCoordinates.iterator().next();
+    // Create a new span with an empty annotation
+    layer.createEmptyAnnotationSpan(selectedCoordinates);
+    // Get the first layer cell (as arbitrary choice of any cells that contain the new span) to call
+    // the edit command on
+    ILayerCell firstSelectedCell = natTable.getCellByPosition(
+        firstCoordinate.getColumnPosition() + 1, firstCoordinate.getRowPosition() + 1);
+    // Now that the span with an annotation of value null exists, we can edit the default way.
+    EditController.editCell(firstSelectedCell, natTable, null, natTable.getConfigRegistry());
+    return true;
   }
 
 }
