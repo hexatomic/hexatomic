@@ -62,10 +62,12 @@ public class CreateSpanCommandHandler extends AbstractLayerCommandHandler<Create
     NatTable natTable = command.getNatTable();
     Set<PositionCoordinate> selectedCoordinates = command.getSelectedNonTokenCells();
     PositionCoordinate firstCoordinate = selectedCoordinates.iterator().next();
-    // Create a new span with an empty annotation
+    // Spans without annotations aren't displayed in the grid, therefore create a new span with the
+    // correctly named annotation but a null value first, then immediately edit the value.
     layer.createEmptyAnnotationSpan(selectedCoordinates);
-    // Get the first layer cell (as arbitrary choice of any cells that contain the new span) to call
-    // the edit command on
+    // Get the first selected cell (as arbitrary choice of any cells that contain the new span) to
+    // call the edit command on. Add 1 to column and row positions, as the NatTable (in contrast to
+    // the body layer) includes header columns and rows in position counts.
     ILayerCell firstSelectedCell = natTable.getCellByPosition(
         firstCoordinate.getColumnPosition() + 1, firstCoordinate.getRowPosition() + 1);
     // Now that the span with an annotation of value null exists, we can edit the default way.
