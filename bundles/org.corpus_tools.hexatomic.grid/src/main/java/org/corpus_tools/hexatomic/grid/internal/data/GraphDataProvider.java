@@ -466,8 +466,9 @@ public class GraphDataProvider implements IDataProvider {
       if (n instanceof SToken) {
         return (SToken) n;
       } else {
-        throw new RuntimeException("Expected an object of type " + SToken.class.getSimpleName()
-            + " in the first column, but found a " + n.getClass().getSimpleName());
+        throw new HexatomicRuntimeException(
+            "Expected an object of type " + SToken.class.getSimpleName()
+                + " in the first column of the grid, but found a " + n.getClass().getSimpleName());
       }
     }).collect(Collectors.toList());
     SSpan span = graph.createSpan(tokens);
