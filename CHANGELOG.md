@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Using GitHub Actions instead of Travis CI for testing the pull requests
-- Update Tycho (build-system related) to version 2.1.0
+- Update Tycho (build-system related) to version 1.7.0
 
 ## [0.4.4] - 2020-09-16
 
