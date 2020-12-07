@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ExportHandlerTest {
+class TestExportHandler {
 
   private ExportHandler fixture;
   private URI exampleProjectUri;

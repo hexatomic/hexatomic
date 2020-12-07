@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PepperJobRunnerTest {
+class TestPepperJobRunner {
 
   private static final int TEST_NUMBER_OF_DOCUMENTS = 12;
 
@@ -49,7 +49,7 @@ class PepperJobRunnerTest {
    * @throws ExecutionException Should not be thrown
    */
   @Test
-  void testReportProgress() throws InterruptedException, ExecutionException {
+  public void testReportProgress() throws InterruptedException, ExecutionException {
 
     // This mocked job directly jumps to importing the documents
     when(job.getStatus()).thenReturn(JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE);
