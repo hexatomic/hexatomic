@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -57,7 +58,6 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
  * Enables the use of an {@link SDocumentGraph} as a data source for the {@link NatTable}.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
- *
  */
 @Creatable
 public class GraphDataProvider implements IDataProvider {
@@ -447,6 +447,43 @@ public class GraphDataProvider implements IDataProvider {
 
   }
 
+  /**
+   * Creates a new {@link SSpan} over the tokens in the first {@link Column} in {@link #columns},
+   * that are defined by the passed {@link PositionCoordinate#getColumnPosition()}s. Then, adds an
+   * {@link SAnnotation} to the new span with an empty value.
+   * 
+   * @param selectedCoordinates a set of the {@link PositionCoordinate}s of the currently selected
+   *        cells
+   */
+  public void createEmptyAnnotationSpan(Set<PositionCoordinate> selectedCoordinates) {
+    // Get tokens
+    List<Integer> selectedRows = selectedCoordinates.parallelStream()
+        .map(PositionCoordinate::getRowPosition).collect(Collectors.toList());
+    List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
+        .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
+    // Check that all potentialTokens are in fact tokens
+    List<SToken> tokens = potentialTokens.parallelStream().map(n -> {
+      if (n instanceof SToken) {
+        return (SToken) n;
+      } else {
+        throw new HexatomicRuntimeException(
+            "Expected an object of type " + SToken.class.getSimpleName()
+                + " in the first column of the grid, but found a " + n.getClass().getSimpleName());
+      }
+    }).collect(Collectors.toList());
+    SSpan span = graph.createSpan(tokens);
+    log.debug("Created new span {}.", span);
+    int columnIndex = selectedCoordinates.iterator().next().getColumnPosition();
+    Column column = getColumns().get(columnIndex);
+
+    for (int rowIndex : selectedRows) {
+      column.setRow(rowIndex, span);
+    }
+    createAnnotation(null, columnIndex, span);
+    log.debug("Annotated new span with empty value.");
+  }
+
+
   @Override
   public int getColumnCount() {
     return columns.size();
@@ -503,5 +540,4 @@ public class GraphDataProvider implements IDataProvider {
       return splitColumnValue[0];
     }
   }
-
 }

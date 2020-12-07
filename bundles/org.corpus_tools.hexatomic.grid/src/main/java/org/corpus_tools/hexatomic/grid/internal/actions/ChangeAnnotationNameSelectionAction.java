@@ -27,16 +27,14 @@ import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
-import org.eclipse.nebula.widgets.nattable.ui.action.IKeyAction;
-import org.eclipse.swt.events.KeyEvent;
 
 /**
- * An {@link IKeyAction} that triggers a {@link DisplayAnnotationRenameDialogOnCellsCommand} for all
- * selected non-token cells of this instance at once.
+ * An {@link IContextFreeAction} that triggers a {@link DisplayAnnotationRenameDialogOnCellsCommand}
+ * for all selected non-token cells of this instance at once.
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
-public class ChangeAnnotationNameSelectionAction implements IKeyAction {
+public class ChangeAnnotationNameSelectionAction implements IContextFreeAction {
 
   private final Set<PositionCoordinate> selectedNonTokenCells;
 
@@ -50,7 +48,7 @@ public class ChangeAnnotationNameSelectionAction implements IKeyAction {
   }
 
   @Override
-  public void run(NatTable natTable, KeyEvent event) {
+  public void run(NatTable natTable) {
     // Map the selected cells by column.
     Map<Integer, Set<Integer>> cellMapByColumn = new HashMap<>();
     for (PositionCoordinate cellCoordinate : this.selectedNonTokenCells) {
