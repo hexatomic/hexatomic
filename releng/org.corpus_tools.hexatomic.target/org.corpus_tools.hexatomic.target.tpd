@@ -2,7 +2,7 @@ target 'Hexatomic Target Platform Definition'
 
 with requirements source configurePhase
 
-location 'http://download.eclipse.org/releases/2020-03/' {
+location 'http://download.eclipse.org/releases/2020-06/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.emf.common
@@ -22,7 +22,7 @@ location 'http://download.eclipse.org/releases/2020-03/' {
 	org.eclipse.pde.junit.runtime
 }
 
-location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
+location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20201130205003/repository/' {
 	
 	org.slf4j.api [1.7.10,2.0.0)
 	ch.qos.logback.slf4j [1.1.2,2.0.0)
