@@ -306,7 +306,7 @@ public class CorpusStructureView {
           if (selected.getFirstElement() instanceof SCorpus) {
             addDocument(toolBar.getShell());
           } else if (selected.getFirstElement() instanceof SCorpusGraph) {
-            addCorpus(toolBar.getShell());
+            addCorpus();
           } else if (selected.getFirstElement() instanceof SDocument) {
             // add a sibling document
             addDocument(toolBar.getShell());
@@ -336,7 +336,7 @@ public class CorpusStructureView {
     addCorpus.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addCorpus(toolBar.getShell());
+        addCorpus();
       }
     });
 
@@ -367,7 +367,7 @@ public class CorpusStructureView {
 
   }
 
-  private void addCorpus(Shell shell) {
+  private void addCorpus() {
 
 
     SCorpusGraph g = null;
