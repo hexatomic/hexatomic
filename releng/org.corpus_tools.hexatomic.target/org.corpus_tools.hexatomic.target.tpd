@@ -13,7 +13,6 @@ location 'http://download.eclipse.org/releases/2020-03/' {
 	org.junit.jupiter.api
 	org.junit.jupiter.engine
     org.junit.platform.engine
-	org.junit.vintage.engine
 	org.eclipse.swtbot.e4.finder
 	org.eclipse.swtbot.generator
 	org.eclipse.swtbot.go
