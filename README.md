@@ -9,7 +9,7 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Build Status][travis-master-shield]][travis-master-url]  
+[![Build Status][gh-actions-master-shield]][gh-actions-master-url]  
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -217,6 +217,8 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [product-screenshot]: images/screenshot.png
 [travis-master-shield]: https://img.shields.io/travis/hexatomic/hexatomic/develop.svg?style=flat-square
 [travis-master-url]: https://travis-ci.org/hexatomic/hexatomic
+[gh-actions-master-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
+[gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests%22
 
 [eclipse-download]: https://www.eclipse.org/downloads/
 [eclipse]: https://eclipse.org
