@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.corpus_tools</groupId>
+        <artifactId>org.corpus_tools.hexatomic.tests</artifactId>
+        <version>0.5.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>org.corpus_tools.hexatomic.formats.tests</artifactId>
+    <packaging>eclipse-test-plugin</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-surefire-plugin</artifactId>
+                <version>${tycho.version}</version>
+                <configuration>
+                <!-- 
+                	Some tests use the SWT Display class implicitly and thus need an actual active UI. 
+                	This configuration mimics the one running the test as "JUnit Plug-in Test" in Eclipse.
+                -->
+	                <useUIHarness>true</useUIHarness>
+                    <useUIThread>true</useUIThread>
+                    <product>org.eclipse.platform.ide</product>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
