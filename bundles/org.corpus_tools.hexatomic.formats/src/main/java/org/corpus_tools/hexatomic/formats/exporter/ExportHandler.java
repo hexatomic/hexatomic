@@ -26,11 +26,11 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.hexatomic.core.handlers.SaveAsHandler;
 import org.corpus_tools.hexatomic.formats.Activator;
+import org.corpus_tools.hexatomic.formats.WizardDialogProvider;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -39,11 +39,14 @@ public class ExportHandler {
   @Inject
   SaveAsHandler saveAsHandler;
 
+  @Inject
+  WizardDialogProvider wizardDialogProvider;
+
   @Execute
   protected void execute(Shell shell, ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
 
-    WizardDialog dialog = createDialog(shell,
+    WizardDialog dialog = wizardDialogProvider.createDialog(shell,
         new ExportWizard(errorService, projectManager, notificationFactory, sync));
 
     if (projectManager.isDirty()) {
@@ -73,10 +76,6 @@ public class ExportHandler {
   protected boolean canExecute(ProjectManager projectManager) {
     return Activator.getPepper().isPresent()
         && !projectManager.getProject().getCorpusGraphs().isEmpty();
-  }
-
-  protected WizardDialog createDialog(Shell shell, IWizard exportWizard) {
-    return new WizardDialog(shell, exportWizard);
   }
 
 }

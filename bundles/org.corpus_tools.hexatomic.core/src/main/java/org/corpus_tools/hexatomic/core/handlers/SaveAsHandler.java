@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.FileChooserProvider;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.e4.core.di.annotations.CanExecute;
@@ -45,6 +46,8 @@ public class SaveAsHandler {
   @Inject
   ProjectManager projectManager;
 
+  @Inject
+  FileChooserProvider fileChooserProvider;
 
   private String lastPath;
 
@@ -69,7 +72,7 @@ public class SaveAsHandler {
         lastPath = originalLocation.get().toFileString();
       }
 
-      DirectoryDialog dialog = createDialog(shell);
+      DirectoryDialog dialog = fileChooserProvider.createDirectoryDialog(shell);
       if (lastPath != null) {
         dialog.setFilterPath(lastPath);
       }
@@ -99,7 +102,11 @@ public class SaveAsHandler {
     this.projectManager = projectManager;
   }
 
-  protected DirectoryDialog createDialog(Shell shell) {
-    return new DirectoryDialog(shell);
+  public void setErrorService(ErrorService errorService) {
+    this.errorService = errorService;
+  }
+
+  public void setFileChooserProvider(FileChooserProvider fileChooserProvider) {
+    this.fileChooserProvider = fileChooserProvider;
   }
 }
