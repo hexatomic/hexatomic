@@ -102,6 +102,8 @@ public class GridEditor {
 
   public static final String CREATE_SPAN_POPUP_MENU_LABEL = "Create span";
 
+  public static final String GROW_SPAN_POPUP_MENU_LABEL = "Grow span";
+
   @Inject
   ErrorService errors;
 

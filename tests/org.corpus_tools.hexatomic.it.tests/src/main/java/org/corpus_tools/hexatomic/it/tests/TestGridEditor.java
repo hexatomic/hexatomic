@@ -1341,6 +1341,36 @@ public class TestGridEditor {
     assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
 
+  /**
+   * Tests whether the "Grow span" context menu is only visible when the respective conditions are
+   * met: There is a single span and at least one empty cell selected, all selections are in the
+   * same column, and the column is a span column.
+   */
+  @Test
+  void growSpanMenuOnlyVisibleOnConditionsMet() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Remove existing large span
+    table.click(4, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new CellDataValueCondition(tableBot, 4, 4, ""));
+
+    // Select single cell for new span
+    table.click(4, 4);
+
+    // Create span and assert
+    table.contextMenu(4, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
+    typeTextPressReturn(table);
+
+    fail();
+
+    // TODO Implement actual tests
+  }
+
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
     String namespace = null;
