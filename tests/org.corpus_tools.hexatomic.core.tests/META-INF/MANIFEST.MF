@@ -12,3 +12,4 @@ Require-Bundle: org.eclipse.osgi.services,
  org.hamcrest;bundle-version="1.1.0",
  org.corpus-tools.salt-api
 Export-Package: org.corpus_tools.hexatomic.core
+Import-Package: org.junit;version="4.13.0"
