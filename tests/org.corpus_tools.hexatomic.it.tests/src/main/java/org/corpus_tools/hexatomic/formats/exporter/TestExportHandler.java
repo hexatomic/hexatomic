@@ -10,8 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.FileChooserProvider;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -20,11 +18,7 @@ import org.corpus_tools.hexatomic.formats.WizardDialogProvider;
 import org.corpus_tools.hexatomic.it.tests.TestHelper;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.util.SaltUtil;
-import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.e4.core.commands.ECommandService;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -33,9 +27,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("restriction")
 class TestExportHandler {
 
+  private static final String EXPORT = "Export";
   private static final String SAVE_PROJECT_BEFORE_EXPORT = "Save project before export?";
 
   private SWTWorkbenchBot bot;
@@ -44,11 +38,8 @@ class TestExportHandler {
   private ProjectManager projectManager;
   private WizardDialog wizardDialog;
   private ErrorService errorService;
-  private UISynchronize sync;
   DirectoryDialog directoryChooser;
 
-  private ECommandService commandService;
-  private EHandlerService handlerService;
 
   @BeforeEach
   private void setUp() throws IOException {
@@ -72,10 +63,6 @@ class TestExportHandler {
     ctx.set(WizardDialogProvider.class, wizardProvider);
     ctx.set(ProjectManager.class, projectManager);
     ctx.set(ErrorService.class, errorService);
-    // Create or get some injected objects
-    commandService = ctx.get(ECommandService.class);
-    handlerService = ctx.get(EHandlerService.class);
-    sync = ctx.get(UISynchronize.class);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -87,23 +74,12 @@ class TestExportHandler {
     when(projectManager.getProject()).thenReturn(project);
   }
 
-  /**
-   * Programmatically execute the export handler
-   */
-  private void executeHandler() {
-    Map<String, String> params = new HashMap<>();
-    ParameterizedCommand cmd =
-        commandService.createCommand("org.corpus_tools.hexatomic.formats.command.export", params);
-
-    sync.asyncExec(() -> handlerService.executeHandler(cmd));
-  }
-
   @Test
   void testExecuteSaveDefault() {
     when(projectManager.isDirty()).thenReturn(false);
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
-    executeHandler();
+    bot.menu(EXPORT).click();
 
     verify(wizardDialog).open();
     verifyZeroInteractions(directoryChooser, errorService);
@@ -114,7 +90,7 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
-    executeHandler();
+    bot.menu(EXPORT).click();
     
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
@@ -131,7 +107,7 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
-    executeHandler();
+    bot.menu(EXPORT).click();
 
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
@@ -147,7 +123,7 @@ class TestExportHandler {
     when(projectManager.getLocation()).thenReturn(Optional.empty());
     when(directoryChooser.open()).thenReturn(exampleProjectUri.toFileString());
 
-    executeHandler();
+    bot.menu(EXPORT).click();
 
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
@@ -165,7 +141,7 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.empty());
 
-    executeHandler();
+    bot.menu(EXPORT).click();
 
     SWTBotShell saveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(saveDialog);
@@ -179,7 +155,7 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.empty());
     
-    executeHandler();
+    bot.menu(EXPORT).click();
 
     SWTBotShell saveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(saveDialog);
