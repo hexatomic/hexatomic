@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.core.ui;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -18,8 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class AboutDialog extends Dialog {
 
-  private Font headerFont;
-  private Font boldFont;
+  private final Font headerFont;
+  private final Font boldFont;
 
 
   /**
@@ -29,6 +30,16 @@ public class AboutDialog extends Dialog {
    */
   public AboutDialog(Shell parentShell) {
     super(parentShell);
+
+    Font dialogFont = JFaceResources.getDialogFont();
+    FontDescriptor headerFontDescriptor =
+        FontDescriptor.createFrom(dialogFont).setHeight(32);
+    headerFont = headerFontDescriptor.createFont(parentShell.getDisplay());
+
+    FontDescriptor boldFontDescriptor =
+        FontDescriptor.createFrom(dialogFont).setStyle(SWT.BOLD);
+    boldFont = boldFontDescriptor.createFont(parentShell.getDisplay());
+
   }
 
   /**
@@ -43,16 +54,10 @@ public class AboutDialog extends Dialog {
     Label lblHeader = new Label(container, SWT.NONE);
     lblHeader.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
     lblHeader.setText("Hexatomic");
-    FontDescriptor headerFontDescriptor =
-        FontDescriptor.createFrom(lblHeader.getFont()).setHeight(32);
-    headerFont = headerFontDescriptor.createFont(lblHeader.getDisplay());
     lblHeader.setFont(headerFont);
 
     Label lblVersion = new Label(container, SWT.NONE);
     lblVersion.setText("Version: <unknown>");
-    FontDescriptor boldFontDescriptor =
-        FontDescriptor.createFrom(lblVersion.getFont()).setStyle(SWT.BOLD);
-    boldFont = boldFontDescriptor.createFont(lblVersion.getDisplay());
     lblVersion.setFont(boldFont);
 
     Link lnkAuthors = new Link(container, SWT.NONE);
@@ -96,5 +101,11 @@ public class AboutDialog extends Dialog {
     return new Point(450, 300);
   }
 
+  @Override
+  public boolean close() {
+    headerFont.dispose();
+    boldFont.dispose();
+    return super.close();
+  }
 
 }
