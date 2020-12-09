@@ -22,11 +22,10 @@ package org.corpus_tools.hexatomic.core;
 
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A class that can be injected to create a {@link FileDialog} or {@link DirectoryDialog}. <br />
+ * A class that can be injected to create a {@link DirectoryDialog}. <br />
  * <br />
  * Having this as an extra class allows to inject custom dialog providers, e.g. for mocked dialogs
  * in tests.
@@ -36,16 +35,6 @@ import org.eclipse.swt.widgets.Shell;
  */
 @Creatable
 public class FileChooserProvider {
-
-  /**
-   * Creates a new file chooser dialog.
-   * 
-   * @param shell The SWT shell to use as parent
-   * @return The created dialog.
-   */
-  public FileDialog createFileDialog(Shell shell) {
-    return new FileDialog(shell);
-  }
 
   /**
    * Creates a new directory dialog.
