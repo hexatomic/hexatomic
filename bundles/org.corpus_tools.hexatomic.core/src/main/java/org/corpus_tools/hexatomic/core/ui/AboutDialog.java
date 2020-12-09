@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.Version;
 
 public class AboutDialog extends Dialog {
 
@@ -42,6 +44,11 @@ public class AboutDialog extends Dialog {
 
   }
 
+  private String getVersionString() {
+    Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
+    return String.format("%d.%d.%d", v.getMajor(), v.getMinor(), v.getMicro());
+  }
+
   /**
    * Create contents of the dialog.
    * 
@@ -57,7 +64,7 @@ public class AboutDialog extends Dialog {
     lblHeader.setFont(headerFont);
 
     Label lblVersion = new Label(container, SWT.NONE);
-    lblVersion.setText("Version: <unknown>");
+    lblVersion.setText("Version: " + getVersionString());
     lblVersion.setFont(boldFont);
 
     Link lnkAuthors = new Link(container, SWT.NONE);
