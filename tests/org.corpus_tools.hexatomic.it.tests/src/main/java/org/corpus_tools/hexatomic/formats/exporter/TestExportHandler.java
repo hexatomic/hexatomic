@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
@@ -55,7 +54,7 @@ class TestExportHandler {
   private ExportHandler fixture;
 
   @BeforeEach
-  private void setUp() throws IOException {
+  private void setUp() {
 
     wizardDialog = mock(WizardDialog.class);
     projectManager = mock(ProjectManager.class);
@@ -87,10 +86,8 @@ class TestExportHandler {
   }
 
   private void executeHandler() {
-    sync.asyncExec(() -> {
-      fixture.execute(bot.activeShell().widget, errorService, projectManager, notificationFactory,
-          sync);
-    });
+    sync.asyncExec(() -> fixture.execute(bot.activeShell().widget, errorService, projectManager,
+        notificationFactory, sync));
     sync.syncExec(() -> {
     });
   }
@@ -112,7 +109,7 @@ class TestExportHandler {
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
     executeHandler();
-    
+
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
 
@@ -176,7 +173,7 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.empty());
     when(saveAsHandler.execute(any(), any())).thenReturn(false);
-    
+
     executeHandler();
 
     SWTBotShell saveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
@@ -187,7 +184,7 @@ class TestExportHandler {
     saveDialog.bot().button("OK").click();
 
     verify(saveAsHandler).execute(any(), any());
-    
+
     // Wizard should not be opened
     verifyZeroInteractions(wizardDialog, errorService);
   }
