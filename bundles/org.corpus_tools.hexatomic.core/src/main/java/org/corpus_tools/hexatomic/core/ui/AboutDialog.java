@@ -44,9 +44,14 @@ public class AboutDialog extends Dialog {
 
   }
 
-  private String getVersionString() {
+  private String getFullVersion() {
     Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
     return String.format("%d.%d.%d", v.getMajor(), v.getMinor(), v.getMicro());
+  }
+
+  private String getShortVersion() {
+    Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
+    return String.format("%d.%d", v.getMajor(), v.getMinor());
   }
 
   /**
@@ -64,20 +69,12 @@ public class AboutDialog extends Dialog {
     lblHeader.setFont(headerFont);
 
     Label lblVersion = new Label(container, SWT.NONE);
-    lblVersion.setText("Version: " + getVersionString());
+    lblVersion.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lblVersion.setText("Version: " + getFullVersion());
     lblVersion.setFont(boldFont);
 
-    Link lnkAuthors = new Link(container, SWT.NONE);
-    lnkAuthors.setText(
-        "2018ff. <a>Hexatomic project team</a>");
-    lnkAuthors.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        Program.launch("https://github.com/orgs/hexatomic/teams/project/members");
-      }
-    });
-
     Link lnkHomepage = new Link(container, SWT.NONE);
+    lnkHomepage.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
     lnkHomepage.setText("Homepage: <a>https://hexatomic.github.io/</a>");
     lnkHomepage.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -86,6 +83,27 @@ public class AboutDialog extends Dialog {
       }
     });
 
+
+    Link lnkDocumentation = new Link(container, SWT.NONE);
+    lnkDocumentation.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lnkDocumentation.setText("<a>Online User Documentation</a>");
+    lnkDocumentation.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        Program.launch("https://hexatomic.github.io/hexatomic/user/v" + getShortVersion() + "/");
+      }
+    });
+    new Label(container, SWT.NONE);
+
+    Link lnkAuthors = new Link(container, SWT.NONE);
+    lnkAuthors.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lnkAuthors.setText("© 2018ff. <a>Hexatomic project team</a>");
+    lnkAuthors.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        Program.launch("https://github.com/orgs/hexatomic/teams/project/members");
+      }
+    });
 
     return container;
   }
