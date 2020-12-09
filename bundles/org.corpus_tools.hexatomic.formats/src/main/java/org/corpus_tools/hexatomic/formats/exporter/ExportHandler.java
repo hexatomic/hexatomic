@@ -37,13 +37,26 @@ import org.eclipse.swt.widgets.Shell;
 public class ExportHandler {
 
   @Inject
-  SaveAsHandler saveAsHandler;
+  private SaveAsHandler saveAsHandler;
 
   @Inject
-  WizardDialogProvider wizardDialogProvider;
+  private WizardDialogProvider wizardDialogProvider;
 
+
+
+  /**
+   * Shows the export wizard. If there are unsaved changes, the users is prompted to save the
+   * project.
+   * 
+   * @param shell The parent shell used to display the dialogs.
+   * @param errorService The service to log and display errors.
+   * @param projectManager Used to get the Salt project to export.
+   * @param notificationFactory Needed to show notifications.
+   * @param sync Since part of the wizard will run in the background, synchronization with the UI
+   *        thread is needed.
+   */
   @Execute
-  protected void execute(Shell shell, ErrorService errorService, ProjectManager projectManager,
+  public void execute(Shell shell, ErrorService errorService, ProjectManager projectManager,
       SaltNotificationFactory notificationFactory, UISynchronize sync) {
 
     WizardDialog dialog = wizardDialogProvider.createDialog(shell,
@@ -76,6 +89,22 @@ public class ExportHandler {
   protected boolean canExecute(ProjectManager projectManager) {
     return Activator.getPepper().isPresent()
         && !projectManager.getProject().getCorpusGraphs().isEmpty();
+  }
+
+  public SaveAsHandler getSaveAsHandler() {
+    return saveAsHandler;
+  }
+
+  public void setSaveAsHandler(SaveAsHandler saveAsHandler) {
+    this.saveAsHandler = saveAsHandler;
+  }
+
+  public WizardDialogProvider getWizardDialogProvider() {
+    return wizardDialogProvider;
+  }
+
+  public void setWizardDialogProvider(WizardDialogProvider wizardDialogProvider) {
+    this.wizardDialogProvider = wizardDialogProvider;
   }
 
 }

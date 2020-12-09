@@ -11,17 +11,19 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import org.corpus_tools.hexatomic.core.FileChooserProvider;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
+import org.corpus_tools.hexatomic.core.handlers.SaveAsHandler;
 import org.corpus_tools.hexatomic.formats.WizardDialogProvider;
 import org.corpus_tools.hexatomic.it.tests.TestHelper;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.util.SaltUtil;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 class TestExportHandler {
 
-  private static final String EXPORT = "Export";
   private static final String SAVE_PROJECT_BEFORE_EXPORT = "Save project before export?";
 
   private SWTWorkbenchBot bot;
@@ -38,8 +39,11 @@ class TestExportHandler {
   private ProjectManager projectManager;
   private WizardDialog wizardDialog;
   private ErrorService errorService;
-  DirectoryDialog directoryChooser;
+  private SaltNotificationFactory notificationFactory;
+  private UISynchronize sync;
+  private SaveAsHandler saveAsHandler;
 
+  private ExportHandler fixture;
 
   @BeforeEach
   private void setUp() throws IOException {
@@ -47,9 +51,7 @@ class TestExportHandler {
     wizardDialog = mock(WizardDialog.class);
     projectManager = mock(ProjectManager.class);
     errorService = mock(ErrorService.class);
-    directoryChooser = mock(DirectoryDialog.class);
-    FileChooserProvider fileChooserProvider = mock(FileChooserProvider.class);
-    when(fileChooserProvider.createDirectoryDialog(any())).thenReturn(directoryChooser);
+    saveAsHandler = mock(SaveAsHandler.class);
 
     WizardDialogProvider wizardProvider = mock(WizardDialogProvider.class);
     when(wizardProvider.createDialog(any(), any())).thenReturn(wizardDialog);
@@ -57,12 +59,9 @@ class TestExportHandler {
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     bot = new SWTWorkbenchBot(ctx);
-
-    // Inject mock objects in order to be able to test the executed methods
-    ctx.set(FileChooserProvider.class, fileChooserProvider);
-    ctx.set(WizardDialogProvider.class, wizardProvider);
-    ctx.set(ProjectManager.class, projectManager);
-    ctx.set(ErrorService.class, errorService);
+    // Get non-mocked instances from context
+    notificationFactory = ContextInjectionFactory.make(SaltNotificationFactory.class, ctx);
+    sync = ctx.get(UISynchronize.class);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
@@ -72,6 +71,19 @@ class TestExportHandler {
 
     SaltProject project = SaltUtil.loadCompleteSaltProject(exampleProjectUri);
     when(projectManager.getProject()).thenReturn(project);
+
+    fixture = new ExportHandler();
+    fixture.setSaveAsHandler(saveAsHandler);
+    fixture.setWizardDialogProvider(wizardProvider);
+  }
+
+  private void executeHandler() {
+    sync.asyncExec(() -> {
+      fixture.execute(bot.activeShell().widget, errorService, projectManager, notificationFactory,
+          sync);
+    });
+    sync.syncExec(() -> {
+    });
   }
 
   @Test
@@ -79,10 +91,10 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(false);
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
-    bot.menu(EXPORT).click();
+    executeHandler();
 
     verify(wizardDialog).open();
-    verifyZeroInteractions(directoryChooser, errorService);
+    verifyZeroInteractions(saveAsHandler, errorService);
   }
 
   @Test
@@ -90,7 +102,7 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
-    bot.menu(EXPORT).click();
+    executeHandler();
     
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
@@ -99,7 +111,7 @@ class TestExportHandler {
 
     verify(wizardDialog).open();
 
-    verifyZeroInteractions(directoryChooser, errorService);
+    verifyZeroInteractions(saveAsHandler, errorService);
   }
 
   @Test
@@ -107,13 +119,13 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.of(exampleProjectUri));
 
-    bot.menu(EXPORT).click();
+    executeHandler();
 
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
 
     askSaveDialog.bot().button("Cancel").click();
-    verifyZeroInteractions(wizardDialog, directoryChooser, errorService);
+    verifyZeroInteractions(wizardDialog, saveAsHandler, errorService);
   }
 
 
@@ -121,16 +133,16 @@ class TestExportHandler {
   void testExecuteSaveAsDirty() {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.empty());
-    when(directoryChooser.open()).thenReturn(exampleProjectUri.toFileString());
+    when(saveAsHandler.execute(any(), any())).thenReturn(true);
 
-    bot.menu(EXPORT).click();
+    executeHandler();
 
     SWTBotShell askSaveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(askSaveDialog);
 
     askSaveDialog.bot().button("OK").click();
 
-    verify(directoryChooser).open();
+    verify(saveAsHandler).execute(any(), any());
     verify(wizardDialog).open();
 
     verifyZeroInteractions(errorService);
@@ -141,32 +153,31 @@ class TestExportHandler {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.empty());
 
-    bot.menu(EXPORT).click();
+    executeHandler();
 
     SWTBotShell saveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(saveDialog);
 
     saveDialog.bot().button("Cancel").click();
-    verifyZeroInteractions(wizardDialog, directoryChooser, errorService);
+    verifyZeroInteractions(wizardDialog, saveAsHandler, errorService);
   }
 
   @Test
   void testExecuteSaveAsDirtyDontChooseFile() {
     when(projectManager.isDirty()).thenReturn(true);
     when(projectManager.getLocation()).thenReturn(Optional.empty());
+    when(saveAsHandler.execute(any(), any())).thenReturn(false);
     
-    bot.menu(EXPORT).click();
+    executeHandler();
 
     SWTBotShell saveDialog = bot.shell(SAVE_PROJECT_BEFORE_EXPORT);
     assertNotNull(saveDialog);
 
-    // Don't actually choose a directory
-    when(directoryChooser.open()).thenReturn(null);
 
     // Say OK to saving the project first
     saveDialog.bot().button("OK").click();
-    
-    verify(directoryChooser).open();
+
+    verify(saveAsHandler).execute(any(), any());
     
     // Wizard should not be opened
     verifyZeroInteractions(wizardDialog, errorService);
