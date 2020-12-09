@@ -50,3 +50,5 @@ To do so, you need a GitHub user account. If you don't have one yet, you can reg
 First of all, please read the <i class="fa fa-book"></i> [*Contributing guidelines*](https://github.com/hexatomic/hexatomic/tree/master/CONTRIBUTING.md). It's a quick read, and the guidelines contain important details.
 
 Then, when you are logged in, go to <i class="fa fa-pencil"></i> <https://github.com/hexatomic/hexatomic/issues/new> to create a new issue.
+You will need to include the Hexatomic version in the issue.
+If you are unsure what version of Hexatomic you are running, you can open click *About* in the *Help* menu.
