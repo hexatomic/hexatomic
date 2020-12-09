@@ -1,7 +1,9 @@
 package org.corpus_tools.hexatomic.formats;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -57,6 +59,7 @@ class TestPepperJobRunner {
     for (int i = 0; i < TEST_NUMBER_OF_DOCUMENTS; i++) {
       DocumentController controller = mock(DocumentController.class);
       when(controller.getGlobalStatus()).thenReturn(DOCUMENT_STATUS.COMPLETED);
+      when(controller.getGlobalId()).thenReturn("" + i);
       docControllers.add(controller);
     }
     when(job.getDocumentControllers()).thenReturn(docControllers);
@@ -68,11 +71,12 @@ class TestPepperJobRunner {
     
     verify(monitor).isCanceled();
     verify(monitor).beginTask(eq("Processing 12 documents"), eq(TEST_NUMBER_OF_DOCUMENTS));
-    for (int i = 0; i < TEST_NUMBER_OF_DOCUMENTS; i++) {
-      verify(monitor).worked(1);
-    }
+    verify(monitor, times(TEST_NUMBER_OF_DOCUMENTS)).worked(1);
     verify(monitor).done();
     verifyNoMoreInteractions(monitor);
+
+    assertEquals(TEST_NUMBER_OF_DOCUMENTS, runner.getCompletedDocuments().size());
+    assertEquals(0, runner.getFailedDocuments().size());
   }
 
 }
