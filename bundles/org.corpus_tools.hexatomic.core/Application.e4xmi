@@ -2,8 +2,8 @@
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_c3AF0MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.application" bindingContexts="_c3AF2cjYEeSyMNYR5xypkQ">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.window.main" label="Hexatomic" iconURI="" bindingContexts="_c3AF2cjYEeSyMNYR5xypkQ" width="800" height="600">
     <children xsi:type="basic:PartSashContainer" xmi:id="_GasGEMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.partsashcontainer.0" horizontal="true">
-      <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left"/>
-      <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main">
+      <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left" containerData="25"/>
+      <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main" containerData="75">
         <tags>org.corpus_tools.hexatomic.tag.editor</tags>
       </children>
     </children>
