@@ -22,7 +22,7 @@ import org.osgi.framework.Version;
 public class AboutDialog extends Dialog {
 
   private final Font headerFont;
-  private final Font boldFont;
+  private final Font versionFont;
 
 
   /**
@@ -39,8 +39,8 @@ public class AboutDialog extends Dialog {
     headerFont = headerFontDescriptor.createFont(parentShell.getDisplay());
 
     FontDescriptor boldFontDescriptor =
-        FontDescriptor.createFrom(dialogFont).setStyle(SWT.BOLD);
-    boldFont = boldFontDescriptor.createFont(parentShell.getDisplay());
+        FontDescriptor.createFrom(dialogFont).setStyle(SWT.BOLD).setHeight(16);
+    versionFont = boldFontDescriptor.createFont(parentShell.getDisplay());
 
   }
 
@@ -71,7 +71,7 @@ public class AboutDialog extends Dialog {
     Label lblVersion = new Label(container, SWT.NONE);
     lblVersion.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
     lblVersion.setText("Version: " + getFullVersion());
-    lblVersion.setFont(boldFont);
+    lblVersion.setFont(versionFont);
 
     Link lnkHomepage = new Link(container, SWT.NONE);
     lnkHomepage.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -129,7 +129,7 @@ public class AboutDialog extends Dialog {
   @Override
   public boolean close() {
     headerFont.dispose();
-    boldFont.dispose();
+    versionFont.dispose();
     return super.close();
   }
 
