@@ -44,14 +44,23 @@ public class AboutDialog extends Dialog {
 
   }
 
-  private String getFullVersion() {
+  private static String getFullVersion() {
     Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
     return String.format("%d.%d.%d", v.getMajor(), v.getMinor(), v.getMicro());
   }
 
-  private String getShortVersion() {
+  private static String getShortVersion() {
     Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
     return String.format("%d.%d", v.getMajor(), v.getMinor());
+  }
+
+  /**
+   * Create the user documentation URL for the current version.
+   * 
+   * @return The complete URL.
+   */
+  public static String getOnlineDocumentationUrl() {
+    return "https://hexatomic.github.io/hexatomic/user/v" + getShortVersion() + "/";
   }
 
   /**
@@ -90,7 +99,7 @@ public class AboutDialog extends Dialog {
     lnkDocumentation.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch("https://hexatomic.github.io/hexatomic/user/v" + getShortVersion() + "/");
+        Program.launch(getOnlineDocumentationUrl());
       }
     });
 
