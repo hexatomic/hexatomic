@@ -1344,31 +1344,77 @@ public class TestGridEditor {
   /**
    * Tests whether the "Grow span" context menu is only visible when the respective conditions are
    * met: There is a single span and at least one empty cell selected, all selections are in the
-   * same column, and the column is a span column.
+   * same column, and that column is a span column.
    */
   @Test
-  void growSpanMenuOnlyVisibleOnConditionsMet() {
-    openDefaultExample();
+  void testGrowSpanMenuOnlyVisibleOnConditionsMet() {
+    openOverlapExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     NatTable natTable = table.widget;
 
-    // Remove existing large span
-    table.click(4, 4);
+    // Remove existing span
+    table.click(1, 3);
     keyboard.pressShortcut(Keystrokes.DELETE);
-    bot.waitUntil(new CellDataValueCondition(tableBot, 4, 4, ""));
+    bot.waitUntil(new CellDataValueCondition(tableBot, 1, 3, ""));
 
-    // Select single cell for new span
-    table.click(4, 4);
+    // Test positive cases
+    table.click(2, 5);
+    ctrlClick(table, 1, 5);
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 5);
+    assertTrue(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
 
-    // Create span and assert
-    table.contextMenu(4, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
-    typeTextPressReturn(table);
+    table.click(4, 5);
+    ctrlClick(table, 1, 5);
+    contextMenu = table.contextMenu(5, 5);
+    assertTrue(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
 
-    fail();
+    // Test only span selected
+    table.click(2, 5);
+    contextMenu = table.contextMenu(2, 5);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
 
-    // TODO Implement actual tests
+    // Test only empty cell selected
+    table.click(1, 5);
+    contextMenu = table.contextMenu(1, 5);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
+
+    // Test two spans selected
+    table.click(2, 5);
+    ctrlClick(table, 4, 5);
+    contextMenu = table.contextMenu(4, 5);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
+
+    // Test two spans + empty cell selected
+    table.click(2, 5);
+    ctrlClick(table, 4, 5);
+    ctrlClick(table, 1, 5);
+    contextMenu = table.contextMenu(4, 5);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
+
+    // Test token annotation selected
+    table.click(1, 2);
+    contextMenu = table.contextMenu(2, 2);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
+
+    // Test token annotation + empty token annotation cell selected
+    table.click(1, 2);
+    ctrlClick(table, 2, 2);
+    contextMenu = table.contextMenu(2, 2);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
+
+    // Test span + empty token annotation cell selected
+    table.click(2, 2);
+    ctrlClick(table, 2, 5);
+    contextMenu = table.contextMenu(2, 5);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
+
+    // Test span + empty span annotation cell in other column selected
+    table.click(1, 3);
+    ctrlClick(table, 2, 5);
+    contextMenu = table.contextMenu(1, 5);
+    assertFalse(contextMenu.menuItems().contains(GridEditor.GROW_SPAN_POPUP_MENU_LABEL));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
