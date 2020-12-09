@@ -93,17 +93,22 @@ public class AboutDialog extends Dialog {
         Program.launch("https://hexatomic.github.io/hexatomic/user/v" + getShortVersion() + "/");
       }
     });
-    new Label(container, SWT.NONE);
 
     Link lnkAuthors = new Link(container, SWT.NONE);
     lnkAuthors.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
     lnkAuthors.setText("© 2018ff. <a>Hexatomic project team</a>");
+
+
     lnkAuthors.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         Program.launch("https://github.com/orgs/hexatomic/teams/project/members");
       }
     });
+
+    Label lblLicense = new Label(container, SWT.NONE);
+    lblLicense.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lblLicense.setText("Published as Open Source software with the Apache License 2.0");
 
     return container;
   }
@@ -123,7 +128,7 @@ public class AboutDialog extends Dialog {
    */
   @Override
   protected Point getInitialSize() {
-    return new Point(450, 300);
+    return new Point(557, 300);
   }
 
   @Override
