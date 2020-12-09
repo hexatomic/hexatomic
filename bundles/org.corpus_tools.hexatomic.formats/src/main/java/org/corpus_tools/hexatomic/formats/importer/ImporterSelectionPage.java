@@ -67,8 +67,8 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
 
         Optional<ImportFormat> format =
             pepper.get().findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))
-                .stream().map(i -> ImportFormat.getFormatByName(i)).filter(i -> i.isPresent())
-                .map(i -> i.get()).findFirst();
+                .stream().map(ImportFormat::getFormatByName).filter(Optional::isPresent)
+                .map(Optional::get).findFirst();
 
         if (format.isPresent()) {
           setErrorMessage(null);
