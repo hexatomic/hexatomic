@@ -91,17 +91,10 @@ public class ExportHandler {
         && !projectManager.getProject().getCorpusGraphs().isEmpty();
   }
 
-  public SaveAsHandler getSaveAsHandler() {
-    return saveAsHandler;
-  }
-
   public void setSaveAsHandler(SaveAsHandler saveAsHandler) {
     this.saveAsHandler = saveAsHandler;
   }
 
-  public WizardDialogProvider getWizardDialogProvider() {
-    return wizardDialogProvider;
-  }
 
   public void setWizardDialogProvider(WizardDialogProvider wizardDialogProvider) {
     this.wizardDialogProvider = wizardDialogProvider;
