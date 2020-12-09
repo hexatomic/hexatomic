@@ -59,11 +59,14 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
     // Initialize selection to default
     btnExb.setSelection(false);
     btnPaulaXml.setSelection(false);
-
     Optional<Pepper> pepper = Activator.getPepper();
+    setPageComplete(false);
 
     if (!givenPathIsRootPath(corpusPath) && pepper.isPresent()) {
       try {
+
+        boolean foundSupportedFormat = false;
+
         for (String importerName : pepper.get()
             .findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))) {
           Optional<ImportFormat> format = ImportFormat.getFormatByName(importerName);
@@ -71,11 +74,24 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
             if (format.get() == ImportFormat.EXB) {
               btnExb.setSelection(true);
               setPageComplete(true);
+              foundSupportedFormat = true;
+              break;
             } else if (format.get() == ImportFormat.PAULA) {
               btnPaulaXml.setSelection(true);
               setPageComplete(true);
+              foundSupportedFormat = true;
+              break;
             }
           }
+        }
+
+        if (foundSupportedFormat) {
+          setErrorMessage(null);
+        } else {
+          // Show warning to the user.
+          setErrorMessage("Auto-detecting the correct corpus format failed. "
+              + "This means that the given location probably does not contain a corpus "
+              + "project in a supported format.");
         }
       } catch (FileNotFoundException ex) {
         log.error("Corpus path not a valid URI, can't get recommened importers", ex);
