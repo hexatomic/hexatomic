@@ -44,6 +44,12 @@ public class AboutDialog extends Dialog {
 
   }
 
+  @Override
+  protected void configureShell(Shell newShell) {
+    super.configureShell(newShell);
+    newShell.setText("About Hexatomic");
+  }
+
   private static String getFullVersion() {
     Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
     return String.format("%d.%d.%d", v.getMajor(), v.getMinor(), v.getMicro());
