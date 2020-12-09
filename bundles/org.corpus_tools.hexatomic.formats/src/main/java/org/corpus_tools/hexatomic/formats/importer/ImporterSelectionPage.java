@@ -65,28 +65,20 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
     if (!givenPathIsRootPath(corpusPath) && pepper.isPresent()) {
       try {
 
-        boolean foundSupportedFormat = false;
+        Optional<ImportFormat> format =
+            pepper.get().findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))
+                .stream().map(i -> ImportFormat.getFormatByName(i)).filter(i -> i.isPresent())
+                .map(i -> i.get()).findFirst();
 
-        for (String importerName : pepper.get()
-            .findAppropriateImporters(URI.createFileURI(corpusPath.getAbsolutePath()))) {
-          Optional<ImportFormat> format = ImportFormat.getFormatByName(importerName);
-          if (format.isPresent()) {
-            if (format.get() == ImportFormat.EXB) {
-              btnExb.setSelection(true);
-              setPageComplete(true);
-              foundSupportedFormat = true;
-              break;
-            } else if (format.get() == ImportFormat.PAULA) {
-              btnPaulaXml.setSelection(true);
-              setPageComplete(true);
-              foundSupportedFormat = true;
-              break;
-            }
-          }
-        }
-
-        if (foundSupportedFormat) {
+        if (format.isPresent()) {
           setErrorMessage(null);
+          if (format.get() == ImportFormat.EXB) {
+            btnExb.setSelection(true);
+            setPageComplete(true);
+          } else if (format.get() == ImportFormat.PAULA) {
+            btnPaulaXml.setSelection(true);
+            setPageComplete(true);
+          }
         } else {
           // Show warning to the user.
           setErrorMessage("Auto-detecting the correct corpus format failed. "
