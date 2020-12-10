@@ -4,8 +4,8 @@
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_470WgASgEeqYQsqyvqiQDg" elementId="org.corpus_tools.hexatomic.core.perspectivestack.0">
       <children xsi:type="advanced:Perspective" xmi:id="_67PQkASgEeqYQsqyvqiQDg" elementId="org.corpus_tools.hexatomic.core.perspective.0">
         <children xsi:type="basic:PartSashContainer" xmi:id="_GasGEMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.partsashcontainer.0" horizontal="true">
-          <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left"/>
-          <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main">
+          <children xsi:type="basic:PartStack" xmi:id="_Hs-NUMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.left" containerData="30"/>
+          <children xsi:type="basic:PartStack" xmi:id="_UiZAkMpvEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.core.main" containerData="70">
             <tags>org.corpus_tools.hexatomic.tag.editor</tags>
           </children>
         </children>
