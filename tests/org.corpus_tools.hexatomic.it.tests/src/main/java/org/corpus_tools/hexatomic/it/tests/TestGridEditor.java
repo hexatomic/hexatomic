@@ -45,6 +45,7 @@ import org.eclipse.nebula.widgets.nattable.selection.command.SelectCellCommand;
 import org.eclipse.nebula.widgets.nattable.style.editor.AbstractEditorPanel;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -54,6 +55,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
+import org.eclipse.swtbot.nebula.nattable.finder.widgets.Position;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -1339,6 +1341,28 @@ public class TestGridEditor {
     assertTrue(potentialSpan instanceof SSpan);
     SSpan span = (SSpan) potentialSpan;
     assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
+   */
+  @Test
+  void testPositionResolvedCorrectly() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    SWTBotShell shell = tableBot.activeShell();
+    Shell shellWidget = shell.widget;
+
+    bot.getDisplay().syncExec(() -> {
+      Rectangle bounds = shellWidget.getBounds();
+      shellWidget.setBounds(bounds.x, bounds.y, 300, bounds.height);
+    });
+    table.scrollViewport(new Position(1, 1), 1, 3);
+    List<String> menu = table.contextMenu(2, 3).menuItems();
+    assertTrue(menu.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
