@@ -21,15 +21,11 @@
 package org.corpus_tools.hexatomic.grid.internal;
 
 import org.corpus_tools.hexatomic.grid.LayerSetupException;
-import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
-import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
-import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 
 /**
  * Helper class to access grid information.
@@ -41,68 +37,6 @@ public class GridHelper {
   private GridHelper() {
     // Should not be initiated.
   }
-
-  /**
-   * Determines whether the column in the {@link NatTable} as determined per the passed
-   * columnPosition integer is a column containing token text values.
-   * 
-   * <p>
-   * Note that if the column position is not got from a {@link NatEventData} object, it must be
-   * incremented by 1, as the row header column at 0) is counted in this case.
-   * </p>
-   * 
-   * @param natTable The NatTable for which the column position is passed
-   * @param columnPosition The column position to determine for whether it contains token text
-   *        values
-   * @param columnPositionDerivedFromNatEventData Whether the column position passed into this
-   *        method is directly derived from a {@link NatEventData} object. If <code>true</code>, the
-   *        column position can be used without adding 1, if not, 1 must be added to it.
-   * @return whether the given column position covers a token column
-   */
-  public static boolean isTokenColumnAtPosition(NatTable natTable, int columnPosition,
-      boolean columnPositionDerivedFromNatEventData) {
-    int positionToCheck = -1;
-    if (columnPositionDerivedFromNatEventData) {
-      positionToCheck = columnPosition;
-    } else {
-      positionToCheck = columnPosition + 1;
-    }
-    ILayerCell cell = natTable.getCellByPosition(positionToCheck, 0);
-    return cell.getDataValue().equals(GraphDataProvider.TOKEN_TEXT_COLUMN_LABEL);
-  }
-
-  /**
-   * Determines whether the column in the {@link NatTable} as determined per the passed
-   * columnPosition integer is a column containing span annotation values, based on the config label
-   * for span cells of the last row position within the column.
-   * 
-   * <p>
-   * Note that if the column position is not got from a {@link NatEventData} object, it must be
-   * incremented by 1, as the row header column at 0) is counted in this case.
-   * </p>
-   * 
-   * @param natTable The NatTable for which the column position is passed
-   * @param columnPosition The column position to determine for whether it contains span annotation
-   *        values
-   * @param columnPositionDerivedFromNatEventData Whether the column position passed into this
-   *        method is directly derived from a {@link NatEventData} object. If <code>true</code>, the
-   *        column position can be used without adding 1, if not, 1 must be added to it.
-   * @return whether the given column position covers a span column
-   */
-  public static boolean isSpanColumnAtPosition(NatTable natTable, int columnPosition,
-      boolean columnPositionDerivedFromNatEventData) {
-    int positionToCheck = -1;
-    if (columnPositionDerivedFromNatEventData) {
-      positionToCheck = columnPosition;
-    } else {
-      positionToCheck = columnPosition + 1;
-    }
-    // Use the last row in the table to check for row style
-    int arbitraryRowPosition = natTable.getRowCount() - 1;
-    ILayerCell cell = natTable.getCellByPosition(positionToCheck, arbitraryRowPosition);
-    return cell.getConfigLabels().hasLabel(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
-  }
-
 
   /**
    * Returns the column header layer (of type {@link GridColumnHeaderLayer}) for the given NatTable.

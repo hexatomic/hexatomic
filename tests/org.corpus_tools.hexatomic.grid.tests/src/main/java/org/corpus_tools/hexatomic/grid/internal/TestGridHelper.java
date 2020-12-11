@@ -3,7 +3,6 @@ package org.corpus_tools.hexatomic.grid.internal;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,7 +13,6 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -31,23 +29,6 @@ class TestGridHelper {
   private static final String LOG_MESSAGE_WRONG_LAYER_TYPE_2 =
       " as expected! Please report this as a bug.\nOffending layer: ";
 
-
-  /**
-   * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.internal.GridHelper#isTokenColumnAtPosition(org.eclipse.nebula.widgets.nattable.NatTable, int, boolean)}.
-   */
-  @Test
-  void testIsTokenColumnAtPosition() {
-    ILayerCell cell = mock(ILayerCell.class);
-    when(cell.getDataValue()).thenReturn("Token");
-    when(natTable.getCellByPosition(1, 0)).thenReturn(cell);
-    assertTrue(GridHelper.isTokenColumnAtPosition(natTable, 1, true));
-    assertThrows(NullPointerException.class,
-        () -> GridHelper.isTokenColumnAtPosition(natTable, 1, false));
-    assertTrue(GridHelper.isTokenColumnAtPosition(natTable, 0, false));
-    assertThrows(NullPointerException.class,
-        () -> GridHelper.isTokenColumnAtPosition(natTable, 0, true));
-  }
 
   /**
    * Test method for
