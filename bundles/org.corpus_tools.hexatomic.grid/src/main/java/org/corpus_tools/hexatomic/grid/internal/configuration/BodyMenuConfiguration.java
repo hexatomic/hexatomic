@@ -33,7 +33,7 @@ import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
+import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
@@ -207,7 +207,6 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-
         for (PositionCoordinate coord : selectedCellCoordinates) {
           // Check whether the column at the position is the token column
           if (isTokenCell(coord)) {
@@ -262,20 +261,13 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
   }
 
   private boolean isTokenCell(PositionCoordinate cellPosition) {
-    // Get first column cell sans header cell. Because we're operating on the table, not the body
-    // layer, header cell positions are taken into account, therefore 1 must be added to column and
-    // row position values.
-    ILayerCell cell = table.getCellByPosition(cellPosition.getColumnPosition() + 1,
-        cellPosition.getRowPosition() + 1);
-    return cell.getConfigLabels().getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
+    LabelStack configLabels = selectionLayer
+        .getConfigLabelsByPosition(cellPosition.getColumnPosition(), cellPosition.getRowPosition());
+    return configLabels.getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
   }
 
   private boolean isSpanColumn(int singleColumnPosition) {
-    // Get first column cell sans header cell. Because we're operating on the table, not the body
-    // layer, header cell positions are taken into account, therefore 1 must be added to column and
-    // row position values.
-    ILayerCell firstColumnCell = table.getCellByPosition(singleColumnPosition + 1, 1);
-    return firstColumnCell.getConfigLabels().getLabels()
-        .contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+    LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
+    return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
   }
 }
