@@ -1372,12 +1372,11 @@ public class TestGridEditor {
       assertNotNull(contextMenu);
       contextMenu.click();
       List<String> menuItems = menu.menuItems();
-      // assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+      assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
     } catch (WidgetNotFoundException e) {
       resetBounds(shellWidget);
-      fail();
+      fail(e);
     }
-    // Reset shell to original bounds
     resetBounds(shellWidget);
   }
 
