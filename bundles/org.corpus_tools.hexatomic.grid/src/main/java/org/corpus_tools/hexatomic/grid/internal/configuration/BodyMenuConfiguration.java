@@ -210,8 +210,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
         for (PositionCoordinate coord : selectedCellCoordinates) {
           // Check whether the column at the position is the token column
-          if (GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
-              coord.getColumnPosition(), false)) {
+          if (isTokenCell(coord)) {
             return false;
           }
         }
@@ -257,15 +256,26 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         }
         // At this point, singleColumnPosition should be set
         // Return whether the single column is a span column
-        return GridHelper.isSpanColumnAtPosition(natEventData.getNatTable(), singleColumnPosition,
-            false);
+        return isSpanColumn(singleColumnPosition);
       }
     }
   }
 
   private boolean isTokenCell(PositionCoordinate cellPosition) {
+    // Get first column cell sans header cell. Because we're operating on the table, not the body
+    // layer, header cell positions are taken into account, therefore 1 must be added to column and
+    // row position values.
     ILayerCell cell = table.getCellByPosition(cellPosition.getColumnPosition() + 1,
         cellPosition.getRowPosition() + 1);
     return cell.getConfigLabels().getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
+  }
+
+  private boolean isSpanColumn(int singleColumnPosition) {
+    // Get first column cell sans header cell. Because we're operating on the table, not the body
+    // layer, header cell positions are taken into account, therefore 1 must be added to column and
+    // row position values.
+    ILayerCell firstColumnCell = table.getCellByPosition(singleColumnPosition + 1, 1);
+    return firstColumnCell.getConfigLabels().getLabels()
+        .contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
   }
 }
