@@ -41,12 +41,9 @@ class AnnotationHeaderState implements IMenuItemState {
   @Override
   public boolean isActive(NatEventData natEventData) {
     NatTable table = natEventData.getNatTable();
-    assert table != null;
     int columnPosition = natEventData.getColumnPosition();
-    assert columnPosition != -1;
 
     ILayerCell cell = table.getCellByPosition(columnPosition, 1);
-    assert cell != null;
     return !cell.getConfigLabels().getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
   }
 
