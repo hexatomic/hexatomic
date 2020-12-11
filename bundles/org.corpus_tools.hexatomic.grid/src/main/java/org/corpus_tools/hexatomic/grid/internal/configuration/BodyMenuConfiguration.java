@@ -150,11 +150,6 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         if (!isTokenCell(cellPosition)) {
           selectedNonTokenCells.add(cellPosition);
         }
-        //
-        //
-        // if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false))
-        // {
-        // }
       }
       return selectedNonTokenCells;
     }
@@ -185,7 +180,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
       PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
       for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-        if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
+        if (!isTokenCell(cellPosition)) {
           selectedNonTokenCells.add(cellPosition);
         }
       }
