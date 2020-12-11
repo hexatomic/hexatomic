@@ -1366,14 +1366,22 @@ public class TestGridEditor {
     });
     table.scrollViewport(new Position(1, 1), 1, 3);
     table.click(2, 3);
-    SWTBotRootMenu menu = table.contextMenu(2, 3);
-    SWTBotMenu contextMenu = menu.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
-    assertNotNull(contextMenu);
-    contextMenu.click();
-    List<String> menuItems = menu.menuItems();
-    // assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
-
+    try {
+      SWTBotRootMenu menu = table.contextMenu(2, 3);
+      SWTBotMenu contextMenu = menu.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
+      assertNotNull(contextMenu);
+      contextMenu.click();
+      List<String> menuItems = menu.menuItems();
+      // assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+    } catch (WidgetNotFoundException e) {
+      resetBounds(shellWidget);
+      fail();
+    }
     // Reset shell to original bounds
+    resetBounds(shellWidget);
+  }
+
+  private void resetBounds(Shell shellWidget) {
     bot.getDisplay().syncExec(() -> {
       shellWidget.setBounds(originalBounds);
     });
