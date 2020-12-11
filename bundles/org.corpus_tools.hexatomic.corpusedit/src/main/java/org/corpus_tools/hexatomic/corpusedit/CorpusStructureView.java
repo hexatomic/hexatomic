@@ -217,10 +217,7 @@ public class CorpusStructureView {
     });
 
     Composite composite = new Composite(parent, SWT.NONE);
-    GridData gridComposite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-    gridComposite.minimumWidth = 300;
-    gridComposite.minimumHeight = 200;
-    composite.setLayoutData(gridComposite);
+    composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     composite.setLayout(new TreeColumnLayout());
 
     treeViewer = new TreeViewer(composite, SWT.BORDER);

@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Using GitHub Actions instead of Travis CI for testing the pull requests
 - Update Tycho (build-system related) to version 1.7.0
+- Ratio between corpus structure editor and editor window is now 30/70 at start
 
 ## [0.4.4] - 2020-09-16
 
