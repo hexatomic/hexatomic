@@ -21,23 +21,33 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
-import org.corpus_tools.hexatomic.grid.internal.GridHelper;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.menu.IMenuItemState;
 
 /**
- * A menu item state which is active on column indices > 1 (i.e., excluding the index and token text
- * columns).
+ * A menu item state which is active on columns which are not token columns.
  * 
  * @author Stephan Druskat (mail@sdruskat.net)
- *
  */
 class AnnotationHeaderState implements IMenuItemState {
 
+  /**
+   * Return whether the column is a token column based on a check if the first cell sans the header
+   * cell has a token config label.
+   */
   @Override
   public boolean isActive(NatEventData natEventData) {
-    return !GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
-        natEventData.getColumnPosition(), true);
+    NatTable table = natEventData.getNatTable();
+    assert table != null;
+    int columnPosition = natEventData.getColumnPosition();
+    assert columnPosition != -1;
+
+    ILayerCell cell = table.getCellByPosition(columnPosition, 1);
+    assert cell != null;
+    return !cell.getConfigLabels().getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
   }
 
 }
