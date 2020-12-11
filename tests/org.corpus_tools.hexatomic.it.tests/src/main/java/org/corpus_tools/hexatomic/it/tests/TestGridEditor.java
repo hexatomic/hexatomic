@@ -1381,9 +1381,7 @@ public class TestGridEditor {
   }
 
   private void resetBounds(Shell shellWidget) {
-    bot.getDisplay().syncExec(() -> {
-      shellWidget.setBounds(originalBounds);
-    });
+    bot.getDisplay().syncExec(() -> shellWidget.setBounds(originalBounds));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
