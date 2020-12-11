@@ -64,6 +64,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -122,6 +123,8 @@ public class TestGridEditor {
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   private ProjectManager projectManager;
+
+  private Rectangle originalBounds;
 
   @BeforeEach
   void setup() {
@@ -1356,13 +1359,24 @@ public class TestGridEditor {
     SWTBotShell shell = tableBot.activeShell();
     Shell shellWidget = shell.widget;
 
+    originalBounds = null;
     bot.getDisplay().syncExec(() -> {
-      Rectangle bounds = shellWidget.getBounds();
-      shellWidget.setBounds(bounds.x, bounds.y, 300, bounds.height);
+      originalBounds = shellWidget.getBounds();
+      shellWidget.setBounds(originalBounds.x, originalBounds.y, 300, originalBounds.height);
     });
     table.scrollViewport(new Position(1, 1), 1, 3);
-    List<String> menu = table.contextMenu(2, 3).menuItems();
-    assertTrue(menu.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+    table.click(2, 3);
+    SWTBotRootMenu menu = table.contextMenu(2, 3);
+    SWTBotMenu contextMenu = menu.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
+    assertNotNull(contextMenu);
+    contextMenu.click();
+    List<String> menuItems = menu.menuItems();
+    // assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+
+    // Reset shell to original bounds
+    bot.getDisplay().syncExec(() -> {
+      shellWidget.setBounds(originalBounds);
+    });
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
