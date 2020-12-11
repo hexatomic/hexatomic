@@ -27,11 +27,13 @@ import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.ChangeAnnotationNameSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
+import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
@@ -145,9 +147,14 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
       PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
       for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-        if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
+        if (!isTokenCell(cellPosition)) {
           selectedNonTokenCells.add(cellPosition);
         }
+        //
+        //
+        // if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false))
+        // {
+        // }
       }
       return selectedNonTokenCells;
     }
@@ -259,5 +266,11 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
             false);
       }
     }
+  }
+
+  private boolean isTokenCell(PositionCoordinate cellPosition) {
+    ILayerCell cell = table.getCellByPosition(cellPosition.getColumnPosition() + 1,
+        cellPosition.getRowPosition() + 1);
+    return cell.getConfigLabels().getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
   }
 }
