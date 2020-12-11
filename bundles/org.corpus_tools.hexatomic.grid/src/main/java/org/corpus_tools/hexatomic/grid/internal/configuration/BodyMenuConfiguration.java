@@ -258,16 +258,16 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return isSpanColumn(singleColumnPosition);
       }
     }
+
+    private boolean isSpanColumn(int singleColumnPosition) {
+      LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
+      return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+    }
   }
 
   private boolean isTokenCell(PositionCoordinate cellPosition) {
     LabelStack configLabels = selectionLayer
         .getConfigLabelsByPosition(cellPosition.getColumnPosition(), cellPosition.getRowPosition());
     return configLabels.getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
-  }
-
-  private boolean isSpanColumn(int singleColumnPosition) {
-    LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
-    return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
   }
 }
