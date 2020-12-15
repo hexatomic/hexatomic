@@ -1447,6 +1447,7 @@ public class TestGridEditor {
         table.getCellDataValueByPosition(pos));
     table.contextMenu(pos.row, pos.column)
         .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    bot.waitUntil(Conditions.shellIsActive(RENAME_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     assertDialogTexts(dialog, "anno9");
