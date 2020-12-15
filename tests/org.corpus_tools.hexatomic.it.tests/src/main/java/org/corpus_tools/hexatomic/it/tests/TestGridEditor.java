@@ -1380,6 +1380,37 @@ public class TestGridEditor {
     resetBounds(shellWidget);
   }
 
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/256.
+   */
+  @Test
+  void testFixScrolledCellMenuThrowsIndexOutOfBoundsException() {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    SWTBotShell shell = tableBot.activeShell();
+    Shell shellWidget = shell.widget;
+
+    originalBounds = null;
+    bot.getDisplay().syncExec(() -> {
+      originalBounds = shellWidget.getBounds();
+      shellWidget.setBounds(originalBounds.x, originalBounds.y, 200, originalBounds.height);
+    });
+    table.scrollViewport(new Position(1, 1), 1, 4);
+    table.click(2, 2);
+    // Make sure that the position we're checking is the correct one
+    assertEquals(
+        "NodeNotifierImpl(salt:/corpus/doc#sSpan6)[]five::span_2=val_span_new1], salt::SNAME=sSpan6]",
+        table.getCellDataValueByPosition(2, 2));
+    List<String> menuItems = table.contextMenu(2, 2).menuItems();
+    // If #256 is fixed, the "Create span" menu item will not be present, as the respective
+    // selection state validation will not have thrown an IndexOutofBoundsException
+    assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+    resetBounds(shellWidget);
+  }
+
   private void resetBounds(Shell shellWidget) {
     bot.getDisplay().syncExec(() -> shellWidget.setBounds(originalBounds));
   }
