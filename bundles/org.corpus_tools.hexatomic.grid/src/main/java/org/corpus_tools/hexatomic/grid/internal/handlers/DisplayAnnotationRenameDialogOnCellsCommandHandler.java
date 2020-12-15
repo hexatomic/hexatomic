@@ -21,14 +21,18 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
-import org.corpus_tools.hexatomic.grid.internal.GridHelper;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.hexatomic.grid.LayerSetupException;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.ui.AnnotationRenameDialog;
+import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.columnRename.RenameColumnHeaderCommand;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
+import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
+import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,9 +58,8 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
     // so that it can be displayed.
     String oldQName = null;
     if (command.displayOldQName()) {
-      GridColumnHeaderLayer columnHeaderLayer =
-          GridHelper.getColumnHeaderLayer(command.getNatTable());
-      oldQName = (String) columnHeaderLayer
+      GridColumnHeaderLayer columnHeaderLayer = getColumnHeaderLayer(command.getNatTable());
+      oldQName = (String) columnHeaderLayer.getSelectionLayer()
           .getDataValueByPosition(command.getCellMapByColumn().keySet().iterator().next(), 0);
     }
 
@@ -72,6 +75,22 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
     log.debug("Returning delegate command {}.", RenameColumnHeaderCommand.class.getSimpleName());
     return command.getNatTable().doCommand(new RenameAnnotationOnCellsCommand(command.getNatTable(),
         command.getCellMapByColumn(), dialog.getNewQName()));
+  }
+
+  private GridColumnHeaderLayer getColumnHeaderLayer(NatTable natTable) {
+    ILayer layer = natTable.getUnderlyingLayerByPosition(0, 0);
+    if (layer instanceof GridLayer) {
+      ILayer columnHeaderLayer = ((GridLayer) layer).getColumnHeaderLayer();
+      if (columnHeaderLayer instanceof GridColumnHeaderLayer) {
+        return (GridColumnHeaderLayer) columnHeaderLayer;
+      } else {
+        throw new LayerSetupException("Column header layer of NatTable", columnHeaderLayer,
+            GridColumnHeaderLayer.class);
+      }
+    }
+    throw new HexatomicRuntimeException(
+        "Could not find a layer of type " + GridColumnHeaderLayer.class.getSimpleName()
+            + " in the NatTable. Please report this as a bug.");
   }
 
   @Override
