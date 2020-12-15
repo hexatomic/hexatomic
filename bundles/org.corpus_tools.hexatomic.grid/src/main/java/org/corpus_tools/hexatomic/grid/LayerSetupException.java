@@ -34,6 +34,13 @@ public class LayerSetupException extends HexatomicRuntimeException {
 
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Creates a new {@link HexatomicRuntimeException} with a specific type and a specific message.
+   * 
+   * @param layerDescription describes the offending layer
+   * @param offendingObject the offending layer
+   * @param expectedClass the expected class of the layer
+   */
   public LayerSetupException(String layerDescription, ILayer offendingObject,
       Class<?> expectedClass) {
     super(getMessage(layerDescription, offendingObject, expectedClass));
