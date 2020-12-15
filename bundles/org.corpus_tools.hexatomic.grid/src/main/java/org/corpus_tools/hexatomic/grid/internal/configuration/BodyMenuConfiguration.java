@@ -21,11 +21,13 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
-import org.corpus_tools.hexatomic.grid.internal.actions.ChangeAnnotationNameSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -137,7 +139,22 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new ChangeAnnotationNameSelectionAction(getSelectedNonTokenCells()).run(natTable);
+          natTable.doCommand(
+              new DisplayAnnotationRenameDialogOnCellsCommand(natTable, createCellMapByColumn()));
+        }
+
+        private Map<Integer, Set<Integer>> createCellMapByColumn() {
+          // Map the selected cells by column.
+          Map<Integer, Set<Integer>> cellMapByColumn = new HashMap<>();
+          for (PositionCoordinate cellCoordinate : getSelectedNonTokenCells()) {
+            Set<Integer> columnCells = cellMapByColumn.get(cellCoordinate.getColumnPosition());
+            if (columnCells == null) {
+              columnCells = new HashSet<>();
+            }
+            columnCells.add(cellCoordinate.getRowPosition());
+            cellMapByColumn.put(cellCoordinate.getColumnPosition(), columnCells);
+          }
+          return cellMapByColumn;
         }
       });
     }
