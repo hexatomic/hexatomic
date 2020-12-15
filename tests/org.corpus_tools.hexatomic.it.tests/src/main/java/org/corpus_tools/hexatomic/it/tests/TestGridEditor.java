@@ -34,6 +34,8 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.internal.workbench.E4Workbench;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -45,7 +47,6 @@ import org.eclipse.nebula.widgets.nattable.selection.command.SelectCellCommand;
 import org.eclipse.nebula.widgets.nattable.style.editor.AbstractEditorPanel;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -124,7 +125,7 @@ public class TestGridEditor {
 
   private ProjectManager projectManager;
 
-  private Rectangle originalBounds;
+  private MWindow window = null;
 
   @BeforeEach
   void setup() {
@@ -159,6 +160,9 @@ public class TestGridEditor {
     overlappingExampleProjectUri =
         URI.createFileURI(overlappingExampleProjectDirectory.getAbsolutePath());
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
+
+    window = E4Workbench.getServiceContext().getActive(MWindow.class);
+    assertNotNull(window);
   }
 
   @AfterEach
@@ -1356,14 +1360,9 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    SWTBotShell shell = tableBot.activeShell();
-    Shell shellWidget = shell.widget;
+    final int originalWidth = window.getWidth();
+    resizeWindow(window, 300);
 
-    originalBounds = null;
-    bot.getDisplay().syncExec(() -> {
-      originalBounds = shellWidget.getBounds();
-      shellWidget.setBounds(originalBounds.x, originalBounds.y, 300, originalBounds.height);
-    });
     table.scrollViewport(new Position(1, 1), 1, 3);
     table.click(2, 3);
     try {
@@ -1374,10 +1373,10 @@ public class TestGridEditor {
       List<String> menuItems = menu.menuItems();
       assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
     } catch (WidgetNotFoundException e) {
-      resetBounds(shellWidget);
       fail(e);
+      resizeWindow(window, originalWidth);
     }
-    resetBounds(shellWidget);
+    resizeWindow(window, originalWidth);
   }
 
   /**
@@ -1390,14 +1389,9 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    SWTBotShell shell = tableBot.activeShell();
-    Shell shellWidget = shell.widget;
+    final int originalWidth = window.getWidth();
+    resizeWindow(window, 200);
 
-    originalBounds = null;
-    bot.getDisplay().syncExec(() -> {
-      originalBounds = shellWidget.getBounds();
-      shellWidget.setBounds(originalBounds.x, originalBounds.y, 200, originalBounds.height);
-    });
     table.scrollViewport(new Position(1, 1), 1, 4);
     table.click(2, 2);
     // Make sure that the position we're checking is the correct one
@@ -1408,11 +1402,13 @@ public class TestGridEditor {
     // If #256 is fixed, the "Create span" menu item will not be present, as the respective
     // selection state validation will not have thrown an IndexOutofBoundsException
     assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
-    resetBounds(shellWidget);
+    resizeWindow(window, originalWidth);
   }
 
-  private void resetBounds(Shell shellWidget) {
-    bot.getDisplay().syncExec(() -> shellWidget.setBounds(originalBounds));
+  private void resizeWindow(MWindow window, int targetWidth) {
+    window.setWidth(targetWidth);
+    window.setToBeRendered(true);
+    bot.waitUntil(new WindowHasOriginalWidthCondition(window, targetWidth));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
@@ -1481,6 +1477,30 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     return (CompositeFreezeLayer) layerUl;
+  }
+
+  /**
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   *
+   */
+  private final class WindowHasOriginalWidthCondition extends DefaultCondition {
+
+    private final int targetWidth;
+
+    public WindowHasOriginalWidthCondition(MWindow window, int targetWidth) {
+      this.targetWidth = targetWidth;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return window.getWidth() == targetWidth;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Window doesn't have the correct width!";
+    }
+
   }
 
   /**
