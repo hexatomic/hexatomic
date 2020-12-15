@@ -1430,8 +1430,9 @@ public class TestGridEditor {
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/257.
    * 
-   * @throws ExecutionException
-   * @throws InterruptedException
+   * @throws InterruptedException If the thread extracting the label text in the given dialog is
+   *         interrupted, or if there is an error during execution.
+   * @throws ExecutionException see InterruptedException
    */
   @Test
   void testFixOldQualifiedNameNotUsed() throws InterruptedException, ExecutionException {
