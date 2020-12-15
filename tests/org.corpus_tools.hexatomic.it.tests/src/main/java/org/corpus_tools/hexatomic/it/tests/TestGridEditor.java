@@ -34,8 +34,6 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.internal.workbench.E4Workbench;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -117,6 +115,7 @@ public class TestGridEditor {
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
   private URI twoDsExampleProjectUri;
+  private URI scrollingExampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
   private EPartService partService;
@@ -125,7 +124,6 @@ public class TestGridEditor {
 
   private ProjectManager projectManager;
 
-  private MWindow window = null;
 
   @BeforeEach
   void setup() {
@@ -156,13 +154,16 @@ public class TestGridEditor {
         + "src/main/resources/org/corpus_tools/hexatomic/grid/two-ds/");
     assertTrue(twoDsExampleProjectDirectory.isDirectory());
 
+    File scrollingExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
+        + "src/main/resources/org/corpus_tools/hexatomic/grid/scrolling/");
+    assertTrue(scrollingExampleProjectDirectory.isDirectory());
+
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     overlappingExampleProjectUri =
         URI.createFileURI(overlappingExampleProjectDirectory.getAbsolutePath());
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
-
-    window = E4Workbench.getServiceContext().getActive(MWindow.class);
-    assertNotNull(window);
+    scrollingExampleProjectUri =
+        URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
   }
 
   @AfterEach
@@ -232,6 +233,28 @@ public class TestGridEditor {
     // Select the first example document
     SWTBotTreeItem docMenu =
         bot.tree().expandNode("<unknown>").expandNode("corpus").expandNode("doc");
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
+
+    SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+  }
+
+  SWTBotView openScrollingExample() {
+    // Programmatically open the example corpus
+    openExample(scrollingExampleProjectUri);
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.tree().expandNode("corpus-graph").expandNode("corpus").expandNode("doc");
 
     // select and open the editor
     docMenu.click();
@@ -1355,28 +1378,26 @@ public class TestGridEditor {
    */
   @Test
   void testPositionResolvedCorrectly() {
-    openDefaultExample();
+    openScrollingExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    final int originalWidth = window.getWidth();
-    resizeWindow(window, 300);
-
-    table.scrollViewport(new Position(1, 1), 1, 3);
-    table.click(2, 3);
+    Position pos = table.scrollViewport(new Position(1, 1), 1, 10);
+    table.click(pos.row, pos.column);
     try {
-      SWTBotRootMenu menu = table.contextMenu(2, 3);
+      SWTBotRootMenu menu = table.contextMenu(pos.row, pos.column);
+      List<String> menuItems = menu.menuItems();
+      assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
       SWTBotMenu contextMenu = menu.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
       assertNotNull(contextMenu);
       contextMenu.click();
-      List<String> menuItems = menu.menuItems();
-      assertTrue(menuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+      menu = table.contextMenu(pos.row, pos.column);
+      menuItems = menu.menuItems();
+      assertTrue(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
     } catch (WidgetNotFoundException e) {
       fail(e);
-      resizeWindow(window, originalWidth);
     }
-    resizeWindow(window, originalWidth);
   }
 
   /**
@@ -1384,31 +1405,20 @@ public class TestGridEditor {
    */
   @Test
   void testFixScrolledCellMenuThrowsIndexOutOfBoundsException() {
-    openOverlapExample();
+    openScrollingExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    final int originalWidth = window.getWidth();
-    resizeWindow(window, 200);
-
-    table.scrollViewport(new Position(1, 1), 1, 4);
-    table.click(2, 2);
+    Position pos = table.scrollViewport(new Position(1, 1), 1, 10);
+    table.click(pos.row, pos.column);
     // Make sure that the position we're checking is the correct one
-    assertEquals(
-        "NodeNotifierImpl(salt:/corpus/doc#sSpan6)[]five::span_2=val_span_new1], salt::SNAME=sSpan6]",
-        table.getCellDataValueByPosition(2, 2));
-    List<String> menuItems = table.contextMenu(2, 2).menuItems();
+    assertEquals("NodeNotifierImpl(salt:/corpus/doc#sSpan10)[anno9=value]], salt::SNAME=sSpan10]",
+        table.getCellDataValueByPosition(pos));
+    List<String> menuItems = table.contextMenu(pos.row, pos.column).menuItems();
     // If #256 is fixed, the "Create span" menu item will not be present, as the respective
     // selection state validation will not have thrown an IndexOutofBoundsException
     assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
-    resizeWindow(window, originalWidth);
-  }
-
-  private void resizeWindow(MWindow window, int targetWidth) {
-    window.setWidth(targetWidth);
-    window.setToBeRendered(true);
-    bot.waitUntil(new WindowHasOriginalWidthCondition(window, targetWidth));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
@@ -1477,30 +1487,6 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     return (CompositeFreezeLayer) layerUl;
-  }
-
-  /**
-   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
-   *
-   */
-  private final class WindowHasOriginalWidthCondition extends DefaultCondition {
-
-    private final int targetWidth;
-
-    public WindowHasOriginalWidthCondition(MWindow window, int targetWidth) {
-      this.targetWidth = targetWidth;
-    }
-
-    @Override
-    public boolean test() throws Exception {
-      return window.getWidth() == targetWidth;
-    }
-
-    @Override
-    public String getFailureMessage() {
-      return "Window doesn't have the correct width!";
-    }
-
   }
 
   /**
