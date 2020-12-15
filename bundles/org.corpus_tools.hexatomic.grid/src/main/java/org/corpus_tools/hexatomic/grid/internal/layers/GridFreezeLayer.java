@@ -85,7 +85,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   protected void registerCommandHandlers() {
     super.registerCommandHandlers();
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
-    registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler());
+    registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
     registerCommandHandler(new CreateSpanCommandHandler(this));
   }
 }
