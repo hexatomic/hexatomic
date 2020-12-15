@@ -49,6 +49,11 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
 
   private static final Logger log =
       LoggerFactory.getLogger(DisplayAnnotationRenameDialogOnCellsCommandHandler.class);
+  private final GridFreezeLayer freezeLayer;
+
+  public DisplayAnnotationRenameDialogOnCellsCommandHandler(GridFreezeLayer gridFreezeLayer) {
+    this.freezeLayer = gridFreezeLayer;
+  }
 
   @Override
   protected boolean doCommand(DisplayAnnotationRenameDialogOnCellsCommand command) {
@@ -59,8 +64,9 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
     String oldQName = null;
     if (command.displayOldQName()) {
       GridColumnHeaderLayer columnHeaderLayer = getColumnHeaderLayer(command.getNatTable());
-      oldQName = (String) columnHeaderLayer
-          .getDataValueByPosition(command.getCellMapByColumn().keySet().iterator().next(), 0);
+      Integer columnIndex = command.getCellMapByColumn().keySet().iterator().next();
+      int columnPosition = freezeLayer.getColumnPositionByIndex(columnIndex);
+      oldQName = (String) columnHeaderLayer.getDataValueByPosition(columnPosition, 0);
     }
 
     AnnotationRenameDialog dialog =
