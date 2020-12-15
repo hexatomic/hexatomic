@@ -24,7 +24,6 @@ package org.corpus_tools.hexatomic.grid.internal.configuration;
 import java.util.HashSet;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
-import org.corpus_tools.hexatomic.grid.internal.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.ChangeAnnotationNameSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -248,8 +247,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
           } else if (columnPosition != singleColumnPosition) {
             return false;
           }
-          if (GridHelper.getBodyLayer(natEventData.getNatTable())
-              .getDataValueByPosition(columnPosition, rowPosition) != null) {
+          if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
             return false;
           }
         }
