@@ -178,6 +178,12 @@ public class TestGridEditor {
         view.close();
       }
     }
+    // Close any open rename dialogs
+    for (SWTBotShell shell : bot.shells()) {
+      if (shell.getText().equals(RENAME_DIALOG_TITLE)) {
+        shell.close();
+      }
+    }
     // TODO: when close project is implemented with save functionality, change this to close the
     // project and its editors
 
@@ -1421,14 +1427,41 @@ public class TestGridEditor {
     assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
   }
 
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/257.
+   * 
+   * @throws ExecutionException
+   * @throws InterruptedException
+   */
+  @Test
+  void testFixOldQualifiedNameNotUsed() throws InterruptedException, ExecutionException {
+    openScrollingExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    Position pos = table.scrollViewport(new Position(1, 1), 1, 10);
+    table.click(pos.row, pos.column);
+    // Make sure that the position we're checking is the correct one
+    assertEquals("NodeNotifierImpl(salt:/corpus/doc#sSpan10)[anno9=value]], salt::SNAME=sSpan10]",
+        table.getCellDataValueByPosition(pos));
+    table.contextMenu(pos.row, pos.column)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertDialogTexts(dialog, "anno9");
+  }
+
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
     String namespace = null;
     String name = null;
     if (qualifiedName != null) {
       Pair<String, String> namespaceNamePair = SaltUtil.splitQName(qualifiedName);
-      namespace = namespaceNamePair.getLeft();
-      name = namespaceNamePair.getRight();
+      String namespaceObject = namespaceNamePair.getLeft();
+      String nameObject = namespaceNamePair.getRight();
+      namespace = namespaceObject == null ? "" : namespaceObject;
+      name = nameObject == null ? "" : nameObject;
     } else {
       namespace = "";
       name = "";
