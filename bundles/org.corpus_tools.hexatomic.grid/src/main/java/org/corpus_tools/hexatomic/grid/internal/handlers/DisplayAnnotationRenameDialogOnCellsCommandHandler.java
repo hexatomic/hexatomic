@@ -59,7 +59,7 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
     String oldQName = null;
     if (command.displayOldQName()) {
       GridColumnHeaderLayer columnHeaderLayer = getColumnHeaderLayer(command.getNatTable());
-      oldQName = (String) columnHeaderLayer.getSelectionLayer()
+      oldQName = (String) columnHeaderLayer
           .getDataValueByPosition(command.getCellMapByColumn().keySet().iterator().next(), 0);
     }
 
