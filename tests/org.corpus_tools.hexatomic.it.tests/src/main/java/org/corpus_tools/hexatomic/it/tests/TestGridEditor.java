@@ -1476,7 +1476,6 @@ public class TestGridEditor {
   private CompositeFreezeLayer getBodyLayer(SWTBotNatTable table) {
     NatTable nattable = table.widget;
 
-    // Loop through the layers in the stack until the selection layer is hit
     ILayer layer = nattable.getLayer();
 
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
