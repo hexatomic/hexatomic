@@ -41,6 +41,11 @@ public class GridHelper {
   /**
    * Returns the column header layer (of type {@link GridColumnHeaderLayer}) for the given NatTable.
    * 
+   * <p>
+   * WARNING! Do not use the returning layer to access data values based on positions, as these are
+   * NOT auto-transformed to indices.
+   * </p>
+   * 
    * @param natTable the NatTable to get the column header layer for.
    * @return the {@link GridColumnHeaderLayer} of the NatTable.
    */
@@ -57,6 +62,11 @@ public class GridHelper {
 
   /**
    * Returns the body layer (of type {@link GridFreezeLayer}) for the given NatTable.
+   * 
+   * <p>
+   * WARNING! Do not use the returning layer to access data values based on positions, as these are
+   * NOT auto-transformed to indices.
+   * </p>
    * 
    * @param natTable the NatTable to get the body layer for.
    * @return the {@link GridFreezeLayer} of the NatTable.
