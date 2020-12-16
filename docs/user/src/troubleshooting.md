@@ -51,4 +51,7 @@ First of all, please read the <i class="fa fa-book"></i> [*Contributing guidelin
 
 Then, when you are logged in, go to <i class="fa fa-pencil"></i> <https://github.com/hexatomic/hexatomic/issues/new> to create a new issue.
 You will need to include the Hexatomic version in the issue.
-If you are unsure what version of Hexatomic you are running, you can open click *About* in the *Help* menu.
+If you are unsure what version of Hexatomic you are running, you can click *About* in the *Help* menu to show the **About dialog** which shows you the version and build number.
+
+Alternatively, you can click the link *Create a bug report to notify us of an error in Hexatomic.* in the **About dialog**.
+This will open the issue creation page in a browser and prepopulate it with the build number of the version you are using, and an issue report form that you can fill in.
