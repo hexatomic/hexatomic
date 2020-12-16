@@ -54,8 +54,7 @@ public class AboutDialog extends Dialog {
     super(parentShell);
 
     Font dialogFont = JFaceResources.getDialogFont();
-    FontDescriptor headerFontDescriptor =
-        FontDescriptor.createFrom(dialogFont).setHeight(32);
+    FontDescriptor headerFontDescriptor = FontDescriptor.createFrom(dialogFont).setHeight(32);
     headerFont = headerFontDescriptor.createFont(parentShell.getDisplay());
 
     FontDescriptor boldFontDescriptor =
