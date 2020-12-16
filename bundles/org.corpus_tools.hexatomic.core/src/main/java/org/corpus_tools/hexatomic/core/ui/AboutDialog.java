@@ -79,10 +79,10 @@ public class AboutDialog extends Dialog {
     return String.format("%d.%d", v.getMajor(), v.getMinor());
   }
 
-private static String getQualifiedVersion() {
-  Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
-  return String.format("%d.%d.%d-%s", v.getMajor(), v.getMinor(), v.getMicro(), v.getQualifier());
-}
+  private static String getQualifiedVersion() {
+    Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
+    return String.format("%d.%d.%d-%s", v.getMajor(), v.getMinor(), v.getMicro(), v.getQualifier());
+  }
 
   /**
    * Create the user documentation URL for the current version.
