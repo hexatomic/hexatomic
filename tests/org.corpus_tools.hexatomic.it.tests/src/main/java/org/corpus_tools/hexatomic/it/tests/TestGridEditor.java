@@ -82,6 +82,8 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditor {
 
 
+  private static final String DOC_GRID_EDITOR = "doc (Grid Editor)";
+
   private static final String DOC = "doc";
 
   private static final String CORPUS = "corpus";
@@ -226,7 +228,7 @@ public class TestGridEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    final SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    final SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -247,7 +249,7 @@ public class TestGridEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -269,7 +271,7 @@ public class TestGridEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
