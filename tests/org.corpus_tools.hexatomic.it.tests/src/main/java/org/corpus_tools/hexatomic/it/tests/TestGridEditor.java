@@ -82,6 +82,10 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditor {
 
 
+  private static final String DOC = "doc";
+
+  private static final String CORPUS = "corpus";
+
   private static final String UNRENAMED_ANNOTATIONS_DIALOG_TITLE =
       "Some annotations were not renamed!";
 
@@ -99,6 +103,9 @@ public class TestGridEditor {
   private static final String TOPIC_VALUE = "topic";
 
   private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
+
+  private static final String TESTPATH_GRID =
+      "../org.corpus_tools.hexatomic.grid.tests/src/main/resources/org/corpus_tools/hexatomic/grid/";
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
 
@@ -146,16 +153,13 @@ public class TestGridEditor {
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
 
-    File overlappingExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
-        + "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/");
+    File overlappingExampleProjectDirectory = new File(TESTPATH_GRID + "overlapping-spans/");
     assertTrue(overlappingExampleProjectDirectory.isDirectory());
 
-    File twoDsExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
-        + "src/main/resources/org/corpus_tools/hexatomic/grid/two-ds/");
+    File twoDsExampleProjectDirectory = new File(TESTPATH_GRID + "two-ds/");
     assertTrue(twoDsExampleProjectDirectory.isDirectory());
 
-    File scrollingExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
-        + "src/main/resources/org/corpus_tools/hexatomic/grid/scrolling/");
+    File scrollingExampleProjectDirectory = new File(TESTPATH_GRID + "scrolling/");
     assertTrue(scrollingExampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
@@ -216,7 +220,7 @@ public class TestGridEditor {
     openExample(overlappingExampleProjectUri);
     // Select the first example document
     SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpus-graph").expandNode("corpus").expandNode("doc");
+        bot.tree().expandNode("corpus-graph").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -238,7 +242,7 @@ public class TestGridEditor {
     openExample(twoDsExampleProjectUri);
     // Select the first example document
     SWTBotTreeItem docMenu =
-        bot.tree().expandNode("<unknown>").expandNode("corpus").expandNode("doc");
+        bot.tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -260,7 +264,7 @@ public class TestGridEditor {
     openExample(scrollingExampleProjectUri);
     // Select the first example document
     SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpus-graph").expandNode("corpus").expandNode("doc");
+        bot.tree().expandNode("corpus-graph").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
