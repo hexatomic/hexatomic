@@ -104,8 +104,8 @@ public class TestGridEditor {
 
   private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
 
-  private static final String TESTPATH_GRID =
-      "../org.corpus_tools.hexatomic.grid.tests/src/main/resources/org/corpus_tools/hexatomic/grid/";
+  private static final String TESTPATH_GRID = "../org.corpus_tools.hexatomic.grid.tests/"
+      + "src/main/resources/org/corpus_tools/hexatomic/grid/";
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
 
@@ -241,8 +241,7 @@ public class TestGridEditor {
     // Programmatically open the example corpus
     openExample(twoDsExampleProjectUri);
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
+    SWTBotTreeItem docMenu = bot.tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
