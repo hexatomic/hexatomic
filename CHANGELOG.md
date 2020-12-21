@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implement changing annotation names for selected cells from the same or different columns (#228)
 - Implement creating and annotating new spans over empty cells in existing span columns (#98)
 - Add link to mailing list to user documentation
+- Add "About" dialog and link to online documentation in the "Help" menu
 
 ### Fixed
 
