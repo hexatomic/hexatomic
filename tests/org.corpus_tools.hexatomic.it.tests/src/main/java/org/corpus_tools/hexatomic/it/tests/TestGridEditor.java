@@ -596,59 +596,6 @@ public class TestGridEditor {
         node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
-  /**
-   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
-   * cell editors, up to 1000ms.
-   * 
-   * @param table The {@link NatTable} to operate on
-   * @throws TimeoutException after 1000ms without returning successfully
-   */
-  private void typeTextPressReturn(SWTBotNatTable table) throws TimeoutException {
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
-    keyboard.pressShortcut(Keystrokes.CR);
-    bot.waitUntil(new DefaultCondition() {
-
-      @Override
-      public boolean test() throws Exception {
-        return table.widget.getActiveCellEditor() == null;
-      }
-
-      @Override
-      public String getFailureMessage() {
-        return "Setting new value for cell took too long.";
-      }
-    }, 1000);
-  }
-
-  protected static class CellDataValueCondition extends DefaultCondition {
-
-    private final SWTNatTableBot tableBot;
-    private final int row;
-    private final int column;
-    private final String expected;
-
-    public CellDataValueCondition(SWTNatTableBot tableBot, int row, int column, String expected) {
-      super();
-      this.tableBot = tableBot;
-      this.row = row;
-      this.column = column;
-      this.expected = expected;
-    }
-
-    @Override
-    public boolean test() throws Exception {
-      String value = tableBot.nattable().getCellDataValueByPosition(row, column);
-      return Objects.equals(value, expected);
-    }
-
-    @Override
-    public String getFailureMessage() {
-      return "NatTable cell at position " + row + "," + column + " did not have expected value "
-          + expected;
-    }
-
-  }
-
   @Test
   void testRemoveSingleAnnotationByDelKey() {
     openDefaultExample();
@@ -1459,6 +1406,62 @@ public class TestGridEditor {
     assertDialogTexts(dialog, "anno9");
   }
 
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/258
+   * 
+   * <p>
+   * Tests that token columns aren't removed when all values are deleted.
+   * </p>
+   */
+  @Test
+  void testTokenColumnNotDeletedWhenEmpty() {
+    SWTBotView view = openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 3);
+    shiftClick(table, 11, 3);
+    table.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
+    // To trigger a redraw, minimize and restore editor part and click in other cell
+    view.minimise();
+    bot.waitUntil(new PartMinimizedCondition(view.getPart()));
+    view.restore();
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+    table.click(1, 1);
+    assertEquals(5, table.columnCount());
+    assertEquals("salt::pos", table.getCellDataValueByPosition(0, 3));
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/258
+   * 
+   * <p>
+   * Tests that span columns aren't removed when all values are deleted.
+   * </p>
+   */
+  @Test
+  void testSpanColumnNotDeletedWhenEmpty() {
+    SWTBotView view = openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    shiftClick(table, 11, 4);
+    table.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
+    // To trigger a redraw, minimize and restore editor part and click in other cell
+    view.minimise();
+    bot.waitUntil(new PartMinimizedCondition(view.getPart()));
+    view.restore();
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+    table.click(1, 1);
+    assertEquals(5, table.columnCount());
+    assertEquals("Inf-Struct", table.getCellDataValueByPosition(0, 4));
+  }
+
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
     String namespace = null;
@@ -1506,6 +1509,30 @@ public class TestGridEditor {
     Display.getDefault()
         .syncExec(() -> selectionLayer.doCommand(new SelectCellCommand(selectionLayer,
             columnPosition - 1, rowPosition - 1, shiftMask, ctrlMask)));
+  }
+
+  /**
+   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
+   * cell editors, up to 1000ms.
+   * 
+   * @param table The {@link NatTable} to operate on
+   * @throws TimeoutException after 1000ms without returning successfully
+   */
+  private void typeTextPressReturn(SWTBotNatTable table) throws TimeoutException {
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.pressShortcut(Keystrokes.CR);
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return table.widget.getActiveCellEditor() == null;
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Setting new value for cell took too long.";
+      }
+    }, 1000);
   }
 
   private SelectionLayer getSelectionLayer(SWTBotNatTable table) {
@@ -1611,6 +1638,35 @@ public class TestGridEditor {
       }
       return null;
     }
+  }
+
+  protected static class CellDataValueCondition extends DefaultCondition {
+
+    private final SWTNatTableBot tableBot;
+    private final int row;
+    private final int column;
+    private final String expected;
+
+    public CellDataValueCondition(SWTNatTableBot tableBot, int row, int column, String expected) {
+      super();
+      this.tableBot = tableBot;
+      this.row = row;
+      this.column = column;
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      String value = tableBot.nattable().getCellDataValueByPosition(row, column);
+      return Objects.equals(value, expected);
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "NatTable cell at position " + row + "," + column + " did not have expected value "
+          + expected;
+    }
+
   }
 
 
