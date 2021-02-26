@@ -21,17 +21,20 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
-import org.corpus_tools.hexatomic.grid.internal.GridHelper;
-import org.corpus_tools.hexatomic.grid.internal.actions.ChangeAnnotationNameSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
+import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
@@ -136,7 +139,22 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new ChangeAnnotationNameSelectionAction(getSelectedNonTokenCells()).run(natTable);
+          natTable.doCommand(
+              new DisplayAnnotationRenameDialogOnCellsCommand(natTable, createCellMapByColumn()));
+        }
+
+        private Map<Integer, Set<Integer>> createCellMapByColumn() {
+          // Map the selected cells by column.
+          Map<Integer, Set<Integer>> cellMapByColumn = new HashMap<>();
+          for (PositionCoordinate cellCoordinate : getSelectedNonTokenCells()) {
+            Set<Integer> columnCells = cellMapByColumn.get(cellCoordinate.getColumnPosition());
+            if (columnCells == null) {
+              columnCells = new HashSet<>();
+            }
+            columnCells.add(cellCoordinate.getRowPosition());
+            cellMapByColumn.put(cellCoordinate.getColumnPosition(), columnCells);
+          }
+          return cellMapByColumn;
         }
       });
     }
@@ -145,7 +163,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
       PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
       for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-        if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
+        if (!isTokenCell(cellPosition)) {
           selectedNonTokenCells.add(cellPosition);
         }
       }
@@ -178,7 +196,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
       PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
       for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-        if (!GridHelper.isTokenColumnAtPosition(table, cellPosition.getColumnPosition(), false)) {
+        if (!isTokenCell(cellPosition)) {
           selectedNonTokenCells.add(cellPosition);
         }
       }
@@ -205,11 +223,9 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-
         for (PositionCoordinate coord : selectedCellCoordinates) {
           // Check whether the column at the position is the token column
-          if (GridHelper.isTokenColumnAtPosition(natEventData.getNatTable(),
-              coord.getColumnPosition(), false)) {
+          if (isTokenCell(coord)) {
             return false;
           }
         }
@@ -248,16 +264,25 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
           } else if (columnPosition != singleColumnPosition) {
             return false;
           }
-          if (GridHelper.getBodyLayer(natEventData.getNatTable())
-              .getDataValueByPosition(columnPosition, rowPosition) != null) {
+          if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
             return false;
           }
         }
         // At this point, singleColumnPosition should be set
         // Return whether the single column is a span column
-        return GridHelper.isSpanColumnAtPosition(natEventData.getNatTable(), singleColumnPosition,
-            false);
+        return isSpanColumn(singleColumnPosition);
       }
     }
+
+    private boolean isSpanColumn(int singleColumnPosition) {
+      LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
+      return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+    }
+  }
+
+  private boolean isTokenCell(PositionCoordinate cellPosition) {
+    LabelStack configLabels = selectionLayer
+        .getConfigLabelsByPosition(cellPosition.getColumnPosition(), cellPosition.getRowPosition());
+    return configLabels.getLabels().contains(StyleConfiguration.TOKEN_TEXT_CELL_STYLE);
   }
 }

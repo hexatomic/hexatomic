@@ -23,6 +23,10 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_lQqf4J6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.undo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/undo.png" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
       </children>
+      <children xsi:type="menu:Menu" xmi:id="_trgNYDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.menu.help" label="&amp;Help">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_oEtxwDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.online_documentation" label="Online Documentation" command="_V7e7gDpHEeu92f5JR1mQ3w"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_wIyIIDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.about" label="About" command="_oseuoDpCEeu92f5JR1mQ3w"/>
+      </children>
     </mainMenu>
     <trimBars xmi:id="_ZPTWQOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.trimbar.tools">
       <children xsi:type="menu:ToolBar" xmi:id="_cmxBUOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.toolbar.0">
@@ -48,6 +52,8 @@
   <handlers xmi:id="_TH7l8FPxEeq55bpbFwb6CQ" elementId="org.corpus_tools.hexatomic.core.handler.exit" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.ExitHandler" command="_HVy0oFPxEeq55bpbFwb6CQ"/>
   <handlers xmi:id="_4evMYJ6EEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handler.undo" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.UndoHandler" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
   <handlers xmi:id="_1pA7oOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handler.redo" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.RedoHandler" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
+  <handlers xmi:id="_-8f0EDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handler.about" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.AboutHandler" command="_oseuoDpCEeu92f5JR1mQ3w"/>
+  <handlers xmi:id="_iL-cwDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handler.online_documentation" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenOnlineDocumentationHandler" command="_V7e7gDpHEeu92f5JR1mQ3w"/>
   <bindingTables xmi:id="_oI0WcEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.bindingtable.windows" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_qIQeoEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.0" keySequence="M1+M2+S" command="_mqJxIEzaEeqppqV5eQIggg">
       <tags>type:user</tags>
@@ -86,6 +92,8 @@
   <commands xmi:id="_HVy0oFPxEeq55bpbFwb6CQ" elementId="org.eclipse.ui.file.exit" commandName="Exit"/>
   <commands xmi:id="_uhiOUJ6CEeqcNd4BgS8ZlA" elementId="org.eclipse.ui.edit.undo" commandName="Undo"/>
   <commands xmi:id="_tXJzIOCfEeqWdLUQSqXLVA" elementId="org.eclipse.ui.edit.redo" commandName="Redo"/>
+  <commands xmi:id="_oseuoDpCEeu92f5JR1mQ3w" elementId="org.eclipse.ui.help.aboutAction" commandName="About"/>
+  <commands xmi:id="_V7e7gDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.command.online_documentation" commandName="Online Documentation"/>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

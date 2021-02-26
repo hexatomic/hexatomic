@@ -43,13 +43,12 @@ public class DisplayAnnotationRenameDialogOnCellsCommand extends AbstractContext
    * 
    * @param natTable the NatTable.
    * @param cellMapByColumn a map of cells from column position to row position within that column.
-   * @param allSelectedCellsInSameColumn whether all selected cells are in the same column
    */
   public DisplayAnnotationRenameDialogOnCellsCommand(NatTable natTable,
-      Map<Integer, Set<Integer>> cellMapByColumn, boolean allSelectedCellsInSameColumn) {
+      Map<Integer, Set<Integer>> cellMapByColumn) {
     this.natTable = natTable;
     this.cellMapByColumn = cellMapByColumn;
-    this.displayOldQName = allSelectedCellsInSameColumn;
+    this.displayOldQName = cellMapByColumn.keySet().size() == 1;
   }
 
   /**

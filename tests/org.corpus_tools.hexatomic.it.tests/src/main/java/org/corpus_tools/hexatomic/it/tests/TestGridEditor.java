@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
+import org.eclipse.swtbot.nebula.nattable.finder.widgets.Position;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -62,6 +63,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
@@ -79,6 +81,12 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
+
+  private static final String DOC_GRID_EDITOR = "doc (Grid Editor)";
+
+  private static final String DOC = "doc";
+
+  private static final String CORPUS = "corpus";
 
   private static final String UNRENAMED_ANNOTATIONS_DIALOG_TITLE =
       "Some annotations were not renamed!";
@@ -98,6 +106,9 @@ public class TestGridEditor {
 
   private static final String NAMESPACE = SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR;
 
+  private static final String TESTPATH_GRID = "../org.corpus_tools.hexatomic.grid.tests/"
+      + "src/main/resources/org/corpus_tools/hexatomic/grid/";
+
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
 
   private static final String LEMMA_NAME = "lemma";
@@ -113,6 +124,7 @@ public class TestGridEditor {
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
   private URI twoDsExampleProjectUri;
+  private URI scrollingExampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
   private EPartService partService;
@@ -120,6 +132,7 @@ public class TestGridEditor {
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
   private ProjectManager projectManager;
+
 
   @BeforeEach
   void setup() {
@@ -142,18 +155,21 @@ public class TestGridEditor {
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
 
-    File overlappingExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
-        + "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/");
+    File overlappingExampleProjectDirectory = new File(TESTPATH_GRID + "overlapping-spans/");
     assertTrue(overlappingExampleProjectDirectory.isDirectory());
 
-    File twoDsExampleProjectDirectory = new File("../org.corpus_tools.hexatomic.grid.tests/"
-        + "src/main/resources/org/corpus_tools/hexatomic/grid/two-ds/");
+    File twoDsExampleProjectDirectory = new File(TESTPATH_GRID + "two-ds/");
     assertTrue(twoDsExampleProjectDirectory.isDirectory());
+
+    File scrollingExampleProjectDirectory = new File(TESTPATH_GRID + "scrolling/");
+    assertTrue(scrollingExampleProjectDirectory.isDirectory());
 
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     overlappingExampleProjectUri =
         URI.createFileURI(overlappingExampleProjectDirectory.getAbsolutePath());
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
+    scrollingExampleProjectUri =
+        URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
   }
 
   @AfterEach
@@ -166,6 +182,12 @@ public class TestGridEditor {
       if (view.getPart().getPersistedState()
           .containsKey("org.corpus_tools.hexatomic.document-id")) {
         view.close();
+      }
+    }
+    // Close any open rename dialogs
+    for (SWTBotShell shell : bot.shells()) {
+      if (shell.getText().equals(RENAME_DIALOG_TITLE)) {
+        shell.close();
       }
     }
     // TODO: when close project is implemented with save functionality, change this to close the
@@ -200,13 +222,13 @@ public class TestGridEditor {
     openExample(overlappingExampleProjectUri);
     // Select the first example document
     SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpus-graph").expandNode("corpus").expandNode("doc");
+        bot.tree().expandNode("corpus-graph").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    final SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    final SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -221,14 +243,35 @@ public class TestGridEditor {
     // Programmatically open the example corpus
     openExample(twoDsExampleProjectUri);
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.tree().expandNode("<unknown>").expandNode("corpus").expandNode("doc");
+    SWTBotTreeItem docMenu = bot.tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    SWTBotView view = bot.partByTitle("doc (Grid Editor)");
+    SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
+    assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+  }
+
+  SWTBotView openScrollingExample() {
+    // Programmatically open the example corpus
+    openExample(scrollingExampleProjectUri);
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.tree().expandNode("corpus-graph").expandNode(CORPUS).expandNode(DOC);
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
+
+    SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -1341,14 +1384,91 @@ public class TestGridEditor {
     assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
 
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
+   */
+  @Test
+  void testPositionResolvedCorrectly() {
+    openScrollingExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    Position pos = table.scrollViewport(new Position(1, 1), 1, 10);
+    table.click(pos.row, pos.column);
+    try {
+      SWTBotRootMenu menu = table.contextMenu(pos.row, pos.column);
+      List<String> menuItems = menu.menuItems();
+      assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+      SWTBotMenu contextMenu = menu.contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL);
+      assertNotNull(contextMenu);
+      contextMenu.click();
+      menu = table.contextMenu(pos.row, pos.column);
+      menuItems = menu.menuItems();
+      assertTrue(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+    } catch (WidgetNotFoundException e) {
+      fail(e);
+    }
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/256.
+   */
+  @Test
+  void testFixScrolledCellMenuThrowsIndexOutOfBoundsException() {
+    openScrollingExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    Position pos = table.scrollViewport(new Position(1, 1), 1, 10);
+    table.click(pos.row, pos.column);
+    // Make sure that the position we're checking is the correct one
+    assertEquals("NodeNotifierImpl(salt:/corpus/doc#sSpan10)[anno9=value]], salt::SNAME=sSpan10]",
+        table.getCellDataValueByPosition(pos));
+    List<String> menuItems = table.contextMenu(pos.row, pos.column).menuItems();
+    // If #256 is fixed, the "Create span" menu item will not be present, as the respective
+    // selection state validation will not have thrown an IndexOutofBoundsException
+    assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/257.
+   * 
+   * @throws InterruptedException If the thread extracting the label text in the given dialog is
+   *         interrupted, or if there is an error during execution.
+   * @throws ExecutionException see InterruptedException
+   */
+  @Test
+  void testFixOldQualifiedNameNotUsed() throws InterruptedException, ExecutionException {
+    openScrollingExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    Position pos = table.scrollViewport(new Position(1, 1), 1, 10);
+    table.click(pos.row, pos.column);
+    // Make sure that the position we're checking is the correct one
+    assertEquals("NodeNotifierImpl(salt:/corpus/doc#sSpan10)[anno9=value]], salt::SNAME=sSpan10]",
+        table.getCellDataValueByPosition(pos));
+    table.contextMenu(pos.row, pos.column)
+        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    bot.waitUntil(Conditions.shellIsActive(RENAME_DIALOG_TITLE));
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertDialogTexts(dialog, "anno9");
+  }
+
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
     String namespace = null;
     String name = null;
     if (qualifiedName != null) {
       Pair<String, String> namespaceNamePair = SaltUtil.splitQName(qualifiedName);
-      namespace = namespaceNamePair.getLeft();
-      name = namespaceNamePair.getRight();
+      String namespaceObject = namespaceNamePair.getLeft();
+      String nameObject = namespaceNamePair.getRight();
+      namespace = namespaceObject == null ? "" : namespaceObject;
+      name = nameObject == null ? "" : nameObject;
     } else {
       namespace = "";
       name = "";
@@ -1402,7 +1522,6 @@ public class TestGridEditor {
   private CompositeFreezeLayer getBodyLayer(SWTBotNatTable table) {
     NatTable nattable = table.widget;
 
-    // Loop through the layers in the stack until the selection layer is hit
     ILayer layer = nattable.getLayer();
 
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
