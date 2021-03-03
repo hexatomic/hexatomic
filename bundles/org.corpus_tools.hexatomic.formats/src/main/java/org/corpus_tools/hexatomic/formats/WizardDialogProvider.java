@@ -26,10 +26,12 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A class that can be injected to create a {@link WizardDialog}. <br />
- * <br />
+ * A class that can be injected to create a {@link WizardDialog}.
+ * 
+ * <p>
  * Having this as an extra class allows to inject custom dialog providers, e.g. for mocked dialogs
  * in tests.
+ * </p>
  *
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *

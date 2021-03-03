@@ -25,10 +25,12 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * A class that can be injected to create a {@link DirectoryDialog}. <br />
- * <br />
+ * A class that can be injected to create a {@link DirectoryDialog}.
+ * 
+ * <p>
  * Having this as an extra class allows to inject custom dialog providers, e.g. for mocked dialogs
  * in tests.
+ * </p>
  *
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
  *
