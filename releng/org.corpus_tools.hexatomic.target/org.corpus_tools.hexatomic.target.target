@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
-<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl --><target name="Hexatomic Target Platform Definition" sequenceNumber="1607351706">
+<!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1614793713">
   <locations>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.platform.sdk" version="4.16.0.I20200604-0540"/>
       <unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.200.v20200528-0603"/>
       <unit id="org.eclipse.emf.common" version="2.19.0.v20200324-0932"/>
@@ -20,9 +21,13 @@
       <unit id="org.eclipse.swtbot.swt.finder" version="3.0.0.202006031738"/>
       <unit id="org.eclipse.jface" version="3.20.0.v20200505-1952"/>
       <unit id="org.eclipse.pde.junit.runtime" version="3.5.800.v20200310-0710"/>
+      <unit id="org.eclipse.equinox.p2.core" version="2.6.300.v20200211-1504"/>
+      <unit id="org.eclipse.equinox.p2.engine" version="2.6.700.v20200511-1530"/>
+      <unit id="org.eclipse.equinox.p2.operations" version="2.5.800.v20200410-1336"/>
+      <unit id="org.eclipse.equinox.p2.metadata.repository" version="1.3.400.v20191211-1528"/>
       <repository location="http://download.eclipse.org/releases/2020-06/"/>
     </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="ch.qos.logback.slf4j" version="1.2.3.v20200428-2012"/>
       <unit id="ch.qos.logback.classic" version="1.2.3.v20200428-2012"/>
@@ -31,24 +36,19 @@
       <unit id="org.antlr.runtime" version="4.7.2.v20200218-0804"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20201130205003/repository/"/>
     </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.corpus-tools.salt-api" version="3.4.2"/>
       <unit id="org.corpus-tools.salt-extensions" version="3.4.2"/>
       <repository location="https://korpling.github.io/salt/p2/salt-3.4/"/>
     </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="1.6.0.201909181823"/>
       <unit id="org.eclipse.nebula.widgets.nattable.extension.e4" version="1.2.0.201909181823"/>
       <repository location="http://download.eclipse.org/nattable/releases/1.6.0/repository/"/>
     </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.swtbot.nebula.nattable.finder" version="2.8.0.201906121535"/>
       <repository location="https://download.eclipse.org/technology/swtbot/releases/2.8.0/"/>
     </location>
-	  <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-		  <repository location="http://download.eclipse.org/releases/2020-06/"/>
-		  <unit id="org.eclipse.equinox.core.feature.feature.group" version="1.11.200.v20200525-1407"/>
-		  <unit id="org.eclipse.equinox.p2.core.feature.feature.group" version="1.6.600.v20200511-1530"/>
-	  </location>
   </locations>
 </target>

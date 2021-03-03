@@ -20,6 +20,10 @@ location 'http://download.eclipse.org/releases/2020-06/' {
 	org.eclipse.swtbot.swt.finder
 	org.eclipse.jface
 	org.eclipse.pde.junit.runtime
+	org.eclipse.equinox.p2.core
+	org.eclipse.equinox.p2.engine
+	org.eclipse.equinox.p2.operations
+	org.eclipse.equinox.p2.metadata.repository
 }
 
 location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20201130205003/repository/' {
