@@ -32,3 +32,22 @@ jobs:
             draft: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy_documentation:
+    name: Deploy documentation
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download and install mdBook 
+        run: curl -L -o mdbook.tar.gz https://github.com/rust-lang-nursery/mdBook/releases/download/v$MDBOOK_VERSION/mdbook-v$MDBOOK_VERSION-x86_64-unknown-linux-gnu.tar.gz && tar -C $HOME/.cargo/bin/ -zvxf mdbook.tar.gz
+        env:
+          MDBOOK_VERSION: 0.3.1
+      - name: Get the release version from the GITHUB_REF variable as new SHORT_VERSION variable
+        run: echo "SHORT_VERSION=$(echo ${GITHUB_REF} | sed -E 's/^refs\/heads\/.*/develop/' | sed -E 's/^(refs\/tags\/v)?(.*)(\.[0-9]+)$/\2/')" >> $GITHUB_ENV
+      # Build all documentation
+      - run: mdbook build --dest-dir book/user/${SHORT_VERSION} docs/user/
+      - run: mdbook build --dest-dir book/dev/${SHORT_VERSION} docs/dev/
+      - name: Deploy documentation to GitHub pages
+        run: releng/sh/deploy-docs.sh
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
