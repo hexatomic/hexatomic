@@ -47,7 +47,12 @@ jobs:
       # Build all documentation
       - run: mdbook build --dest-dir book/user/${SHORT_VERSION} docs/user/
       - run: mdbook build --dest-dir book/dev/${SHORT_VERSION} docs/dev/
-      - name: Deploy documentation to GitHub pages
-        run: releng/sh/deploy-docs.sh
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout and prepare GitHub pages branch
+        run: releng/sh/prepare-deploy-docs.sh
+      # We use a special action to perform the push, so we can use the automatically created token
+      - name: Push changes to GitHub pages branch
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: gh-pages
+          branch: gh-pages
