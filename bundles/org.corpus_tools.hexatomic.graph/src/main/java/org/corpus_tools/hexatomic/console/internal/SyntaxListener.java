@@ -60,6 +60,7 @@ import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
+import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
@@ -369,6 +370,23 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
   }
 
+  private List<String> newTokensTextFromContext(ListIterator<StringContext> itWords) {
+    List<String> newTokenTexts = new LinkedList<>();
+    while (itWords.hasNext()) {
+      String tokenValue = getString(itWords.next());
+      newTokenTexts.add(tokenValue);
+    }
+    return newTokenTexts;
+  }
+
+  private void addTokensToText(STextualDS ds, int offset, List<String> newTokenTexts) {
+    int numberOfTokens = graph.getTokens().size();
+    List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
+    for (SToken t : newTokens) {
+      t.setName(getUnusedName("t", ++numberOfTokens));
+    }
+  }
+
   @Override
   public void exitTokenizeAfter(TokenizeAfterContext ctx) {
     SDocumentGraph graph = this.graph;
@@ -389,20 +407,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          List<String> newTokenTexts = newTokensTextFromContext(ctx.string().listIterator());
+          addTokensToText(ds, offset, newTokenTexts);
         }
       }
     } else {
@@ -425,23 +431,29 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         int offset = seq.getStart().intValue();
         if (seq.getDataSource() instanceof STextualDS) {
           STextualDS ds = (STextualDS) seq.getDataSource();
-          int numberOfTokens = graph.getTokens().size();
-
-          ListIterator<StringContext> itWords = ctx.string().listIterator();
-          List<String> newTokenTexts = new LinkedList<>();
-          while (itWords.hasNext()) {
-            String tokenValue = getString(itWords.next());
-            newTokenTexts.add(tokenValue);
-          }
-
-          List<SToken> newTokens = graph.insertTokensAt(ds, offset, newTokenTexts, true);
-          for (SToken t : newTokens) {
-            t.setName(getUnusedName("t", ++numberOfTokens));
-          }
+          List<String> newTokenTexts = newTokensTextFromContext(ctx.string().listIterator());
+          addTokensToText(ds, offset, newTokenTexts);
         }
       }
     } else {
       this.outputLines.add("Referenced node is not a token.");
+    }
+  }
+
+  private void updateAnnotationForElement(SAnnotationContainer element, SAnnotation anno) {
+    SAnnotation existingAnnotation = element.getAnnotation(anno.getNamespace(), anno.getName());
+    if (existingAnnotation == null) {
+      if (anno.getValue() != null) {
+        // Create a new one
+        element.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
+      }
+    } else if (anno.getValue() == null) {
+      // Remove the existing annotation
+      element.removeLabel(anno.getNamespace(), anno.getName());
+    } else if (anno.getValue() != null) {
+      // Update the value of the annotation: this causes fever update events than deleting and (re-)
+      // adding it
+      existingAnnotation.setValue(anno.getValue());
     }
   }
 
@@ -450,20 +462,10 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     for (SAnnotation anno : this.attributes) {
 
       for (SStructuredNode n : this.referencedNodes) {
-        if (n.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-          n.removeLabel(anno.getNamespace(), anno.getName());
-        }
-        if (anno.getValue() != null) {
-          n.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
-        }
+        updateAnnotationForElement(n, anno);
       }
       for (SRelation<?, ?> rel : this.referencedEdges) {
-        if (rel.getAnnotation(anno.getNamespace(), anno.getName()) != null) {
-          rel.removeLabel(anno.getNamespace(), anno.getName());
-        }
-        if (anno.getValue() != null) {
-          rel.createAnnotation(anno.getNamespace(), anno.getName(), anno.getValue());
-        }
+        updateAnnotationForElement(rel, anno);
       }
     }
   }

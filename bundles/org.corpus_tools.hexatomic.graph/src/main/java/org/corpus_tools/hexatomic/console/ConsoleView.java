@@ -24,6 +24,7 @@ import com.google.common.collect.Range;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -51,6 +52,8 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   private final UISynchronize sync;
 
+  private final ProjectManager projectManager;
+
   private final ConsoleController controller;
 
   private final SourceViewer view;
@@ -60,12 +63,16 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
    * 
    * @param view The view widget the console view is using
    * @param sync An Eclipse synchronization object.
+   * @param projectManager An project manager object.
    * @param graph The Salt graph to edit.
    */
-  public ConsoleView(SourceViewer view, UISynchronize sync, SDocumentGraph graph) {
+  public ConsoleView(SourceViewer view, UISynchronize sync,
+      ProjectManager projectManager,
+      SDocumentGraph graph) {
     this.document = view.getDocument();
     this.sync = sync;
     this.view = view;
+    this.projectManager = projectManager;
     this.controller = new ConsoleController(graph);
 
     this.document.addDocumentListener(this);
@@ -148,7 +155,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
           for (String l : output) {
             writeLine(l);
           }
-
+          projectManager.addCheckpoint();
         }
       } catch (BadLocationException e) {
         log.error("Bad location in console, no last line", e);
@@ -197,7 +204,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
 
   @Override
   public void documentAboutToBeChanged(DocumentEvent event) {
-
+    // Do nothing: all relevant operations are done after the document has been changed.
   }
 
   @Override
@@ -221,72 +228,104 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
       this.styledText = styledText;
     }
 
+    private void verifyCtrlPlusKey(VerifyEvent e) {
+      e.doit = false;
+      FontData[] fd = styledText.getFont().getFontData();
+
+      fd[0].setHeight(fd[0].getHeight() + 1);
+      styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+    }
+
+    private void verifyCtrlMinusKey(VerifyEvent e) {
+      e.doit = false;
+      FontData[] fd = styledText.getFont().getFontData();
+
+      if (fd[0].getHeight() > 6) {
+        fd[0].setHeight(fd[0].getHeight() - 1);
+      }
+      styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+    }
+
+    private void verifyArrowUpKey(VerifyEvent e) {
+      if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
+        e.doit = false;
+        ListIterator<String> itCommandHistory = controller.getCommandHistoryIterator();
+        if (itCommandHistory != null && itCommandHistory.hasNext()) {
+          String oldCommand = itCommandHistory.next();
+          if (oldCommand != null) {
+            setCommand(oldCommand);
+          }
+          if (!itCommandHistory.hasNext() && itCommandHistory.hasPrevious()) {
+            // Last command in history reached, go back one item so if the user is going back in
+            // history, they get the correct entry. If we don't go back here, the user must press
+            // the arrow key twice.
+            itCommandHistory.previous();
+          }
+        }
+      }
+    }
+
+    private void verifyArrowDownKey(VerifyEvent e) {
+      if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
+        e.doit = false;
+        ListIterator<String> itCommandHistory = controller.getCommandHistoryIterator();
+        if (itCommandHistory != null && itCommandHistory.hasPrevious()) {
+          String oldCommand = itCommandHistory.previous();
+          if (oldCommand != null) {
+            setCommand(oldCommand);
+          }
+          if (!itCommandHistory.hasPrevious() && itCommandHistory.hasNext()) {
+            // First command in history reached, go forward one item so if the user is going forward
+            // in history, they get the correct entry. If we don't go forward here, the user must
+            // press the arrow key twice.
+            itCommandHistory.next();
+          }
+        }
+      }
+    }
+
+    private void verifyHomeKey(VerifyEvent e) {
+      Optional<Range<Integer>> promptRange = getPromptRange();
+      if (promptRange.isPresent()) {
+        // Set cursor at the beginning of the allowed input prompt position (which is a better
+        // home position than the non-editable beginning of the line)
+        styledText.setCaretOffset(promptRange.get().lowerEndpoint());
+        e.doit = false;
+      }
+    }
+
+    private void verifyEndKey(VerifyEvent e) {
+      Optional<Range<Integer>> promptRange = getPromptRange();
+      if (promptRange.isPresent()) {
+        // Set cursor at the end of the allowed input prompt position (which is a better
+        // home position than the non-editable beginning of the line)
+        styledText.setCaretOffset(promptRange.get().upperEndpoint());
+        e.doit = false;
+      }
+    }
+
     @Override
     public void verifyKey(VerifyEvent e) {
       boolean ctrlActive = (e.stateMask & SWT.CTRL) == SWT.CTRL;
 
-      ListIterator<String> itCommandHistory = controller.getCommandHistoryIterator();
-
       if (ctrlActive) {
         if (e.character == '+') {
-          e.doit = false;
-          FontData[] fd = styledText.getFont().getFontData();
-
-          fd[0].setHeight(fd[0].getHeight() + 1);
-          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
-
+          verifyCtrlPlusKey(e);
         } else if (e.character == '-') {
-          e.doit = false;
-          FontData[] fd = styledText.getFont().getFontData();
-
-          if (fd[0].getHeight() > 6) {
-            fd[0].setHeight(fd[0].getHeight() - 1);
-          }
-          styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+          verifyCtrlMinusKey(e);
         }
       } else if (e.keyCode == SWT.ARROW_UP) {
-        if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
-          e.doit = false;
-          if (itCommandHistory != null && itCommandHistory.hasNext()) {
-            String oldCommand = itCommandHistory.next();
-            if (oldCommand != null) {
-              setCommand(oldCommand);
-            }
-          }
-        }
+        verifyArrowUpKey(e);
       } else if (e.keyCode == SWT.ARROW_DOWN) {
-        if (isOffsetPartOfCmd(view.getTextWidget().getCaretOffset())) {
-          e.doit = false;
-          if (itCommandHistory != null && itCommandHistory.hasPrevious()) {
-            String oldCommand = itCommandHistory.previous();
-            if (oldCommand != null) {
-              setCommand(oldCommand);
-            }
-          }
-        }
+        verifyArrowDownKey(e);
       } else if (e.keyCode == '\r') {
         // make sure the cursor is set to the end of the line
         styledText.setCaretOffset(document.getLength());
       } else if (e.keyCode == SWT.HOME) {
-        Optional<Range<Integer>> promptRange = getPromptRange();
-        if (promptRange.isPresent()) {
-          // Set cursor at the beginning of the allowed input prompt position (which is a better
-          // home position than the non-editable beginning of the line)
-          styledText.setCaretOffset(promptRange.get().lowerEndpoint());
-          e.doit = false;
-        }
+        verifyHomeKey(e);
       } else if (e.keyCode == SWT.END) {
-        Optional<Range<Integer>> promptRange = getPromptRange();
-        if (promptRange.isPresent()) {
-          // Set cursor at the end of the allowed input prompt position (which is a better
-          // home position than the non-editable beginning of the line)
-          styledText.setCaretOffset(promptRange.get().upperEndpoint());
-          e.doit = false;
-        }
+        verifyEndKey(e);
       }
-
     }
   }
-
-
 }

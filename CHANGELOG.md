@@ -6,6 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2021-03-04
+
+### Added
+
+- Implement undoing and redoing changes (#38)
+- Implement changing annotation names for whole annotation columns (#97)
+- Implement import and export using Pepper (#111) for PAULA XML (#114) and EXMARaLDA files (#115)
+- Implement changing annotation names for selected cells from the same or different columns (#228)
+- Implement creating and annotating new spans over empty cells in existing span columns (#98)
+- Add link to mailing list to user documentation
+- Add "About" dialog and link to online documentation in the "Help" menu
+
+### Fixed
+
+- Fixed incorrect description of unreviewed hotfixes workflow in developer/maintainer documentation
+- When adding tokens in the graph editor to a previously empty document, you don't need to zoom in anymore (#224)
+- UI Integration tests can be run in Eclipse without depending on the JUnit runtime that's packaged with the IDE
+
+### Changed
+
+- Using GitHub Actions instead of Travis CI for testing the pull requests
+- Update Tycho (build-system related) to version 1.7.0
+- Ratio between corpus structure editor and editor window is now 30/70 at start
+
 ## [0.4.4] - 2020-09-16
 
 ### Fixed
@@ -38,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Editor for the Salt annotation graph based on Zest and using a command line interface similar to GraphAnno
 - Grid Editor for token and span annotations based on NatTable and using a similar interface to Excel
 - Salt Projects can be saved now
+- Annotation graph updates are propagated using the Eclipse RCP event bus
 - Added a process to merge non-reviewed code and triage these unreviewed PRs regulary
 
 ### Changed
@@ -47,11 +72,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the Eclipse platform to the 2020-03 release.
 - Updated PR template so that every checkbox is an actual task and should be checked to pass quality control.
 
+## Removed
+
+- The Salt graphs are not using the insufficient Salt notification extension anymore
+- `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
+
 ### Fixed
 
 - Update views via notification even if the object that changed was created before the view.
 - Allow to run Hexatomic on Java 11 platforms
 - Set locale in UI tests to avoid issues with auto-detected keyboard layouts
+
 
 ## [0.3.1] - 2019-12-16
 
@@ -103,12 +134,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.4.4...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/hexatomic/hexatomic/compare/v0.4.4...v0.5.0
 [0.4.4]: https://github.com/hexatomic/hexatomic/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/hexatomic/hexatomic/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hexatomic/hexatomic/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...v0.4.0
+[0.4.0]: https://github.com/hexatomic/hexatomic/compare/vRemoved...v0.4.0
+[Removed]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...vRemoved
 [0.3.1]: https://github.com/hexatomic/hexatomic/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hexatomic/hexatomic/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hexatomic/hexatomic/compare/v0.1.3...v0.2.0

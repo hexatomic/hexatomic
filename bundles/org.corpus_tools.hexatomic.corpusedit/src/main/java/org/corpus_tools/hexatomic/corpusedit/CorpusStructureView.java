@@ -31,9 +31,11 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDragSource;
 import org.corpus_tools.hexatomic.corpusedit.dnd.SaltObjectTreeDropTarget;
 import org.corpus_tools.salt.SaltFactory;
@@ -48,11 +50,6 @@ import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
 import org.corpus_tools.salt.core.SNamedElement;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
-import org.corpus_tools.salt.extensions.notification.Listener;
-import org.corpus_tools.salt.graph.GRAPH_ATTRIBUTES;
-import org.corpus_tools.salt.graph.Graph;
-import org.corpus_tools.salt.graph.IdentifiableElement;
-import org.corpus_tools.salt.graph.Node;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
@@ -106,7 +103,9 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wb.swt.ResourceManager;
 
-public class CorpusStructureView implements Listener {
+public class CorpusStructureView {
+
+  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
 
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
@@ -115,7 +114,7 @@ public class CorpusStructureView implements Listener {
 
   private static final String OPEN_DOCUMENT_POPUP_MENU_ID =
       "org.corpus_tools.hexatomic.corpusedit.popupmenu.documents";
-  private static final String ERROR_WHEN_DELETING_SUB_CORPUS_TITLE =
+  public static final String ERROR_WHEN_DELETING_SUB_CORPUS_TITLE =
       "Error when deleting (sub-) corpus";
   private static final String ERROR_WHEN_DELETING_SUB_CORPUS_MSG =
       "Before deleting a (sub-) corpus, first delete all its child elements.";
@@ -125,6 +124,7 @@ public class CorpusStructureView implements Listener {
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_TITLE = "Error when adding (sub-) corpus";
   private static final String ERROR_WHEN_ADDING_SUBCORPUS_MSG =
       "You can only create a (sub-) corpus when a corpus graph or another corpus is selected.";
+
 
   static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CorpusStructureView.class);
 
@@ -158,7 +158,8 @@ public class CorpusStructureView implements Listener {
                 @Override
                 public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                     SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-
+                  // No further action needed when leaving the node. All operations are already done
+                  // in nodeReached(...).
                 }
 
                 @Override
@@ -216,10 +217,7 @@ public class CorpusStructureView implements Listener {
     });
 
     Composite composite = new Composite(parent, SWT.NONE);
-    GridData gridComposite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-    gridComposite.minimumWidth = 300;
-    gridComposite.minimumHeight = 200;
-    composite.setLayoutData(gridComposite);
+    composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     composite.setLayout(new TreeColumnLayout());
 
     treeViewer = new TreeViewer(composite, SWT.BORDER);
@@ -235,8 +233,10 @@ public class CorpusStructureView implements Listener {
         if (element instanceof TreeItem) {
           TreeItem item = (TreeItem) element;
           if (item.getData() instanceof SNamedElement) {
+
             SNamedElement n = (SNamedElement) item.getData();
             n.setName(value.toString());
+            projectManager.addCheckpoint();
           }
         }
 
@@ -292,13 +292,11 @@ public class CorpusStructureView implements Listener {
     });
 
     registerEditors(modelService, application, thisPart);
-
-    projectManager.addListener(this);
   }
 
   private void createAddMenu(ToolBar toolBar) {
     ToolItem addToolItem = new ToolItem(toolBar, SWT.DROP_DOWN);
-    addToolItem.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addToolItem.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/plus-solid.png"));
     addToolItem.setText("Add");
     Menu addMenu = new Menu(addToolItem.getParent().getShell());
@@ -330,7 +328,7 @@ public class CorpusStructureView implements Listener {
 
     MenuItem addCorpusGraph = new MenuItem(addMenu, SWT.NONE);
     addCorpusGraph.setText("Corpus Graph");
-    addCorpusGraph.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addCorpusGraph.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/project-diagram-solid.png"));
     addCorpusGraph.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -341,7 +339,7 @@ public class CorpusStructureView implements Listener {
 
     MenuItem addCorpus = new MenuItem(addMenu, SWT.NONE);
     addCorpus.setText("(Sub-) Corpus");
-    addCorpus.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addCorpus.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/folder-regular.png"));
     addCorpus.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -352,7 +350,7 @@ public class CorpusStructureView implements Listener {
 
     MenuItem addDocument = new MenuItem(addMenu, SWT.NONE);
     addDocument.setText("Document");
-    addDocument.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    addDocument.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/file-alt-regular.png"));
     addDocument.addSelectionListener(new SelectionAdapter() {
       @Override
@@ -370,12 +368,15 @@ public class CorpusStructureView implements Listener {
 
     SCorpusGraph newGraph = projectManager.getProject().createCorpusGraph();
     newGraph.setName("corpus_graph_" + (oldSize + 1));
+    projectManager.addCheckpoint();
 
     selectSaltObject(newGraph, true);
+
 
   }
 
   private void addCorpus(Shell shell) {
+
 
     SCorpusGraph g = null;
     SCorpus parent = null;
@@ -407,6 +408,9 @@ public class CorpusStructureView implements Listener {
       } else {
         newCorpus = g.createCorpus(parent, newCorpusName);
       }
+
+      projectManager.addCheckpoint();
+
       if (newCorpus != null) {
         selectSaltObject(newCorpus, true);
       }
@@ -434,13 +438,110 @@ public class CorpusStructureView implements Listener {
     }
 
     if (parent != null) {
+
       int oldSize =
           parent.getGraph().getDocuments() == null ? 0 : parent.getGraph().getDocuments().size();
       SDocument newDocument = parent.getGraph().createDocument(parent, "document_" + (oldSize + 1));
+      projectManager.addCheckpoint();
+
       log.debug("Selecting created document");
       selectSaltObject(newDocument, true);
+
     }
 
+  }
+
+  private void deleteSelectedObject() {
+    StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
+    if (selection != null) {
+      Object firstSelectedObject = selection.getFirstElement();
+      if (firstSelectedObject instanceof SCorpusGraph) {
+        deleteCorpusGraph((SCorpusGraph) firstSelectedObject);
+      } else if (firstSelectedObject instanceof SCorpus) {
+        deleteCorpus((SCorpus) firstSelectedObject);
+      } else if (firstSelectedObject instanceof SDocument) {
+        deleteDocument((SDocument) firstSelectedObject);
+      }
+    }
+  }
+
+  private void deleteCorpusGraph(SCorpusGraph selectedCorpusGraph) {
+    projectManager.getProject().removeCorpusGraph(selectedCorpusGraph);
+    // select nothing
+    treeViewer.setSelection(null);
+    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+  }
+
+  private void deleteCorpus(SCorpus selectedCorpus) {
+    boolean hasChildren = selectedCorpus.getOutRelations().stream()
+        .anyMatch(
+            rel -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation);
+    if (hasChildren) {
+      errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
+          ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
+      return;
+    }
+
+    Optional<SNode> parent =
+        selectedCorpus.getInRelations().stream().filter(rel -> rel instanceof SCorpusRelation)
+            .findFirst()
+            .map(rel -> ((SCorpusRelation) rel).getSource());
+    if (parent.isPresent()) {
+      // select parent corpus
+      selectSaltObject(parent.get(), true);
+    } else {
+      // use the corpus graph
+      selectSaltObject(selectedCorpus.getGraph(), true);
+    }
+
+    selectedCorpus.getGraph().removeNode(selectedCorpus);
+
+    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+  }
+
+  private void deleteDocument(SDocument selectedDocument) {
+    Optional<SNode> parent =
+        selectedDocument.getInRelations().stream()
+            .filter(rel -> rel instanceof SCorpusDocumentRelation)
+            .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
+
+    // Attempt to find the previous sibling document of the one that is deleted
+    Optional<SDocument> previousDocument = Optional.empty();
+    if (parent.isPresent()) {
+      // Collect all siblings
+      List<SDocument> siblings = parent.get().getOutRelations().stream()
+          .filter(rel -> rel instanceof SCorpusDocumentRelation)
+          .map(rel -> ((SCorpusDocumentRelation) rel).getTarget()).collect(Collectors.toList());
+      if (!siblings.isEmpty()) {
+        // Find the position of the deleted document and use the index
+        // to get the previous document (or select the first other if not found)
+        int indexOfDocument = siblings.indexOf(selectedDocument);
+        if (indexOfDocument == 0) {
+          if (siblings.size() > 1) {
+            // select the next document in the list since we are deleting the first one
+            previousDocument = Optional.of(siblings.get(1));
+          }
+        } else if (indexOfDocument > 0) {
+          previousDocument = Optional.of(siblings.get(indexOfDocument - 1));
+        } else {
+          previousDocument = Optional.of(siblings.get(0));
+        }
+      }
+    }
+
+    if (previousDocument.isPresent()) {
+      // select the previous corpus
+      selectSaltObject(previousDocument.get(), true);
+    } else if (parent.isPresent()) {
+      // select parent corpus
+      selectSaltObject(parent.get(), true);
+    } else {
+      // use the corpus graph
+      selectSaltObject(selectedDocument.getGraph(), true);
+    }
+
+    selectedDocument.getGraph().removeNode(selectedDocument);
+    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
   }
 
   private void createDeleteMenu(ToolBar toolBar) {
@@ -448,92 +549,13 @@ public class CorpusStructureView implements Listener {
     deleteToolItem.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
-        if (selection != null) {
-          if (selection.getFirstElement() instanceof SCorpusGraph) {
-            projectManager.getProject()
-                .removeCorpusGraph((SCorpusGraph) selection.getFirstElement());
-            // select nothing
-            treeViewer.setSelection(null);
-            treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
-          } else if (selection.getFirstElement() instanceof SCorpus) {
-            SCorpus n = (SCorpus) selection.getFirstElement();
-
-            boolean hasChildren = n.getOutRelations().stream().filter(
-                (rel) -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation)
-                .findAny().isPresent();
-            if (hasChildren) {
-              errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
-                  ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
-              return;
-            }
-
-            Optional<SNode> parent =
-                n.getInRelations().stream().filter((rel) -> rel instanceof SCorpusRelation)
-                    .findFirst().map(rel -> ((SCorpusRelation) rel).getSource());
-            if (parent.isPresent()) {
-              // select parent corpus
-              selectSaltObject(parent.get(), true);
-            } else {
-              // use the corpus graph
-              selectSaltObject(n.getGraph(), true);
-            }
-
-            n.getGraph().removeNode(n);
-
-            treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
-          } else if (selection.getFirstElement() instanceof SDocument) {
-            SDocument n = (SDocument) selection.getFirstElement();
-
-            Optional<SNode> parent =
-                n.getInRelations().stream().filter((rel) -> rel instanceof SCorpusDocumentRelation)
-                    .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
-
-            // Attempt to find the previous sibling document of the one that is deleted
-            Optional<SDocument> previousDocument = Optional.empty();
-            if (parent.isPresent()) {
-              // Collect all siblings
-              List<SDocument> siblings = parent.get().getOutRelations().stream()
-                  .filter(rel -> rel instanceof SCorpusDocumentRelation)
-                  .map(rel -> ((SCorpusDocumentRelation) rel).getTarget())
-                  .collect(Collectors.toList());
-              if (!siblings.isEmpty()) {
-                // Find the position of the deleted document and use the index
-                // to get the previous document (or select the first other if not found)
-                int indexOfDocument = siblings.indexOf(n);
-                if (indexOfDocument == 0) {
-                  if (siblings.size() > 1) {
-                    // select the next document in the list since we are deleting the first one
-                    previousDocument = Optional.of(siblings.get(1));
-                  }
-                } else if (indexOfDocument > 0) {
-                  previousDocument = Optional.of(siblings.get(indexOfDocument - 1));
-                } else {
-                  previousDocument = Optional.of(siblings.get(0));
-                }
-              }
-            }
-
-            if (previousDocument.isPresent()) {
-              // select the previous corpus
-              selectSaltObject(previousDocument.get(), true);
-            } else if (parent.isPresent()) {
-              // select parent corpus
-              selectSaltObject(parent.get(), true);
-            } else {
-              // use the corpus graph
-              selectSaltObject(n.getGraph(), true);
-            }
-
-            n.getGraph().removeNode(n);
-            treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
-          }
-        }
+        deleteSelectedObject();
       }
     });
-    deleteToolItem.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    deleteToolItem.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/trash-alt-regular.png"));
     deleteToolItem.setText("Delete");
+    deleteToolItem.setToolTipText("Delete the selected corpus structure element.");
   }
 
   /**
@@ -565,7 +587,8 @@ public class CorpusStructureView implements Listener {
             @Override
             public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                 SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-
+              // No further action needed when leaving the node. All operations are already done
+              // in nodeReached(...).
             }
 
             @Override
@@ -592,33 +615,26 @@ public class CorpusStructureView implements Listener {
     }
   }
 
-
-  @Override
-  public void notify(NOTIFICATION_TYPE type, GRAPH_ATTRIBUTES attribute, Object oldValue,
-      Object newValue, Object container) {
-
-    IdentifiableElement element = null;
-    if (container instanceof IdentifiableElement) {
-      element = (IdentifiableElement) container;
-    } else if (container instanceof org.corpus_tools.salt.graph.Label) {
-      element = ((org.corpus_tools.salt.graph.Label) container).getContainer();
-    }
-
-    if (element instanceof Graph<?, ?, ?>) {
-      updateView();
-    } else if (element instanceof Node) {
-      element = ((Node) element).getGraph();
-      if (element instanceof SCorpusGraph) {
-        updateView();
-      }
-    }
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_LOADED) String value) {
+    updateView();
   }
-
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void subscribeProjectLoaded(@UIEventTopic(Topics.PROJECT_LOADED) String path) {
-    updateView();
+  private void subscribeProjectChanged(
+      @UIEventTopic(Topics.ANNOTATION_CHANGED) Object changeSetRaw) {
+    if (changeSetRaw instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) changeSetRaw;
+      for (Object container : changeSet.getChangedContainers()) {
+        Optional<SCorpusGraph> graph = SaltHelper.getGraphForObject(container, SCorpusGraph.class);
+        if (graph.isPresent()) {
+          updateView();
+          break;
+        }
+      }
+    }
   }
 
   private void registerEditors(EModelService modelService, MApplication application,

@@ -22,43 +22,51 @@
 package org.corpus_tools.hexatomic.grid;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.grid.bindings.FreezeGridBindings;
-import org.corpus_tools.hexatomic.grid.configuration.CustomBodyMenuConfiguration;
-import org.corpus_tools.hexatomic.grid.configuration.CustomHeaderMenuConfiguration;
-import org.corpus_tools.hexatomic.grid.configuration.EditConfiguration;
-import org.corpus_tools.hexatomic.grid.configuration.GridLayerConfiguration;
-import org.corpus_tools.hexatomic.grid.data.ColumnHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.data.GraphDataProvider;
-import org.corpus_tools.hexatomic.grid.data.RowHeaderDataProvider;
-import org.corpus_tools.hexatomic.grid.layers.NodeSpanningDataProvider;
-import org.corpus_tools.hexatomic.grid.style.LabelAccumulator;
-import org.corpus_tools.hexatomic.grid.style.SelectionStyleConfiguration;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.grid.internal.bindings.FreezeGridBindings;
+import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.configuration.ColumnHeaderMenuConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.configuration.EditConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.configuration.GridLayerConfiguration;
+import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
+import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
-import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
-import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultColumnHeaderDataLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.DefaultRowHeaderDataLayer;
@@ -70,6 +78,7 @@ import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -82,10 +91,22 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
+  private static final String NO_TOKENS_MESSAGE =
+      "The data source does not contain any tokens, and cannot be displayed.";
+
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GridEditor.class);
+
+  public static final String DELETE_CELLS_POPUP_MENU_LABEL = "Delete cell(s)";
+
+  public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
+
+  public static final String CREATE_SPAN_POPUP_MENU_LABEL = "Create span";
 
   @Inject
   ErrorService errors;
+
+  @Inject
+  private IEventBroker events;
 
   @Inject
   private ESelectionService selectionService;
@@ -102,6 +123,8 @@ public class GridEditor {
   private SDocumentGraph graph;
 
   private NatTable table;
+
+  private STextualDS activeDs = null;
 
   /**
    * Creates the grid that contains the data of the {@link SDocumentGraph}.
@@ -122,8 +145,7 @@ public class GridEditor {
     addTextSelectionDropdown(parent);
 
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
-    NodeSpanningDataProvider spanningDataProvider =
-        new NodeSpanningDataProvider(bodyDataProvider, false, true);
+    NodeSpanningDataProvider spanningDataProvider = new NodeSpanningDataProvider(bodyDataProvider);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
 
     // Body
@@ -137,13 +159,14 @@ public class GridEditor {
     final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
     selectionLayer.addConfiguration(new SelectionStyleConfiguration());
     final FreezeLayer freezeLayer = new FreezeLayer(selectionLayer);
-    final CompositeFreezeLayer compositeFreezeLayer =
-        new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
+    final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
+        bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
     // Column header
-    final IDataProvider columnHeaderDataProvider = new ColumnHeaderDataProvider(bodyDataProvider);
-    final ILayer columnHeaderLayer =
-        new ColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
+    final IDataProvider columnHeaderDataProvider =
+        new ColumnHeaderDataProvider(bodyDataProvider, projectManager);
+    final GridColumnHeaderLayer columnHeaderLayer =
+        new GridColumnHeaderLayer(new DefaultColumnHeaderDataLayer(columnHeaderDataProvider),
             compositeFreezeLayer, selectionLayer);
 
     // Row header
@@ -166,16 +189,34 @@ public class GridEditor {
 
     // Configuration
     table.addConfiguration(new StyleConfiguration());
-    table.addConfiguration(new CustomHeaderMenuConfiguration(table));
+    table.addConfiguration(new ColumnHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
-    table.addConfiguration(new EditConfiguration(labelAccumulator, selectionLayer));
-    table.addConfiguration(new CustomBodyMenuConfiguration(table, selectionLayer));
+    table.addConfiguration(
+        new EditConfiguration(bodyDataProvider, labelAccumulator, selectionLayer));
+    table.addConfiguration(new BodyMenuConfiguration(table, selectionLayer));
 
     table.configure();
 
     // Configure grid layout generically
     GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
+  }
 
+  @PreDestroy
+  public void cleanup(MPart part) {
+    events.post(Topics.DOCUMENT_CLOSED,
+        part.getPersistedState().get("org.corpus_tools.hexatomic.document-id"));
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      if (changeSet.containsDocument(
+          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+        setSelection(getActiveDs());
+      }
+    }
   }
 
   /**
@@ -187,11 +228,10 @@ public class GridEditor {
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
+      setActiveDS(ds);
       bodyDataProvider.setDsAndResolveGraph(ds);
       // Refresh all layers
       table.refresh();
-    } else {
-      // Do nothing
     }
   }
 
@@ -220,6 +260,7 @@ public class GridEditor {
    * @param parent The parent composite
    */
   private void addTextSelectionDropdown(Composite parent) {
+    final Label messageLabel = new Label(parent, SWT.NONE);
     Composite dropdownGroup = new Composite(parent, SWT.NONE);
     dropdownGroup.setLayout(new GridLayout(2, false));
     GridDataFactory.fillDefaults().grab(true, false).applyTo(dropdownGroup);
@@ -228,8 +269,63 @@ public class GridEditor {
     label.setText("Data source:");
 
     final ComboViewer viewer = new ComboViewer(dropdownGroup, SWT.READ_ONLY);
+
+    final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
+    deco.setShowOnlyOnFocus(false);
+
     viewer.setContentProvider(ArrayContentProvider.getInstance());
-    viewer.setLabelProvider(new LabelProvider() {
+    viewer.setLabelProvider(createLabelProvider());
+    viewer.addSelectionChangedListener(createSelectionChangeListener(messageLabel, parent, deco));
+    viewer.setInput(graph.getTextualDSs());
+    if (graph.getTextualDSs().size() == 1) {
+      viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
+    } else {
+      messageLabel.setText("Please select a data source!");
+      messageLabel.setVisible(true);
+      parent.layout();
+    }
+  }
+
+  private ISelectionChangedListener createSelectionChangeListener(Label messageLabel,
+      Composite parent, ControlDecoration deco) {
+    return event -> {
+      IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+      if (selection.size() > 0 && selection.getFirstElement() instanceof STextualDS) {
+        // Dispose select message, once a selection is made, selection can never be null or empty
+        // again.
+        messageLabel.dispose();
+        parent.layout();
+        // Set decoration depending on whether there are tokens in the data source.
+        // This is found out by checking whether the data source has incoming relations of type
+        // STextualRelation.
+        if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
+            .noneMatch(rel -> rel instanceof STextualRelation)) {
+          deco.setDescriptionText(NO_TOKENS_MESSAGE);
+          Image errorImage = FieldDecorationRegistry.getDefault()
+              .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+          deco.setImage(errorImage);
+          if (table != null) {
+            // Hide table
+            table.setVisible(false);
+            parent.layout();
+          }
+        } else {
+          deco.setDescriptionText(null);
+          deco.setImage(null);
+          selectionService.setSelection(
+              selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
+          if (table != null) {
+            // Show table
+            table.setVisible(true);
+            parent.layout();
+          }
+        }
+      }
+    };
+  }
+
+  private LabelProvider createLabelProvider() {
+    return new LabelProvider() {
       @Override
       public String getText(Object element) {
         if (element instanceof STextualDS) {
@@ -238,21 +334,26 @@ public class GridEditor {
         }
         return super.getText(element);
       }
-    });
-    viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-        IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        if (selection.size() > 0 && selection.getFirstElement() instanceof STextualDS) {
-          selectionService.setSelection(
-              selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
-        }
-      }
-    });
-    viewer.setInput(graph.getTextualDSs());
-    if (graph.getTextualDSs().size() == 1) {
-      viewer.setSelection(new StructuredSelection(graph.getTextualDSs().get(0)));
-    }
+    };
+  }
+
+  /**
+   * Sets the active textual data source the table displays.
+   * 
+   * @param ds The active data source.
+   */
+  private void setActiveDS(STextualDS ds) {
+    this.activeDs = ds;
+
+  }
+
+  /**
+   * Returns the currently active textual data source.
+   * 
+   * @return the currently active textual data source
+   */
+  private STextualDS getActiveDs() {
+    return this.activeDs;
   }
 
   private SDocumentGraph getGraph() {

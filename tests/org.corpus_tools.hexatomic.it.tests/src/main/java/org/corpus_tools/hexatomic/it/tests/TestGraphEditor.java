@@ -15,15 +15,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.graph.GraphEditor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -36,6 +40,7 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
@@ -43,6 +48,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.utils.WidgetTextDescription;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -58,6 +64,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
+  private static final String ANOTHER_TEXT = "Another text";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
   private static final String GET_VIEWPORT = "getViewport";
 
@@ -72,6 +80,60 @@ class TestGraphEditor {
   private ProjectManager projectManager;
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+
+  private final class ConsoleFontSizeCondition implements ICondition {
+    private final SWTBotStyledText console;
+    private final int expectedSize;
+
+    private ConsoleFontSizeCondition(int expectedSize, SWTBotStyledText console) {
+      this.expectedSize = expectedSize;
+      this.console = console;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      final AtomicInteger actualSize = new AtomicInteger();
+      UIThreadRunnable
+          .syncExec(() -> actualSize.set(console.widget.getFont().getFontData()[0].getHeight()));
+      return actualSize.get() == expectedSize;
+    }
+
+    @Override
+    public void init(SWTBot bot) {
+      // No initialization needed
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Console font size was not the expected size " + expectedSize;
+    }
+  }
+
+  private final class CurrentConsoleLineCondition implements ICondition {
+    private final SWTBotStyledText console;
+    private final String expected;
+
+    private CurrentConsoleLineCondition(String expected, SWTBotStyledText console) {
+      this.console = console;
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return Objects.equals(expected, console.getTextOnCurrentLine());
+    }
+
+    @Override
+    public void init(SWTBot bot) {
+      // No initialization needed
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Current line on console should have been \"" + expected + "\" but was \""
+          + console.getTextOnCurrentLine() + "\"";
+    }
+  }
 
   private final class GraphLoadedCondition extends DefaultCondition {
 
@@ -92,7 +154,7 @@ class TestGraphEditor {
     public boolean test() throws Exception {
       SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
-        SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+        SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
         for (int i : segmentIndexes) {
           if (!textRangeTable.getTableItem(i).isChecked()) {
@@ -170,7 +232,7 @@ class TestGraphEditor {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-    
+
     partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
@@ -203,8 +265,7 @@ class TestGraphEditor {
 
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
@@ -213,9 +274,24 @@ class TestGraphEditor {
     bot.waitUntil(new GraphLoadedCondition(0));
   }
 
+  void openMinimalProjectStructure() {
+    TestCorpusStructure.createMinimalCorpusStructure(bot);
+
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
+            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+
+    // Select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+
+    bot.waitUntil(new GraphLoadedCondition("document_1"));
+  }
+
   void enterCommand(String command) {
-    SWTBotStyledText console = bot.styledTextWithId("graph-editor/text-console");
-    final SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
+    SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
+    final SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
 
     // Remember the index of the currently selected segment
     Optional<Integer> firstSelectedRow = Optional.empty();
@@ -265,13 +341,13 @@ class TestGraphEditor {
     // Check all nodes and edges have been created
     bot.waitUntil(new NumberOfNodesCondition(23));
     bot.waitUntil(new NumberOfConnectionsCondition(22));
-    
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
     SWTUtils.display().syncExec(g::forceFocus);
 
     final Viewport viewPort = (Viewport) SWTUtils.invokeMethod(g, GET_VIEWPORT);
-    
+
     Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
     // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
@@ -284,8 +360,7 @@ class TestGraphEditor {
 
     // Zoom in so we can move the view with the arrow keys
     // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad keys yet.
-    Keyboard mockKeyboadForGraph =
-        KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
+    Keyboard mockKeyboadForGraph = KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
     KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
     mockKeyboadForGraph.pressShortcut(strokesZoomIn);
 
@@ -293,11 +368,11 @@ class TestGraphEditor {
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x + 25, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.LEFT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
@@ -312,16 +387,14 @@ class TestGraphEditor {
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
 
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
-    bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort,
-            new Point(origLocation.x + 250, origLocation.y)));
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x + 250, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
-    bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort,
-            new Point(origLocation.x, origLocation.y + 250)));
+    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
+        new Point(origLocation.x, origLocation.y + 250)));
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
@@ -362,7 +435,7 @@ class TestGraphEditor {
           "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
 
       // Add a pointing relation between the two structures
-      enterCommand("e #structure3 -> #structure5");
+      enterCommand(ADD_POINTING_COMMMAND);
 
       // Check that no exception was thrown/handled by UI
       assertFalse(errorService.getLastException().isPresent());
@@ -390,6 +463,7 @@ class TestGraphEditor {
 
     openDefaultExample();
 
+
     // Get a reference to the opened document graph
     Optional<SDocument> optionalDoc =
         projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
@@ -402,20 +476,23 @@ class TestGraphEditor {
       final String originalText = firstText.getText();
 
       // Add an additional data source to the document graph
-      STextualDS anotherText = graph.createTextualDS("Another text");
+      STextualDS anotherText = graph.createTextualDS(ANOTHER_TEXT);
       graph.createToken(anotherText, 0, 7);
       graph.createToken(anotherText, 8, 12);
 
+      // Add a checkpoint so the changes are propagated to the view
+      projectManager.addCheckpoint();
+
       // Select the new text
-      SWTBotTable textRangeTable = bot.tableWithId("graph-editor/text-range");
-      textRangeTable.select("Another text");
+      SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
+      textRangeTable.select(ANOTHER_TEXT);
 
       // Wait until the graph has been properly selected
       bot.waitUntil(new DefaultCondition() {
 
         @Override
         public boolean test() throws Exception {
-          return textRangeTable.getTableItem("Another text").isChecked();
+          return textRangeTable.getTableItem(ANOTHER_TEXT).isChecked();
         }
 
         @Override
@@ -445,7 +522,7 @@ class TestGraphEditor {
     assertNotNull(g);
 
     // Add a pointing relation between the two structures
-    enterCommand("e #structure3 -> #structure5");
+    enterCommand(ADD_POINTING_COMMMAND);
 
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
@@ -480,6 +557,29 @@ class TestGraphEditor {
   }
 
 
+  @Test
+  void testUndoRedoRendered() {
+    openDefaultExample();
+
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+
+    // Add a pointing relation between the two structures
+    enterCommand(ADD_POINTING_COMMMAND);
+
+    // Pointing relations are shown initially and the new one should be visible now
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
+
+    // Undo/Redo the changes and check that the view has been updated
+    bot.menu("Undo").click();
+    bot.waitUntil(new NumberOfConnectionsCondition(22));
+
+    bot.menu("Redo").click();
+    bot.waitUntil(new NumberOfConnectionsCondition(23));
+  }
+
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/220
    * 
@@ -487,19 +587,7 @@ class TestGraphEditor {
    */
   @Test
   void testTokenizeSaveTokenizeSave() throws IOException {
-    TestCorpusStructure.createMinimalCorpusStructure(bot);
-
-    // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
-            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
-
-    // Select and open the editor
-    docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
-
-    bot.waitUntil(new GraphLoadedCondition("document_1"));
-
+    openMinimalProjectStructure();
 
     // Add the two tokens to the document graph
     enterCommand("t Oi!");
@@ -519,13 +607,92 @@ class TestGraphEditor {
 
     // Save to original location
     params.put(CommandParams.LOCATION, tmpDir.toString());
-    final ParameterizedCommand cmdSave = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.save_salt_project",
-            new HashMap<>());
+    final ParameterizedCommand cmdSave = commandService.createCommand(
+        "org.corpus_tools.hexatomic.core.command.save_salt_project", new HashMap<>());
 
     UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
 
     // The last save should not have triggered any errors
     assertFalse(errorService.getLastException().isPresent());
+  }
+
+  @Test
+  void testHistory() {
+    openDefaultExample();
+
+    enterCommand("c1");
+    enterCommand("c2");
+    enterCommand("c3");
+
+    // Use arrow up key to navigate to the previous command
+    SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
+    console.setFocus();
+
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new CurrentConsoleLineCondition("> c1", console));
+
+    // Go forward in history again
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+    keyboard.pressShortcut(Keystrokes.DOWN);
+    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
+
+    // Go back again, just to make sure the user does not need to click the arrow key twice
+    keyboard.pressShortcut(Keystrokes.UP);
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+  }
+
+  @Test
+  void testConsoleTextSize() {
+    openDefaultExample();
+
+    SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
+
+    final AtomicInteger initialSize = new AtomicInteger(12);
+    // We can only access the widget in the SWT thread
+    UIThreadRunnable
+        .syncExec(() -> initialSize.set(console.widget.getFont().getFontData()[0].getHeight()));
+    Keyboard mockKeyboadForGraph =
+        KeyboardFactory.getMockKeyboard(console.widget, new WidgetTextDescription(console.widget));
+
+    console.setFocus();
+    KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
+    mockKeyboadForGraph.pressShortcut(strokesZoomIn);
+    bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() + 1, console));
+
+    KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
+    mockKeyboadForGraph.pressShortcut(strokesZoomOut);
+    bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get(), console));
+
+    mockKeyboadForGraph.pressShortcut(strokesZoomOut);
+    bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() - 1, console));
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/224
+   * 
+   * <p>
+   * It checks that if you create new token in an empty document, that the zoom level is correct and
+   * the tokens are actually shown.
+   * </p>
+   */
+  @Test
+  void testShowNewlyCreatedToken() {
+    openMinimalProjectStructure();
+
+    // Add some token
+    enterCommand("t This is an example.");
+
+    // Make sure the token node boxes are large enough to be visible
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+    bot.waitUntil(new NumberOfNodesCondition(5));
+
+    ScalableFigure figure = g.getRootLayer();
+    assertEquals(1.0, figure.getScale());
   }
 }

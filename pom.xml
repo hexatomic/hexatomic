@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.corpus_tools</groupId>
 	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
-	<version>0.4.4</version>
+	<version>0.5.0</version>
 	<packaging>pom</packaging>
 	<!-- SCM -->
 	<scm>
@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<tycho.version>1.6.0</tycho.version>
+		<tycho.version>1.7.0</tycho.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
@@ -75,8 +75,7 @@
 							</goals>
 							<phase>process-sources</phase>
 							<configuration>
-								<organizationName>Stephan Druskat,
-									Thomas Krause</organizationName>
+								<organizationName>Stephan Druskat, Thomas Krause</organizationName>
 								<inceptionYear>2018</inceptionYear>
 								<licenseName>apache_v2</licenseName>
 								<roots>
@@ -113,10 +112,10 @@
 					<version>3.9.0</version>
 				</plugin>
 				<plugin>
-		          <groupId>org.eclipse.tycho</groupId>
-		          <artifactId>tycho-versions-plugin</artifactId>
-		          <version>${tycho.version}</version>
-		        </plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-versions-plugin</artifactId>
+					<version>${tycho.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -151,7 +150,7 @@
 						<artifact>
 							<groupId>org.corpus_tools</groupId>
 							<artifactId>org.corpus_tools.hexatomic.target</artifactId>
-							<version>0.4.4</version>
+							<version>0.5.0</version>
 						</artifact>
 					</target>
 					<environments>
@@ -252,7 +251,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>coverage</id>

@@ -14,7 +14,7 @@ Please go through the sections on this page to see if one is what you are lookin
 
 This user documentation is the one-stop source of information on using Hexatomic, and can hopefully help you.
 
-If you have read through it and haven't found an answer to your question, you can join the Hexatomic User Mailing List (to be announced) and ask your question there.
+If you have read through it and haven't found an answer to your question, you can write to the <nobr>[**<i class="fa fa-envelope"></i> Hexatomic User Mailing List**](https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users)</nobr> and ask your question there. (Please don't use the mailing list to report bugs, see [*I've found a bug!*](#ive-found-a-bug) instead.)
 
 If you have an idea how we could make the documentation better so that the next person with your question can get it answered in the documentation, please let us know! "[The documentation didn't help me!](#the-documentation-didnt-help-me)" below shows you how to do this.
 
@@ -50,3 +50,8 @@ To do so, you need a GitHub user account. If you don't have one yet, you can reg
 First of all, please read the <i class="fa fa-book"></i> [*Contributing guidelines*](https://github.com/hexatomic/hexatomic/tree/master/CONTRIBUTING.md). It's a quick read, and the guidelines contain important details.
 
 Then, when you are logged in, go to <i class="fa fa-pencil"></i> <https://github.com/hexatomic/hexatomic/issues/new> to create a new issue.
+You will need to include the Hexatomic version in the issue.
+If you are unsure what version of Hexatomic you are running, you can click *About* in the *Help* menu to show the **About dialog** which shows you the version and build number.
+
+Alternatively, you can click the link *Create a bug report to notify us of an error in Hexatomic.* in the **About dialog**.
+This will open the issue creation page in a browser and prepopulate it with the build number of the version you are using, and an issue report form that you can fill in.

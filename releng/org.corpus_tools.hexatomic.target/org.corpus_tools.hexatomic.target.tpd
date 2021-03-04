@@ -2,7 +2,7 @@ target 'Hexatomic Target Platform Definition'
 
 with requirements source configurePhase
 
-location 'http://download.eclipse.org/releases/2020-03/' {
+location 'http://download.eclipse.org/releases/2020-06/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.emf.common
@@ -13,15 +13,15 @@ location 'http://download.eclipse.org/releases/2020-03/' {
 	org.junit.jupiter.api
 	org.junit.jupiter.engine
     org.junit.platform.engine
-	org.junit.vintage.engine
 	org.eclipse.swtbot.e4.finder
 	org.eclipse.swtbot.generator
 	org.eclipse.swtbot.go
 	org.eclipse.swtbot.swt.finder
 	org.eclipse.jface
+	org.eclipse.pde.junit.runtime
 }
 
-location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository/' {
+location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20201130205003/repository/' {
 	
 	org.slf4j.api [1.7.10,2.0.0)
 	ch.qos.logback.slf4j [1.1.2,2.0.0)
@@ -34,7 +34,10 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R201906022121
 location 'https://korpling.github.io/salt/p2/salt-3.4/' {
 	org.corpus-tools.salt-api [3.4.2,3.5.0)
 	org.corpus-tools.salt-extensions [3.4.2,3.5.0)
-	
+}
+
+location 'https://korpling.github.io/pepper/p2/3.5/' {
+	org.corpus-tools.pepper-framework [3.5.3,4.0.0)
 }
 
 // NatTable (Eclipse Nebula table widget)

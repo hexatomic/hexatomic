@@ -42,7 +42,9 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -52,6 +54,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
+
+  private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
 
   private SWTWorkbenchBot bot;
 
@@ -100,7 +104,7 @@ class TestProjectManager {
 
     assertEquals(projectManager.getProject().getCorpusGraphs().size(), 1);
 
-    final String[] docIDs = {"salt:/rootCorpus/subCorpus1/doc1", "salt:/rootCorpus/subCorpus1/doc2",
+    final String[] docIDs = {DOC1_SALT_ID, "salt:/rootCorpus/subCorpus1/doc2",
         "salt:/rootCorpus/subCorpus2/doc3", "salt:/rootCorpus/subCorpus2/doc4"};
 
     for (String id : docIDs) {
@@ -111,7 +115,7 @@ class TestProjectManager {
 
     // Load a single document into memory
     Optional<SDocument> optionalDoc1 =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+        projectManager.getDocument(DOC1_SALT_ID, true);
     assertTrue(optionalDoc1.isPresent());
     if (optionalDoc1.isPresent()) {
       SDocument doc1 = optionalDoc1.get();
@@ -122,7 +126,29 @@ class TestProjectManager {
       List<SToken> tokens = doc1Graph.getSortedTokenByText();
       doc1Graph.createSpan(tokens.get(0), tokens.get(1));
 
+      projectManager.addCheckpoint();
+
       assertTrue(projectManager.isDirty());
+      bot.waitUntil(new ICondition() {
+        
+        @Override
+        public boolean test() throws Exception {
+          return bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled();
+        }
+        
+        @Override
+        public void init(SWTBot bot) {
+          // No initialization needed
+        }
+        
+        @Override
+        public String getFailureMessage() {
+          return "Undo toolbar button not enabled";
+        }
+      });
+      // Also check that the undo toolbar item has been enabled
+      assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
+      assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
 
       // Save the project to a different location
       Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
@@ -143,7 +169,7 @@ class TestProjectManager {
           SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
       SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-          .getNode("salt:/rootCorpus/subCorpus1/doc1");
+          .getNode(DOC1_SALT_ID);
 
       Set<Difference> docDiff =
           SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
@@ -151,7 +177,7 @@ class TestProjectManager {
 
       // Apply some more changes to the loaded document graph and save to same
       // location
-      optionalDoc1 = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+      optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
       assertTrue(optionalDoc1.isPresent());
       if (optionalDoc1.isPresent()) {
         doc1 = optionalDoc1.get();
@@ -159,6 +185,8 @@ class TestProjectManager {
         assertNotNull(doc1Graph);
         tokens = doc1Graph.getSortedTokenByText();
         doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+        projectManager.addCheckpoint();
 
         assertTrue(projectManager.isDirty());
 
@@ -172,7 +200,7 @@ class TestProjectManager {
         savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
         savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-            .getNode("salt:/rootCorpus/subCorpus1/doc1");
+            .getNode(DOC1_SALT_ID);
 
         docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
         assertThat(docDiff, is(empty()));

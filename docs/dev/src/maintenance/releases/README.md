@@ -31,7 +31,7 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 3. `mvn clean install` - Builds the project, runs tests, and may update the file headers in Java files.
 4. `git add .` - Adds the updated files - if any - to the Git index. Make sure you only add intended changes.
 5. `git commit -m "Update file headers"` - Commits the updates to version control.
-6. `git push` - Updates the remote *develop* branch.
+6. `git push` - Updates the remote *hotfix* branch.
 7. Check if the `[Unreleased]` changelog section in `CHANGELOG.md` is complete and up-to-date. Make changes, commit and push if necessary.
 8. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 9.  `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
