@@ -2,7 +2,7 @@ name: Deploy release binaries and documentation
 on: 
   push:
     tags:
-      - '/^v\d+.\d+(.\d+)?(-\S*)?$/'
+      - v*
 
 jobs:
   deploy_binaries:
