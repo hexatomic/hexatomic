@@ -284,7 +284,7 @@ public class GridEditor {
     }
   }
   
-  void changeTableVisibility(NatTable currTable, Composite currParent, Boolean visible) {
+  private void changeTableVisibility(NatTable currTable, Composite currParent, Boolean visible) {
     if (currTable != null) {
       currTable.setVisible(visible);
       currParent.layout();
@@ -310,23 +310,13 @@ public class GridEditor {
           Image errorImage = FieldDecorationRegistry.getDefault()
               .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
           deco.setImage(errorImage);
-          changeTableVisibility(table, parent, false);
-          /*if (table != null) {
-            // Hide table
-            table.setVisible(false);
-            parent.layout();
-          }*/
+          changeTableVisibility(table, parent, false);          
         } else {
           deco.setDescriptionText(null);
           deco.setImage(null);
           selectionService.setSelection(
               selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
           changeTableVisibility(table, parent, true);
-          /*if (table != null) {
-            // Show table
-            table.setVisible(true);
-            parent.layout();
-          }*/
         }
       }
     };
