@@ -4,7 +4,7 @@
 # And add the respective index pages.
 
 if [ -n "$GITHUB_TOKEN" ]; then
-    cd "$TRAVIS_BUILD_DIR"
+    cd "$GITHUB_WORKSPACE"
 
     echo "Clone gh-pages"
     # Clones the gh-pages branch into a directory `gh-pages` in the build directory
@@ -13,8 +13,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
     # Copies the freshly built documentation directories to the root of the gh-pages repository, i.e.,
     # to gh-pages/dev/<short-version/ and gh-pages/dev/<short-version>, thereby overwriting existing
     # documentation for this minor version.
-    cp -R ${TRAVIS_BUILD_DIR}/docs/user/book/* .
-    cp -R ${TRAVIS_BUILD_DIR}/docs/dev/book/* .
+    cp -R ${GITHUB_WORKSPACE}/docs/user/book/* .
+    cp -R ${GITHUB_WORKSPACE}/docs/dev/book/* .
     # Declare a string array for the directory prefixes "user" and "dev" to use in the following loop
     declare -a arr=("dev" "user")
     # Loop through both prefixes
@@ -37,10 +37,10 @@ if [ -n "$GITHUB_TOKEN" ]; then
             sed -i -e "s/<\!--REPLACEME-->/<\!--REPLACEME-->\\n            <tr><td class=\"table-success\"><a href=\"\.\/$SHORT_VERSION\/index.html\">$SHORT_VERSION<\/a> \(last updated: $DATE\)<\/td><\/tr>/g" "$DOCS_TYPE"/index.html
         fi
     done
-    # Add all changes to the git index and let a virtual Travis user push it to gh-pages.
+    # Add all changes to the git index and let a virtual GH user push it to gh-pages.
     git add .
-    git -c user.name='Travis CI' -c user.email='travis@corpus-tools.org' commit -m "Update documentation"
+    git -c user.name='GitHub Action CI' -c user.email='gh-actions@corpus-tools.org' commit -m "Update documentation"
     echo "Push to gh-pages"
     git push -q https://sdruskat:$GITHUB_TOKEN@github.com/hexatomic/hexatomic gh-pages &>/dev/null
-    cd "$TRAVIS_BUILD_DIR"
+    cd "$GITHUB_WORKSPACE"
 fi
