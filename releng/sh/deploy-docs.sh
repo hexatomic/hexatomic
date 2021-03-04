@@ -8,7 +8,7 @@ if [ -n "$GITHUB_TOKEN" ]; then
 
     echo "Clone gh-pages"
     # Clones the gh-pages branch into a directory `gh-pages` in the build directory
-    git clone -q  -b gh-pages https://hexatomic:$GITHUB_TOKEN@github.com/hexatomic/hexatomic gh-pages &>/dev/null
+    git clone -q  -b gh-pages https://x-access-token:$GITHUB_TOKEN@github.com/hexatomic/hexatomic gh-pages &>/dev/null
     cd gh-pages
     # Copies the freshly built documentation directories to the root of the gh-pages repository, i.e.,
     # to gh-pages/dev/<short-version/ and gh-pages/dev/<short-version>, thereby overwriting existing
@@ -41,6 +41,6 @@ if [ -n "$GITHUB_TOKEN" ]; then
     git add .
     git -c user.name='GitHub Action CI' -c user.email='gh-actions@corpus-tools.org' commit -m "Update documentation"
     echo "Push to gh-pages"
-    git push -q https://hexatomic:$GITHUB_TOKEN@github.com/hexatomic/hexatomic gh-pages &>/dev/null
+    git push -q https://x-access-token:$GITHUB_TOKEN@github.com/hexatomic/hexatomic gh-pages &>/dev/null
     cd "$GITHUB_WORKSPACE"
 fi
