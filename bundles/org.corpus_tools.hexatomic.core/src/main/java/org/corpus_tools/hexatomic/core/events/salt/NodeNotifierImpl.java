@@ -68,4 +68,9 @@ public class NodeNotifierImpl extends NodeImpl implements Node, NotifyingLabelab
   public void removeAll() {
     applyRemoveAllLabels(super::removeAll, this);
   }
+
+  @Override
+  public void setId(String id) {
+    setNotficiationAwareId(this, id);
+  }
 }

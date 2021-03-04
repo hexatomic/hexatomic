@@ -13,7 +13,6 @@ location 'http://download.eclipse.org/releases/2020-06/' {
 	org.junit.jupiter.api
 	org.junit.jupiter.engine
     org.junit.platform.engine
-	org.junit.vintage.engine
 	org.eclipse.swtbot.e4.finder
 	org.eclipse.swtbot.generator
 	org.eclipse.swtbot.go
@@ -35,7 +34,10 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R202011302050
 location 'https://korpling.github.io/salt/p2/salt-3.4/' {
 	org.corpus-tools.salt-api [3.4.2,3.5.0)
 	org.corpus-tools.salt-extensions [3.4.2,3.5.0)
-	
+}
+
+location 'https://korpling.github.io/pepper/p2/3.5/' {
+	org.corpus-tools.pepper-framework [3.5.3,4.0.0)
 }
 
 // NatTable (Eclipse Nebula table widget)

@@ -30,6 +30,7 @@ Require-Bundle: org.junit,
  org.slf4j.api,
  org.mockito;bundle-version="2.23.0",
  org.eclipse.e4.core.services,
+ org.corpus_tools.hexatomic.formats;bundle-version="0.5.0",
  org.apache.commons.lang3;bundle-version="3.4.0"
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Bundle-ActivationPolicy: lazy
