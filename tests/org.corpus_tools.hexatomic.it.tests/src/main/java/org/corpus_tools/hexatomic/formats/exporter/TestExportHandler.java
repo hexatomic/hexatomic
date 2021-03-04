@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests the several conditions of the {@link ExportHandler}. The handler is used as a fixture with
  * mocked dependencies instead of the real ones from the context to make it easier to access the
- * state. We still need to do this tests in the integration test package, since we need access to
+ * state. We still need to do these tests in the integration test package, since we need access to
  * the message dialogs (which are created using static methods and not easy to mock).
  * 
  * @author Thomas Krause {@literal <krauseto@hu-berlin.de>}
