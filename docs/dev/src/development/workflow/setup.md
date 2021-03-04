@@ -6,7 +6,6 @@
 
 - **Root directory**
 	- main POM
-	- `.travis.yml` ([Travis CI](https://travis-ci.org/) config)
 	- Meta files (`.gitignore`, `README.md`, `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.)
 - **`bundles`**
 	- plug-in sub-projects
