@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.core.FileChooserProvider;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.handlers.SaveAsHandler;
 import org.eclipse.emf.common.util.URI;
@@ -29,7 +30,15 @@ public class TestSaveAsHandler {
 
   @BeforeEach
   private void setUp() {
-    this.fixture = new CustomSaveAsHandler();
+    dialog = mock(DirectoryDialog.class);
+
+    this.fixture = new SaveAsHandler();
+    this.fixture.setFileChooserProvider(new FileChooserProvider() {
+      @Override
+      public DirectoryDialog createDirectoryDialog(Shell shell) {
+        return dialog;
+      }
+    });
     File exampleProjectDirectory =
         new File("src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
@@ -39,7 +48,6 @@ public class TestSaveAsHandler {
     shell = mock(Shell.class);
     projectManager = mock(ProjectManager.class);
     
-    dialog = mock(DirectoryDialog.class);
     
     this.fixture.setProjectManager(projectManager);
 
@@ -76,19 +84,6 @@ public class TestSaveAsHandler {
 
     verifyNoMoreInteractions(dialog);
     verifyNoMoreInteractions(projectManager);
-  }
-
-  /**
-   * An implementation that returns the mock dialog instead of a real one.
-   * 
-   * @author Thomas Krause
-   *
-   */
-  private class CustomSaveAsHandler extends SaveAsHandler {
-    @Override
-    protected DirectoryDialog createDialog(Shell shell) {
-      return dialog;
-    }
   }
 
 }

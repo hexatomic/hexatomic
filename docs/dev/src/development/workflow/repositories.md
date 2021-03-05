@@ -13,7 +13,6 @@ Section [*Downloading the source code to your computer*](../getting-the-source-c
 
 - **Root directory**
     - main [POM](http://web.archive.org/web/20191212124853/https://maven.apache.org/guides/introduction/introduction-to-the-pom.html) (`pom.xml`)
-    - `.travis.yml` (Configuration for the [Travis continuous integration platform](https://travis-ci.org/))
     - Meta files (`.gitignore`, `README.md`, `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.)
 - **`bundles`**
     - bundle sub-projects
@@ -23,6 +22,8 @@ Section [*Downloading the source code to your computer*](../getting-the-source-c
     - source files for user and developer/maintainer documentation
 - **`releng`**
     - configuration and release engineering files
+- **`.github`** 
+    - GitHub specific configuration, such as issue templates and workflows of the GitHub Actions CI
 
 ### Setup details
 

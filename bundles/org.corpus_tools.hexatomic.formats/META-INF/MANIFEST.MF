@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Corpus file formats
+Bundle-SymbolicName: org.corpus_tools.hexatomic.formats;singleton:=true
+Bundle-Version: 0.6.0.qualifier
+Require-Bundle: org.eclipse.e4.ui.model.workbench;bundle-version="2.1.700.v20200113-1422",
+ org.eclipse.e4.core.di.annotations,
+ org.eclipse.jface;bundle-version="3.19.0",
+ org.corpus-tools.pepper-framework;bundle-version="3.4.2",
+ org.corpus_tools.hexatomic.core;bundle-version="0.5.0",
+ org.eclipse.emf.common;bundle-version="2.18.0",
+ org.eclipse.core.runtime;bundle-version="3.17.100",
+ org.slf4j.api,
+ org.corpus-tools.salt-api;bundle-version="3.4.2",
+ com.google.guava;bundle-version="19.0.0",
+ org.eclipse.e4.core.commands,
+ org.eclipse.e4.ui.di,
+ javax.inject
+Automatic-Module-Name: org.corpus.tools.hexatomic.formats
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator
+Bundle-ActivationPolicy: lazy
+Export-Package: org.corpus_tools.hexatomic.formats, org.corpus_tools.hexatomic.formats.exporter

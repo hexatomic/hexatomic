@@ -41,6 +41,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SDocument;
@@ -64,7 +65,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
-import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
@@ -99,6 +99,8 @@ public class GridEditor {
   public static final String DELETE_CELLS_POPUP_MENU_LABEL = "Delete cell(s)";
 
   public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
+
+  public static final String CREATE_SPAN_POPUP_MENU_LABEL = "Create span";
 
   @Inject
   ErrorService errors;
@@ -157,8 +159,8 @@ public class GridEditor {
     final SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
     selectionLayer.addConfiguration(new SelectionStyleConfiguration());
     final FreezeLayer freezeLayer = new FreezeLayer(selectionLayer);
-    final CompositeFreezeLayer compositeFreezeLayer =
-        new CompositeFreezeLayer(freezeLayer, bodyLayer.getViewportLayer(), selectionLayer);
+    final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
+        bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
     // Column header
     final IDataProvider columnHeaderDataProvider =

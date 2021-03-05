@@ -23,16 +23,21 @@ package org.corpus_tools.hexatomic.core.handlers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.CommandParams;
+import org.corpus_tools.hexatomic.core.FileChooserProvider;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.e4.core.di.annotations.CanExecute;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 
+@Creatable
+@Singleton
 public class SaveAsHandler {
 
   @Inject
@@ -41,6 +46,8 @@ public class SaveAsHandler {
   @Inject
   ProjectManager projectManager;
 
+  @Inject
+  FileChooserProvider fileChooserProvider;
 
   private String lastPath;
 
@@ -50,9 +57,10 @@ public class SaveAsHandler {
    * @param shell The user interface shell
    * @param location If non-null, save the project to this location. If null, use the original
    *        location from where the project was loaded.
+   * @return True when a location was choosen and the corpus was saved, false when aborted.
    */
   @Execute
-  public void execute(Shell shell,
+  public boolean execute(Shell shell,
       @Optional @Named(CommandParams.LOCATION) String location) {
 
     String resultPath;
@@ -64,7 +72,7 @@ public class SaveAsHandler {
         lastPath = originalLocation.get().toFileString();
       }
 
-      DirectoryDialog dialog = createDialog(shell);
+      DirectoryDialog dialog = fileChooserProvider.createDirectoryDialog(shell);
       if (lastPath != null) {
         dialog.setFilterPath(lastPath);
       }
@@ -75,11 +83,15 @@ public class SaveAsHandler {
       resultPath = location;
     }
 
-    if (resultPath != null) {
+    if (resultPath == null) {
+      return false;
+    } else {
       projectManager.saveTo(URI.createFileURI(resultPath), shell);
       lastPath = resultPath;
+      return true;
     }
   }
+
 
   @CanExecute
   public boolean canExecute() {
@@ -90,7 +102,11 @@ public class SaveAsHandler {
     this.projectManager = projectManager;
   }
 
-  protected DirectoryDialog createDialog(Shell shell) {
-    return new DirectoryDialog(shell);
+  public void setErrorService(ErrorService errorService) {
+    this.errorService = errorService;
+  }
+
+  public void setFileChooserProvider(FileChooserProvider fileChooserProvider) {
+    this.fileChooserProvider = fileChooserProvider;
   }
 }

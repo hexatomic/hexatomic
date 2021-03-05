@@ -42,7 +42,9 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -127,6 +129,23 @@ class TestProjectManager {
       projectManager.addCheckpoint();
 
       assertTrue(projectManager.isDirty());
+      bot.waitUntil(new ICondition() {
+        
+        @Override
+        public boolean test() throws Exception {
+          return bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled();
+        }
+        
+        @Override
+        public void init(SWTBot bot) {
+          // No initialization needed
+        }
+        
+        @Override
+        public String getFailureMessage() {
+          return "Undo toolbar button not enabled";
+        }
+      });
       // Also check that the undo toolbar item has been enabled
       assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
       assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());

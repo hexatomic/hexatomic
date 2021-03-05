@@ -92,6 +92,11 @@ public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L exten
 
   @Override
   public void addNode(N node) {
+    @SuppressWarnings("unchecked")
+    Graph<N, ?, ?> oldGraph = node.getGraph();
+    if (oldGraph != null) {
+      oldGraph.removeNode(node);
+    }
     super.addNode(node);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addNode() would have an optional parameter for
@@ -113,6 +118,11 @@ public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L exten
   @SuppressWarnings("unchecked")
   @Override
   public void addRelation(Relation<? extends N, ? extends N> relation) {
+    @SuppressWarnings("rawtypes")
+    Graph oldGraph = relation.getGraph();
+    if (oldGraph != null) {
+      oldGraph.removeRelation(relation);
+    }
     super.addRelation(relation);
     // HACK: Reset to the actual owning graph.
     // It would be better if the super.addRelation() would have an optional parameter for
@@ -159,5 +169,10 @@ public class GraphNotifierImpl<N extends Node, R extends Relation<N, N>, L exten
     super.removeLayer(layer);
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED,
         new RemoveLayerFromGraphOperation<L>(typedDelegation, layer));
+  }
+
+  @Override
+  public void setId(String id) {
+    setNotficiationAwareId(this, id);
   }
 }

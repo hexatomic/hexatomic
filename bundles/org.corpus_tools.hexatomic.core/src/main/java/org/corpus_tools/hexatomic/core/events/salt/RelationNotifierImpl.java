@@ -93,4 +93,8 @@ public class RelationNotifierImpl<S extends Node, T extends Node>
     sendEvent(Topics.ANNOTATION_OPERATION_ADDED, new SetTargetOperation<T>(this, oldNode));
   }
 
+  @Override
+  public void setId(String id) {
+    setNotficiationAwareId(this, id);
+  }
 }

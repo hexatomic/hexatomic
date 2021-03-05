@@ -308,7 +308,26 @@ public class ProjectManager {
     return project;
   }
 
-  /*
+  /**
+   * Sets the current single instance of a {@link SaltProject}.
+   * 
+   * @param project The new current Salt project instance.
+   */
+  public void setProject(SaltProject project) {
+    closeOpenEditors();
+
+    this.project = project;
+
+    this.location = Optional.empty();
+    hasUnsavedChanges = true;
+
+    uiStatus.setDirty(true);
+    uiStatus.setLocation(null);
+
+    events.send(Topics.PROJECT_LOADED, null);
+  }
+
+  /**
    * Return a document by its ID. The document graph might not be loaded.
    * 
    * @param documentID The Salt ID
@@ -331,7 +350,7 @@ public class ProjectManager {
   public Optional<SDocument> getDocument(String documentID, boolean loadDocumentGraph) {
     Optional<SDocument> result =
         this.project.getCorpusGraphs().stream().map(g -> g.getNode(documentID))
-            .filter(o -> o instanceof SDocument).map(o -> (SDocument) o).findFirst();
+            .filter(SDocument.class::isInstance).map(SDocument.class::cast).findFirst();
 
     if (loadDocumentGraph && result.isPresent() && result.get().getDocumentGraph() == null) {
       if (result.get().getDocumentGraphLocation() == null) {

@@ -2,7 +2,7 @@
 <feature
       id="org.corpus_tools.hexatomic"
       label="Hexatomic Core Feature"
-      version="0.5.0.qualifier"
+      version="0.6.0.qualifier"
       provider-name="Hexatomic Research Project">
 
    <description url="http://www.example.com/description">
@@ -85,6 +85,13 @@
 
    <plugin
          id="org.corpus_tools.hexatomic.graph"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.corpus_tools.hexatomic.formats"
          download-size="0"
          install-size="0"
          version="0.0.0"

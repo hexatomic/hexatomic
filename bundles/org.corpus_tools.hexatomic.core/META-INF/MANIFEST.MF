@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Core Plugin
 Bundle-SymbolicName: org.corpus_tools.hexatomic.core;singleton:=true
-Bundle-Version: 0.5.0.qualifier
+Bundle-Version: 0.6.0.qualifier
 Bundle-Vendor: Hexatomic Research Project
 Require-Bundle: javax.inject;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
@@ -25,6 +25,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
 Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.errors,
+ org.corpus_tools.hexatomic.core.events.salt,
  org.corpus_tools.hexatomic.core.handlers,
  org.corpus_tools.hexatomic.core.ui;x-internal:=true,
  org.corpus_tools.hexatomic.core.undo
