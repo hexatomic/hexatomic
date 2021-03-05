@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Allow all Unicode letter characters as identifier in the graph console 
+  and the "ideographic full stop" as punctuation. (#261)
+
 ## [0.5.0] - 2021-03-04
 
 ### Added
