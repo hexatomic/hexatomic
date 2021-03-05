@@ -33,20 +33,20 @@
       <import plugin="ch.qos.logback.classic" version="1.1.2" match="greaterOrEqual"/>
       <import plugin="ch.qos.logback.core" version="1.1.2" match="greaterOrEqual"/>
       <import plugin="org.slf4j.api" version="1.7.10" match="greaterOrEqual"/>
-      <import plugin="org.corpus-tools.salt-api" version="3.3.12" match="greaterOrEqual"/>
+      <import plugin="org.corpus-tools.salt-api"/>
+      <import plugin="javax.annotation" version="1.2.0" match="greaterOrEqual"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="equivalent"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.eclipse.core.runtime" version="3.15.300" match="greaterOrEqual"/>
       <import plugin="org.corpus_tools.hexatomic.core" version="0.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common" version="2.16.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.e4.ui.workbench" version="1.10.0" match="greaterOrEqual"/>
+      <import plugin="org.corpus-tools.salt-api" version="3.3.8" match="greaterOrEqual"/>
       <import plugin="org.corpus_tools.hexatomic.core" version="0.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.nebula.widgets.nattable.core"/>
-      <import plugin="org.corpus-tools.salt-extensions" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="javax.annotation" version="1.2.0" match="greaterOrEqual"/>
-      <import plugin="org.junit"/>
-      <import plugin="org.slf4j.api" version="1.7.30" match="equivalent"/>
-      <import plugin="org.corpus-tools.salt-api" version="3.3.8" match="greaterOrEqual"/>
+      <import plugin="org.corpus-tools.salt-extensions"/>
       <import plugin="org.apache.commons.lang3" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.zest.core" version="1.5.300" match="greaterOrEqual"/>
       <import plugin="org.eclipse.zest.layouts" version="1.1.300" match="greaterOrEqual"/>
