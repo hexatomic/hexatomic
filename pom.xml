@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.corpus_tools</groupId>
 	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<packaging>pom</packaging>
 	<!-- SCM -->
 	<scm>
@@ -150,7 +150,7 @@
 						<artifact>
 							<groupId>org.corpus_tools</groupId>
 							<artifactId>org.corpus_tools.hexatomic.target</artifactId>
-							<version>0.5.0</version>
+							<version>0.5.1</version>
 						</artifact>
 					</target>
 					<environments>
