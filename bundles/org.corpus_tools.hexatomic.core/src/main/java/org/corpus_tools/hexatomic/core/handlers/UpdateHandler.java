@@ -51,19 +51,16 @@ public class UpdateHandler {
     }
     ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
     if (provisioningJob != null) {
-      sync.syncExec(new Runnable() {
-        @Override
-        public void run() {
-          boolean performUpdate = MessageDialog.openQuestion(null, "Updates available",
-              "There are updates available. Do you want to install them now?");
-          if (performUpdate) {
-            provisioningJob.schedule();
+      sync.syncExec(() -> {
+        boolean performUpdate = MessageDialog.openQuestion(null, "Updates available",
+            "There are updates available. Do you want to install them now?");
+        if (performUpdate) {
+          provisioningJob.schedule();
 
-            boolean restart = MessageDialog.openQuestion(null, "Updates installed, restart?",
-                "Updates have been installed successfully, do you want to restart?");
-            if (restart) {
-              workbench.restart();
-            }
+          boolean restart = MessageDialog.openQuestion(null, "Updates installed, restart?",
+              "Updates have been installed successfully, do you want to restart?");
+          if (restart) {
+            workbench.restart();
           }
         }
       });
