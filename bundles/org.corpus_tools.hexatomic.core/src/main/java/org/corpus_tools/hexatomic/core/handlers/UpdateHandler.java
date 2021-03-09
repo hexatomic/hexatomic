@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -40,7 +41,8 @@ public class UpdateHandler {
    */
 
   @Execute
-  public void execute(IProvisioningAgent agent, UISynchronize sync, IWorkbench workbench) {
+  protected static void execute(IProvisioningAgent agent, UISynchronize sync, IWorkbench workbench,
+      ErrorService errorService) {
 
     ProvisioningSession session = new ProvisioningSession(agent);
     // update all user-visible installable units
@@ -66,11 +68,13 @@ public class UpdateHandler {
       });
     } else {
       if (operation.hasResolved()) {
-        MessageDialog.openError(null, "Error",
-            "Couldn't get provisioning job: " + operation.getResolutionResult());
+        errorService.showError("Error",
+            "Couldn't get provisioning job: " + operation.getResolutionResult(),
+            UpdateHandler.class);
       } else {
-        MessageDialog.openError(null, "Error", "Couldn't resolve provisioning job");
+        errorService.showError("Error", "Couldn't resolve provisioning job", UpdateHandler.class);
       }
     }
   }
+
 }
