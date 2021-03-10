@@ -1,0 +1,3 @@
+instructions.configure=\
+  addRepository(type:0,location:http${#58}//download.eclipse.org/eclipse/updates/4.5,name:Eclipse Mars Update Site);\
+  addRepository(type:1,location:http${#58}//download.eclipse.org/eclipse/updates/4.5,name:Eclipse Mars Update Site);
