@@ -51,7 +51,8 @@
       "contributions": [
         "bug",
         "doc",
-        "maintenance"
+        "maintenance",
+        "code"
       ]
     }
   ],
