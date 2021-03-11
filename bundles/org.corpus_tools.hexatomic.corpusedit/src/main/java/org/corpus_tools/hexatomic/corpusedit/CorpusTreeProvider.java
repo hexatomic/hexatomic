@@ -45,7 +45,7 @@ public class CorpusTreeProvider implements ITreeContentProvider {
 
       return new SNode[] {n};
     } else {
-      return null;
+      return new Object[0];
     }
   }
 
@@ -62,7 +62,7 @@ public class CorpusTreeProvider implements ITreeContentProvider {
       SCorpusGraph g = (SCorpusGraph) parentElement;
       List<SNode> roots = g.getRoots();
       if (roots == null) {
-        return null;
+        return new Object[0];
       } else {
         return roots.toArray();
       }
@@ -71,7 +71,7 @@ public class CorpusTreeProvider implements ITreeContentProvider {
       List<SCorpusGraph> graphs = p.getCorpusGraphs();
       return graphs.toArray();
     } else {
-      return null;
+      return new Object[0];
     }
   }
 

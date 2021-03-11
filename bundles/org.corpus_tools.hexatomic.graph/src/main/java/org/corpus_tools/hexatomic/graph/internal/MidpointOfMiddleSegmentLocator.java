@@ -41,6 +41,8 @@ public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
    * 
    * @return the reference point
    */
+  
+  @Override
   protected Point getReferencePoint() {
     Connection conn = getConnection();
     Point p = Point.SINGLETON;

@@ -44,7 +44,7 @@ public class SaltObjectTreeDropTarget extends ViewerDropAdapter {
   public boolean performDrop(Object data) {
 
     SCorpus newParent = (SCorpus) getCurrentTarget();
-    log.info("Trying to drop {} into", data, newParent.getId());
+    log.info("Trying to drop {} into {}", data, newParent.getId());
 
     // get the document which is referred by the dropped ID
     String docID = (String) data;
@@ -63,12 +63,6 @@ public class SaltObjectTreeDropTarget extends ViewerDropAdapter {
   @Override
   public boolean validateDrop(Object target, int operation, TransferData transferType) {
 
-    if (target instanceof SCorpus) {
-      return true;
-    } else {
-      return false;
-    }
-
+    return target instanceof SCorpus;
   }
-
 }

@@ -155,9 +155,7 @@ public class ErrorService {
    * 
    */
   public void clearLastException() {
-    sync.syncExec(() -> {
-      lastException = Optional.empty();
-    });
+    sync.syncExec(() -> lastException = Optional.empty());
   }
 
   /**

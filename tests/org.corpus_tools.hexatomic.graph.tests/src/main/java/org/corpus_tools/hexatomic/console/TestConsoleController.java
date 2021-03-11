@@ -96,7 +96,7 @@ class TestConsoleController {
     SNode t2 = graph.getNodesByName("t2").get(0);
 
     List<SRelation<?, ?>> pointing = t2.getOutRelations().stream()
-        .filter((rel) -> rel instanceof SPointingRelation).collect(Collectors.toList());
+        .filter(rel -> rel instanceof SPointingRelation).collect(Collectors.toList());
     assertEquals(1, pointing.size());
     assertEquals(t1, pointing.get(0).getTarget());
     assertEquals("nsubj", pointing.get(0).getAnnotation("func").getValue());

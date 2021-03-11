@@ -66,15 +66,10 @@ public class ExitHandler implements IWindowCloseHandler {
   public boolean close(MWindow window) {
     if (projectManager.isDirty()) {
       // Ask user if project should be closed even with unsaved changes
-      boolean confirmed = MessageDialog.openConfirm((Shell) window.getWidget(),
+      return MessageDialog.openConfirm((Shell) window.getWidget(),
           "Discard unsaved changes?",
           "There are unsaved changes in the project that will be lost if you close the "
           + "application. Do you really want to close Hexatomic?");
-      if (confirmed) {
-        return true;
-      } else {
-        return false;
-      }
     }
     return true;
   }
