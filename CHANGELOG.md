@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use GitHub Actions instead of Travis CI for deploying the release binaries and the documentation.
 
+## [0.5.1] - 2021-03-11
+
+### Fixed
+
+- Allow all Unicode letter characters as identifier in the graph console 
+  and the "ideographic full stop" as punctuation. (#261)
+
 ## [0.5.0] - 2021-03-04
 
 ### Added
@@ -138,7 +145,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/hexatomic/hexatomic/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/hexatomic/hexatomic/compare/v0.4.4...v0.5.0
 [0.4.4]: https://github.com/hexatomic/hexatomic/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...v0.4.3
