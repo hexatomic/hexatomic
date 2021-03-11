@@ -48,9 +48,6 @@ class TestCorpusStructure {
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
-  private ECommandService commandService;
-  private EHandlerService handlerService;
-
   private ProjectManager projectManager;
 
   private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
@@ -63,10 +60,10 @@ class TestCorpusStructure {
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
-    commandService = ctx.get(ECommandService.class);
+    ECommandService commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
 
-    handlerService = ctx.get(EHandlerService.class);
+    EHandlerService handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
     TestHelper.executeNewProjectCommand(commandService, handlerService);

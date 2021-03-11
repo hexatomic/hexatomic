@@ -62,7 +62,8 @@ class TestGraphDataProvider {
   private SDocumentGraph overlappingExampleGraph;
   private STextualDS overlappingExampleText;
 
-  private static final String overlappingExamplePath =
+
+  private static final String OVERLAPPING_EXAMPLE_PATH =
       "src/main/resources/org/corpus_tools/hexatomic/grid/overlapping-spans/";
 
   /**
@@ -72,7 +73,7 @@ class TestGraphDataProvider {
   void setUp() {
     fixture = new GraphDataProvider();
     exampleGraph = TestHelper.retrieveGraph();
-    overlappingExampleGraph = TestHelper.retrieveGraph(overlappingExamplePath);
+    overlappingExampleGraph = TestHelper.retrieveGraph(OVERLAPPING_EXAMPLE_PATH);
     exampleText = TestHelper.getFirstTextFromGraph(exampleGraph);
     overlappingExampleText = TestHelper.getFirstTextFromGraph(overlappingExampleGraph);
     errorService = mock(ErrorService.class);

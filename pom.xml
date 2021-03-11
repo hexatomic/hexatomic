@@ -48,8 +48,7 @@
 						<windowtitle>Hexatomic API Documentation</windowtitle>
 						<doctitle>Hexatomic
 							${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}
-							API</doctitle>
-						<!-- <excludePackageNames>*.internal.*</excludePackageNames> -->
+							API</doctitle>						
 						<linksource>true</linksource>
 						<links>
 							<!-- This list should match the bundles/packages depended on, with 
@@ -274,7 +273,4 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<!-- JAVADOC REPORTING -->
-	<!--<reporting><excludeDefaults>true</excludeDefaults><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId><version>3.1.1</version><reportSets><reportSet><reports><report>aggregate-no-fork</report><report>test-aggregate-no-fork</report></reports></reportSet></reportSets></plugin></plugins></reporting> -->
 </project>

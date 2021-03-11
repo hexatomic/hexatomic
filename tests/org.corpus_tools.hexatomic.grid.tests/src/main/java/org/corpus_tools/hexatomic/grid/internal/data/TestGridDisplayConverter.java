@@ -93,8 +93,6 @@ class TestGridDisplayConverter {
    */
   @Test
   void testDisplayToCanonicalValueILayerCell() {
-    // assertEquals(token, fixture.displayToCanonicalValue(tokenCell, null, "token_pass"));
-    // assertEquals(span, fixture.displayToCanonicalValue(spanCell, null, "span_pass"));
     assertEquals(BE, fixture.displayToCanonicalValue(tokenCell, null, BE));
     assertEquals(CONTRAST_FOCUS,
         fixture.displayToCanonicalValue(spanCell, null, CONTRAST_FOCUS));

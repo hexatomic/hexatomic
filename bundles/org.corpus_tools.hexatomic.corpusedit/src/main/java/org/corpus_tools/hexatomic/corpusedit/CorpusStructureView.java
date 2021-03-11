@@ -67,7 +67,6 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -83,7 +82,6 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -147,10 +145,9 @@ public class CorpusStructureView {
                 @Override
                 public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                     SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-                  if (currNode.getName() != null) {
-                    if (currNode.getName().toLowerCase().contains(filterText)) {
-                      found.set(true);
-                    }
+                  if (currNode.getName() != null 
+                      && currNode.getName().toLowerCase().contains(filterText)) {
+                    found.set(true);
                   }
 
                 }
@@ -207,14 +204,7 @@ public class CorpusStructureView {
     txtFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     txtFilter.setToolTipText("Type to filter for corpus/document name");
 
-    txtFilter.addModifyListener(new ModifyListener() {
-
-      @Override
-      public void modifyText(ModifyEvent e) {
-        treeViewer.refresh();
-
-      }
-    });
+    txtFilter.addModifyListener((ModifyEvent e) -> treeViewer.refresh());
 
     Composite composite = new Composite(parent, SWT.NONE);
     composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -282,14 +272,11 @@ public class CorpusStructureView {
     treeViewer.setFilters(new ChildNameFilter());
     treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 
-    treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-        IStructuredSelection selection = treeViewer.getStructuredSelection();
-        selectionService.setSelection(selection.getFirstElement());
-      }
-    });
+    treeViewer.addSelectionChangedListener((SelectionChangedEvent event) -> {
+      IStructuredSelection selection = treeViewer.getStructuredSelection();
+      selectionService.setSelection(selection.getFirstElement());
+    }
+    );
 
     registerEditors(modelService, application, thisPart);
   }
@@ -314,7 +301,7 @@ public class CorpusStructureView {
           if (selected.getFirstElement() instanceof SCorpus) {
             addDocument(toolBar.getShell());
           } else if (selected.getFirstElement() instanceof SCorpusGraph) {
-            addCorpus(toolBar.getShell());
+            addCorpus();
           } else if (selected.getFirstElement() instanceof SDocument) {
             // add a sibling document
             addDocument(toolBar.getShell());
@@ -344,7 +331,7 @@ public class CorpusStructureView {
     addCorpus.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addCorpus(toolBar.getShell());
+        addCorpus();
       }
     });
 
@@ -375,7 +362,7 @@ public class CorpusStructureView {
 
   }
 
-  private void addCorpus(Shell shell) {
+  private void addCorpus() {
 
 
     SCorpusGraph g = null;
@@ -641,7 +628,7 @@ public class CorpusStructureView {
       MPart thisPart) {
     // Find all descriptors with the correct category
     List<MPartDescriptor> editorParts = application.getDescriptors().stream()
-        .filter((p) -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
+        .filter(p -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
         .collect(Collectors.toList());
 
     for (MPartDescriptor desc : editorParts) {
