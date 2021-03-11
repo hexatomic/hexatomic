@@ -356,5 +356,23 @@ class TestConsoleController {
     assertNull(console.getGraph());
     assertNull(console.getSelectedText());
   }
+  
+  /** 
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/261 
+   */
+  @Test
+  void testNonAsciiTokens() {
+    console.executeCommand("t 这 是 一个 例子 。");
+    graph.sortTokenByText();
+    
+    List<SToken> tokens = graph.getTokens();
+    assertEquals(5, tokens.size());
+    assertEquals(1, graph.getTextualDSs().size());
+    assertEquals("这", graph.getText(tokens.get(0)));
+    assertEquals("是", graph.getText(tokens.get(1)));
+    assertEquals("一个", graph.getText(tokens.get(2)));
+    assertEquals("例子", graph.getText(tokens.get(3)));
+    assertEquals("。", graph.getText(tokens.get(4)));
+  }
 
 }
