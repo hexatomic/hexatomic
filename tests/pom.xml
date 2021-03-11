@@ -37,7 +37,7 @@
                 </os>
             </activation>
             <properties>
-                <tycho-tests-jvmargs>-XstartOnFirstThread</tycho-tests-jvmargs>
+                <tycho-tests-jvmargs>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</tycho-tests-jvmargs>
             </properties>
         </profile>
     </profiles>
