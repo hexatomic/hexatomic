@@ -13,10 +13,6 @@
     <artifactId>org.corpus_tools.hexatomic.it.tests</artifactId>
     <packaging>eclipse-test-plugin</packaging>
 
-	<properties>
-		<tycho-it-tests-jvmargs></tycho-it-tests-jvmargs>
-	</properties>
-
     <build>
         <plugins>
             <plugin>
@@ -38,25 +34,8 @@
 	                    -->
                     	<GDK_BACKEND>x11,*</GDK_BACKEND>
                     </environmentVariables>
-                    <argLine>${tycho-it-tests-jvmargs}</argLine>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    
-    <profiles>
-    	<profile>
-    	<id>macos</id>
-    	<activation>
-    		<os>
-    			<family>macos</family>
-    		</os>
-    	</activation>
-    	<properties>
-    		<tycho-it-tests-jvmargs>-XstartOnFirstThread</tycho-it-tests-jvmargs>
-    	</properties>
-    </profile>
- 
-    </profiles>
-
 </project>
