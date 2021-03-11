@@ -5,6 +5,8 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 class TestHelpMenu {
 
@@ -24,6 +26,7 @@ class TestHelpMenu {
   }
 
   @Test
+  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testOpenAboutDialog() {
     SWTBotMenu helpMenu = bot.menu("Help");
     helpMenu.menu("About").click();
