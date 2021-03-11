@@ -112,6 +112,7 @@ public class TestGridEditor {
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
   
   private static final String SPAN_1 = "span_1";
+  private static final String SPAN_2 = "span_2";
   
   private static final String FIVE = "five::";
 
@@ -362,7 +363,7 @@ public class TestGridEditor {
     assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
     assertEquals(FIVE + SPAN_1, table.getCellDataValueByPosition(0, 3));
     assertEquals(FIVE + SPAN_1 + " (2)", table.getCellDataValueByPosition(0, 4));
-    assertEquals(FIVE + "span_2", table.getCellDataValueByPosition(0, 5));
+    assertEquals(FIVE + SPAN_2, table.getCellDataValueByPosition(0, 5));
 
     // Test cells
     assertEquals("val_span_1", ((SAnnotationContainer) natTable.getDataValueByPosition(3, 1))
@@ -926,7 +927,7 @@ public class TestGridEditor {
     // Test headers
     assertEquals(FIVE + SPAN_1, table.getCellDataValueByPosition(0, 3));
     assertEquals(FIVE + SPAN_1 + " (2)", table.getCellDataValueByPosition(0, 4));
-    assertEquals(FIVE + "span_2", table.getCellDataValueByPosition(0, 5));
+    assertEquals(FIVE + SPAN_2, table.getCellDataValueByPosition(0, 5));
 
     // Change annotation name in first overlapping column (currently at position 3)
     table.contextMenu(0, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
@@ -937,7 +938,7 @@ public class TestGridEditor {
     // Assert names and positions have changed
     assertEquals(FIVE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
     assertEquals(FIVE + TEST_ANNOTATION_VALUE + " (2)", table.getCellDataValueByPosition(0, 4));
-    assertEquals(FIVE + "span_2", table.getCellDataValueByPosition(0, 5));
+    assertEquals(FIVE + SPAN_2, table.getCellDataValueByPosition(0, 5));
     // Also check if annotation name has changed for all cells in column
     for (int i = 1; i < 11; i++) {
       Object nodeObjFirstColumn = table.widget.getDataValueByPosition(3, i);
