@@ -18,3 +18,10 @@ A clear and concise description of any alternative solutions or features you've 
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
+
+**Get credited**
+Thinking about how to improve Hexatomic deserves credit! Get yourself listed as a contributor by mentioning your username in the next line.
+
+@all-contributors, please add <@ user> for ideas.
+
+<!-- Replace <@user> in the line above with your GitHub username by the @ symbol. -->
