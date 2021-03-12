@@ -185,13 +185,13 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 
 - Stephan Druskat ([@sdruskat](https://github.com/sdruskat))
 - Thomas Krause ([@thomaskrause](https://github.com/thomaskrause))
+- Clara Lachenmaier ([@clachenmaier](https://github.com/clachenmaierclachenmaier))
+- Bastian Bunzeck ([@bunz-lightyear](https://github.com/bunz-lightyear))
 
 ### Principal investigators
 
 - Volker Gast ([@VolkerGast](https://github.com/VolkerGast))
 - Anke Lüdeling ([@AnkeLuedeling](https://github.com/AnkeLuedeling))
-
-
 
 <!-- ACKNOWLEDGEMENTS -->
 <!--## Acknowledgements
