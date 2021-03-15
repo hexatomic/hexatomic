@@ -105,8 +105,8 @@ class TestCorpusStructure {
   private void createExampleStructure() {
     createMinimalCorpusStructure(bot);
 
-    // Add document_2
-    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
+    // Add document_2 and use the explicit document menu entry for it
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).menuItem("Document").click();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(1).select();
 
 
