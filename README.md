@@ -1,21 +1,3 @@
-<!-- PROJECT SHIELDS -->
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Build Status][gh-actions-master-shield]][gh-actions-master-url]  
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![Apache License, Version 2.0][license-shield]][license-url]
-
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -38,7 +20,32 @@
   </p>
 </p>
 
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
 
+**Community**
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+
+**Project**
+
+[![Issues][issues-shield]][issues-url]
+[![Apache License, Version 2.0][license-shield]][license-url]
+
+**Code Quality**
+
+[![Build Status][gh-actions-master-shield]][gh-actions-master-url]  
+[![SonarCloud Bugs][sonarcloud-bugs-shield]][sonarcloud-dashboard]
+[![SonarCloud Code Smells][sonarcloud-smells-shield]][sonarcloud-dashboard]  
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -217,6 +224,9 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [product-screenshot]: images/screenshot.png
 [gh-actions-master-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
 [gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests%22
+[sonarcloud-dashboard]: https://sonarcloud.io/dashboard?id=hexatomic_hexatomic
+[sonarcloud-bugs-shield]: https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=bugs
+[sonarcloud-smells-shield]: https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=code_smells
 
 [eclipse-download]: https://www.eclipse.org/downloads/
 [eclipse]: https://eclipse.org
