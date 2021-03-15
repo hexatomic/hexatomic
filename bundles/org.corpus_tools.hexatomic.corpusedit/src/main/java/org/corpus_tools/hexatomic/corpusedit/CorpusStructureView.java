@@ -458,9 +458,11 @@ public class CorpusStructureView {
   }
 
   private void deleteCorpus(SCorpus selectedCorpus) {
-    boolean hasChildren = selectedCorpus.getOutRelations().stream()
-        .anyMatch(rel -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation);
-    if (hasChildren) {
+    boolean hasSubCorpora = selectedCorpus.getOutRelations().stream()
+        .anyMatch(SCorpusRelation.class::isInstance);
+    boolean hasDocuments = selectedCorpus.getOutRelations().stream()
+        .anyMatch(SCorpusDocumentRelation.class::isInstance);
+    if (hasSubCorpora || hasDocuments) {
       errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
           ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
       return;
