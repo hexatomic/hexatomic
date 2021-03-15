@@ -87,6 +87,8 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditor {
 
 
+  private static final String TEXT1_CAPTION = "sText1";
+
   private static final String DOC_GRID_EDITOR = "doc (Grid Editor)";
 
   private static final String DOC = "doc";
@@ -439,7 +441,7 @@ public class TestGridEditor {
     SWTBotCombo combo = bot.comboBox();
     assertNotNull(combo);
 
-    assertEquals("sText1", combo.getText());
+    assertEquals(TEXT1_CAPTION, combo.getText());
   }
 
   @Test
@@ -455,7 +457,7 @@ public class TestGridEditor {
     assertEquals("Token annotations only", combo.getText());
 
     combo.setSelection(0);
-    assertEquals("sText1", combo.getText());
+    assertEquals(TEXT1_CAPTION, combo.getText());
 
     combo.pressShortcut(KeyStroke.getInstance(SWT.ARROW_DOWN));
     assertEquals("Token annotations only", combo.getText());
@@ -475,7 +477,7 @@ public class TestGridEditor {
     if (document.isPresent()) {
       SDocumentGraph docGraph = document.get().getDocumentGraph();
       List<SToken> tokens = new LinkedList<>(docGraph.getTokens());
-      tokens.stream().forEach(t -> docGraph.removeNode(t));
+      tokens.stream().forEach(docGraph::removeNode);
 
       projectManager.addCheckpoint();
 
@@ -488,7 +490,7 @@ public class TestGridEditor {
       SWTBotCombo combo = bot.comboBox();
       assertNotNull(combo);
 
-      assertEquals("sText1", combo.getText());
+      assertEquals(TEXT1_CAPTION, combo.getText());
 
       Object decoRaw =
           UIThreadRunnable.syncExec(() -> combo.widget.getData(GridEditor.CONTROL_DECORATION));
@@ -496,7 +498,7 @@ public class TestGridEditor {
       assertTrue(decoRaw instanceof ControlDecoration);
       if (decoRaw instanceof ControlDecoration) {
         ControlDecoration deco = (ControlDecoration) decoRaw;
-        assertTrue(UIThreadRunnable.syncExec(() -> deco.isVisible()));
+        assertTrue(UIThreadRunnable.syncExec(deco::isVisible));
       }
     }
   }
