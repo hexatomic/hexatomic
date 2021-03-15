@@ -195,9 +195,10 @@ class TestCorpusStructure {
     bot.waitUntil(
         Conditions.shellIsActive(CorpusStructureView.ERROR_WHEN_DELETING_SUB_CORPUS_TITLE));
     bot.button("OK").click();
-    
 
-    // Add a sub-corpus for corpus_1 and test that we can't delete a corpus when there is still a sub-corpus
+
+    // Add a sub-corpus for corpus_1 and test that we can't delete a corpus when there is still a
+    // sub-corpus
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
     bot.toolbarDropDownButton(ADD_BUTTON_TEXT).menuItem("(Sub-) Corpus").click();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
@@ -214,11 +215,11 @@ class TestCorpusStructure {
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
     assertFalse(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
-    
+
     // Delete the sub-corpus
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(0).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
-  
+
     // Delete the corpus which should be successful now
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
@@ -246,13 +247,13 @@ class TestCorpusStructure {
     bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
 
     bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_1);
-    
+
     assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
-    
+
     // Undo all changes and make sure the view has been updated
     bot.menu("Undo").click();
     assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
-    
+
     bot.menu("Undo").click();
     assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
 
