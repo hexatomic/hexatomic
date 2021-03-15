@@ -91,6 +91,9 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
+  /** SWT data key used to store a reference to {@link ControlDecoration} of a component. */
+  public static final String CONTROL_DECORATION = "CONTROL_DECORATION";
+
   private static final String NO_TOKENS_MESSAGE =
       "The data source does not contain any tokens, and cannot be displayed.";
 
@@ -272,6 +275,7 @@ public class GridEditor {
 
     final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
     deco.setShowOnlyOnFocus(false);
+    viewer.getControl().setData(CONTROL_DECORATION, deco);
 
     viewer.setContentProvider(ArrayContentProvider.getInstance());
     viewer.setLabelProvider(createLabelProvider());
