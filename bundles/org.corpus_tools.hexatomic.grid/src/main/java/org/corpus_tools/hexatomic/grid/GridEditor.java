@@ -91,7 +91,9 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
-  /** SWT data key used to store a reference to {@link ControlDecoration} of a component. */
+  /** 
+   * SWT data key used to store a reference to {@link ControlDecoration} of a component. 
+   */
   public static final String CONTROL_DECORATION = "CONTROL_DECORATION";
 
   private static final String NO_TOKENS_MESSAGE =
