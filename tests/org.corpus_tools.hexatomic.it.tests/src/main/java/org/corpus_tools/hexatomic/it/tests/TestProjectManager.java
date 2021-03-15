@@ -45,6 +45,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -257,6 +258,33 @@ class TestProjectManager {
     assertTrue(lastException.isPresent());
     if (lastException.isPresent()) {
       assertTrue(lastException.get().getException() instanceof InterruptedException);
+    }
+  }
+  
+  @Test
+  @Order(4)
+  void testCloseUnsavedChangesWarning() {
+    projectManager.open(exampleProjectUri);
+    Optional<SDocument> optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
+    assertTrue(optionalDoc1.isPresent());
+    if (optionalDoc1.isPresent()) {
+      SDocumentGraph doc1Graph = optionalDoc1.get().getDocumentGraph();
+      assertNotNull(doc1Graph);
+      List<SToken> tokens = doc1Graph.getSortedTokenByText();
+      doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+      projectManager.addCheckpoint();
+
+      assertTrue(projectManager.isDirty());
+
+      // Click on the exit menu entry
+      bot.menu("Exit").click();
+      
+      // A warning dialog should appear
+      SWTBotShell warningDialog = bot.shell("Discard unsaved changes?");
+      assertNotNull(warningDialog);
+      assertTrue(warningDialog.isOpen());
+      warningDialog.bot().button("Cancel").click();
     }
   }
 }

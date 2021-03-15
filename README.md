@@ -1,7 +1,4 @@
 <!-- PROJECT SHIELDS -->
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
@@ -9,12 +6,22 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Build Status][gh-actions-master-shield]][gh-actions-master-url]  
+
+[![Apache License, Version 2.0][license-shield]][license-url]
+[![Issues][issues-shield]][issues-url]
+[![Build Status][gh-actions-master-shield]][gh-actions-master-url]
+
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=alert_status)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=security_rating)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=coverage)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-) <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![Apache License, Version 2.0][license-shield]][license-url]
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -37,8 +44,6 @@
     <a href="https://github.com/hexatomic/hexatomic/issues/new">Request Feature</a>
   </p>
 </p>
-
-
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -216,7 +221,8 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [license-url]: https://github.com/hexatomic/hexatomic/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
 [gh-actions-master-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
-[gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests%22
+[gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests
+[sonarcloud-dashboard]: https://sonarcloud.io/dashboard?id=hexatomic_hexatomic
 
 [eclipse-download]: https://www.eclipse.org/downloads/
 [eclipse]: https://eclipse.org
