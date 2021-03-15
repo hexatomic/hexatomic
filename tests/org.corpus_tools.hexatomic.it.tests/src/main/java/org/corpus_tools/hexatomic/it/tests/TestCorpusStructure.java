@@ -197,8 +197,8 @@ class TestCorpusStructure {
     bot.button("OK").click();
 
 
-    // Add a sub-corpus for corpus_1 and test that we can't delete a corpus when there is still a
-    // sub-corpus
+    // Add a sub-corpus for corpus_1 and test that we can't delete a corpus when there is still
+    // both a document and a sub-corpus
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
     bot.toolbarDropDownButton(ADD_BUTTON_TEXT).menuItem("(Sub-) Corpus").click();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
@@ -215,6 +215,14 @@ class TestCorpusStructure {
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
     assertFalse(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
+
+    // Test that we can't delete a corpus when there is still
+    // a sub-corpus (but no document)
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
+    bot.waitUntil(
+        Conditions.shellIsActive(CorpusStructureView.ERROR_WHEN_DELETING_SUB_CORPUS_TITLE));
+    bot.button("OK").click();
 
     // Delete the sub-corpus
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(0).select();
