@@ -34,7 +34,7 @@ Maven then builds Hexatomic and installs artifacts in the local Maven repository
 
 During the build, some tests are being run that start Hexatomic and automatedly interact with the graphical user interface.
 You must not use the keyboard or mouse during these GUI tests, as this may interfere with the automated interactions.
-If you want to keep working during the local build, you can run the build "headlessly", i.e., with the help of a virtual display server, e.g., [`xvfb-run`](http://manpages.ubuntu.com/manpages/focal/man1/xvfb-run.1.html) to run an Xvfb X server on Linux.
+If you want to keep working during the local build, you can run the build "headlessly", i.e., with the help of a virtual display server, e.g., [`xvfb-run`](https://web.archive.org/web/20210315172731/http://manpages.ubuntu.com/manpages/focal/man1/xvfb-run.1.html) to run an Xvfb X server on Linux.
 
 ## Getting the source code into the Eclipse IDE
 
