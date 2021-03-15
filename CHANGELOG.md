@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add section about building Hexatomic locally in developer/maintainer documentation (#194)
+- Add information on how to make releases on GitHub to developer documentation (#211)
 
 ### Changed
 
