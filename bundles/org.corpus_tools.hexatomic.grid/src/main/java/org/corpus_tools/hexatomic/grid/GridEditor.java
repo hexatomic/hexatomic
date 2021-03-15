@@ -285,15 +285,15 @@ public class GridEditor {
       parent.layout();
     }
   }
-  
+
   private void changeTableVisibility(NatTable currTable, Composite currParent, Boolean visible) {
     if (currTable != null) {
       currTable.setVisible(visible);
       currParent.layout();
     }
-    
+
   }
-  
+
   private ISelectionChangedListener createSelectionChangeListener(Label messageLabel,
       Composite parent, ControlDecoration deco) {
     return event -> {
@@ -307,12 +307,12 @@ public class GridEditor {
         // This is found out by checking whether the data source has incoming relations of type
         // STextualRelation.
         if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
-            .noneMatch(rel -> rel instanceof STextualRelation)) {
+            .noneMatch(STextualRelation.class::isInstance)) {
           deco.setDescriptionText(NO_TOKENS_MESSAGE);
           Image errorImage = FieldDecorationRegistry.getDefault()
               .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
           deco.setImage(errorImage);
-          changeTableVisibility(table, parent, false);          
+          changeTableVisibility(table, parent, false);
         } else {
           deco.setDescriptionText(null);
           deco.setImage(null);

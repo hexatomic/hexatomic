@@ -144,7 +144,7 @@ public class CorpusStructureView {
                 @Override
                 public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                     SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-                  if (currNode.getName() != null 
+                  if (currNode.getName() != null
                       && currNode.getName().toLowerCase().contains(filterText)) {
                     found.set(true);
                   }
@@ -274,8 +274,7 @@ public class CorpusStructureView {
     treeViewer.addSelectionChangedListener((SelectionChangedEvent event) -> {
       IStructuredSelection selection = treeViewer.getStructuredSelection();
       selectionService.setSelection(selection.getFirstElement());
-    }
-    );
+    });
 
     registerEditors(modelService, application, thisPart);
   }
@@ -460,8 +459,7 @@ public class CorpusStructureView {
 
   private void deleteCorpus(SCorpus selectedCorpus) {
     boolean hasChildren = selectedCorpus.getOutRelations().stream()
-        .anyMatch(
-            rel -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation);
+        .anyMatch(rel -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation);
     if (hasChildren) {
       errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
           ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
@@ -469,9 +467,8 @@ public class CorpusStructureView {
     }
 
     Optional<SNode> parent =
-        selectedCorpus.getInRelations().stream().filter(rel -> rel instanceof SCorpusRelation)
-            .findFirst()
-            .map(rel -> ((SCorpusRelation) rel).getSource());
+        selectedCorpus.getInRelations().stream().filter(SCorpusRelation.class::isInstance)
+            .findFirst().map(rel -> ((SCorpusRelation) rel).getSource());
     if (parent.isPresent()) {
       // select parent corpus
       selectSaltObject(parent.get(), true);
@@ -487,17 +484,16 @@ public class CorpusStructureView {
 
   private void deleteDocument(SDocument selectedDocument) {
     Optional<SNode> parent =
-        selectedDocument.getInRelations().stream()
-            .filter(rel -> rel instanceof SCorpusDocumentRelation)
+        selectedDocument.getInRelations().stream().filter(SCorpusDocumentRelation.class::isInstance)
             .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
 
     // Attempt to find the previous sibling document of the one that is deleted
     Optional<SDocument> previousDocument = Optional.empty();
     if (parent.isPresent()) {
       // Collect all siblings
-      List<SDocument> siblings = parent.get().getOutRelations().stream()
-          .filter(rel -> rel instanceof SCorpusDocumentRelation)
-          .map(rel -> ((SCorpusDocumentRelation) rel).getTarget()).collect(Collectors.toList());
+      List<SDocument> siblings =
+          parent.get().getOutRelations().stream().filter(SCorpusDocumentRelation.class::isInstance)
+              .map(rel -> ((SCorpusDocumentRelation) rel).getTarget()).collect(Collectors.toList());
       if (!siblings.isEmpty()) {
         // Find the position of the deleted document and use the index
         // to get the previous document (or select the first other if not found)
