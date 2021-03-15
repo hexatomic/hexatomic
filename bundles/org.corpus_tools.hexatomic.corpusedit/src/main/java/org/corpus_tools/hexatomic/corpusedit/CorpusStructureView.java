@@ -93,7 +93,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -299,12 +298,12 @@ public class CorpusStructureView {
           // trigger a default action based on the currently selected tree item
           StructuredSelection selected = (StructuredSelection) treeViewer.getSelection();
           if (selected.getFirstElement() instanceof SCorpus) {
-            addDocument(toolBar.getShell());
+            addDocument();
           } else if (selected.getFirstElement() instanceof SCorpusGraph) {
             addCorpus();
           } else if (selected.getFirstElement() instanceof SDocument) {
             // add a sibling document
-            addDocument(toolBar.getShell());
+            addDocument();
           } else {
             // fallback to a corpus graph, which always can be added
             addCorpusGraph();
@@ -342,7 +341,7 @@ public class CorpusStructureView {
     addDocument.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addDocument(toolBar.getShell());
+        addDocument();
       }
     });
 
@@ -405,7 +404,7 @@ public class CorpusStructureView {
 
   }
 
-  private void addDocument(Shell shell) {
+  private void addDocument() {
 
     // get the selected corpus graph
     StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
