@@ -1,6 +1,5 @@
 package org.corpus_tools.hexatomic.it.tests;
 
-import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withTooltip;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
@@ -281,7 +280,7 @@ class TestProjectManager {
       assertTrue(projectManager.isDirty());
 
       // Click on the exit menu entry
-      bot.menu(bot.activeShell(), withTooltip("Exit the Hexatomic application"), true).click();
+      bot.menu("Exit").click();
 
       // A warning dialog should appear
       SWTBotShell warningDialog = bot.shell("Discard unsaved changes?");
