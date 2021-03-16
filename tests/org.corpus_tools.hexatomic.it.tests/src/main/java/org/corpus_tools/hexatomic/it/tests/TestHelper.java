@@ -2,6 +2,7 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.SystemUtils;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -77,6 +78,30 @@ public class TestHelper {
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
     handlerService.executeHandler(cmd);
+  }
+  
+  /**
+   * Returns the macOS command key representation or "Ctrl+" on all other systems.
+   * @return A string representation for the "Ctrl" key as used by tooltips on this system.
+   */
+  public static String getControlTooltipPrefix() {
+    if(SystemUtils.IS_OS_MAC) {
+      return "\u2318";
+    } else {
+      return "Ctrl+";
+    }
+  }
+  
+  /**
+   * Returns the macOS shift key representation or "Shift+" on all other systems.
+   * @return A string representation for the "Shift" key as used by tooltips on this system.
+   */
+  public static String getShiftTooltipPrefix() {
+    if(SystemUtils.IS_OS_MAC) {
+      return "\u21E7";
+    } else {
+      return "Shift+";
+    }
   }
 
 }
