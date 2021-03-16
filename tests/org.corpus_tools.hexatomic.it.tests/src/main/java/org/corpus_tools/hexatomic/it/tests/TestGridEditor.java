@@ -12,9 +12,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -23,6 +25,7 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
@@ -37,6 +40,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
@@ -57,6 +61,7 @@ import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.Position;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
@@ -81,6 +86,8 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("restriction")
 public class TestGridEditor {
 
+
+  private static final String TEXT1_CAPTION = "sText1";
 
   private static final String DOC_GRID_EDITOR = "doc (Grid Editor)";
 
@@ -110,10 +117,10 @@ public class TestGridEditor {
       + "src/main/resources/org/corpus_tools/hexatomic/grid/";
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
-  
+
   private static final String SPAN_1 = "span_1";
   private static final String SPAN_2 = "span_2";
-  
+
   private static final String FIVE = "five::";
 
   private static final String LEMMA_NAME = "lemma";
@@ -199,9 +206,7 @@ public class TestGridEditor {
 
   }
 
-  SWTBotView openDefaultExample() {
-    // Programmatically open the example corpus
-    openExample(exampleProjectUri);
+  SWTBotView openEditorForDefaultDocument() {
     // Select the first example document
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
         .expandNode("subCorpus1").expandNode("doc1");
@@ -219,6 +224,13 @@ public class TestGridEditor {
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     return view;
+  }
+
+  SWTBotView openDefaultExample() {
+    // Programmatically open the example corpus
+    openExample(exampleProjectUri);
+
+    return openEditorForDefaultDocument();
   }
 
   SWTBotView openOverlapExample() {
@@ -429,7 +441,7 @@ public class TestGridEditor {
     SWTBotCombo combo = bot.comboBox();
     assertNotNull(combo);
 
-    assertEquals("sText1", combo.getText());
+    assertEquals(TEXT1_CAPTION, combo.getText());
   }
 
   @Test
@@ -445,10 +457,50 @@ public class TestGridEditor {
     assertEquals("Token annotations only", combo.getText());
 
     combo.setSelection(0);
-    assertEquals("sText1", combo.getText());
+    assertEquals(TEXT1_CAPTION, combo.getText());
 
     combo.pressShortcut(KeyStroke.getInstance(SWT.ARROW_DOWN));
     assertEquals("Token annotations only", combo.getText());
+  }
+
+  @Test
+  void testDropdownWithTextButNoToken() {
+    // Programmatically open the example corpus, but do not open
+    // the editor yet
+    openExample(exampleProjectUri);
+
+
+    // Delete all token of the first document (but keep the STextualDS)
+    Optional<SDocument> document =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+    assertTrue(document.isPresent());
+    if (document.isPresent()) {
+      SDocumentGraph docGraph = document.get().getDocumentGraph();
+      List<SToken> tokens = new LinkedList<>(docGraph.getTokens());
+      tokens.stream().forEach(docGraph::removeNode);
+
+      projectManager.addCheckpoint();
+
+      assertEquals(0, docGraph.getTokens().size());
+      assertEquals(1, docGraph.getTextualDSs().size());
+
+      // Open the grid editor with the document
+      openEditorForDefaultDocument();
+
+      SWTBotCombo combo = bot.comboBox();
+      assertNotNull(combo);
+
+      assertEquals(TEXT1_CAPTION, combo.getText());
+
+      Object decoRaw =
+          UIThreadRunnable.syncExec(() -> combo.widget.getData(GridEditor.CONTROL_DECORATION));
+      assertNotNull(decoRaw);
+      assertTrue(decoRaw instanceof ControlDecoration);
+      if (decoRaw instanceof ControlDecoration) {
+        ControlDecoration deco = (ControlDecoration) decoRaw;
+        assertTrue(UIThreadRunnable.syncExec(deco::isVisible));
+      }
+    }
   }
 
   @Test
@@ -947,8 +999,7 @@ public class TestGridEditor {
       }
       Object nodeObjSecondColumn = table.widget.getDataValueByPosition(4, i);
       if (nodeObjSecondColumn != null) {
-        assertNotNull(
-            ((SSpan) nodeObjSecondColumn).getAnnotation(FIVE + TEST_ANNOTATION_VALUE));
+        assertNotNull(((SSpan) nodeObjSecondColumn).getAnnotation(FIVE + TEST_ANNOTATION_VALUE));
       }
     }
   }
