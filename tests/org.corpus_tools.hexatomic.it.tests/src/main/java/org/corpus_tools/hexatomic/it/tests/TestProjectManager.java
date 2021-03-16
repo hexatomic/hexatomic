@@ -48,6 +48,8 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -265,6 +267,7 @@ class TestProjectManager {
 
   @Test
   @Order(4)
+  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testCloseUnsavedChangesWarning() {
     projectManager.open(exampleProjectUri);
     Optional<SDocument> optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
