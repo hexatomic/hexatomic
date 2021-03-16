@@ -225,6 +225,7 @@ class TestCorpusStructure {
     bot.button("OK").click();
 
     // Delete the sub-corpus
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).expand();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(0).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
 
