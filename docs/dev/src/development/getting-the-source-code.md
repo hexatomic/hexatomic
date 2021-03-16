@@ -22,7 +22,19 @@ It will download the latest version of the source code in the `master` branch to
 along with the complete Git version history.
 
 For your actual contribution, you will need to create a new Git branch, but this is explained in detail in section [Workflow](./workflow/).
-For now, all that is left to do is get the Hexatomic source code into your IDE.
+For now, all that is left to do is build Hexatomic locally, and get its source code into your IDE.
+
+## Build Hexatomic locally
+
+Before you import the Hexatomic source code into the Eclipse IDE, you should now build it locally to check that everything works, and to avoid error messages in the Eclipse IDE.
+
+To build Hexatomic locally, go to the root directory of your local copy of the Hexatomic source code, and run `mvn clean install`.
+
+Maven then builds Hexatomic and installs artifacts in the local Maven repository.
+
+During the build, some tests are being run that start Hexatomic and automatedly interact with the graphical user interface.
+You must not use the keyboard or mouse during these GUI tests, as this may interfere with the automated interactions.
+If you want to keep working during the local build, you can run the build "headlessly", i.e., with the help of a virtual display server, e.g., [`xvfb-run`](https://web.archive.org/web/20210315172731/http://manpages.ubuntu.com/manpages/focal/man1/xvfb-run.1.html) to run an Xvfb X server on Linux.
 
 ## Getting the source code into the Eclipse IDE
 

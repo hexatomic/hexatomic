@@ -36,6 +36,7 @@ class TestCorpusStructure {
 
   private static final String SALT_PREFIX = "salt:/";
 
+  private static final String ADD_BUTTON_TEXT = "Add";
   private static final String DELETE_BUTTON_TEXT = "Delete";
 
   private static final String ABC = "abc";
@@ -88,15 +89,15 @@ class TestCorpusStructure {
 
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
-    partBot.toolbarDropDownButton(0).click();
+    partBot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
     partBot.tree().getTreeItem(CORPUS_GRAPH_1).select();
 
     // Add corpus 1
-    partBot.toolbarDropDownButton(0).click();
+    partBot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
     partBot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
 
     // Add document_1
-    partBot.toolbarDropDownButton(0).click();
+    partBot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
     partBot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(0).select();
   }
 
@@ -104,8 +105,8 @@ class TestCorpusStructure {
   private void createExampleStructure() {
     createMinimalCorpusStructure(bot);
 
-    // Add document_2
-    bot.toolbarDropDownButton(0).click();
+    // Add document_2 and use the explicit document menu entry for it
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).menuItem("Document").click();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(1).select();
 
 
@@ -158,8 +159,8 @@ class TestCorpusStructure {
 
     // The function before already added some documents, add two more
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF).select();
-    bot.toolbarDropDownButton(0).click();
-    bot.toolbarDropDownButton(0).click();
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
 
 
     List<String> children = bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes();
@@ -195,14 +196,37 @@ class TestCorpusStructure {
         Conditions.shellIsActive(CorpusStructureView.ERROR_WHEN_DELETING_SUB_CORPUS_TITLE));
     bot.button("OK").click();
 
+
+    // Add a sub-corpus for corpus_1 and test that we can't delete a corpus when there is still
+    // both a document and a sub-corpus
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).menuItem("(Sub-) Corpus").click();
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
+    bot.waitUntil(
+        Conditions.shellIsActive(CorpusStructureView.ERROR_WHEN_DELETING_SUB_CORPUS_TITLE));
+    bot.button("OK").click();
+
     assertTrue(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
     SaltProject project = projectManager.getProject();
-    assertEquals(1, project.getCorpusGraphs().get(0).getCorpora().size());
+    assertEquals(2, project.getCorpusGraphs().get(0).getCorpora().size());
 
     // Delete the second document
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DEF).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
     assertFalse(projectManager.getDocument(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2).isPresent());
+
+    // Test that we can't delete a corpus when there is still
+    // a sub-corpus (but no document)
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
+    bot.waitUntil(
+        Conditions.shellIsActive(CorpusStructureView.ERROR_WHEN_DELETING_SUB_CORPUS_TITLE));
+    bot.button("OK").click();
+
+    // Delete the sub-corpus
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(0).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
 
     // Delete the corpus which should be successful now
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
@@ -220,24 +244,24 @@ class TestCorpusStructure {
   void testUndo() {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
-    bot.toolbarDropDownButton(0).click();
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).select();
 
     // Add corpus 1
-    bot.toolbarDropDownButton(0).click();
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
 
     // Add document_1
-    bot.toolbarDropDownButton(0).click();
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
 
     bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_1);
-    
+
     assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
-    
+
     // Undo all changes and make sure the view has been updated
     bot.menu("Undo").click();
     assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
-    
+
     bot.menu("Undo").click();
     assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
 

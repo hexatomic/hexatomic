@@ -6,9 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add section about building Hexatomic locally in developer/maintainer documentation (#194)
+- Add information on how to make releases on GitHub to developer documentation (#211)
+
 ### Changed
 
 - Use GitHub Actions instead of Travis CI for deploying the release binaries and the documentation.
+
+### Fixed
+
+- Fix erroneous launch configuration that broke launching from Eclipse
 
 ## [0.5.1] - 2021-03-11
 

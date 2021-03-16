@@ -1,7 +1,4 @@
 <!-- PROJECT SHIELDS -->
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!--
 *** I'm using markdown "reference style" links for readability.
 *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
@@ -9,12 +6,22 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Build Status][gh-actions-master-shield]][gh-actions-master-url]  
+
+[![Apache License, Version 2.0][license-shield]][license-url]
+[![Issues][issues-shield]][issues-url]
+[![Build Status][gh-actions-master-shield]][gh-actions-master-url]
+
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=alert_status)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=security_rating)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=coverage)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-) <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![Apache License, Version 2.0][license-shield]][license-url]
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -37,8 +44,6 @@
     <a href="https://github.com/hexatomic/hexatomic/issues/new">Request Feature</a>
   </p>
 </p>
-
-
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -185,13 +190,13 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 
 - Stephan Druskat ([@sdruskat](https://github.com/sdruskat))
 - Thomas Krause ([@thomaskrause](https://github.com/thomaskrause))
+- Clara Lachenmaier ([@clachenmaier](https://github.com/clachenmaierclachenmaier))
+- Bastian Bunzeck ([@bunz-lightyear](https://github.com/bunz-lightyear))
 
 ### Principal investigators
 
 - Volker Gast ([@VolkerGast](https://github.com/VolkerGast))
 - Anke Lüdeling ([@AnkeLuedeling](https://github.com/AnkeLuedeling))
-
-
 
 <!-- ACKNOWLEDGEMENTS -->
 <!--## Acknowledgements
@@ -216,7 +221,8 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [license-url]: https://github.com/hexatomic/hexatomic/blob/master/LICENSE
 [product-screenshot]: images/screenshot.png
 [gh-actions-master-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
-[gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests%22
+[gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests
+[sonarcloud-dashboard]: https://sonarcloud.io/dashboard?id=hexatomic_hexatomic
 
 [eclipse-download]: https://www.eclipse.org/downloads/
 [eclipse]: https://eclipse.org
@@ -243,13 +249,15 @@ We would like to thank the following people for contributing to Hexatomic!
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://sdruskat.net"><img src="https://avatars0.githubusercontent.com/u/3007126?v=4" width="100px;" alt=""/><br /><sub><b>Stephan Druskat</b></sub></a><br /><a href="#maintenance-sdruskat" title="Maintenance">🚧</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Code">💻</a> <a href="#content-sdruskat" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Documentation">📖</a> <a href="#fundingFinding-sdruskat" title="Funding Finding">🔍</a> <a href="#ideas-sdruskat" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-sdruskat" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-sdruskat" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Asdruskat" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Tests">⚠️</a> <a href="#talk-sdruskat" title="Talks">📢</a> <a href="https://github.com/hexatomic/hexatomic/issues?q=author%3Asdruskat" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="http://u.hu-berlin.de/korpling-thomaskrause"><img src="https://avatars3.githubusercontent.com/u/2168104?v=4" width="100px;" alt=""/><br /><sub><b>Thomas Krause</b></sub></a><br /><a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Code">💻</a> <a href="#content-thomaskrause" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Documentation">📖</a> <a href="#fundingFinding-thomaskrause" title="Funding Finding">🔍</a> <a href="#ideas-thomaskrause" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-thomaskrause" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-thomaskrause" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Athomaskrause" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Tests">⚠️</a> <a href="#talk-thomaskrause" title="Talks">📢</a></td>
+    <td align="center"><a href="http://sdruskat.net"><img src="https://avatars0.githubusercontent.com/u/3007126?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stephan Druskat</b></sub></a><br /><a href="#maintenance-sdruskat" title="Maintenance">🚧</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Code">💻</a> <a href="#content-sdruskat" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Documentation">📖</a> <a href="#fundingFinding-sdruskat" title="Funding Finding">🔍</a> <a href="#ideas-sdruskat" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-sdruskat" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-sdruskat" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Asdruskat" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=sdruskat" title="Tests">⚠️</a> <a href="#talk-sdruskat" title="Talks">📢</a> <a href="https://github.com/hexatomic/hexatomic/issues?q=author%3Asdruskat" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://u.hu-berlin.de/korpling-thomaskrause"><img src="https://avatars3.githubusercontent.com/u/2168104?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Thomas Krause</b></sub></a><br /><a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Code">💻</a> <a href="#content-thomaskrause" title="Content">🖋</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Documentation">📖</a> <a href="#fundingFinding-thomaskrause" title="Funding Finding">🔍</a> <a href="#ideas-thomaskrause" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-thomaskrause" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#question-thomaskrause" title="Answering Questions">💬</a> <a href="https://github.com/hexatomic/hexatomic/pulls?q=is%3Apr+reviewed-by%3Athomaskrause" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=thomaskrause" title="Tests">⚠️</a> <a href="#talk-thomaskrause" title="Talks">📢</a></td>
+    <td align="center"><a href="https://github.com/clachenmaier"><img src="https://avatars.githubusercontent.com/u/73929591?v=4?s=100" width="100px;" alt=""/><br /><sub><b>clachenmaier</b></sub></a><br /><a href="https://github.com/hexatomic/hexatomic/issues?q=author%3Aclachenmaier" title="Bug reports">🐛</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=clachenmaier" title="Documentation">📖</a> <a href="#maintenance-clachenmaier" title="Maintenance">🚧</a> <a href="https://github.com/hexatomic/hexatomic/commits?author=clachenmaier" title="Code">💻</a></td>
   </tr>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

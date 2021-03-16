@@ -39,6 +39,27 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 11. `git push` - Updates the remote release branch.
 12. `mvn gitflow:hotfix-finish` - Finalizes the hotfix and finishes the merge and release procedure.
 
+## Promoting releases on GitHub
+
+When you have made a [feature](#feature-releases) or [hotfix](#hotfix-releases) as described above, you will find a new tag for the released version on the [Hexatomic releases page on GitHub](https://github.com/hexatomic/hexatomic/releases).
+
+![Screenshot of a mocked tag on GitHub that has not been promoted to release yet](tag.png)
+
+You can now make a release from this tag:
+
+1. Click on **Draft a new release** on the Releases page.
+2. Complete the *Tag version* field with the tag you want to release (e.g. `v0.4.1`).
+3. Give the release a title. It should start with `Hexatomic`, include any necessary qualifiers (e.g., `Beta` if it's a `0.` MAJOR version) and the version number itself without any prefixes (e.g., use `0.4.1` instead of `v0.4.1`).
+4. Describe the release in three parts:
+   1. A high-level description of the form `This is a Hexatomic <hotfix/feature> release <:bug:/:tada:>!` followed by a blank line.
+   2. A short description of the fix (including issue numbers with hash prefixes, e.g. `#123`) or the added functionality. You can use bullet lists if more than one fix or feature has been added.
+   3. A link to the user documentation with, e.g., the following text: `:green_book: Read the [user documentation](https://hexatomic.github.io/hexatomic/user/v0.5/index.html) for Hexatomic to learn how to install and use it.` Make sure you get the `vMAJOR.MINOR` part in the documentation URL right.
+5. Click the **Preview** tab and check if everything looks good.
+6. Click on the green **Publish release** button. You can always delete and re-create releases from tags if something goes wrong.
+7. Check if the release contains all "binaries", i.e., the product .zip files for all three major operating systems.
+
+![Animation showing how to create a release on GitHub](release.gif)
+
 ## What to do when releases go wrong?
 
 When a feature release doesn't work as expected, simply
