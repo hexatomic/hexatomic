@@ -91,6 +91,11 @@
                             <pattern>.*:org\.eclipse\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/eclipse-epl2.yml</template>
                         </referenceTemplate>
+                        <!-- JNA is either Apache or LGPL, we choose Apache -->
+                        <referenceTemplate>
+                            <pattern>.*:com\.sun\.jna\..*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/jna.yml</template>
+                        </referenceTemplate>
                     </referenceTemplates>
                     <ignoredArtifacts>
                         <ignoredArtifact>p2\.eclipse-plugin:org\.corpus_tools\.hexatomic\..*</ignoredArtifact>
