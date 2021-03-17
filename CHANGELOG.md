@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use GitHub Actions instead of Travis CI for deploying the release binaries and the documentation.
 - Updated Eclipse platform to release 2021-03
 - Updated Tycho to 2.1.0
+- Java 11 is required to build Hexatomic
 
 ### Fixed
 
