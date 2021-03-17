@@ -2,25 +2,6 @@ name: Automated tests
 on: push
 
 jobs:
-  test_jdk8:
-    name: OpenJDK 8
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-8-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-8-
-      - name: Set JAVA_HOME to OpenJDK 8
-        run: echo JAVA_HOME=$JAVA_HOME_8_X64 >> $GITHUB_ENV
-      - name: Run Maven install (includes tests)
-        run: xvfb-run mvn verify
-        env:
-          LANG: en_US.UTF-8
   test_jdk11:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
