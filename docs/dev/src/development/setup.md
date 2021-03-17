@@ -12,12 +12,11 @@ You need all three on your computer to contribute code to Hexatomic.
 
 The documentation is written in Markdown and generated with **mdbook**.
 
-### Java 1.8
+### Java 11
 
-You need to have a copy of the **Java Development Kit (JDK), Version 1.8** (sometimes referred to as *Java 8*) installed on your computer.
+You need to have a copy of the **Java Development Kit (JDK), Version 11** installed on your computer.
 It shouldn't make any difference whether you use the open *OpenJDK* implementation of Java, or an *Oracle JDK*.
-We suggest that you use **OpenJDK** in its latest build (which was `1.8u232` at the time of writing).
-See the [OpenJDK 8 Updates site](https://wiki.openjdk.java.net/display/jdk8u/Main) to find out what the currently latest build is.
+We suggest that you use **OpenJDK** since more recent versions of the *Oracle JDK* have a more restricted license.
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
 For stand-alone packages, you can use the installers distributed by the [AdoptOpenJDK project](https://adoptopenjdk.net).
 AdoptOpenJDK packages are are available for Windows, MacOS, and Linux.
@@ -31,9 +30,9 @@ java -version
 On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.
 
 ```bash
-openjdk version "1.8.0_222"
-OpenJDK Runtime Environment (build 1.8.0_222-8u222-b10-1ubuntu1~18.04.1-b10)
-OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+openjdk version "11.0.10" 2021-01-19
+OpenJDK Runtime Environment (build 11.0.10+9-Ubuntu-0ubuntu1.20.04)
+OpenJDK 64-Bit Server VM (build 11.0.10+9-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
 ```
 
 ### Apache Maven
@@ -52,9 +51,9 @@ On Linux, this should produce the following output, or something similar. The fi
 ```bash
 Apache Maven 3.6.3
 Maven home: /usr/share/maven
-Java version: 1.8.0_222, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
-Default locale: en_US, platform encoding: UTF-8
-OS name: "linux", version: "5.0.0-23-generic", arch: "amd64", family: "unix"
+Java version: 11.0.10, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd64
+Default locale: de_DE, platform encoding: UTF-8
+OS name: "linux", version: "5.10.0-1016-oem", arch: "amd64", family: "unix"
 ```
 
 > <i class="fa fa-bug"></i> **Known bug in Maven version 3.6.2**
