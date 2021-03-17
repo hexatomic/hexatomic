@@ -1,0 +1,1552 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<!-- start of server/head-include-1.html -->
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:webmasters@gnu.org" />
+<link rel="icon" type="image/png" href="/graphics/gnu-head-mini.png" />
+<meta name="ICBM" content="42.355469,-71.058627" />
+<meta name="DC.title" content="gnu.org" />
+<link rel="stylesheet" type="text/css" href="/reset.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/mini.css" media="handheld" />
+<link rel="stylesheet" type="text/css" href="/layout.min.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/print.min.css" media="print" />
+<!-- end of server/head-include-1.html -->
+
+<!-- end of server/header.html -->
+
+<!-- Parent-Version: 1.91 -->
+   
+<title>The GNU Operating System and the Free Software Movement</title>
+
+<meta http-equiv="Keywords" content="GNU, FSF, Free Software Foundation, Linux, Emacs, GCC, Unix, Free Software, Libre Software, Operating System, GNU Kernel, GNU Hurd" />
+<meta http-equiv="Description" content="Since 1983, developing the free Unix style operating system GNU, so that computer users can have the freedom to share and improve the software they use." />
+<link rel="alternate" title="Planet GNU" href="http://planet.gnu.org/rss20.xml" type="application/rss+xml" />
+
+<style type="text/css" media="print,screen">
+<!--
+blockquote.highlight-para { margin: 1.5em 0 0; }
+
+.first-column, .second-column {
+   width: 46em; max-width: 100%;
+   margin: auto;
+}
+
+h2 {
+   color: #333;
+   margin: 1.2em 0 .9em;
+}
+h2.first {
+   margin-top: .9em;
+}
+
+#gnu-linux, .thumbs {
+   text-align: center;
+   font-style: italic;
+   margin: 1em auto;
+}
+#gnu-linux {
+   width: 32em;
+   max-width: 100%;
+   margin: .5em auto;
+}
+.screenshot, .thumbs .image td {
+   line-height: .8em;
+   background: #444;
+   padding: .2em;
+}
+.screenshot a, .thumbs .image td a {
+   color: white;
+}
+.screenshot a[href]:hover, .thumbs .image td a[href]:hover {
+   background: #444;
+}
+.screenshot img {
+   width: 100%;
+}
+#gnu-linux p {
+   line-height: 1.2em;
+   margin: .2em 0 0;
+}
+.thumbs {
+   width: 100%;
+   display: block;
+   overflow: auto;
+   padding-bottom: .8em;
+}
+.thumbs td {
+   vertical-align: top;
+   padding: .1em;
+   border: 0;
+   border-left: .5em solid white;
+}
+.thumbs td:first-child {
+   border: 0;
+}
+.thumbs .caption td  {
+   line-height: 1em;
+}
+.thumbs img {
+   width: 10em;
+   max-width: 100%;
+   min-width: 8em;
+}
+
+.btn-left a[href], .btn-right a[href] {
+   display: inline-block;
+   text-align: center;
+   font-family: "Noto Sans Display", "Noto Sans", "Liberation Sans", sans-serif;
+   font-size: 1.6em;
+   font-weight: bold;
+   text-decoration: none;
+   padding: .4em .6em .5em;
+   color: #b02500;
+   background: white;
+   border: .1em solid #b02500;
+   border-radius: .3em;
+}
+.btn-left a[href]:hover, .btn-right a[href]:hover {
+   text-decoration: none;
+   color: #a42e2b;
+   background: #f6e5e1;
+   border-color: #a42e2b;
+}
+.btn-left {
+   float: left;
+   margin: 2em 0;
+}
+.btn-right {
+   float: right;
+   margin: 2em 0 1.5em;
+}
+.btn-right a { margin-left: .7em; }
+
+.first-column p.back {
+   margin-bottom: 0;
+}
+
+.second-column .emph-box {
+   padding: 0 1.2em 1.2em;
+   margin-top: 2.3em;
+}
+.second-column .emph-box.white {
+   background: white;
+}
+.second-column .emph-box.beige {
+   background: #faf8ed;
+}
+.second-column .emph-box .back {
+   margin-top: 1em;
+}
+h3 {
+   margin-top: .7em;
+}
+h3 img {
+   height: .8em;
+   padding: .2em .5em;
+   background: white;
+}
+#blurb h4 {
+   text-align: left;
+   font-size: 1.5em;
+   margin-top: .4em;
+}
+#blurb h4 img {
+   float: left;
+   margin-right: .5em;
+}
+#Flashes p, #unmaint, #blurb p, #blurb p small {
+   font-size: .9em;
+}
+#unmaint li, #blurb p {
+   color: #404040;
+}
+#unmaint strong {
+   display: block;
+   font-size: 1.1em;
+   color: black;
+   margin-bottom: .5em;
+}
+.ltr {
+   direction: ltr;
+   text-align: left;
+}
+
+.translators-notes {
+   width: 44.4em; max-width: 100%;
+   margin: 0 auto;
+}
+#sisters {
+   font-size: .9em;
+   text-align: center;
+   background-color: white;
+   padding: 0 3% 2em;
+   margin: 0;
+}
+
+@media (min-width: 60em) {
+   .first-column {
+      width: 65%;
+      float: left;
+      margin: 0;
+   }
+   .second-column {
+      width: 30%;
+      float: right;
+      margin: 0;
+   }
+   .translators-notes {
+      width: 100%;
+   }
+}
+-->
+
+</style>
+<!-- start of fs-gang-definitions.html -->
+
+<style type="text/css" media="print,screen">
+/* Common clauses for the Free Software Gang banner. */
+#fs-gang .img-container {
+   text-align: left;
+   padding-top: .5em;
+   height: 100%;
+   width: 40em; max-width: 100%;
+   margin: auto;
+}
+#fs-gang .img-container a {
+   font-size: 1.3em;
+   font-weight: bold;
+   margin-left: .5em;
+   color: white; text-decoration: none;
+}
+#fs-gang .img-container a:hover {
+   background: none;
+}
+#fs-gang .img-container img {
+   width: 100%;
+   padding: .3em 0 0 0;
+   margin: 0;
+}
+</style>
+
+<style type="text/css" media="screen">
+/* screen-specific fs-gang-definitions */
+#fs-gang {
+   clear: both;
+   margin: 0;
+   background-color: #a50606; /* Fallback from gradient */
+   background: -moz-linear-gradient(#910606, #e74c3c); /* FF 3.6+ */  
+   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #910606), color-stop(100%, #e74c3c)); /* Safari 4+, Chrome 2+ */  
+   background: -webkit-linear-gradient(#910606, #e74c3c); /* Safari 5.1+, Chrome 10+ */  
+   background: -o-linear-gradient(#910606, #e74c3c); /* Opera 11.10 */  
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#910606', endColorstr='#e74c3c'); /* IE6 &amp; IE7 */  
+   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#910606', endColorstr='#e74c3c')"; /* IE8+ */  
+   background: linear-gradient(#910606, #e74c3c); /* the standard */
+}
+</style>
+
+<!-- end of fs-gang-definitions.html -->
+
+<!-- begin translist file -->
+
+<link rel="alternate" type="text/html" href="/home.html" hreflang="x-default" />
+<link rel="alternate" type="text/html" lang="en" hreflang="en" href="/home.en.html" title="English" />
+<link rel="alternate" type="text/html" lang="de" hreflang="de" href="/home.de.html" title="Deutsch" />
+<link rel="alternate" type="text/html" lang="es" hreflang="es" href="/home.es.html" title="español" />
+<link rel="alternate" type="text/html" lang="fa" hreflang="fa" href="/home.fa.html" title="فارسی" />
+<link rel="alternate" type="text/html" lang="fr" hreflang="fr" href="/home.fr.html" title="français" />
+<link rel="alternate" type="text/html" lang="it" hreflang="it" href="/home.it.html" title="italiano" />
+<link rel="alternate" type="text/html" lang="ja" hreflang="ja" href="/home.ja.html" title="日本語" />
+<link rel="alternate" type="text/html" lang="nl" hreflang="nl" href="/home.nl.html" title="Nederlands" />
+<link rel="alternate" type="text/html" lang="pt-br" hreflang="pt-br" href="/home.pt-br.html" title="português" />
+<link rel="alternate" type="text/html" lang="ru" hreflang="ru" href="/home.ru.html" title="русский" />
+<link rel="alternate" type="text/html" lang="sq" hreflang="sq" href="/home.sq.html" title="Shqip" />
+<link rel="alternate" type="text/html" lang="tr" hreflang="tr" href="/home.tr.html" title="Türkçe" />
+<link rel="alternate" type="text/html" lang="uk" hreflang="uk" href="/home.uk.html" title="українська" />
+<link rel="alternate" type="text/html" lang="zh-cn" hreflang="zh-cn" href="/home.zh-cn.html" title="简体中文" />
+<link rel="alternate" type="text/html" lang="zh-tw" hreflang="zh-tw" href="/home.zh-tw.html" title="繁體中文" />
+<!-- end translist file -->
+
+<!-- start of server/banner.html -->
+<!-- start of head-include-2.html -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style type="text/css" media="screen">
+@media (min-width: 0) {
+   a#more-links:after { content: "More\00A0\002B9F"; }
+   a#less-links:after { content: "\002B9D"; }
+}
+</style>
+<!-- end of head-include-2.html -->
+
+</head>
+<body>
+<div class="inner">
+<!-- start of server/body-include-1.html -->
+<div>
+<a class="skip" href="#content"><b>Skip to main text</b></a>
+</div>
+
+<div id="fsf-frame">
+<div id="join-fsf" class="button"><a
+href="https://www.fsf.org/associate/support_freedom?referrer=4052">JOIN&nbsp;THE&nbsp;FSF</a>
+</div>
+
+<form id="fssbox" action="https://my.fsf.org/civicrm/profile/create?reset=1&amp;gid=31"
+      method="post" class="header">
+ <fieldset>
+  <input name="postURL" type="hidden" value="" />
+  <input type="hidden" name="group[25]" value="1" />
+  <input name="cancelURL" type="hidden" value="https://crm.fsf.org/civicrm/profile?reset=1&amp;gid=31" />
+  <input name="_qf_default" type="hidden" value="Edit:cancel" />
+  <label for="frmEmail"><span class="gnun-split"></span>
+  <a href="//www.fsf.org/fss">Free Software Supporter</a>:
+  <span class="gnun-split"></span></label>
+  <div>
+   <input type="text" id="frmEmail" name="email-Primary" size="18" maxlength="80"
+          value="email address" onfocus="this.value=''"/>
+   <input type="submit" name="_qf_Edit_next" value="Sign up" />
+  </div>
+ </fieldset>
+</form>
+<div style="clear: both"></div>
+</div>
+
+<div id="header">
+<p id="gnu-banner">
+ <a href="/">
+ <img src="/graphics/heckert_gnu.transp.small.png" height="48"
+      alt="&nbsp;[A GNU head]&nbsp;" /><strong>GNU</strong> <span
+ class="hide">Operating System</span></a><br />
+ <small id="fsf-support">Supported by the
+ <a href="#mission-statement">Free Software Foundation</a></small>
+</p>
+
+<div id="switches">
+ <a id="search-button" class="switch" href="//www.gnu.org/cgi-bin/estseek.cgi">
+  <img id="search-icon" height="32"
+       src="/graphics/icons/search.png"
+       alt="&nbsp;[Search www.gnu.org]&nbsp;" /></a>
+
+ <a id="language-button" class="switch" href="#language-container">
+  <img id="language-icon" height="32"
+       src="/graphics/icons/translations.png"
+       alt="&nbsp;[Languages]&nbsp;" />
+ </a>
+
+</div>
+</div>
+<!-- end of server/body-include-1.html -->
+
+<!-- start of server/body-include-2 -->
+
+
+<div style="clear: both"></div>
+<div id="navigation">
+ <a id="more-links" href="#navigation"></a>
+ <a id="less-links" href="#tabAboutGNU"></a>
+ <ul>
+
+   <li id="tabAboutGNU"><a href="/gnu/gnu.html">ABOUT&nbsp;GNU</a></li>
+
+
+  <li id="tabPhilosophy"><a href="/philosophy/philosophy.html">PHILOSOPHY</a></li>
+
+
+  <li id="tabLicenses"><a href="/licenses/licenses.html">LICENSES</a></li>
+
+
+  <li id="tabEducation"><a href="/education/education.html">EDUCATION</a></li>
+
+
+  <li id="tabSoftware"><a href="/software/software.html">SOFTWARE</a></li>
+
+
+  <li id="tabDoc"><a href="/doc/doc.html">DOCS</a></li>
+
+
+  <li id="tabMalware"><a href="/proprietary/proprietary.html">MALWARE</a></li>
+
+
+  <li id="tabHelp"><a href="/help/help.html">HELP&nbsp;GNU</a></li>
+
+
+  <li id="tabArt"><a href="/graphics/graphics.html">GNU&nbsp;ART</a></li>
+
+
+  <li id="tabPeople"><a href="/people/people.html">GNU'S&nbsp;WHO?</a></li>
+
+  <li><a href="/server/sitemap.html">SITEMAP</a></li>
+  <li><a href="//directory.fsf.org">SOFTWARE&nbsp;DIRECTORY</a></li>
+  <li><a href="https://h-node.org/">HARDWARE</a></li>
+ </ul>
+ <div style="clear: both"></div>
+</div><!-- /"navigation -->
+<!-- end of server/body-include-2 -->
+
+<div id="content">
+<!-- end of server/banner.html -->
+
+<p class="no-display">GNU is the only operating system developed
+specifically to give its users freedom.  What is GNU, and what freedom
+is at stake?</p>
+
+<div id="home">
+<div class="first-column">
+
+<h2 class="first">What is GNU?</h2>
+
+<p>GNU is an operating system that
+is <a href="/philosophy/free-sw.html">free software</a>&mdash;that is,
+it respects users' freedom.  The GNU operating system consists of GNU
+packages (programs specifically released by the GNU Project) as well
+as free software released by third parties.  The development of GNU
+made it possible to use a computer without software that would trample
+your freedom.</p>
+
+<p>We recommend <a href="/distros/free-distros.html">installable
+versions of GNU</a> (more precisely, GNU/Linux distributions) which
+are entirely free software.  <a href="#More-GNU">More about GNU
+below</a>.</p>
+
+<div class="btn-left">
+  <a href="/distros/free-distros.html">Try GNU/Linux</a></div>
+<div style="clear:both"></div>
+
+<div id="gnu-linux">
+<div class="screenshot">
+ <a href="/distros/screenshots/hyperbola-i3.png"><img
+   src="/distros/screenshots/hyperbola-i3.png"
+   alt="&nbsp;[Screenshot of Hyperbola with i3 window manager]&nbsp;" /></a>
+</div>
+<p><small><a href="https://www.hyperbola.info/">
+Hyperbola&nbsp;0.3</a> with <a href="https://i3wm.org/">i3 window manager</a>,
+cool-retro-term (terminal emulator), Gimp (image editor), and Iceweasel-UXP (web
+browser)</small></p>
+</div>
+
+<table class="thumbs">
+ <tr class="image">
+  <td><a href="/home.html?distro=dragora#gnu-linux"><img
+   src="/distros/screenshots/dragora-ice-thumb.jpg"
+   alt="&nbsp;[Screenshot of Dragora&nbsp;3.0-beta1 with IceWM window manager]&nbsp;" /></a></td>
+  <td><a href="/home.html?distro=guix#gnu-linux"><img
+   src="/distros/screenshots/guixSD-gnome3-thumb.jpg"
+   alt="&nbsp;[Screenshot of Guix&nbsp;0.15 with GNOME&nbsp;3 desktop]&nbsp;" /></a></td>
+  <td><a href="/home.html?distro=hyperbola#gnu-linux"><img
+   src="/distros/screenshots/hyperbola-i3-thumb.jpg"
+   alt="&nbsp;[Screenshot of Hyperbola&nbsp;0.3 with i3 window manager]&nbsp;" /></a></td>
+  <td><a href="/home.html?distro=parabola#gnu-linux"><img
+   src="/distros/screenshots/parabola2020-lxde-thumb.jpg"
+   alt="&nbsp;[Screenshot of Parabola&nbsp;2020 with LXDE desktop]&nbsp;" /></a></td>
+  <td><a href="/home.html?distro=pureos#gnu-linux"><img
+   src="/distros/screenshots/gnome3-thumb.jpg"
+   alt="&nbsp;[Screenshot of PureOS&nbsp;8 with GNOME&nbsp;3 desktop]&nbsp;" /></a></td>
+  <td><a href="/home.html?distro=trisquel#gnu-linux"><img
+   src="/distros/screenshots/trisquel8-mate-thumb.jpg"
+   alt="&nbsp;[Screenshot of Trisquel&nbsp;8 with MATE desktop]&nbsp;" /></a></td>
+ </tr>
+ <tr class="caption">
+  <td><small>Dragora / IceWM</small></td>
+  <td><small>Guix / GNOME3</small></td>
+  <td><small>Hyperbola / i3</small></td>
+  <td><small>Parabola / LXDE</small></td>
+  <td><small>PureOS / GNOME3</small></td>
+  <td><small>Trisquel / MATE</small></td>
+ </tr>
+</table>
+
+<div class="btn-right">... or <a
+href="https://directory.fsf.org/wiki/Free_Software_Directory:Free_software_replacements">
+Try parts of GNU</a></div>
+<div style="clear:both"></div>
+
+<h2>What is the Free Software Movement?</h2>
+
+<p>The free software movement campaigns to win for the users of
+computing the freedom that comes from free software.  Free software
+puts its users in control of their own computing.  Nonfree software
+puts its users under the power of the software's developer.  See
+<a href="https://www.fsf.org/blogs/rms/20140407-geneva-tedx-talk-free-software-free-society">
+the video explanation</a>.</p>
+
+<h2>What is Free Software?</h2>
+
+<p><strong>Free software means the users have the freedom to run,
+copy, distribute, study, change and improve the software.</strong></p>
+
+<p>Free software is a matter of liberty, not price.  To understand the
+concept, you should think of &ldquo;free&rdquo; as in &ldquo;free
+speech&rdquo;, not as in &ldquo;free beer&rdquo;.</p>
+
+<p>More precisely, free software means users of a program have
+the <a href="/philosophy/free-sw.html">four essential
+freedoms</a>:</p>
+
+<ul>
+<li>The freedom to run the program as you wish,
+    for any purpose (freedom 0).</li>
+<li>The freedom to study how the program works, and change it so it
+    does your computing as you wish (freedom 1). Access to the source
+    code is a precondition for this.</li>
+<li>The freedom to redistribute copies so you can help others
+    (freedom 2).</li>
+<li>The freedom to distribute copies of your modified versions
+    to others (freedom 3).  By doing this you can give the whole
+    community a chance to benefit from your changes.
+    Access to the source code is a precondition for this.</li>
+</ul>
+
+<p>Developments in technology and network use have made these freedoms
+<a href="/philosophy/free-software-even-more-important.html">even more
+important now</a> than they were in 1983.</p>
+
+<p>Nowadays the free software movement goes far beyond developing the
+GNU system.  See <a href="https://fsf.org">the Free Software
+Foundation's web site</a> for more about what we do, and a list
+of <a href="/help">ways you can help</a>.</p>
+
+<h2>More about GNU</h2>
+
+<p><a id="More-GNU">GNU</a> is a Unix-like operating system.  That
+means it is a collection of many programs: applications, libraries,
+developer tools, even games.  The development of GNU, started in
+January 1984, is known as the GNU Project.  Many of the programs in
+GNU are released under the auspices of the GNU Project; those we
+call <a href="/software/">GNU packages</a>.</p>
+
+<p>The name &ldquo;GNU&rdquo; is a recursive acronym for &ldquo;GNU's
+Not
+Unix.&rdquo; <a href="/pronunciation/pronunciation.html">&ldquo;GNU&rdquo;
+is pronounced <em>g'noo</em></a>, as one syllable, like saying
+&ldquo;grew&rdquo; but replacing the <em>r</em> with <em>n</em>.</p>
+
+<p>The program in a Unix-like system that allocates machine resources
+and talks to the hardware is called the &ldquo;kernel&rdquo;.  GNU is
+typically used with a kernel called Linux.  This combination is
+the <a href="/gnu/linux-and-gnu.html"><strong>GNU/Linux operating
+system</strong></a>.  GNU/Linux is used by millions, though
+many <a href="/gnu/gnu-linux-faq.html">call it &ldquo;Linux&rdquo; by
+mistake</a>.</p>
+
+<p>GNU's own kernel, <a href="/software/hurd/hurd.html">The Hurd</a>,
+was started in 1990 (before Linux was started).  Volunteers continue
+developing the Hurd because it is an interesting technical
+project.</p>
+
+<p class="back"><a href="/gnu/gnu.html">More information</a></p>
+</div><!-- /first-column -->
+
+<div class="second-column">
+
+<div class="emph-box beige">
+<p><strong>The GNU Project strongly urges the community to communicate in 
+ways that are friendly, welcoming and kind. See the 
+<a href="/philosophy/kind-communication.html">
+GNU Kind Communications Guidelines</a></strong>.</p>
+</div>
+
+<div id="Flashes" class="emph-box white">
+<h3>Planet GNU
+<a href="https://planet.gnu.org/rss20.xml"><img src="/feed-icon-10x10.png"
+alt="RSS Feed" /></a></h3>
+<div class="ltr">
+<!-- Autogenerated by planetrss.pl 1.19 -->
+<p><a href='http://www.fsf.org/blogs/community/how-to-livestream-a-conference-in-just-under-a-week'>
+<span class="gnun-split"></span>How to livestream a conference in just under a week<span class="gnun-split"></span></a><span class="gnun-split"></span><!-- TRANSLATORS: 
+http://www.fsf.org/blogs/community/how-to-livestream-a-conference-in-just-under-a-week -->:
+ For the first time ever, LibrePlanet 2020 was a fully
+virtual conference due to ongoing issues caused by the
+coronavirus pandemic. In our...
+</p>
+<p><a href='http://www.fsf.org/blogs/community/better-than-zoom-try-these-free-software-tools-for-staying-in-touch'>
+<span class="gnun-split"></span>Better than Zoom: Try these free software tools for staying in touch<span class="gnun-split"></span></a><span class="gnun-split"></span><!-- TRANSLATORS: 
+http://www.fsf.org/blogs/community/better-than-zoom-try-these-free-software-tools-for-staying-in-touch -->:
+ In times like these it becomes all the more important to
+remember that tools like Zoom, Slack, and Facebook Messenger are...
+</p>
+<p><a href='http://www.fsf.org/blogs/community/summer-internships-at-the-fsf-apply-by-may-10'>
+<span class="gnun-split"></span>Summer internships at the FSF! Apply by May 10<span class="gnun-split"></span></a><span class="gnun-split"></span><!-- TRANSLATORS: 
+http://www.fsf.org/blogs/community/summer-internships-at-the-fsf-apply-by-may-10 -->:
+ Do you believe that free software is crucial to a free society? Do you
+want to help people learn why free software matters, and how to use
+it?..
+</p>
+
+</div>
+</div>
+
+<div id="Action" class="emph-box beige">
+<h3>Take Action</h3>
+
+<ul>
+<li><strong>Support the efforts on net neutrality
+<a href="https://www.freepress.net/issues/free-open-internet/net-neutrality" title="Net
+neutrality in the United States of America">in the USA</a></strong>,
+and in your home country.</li>
+
+<li>Defend <a href="https://www.laquadrature.net/en/personnal-data/">
+privacy</a>, and support <a
+href="https://www.laquadrature.net/en/?s=copyright">
+global copyright reform</a> with <a
+href="https://www.laquadrature.net/en/">LQDN</a>.</li>
+
+<li><strong><a href="http://www.fsf.org/campaigns">Support current FSF
+campaigns</a></strong>.</li>
+
+<li>Fight against software patents:
+<a href="http://www.endsoftpatents.org">worldwide</a>, and
+<a href="/server/takeaction.html#swpat">in Europe</a>.</li>
+</ul>
+
+<p class="back"><a href="/server/takeaction.html">More action items</a></p>
+</div>
+
+<div id="unmaint" class="emph-box beige">
+<p><strong>Can you contribute to any of
+these <a href="//www.fsf.org/campaigns/priority-projects/">High
+Priority Areas</a>?</strong></p>
+<ul>
+  <li>Free phone operating system,</li>
+  <li>decentralization, federation and self-hosting,</li>
+  <li>free drivers, firmware and hardware designs,</li>
+  <li>real-time voice and video chat,</li>
+  <li>encourage contribution by people underrepresented in the community,</li>
+  <li>and more.</li>
+</ul>
+
+<p><strong>Can you help <a
+href="/server/takeaction.html#unmaint">maintain a GNU package</a>?</strong></p>
+<ul>
+<li><span class="gnun-split"></span>
+  <a href="/software/cfengine/">cfengine</a>,
+  <a href="/software/freedink/">freedink</a>,
+  <a href="/software/freetalk/">freetalk</a>,
+  <a href="/software/halifax/">halifax</a>,
+  <a href="/software/mcron/">mcron</a>,
+  <a href="/software/quickthreads/">quickthreads</a><span class="gnun-split"></span>,
+are all looking for maintainers.</li>
+
+<li>Also, these packages are looking for co-maintainers:
+<span class="gnun-split"></span>
+  <a href="/software/aspell/">aspell</a>,
+  <a href="/software/bison/">bison</a>,
+  <a href="/software/gnuae/">gnuae</a>,
+  <a href="/software/gnubik/">gnubik</a>,
+  <a href="/software/metaexchange/">metaexchange</a>,
+  <a href="/software/powerguru/">powerguru</a>,
+  <a href="/software/xboard/">xboard</a><span class="gnun-split"></span>.</li>
+</ul>
+
+<p>See the package web pages for more information.</p>
+</div>
+
+<div id="blurb" class="emph-box white">
+<p><strong><a href="/software/recent-releases.html">Recent GNU
+releases</a></strong></p>
+
+<p><strong><a href="/manual/blurbs.html">Short descriptions for all GNU
+packages</a></strong></p>
+
+<p style="margin-top: 2em">Today's random package&hellip;</p>
+<!-- home-pkgselect.html begins -->
+<!-- Automatically generated by select-blurbs.awk on Wed Apr 29 11:29:26 EDT 2020 -->
+<!-- Next selections are going to be:
+ pspp gretl autogen gnucomm poke gnunet guile-sdl mpc sather unifont
+ gnats automake easejs health global java-getopt gsrc
+-->
+
+<!-- home-pkgselect.html ends -->
+
+<div class="ltr">
+<!-- File generated by www/prep/gnumaint/gm Thu Apr 23 03:08:54 UTC 2020 -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h4 id="mediagoblin">
+  <img src="/graphics/pkg-logos-250x100/mediagoblin.250x100.png" style="height:1.3em"
+       alt="logo for mediagoblin" />
+  <a href="/software/mediagoblin/">Mediagoblin</a></h4><p>
+GNU MediaGoblin is a free media publishing platform.  It runs in a
+federalized manner, freeing the user from centralized web services. It
+supports pictures, videos and audio.
+<small>(<a href="/manual/manual.html#mediagoblin">doc</a>)</small></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- End file generated by www/prep/gnumaint/gm Thu Apr 23 03:08:54 UTC 2020 -->
+
+</div>
+</div>
+
+</div><!-- /second-column -->
+</div><!-- /home -->
+
+<div style="clear:both"></div>
+</div><!-- for id="content", starts in the include above -->
+
+              <!-- begin server/footer-text.html -->
+
+
+
+
+
+<div style="clear:both"></div>
+
+
+<div id="language-container">
+ <a href="#" class="close"></a>
+ <div id="languages" class="rounded-corners">
+  <div class="backtotop">
+   <hr class="no-display" />
+   <a href="#header"><span>BACK TO TOP </span>&#11165;</a>
+  </div>
+  <a href="#" class="close"></a>
+  <div id="set-language" class="button">
+   <span class="gnun-split"></span>
+   <a href="/server/select-language.html?callback=/" rel="nofollow">
+   Set language
+   <span class="gnun-split"></span>
+   </a>
+  </div>
+  <p>Available for this page:</p>
+  <div id="translations">
+<p>
+<span dir="ltr" class="original">[en]&nbsp;<a lang="en" hreflang="en" href="/home.en.html">English</a> &nbsp;</span>
+<span dir="ltr">[de]&nbsp;<a lang="de" hreflang="de" href="/home.de.html">Deutsch</a> &nbsp;</span>
+<span dir="ltr">[es]&nbsp;<a lang="es" hreflang="es" href="/home.es.html">español</a> &nbsp;</span>
+<span dir="ltr">[fa]&nbsp;<a lang="fa" hreflang="fa" href="/home.fa.html">فارسی</a> &nbsp;</span>
+<span dir="ltr">[fr]&nbsp;<a lang="fr" hreflang="fr" href="/home.fr.html">français</a> &nbsp;</span>
+<span dir="ltr">[it]&nbsp;<a lang="it" hreflang="it" href="/home.it.html">italiano</a> &nbsp;</span>
+<span dir="ltr">[ja]&nbsp;<a lang="ja" hreflang="ja" href="/home.ja.html">日本語</a> &nbsp;</span>
+<span dir="ltr">[nl]&nbsp;<a lang="nl" hreflang="nl" href="/home.nl.html">Nederlands</a> &nbsp;</span>
+<span dir="ltr">[pt-br]&nbsp;<a lang="pt-br" hreflang="pt-br" href="/home.pt-br.html">português</a> &nbsp;</span>
+<span dir="ltr">[ru]&nbsp;<a lang="ru" hreflang="ru" href="/home.ru.html">русский</a> &nbsp;</span>
+<span dir="ltr">[sq]&nbsp;<a lang="sq" hreflang="sq" href="/home.sq.html">Shqip</a> &nbsp;</span>
+<span dir="ltr">[tr]&nbsp;<a lang="tr" hreflang="tr" href="/home.tr.html">Türkçe</a> &nbsp;</span>
+<span dir="ltr">[uk]&nbsp;<a lang="uk" hreflang="uk" href="/home.uk.html">українська</a> &nbsp;</span>
+<span dir="ltr">[zh-cn]&nbsp;<a lang="zh-cn" hreflang="zh-cn" href="/home.zh-cn.html">简体中文</a> &nbsp;</span>
+<span dir="ltr">[zh-tw]&nbsp;<a lang="zh-tw" hreflang="zh-tw" href="/home.zh-tw.html">繁體中文</a> &nbsp;</span>
+</p>
+</div>
+ </div>
+</div>
+
+<div id="mission-statement">
+ <div class="backtotop">
+  <hr class="no-display" />
+  <a href="#header"><span>BACK TO TOP </span>&#11165;</a>
+ </div>
+<div style="clear: both"></div>
+<blockquote>
+<p style="direction:ltr; text-align:left"><a href="//www.fsf.org"><img id="fsfbanner"
+src="/graphics/fsf-logo-notext-small.png" alt="&nbsp;[FSF logo]&nbsp;"/></a><strong>
+&ldquo;The Free Software Foundation (FSF) is a nonprofit with a worldwide
+mission to promote computer user freedom. We defend the rights of all
+software users.&rdquo;</strong></p>
+</blockquote>
+
+<div id="support-the-fsf" class="button">
+ <a class="join" href="//www.fsf.org/associate/support_freedom?referrer=4052">JOIN</a>
+ <a class="donate" href="//donate.fsf.org/">DONATE</a>
+ <a class="shop" href="//shop.fsf.org/">SHOP</a>
+</div>
+</div>
+<!-- end server/footer-text.html -->
+
+
+
+<p id="sisters">The <a href="http://www.fsf.org/">FSF</a> also has sister
+organizations in <a href="http://www.fsfe.org">Europe</a>, <a
+href="http://www.fsfla.org/">Latin America</a> and <a
+href="http://fsf.org.in/">India</a>.<br />
+Feel free to join them!</p>
+
+<div id="fs-gang">
+<div class="img-container">
+<a href="//www.fsf.org/working-together/gang">meet the free software
+gang<img src="/graphics/fs-gang.png" alt=" [FS gang] "/></a>
+</div> <!-- /img-container -->
+</div> <!-- /fs-gang -->
+
+
+
+<div id="footer">
+<div class="unprintable">
+
+<p>Please send general FSF &amp; GNU inquiries to
+<a href="mailto:gnu@gnu.org">&lt;gnu@gnu.org&gt;</a>.
+There are also <a href="/contact/">other ways to contact</a>
+the FSF.  Broken links and other corrections or suggestions can be sent
+to <a href="mailto:webmasters@gnu.org">&lt;webmasters@gnu.org&gt;</a>.</p>
+
+<p><!-- TRANSLATORS: Ignore the original text in this paragraph,
+        replace it with the translation of these two:
+
+        We work hard and do our best to provide accurate, good quality
+        translations.  However, we are not exempt from imperfection.
+        Please send your comments and general suggestions in this regard
+        to <a href="mailto:web-translators@gnu.org">
+        &lt;web-translators@gnu.org&gt;</a>.</p>
+
+        <p>For information on coordinating and submitting translations of
+        our web pages, see <a
+        href="/server/standards/README.translations.html">Translations
+        README</a>. -->
+Please see the <a
+href="/server/standards/README.translations.html">Translations
+README</a> for information on coordinating and submitting translations
+of this article.</p>
+</div>
+
+<!-- Regarding copyright, in general, standalone pages (as opposed to
+     files generated as part of manuals) on the GNU web server should
+     be under CC BY-ND 4.0.  Please do NOT change or remove this
+     without talking with the webmasters or licensing team first.
+     Please make sure the copyright date is consistent with the
+     document.  For web pages, it is ok to list just the latest year the
+     document was modified, or published.
+
+     If you wish to list earlier years, that is ok too.
+     Either "2001, 2002, 2003" or "2001-2003" are ok for specifying
+     years, as long as each year in the range is in fact a copyrightable
+     year, i.e., a year in which the document was published (including
+     being publicly visible on the web or in a revision control system).
+
+     There is more detail about copyright years in the GNU Maintainers
+     Information document, www.gnu.org/prep/maintain. -->
+
+<p>Copyright &copy; 1996-2020 <a
+href="http://www.fsf.org">Free Software Foundation</a>, Inc.</p>
+
+<p>This page is licensed under a <a rel="license"
+href="http://creativecommons.org/licenses/by-nd/4.0/">Creative
+Commons Attribution-NoDerivatives 4.0 International License</a>.</p>
+
+<!-- start of server/bottom-notes.html -->
+<div id="bottom-notes" class="unprintable">
+<p><a href="//www.fsf.org/about/dmca-notice">Copyright Infringement Notification</a></p>
+<div id="generic">
+
+
+</div>
+</div>
+<!-- end of server/bottom-notes.html -->
+
+
+<p class="unprintable">Updated:
+<!-- timestamp start -->
+$Date: 2020/04/26 06:02:36 $
+<!-- timestamp end -->
+</p>
+</div>
+</div><!-- for class="inner", starts in the banner include -->
+</body>
+</html>
