@@ -15,10 +15,18 @@ metacity &
 METACITY_PID=$!
 echo "Started metacity with PID $METACITY_PID"
 
-# run the given program
+# Run the given program and remember its exit code
 echo "Executing given command $@"
 $@
+COMMAND_EXIT=$?
+echo "Command exited with code $COMMAND_EXIT"
 
 # kill the started services
 kill $METACITY_PID
 kill $XVFB_PID
+
+# Exit with the code of the executed program.
+# If this is e.g. a test execution, this script should
+# fail when the program failed.
+
+exit $COMMAND_EXIT
