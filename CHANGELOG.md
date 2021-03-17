@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add section about building Hexatomic locally in developer/maintainer documentation (#194)
 - Add information on how to make releases on GitHub to developer documentation (#211)
+- Java is now included in the released product, it is not necessary to have Java installed (#20)
 
 ### Changed
 
 - Use GitHub Actions instead of Travis CI for deploying the release binaries and the documentation.
+- Updated Eclipse platform to release 2021-03
+- Updated Tycho to 2.1.0
 
 ### Fixed
 
