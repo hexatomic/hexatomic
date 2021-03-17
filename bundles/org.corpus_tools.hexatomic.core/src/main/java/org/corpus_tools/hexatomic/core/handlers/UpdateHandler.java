@@ -72,7 +72,8 @@ public class UpdateHandler {
             "Couldn't get provisioning job: " + operation.getResolutionResult(),
             UpdateHandler.class);
       } else {
-        errorService.showError("Error", "Couldn't resolve provisioning job", UpdateHandler.class);
+        errorService.showError("Error when searching for provisioning job.", 
+            "Couldn't resolve provisioning job", UpdateHandler.class);
       }
     }
   }
