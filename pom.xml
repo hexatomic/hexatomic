@@ -15,7 +15,7 @@
 		<license-maven-plugin.version>2.0.0</license-maven-plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.source>11</maven.compiler.source>
 		<tycho.version>1.7.0</tycho.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
@@ -53,7 +53,7 @@
 						<links>
 							<!-- This list should match the bundles/packages depended on, with 
 								the versions as specified in the target platform -->
-							<link>https://docs.oracle.com/javase/8/docs/api/</link>
+							<link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
 						</links>
 						<failOnError>false</failOnError>
 					</configuration>
@@ -152,6 +152,7 @@
 							<version>0.5.1</version>
 						</artifact>
 					</target>
+		            <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
 					<environments>
 						<environment>
 							<os>linux</os>

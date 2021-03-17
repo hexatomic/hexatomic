@@ -31,6 +31,10 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R202011302050
 	org.antlr.runtime
 }
 
+location 'https://download.eclipse.org/justj/jres/11/updates/release/11.0.2' {
+	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
+}
+
 location 'https://korpling.github.io/salt/p2/salt-3.4/' {
 	org.corpus-tools.salt-api [3.4.2,3.5.0)
 	org.corpus-tools.salt-extensions [3.4.2,3.5.0)

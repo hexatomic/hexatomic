@@ -21,7 +21,7 @@ Require-Bundle: javax.inject;bundle-version="0.0.0",
  org.slf4j.api;bundle-version="1.7.10",
  org.corpus-tools.salt-api,
  javax.annotation;bundle-version="1.2.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
 Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.errors,
