@@ -130,7 +130,12 @@ references:
 - type: software
   title: com.sun.jna.platform
   version: 4.5.1.v20190425-1842
-  authors: []
+  license: Apache-2.0
+  authors:
+  - name: Timothy Wall
+  - name: Matthias Bläsing
+  notes: More license information can be found in the THIRD-PARTY/com.sun.jna.platform
+    directory.
 - type: software
   title: javax.annotation
   version: 1.3.5.v20200909-1856
