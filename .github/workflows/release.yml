@@ -14,7 +14,7 @@ jobs:
         - name: Set JAVA_HOME to OpenJDK 11
           run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
         - name: Run Maven install (includes tests)
-          run: xvfb-run mvn clean install
+          run: releng/sh/metacity-run.sh mvn clean install
           env:
             LANG: en_US.UTF-8
         - name: Update CFF file
@@ -22,7 +22,7 @@ jobs:
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file
-          run: xvfb-run mvn clean verify
+          run: releng/sh/metacity-run.sh mvn clean verify
           env:
             LANG: en_US.UTF-8
         - name: Release assets on GitHub
