@@ -306,7 +306,7 @@ class TestGraphEditor {
     // Make sure the cursor is at the end of the line
     console.navigateTo(console.getLineCount() - 1, command.length() + 2);
     // Finish with typing the return character
-    console.typeText("\n");
+    console.insertText("\n");
 
     // Wait until the graph has been rendered
     if (firstSelectedRow.isPresent()) {
