@@ -40,7 +40,9 @@ COMMAND_EXIT=$?
 echo "Command exited with code $COMMAND_EXIT"
 
 # kill the started services
-kill $METACITY_PID
+echo "Killing metacity (PID $METACITY_PID)"
+kill -9 $METACITY_PID
+echo "Killing Xvfb server (PID $XVFB_PID)"
 kill $XVFB_PID
 
 # Exit with the code of the executed program.
