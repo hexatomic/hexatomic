@@ -27,7 +27,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_oEtxwDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.online_documentation" label="Online Documentation" command="_V7e7gDpHEeu92f5JR1mQ3w"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_wIyIIDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.about" label="About" command="_oseuoDpCEeu92f5JR1mQ3w"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_s9xtEHwfEeuqD5Pog2ICmw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.update" label="Update" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/sync-solid.png" command="_SjveQHwfEeuqD5Pog2ICmw"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_vlU6gIZZEeuGT4Ahk_B38A" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.preferences" label="Preferences" command="_hMcwcIZZEeuGT4Ahk_B38A"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_vlU6gIZZEeuGT4Ahk_B38A" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.preferences" label="Preferences" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/cog-solid.png" command="_hMcwcIZZEeuGT4Ahk_B38A"/>
       </children>
     </mainMenu>
     <trimBars xmi:id="_ZPTWQOCuEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.trimbar.tools">

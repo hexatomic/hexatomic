@@ -25,14 +25,17 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import java.io.File;
 import java.net.URL;
+import org.corpus_tools.hexatomic.core.ui.PreferencesDialog;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * Class that hooks into the application lifecycle and configures logging.
@@ -79,5 +82,13 @@ public class ApplicationLifecycle {
       log.error("Could not configure logging", ex);
     }
   }
+  
+  @PostContextCreate
+  private void test() {
+    if (PreferencesDialog.isUpdate_enabled()) {
+      System.err.println("HI!");
+    }
+  }
+
 
 }
