@@ -42,8 +42,8 @@ jobs:
     steps:
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Set JAVA_HOME to OpenJDK 8
-          run: echo JAVA_HOME=$JAVA_HOME_8_X64 >> $GITHUB_ENV
+        - name: Set JAVA_HOME to OpenJDK 11
+          run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
         - name: Run Maven install (includes tests)
           run: mvn clean install
           env:

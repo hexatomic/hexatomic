@@ -28,6 +28,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           LANG: en_US.UTF-8
+  test_macos:
+    name: OpenJDK 11 macOS
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-11-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-11-
+      - name: Set JAVA_HOME to OpenJDK 11
+        run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+      - name: Run Maven install (includes tests)
+        run: mvn verify
+        env:
+          LANG: en_US.UTF-8
 
   test_docs:
     name: Test documentation
