@@ -48,11 +48,11 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
@@ -251,10 +251,10 @@ class TestProjectManager {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    UIThreadRunnable.syncExec(() ->
     // Call saveTo which should show an error
-    spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
-        bot.getDisplay().getActiveShell()));
+    UIThreadRunnable
+        .syncExec(() -> spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
+            bot.getDisplay().getActiveShell()));
 
     Optional<IStatus> lastException =
         UIThreadRunnable.syncExec(() -> errorService.getLastException());

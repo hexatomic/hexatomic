@@ -57,10 +57,8 @@ public class TestHelper {
             forcedKeyboardLayout;
       }
     } catch (SecurityException ex) {
-      log.error(
-          "Could not get environment variable " + SWTBOT_KEYBOARD_LAYOUT
-              + " because the security mananger is running and disallowed access",
-          ex);
+      log.error("Could not get environment variable " + SWTBOT_KEYBOARD_LAYOUT
+          + " because the security mananger is running and disallowed access", ex);
     }
   }
 
@@ -79,26 +77,28 @@ public class TestHelper {
         .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
     handlerService.executeHandler(cmd);
   }
-  
+
   /**
    * Returns the macOS command key representation or "Ctrl+" on all other systems.
+   * 
    * @return A string representation for the "Ctrl" key as used by tooltips on this system.
    */
   public static String getControlTooltipPrefix() {
-    if(SystemUtils.IS_OS_MAC) {
-      return "\u2318";
+    if (SystemUtils.IS_OS_MAC) {
+      return "⌘";
     } else {
       return "Ctrl+";
     }
   }
-  
+
   /**
    * Returns the macOS shift key representation or "Shift+" on all other systems.
+   * 
    * @return A string representation for the "Shift" key as used by tooltips on this system.
    */
   public static String getShiftTooltipPrefix() {
-    if(SystemUtils.IS_OS_MAC) {
-      return "\u21E7";
+    if (SystemUtils.IS_OS_MAC) {
+      return "⇧";
     } else {
       return "Shift+";
     }

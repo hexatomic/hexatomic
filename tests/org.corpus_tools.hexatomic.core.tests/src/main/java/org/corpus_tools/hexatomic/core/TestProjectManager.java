@@ -80,16 +80,16 @@ class TestProjectManager {
 
     projectManager = new ProjectManager();
     projectManager.events = events;
-    
+
     errorService = mock(ErrorService.class);
     projectManager.errorService = errorService;
-    
+
     partService = mock(EPartService.class);
     projectManager.partService = partService;
 
     UiStatusReport uiStatus = mock(UiStatusReport.class);
     projectManager.uiStatus = uiStatus;
-    
+
     projectManager.sync = sync;
     projectManager.notificationFactory = factory;
 
