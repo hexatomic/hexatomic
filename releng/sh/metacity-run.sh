@@ -2,6 +2,24 @@
 
 # Runs a command using a background Xvfb server with a running window manager (metacity)
 
+# Check if Xvfb and metacity are installed; if not, prompt user whether to install.
+for PACKAGE in Xvfb metacity
+do
+    dpkg -s "$PACKAGE" >/dev/null 2>&1 && {
+        echo "$PACKAGE is installed."
+    } || {
+        echo -e "$PACKAGE is not installed. Install now? [y/n] \c"
+        read install_package
+        if ([[ "$install_package" = 'y' ]] || [[ "$install_package" = 'Y' ]]); then
+            echo "Installing $PACKAGE ..."
+            sudo apt-get install $PACKAGE
+        else
+            echo "This script needs $PACKAGE to run. Exiting."
+            exit 0
+        fi
+    }
+done
+
 # Use this port, change temporarly if it is already taken
 export DISPLAY=:99
 
