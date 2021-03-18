@@ -23,7 +23,7 @@ It will be easier for you to contribute to Hexatomic if you already have some ex
 
 Here are links to some resources that can help you get started:
 
-- [Java 8 tutorials](http://web.archive.org/web/20190815125800/https://docs.oracle.com/javase/tutorial/) by Oracle
+- [Java tutorials](http://web.archive.org/web/20190815125800/https://docs.oracle.com/javase/tutorial/) by Oracle
 - [Maven in 5 minutes - Tutorial](http://web.archive.org/web/20190815125723/https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html) by the Apache Software Foundation
 - [Eclipse RCP (Rich Client Platform) - Tutorial](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html) by Lars Vogel
 - [Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial](http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html) by 

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Graph Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.graph;singleton:=true
-Bundle-Version: 0.5.1
+Bundle-Version: 0.6.0.qualifier
 Require-Bundle: javax.inject,
  org.eclipse.osgi,
  org.eclipse.jface,
@@ -24,7 +24,7 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.core.services,
  javax.annotation;bundle-version="1.2.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.corpus_tools.hexatomic.console,
  org.corpus_tools.hexatomic.console.internal;x-internal:=true,
  org.corpus_tools.hexatomic.graph,
