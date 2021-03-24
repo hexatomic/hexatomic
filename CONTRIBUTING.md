@@ -11,9 +11,6 @@ We welcome contributions from the community, and want to make contributing to th
 Please read these guidelines before contributing.
 If you have questions about them or want to suggest improvements, please [open a new issue](https://github.com/hexatomic/hexatomic/issues/new).
 
-**TODO** Cf. https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62 
-https://help.github.com/en/articles/setting-guidelines-for-repository-contributors
-
 ## Development on GitHub
 
 We use GitHub to host source code and documentation, to track issues such as bug reports and feature requests, and to provide Hexatomic downloads to users.
