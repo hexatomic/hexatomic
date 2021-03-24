@@ -47,12 +47,16 @@ Currently, we aim to review pull requests at the following times:
 - Friday mornings
 - Friday afternoons
   
-All times are in Central European (Summer) Time and are meant for orientation. Note that we may sometimes not be able to perform reviews in these time slots due to illness, holidays, etc.
+All times are in Central European (Summer) Time and are meant for orientation.
+Note that we may sometimes not be able to perform reviews in these time slots
+due to illness, holidays, etc.
 
 ## License
 
 By contributing code to Hexatomic, you agree that your contributions will be licensed under its [Apache License, Version 2.0](LICENSE).  
-By contributing documentation to Hexatomic, you agree that your contributions will be licensed under its [CC0 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/legalcode) license.
+By contributing documentation to Hexatomic, you agree that your contributions
+will be licensed under its [CC0 1.0 Universal (CC0
+1.0)](https://creativecommons.org/publicdomain/zero/1.0/legalcode) license.
 
 ## Governance
 
@@ -62,12 +66,30 @@ This section describes the decision-making processes for the Hexatomic project, 
 
 In the Hexatomic project, the following roles are defined.
 
-- **Core contributors:** Active contributors to the Hexatomic software. The development of Hexatomic is either part of the job description of core contributors, or they are actively making substantial contributions to the project. Core contributors are listed in the [README file](README.md).
+- **Core contributors:** Active contributors to the Hexatomic software. The
+  development of Hexatomic is either part of the job description of core
+  contributors, or they are actively making substantial contributions to the
+  project. Core contributors are listed in the [README file](README.md).
 
-- **Maintainer:** Hexatomic has a single maintainer. This person is responsible for the development and release workflow of Hexatomic, including project and software documentation and facilitating maintenance transfers, as well as nominating core contributors. THe maintainer is named in the [README file](README.md).
+- **Maintainer:** Hexatomic has a single (lead) maintainer, although more than
+  one person can do actual maintenance work in the project. The maintainer is 
+  responsible for the development and release workflow of
+  Hexatomic, including project and software documentation and facilitating
+  maintenance transfers, as well as nominating core contributors. The maintainer
+  is named in the [README file](README.md).
 
-- **Principal investigators:** As Hexatomic is research software, the principal investigators are responsible for strategic development of the project. The principal investigators are listed in the [README file](README.md).
+- **Principal investigators:** As Hexatomic is research software, the principal
+  investigators are responsible for strategic development of the project. The
+  principal investigators are listed in the [README file](README.md).
 
 ### Decision making
 
-Decisions are usually made by the maintainer, with potential recourse to the core contributors, the principal investigators, or both. **TODO Discuss and document**
+Decisions are usually made by the maintainer, with potential recourse to the
+core contributors, the principal investigators, the user community, or a
+combination of them.
+
+## Further information
+
+You can find further information concerning the development and maintenance of
+Hexatomic in the [developer and maintainer
+documentation](https://hexatomic.github.io/hexatomic/dev/).
