@@ -25,12 +25,21 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import java.io.File;
 import java.net.URL;
-import org.corpus_tools.hexatomic.core.ui.PreferencesDialog;
+import javax.inject.Inject;
+//import org.corpus_tools.hexatomic.core.update.P2Util;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+//import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+//import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.di.extensions.Preference;
+// import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+// import org.eclipse.e4.core.di.extensions.Preference;
+//import org.eclipse.e4.ui.di.UISynchronize;
+//import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
+//import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -51,6 +60,9 @@ public class ApplicationLifecycle {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
+  @Inject
+  @Preference(nodePath = "org.corpus_tools.hexatomic.core.project", value = "autoUpdate")
+  private boolean autoUpdateEnabled;
 
   /**
    * Called when the model is loaded and initializes the logging.
@@ -82,13 +94,17 @@ public class ApplicationLifecycle {
       log.error("Could not configure logging", ex);
     }
   }
-  
+
   @PostContextCreate
   private void test() {
-    if (PreferencesDialog.isUpdate_enabled()) {
-      System.err.println("HI!");
-    }
+    System.out.println("New user: " + autoUpdateEnabled);
+
+    // private void test(IProvisioningAgent agent, UISynchronize sync, IWorkbench workbench) {
+    // Boolean autoUpdateEnabled = pref.getBoolean("autoUpdate", true);
+    // P2Util util = new P2Util(agent, sync, workbench);
+    // util.platzhalter();
+    // if (autoUpdateEnabled) {
+    // util.performAutoUpdate();
+    // }
   }
-
-
 }
