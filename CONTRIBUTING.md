@@ -5,7 +5,7 @@ We welcome contributions from the community, and want to make contributing to th
 - reporting a bug,
 - submitting code,
 - proposing a new feature, or
-- put yourself forward to become the maintainer,
+- putting yourself forward to become the maintainer,
 - ...
 
 Please read these guidelines before contributing.
