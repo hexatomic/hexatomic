@@ -30,8 +30,8 @@ It's easy.
 
 1. Fork this repository.
 1. Open a new issue describing what you are planning to do. The maintainer will decide and communicate whether your change is a *hotfix* or a *feature*.
-1. Create a `feature` branch (for new functionality) with `mvn gitflow:feature-start`,  
-or a `hotfix` branch (for bug fixes) with `mvn gitflow:hotfix-start`.
+1. Create a `feature` branch (for new functionality or non-critical bug fixes) with `mvn gitflow:feature-start`,  
+or a `hotfix` branch (for hot fixes to releases) with `mvn gitflow:hotfix-start`.
 1. Do your work in this branch.
     - If you add code, add tests!
     - Update the relevant documentation in user and developer & maintainer documentation!
