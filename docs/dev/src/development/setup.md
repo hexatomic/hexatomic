@@ -20,6 +20,7 @@ We suggest that you use **OpenJDK** since more recent versions of the *Oracle JD
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
 For stand-alone packages, you can use the installers distributed by the [AdoptOpenJDK project](https://adoptopenjdk.net).
 AdoptOpenJDK packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
+When installing the AdoptOpenJDK on Windows, make sure to specify that the JAVA_HOME environment variable is set.
 
 You can check which version of Java you have installed by typing the following command into the terminal of your computer:
 
