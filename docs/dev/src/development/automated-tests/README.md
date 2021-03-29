@@ -23,7 +23,9 @@ to execute the tests.
 Tests are executed when building the project with `mvn install`.
 To specifically run the tests and not install the artifacts, use `mvn integration-test` instead.
 Unlike unit tests, `mvn test` will not work for integration tests, as the Tycho Surefire Plugin requires
-the bundles to be packaged, which happens in Maven's `package` phase, which comes after `test` and before `integration-test`.
+the bundles to be packaged, which happens in Maven's `package` phase, which
+comes after `test` and before `integration-test`. See the section [*Running UI
+integration tests*](./ui-integration-tests.md#running-ui-integration-tests) below for more information on running these tests.
 
 You can also generate a test code coverage report by executing `mvn verify site -Pcoverage`. 
 The generated report will be located under `tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/index.html`.
@@ -49,6 +51,6 @@ Click on **Run** to execute the user interface integration tests.
 
 ![Run UI tests configuration](launch-ui-tests.png)
 
-This will open an actual Hexatomic window where the user interactions are executed automatically.
-During the tests, don't interact with your computer (switching windows, moving the mouse, etc.) to avoid
-any interference with the automatic tests.
+This will open an actual Hexatomic window where the user interactions are
+executed automatically. See the section [*Running UI
+integration tests*](./ui-integration-tests.md#running-ui-integration-tests) below for more information on running these tests.
