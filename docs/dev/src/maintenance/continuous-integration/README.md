@@ -92,4 +92,17 @@ The release workflow consists of two separate jobs:
 
 ## Static code analysis
 
-<!-- TODO -->
+We use the static code analysis service SonarCloud to 
+
+- automatically detect potential issues and security threats in our code, and 
+- provide information about the portion of code that is covered by tests, and
+- provide information of duplication in the code.
+
+Each time, the [test workflow](#test-workflow) is run, it triggers the analysis SonarCloud's servers.
+During the analysis, it is checked whether the changes made to the codebase pass a so-called quality gate, i.e., whether threshholds for code quality are met.
+The results are being reported, for example on a pull request page.
+A failed quality gate also blocks code from getting merged.
+
+You can learn more about the service on the [SonarCloud documentation website](https://sonarcloud.io/documentation).
+
+To access and configure the Hexatomic project in SonarCloud, you must have maintenance access to the Hexatomic repository on GitHub, and log in to SonarCloud at <https://sonarcloud.io>.
