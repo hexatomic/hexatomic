@@ -76,3 +76,17 @@ This can lead to test errors when the locale is not consistent with the keyboard
 To enforce a specific keyboard layout for the tests, set the `SWTBOT_KEYBOARD_LAYOUT` environment variable to the layout you want to use.
 This can also be helpful if SWTBot does not provide a keyboard layout for the current locale, e.g., if there is no `EN_GB` layout you can still enforce the very similar `EN_US` layout.
 For more information on SWTBot's keyboard layouts, see [Keyboard Layouts in SWTBot on the Eclipse wiki](https://wiki.eclipse.org/SWTBot/Keyboard_Layouts).
+
+## Running UI integration tests
+
+UI integration tests start Hexatomic and automatedly interact with the graphical user interface.
+You must not use the keyboard or mouse during these GUI tests, as this may
+interfere with the automated interactions.
+
+If you want to keep working during the local build, you can run the build
+"headlessly", i.e., with the help of a virtual display server.
+To do this on Linux, for example, you can run the script `releng/sh/metacity-run.sh` from the root of the local repository:
+
+`./releng/sh/metacity-run.sh mvn clean install`
+
+See the [SWTBot documentation on this topic](https://wiki.eclipse.org/SWTBot/Automate_test_execution#use_another_DISPLAY_to_save_time) for further details.

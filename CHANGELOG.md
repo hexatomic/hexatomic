@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add section about continuous integration in developer/maintainer documentation (#84)
 - Add information on how to make releases on GitHub to developer documentation (#211)
 - Java is now included in the released product, it is not necessary to have Java installed (#20)
+- Document common development issues (#278)
 
 ### Changed
 
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix erroneous launch configuration that broke launching from Eclipse
+- Fix incomplete contribution guidelines (#292)
 
 ## [0.5.1] - 2021-03-11
 
