@@ -30,7 +30,7 @@ import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.edit.command.DeleteSelectionCommandHandler;
-import org.eclipse.nebula.widgets.nattable.edit.editor.TextCellEditor;
+import org.eclipse.nebula.widgets.nattable.edit.editor.MultiLineTextCellEditor;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
@@ -43,7 +43,6 @@ import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
  */
 public class EditConfiguration extends AbstractRegistryConfiguration {
 
-  private static final String CELL_EDITOR = "CELL_EDITOR";
   private static final String TOKEN_COLUMN_CONFIG_LABEL = "TOKEN_COLUMN_CONFIG_LABEL";
   private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
   private final LabelAccumulator labelAccumulator;
@@ -88,9 +87,9 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
   }
 
   private void registerCellEditor(IConfigRegistry configRegistry) {
-    TextCellEditor textCellEditor = new TextCellEditor();
+    MultiLineTextCellEditor textCellEditor = new MultiLineTextCellEditor();
     configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITOR, textCellEditor,
-        DisplayMode.NORMAL, CELL_EDITOR);
+        DisplayMode.NORMAL);
   }
 
   @Override
