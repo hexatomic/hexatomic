@@ -36,26 +36,6 @@ It consists of two separate jobs:
    static code analysis
 2. A job that builds and tests the documentation
 
-#### OpenJDK and static code analysis job
-
-Steps:
-
-1. Install a window manager for running UI integration tests in the background
-2. Check out the source code to the virtual machine that runs the workflow
-3. Cache the local Maven repository to reduce workflow run times
-4. Set environment variables
-5. Run tests using Maven with enabled code coverage reports, and upload the
-   results to SonarCloud
-
-#### Documentation test job
-
-Steps:
-
-1. Check out the source code to the virtual machine that runs the workflow
-2. Download and install mdBook
-3. Test the user documentation with `mdbook test`
-4. Test the developer and maintainer documentation with `mdbook test`
-
 ### Release workflow
 
 The [release
@@ -69,26 +49,6 @@ The release workflow consists of two separate jobs:
    updates the citation metadata, and deploys the release binaries to GitHub
 2. A job that builds the documentation and deploys the built website to the
    `github-pages` branch of the repository, from where GitHub Pages renders it
-
-#### Deploy release binaries job
-
-1. Install a window manager for running UI integration tests in the background
-2. Check out the source code to the virtual machine that runs the workflow
-3. Set environment variables
-4. Install the product with Maven, which includes running all tests
-5. Update the citation metadata in the `CITATION.cff` file
-6. Run the build again including the updated CFF file
-7. Create a draft release on GitHub and attach the release binaries
-
-#### Deploy documentation job
-
-1. Check out the source code to the virtual machine that runs the workflow
-2. Download and install mdBook
-3. Get the version identifier for the current release and save it in a variable
-4. Build the user documentation into a directory qualified with the version identifier
-5. Build the developer and maintainer documentation into a directory qualified with the version identifier
-6. Checkout the branch `github-pages` and run a script that prepares the branch
-7. Push the build artifacts to the `github-pages` branch
 
 ## Static code analysis
 
