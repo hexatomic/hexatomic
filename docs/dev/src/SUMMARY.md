@@ -17,6 +17,7 @@
 	   - [Adding a test case](./development/automated-tests/adding-test-case.md)
 	   - [Mocking injected dependencies](./development/automated-tests/mocking-injected-dependencies.md)
 	   - [UI integration tests](./development/automated-tests/ui-integration-tests.md)
+  - [Documentation](./development/documentation/README.md)
 - [Maintenance](./maintenance/README.md)
   - [Versioning](./maintenance/versioning/README.md)
   - [Continuous integration](./maintenance/continuous-integration/README.md)
