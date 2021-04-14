@@ -134,3 +134,4 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 - [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0-SNAPSHOT or newer**  
 (Update Site: <http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/>)
 - [**Eclipse Checkstyle Plugin**](https://checkstyle.org/eclipse-cs/) (Update Site: <https://checkstyle.org/eclipse-cs/update>)
+- 
