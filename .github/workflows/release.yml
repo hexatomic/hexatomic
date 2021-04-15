@@ -59,9 +59,10 @@ jobs:
         - name: Remove code sign from generated app folder
           run: codesign --remove-signature releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/macosx/cocoa/x86_64/hexatomic.app
         - name: Create zip file from app folder
-          run: zip -r hexatomic_unsigned.zip  releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/macosx/cocoa/x86_64/hexatomic.app/
+          run: zip -r hexatomic_unsigned.zip hexatomic.app/
+          working-directory: releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/macosx/cocoa/x86_64/
         - name: Replace macOS release asset with the unsigned zip file
-          run: mv hexatomic_unsigned.zip releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-macosx.cocoa.x86_64.zip
+          run: mv releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/macosx/cocoa/x86_64/hexatomic_unsigned.zip releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-macosx.cocoa.x86_64.zip
         - name: Release assets on GitHub
           uses: softprops/action-gh-release@v0.1.5
           with:
