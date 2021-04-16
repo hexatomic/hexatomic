@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix erroneous launch configuration that broke launching from Eclipse
 - Fix incomplete contribution guidelines (#292)
+- Fix startup error message in macOS by removing broken code signature on release (#271)
 
 ## [0.5.1] - 2021-03-11
 
