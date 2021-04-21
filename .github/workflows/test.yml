@@ -14,9 +14,9 @@ jobs:
   test_jdk11:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    steps:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
-    steps:
       - name: Install metacity window manager for background tests
         run: sudo apt-get install metacity
       - name: Checkout
