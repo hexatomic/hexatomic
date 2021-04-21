@@ -54,6 +54,16 @@
         "maintenance",
         "code"
       ]
+    },
+    {
+      "login": "bbunzeck",
+      "name": "bbunzeck",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74560190?v=4",
+      "profile": "https://github.com/bbunzeck",
+      "contributions": [
+        "bug",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
