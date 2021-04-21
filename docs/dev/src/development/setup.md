@@ -126,7 +126,7 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 
 - Open the *Install Wizard* via the menu **Help > Install New Software...**
 - In the **Work with:** field, enter the URL of the Update Site for the plugin, given in brackets below.
-- Select the plugins you want to install, and install it with the help of the wizard.
+- Select the plugins you want to install, and install them with the help of the wizard.
 - (Installing IDE plugins might trigger security warnings on Windows)
 
 
