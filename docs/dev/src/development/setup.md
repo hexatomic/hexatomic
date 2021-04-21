@@ -127,7 +127,7 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 - Open the *Install Wizard* via the menu **Help > Install New Software...**
 - In the **Work with:** field, enter the URL of the Update Site for the plugin, given in brackets below.
 - Select the plugins you want to install, and install them with the help of the wizard.
-- (Installing IDE plugins might trigger security warnings on Windows)
+- Installing IDE plugins sometimes triggers security warnings, because the code in the plugins has not been [signed](https://en.wikipedia.org/wiki/Code_signing). Often, code authors will simply have avoided the cost of purchasing a certificate to do the signing with, and in these cases the warnings are false alarms. However, we encourage you to carefully check the plugins you install, just as you would when you install other software.
 
 
 ### List of Eclipse IDE plugins required for Hexatomic development
