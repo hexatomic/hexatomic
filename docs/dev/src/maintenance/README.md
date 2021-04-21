@@ -10,10 +10,6 @@ TODOs
 
 Link to dev docs section on GitFlow.
 
-## Continuous integration
-
-Add section about working with Travis
-
 ## Pull Requests
 
 Add section about working with PRs, 
