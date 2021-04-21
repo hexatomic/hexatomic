@@ -2,21 +2,10 @@ name: Automated tests
 on: [push, pull_request]
 
 jobs:
-  pre_job:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@master
-
   test_jdk11:
-    needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
-    steps:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
+    steps:
       - name: Install metacity window manager for background tests
         run: sudo apt-get install metacity
       - name: Checkout
@@ -41,8 +30,6 @@ jobs:
           LANG: en_US.UTF-8
 
   test_docs:
-    needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Test documentation
     runs-on: ubuntu-20.04
     steps:
