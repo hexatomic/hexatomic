@@ -29,7 +29,7 @@ virtual machine on GitHub's servers running a recent Linux version.
 
 ### Test workflow
 
-The [test workflow](https://github.com/hexatomic/hexatomic/blob/develop/.github/workflows/test.yml) is run whenever Git commits are pushed to the repository.
+The [test workflow](https://github.com/hexatomic/hexatomic/blob/develop/.github/workflows/test.yml) is run whenever Git commits are pushed to the repository, or when a pull request is opened or updated.
 It consists of two separate jobs:
 
 1. A job that builds and tests Hexatomic with the defined Java version and runs
