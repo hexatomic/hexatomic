@@ -42,9 +42,9 @@ This may include a specific editor UI, its annotation logic, and other related f
 Hexatomic contains several features.
 Most of them come from the Eclipse RCP platform,
 but one of them also contains a Java Runtime Environment (JRE) that is shipped together with Hexatomic,
-so that users don't have to download and install a JRE to be able to run Hexatomic.
+so that users don't have to download and install a JRE to be able to run Hexatomic (*JustJ OpenJDK Feature* in the figure below).
 
-Finally, the Hexatomic product also contains the Hexatomic core feature, 
+Finally, the Hexatomic product also contains the **Hexatomic core feature**, 
 which contains all the parts that make Hexatomic software for linguistic research.
 The core feature is [described further below](#the-hexatomic-core-feature).
 
@@ -59,9 +59,9 @@ This means that Hexatomic is extended through the inclusion of additional featur
 This inclusion can happen in two ways:
 
 1. Additional features are added to the Hexatomic product via its product definition file, see the [section on Hexatomic as a product](#product).
-This way, the additional features are shipped as part of the Hexatomic standalone software.
+This way, the additional features are shipped as part of the Hexatomic standalone software (e.g., *Hexatomic Feature A* and *Hexatomic Feature B* in the figure above).
 2. Additional features are added to Hexatomic *at runtime*, i.e., when it is being run.
-This way, users can extend Hexatomic "on-the-fly" while they use it, by downloading and installing additional features.
+This way, users can extend Hexatomic "on-the-fly" while they use it, by downloading and installing additional features (e.g., *New Feature A* and *New Feature B* in the figure above).
 To enable the installation of new features at runtime, they must be available in a *p2 repository*.
 A p2 repository is an accessible folder structure that contains features and their plugins, 
 but also metadata files that can be read by Eclipse RCP products through their update and installation mechanism.
@@ -74,9 +74,23 @@ For example, there is a Hexatomic plugin which only deals with different linguis
 their conversion into and from Hexatomic's data model.
 
 On a technical level, Hexatomic plugins (and Eclipse RCP plugins in general) are also *OSGi bundles*.
-OSGi is a modularization framework for Java, and Eclipse Equinox - which is contained in the Eclipse RCP platform - is the OSGi reference implementation.
+[OSGi](https://www.osgi.org/resources/what-is-osgi/) is a modularization framework for Java, and Eclipse Equinox - which is contained in the Eclipse RCP platform - is the OSGi reference implementation.
 
 ## The Hexatomic core feature
 
-## When to create features and when to create plugins
+The Hexatomic core feature contains the fundamental parts of the software application:
 
+- The [configuration of the Eclipse RCP application platform](https://github.com/hexatomic/hexatomic/blob/develop/bundles/org.corpus_tools.hexatomic.core/Application.e4xmi), and basic application functionality such as logging
+- The [Salt](https://github.com/hexatomic/hexatomic/blob/develop/features/org.corpus_tools.hexatomic/feature.xml#L45) data model API
+- The [Pepper](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.formats) conversion framework configuration logic, GUI and format-specific plugins
+- The [corpus project management](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.corpusedit) API and GUI
+- Two powerful basic editors for the manipulation of the data model via annotation tasks: the [Graph Editor](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.graph) and the [Grid Editor](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.grid)
+- A simple [viewer](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.textviewer) for document texts
+
+Other features can build on the core feature and its plugins to extend Hexatomic's functionality.
+
+## Extending Hexatomic
+
+The [core feature](#the-hexatomic-core-feature) has a defined scope, and should not be extended by adding further plugins.
+Generally, its scope is to enable basic manipulation of Salt models: provision of the application, creation or import of corpora, basic manipulation of these corpora (covered by the Graph Editor and the Grid Editor), and export to corpus formats.
+For all new functionality that goes beyond this, you should create a new feature, and add new plugins to it that implement the functionality.
