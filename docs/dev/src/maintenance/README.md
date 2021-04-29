@@ -20,10 +20,6 @@ and technicalities for getting PRs into develop.
 
 Document code reviews
 
-## Templates
-
-Explain PR and issue templates
-
 ## Citation & licensing
 
 Explain citation and licensing templates better in licensing and citation section
