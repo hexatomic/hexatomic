@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add section about documentation in developer/maintainer documentation (#58)
 - Java is now included in the released product, it is not necessary to have Java installed (#20)
 - Document common development issues (#278)
+- Document working with contributions via pull request (#85)
 
 ### Changed
 
