@@ -55,7 +55,28 @@ Alternatively, it should be closed with a comment that explains the reasons for 
 
 ### Merging pull requests
 
-TODO
+The way that pull requests are merged into their target branch depends on their type.
+
+1. Pull requests that provide **hotfixes**, i.e., repair functionality that is broken rather than provide 
+new or change existing functionality, **must not be merged** from the GitHub UI directly. This is
+because they target the `master` branch, which only contains released code. Therefore, code that
+goes into the `master` branch must be formally released, which cannot be done from the GitHub UI.
+Instead, refer to the section about [releasing hotfixes](../releases/README.md#hotfix-releases) to learn how to do this.
+2. Pull requests that target the `develop` branch must not necessarily be released on merge. Instead,
+code changes from different pull requests can be bundled into a release. Therefore, it is safe to
+merge the pull request from the GitHub UI by clicking the green **Merge pull request** button (see figure below).
+
+#### Requirements for merging
+
+You must only merge pull requests
+
+1. that have undergone code review, have been approved by the reviewer, and have no unresolved questions or change suggestions;
+2. that have passed static code analysis;
+3. that have passed all CI workflows;
+4. for which all tasks on the pull request checklist have been completed;
+5. for which copyright, license and citation information are complete.
+
+![When all requirements are fulfilled, pull requests to `develop` can be merged by clicking the green button "Merge pull request".](merge-pull-request.png)
 
 ## Maintaining contributions that are not code contributions
 
