@@ -80,12 +80,12 @@ On a technical level, Hexatomic plugins (and Eclipse RCP plugins in general) are
 
 The Hexatomic core feature contains the fundamental parts of the software application:
 
-- The [configuration of the Eclipse RCP application platform](https://github.com/hexatomic/hexatomic/blob/develop/bundles/org.corpus_tools.hexatomic.core/Application.e4xmi), and basic application functionality such as logging
-- The [Salt](https://github.com/hexatomic/hexatomic/blob/develop/features/org.corpus_tools.hexatomic/feature.xml#L45) data model API
-- The [Pepper](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.formats) conversion framework configuration logic, GUI and format-specific plugins
-- The [corpus project management](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.corpusedit) API and GUI
-- Two powerful basic editors for the manipulation of the data model via annotation tasks: the [Graph Editor](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.graph) and the [Grid Editor](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.grid)
-- A simple [viewer](https://github.com/hexatomic/hexatomic/tree/develop/bundles/org.corpus_tools.hexatomic.textviewer) for document texts
+- The configuration of the Eclipse RCP application platform (`bundles/org.corpus_tools.hexatomic.core/Application.e4xmi`), and basic application functionality such as logging
+- The Salt data model API (see `features/org.corpus_tools.hexatomic/feature.xml`)
+- The Pepper conversion framework configuration logic, GUI and format-specific plugins (see `bundles/org.corpus_tools.hexatomic.formats`)
+- The corpus project management API and GUI (`bundles/org.corpus_tools.hexatomic.corpusedit`)
+- Two powerful basic editors for the manipulation of the data model via annotation tasks: the Graph Editor(`bundles/org.corpus_tools.hexatomic.graph`) and the Grid Editor (`bundles/org.corpus_tools.hexatomic.grid`)
+- A simple viewer for document texts (`bundles/org.corpus_tools.hexatomic.textviewer`)
 
 Other features can build on the core feature and its plugins to extend Hexatomic's functionality.
 
