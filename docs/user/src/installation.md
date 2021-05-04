@@ -10,9 +10,9 @@
     - **Windows**: Download `hexatomic-<version>-win32.win32.x86_64.zip`
 3. Extract the downloaded `zip` file to a directory of your choice.[^1]
 
-For Linux and Windows That's it. You can now run Hexatomic.
+For Linux and Windows, that's it. You can now run Hexatomic.
 
-On macOS, you need to move the Hexatomic application from the "Download" folder to the "Application" folder by dragging it to "Applications" in the Finder.
+On macOS, you need to move the Hexatomic application from the "Download" folder to the "Applications" folder by dragging it to "Applications" in the Finder.
 
 ![Drag the Hexatomic application to Applications](macos-install.png)
 
@@ -32,11 +32,12 @@ On macOS, you need to move the Hexatomic application from the "Download" folder 
 
 ### macOS-specific instructions
 
-When you start Hexatomic for the first time on macOS, use the context menu (accessible with a click to both mouse buttons) and choose "Open" from there.
+When you start Hexatomic for the first time on macOS, use the context menu and choose "Open" from there.
 
 ![Open Hexatomic from the context menu on macOS](macos-open.png)
 
-You will be asked if you want to open Hexatomic, even when the developer is unknown.
+You will be asked if you want to open Hexatomic, although it has not been downloaded from a trusted source.
+This dialog appears because we don't have an expensive Apple Developer ID and therefore cannot sign Hexatomic releases with it.
 Choose to open Hexatomic anyway. This dialog will be only shown on the first start, and you can open Hexatomic regularly afterwards.
 
 ![Security warning on macOS](macos-security-alert.png)
