@@ -31,6 +31,8 @@ See the [Logback documentation](https://logback.qos.ch/manual/configuration.html
 
 The core bundle exports the special `org.corpus_tools.hexatomic.core.errors.ErrorService` service which should be used to display error messages to the user.
 
+To use the `ErrorService` in a class, you can either simply pass an instance of it to a constructor of the class, or you can inject the service via the Eclipse context. To learn more about the Eclipse context and dependency injection, read Lars Vogel's tutorial ["Dependency injection and Eclipse"](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse).
+
 To report an exception, simply call the `handleException(...)` function of the service with an error message, the exception object, and the class of the caller, i.e., the class in which you catch the exception.
 ```java
 project = SaltFactory.createSaltProject();
