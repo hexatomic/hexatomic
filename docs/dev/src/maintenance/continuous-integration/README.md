@@ -63,6 +63,8 @@ During the analysis, it is checked whether the changes made to the codebase pass
 The results are being reported, for example on a pull request page.
 A failed quality gate also blocks code from getting merged.
 
+![Screenshot of a SonarCloud report to a pull request page.](./sonarcloud-report.png)
+
 You can learn more about the service on the [SonarCloud documentation website](https://sonarcloud.io/documentation).
 
 To access and configure the Hexatomic project in SonarCloud, you must have maintenance access to the Hexatomic repository on GitHub, and log in to SonarCloud at <https://sonarcloud.io>.
