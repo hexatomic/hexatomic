@@ -35,7 +35,7 @@ The contribution must be evaluated in terms of
   - Will the contribution introduce regressions?
   - Is the contribution documented?
 
-Evalution is done through different tools:
+Evaluation is done through different tools:
 - [communication](#communication-with-the-creator-of-the-pull-request) to clarify suitability and help fulfill non-functional requirements
 - [manual testing](#manual-testing-of-pull-requests) and code review to evaluate functional requirements <!-- TODO Add link to section on code review -->
 - static code analysis to evaluate quality <!-- TODO Add link to section on static code analysis -->
