@@ -25,6 +25,8 @@
   - [Licensing and citation](./maintenance/licensing/README.md)
   - [Releases](./maintenance/releases/README.md)
   - [Periodic unreviewed code triage](./maintenance/unreviewed-code-triage.md)
+  - [Repository maintenance](./maintenance/repository/README.md)
+    - [Template files](./maintenance/repository/templates.md)
 - [Common issues](./common-issues/README.md)
 - [Governance](./governance.md)
 - [License](./LICENSE.md)

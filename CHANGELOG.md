@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document basic architecture and modularization (#41)
 - Java is now included in the released product, it is not necessary to have Java installed (#20)
 - Document common development issues (#278)
+- Document use of issue & PR templates (#86)
 
 ### Changed
 
