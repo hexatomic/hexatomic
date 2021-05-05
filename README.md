@@ -24,6 +24,8 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 
+[![Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/hexatomic/hexatomic/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/hexatomic/hexatomic)
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
