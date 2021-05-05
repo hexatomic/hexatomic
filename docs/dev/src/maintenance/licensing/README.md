@@ -26,7 +26,7 @@ You can read about the plug-in on the [Maven License Plugin website](http://www.
 
 ### Dependencies
 
-We use the [Citation File Format Maven plugin](https://github.com/hexatomic/cff-maven-plugin) to
+We use the Citation File Format Maven plugin to
 document Hexatomic's dependencies, their licenses, and their citation information.
 This plug-in provides two goals, which can be executed to update the third-party dependency information.
 Since our external dependencies are currently collected by the `org.corpus_tools.hexatomic` feature,
@@ -43,3 +43,5 @@ You can configure the behavior of the CFF plug-in by editing the `features/org.c
 Several templates for curated license information are located in the `releng/templates` folder.
 This includes the `releng/templates/CITATION.cff` file, which is a template for citation information - e.g., the curated list of authors - for the software itself (here: Hexatomic),
 but it can also be used to provide citation metadata for references, which shouldn't be overwritten during auto-generation.
+
+To learn more about configuring the CFF plugin and working with templates, refer to the [Citation File Format Maven plugin project](https://github.com/hexatomic/cff-maven-plugin).
