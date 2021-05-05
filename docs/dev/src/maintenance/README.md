@@ -4,11 +4,12 @@ This section contains the documentation for Hexatomic maintenance work.
 
 The maintainer is *the* central position in the Hexatomic software project.
 They are responsible for completing the following tasks.
+All tasks should be completed in a *timely fashion*, and based on the Hexatomic code of conduct.
 
 ## <i class="fa fa-cogs"></i> Maintenance work
 
 - Ensure that Hexatomic always builds without errors in the `master` and `develop` branches
-- Fix security issues, bugs, code smells, etc., that show up, e.g. during continuous integration worfklows
+- Fix security issues and bugs
 - Maintain templates, configuration files, community files (`README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.), licenses, etc.
 
 ## <i class="fa fa-plus-square"></i> Contributions
