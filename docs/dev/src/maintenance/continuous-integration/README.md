@@ -29,7 +29,7 @@ virtual machine on GitHub's servers running a recent Linux version.
 
 ### Test workflow
 
-The [test workflow](https://github.com/hexatomic/hexatomic/blob/develop/.github/workflows/test.yml) is run whenever Git commits are pushed to the repository, or when a pull request is opened or updated.
+The test workflow (`.github/workflows/test.yml`) is run whenever Git commits are pushed to the repository, or when a pull request is opened or updated.
 It consists of two separate jobs:
 
 1. A job that builds and tests Hexatomic with the defined Java version and runs
@@ -38,8 +38,8 @@ It consists of two separate jobs:
 
 ### Release workflow
 
-The [release
-workflow](https://github.com/hexatomic/hexatomic/blob/develop/.github/workflows/release.yml)
+The release
+workflow (`.github/workflows/release.yml`)
 is run whenever Git tags are pushed to the repository that start with a `v`
 (e.g., `v0.6.0`). Following the [development workflow for Hexatomic](../../development/workflow/), this should only be
 the case during a [release](../releases/).
