@@ -22,6 +22,7 @@
 - [Maintenance](./maintenance/README.md)
   - [Versioning](./maintenance/versioning/README.md)
   - [Continuous integration](./maintenance/continuous-integration/README.md)
+  - [Working with contributions](maintenance/contributions/README.md)
   - [Licensing and citation](./maintenance/licensing/README.md)
   - [Releases](./maintenance/releases/README.md)
   - [Periodic unreviewed code triage](./maintenance/unreviewed-code-triage.md)
