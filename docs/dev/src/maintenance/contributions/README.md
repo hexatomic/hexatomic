@@ -35,7 +35,7 @@ The contribution must be evaluated in terms of
   - Will the contribution introduce regressions?
   - Is the contribution documented?
 
-Evalution is done through different tools:
+Evaluation is done through different tools:
 - [communication](#communication-with-the-creator-of-the-pull-request) to clarify suitability and help fulfill non-functional requirements
 - automated testing by the [continuous integration workflows](../continuous-integration/) that run automated tests on all pull requests
 - [manual testing](#manual-testing-of-pull-requests) and code review to evaluate functional requirements
