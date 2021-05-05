@@ -19,7 +19,9 @@ It shouldn't make any difference whether you use the open *OpenJDK* implementati
 We suggest that you use **OpenJDK** since more recent versions of the *Oracle JDK* have a more restricted license.
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
 For stand-alone packages, you can use the installers distributed by the [AdoptOpenJDK project](https://adoptopenjdk.net).
-AdoptOpenJDK packages are are available for Windows, MacOS, and Linux.
+AdoptOpenJDK packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
+When installing the AdoptOpenJDK on Windows, make sure that the option to set the `JAVA_HOME` environment variable is activated.
+Otherwise you will have to set the environment variable manually.
 
 You can check which version of Java you have installed by typing the following command into the terminal of your computer:
 
@@ -124,10 +126,13 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 
 - Open the *Install Wizard* via the menu **Help > Install New Software...**
 - In the **Work with:** field, enter the URL of the Update Site for the plugin, given in brackets below.
-- Select the plugins you want to install, and install it with the help of the wizard.
+- Select the plugins you want to install, and install them with the help of the wizard.
+- Installing IDE plugins sometimes triggers security warnings, because the code in the plugins has not been [signed](https://en.wikipedia.org/wiki/Code_signing). Often, code authors will simply have avoided the cost of purchasing a certificate to do the signing with, and in these cases the warnings are false alarms. However, we encourage you to carefully check the plugins you install, just as you would when you install other software.
+
 
 ### List of Eclipse IDE plugins required for Hexatomic development
 
 - [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0-SNAPSHOT or newer**  
 (Update Site: <http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/>)
 - [**Eclipse Checkstyle Plugin**](https://checkstyle.org/eclipse-cs/) (Update Site: <https://checkstyle.org/eclipse-cs/update>)
+- 

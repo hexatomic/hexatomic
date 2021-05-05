@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add section about building Hexatomic locally in developer/maintainer documentation (#194)
+- Add section about continuous integration in developer/maintainer documentation (#84)
 - Add information on how to make releases on GitHub to developer documentation (#211)
+- Add section about documentation in developer/maintainer documentation (#58)
+- Document basic architecture and modularization (#41)
 - Java is now included in the released product, it is not necessary to have Java installed (#20)
+- Document common development issues (#278)
+- Document working with contributions via pull request (#85)
+- Document use of issue & PR templates (#86)
 
 ### Changed
 
@@ -22,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix erroneous launch configuration that broke launching from Eclipse
+- Fix incomplete contribution guidelines (#292)
 
 ## [0.5.1] - 2021-03-11
 
