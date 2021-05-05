@@ -37,13 +37,31 @@ The contribution must be evaluated in terms of
 
 Evalution is done through different tools:
 - [communication](#communication-with-the-creator-of-the-pull-request) to clarify suitability and help fulfill non-functional requirements
-- [manual testing](#manual-testing-of-pull-requests) and code review to evaluate functional requirements <!-- TODO Add link to section on code review -->
-- static code analysis to evaluate quality <!-- TODO Add link to section on static code analysis -->
+- automated testing by the [continuous integration workflows](../continuous-integration/) that run automated tests on all pull requests
+- [manual testing](#manual-testing-of-pull-requests) and code review to evaluate functional requirements
+- [static code analysis](../continuous-integration/#static-code-analysis) to evaluate quality
 
 #### Manual testing of pull requests
 
-Check out the branch of the pull request, and run it locally to manually test the changes.
-For external pull requests, only do so *after* checking for potential security issues.
+In addition to the automated tests run by the continuous integration pipeline, **all pull requests must be manually tested**.
+The steps for manual testing depend on whether the pull request is internal or external.
+The reason for this is that *external* pull requests should never be afforded the same level of **trust** as *internal* pull requests, i.e., pull requests from the core contributors.
+
+<!--TODO To read more about how to review the changes as part of this process, read the section on [code review](TODO).-->
+
+##### Manually testing *external*, untrusted pull requests
+
+1. **Code review on GitHub:** Perform a code review of every single change on GitHub before doing anything else with the pull request.  
+<i class="fa fa-warning"></i> This is because *external pull requests may contain malign changes*, e.g., the continuous integration workflow, or any portion of code, could have been changed to expose secrets such as API or access tokens.
+2. **Test a local checkout of the pull request:** Check out the pull request locally by cloning its source repository into a new local directory, and pulling and switching to its source branch. You may then use the IDE to review the changes and their interrelations and context more comfortably together with the view on the changes that GitHub provides.
+3. **Build and run the pull request version of Hexatomic locally:** Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.
+
+##### Manually testing *internal*, trusted pull requests
+
+To avoid potential duplication of code review, you may change the manual testing steps for internal pull requests as follows.
+
+1. **Review a local checkout of the pull request:** Check out the pull request locally by pulling and switching to its source branch. Use the IDE to review the changes and their interrelations and context comfortably, based on the list of changes on GitHub. 
+3. **Build and run the pull request version of Hexatomic locally:** Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.
 
 ### Moving pull requests forward
 
