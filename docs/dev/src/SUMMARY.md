@@ -20,6 +20,7 @@
     - [UI integration tests](./development/automated-tests/ui-integration-tests.md)
   - [Documentation](./development/documentation/README.md)
 - [Maintenance](./maintenance/README.md)
+  - [Taking over as maintainer](./maintenance/taking-over/README.md)
   - [Versioning](./maintenance/versioning/README.md)
   - [Continuous integration](./maintenance/continuous-integration/README.md)
   - [Working with contributions](maintenance/contributions/README.md)
