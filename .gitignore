@@ -3,3 +3,4 @@ book/
 NOTES.md
 workspace/
 tests/**/Rerun*
+**/.vscode/
