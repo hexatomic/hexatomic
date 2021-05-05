@@ -2,19 +2,19 @@
 
 This section contains the documentation for Hexatomic maintenance work.
 
-The maintainer is the central position in the Hexatomic software project. 
+The maintainer is *the* central position in the Hexatomic software project.
 They are responsible for completing the following tasks.
 
 ## <i class="fa fa-cogs"></i> Maintenance work
 
 - Ensure that Hexatomic always builds without errors in the `master` and `develop` branches
 - Fix security issues, bugs, code smells, etc., that show up, e.g. during continuous integration worfklows
-- Maintain templates, configuration files, community files (`README-md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.), licenses, etc.
+- Maintain templates, configuration files, community files (`README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.), licenses, etc.
 
-## <i class="fa fa-plus-square"></i>  Contributions
+## <i class="fa fa-plus-square"></i> Contributions
 
 - Ensure that citation information is always up-to-date (in `CITATION.cff`)
-- Ensure that the contributors list is always up-to-date (in `README.md`, maintained via the [All Contributors bot](TODO))
+- Ensure that the contributors list is always up-to-date (in `README.md`, maintained via the *All Contributors* bot)
 - Maintain pull requests
 
 ## <i class="fa fa-search-plus"></i> Code review
@@ -34,14 +34,16 @@ They are responsible for completing the following tasks.
 
 ## <i class="fa fa-book"></i> Documentation
 
-- Maintain user documentation by ensuring that it is up-to-date with each contribution
-- Maintain developer and maintainers documentation by ensuring that they are up-to-date with each contribution; additionally document the current state of practice for developing and maintaining Hexatomic
+- Maintain user documentation and ensure that it is up-to-date with each contribution
+- Maintain developer and maintainer documentation and ensure that it is up-to-date with each contribution
+- Document the current state of practice for developing and maintaining Hexatomic
 
 ## <i class="fa fa-comments"></i> Communication & community work
 
 - Publicize releases to the relevant stakeholders
 - Redirect questions to the issue tracker
 - Update external resources
+- Work with and build the community of users and developers
 
 ## <i class="fa fa-hand-o-right"></i> Prepare maintainer changes
 
