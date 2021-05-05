@@ -2,20 +2,48 @@
 
 This section contains the documentation for Hexatomic maintenance work.
 
-<!--
+The maintainer is the central position in the Hexatomic software project. 
+They are responsible for completing the following tasks.
 
-TODOs
+## <i class="fa fa-cogs"></i> Maintenance work
 
-## GitFlow
+- Ensure that Hexatomic always builds without errors in the `master` and `develop` branches
+- Fix security issues, bugs, code smells, etc., that show up, e.g. during continuous integration worfklows
+- Maintain templates, configuration files, community files (`README-md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.), licenses, etc.
 
-Link to dev docs section on GitFlow.
+## <i class="fa fa-plus-square"></i>  Contributions
 
-## Code reviews
+- Ensure that citation information is always up-to-date (in `CITATION.cff`)
+- Ensure that the contributors list is always up-to-date (in `README.md`, maintained via the [All Contributors bot](TODO))
+- Maintain pull requests
 
-Document code reviews
+## <i class="fa fa-search-plus"></i> Code review
 
-## Citation & licensing
+- Perform code reviews
+- Document & triage unreviewed code
 
-Explain citation and licensing templates better in licensing and citation section
+## <i class="fa fa-question-circle"></i> Issues
 
--->
+- Communicate with issue authors: answer questions, and suggest fixes, or make fixes themself if possible or necessary
+- Do issue housekeeping: check open issues regularly, and fix and/or close where possible
+
+## <i class="fa fa-rocket"></i> Releases
+
+- Release Hexatomic
+- Publish new releases
+
+## <i class="fa fa-book"></i> Documentation
+
+- Maintain user documentation by ensuring that it is up-to-date with each contribution
+- Maintain developer and maintainers documentation by ensuring that they are up-to-date with each contribution; additionally document the current state of practice for developing and maintaining Hexatomic
+
+## <i class="fa fa-comments"></i> Communication & community work
+
+- Publicize releases to the relevant stakeholders
+- Redirect questions to the issue tracker
+- Update external resources
+
+## <i class="fa fa-hand-o-right"></i> Prepare maintainer changes
+
+- Prepare the repositories for takeover by a new maintainer
+- Document takeover by a new maintainer
