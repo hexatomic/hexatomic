@@ -2,26 +2,51 @@
 
 This section contains the documentation for Hexatomic maintenance work.
 
-<!--
+The maintainer is *the* central position in the Hexatomic software project.
+They are responsible for completing the following tasks.
+All tasks should be completed in a *timely fashion*, and based on the Hexatomic code of conduct.
 
-TODOs
+## <i class="fa fa-cogs"></i> Maintenance work
 
-## GitFlow
+- Ensure that Hexatomic always builds without errors in the `master` and `develop` branches
+- Fix security issues and bugs
+- Maintain templates, configuration files, community files (`README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.), licenses, etc.
 
-Link to dev docs section on GitFlow.
+## <i class="fa fa-plus-square"></i> Contributions
 
-## Pull Requests
+- Ensure that citation information is always up-to-date (in `CITATION.cff`)
+- Ensure that the contributors list is always up-to-date (in `README.md`, maintained via the *All Contributors* bot)
+- Maintain pull requests
 
-Add section about working with PRs, 
-more how to communicate with PR creators,
-and technicalities for getting PRs into develop.
+## <i class="fa fa-search-plus"></i> Code review
 
-## Code reviews
+- Perform code reviews
+- Document & triage unreviewed code
 
-Document code reviews
+## <i class="fa fa-question-circle"></i> Issues
 
-## Citation & licensing
+- Communicate with issue authors: answer questions, and suggest fixes, or make fixes themself if possible or necessary
+- Do issue housekeeping: check open issues regularly, and fix and/or close where possible
 
-Explain citation and licensing templates better in licensing and citation section
+## <i class="fa fa-rocket"></i> Releases
 
--->
+- Release Hexatomic
+- Publish new releases
+
+## <i class="fa fa-book"></i> Documentation
+
+- Maintain user documentation and ensure that it is up-to-date with each contribution
+- Maintain developer and maintainer documentation and ensure that it is up-to-date with each contribution
+- Document the current state of practice for developing and maintaining Hexatomic
+
+## <i class="fa fa-comments"></i> Communication & community work
+
+- Publicize releases to the relevant stakeholders
+- Redirect questions to the issue tracker
+- Update external resources
+- Work with and build the community of users and developers
+
+## <i class="fa fa-hand-o-right"></i> Prepare maintainer changes
+
+- Prepare the repositories for takeover by a new maintainer
+- Document takeover by a new maintainer
