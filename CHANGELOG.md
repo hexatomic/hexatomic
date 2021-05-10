@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document working with contributions via pull request (#85)
 - Document use of issue & PR templates (#86)
 - Document preparation for end-of-maintenance (#276)
+- Document tasks for new maintainers when taking over the project (#275)
 - Document when to make releases (#61)
 - Document maintenance tasks (#277)
 
