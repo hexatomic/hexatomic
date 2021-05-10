@@ -50,7 +50,7 @@ Update the maintainer information in the relevant places:
 
 ## Update public information about code reviews
 
-The contribution guidelines in `CONTRIBUTING.md` contain information on when code reviews are likely to be performed. Change the information there as appropriate, e.g., update the timezone.
+The contribution guidelines in `CONTRIBUTING.md` contain information on when code reviews are likely to be performed. Change the information there as appropriate, e.g., update the time zone.
 
 ## Get ready for maintenance
 
@@ -68,7 +68,7 @@ Check if the [build](../../development/getting-the-source-code.md#build-hexatomi
 ## Maintain open contributions
 
 Check if there are any open pull requests for Hexatomic in the original repository.
-If you are working in a fork, consider gettin in touch with the authors of the open pull requests and ask them to put them up again against your fork.
+If you are working in a fork, consider getting in touch with the authors of the open pull requests and ask them to put them up again against your fork.
 [Maintain the open pull requests](../contributions/) so that they can be closed or merged.
 
 ## Maintain open issues
