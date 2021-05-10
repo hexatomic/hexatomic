@@ -40,6 +40,13 @@ This is the preferred option, as all repository configurations as well as the hi
 If you cannot find someone to give you administrative rights to the repository, you can fork it, i.e., make a copy of the original repository and host it on a coding platform under your own or your organization's account.
 A fork will give you complete control over the repository, but you will lose the issue and pull request history.
 
+We encourage you to rename your fork repository to something other than - but perhaps similar to - *hexatomic*, and also change any documentation and in-application branding accordingly.
+This will help users separate your fork project from the original project.
+Make sure that you act within the bounds of the respective [licenses](../licensing/), e.g., with regard to copyright notices.
+Also note that while you may add yourself to the list of authors in the [`CITATION.cff](../licensing/) file once you have fulfilled authorship requirements,<!-- TODO Link once they're there -->
+you must not remove any authors from this list, until you can establish that their contributions are not part of the work anymore.
+This may be the case when you have deleted all lines of code or documentation that a single author has contributed.
+
 ## Update maintainer information
 
 Update the maintainer information in the relevant places:
