@@ -1,5 +1,16 @@
 # Releases
 
+Releases are versions of Hexatomic that are marked as encapsulating a specific set of tested and documented functionality features or repairs. Releases have a [version identifier](../versioning/) and are listed on the [releases page](#promoting-releases-on-github) in the Hexatomic repository.
+
+## When to create a release
+
+Hexatomic is a dynamic software project, and therefore there is no release plan with fixed dates for releases.
+Instead, the maintainers of Hexatomic decide when to create a new release.
+There are, however, two ground rules for when a release is created:
+
+1. Whenever a bug in a previous release of Hexatomic is [hotfixed](../../development/workflow/#contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix), a [new hotfix release](#hotfix-releases) *must* be created.
+2. Whenever new functionality has been implemented and merged into the `develop` branch, a [new feature release](#feature-releases) *should* be created.
+
 ## Feature releases
 
 To release a new *feature* (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.
