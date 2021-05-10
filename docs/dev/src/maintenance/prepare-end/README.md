@@ -63,6 +63,9 @@ read the [Software Heritage documentation](https://www.softwareheritage.org/save
 <i class="fa fa-hourglass-start"></i> *1 day before the end of your maintenance term*
 
 Add a note at the top of the `README.md`, notifying future repository visitors that Hexatomic has reached a temporary end-of-maintenance.
+Include contact details for yourself in that note that don't rely on GitHub functionality (e.g., an email address), so that potential new maintainers can get in touch with you if they want to revive the repository.
 Let them know that it can, however, be revived, and link to the relevant developer and maintainer documentation on Software Heritage (e.g., [`https://archive.softwareheritage.org/browse/origin/content/?origin_url=https://github.com/hexatomic/hexatomic&path=docs/dev/src/SUMMARY.md`](https://archive.softwareheritage.org/browse/origin/content/?origin_url=https://github.com/hexatomic/hexatomic&path=docs/dev/src/SUMMARY.md)). 
+Archive the repository on GitHub.
+This will preserve everything that's in the repository, including issues and pull requests, but everything will be read-only.
 Take your leave, and don't forget to switch off the lights.
 Thank you for maintaining Hexatomic! <i class="fa fa-heart"></i>
