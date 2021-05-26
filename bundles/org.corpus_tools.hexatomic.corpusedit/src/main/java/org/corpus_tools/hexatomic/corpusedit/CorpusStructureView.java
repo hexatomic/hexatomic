@@ -67,7 +67,6 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -83,7 +82,6 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -95,7 +93,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -147,10 +144,9 @@ public class CorpusStructureView {
                 @Override
                 public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
                     SNode currNode, SRelation<SNode, SNode> relation, SNode fromNode, long order) {
-                  if (currNode.getName() != null) {
-                    if (currNode.getName().toLowerCase().contains(filterText)) {
-                      found.set(true);
-                    }
+                  if (currNode.getName() != null
+                      && currNode.getName().toLowerCase().contains(filterText)) {
+                    found.set(true);
                   }
 
                 }
@@ -207,14 +203,7 @@ public class CorpusStructureView {
     txtFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     txtFilter.setToolTipText("Type to filter for corpus/document name");
 
-    txtFilter.addModifyListener(new ModifyListener() {
-
-      @Override
-      public void modifyText(ModifyEvent e) {
-        treeViewer.refresh();
-
-      }
-    });
+    txtFilter.addModifyListener((ModifyEvent e) -> treeViewer.refresh());
 
     Composite composite = new Composite(parent, SWT.NONE);
     composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -282,13 +271,9 @@ public class CorpusStructureView {
     treeViewer.setFilters(new ChildNameFilter());
     treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
 
-    treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-        IStructuredSelection selection = treeViewer.getStructuredSelection();
-        selectionService.setSelection(selection.getFirstElement());
-      }
+    treeViewer.addSelectionChangedListener((SelectionChangedEvent event) -> {
+      IStructuredSelection selection = treeViewer.getStructuredSelection();
+      selectionService.setSelection(selection.getFirstElement());
     });
 
     registerEditors(modelService, application, thisPart);
@@ -312,12 +297,12 @@ public class CorpusStructureView {
           // trigger a default action based on the currently selected tree item
           StructuredSelection selected = (StructuredSelection) treeViewer.getSelection();
           if (selected.getFirstElement() instanceof SCorpus) {
-            addDocument(toolBar.getShell());
+            addDocument();
           } else if (selected.getFirstElement() instanceof SCorpusGraph) {
-            addCorpus(toolBar.getShell());
+            addCorpus();
           } else if (selected.getFirstElement() instanceof SDocument) {
             // add a sibling document
-            addDocument(toolBar.getShell());
+            addDocument();
           } else {
             // fallback to a corpus graph, which always can be added
             addCorpusGraph();
@@ -344,7 +329,7 @@ public class CorpusStructureView {
     addCorpus.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addCorpus(toolBar.getShell());
+        addCorpus();
       }
     });
 
@@ -355,7 +340,7 @@ public class CorpusStructureView {
     addDocument.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addDocument(toolBar.getShell());
+        addDocument();
       }
     });
 
@@ -375,7 +360,7 @@ public class CorpusStructureView {
 
   }
 
-  private void addCorpus(Shell shell) {
+  private void addCorpus() {
 
 
     SCorpusGraph g = null;
@@ -418,7 +403,7 @@ public class CorpusStructureView {
 
   }
 
-  private void addDocument(Shell shell) {
+  private void addDocument() {
 
     // get the selected corpus graph
     StructuredSelection selection = (StructuredSelection) treeViewer.getSelection();
@@ -473,19 +458,19 @@ public class CorpusStructureView {
   }
 
   private void deleteCorpus(SCorpus selectedCorpus) {
-    boolean hasChildren = selectedCorpus.getOutRelations().stream()
-        .anyMatch(
-            rel -> rel instanceof SCorpusRelation || rel instanceof SCorpusDocumentRelation);
-    if (hasChildren) {
+    boolean hasSubCorpora = selectedCorpus.getOutRelations().stream()
+        .anyMatch(SCorpusRelation.class::isInstance);
+    boolean hasDocuments = selectedCorpus.getOutRelations().stream()
+        .anyMatch(SCorpusDocumentRelation.class::isInstance);
+    if (hasSubCorpora || hasDocuments) {
       errorService.showError(ERROR_WHEN_DELETING_SUB_CORPUS_TITLE,
           ERROR_WHEN_DELETING_SUB_CORPUS_MSG, this.getClass());
       return;
     }
 
     Optional<SNode> parent =
-        selectedCorpus.getInRelations().stream().filter(rel -> rel instanceof SCorpusRelation)
-            .findFirst()
-            .map(rel -> ((SCorpusRelation) rel).getSource());
+        selectedCorpus.getInRelations().stream().filter(SCorpusRelation.class::isInstance)
+            .findFirst().map(rel -> ((SCorpusRelation) rel).getSource());
     if (parent.isPresent()) {
       // select parent corpus
       selectSaltObject(parent.get(), true);
@@ -501,17 +486,16 @@ public class CorpusStructureView {
 
   private void deleteDocument(SDocument selectedDocument) {
     Optional<SNode> parent =
-        selectedDocument.getInRelations().stream()
-            .filter(rel -> rel instanceof SCorpusDocumentRelation)
+        selectedDocument.getInRelations().stream().filter(SCorpusDocumentRelation.class::isInstance)
             .findFirst().map(rel -> ((SCorpusDocumentRelation) rel).getSource());
 
     // Attempt to find the previous sibling document of the one that is deleted
     Optional<SDocument> previousDocument = Optional.empty();
     if (parent.isPresent()) {
       // Collect all siblings
-      List<SDocument> siblings = parent.get().getOutRelations().stream()
-          .filter(rel -> rel instanceof SCorpusDocumentRelation)
-          .map(rel -> ((SCorpusDocumentRelation) rel).getTarget()).collect(Collectors.toList());
+      List<SDocument> siblings =
+          parent.get().getOutRelations().stream().filter(SCorpusDocumentRelation.class::isInstance)
+              .map(rel -> ((SCorpusDocumentRelation) rel).getTarget()).collect(Collectors.toList());
       if (!siblings.isEmpty()) {
         // Find the position of the deleted document and use the index
         // to get the previous document (or select the first other if not found)
@@ -641,7 +625,7 @@ public class CorpusStructureView {
       MPart thisPart) {
     // Find all descriptors with the correct category
     List<MPartDescriptor> editorParts = application.getDescriptors().stream()
-        .filter((p) -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
+        .filter(p -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
         .collect(Collectors.toList());
 
     for (MPartDescriptor desc : editorParts) {

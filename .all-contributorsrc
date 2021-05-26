@@ -40,7 +40,30 @@
         "question",
         "review",
         "test",
-        "talk"
+        "talk",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "clachenmaier",
+      "name": "clachenmaier",
+      "avatar_url": "https://avatars.githubusercontent.com/u/73929591?v=4",
+      "profile": "https://github.com/clachenmaier",
+      "contributions": [
+        "bug",
+        "doc",
+        "maintenance",
+        "code"
+      ]
+    },
+    {
+      "login": "bbunzeck",
+      "name": "bbunzeck",
+      "avatar_url": "https://avatars.githubusercontent.com/u/74560190?v=4",
+      "profile": "https://github.com/bbunzeck",
+      "contributions": [
+        "bug",
+        "doc"
       ]
     }
   ],

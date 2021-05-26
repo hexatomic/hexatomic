@@ -97,18 +97,10 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
       if (saltSource instanceof SToken && saltTarget instanceof SToken) {
         // Make sure the pointing relation is routed above the tokens with two bend points
-        Bendpoint bpSource = new Bendpoint() {
-          @Override
-          public Point getLocation() {
-            return getBendpointLocation(connection, false);
-          }
-        };
-        Bendpoint bpTarget = new Bendpoint() {
-          @Override
-          public Point getLocation() {
-            return getBendpointLocation(connection, true);
-          }
-        };
+        Bendpoint bpSource = () -> getBendpointLocation(connection, false);
+        
+        Bendpoint bpTarget = () -> getBendpointLocation(connection, true);
+              
         this.pointingConnectionRouter.setConstraint(connection.getConnectionFigure(),
             Arrays.asList(bpSource, bpTarget));
       }
@@ -191,9 +183,9 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   @Override
   public IFigure getFigure(Object element) {
     if (element instanceof SNode) {
-      NodeFigure figure = new NodeFigure((SNode) element);
-      figure.setSize(figure.getPreferredSize());
-      return figure;
+      NodeFigure currFigure = new NodeFigure((SNode) element);
+      currFigure.setSize(currFigure.getPreferredSize());
+      return currFigure;
     }
     return null;
   }

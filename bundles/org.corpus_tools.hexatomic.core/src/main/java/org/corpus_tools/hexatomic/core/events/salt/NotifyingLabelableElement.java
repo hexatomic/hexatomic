@@ -26,6 +26,9 @@ import java.util.LinkedList;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.undo.operations.LabelAddOperation;
 import org.corpus_tools.hexatomic.core.undo.operations.LabelRemoveOperation;
+import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.graph.GraphFactory;
+import org.corpus_tools.salt.graph.IdentifiableElement;
 import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 
@@ -84,5 +87,18 @@ public interface NotifyingLabelableElement<T extends LabelableElement>
     }
   }
 
-
+  /**
+   * Creates and sets a new identifier using the {@link SaltFactory} instead of the default
+   * {@link GraphFactory}. The default {@link GraphFactory} will not use the notification-aware
+   * implementation of {@link GraphFactory#createIdentifier(IdentifiableElement, String)} and we
+   * can't override the use {@link GraphFactory}.
+   * 
+   * @param container The container to set the ID for.
+   * @param id The ID as string.
+   */
+  default void setNotficiationAwareId(IdentifiableElement container, String id) {
+    if ((id != null) && (!id.isEmpty())) {
+      SaltFactory.createIdentifier(container, id);
+    }
+  }
 }

@@ -91,6 +91,11 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
+  /** 
+   * SWT data key used to store a reference to {@link ControlDecoration} of a component. 
+   */
+  public static final String CONTROL_DECORATION = "CONTROL_DECORATION";
+
   private static final String NO_TOKENS_MESSAGE =
       "The data source does not contain any tokens, and cannot be displayed.";
 
@@ -272,6 +277,7 @@ public class GridEditor {
 
     final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
     deco.setShowOnlyOnFocus(false);
+    viewer.getControl().setData(CONTROL_DECORATION, deco);
 
     viewer.setContentProvider(ArrayContentProvider.getInstance());
     viewer.setLabelProvider(createLabelProvider());
@@ -284,6 +290,14 @@ public class GridEditor {
       messageLabel.setVisible(true);
       parent.layout();
     }
+  }
+
+  private void changeTableVisibility(NatTable currTable, Composite currParent, Boolean visible) {
+    if (currTable != null) {
+      currTable.setVisible(visible);
+      currParent.layout();
+    }
+
   }
 
   private ISelectionChangedListener createSelectionChangeListener(Label messageLabel,
@@ -299,26 +313,18 @@ public class GridEditor {
         // This is found out by checking whether the data source has incoming relations of type
         // STextualRelation.
         if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
-            .noneMatch(rel -> rel instanceof STextualRelation)) {
+            .noneMatch(STextualRelation.class::isInstance)) {
           deco.setDescriptionText(NO_TOKENS_MESSAGE);
           Image errorImage = FieldDecorationRegistry.getDefault()
               .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
           deco.setImage(errorImage);
-          if (table != null) {
-            // Hide table
-            table.setVisible(false);
-            parent.layout();
-          }
+          changeTableVisibility(table, parent, false);
         } else {
           deco.setDescriptionText(null);
           deco.setImage(null);
           selectionService.setSelection(
               selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
-          if (table != null) {
-            // Show table
-            table.setVisible(true);
-            parent.layout();
-          }
+          changeTableVisibility(table, parent, true);
         }
       }
     };

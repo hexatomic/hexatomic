@@ -1,5 +1,16 @@
 # Releases
 
+Releases are versions of Hexatomic that are marked as encapsulating a specific set of tested and documented functionality features or repairs. Releases have a [version identifier](../versioning/) and are listed on the [releases page](#promoting-releases-on-github) in the Hexatomic repository.
+
+## When to create a release
+
+Hexatomic is a dynamic software project, and therefore there is no release plan with fixed dates for releases.
+Instead, the maintainers of Hexatomic decide when to create a new release.
+There are, however, two ground rules for when a release is created:
+
+1. Whenever a bug in a previous release of Hexatomic is [hotfixed](../../development/workflow/#contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix), a [new hotfix release](#hotfix-releases) *must* be created.
+2. Whenever new functionality has been implemented and merged into the `develop` branch, a [new feature release](#feature-releases) *should* be created.
+
 ## Feature releases
 
 To release a new *feature* (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.
@@ -38,6 +49,27 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 10. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
 11. `git push` - Updates the remote release branch.
 12. `mvn gitflow:hotfix-finish` - Finalizes the hotfix and finishes the merge and release procedure.
+
+## Promoting releases on GitHub
+
+When you have made a [feature](#feature-releases) or [hotfix](#hotfix-releases) as described above, you will find a new tag for the released version on the [Hexatomic releases page on GitHub](https://github.com/hexatomic/hexatomic/releases).
+
+![Screenshot of a mocked tag on GitHub that has not been promoted to release yet](tag.png)
+
+You can now make a release from this tag:
+
+1. Click on **Draft a new release** on the Releases page.
+2. Complete the *Tag version* field with the tag you want to release (e.g. `v0.4.1`).
+3. Give the release a title. It should start with `Hexatomic`, include any necessary qualifiers (e.g., `Beta` if it's a `0.` MAJOR version) and the version number itself without any prefixes (e.g., use `0.4.1` instead of `v0.4.1`).
+4. Describe the release in three parts:
+   1. A high-level description of the form `This is a Hexatomic <hotfix/feature> release <:bug:/:tada:>!` followed by a blank line.
+   2. A short description of the fix (including issue numbers with hash prefixes, e.g. `#123`) or the added functionality. You can use bullet lists if more than one fix or feature has been added.
+   3. A link to the user documentation with, e.g., the following text: `:green_book: Read the [user documentation](https://hexatomic.github.io/hexatomic/user/v0.5/index.html) for Hexatomic to learn how to install and use it.` Make sure you get the `vMAJOR.MINOR` part in the documentation URL right.
+5. Click the **Preview** tab and check if everything looks good.
+6. Click on the green **Publish release** button. You can always delete and re-create releases from tags if something goes wrong.
+7. Check if the release contains all "binaries", i.e., the product .zip files for all three major operating systems.
+
+![Animation showing how to create a release on GitHub](release.gif)
 
 ## What to do when releases go wrong?
 

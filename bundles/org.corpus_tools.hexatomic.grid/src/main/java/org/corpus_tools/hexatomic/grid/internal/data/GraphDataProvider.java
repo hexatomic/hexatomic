@@ -70,7 +70,7 @@ public class GraphDataProvider implements IDataProvider {
   private STextualDS dataSource = null;
   private SDocumentGraph graph;
 
-  private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
+  private final List<SToken> orderedDsTokens = new ArrayList<>();
   private final LinkedHashMap<SSpan, Set<SToken>> spanTokenMap = new LinkedHashMap<>();
 
   // Alphabetically ordered maps of column titles to columns for the two annotated types
@@ -97,7 +97,7 @@ public class GraphDataProvider implements IDataProvider {
         dataSource);
 
     // Only consider tokens that are based on the selected data source.
-    List<SToken> unorderedTokens = new ArrayList<SToken>();
+    List<SToken> unorderedTokens = new ArrayList<>();
     for (SRelation<?, ?> inRel : dataSource.getInRelations()) {
       if (inRel instanceof STextualRelation) {
         // Source of STextualRelation can only be token
@@ -144,21 +144,22 @@ public class GraphDataProvider implements IDataProvider {
     if (set != null) {
       set.add(token);
     } else {
-      set = new HashSet<SToken>();
+      set = new HashSet<>();
       set.add(token);
     }
     spanTokenMap.put(span, set);
   }
 
   private void resolveSpanAnnotations(List<SToken> orderedTokens) {
-    for (SSpan span : spanTokenMap.keySet()) {
-      Set<SToken> overlappedTokens = spanTokenMap.get(span);
+    for (Entry<SSpan, Set<SToken>> entry : spanTokenMap.entrySet()) {
+      Set<SToken> overlappedTokens = entry.getValue();
       List<Integer> tokenIndices = new ArrayList<>();
       // Build token index list, i.e., row indices covered by this span
       for (SToken token : overlappedTokens) {
         tokenIndices.add(orderedTokens.indexOf(token));
       }
       Collections.sort(tokenIndices);
+      SSpan span = entry.getKey();
       for (SAnnotation annotation : span.getAnnotations()) {
         resolveAnnotationRecursively(tokenIndices, span, annotation, 1);
       }
@@ -286,7 +287,7 @@ public class GraphDataProvider implements IDataProvider {
         return null;
       }
     } else {
-      if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
+      if (orderedDsTokens.isEmpty() && columnIndex == 0 && rowIndex == 0) {
         return null;
       } else {
         Column column = null;
@@ -365,7 +366,7 @@ public class GraphDataProvider implements IDataProvider {
           log.debug("Action not implemented: Create token.");
         }
       } else {
-        log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString(), newValue);
+        log.debug("Action not implemented: Set text on '{}' to '{}'.", node, newValue);
       }
     }
     projectManager.addCheckpoint();
@@ -380,7 +381,7 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject) {
-    SStructuredNode node = (SStructuredNode) dataObject;
+    SStructuredNode node = dataObject;
     SAnnotation anno = node.getAnnotation(column.getColumnValue());
     if (anno == null) {
       throw new HexatomicRuntimeException(

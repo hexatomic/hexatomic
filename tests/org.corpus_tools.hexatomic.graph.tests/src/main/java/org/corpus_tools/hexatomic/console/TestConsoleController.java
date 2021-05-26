@@ -96,7 +96,7 @@ class TestConsoleController {
     SNode t2 = graph.getNodesByName("t2").get(0);
 
     List<SRelation<?, ?>> pointing = t2.getOutRelations().stream()
-        .filter((rel) -> rel instanceof SPointingRelation).collect(Collectors.toList());
+        .filter(SPointingRelation.class::isInstance).collect(Collectors.toList());
     assertEquals(1, pointing.size());
     assertEquals(t1, pointing.get(0).getTarget());
     assertEquals("nsubj", pointing.get(0).getAnnotation("func").getValue());
@@ -111,7 +111,7 @@ class TestConsoleController {
     // Add initial tokens
     console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
     graph.sortTokenByText();
-    
+
     // Add initial pointing relation
     console.executeCommand("e #t2 -> #t1 func:nsubj");
     assertEquals(1, graph.getPointingRelations().size());
@@ -127,7 +127,7 @@ class TestConsoleController {
     console.executeCommand("a pos: #t1");
     assertEquals(null, graph.getTokens().get(0).getAnnotation("pos"));
     assertEquals("DT", graph.getTokens().get(2).getAnnotation("pos").getValue());
-    
+
     // Add annotation to edge
     console.executeCommand("a func_alt:nominal_subject #t2 -> #t1");
     assertEquals(1, graph.getPointingRelations().size());
@@ -217,7 +217,7 @@ class TestConsoleController {
     assertEquals(1, graph.getTextualDSs().size());
     STextualDS firstText = graph.getTextualDSs().get(0);
     final String originalText = firstText.getText();
-    
+
     // Add another textual data source manually
     STextualDS anotherText = graph.createTextualDS("Another text");
     final SToken tok1 = graph.createToken(anotherText, 0, 7);
@@ -296,9 +296,9 @@ class TestConsoleController {
    */
   @Test
   void testInsertEdgeTwice() {
-    // Add initial tokens 
+    // Add initial tokens
     console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
-    
+
     // Add first pointing relation
     console.executeCommand("e #t1 -> #t2 ns:n:a");
     assertEquals(1, graph.getPointingRelations().size());
@@ -308,14 +308,14 @@ class TestConsoleController {
     // Check that we can't create a pointing relation when one of the nodes does not exist
     console.executeCommand("e #t1 -> #n245 ns:n:a");
     assertEquals(2, graph.getPointingRelations().size());
-    
+
     // Repeat the test sequence with dominance relations: create two syntax nodes first
     console.executeCommand("n cat:X #t1");
     assertEquals(1, graph.getDominanceRelations().size());
     console.executeCommand("e #n1 > #t2 ns:n:a");
     assertEquals(2, graph.getDominanceRelations().size());
     console.executeCommand("e #n1 > #t2 ns:n:a");
-    assertEquals(3, graph.getDominanceRelations().size()); 
+    assertEquals(3, graph.getDominanceRelations().size());
   }
 
   @Test
@@ -345,7 +345,7 @@ class TestConsoleController {
     newGraph = SaltFactory.createSDocumentGraph();
     newDocument.setDocumentGraph(newGraph);
     SampleGenerator.createPrimaryData(newDocument);
-    namedText =  newGraph.createTextualDS("ABC");
+    namedText = newGraph.createTextualDS("ABC");
     namedText.setName("just_a_text");
 
     console.setGraph(newGraph);
@@ -355,6 +355,24 @@ class TestConsoleController {
     console.setGraph(null);
     assertNull(console.getGraph());
     assertNull(console.getSelectedText());
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/261
+   */
+  @Test
+  void testNonAsciiTokens() {
+    console.executeCommand("t 这 是 一个 例子 。");
+    graph.sortTokenByText();
+
+    List<SToken> tokens = graph.getTokens();
+    assertEquals(5, tokens.size());
+    assertEquals(1, graph.getTextualDSs().size());
+    assertEquals("这", graph.getText(tokens.get(0)));
+    assertEquals("是", graph.getText(tokens.get(1)));
+    assertEquals("一个", graph.getText(tokens.get(2)));
+    assertEquals("例子", graph.getText(tokens.get(3)));
+    assertEquals("。", graph.getText(tokens.get(4)));
   }
 
 }

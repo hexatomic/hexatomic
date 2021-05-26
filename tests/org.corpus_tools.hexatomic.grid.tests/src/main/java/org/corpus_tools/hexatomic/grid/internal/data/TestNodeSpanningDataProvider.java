@@ -26,7 +26,7 @@ class TestNodeSpanningDataProvider {
    * @throws java.lang.Exception any exception thrown during set up.
    */
   @BeforeEach
-  void setUp() throws IllegalArgumentException {
+  void setUp() {
     fixture = new NodeSpanningDataProvider(mock(GraphDataProvider.class));
   }
 

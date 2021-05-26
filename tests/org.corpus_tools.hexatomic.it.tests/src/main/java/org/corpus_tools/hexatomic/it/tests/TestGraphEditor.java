@@ -74,8 +74,7 @@ class TestGraphEditor {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  private EPartService partService;
-
+  
   private ErrorService errorService;
   private ProjectManager projectManager;
 
@@ -233,7 +232,7 @@ class TestGraphEditor {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
-    partService = ctx.get(EPartService.class);
+    EPartService partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"

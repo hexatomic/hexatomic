@@ -25,7 +25,6 @@
    <vm>
    </vm>
 
-
    <plugins>
    </plugins>
 
@@ -34,6 +33,7 @@
       <feature id="org.eclipse.e4.rcp" installMode="root"/>
       <feature id="org.eclipse.emf.ecore" installMode="root"/>
       <feature id="org.eclipse.emf.common" installMode="root"/>
+      <feature id="org.eclipse.justj.openjdk.hotspot.jre.full" installMode="root"/>
    </features>
 
    <configurations>
