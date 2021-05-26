@@ -1410,7 +1410,8 @@ public class TestGridEditor {
    * Regression test for https://github.com/hexatomic/hexatomic/issues/258
    * 
    * <p>
-   * Tests that token columns aren't removed when all values are deleted.
+   * Tests that token columns aren't removed when all values are deleted, 
+   * but instead stay "alive" until the editor is closed.
    * </p>
    */
   @Test
