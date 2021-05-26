@@ -122,7 +122,7 @@ public class ProjectManager {
       monitor.worked(1);
 
       // Load each document individually and persist it
-      if ((project.getCorpusGraphs() != null) && (project.getCorpusGraphs().size() > 0)) {
+      if ((project.getCorpusGraphs() != null) && (!project.getCorpusGraphs().isEmpty())) {
 
         // Store all documents and copy them from the original location if necessary.
         // When storing the same location, we can assume we did not change the document graph
@@ -166,7 +166,7 @@ public class ProjectManager {
           List<URI> allDocuments =
               existingProject.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
                   .filter(d -> d.getDocumentGraphLocation() != null)
-                  .map(d -> d.getDocumentGraphLocation()).collect(Collectors.toList());
+                  .map(SDocument::getDocumentGraphLocation).collect(Collectors.toList());
           // Delete the Salt XML files belonging to this document
           for (URI doc : allDocuments) {
             Path saltFile = Paths.get(doc.toFileString());
@@ -178,8 +178,7 @@ public class ProjectManager {
       } catch (SaltResourceException ex) {
         // This is not a valid salt project folder, don't delete any files
       } catch (IOException ex) {
-        log.warn("Could not delete output directory of Salt project {}", outputDirectory.toString(),
-            ex);
+        log.warn("Could not delete output directory of Salt project {}", outputDirectory, ex);
       }
     }
 
@@ -229,10 +228,9 @@ public class ProjectManager {
             }
           } catch (IOException ex) {
             monitor.done();
-            sync.asyncExec(() -> {
-              errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
-                  ProjectManager.class);
-            });
+            sync.asyncExec(() -> 
+                errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
+                  ProjectManager.class));
             return;
           }
         } else {
@@ -466,7 +464,7 @@ public class ProjectManager {
       final Set<String> documentsToReload =
           project.getCorpusGraphs().stream().flatMap(cg -> cg.getDocuments().stream())
               .filter(d -> d.getDocumentGraph() != null).filter(d -> getNumberOfOpenEditors(d) > 0)
-              .map(d -> d.getId()).collect(Collectors.toSet());
+              .map(SDocument::getId).collect(Collectors.toSet());
 
       IRunnableWithProgress operation = new SaveToRunnable(documentsToReload, path);
 
@@ -712,18 +710,16 @@ public class ProjectManager {
     // Check if any other editor is open for this document
     if (documentID != null) {
       Optional<SDocument> document = getDocument(documentID, false);
-      if (document.isPresent()) {
-        if (getNumberOfOpenEditors(document.get()) <= 1) {
-          // No other editor found, unload document graph if it can be located on disk
-          if (document.get().getDocumentGraphLocation() != null
-              && document.get().getDocumentGraph() != null) {
-            log.debug("Unloading document {}", documentID);
-            // Suppress superfluous notifications
-            notificationFactory.setSuppressingEvents(true);
-            document.get().setDocumentGraph(null);
-            notificationFactory.setSuppressingEvents(false);
-          }
-        }
+      if (document.isPresent()
+           && getNumberOfOpenEditors(document.get()) <= 1
+           // No other editor found, unload document graph if it can be located on disk
+           && document.get().getDocumentGraphLocation() != null
+           && document.get().getDocumentGraph() != null) {
+        log.debug("Unloading document {}", documentID);
+        // Suppress superfluous notifications
+        notificationFactory.setSuppressingEvents(true);
+        document.get().setDocumentGraph(null);
+        notificationFactory.setSuppressingEvents(false);
       }
     }
   }

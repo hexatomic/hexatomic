@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Core Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.core.tests
-Bundle-Version: 0.5.1
+Bundle-Version: 0.6.0
 Fragment-Host: org.corpus_tools.hexatomic.core;bundle-version="0.2.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.core.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.osgi.services,
  org.junit.jupiter.api,
  org.mockito;bundle-version="2.23.0",

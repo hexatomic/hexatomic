@@ -354,7 +354,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     if (!tokens.isEmpty()) {
       SDocumentGraph docGraph = tokens.iterator().next().getGraph();
       if (docGraph != null) {
-        List<SToken> sortedTokens = docGraph.getSortedTokenByText(new LinkedList<SToken>(tokens));
+        List<SToken> sortedTokens = docGraph.getSortedTokenByText(new LinkedList<>(tokens));
         for (SToken t : sortedTokens) {
           InternalNode n = this.nodes.inverse().get(t);
           if (n != null) {

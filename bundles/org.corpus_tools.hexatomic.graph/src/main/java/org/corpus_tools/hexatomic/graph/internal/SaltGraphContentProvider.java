@@ -71,7 +71,7 @@ public class SaltGraphContentProvider implements IGraphEntityRelationshipContent
       }
 
     }
-    return null;
+    return new Object[0];
   }
 
 

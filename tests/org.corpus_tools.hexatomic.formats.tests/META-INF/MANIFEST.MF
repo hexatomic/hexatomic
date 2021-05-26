@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Importer and Exporter Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.formats.tests
-Bundle-Version: 0.5.1
+Bundle-Version: 0.6.0
 Fragment-Host: org.corpus_tools.hexatomic.formats;bundle-version="0.4.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.formats.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit.jupiter.api,
  org.mockito;bundle-version="2.23.0",
  org.apache.commons.io

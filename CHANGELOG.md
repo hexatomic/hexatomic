@@ -6,6 +6,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2021-05-26
+
+### Added
+
+- Add section about building Hexatomic locally in developer/maintainer documentation (#194)
+- Add section about continuous integration in developer/maintainer documentation (#84)
+- Add information on how to make releases on GitHub to developer documentation (#211)
+- Add section about documentation in developer/maintainer documentation (#58)
+- Document basic architecture and modularization (#41)
+- Java is now included in the released product, it is not necessary to have Java installed (#20)
+- Document common development issues (#278)
+- Document working with contributions via pull request (#85)
+- Document use of issue & PR templates (#86)
+- Document preparation for end-of-maintenance (#276)
+- Document tasks for new maintainers when taking over the project (#275)
+- Document when to make releases (#61)
+- Document maintenance tasks (#277)
+
+### Changed
+
+- Use GitHub Actions instead of Travis CI for deploying the release binaries and the documentation.
+- Updated Eclipse platform to release 2021-03
+- Updated Tycho to 2.1.0
+- Java 11 is required to build Hexatomic
+
+### Fixed
+
+- Fix erroneous launch configuration that broke launching from Eclipse
+- Fix incomplete contribution guidelines (#292)
+- Fix startup error message in macOS by removing broken code signature on release (#271)
+
 ## [0.5.1] - 2021-03-11
 
 ### Fixed
@@ -141,7 +172,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/hexatomic/hexatomic/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/hexatomic/hexatomic/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/hexatomic/hexatomic/compare/v0.4.4...v0.5.0
 [0.4.4]: https://github.com/hexatomic/hexatomic/compare/v0.4.3...v0.4.4

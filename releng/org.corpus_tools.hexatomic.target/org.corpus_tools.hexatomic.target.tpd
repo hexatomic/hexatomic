@@ -2,7 +2,7 @@ target 'Hexatomic Target Platform Definition'
 
 with requirements source configurePhase
 
-location 'http://download.eclipse.org/releases/2020-06/' {
+location 'http://download.eclipse.org/releases/2021-03/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.emf.common
@@ -29,6 +29,10 @@ location 'https://download.eclipse.org/tools/orbit/downloads/drops/R202011302050
 	org.mockito
 	org.hamcrest
 	org.antlr.runtime
+}
+
+location 'https://download.eclipse.org/justj/jres/11/updates/release/11.0.2' {
+	org.eclipse.justj.openjdk.hotspot.jre.full.feature.group
 }
 
 location 'https://korpling.github.io/salt/p2/salt-3.4/' {

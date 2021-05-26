@@ -12,15 +12,16 @@ You need all three on your computer to contribute code to Hexatomic.
 
 The documentation is written in Markdown and generated with **mdbook**.
 
-### Java 1.8
+### Java 11
 
-You need to have a copy of the **Java Development Kit (JDK), Version 1.8** (sometimes referred to as *Java 8*) installed on your computer.
+You need to have a copy of the **Java Development Kit (JDK), Version 11** installed on your computer.
 It shouldn't make any difference whether you use the open *OpenJDK* implementation of Java, or an *Oracle JDK*.
-We suggest that you use **OpenJDK** in its latest build (which was `1.8u232` at the time of writing).
-See the [OpenJDK 8 Updates site](https://wiki.openjdk.java.net/display/jdk8u/Main) to find out what the currently latest build is.
+We suggest that you use **OpenJDK** since more recent versions of the *Oracle JDK* have a more restricted license.
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
 For stand-alone packages, you can use the installers distributed by the [AdoptOpenJDK project](https://adoptopenjdk.net).
-AdoptOpenJDK packages are are available for Windows, MacOS, and Linux.
+AdoptOpenJDK packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
+When installing the AdoptOpenJDK on Windows, make sure that the option to set the `JAVA_HOME` environment variable is activated.
+Otherwise you will have to set the environment variable manually.
 
 You can check which version of Java you have installed by typing the following command into the terminal of your computer:
 
@@ -31,9 +32,9 @@ java -version
 On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.
 
 ```bash
-openjdk version "1.8.0_222"
-OpenJDK Runtime Environment (build 1.8.0_222-8u222-b10-1ubuntu1~18.04.1-b10)
-OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+openjdk version "11.0.10" 2021-01-19
+OpenJDK Runtime Environment (build 11.0.10+9-Ubuntu-0ubuntu1.20.04)
+OpenJDK 64-Bit Server VM (build 11.0.10+9-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
 ```
 
 ### Apache Maven
@@ -52,9 +53,9 @@ On Linux, this should produce the following output, or something similar. The fi
 ```bash
 Apache Maven 3.6.3
 Maven home: /usr/share/maven
-Java version: 1.8.0_222, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
-Default locale: en_US, platform encoding: UTF-8
-OS name: "linux", version: "5.0.0-23-generic", arch: "amd64", family: "unix"
+Java version: 11.0.10, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd64
+Default locale: de_DE, platform encoding: UTF-8
+OS name: "linux", version: "5.10.0-1016-oem", arch: "amd64", family: "unix"
 ```
 
 > <i class="fa fa-bug"></i> **Known bug in Maven version 3.6.2**
@@ -125,10 +126,13 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 
 - Open the *Install Wizard* via the menu **Help > Install New Software...**
 - In the **Work with:** field, enter the URL of the Update Site for the plugin, given in brackets below.
-- Select the plugins you want to install, and install it with the help of the wizard.
+- Select the plugins you want to install, and install them with the help of the wizard.
+- Installing IDE plugins sometimes triggers security warnings, because the code in the plugins has not been [signed](https://en.wikipedia.org/wiki/Code_signing). Often, code authors will simply have avoided the cost of purchasing a certificate to do the signing with, and in these cases the warnings are false alarms. However, we encourage you to carefully check the plugins you install, just as you would when you install other software.
+
 
 ### List of Eclipse IDE plugins required for Hexatomic development
 
 - [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0-SNAPSHOT or newer**  
 (Update Site: <http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/>)
 - [**Eclipse Checkstyle Plugin**](https://checkstyle.org/eclipse-cs/) (Update Site: <https://checkstyle.org/eclipse-cs/update>)
+- 
