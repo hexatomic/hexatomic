@@ -74,7 +74,7 @@ You can now make a release from this tag:
 ## Promoting releases to the community
 
 Hexatomic has a mailing list for users: `hexatomic-users@lists.hu-berlin.de`.
-The maintainers of the Hexatomic software project are also [maintainers of this mailing list](TODO).
+The maintainers of the Hexatomic software project are also [maintainers of this mailing list](https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users).
 Whenever a new version of Hexatomic is released, the mailing list should be notified of this.
 To do so, write an email to `hexatomic-users@lists.hu-berlin.de` using the following template.
 Replace the \<PLACEHOLDERS\> with the actual values.
