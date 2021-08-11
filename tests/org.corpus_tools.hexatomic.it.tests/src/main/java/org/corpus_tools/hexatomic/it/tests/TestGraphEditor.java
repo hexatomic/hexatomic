@@ -80,9 +80,6 @@ class TestGraphEditor {
   private ProjectManager projectManager;
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
-
 
   private final class ConsoleFontSizeCondition implements ICondition {
     private final SWTBotStyledText console;
