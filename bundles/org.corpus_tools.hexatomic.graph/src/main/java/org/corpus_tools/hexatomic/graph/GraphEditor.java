@@ -35,16 +35,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.console.ConsoleView;
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -711,24 +712,7 @@ public class GraphEditor {
       }
     }
   }
-
-  private boolean checkUpdateViewNecessary(Object element) {
-    SDocumentGraph loadedGraph = getGraph();
-    Optional<SDocumentGraph> changedGraph =
-        SaltHelper.getGraphForObject(element, SDocumentGraph.class);
-
-    if (changedGraph.isPresent() && loadedGraph == changedGraph.get()) {
-      // Only relations with text coverage semantics can change the structure of the graph and
-      // modify segments
-      boolean recalculateSegments =
-          element instanceof STextualRelation || element instanceof STextOverlappingRelation<?, ?>;
-      updateView(recalculateSegments, false);
-      return recalculateSegments;
-    }
-
-    return false;
-  }
-
+  
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onCheckpointCreated(
@@ -737,13 +721,23 @@ public class GraphEditor {
     if (element instanceof ChangeSet) {
       ChangeSet changeSet = (ChangeSet) element;
       log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
-      for (Object changed : changeSet.getChangedElements()) {
-        if (checkUpdateViewNecessary(changed)) {
-          break;
-        }
+
+      // Filter for change set events that belong to the loaded document graph
+      SDocumentGraph loadedGraph = getGraph();
+      Set<Object> changedObjects =
+          changeSet.getChanges().stream().filter(c -> c.getChangedContainer() == loadedGraph)
+              .map(ReversibleOperation::getChangedElement).collect(Collectors.toSet());
+      if (!changedObjects.isEmpty()) {
+        // Only relations with text coverage semantics can change the structure of the graph and
+        // modify segments
+        boolean recalculateSegments =
+            changedObjects.stream().anyMatch(
+                c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
+        updateView(recalculateSegments, false);
       }
     }
   }
+
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional

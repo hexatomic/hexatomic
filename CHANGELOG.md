@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix the update of the segmentation list when a token is deleted from the Graph Editor (#326)
+
 ## [0.6.0] - 2021-05-26
 
 ### Added
