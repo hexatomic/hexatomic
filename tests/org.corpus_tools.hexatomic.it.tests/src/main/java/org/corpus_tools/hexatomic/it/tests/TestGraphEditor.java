@@ -64,6 +64,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
@@ -694,4 +695,47 @@ class TestGraphEditor {
     ScalableFigure figure = g.getRootLayer();
     assertEquals(1.0, figure.getScale());
   }
+  
+  
+  /**
+   * Tests that the segmentation list is updated when a token is deleted.
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/261
+   */
+  @Test
+  void testUpdateSegmentsOnDeletedToken() {
+    openDefaultExample();
+
+    SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
+
+    enterCommand("t abc");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return textRangeTable.containsItem(TEST_TOKEN);
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Segment for new token was not shown";
+      }
+    }, 5000);
+
+    enterCommand("d #t12");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return !textRangeTable.containsItem(TEST_TOKEN);
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Segmentation for deleted token was not removed";
+      }
+    }, 5000);
+    
+        
+  }
+
 }
