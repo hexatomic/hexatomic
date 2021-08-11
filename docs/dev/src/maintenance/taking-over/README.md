@@ -89,3 +89,11 @@ If you create copies of issues in your fork, make sure to link to the issues in 
 
 [Make a release](../releases/) if any changes to Hexatomic were made during any of the previous steps.
 This is also a good way to celebrate that you are now the maintainer of Hexatomic!
+
+## Announce the new release to the community
+
+Announce the new release as described in the [Releases](../releases/#promoting-releases-to-the-community) section.
+If you can find a person with administrative rights to the project (see the [previous section](#announce-that-you-want-to-take-over-as-new-maintainer)),
+ask them to give you administrative rights for the mailing list `hexatomic-users@lists.hu-berlin.de` as well.
+If they are not available, you can always just subscribe to the mailing list and send a message as a subscriber.
+Consider to move the mailing list to a list provider you have administrative access to, and if you do this, also announce it via the `hexatomic-users@lists.hu-berlin.de` list.

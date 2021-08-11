@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document tasks for new maintainers when taking over the project (#275)
 - Document when to make releases (#61)
 - Document maintenance tasks (#277)
+- Document communication with users via mailing list (#318)
 
 ### Changed
 
