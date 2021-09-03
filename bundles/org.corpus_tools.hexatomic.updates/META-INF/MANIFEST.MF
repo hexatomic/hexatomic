@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Updates
+Bundle-SymbolicName: org.corpus_tools.hexatomic.updates;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Require-Bundle: org.eclipse.e4.ui.model.workbench;bundle-version="2.1.700",
+ org.corpus_tools.hexatomic.core;bundle-version="0.5.0",
+ org.eclipse.e4.core.di;bundle-version="1.7.600",
+ javax.inject;bundle-version="1.0.0",
+ org.eclipse.osgi;bundle-version="3.15.300",
+ org.eclipse.jface;bundle-version="3.20.0",
+ org.eclipse.e4.ui.di;bundle-version="1.2.800",
+ org.slf4j.api;bundle-version="1.7.2",
+ org.eclipse.emf.common;bundle-version="2.19.0"
+Automatic-Module-Name: org.corpus.tools.hexatomic.updates
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+

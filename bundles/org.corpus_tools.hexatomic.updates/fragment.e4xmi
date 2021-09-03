@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_5yjBwAsGEeykAbrpC3cyYg">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7JSyQAsGEeykAbrpC3cyYg" featurename="menuContributions" parentElementId="xpath:/">
+    <elements xsi:type="menu:MenuContribution" xmi:id="_-Jd-sAsGEeykAbrpC3cyYg" elementId="org.corpus_tools.hexatomic.updates.menucontribution.0"/>
+  </fragments>
+</fragment:ModelFragments>
