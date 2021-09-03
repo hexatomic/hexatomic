@@ -1,3 +1,5 @@
+package org.corpus_tools.hexatomic.updates;
+
 /*-
  * #%L
  * org.corpus_tools.hexatomic.core
@@ -18,7 +20,6 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.core.update;
 
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -36,7 +37,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.BackingStoreException;
 
-public class P2Util {
+
+public class UpdateHandler {
   @Inject
   @Preference(nodePath = "org.corpus_tools.hexatomic.core")
   private IEclipsePreferences pref;
@@ -126,5 +128,4 @@ public class P2Util {
     System.out.println("test");
   }
 }
-
 
