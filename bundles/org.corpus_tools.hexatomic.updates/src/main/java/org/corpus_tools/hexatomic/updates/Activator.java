@@ -20,16 +20,17 @@
 
 package org.corpus_tools.hexatomic.updates;
 
+import javax.annotation.PostConstruct;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Activator.class);
 
+  @PostConstruct
   @Override
   public void start(BundleContext context) throws Exception {
     log.info("Starting Updates-Plugin");
-    System.out.println("Starting Updates-Plugin");
     // TODO Auto-generated method stub
     
   }
