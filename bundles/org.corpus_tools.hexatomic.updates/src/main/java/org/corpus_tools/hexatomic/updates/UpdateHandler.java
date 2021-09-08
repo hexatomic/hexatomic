@@ -27,14 +27,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 public class UpdateHandler {
@@ -43,9 +44,10 @@ public class UpdateHandler {
   private static final String HOME_DIR = System.getProperty("user.home");
   private static final String SEP = System.getProperty("file.separator");
   private static final String REPOSITORY_LOC = System.getProperty("UpdateHandler.Repo", 
-      "file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP + "hexatomic" + SEP + "releng" 
-      + SEP + "org.corpus_tools.hexatomic.update" + SEP + "target" + SEP + "repository" 
-      + SEP);
+      //"file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP + "test" + SEP
+      "file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP
+      + "hexatomic" + SEP + "releng" + SEP + "org.corpus_tools.hexatomic.update" + SEP 
+      + "target" + SEP + "repository" + SEP);
   
 
   private IWorkbench workbench;
@@ -60,21 +62,21 @@ public class UpdateHandler {
   public void execute(final IProvisioningAgent agent, IWorkbench workbench, Shell shell) {
     System.out.println(REPOSITORY_LOC);
     if (agent != null) {
-      log.debug("Provisioning agent created");
+      log.info("Provisioning agent created");
     }
     this.workbench = workbench;
     Job updateJob = Job.create("Update Job", monitor -> {
       performUpdates(agent, monitor, shell);
     });
     
-    
+    /*
     boolean restart = MessageDialog.openConfirm(shell, 
         "Updates installed, restart?",
         "Updates have been installed successfully, do you want to restart?");
     if (restart) {
-      log.debug("Restarting workbench");
+      log.info("Restarting workbench");
       workbench.restart();
-    }
+    }*/
     
     updateJob.schedule();
 
@@ -85,7 +87,7 @@ public class UpdateHandler {
     // configure update operation
     final ProvisioningSession session = new ProvisioningSession(agent);
     if (session != null) {
-      log.debug("Provisioning session created");
+      log.info("Provisioning session created");
     }
     final UpdateOperation operation = new UpdateOperation(session);
     // create uri and check for validity
@@ -110,7 +112,7 @@ public class UpdateHandler {
     // failed to find updates (inform user and exit)
     
     if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-      log.debug("Nothing to Update");
+      log.info("Nothing to Update");
       return Status.CANCEL_STATUS;
     }
     // run installation
@@ -121,9 +123,9 @@ public class UpdateHandler {
 
     }
     
-    //configureProvisioningJob(provisioningJob);
+    configureProvisioningJob(provisioningJob);
     
-    log.debug("Installing updates");
+    log.info("Installing updates");
     provisioningJob.schedule();
    
     
@@ -133,9 +135,9 @@ public class UpdateHandler {
     return Status.OK_STATUS;
 
   }
-  /*
-  private void configureProvisioningJob(ProvisioningJob provisioningJob, Shell shell) {
-
+  
+  //private void configureProvisioningJob(ProvisioningJob provisioningJob, Shell shell) {
+  private void configureProvisioningJob(ProvisioningJob provisioningJob) {
     // register a job change listener to track
 
     // installation progress and restart application in case of updates
@@ -144,17 +146,17 @@ public class UpdateHandler {
       @Override
       public void done(IJobChangeEvent event) {
         if (event.getResult().isOK()) {
-          boolean restart = MessageDialog.openQuestion(shell, "Updates installed, restart?",
-              "Updates have been installed successfully, do you want to restart?");
-          if (restart) {
-            log.debug("Restarting workbench");
-            workbench.restart();
-          }
+          //boolean restart = MessageDialog.openQuestion(shell, "Updates installed, restart?",
+          //    "Updates have been installed successfully, do you want to restart?");
+          //if (restart) {
+          log.debug("Restarting workbench");
+          workbench.restart();
+          //}
         }
         super.done(event);
       }
     });
-  }*/
+  }
 }
 
 
