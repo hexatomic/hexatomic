@@ -37,6 +37,7 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
 
   protected Button btnExb;
   protected Button btnPaulaXml;
+  protected Button btnGraphAnno;
 
   protected CorpusFormatSelectionPage(String pageName) {
     super(pageName);
@@ -71,6 +72,10 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
     btnPaulaXml = new Button(container, SWT.RADIO);
     btnPaulaXml.addSelectionListener(checkboxSelectionAdapter);
     btnPaulaXml.setText("PAULA format");
+
+    btnGraphAnno = new Button(container, SWT.RADIO);
+    btnGraphAnno.addSelectionListener(checkboxSelectionAdapter);
+    btnGraphAnno.setText("GraphAnno format");
   }
 
 

@@ -59,6 +59,7 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
     // Initialize selection to default
     btnExb.setSelection(false);
     btnPaulaXml.setSelection(false);
+    btnGraphAnno.setSelection(false);
     Optional<Pepper> pepper = Activator.getPepper();
     setPageComplete(false);
 
@@ -77,6 +78,9 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
             setPageComplete(true);
           } else if (format.get() == ImportFormat.PAULA) {
             btnPaulaXml.setSelection(true);
+            setPageComplete(true);
+          } else if (format.get() == ImportFormat.GRAPHANNO) {
+            btnGraphAnno.setSelection(true);
             setPageComplete(true);
           }
         } else {
@@ -97,6 +101,8 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
       return Optional.of(ImportFormat.EXB);
     } else if (btnPaulaXml.getSelection()) {
       return Optional.of(ImportFormat.PAULA);
+    } else if (btnGraphAnno.getSelection()) {
+      return Optional.of(ImportFormat.GRAPHANNO);
     }
     return Optional.empty();
   }
