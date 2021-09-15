@@ -31,7 +31,7 @@ In order to gain the necessary control over the repository to maintain it, you h
 ### 1. Get administrative rights for the original repository.
 
 If you can find a person with administrative rights to the project (see the [previous section](#announce-that-you-want-to-take-over-as-new-maintainer)),
-ask them to give you administrative rights for the original GitHub repository.
+ask them to give you administrative rights (e.g. make you the owner) for the original GitHub repository.
 
 This is the preferred option, as all repository configurations as well as the history of issues and pull requests remain intact.
 
