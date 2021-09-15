@@ -8,6 +8,8 @@ Pull requests can come from within the Hexatomic core development team that work
 
 The maintainer is in charge of supervising pull requests from their creation to the point when they are merged into the target branched, or dismissed and closed.
 
+It is recommended to turn on notifications for pull requests, e.g. by changing the notification settings with the "Watch" button in the upper right corner of the GitHub interface.
+
 ### Communication with the creator of the pull request  
 
 Communication with the creator of the pull request is by far the most important task in pull request maintenance.
