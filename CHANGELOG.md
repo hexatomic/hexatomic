@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Remove and ignore .settings folders from repository to enable smoother import into Eclipse (#332)
+- Fix partially failing integration test by determining file menu programmatically rather than relying on defaults
 
 ## [0.6.1] - 2021-08-11
 
