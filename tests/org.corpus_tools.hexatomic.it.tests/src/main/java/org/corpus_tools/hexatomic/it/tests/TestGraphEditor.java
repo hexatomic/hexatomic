@@ -214,7 +214,7 @@ class TestGraphEditor {
 
     @Override
     public String getFailureMessage() {
-      return "Showing the expected number of " + expected + " connections took too long";
+      return "Showing the expected number of " + expected + " nodes took too long";
     }
   }
 
