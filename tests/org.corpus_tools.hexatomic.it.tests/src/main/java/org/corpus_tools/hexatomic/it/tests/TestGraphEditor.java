@@ -671,6 +671,27 @@ class TestGraphEditor {
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() - 1, console));
   }
+  
+  @Test
+  void testShowNewlyCreatedSpan() {
+    openDefaultExample();
+    
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+    
+    // Deactivate/activate spans in view and check the view has less/more nodes
+    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    includeSpans.deselect();
+    bot.waitUntil(new NumberOfNodesCondition(23));
+    includeSpans.select();
+    bot.waitUntil(new NumberOfNodesCondition(26));
+    
+    // Add some span
+    enterCommand("s spanno:test #sTok1 #sTok2");
+
+    // Check that an extra node (the span) has been created and is visible
+    bot.waitUntil(new NumberOfNodesCondition(27));
+  }
 
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/224
