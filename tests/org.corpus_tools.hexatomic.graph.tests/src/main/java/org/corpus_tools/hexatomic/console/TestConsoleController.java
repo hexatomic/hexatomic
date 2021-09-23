@@ -10,6 +10,7 @@ import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
+import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
@@ -72,6 +73,24 @@ class TestConsoleController {
     assertEquals(n2, n4.getOutRelations().get(0).getTarget());
     assertEquals(n3, n4.getOutRelations().get(1).getTarget());
   }
+  
+  @Test
+  void testExampleNewSpans() {
+    // Add initial tokens
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
+    graph.sortTokenByText();
+    
+    // Make sure there are no spans yet
+    assertEquals(0, graph.getSpans());
+
+    // Add some annnotated spans
+    console.executeCommand("s sanno:1 #t1");
+    console.executeCommand("s sanno:2 #t2 #t3");
+    console.executeCommand("s #t4 #t5");
+    
+    assertEquals(3, graph.getSpans());
+  }
+
 
   @Test
   void testExampleAddEdge() {
