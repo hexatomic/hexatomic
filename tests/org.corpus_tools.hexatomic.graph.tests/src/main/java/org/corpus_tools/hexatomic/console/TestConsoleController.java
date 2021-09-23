@@ -10,7 +10,6 @@ import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
-import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SNode;
@@ -81,14 +80,14 @@ class TestConsoleController {
     graph.sortTokenByText();
     
     // Make sure there are no spans yet
-    assertEquals(0, graph.getSpans());
+    assertEquals(0, graph.getSpans().size());
 
     // Add some annnotated spans
     console.executeCommand("s sanno:1 #t1");
     console.executeCommand("s sanno:2 #t2 #t3");
     console.executeCommand("s #t4 #t5");
     
-    assertEquals(3, graph.getSpans());
+    assertEquals(3, graph.getSpans().size());
   }
 
 
