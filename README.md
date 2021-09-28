@@ -187,14 +187,15 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 
 ### Maintainer
 
-- Thomas Krause ([@sdruskat](https://github.com/thomaskrause))
+- Thomas Krause ([@thomaskrause](https://github.com/thomaskrause))
+- Bastian Bunzeck ([@bbunzeck](https://github.com/bbunzeck))
 
 ### Core contributors
 
 - Stephan Druskat ([@sdruskat](https://github.com/sdruskat))
 - Thomas Krause ([@thomaskrause](https://github.com/thomaskrause))
 - Clara Lachenmaier ([@clachenmaier](https://github.com/clachenmaierclachenmaier))
-- Bastian Bunzeck ([@bunz-lightyear](https://github.com/bunz-lightyear))
+- Bastian Bunzeck ([@bbunzeck](https://github.com/bbunzeck))
 
 ### Principal investigators
 

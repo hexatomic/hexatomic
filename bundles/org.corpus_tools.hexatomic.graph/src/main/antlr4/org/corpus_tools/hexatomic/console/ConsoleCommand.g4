@@ -12,6 +12,7 @@ start
 
 command
     : NEW_NODE (attribute | node_reference | layer_reference)+ # NewNode
+    | NEW_SPAN (attribute | node_reference | layer_reference)+ # NewSpan
     | NEW_EDGE (attribute | new_edge_reference | layer_reference)+ # NewEdge
     | SET_ATTRIBUTE (attribute | node_reference | existing_edge_reference)+ # Annotate
     | DELETE (node_reference | existing_edge_reference)+ # Delete

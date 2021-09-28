@@ -42,6 +42,7 @@ All tasks should be completed in a *timely fashion*, and based on the Hexatomic 
 ## <i class="fa fa-comments"></i> Communication & community work
 
 - Publicize releases to the relevant stakeholders
+  - Includes emails to the user mailing list `hexatomic-users@lists.hu-berlin.de`
 - Redirect questions to the issue tracker
 - Update external resources
 - Work with and build the community of users and developers
