@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.root</artifactId>
-        <version>0.7.0-SNAPSHOT</version>
+        <version>0.7.0</version>
     </parent>
     <modules>
         <module>org.corpus_tools.hexatomic.update</module>
