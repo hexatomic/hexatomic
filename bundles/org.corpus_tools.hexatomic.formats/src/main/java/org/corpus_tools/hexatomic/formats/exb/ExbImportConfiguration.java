@@ -51,7 +51,7 @@ public class ExbImportConfiguration extends ConfigurationPage {
     container.setLayout(new GridLayout(1, false));
 
     btnAddSpaces = new Button(container, SWT.CHECK);
-    btnAddSpaces.setText("Add spaces between token");
+    btnAddSpaces.setText("Add spaces between tokens");
     btnAddSpaces.setSelection(true);
     btnAddSpaces.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
   }
