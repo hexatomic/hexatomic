@@ -32,6 +32,7 @@ import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage;
 import org.corpus_tools.hexatomic.formats.CorpusPathSelectionPage.Type;
 import org.corpus_tools.hexatomic.formats.PepperWizard;
 import org.corpus_tools.hexatomic.formats.exb.ExbImportConfiguration;
+import org.corpus_tools.hexatomic.formats.txt.TxtImportConfiguration;
 import org.corpus_tools.pepper.common.CorpusDesc;
 import org.corpus_tools.pepper.common.Pepper;
 import org.corpus_tools.pepper.common.PepperConfiguration;
@@ -92,6 +93,11 @@ public class ImportWizard extends PepperWizard {
           exbConfigPage.setWizard(this);
           this.configPage = Optional.of(exbConfigPage);
           return exbConfigPage;
+        } else if (selectedFormat.get() == ImportFormat.TXT) {
+          TxtImportConfiguration txtConfigPage = new TxtImportConfiguration();
+          txtConfigPage.setWizard(this);
+          this.configPage = Optional.of(txtConfigPage);
+          return txtConfigPage;
         } else {
           return null;
         }
