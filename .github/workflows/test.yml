@@ -25,7 +25,7 @@ jobs:
       - name: Set JAVA_HOME to OpenJDK 11
         run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
       - name: Run Maven Tests with enabled code coverage and upload results to SonarCloud
-        run: ./releng/sh/metacity-run.sh mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        run: ./releng/sh/metacity-run.sh mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=stephandruskat_hexatomic -Dsonar.organization=stephandruskat -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
