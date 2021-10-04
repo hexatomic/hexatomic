@@ -43,6 +43,7 @@ class TestImportExport {
   private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String EXMARALDA_FORMAT_EXB = "EXMARaLDA format (*.exb)";
   private static final String PAULA_FORMAT = "PAULA format";
+  private static final String TEXT_FORMAT = "Plain text format (*.txt)";
   private static final String FINISH = "Finish";
   private static final String NEXT = "Next >";
   private static final String EXPORT = "Export";
@@ -346,4 +347,54 @@ class TestImportExport {
     }
   }
 
+  /**
+   * This test imports a plain text file from a directory and creates a Salt project structure with
+   * a single document containing the text from the file as textual resource.
+   * 
+   * @throws IOException Might throw an exception when there are no temporary directories to create
+   */
+  @Test
+  void testImportText() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+
+    // Prepare the temp directory and plain text file
+    Path tmpDir = Files.createTempDirectory("textImportTest_");
+    String fileStr = "test-corpus.txt";
+    String testText = "Is this example more complicated than it appears to be?";
+    Path file = Files.writeString(tmpDir.resolve(fileStr), testText);
+    assertTrue(file.toFile().isFile());
+
+    // Import the just exported corpus
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+
+    wizard.bot().radio(TEXT_FORMAT).click();
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    String expectedDocName = fileStr.substring(0, fileStr.length() - 4);
+    Optional<SDocument> doc1 = projectManager.getDocument(expectedDocName, true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // Importing should tokenize and set an STextualDS
+      assertEquals(1, doc1.get().getDocumentGraph().getTextualDSs().size());
+      assertEquals(testText, doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
+      assertEquals(11, doc1.get().getDocumentGraph().getTokens().size());
+    }
+    
+    // Clean up
+    assertTrue(TestHelper.deleteDirectory(tmpDir));
+  }
 }
