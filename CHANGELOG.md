@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add import of plain text files with optional tokenization (#110)
+
+### Fixed
+
+- Fixed some minor typos in the GUI
+
 ## [0.7.0] - 2021-09-28
 
 ### Added
