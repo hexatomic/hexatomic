@@ -7,9 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
@@ -18,6 +20,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -380,11 +383,11 @@ class TestImportExport {
     assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
 
-    wizard.bot().radio(TEXT_FORMAT).click();
     wizard.bot().button(FINISH).click();
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
-    String expectedDocName = fileStr.substring(0, fileStr.length() - 4);
+    String expectedDocName = SaltUtil.SALT_SCHEME + ":/" + tmpDir.getFileName()
+        + FileSystems.getDefault().getSeparator() + fileStr.substring(0, fileStr.length() - 4);
     Optional<SDocument> doc1 = projectManager.getDocument(expectedDocName, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
@@ -393,7 +396,7 @@ class TestImportExport {
       assertEquals(testText, doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
       assertEquals(11, doc1.get().getDocumentGraph().getTokens().size());
     }
-    
+
     // Clean up
     assertTrue(TestHelper.deleteDirectory(tmpDir));
   }
