@@ -11,7 +11,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
@@ -51,7 +50,8 @@ class TestImportExport {
   private static final String NEXT = "Next >";
   private static final String EXPORT = "Export";
   private static final String IMPORT = "Import";
-  private static final String ADD_SPACES_BETWEEN_TOKEN = "Add spaces between token";
+  private static final String ADD_SPACES_BETWEEN_TOKEN = "Add spaces between tokens";
+  private static final String TOKENIZE = "Tokenize after import";
 
   private final class WizardClosedCondition extends DefaultCondition {
     private final SWTBotShell wizard;
@@ -352,12 +352,15 @@ class TestImportExport {
 
   /**
    * This test imports a plain text file from a directory and creates a Salt project structure with
-   * a single document containing the text from the file as textual resource.
+   * a single document containing the text from the file as textual resource. It also
+   * uses the default setting for the <code>pepper.after.tokenize</code> property
+   * (<code>true</code>), i.e., tokenizes the data after import, and the auto-detected format, which
+   * should be plain text.
    * 
-   * @throws IOException Might throw an exception when there are no temporary directories to create
+   * @throws IOException May throw an exception when temporary directory creation fails
    */
   @Test
-  void testImportText() throws IOException {
+  void testImportTextWithDefaults() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
     assertFalse(bot.menu(EXPORT).isEnabled());
 
@@ -368,7 +371,7 @@ class TestImportExport {
     Path file = Files.writeString(tmpDir.resolve(fileStr), testText);
     assertTrue(file.toFile().isFile());
 
-    // Import the just exported corpus
+    // Import the created document
     bot.menu(IMPORT).click();
 
     SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
@@ -382,6 +385,9 @@ class TestImportExport {
     // Valid path was selected, this should enable the next button
     assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
+    
+    // Assert that plain text is the detected format
+    assertTrue(wizard.bot().radio(TEXT_FORMAT).isSelected());
 
     wizard.bot().button(FINISH).click();
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
@@ -400,4 +406,68 @@ class TestImportExport {
     // Clean up
     assertTrue(TestHelper.deleteDirectory(tmpDir));
   }
+  
+  /**
+   * This test imports a plain text file from a directory and creates a Salt project structure with
+   * a single document containing the text from the file as textual resource. It also
+   * uses the default setting for the <code>pepper.after.tokenize</code> property
+   * (<code>true</code>), i.e., tokenizes the data after import.
+   * 
+   * @throws IOException May throw an exception when temporary directory creation fails
+   */
+  @Test
+  void testImportTextWithTokenizationOff() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+
+    // Prepare the temp directory and plain text file
+    Path tmpDir = Files.createTempDirectory("textImportTest_");
+    String fileStr = "test-corpus.txt";
+    String testText = "Is this example more complicated than it appears to be?";
+    Path file = Files.writeString(tmpDir.resolve(fileStr), testText);
+    assertTrue(file.toFile().isFile());
+
+    // Import the created document
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+    
+    // Assert that plain text is the detected format
+    assertTrue(wizard.bot().radio(TEXT_FORMAT).isSelected());
+    // Next button should be enabled
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+    
+    assertTrue(wizard.bot().checkBox(TOKENIZE).isChecked());
+    wizard.bot().checkBox(TOKENIZE).click();
+    assertFalse(wizard.bot().checkBox(TOKENIZE).isChecked());
+    
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    String expectedDocName = SaltUtil.SALT_SCHEME + ":/" + tmpDir.getFileName()
+        + FileSystems.getDefault().getSeparator() + fileStr.substring(0, fileStr.length() - 4);
+    Optional<SDocument> doc1 = projectManager.getDocument(expectedDocName, true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // Importing should tokenize and set an STextualDS
+      assertEquals(1, doc1.get().getDocumentGraph().getTextualDSs().size());
+      assertEquals(testText, doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
+      assertEquals(0, doc1.get().getDocumentGraph().getTokens().size());
+    }
+
+    // Clean up
+    assertTrue(TestHelper.deleteDirectory(tmpDir));
+  }
+
 }
