@@ -15,3 +15,5 @@
         	- [Editing annotation names](usage/grid-editor/editing-names.md)
         	- [Deleting annotations](usage/grid-editor/deleting-annotations.md)
 - [Troubleshooting & getting help](./troubleshooting.md)
+- [Tutorials](./tutorials/README.md)
+    - [Creating a corpus from scratch](tutorials/corpus-creation.md)
