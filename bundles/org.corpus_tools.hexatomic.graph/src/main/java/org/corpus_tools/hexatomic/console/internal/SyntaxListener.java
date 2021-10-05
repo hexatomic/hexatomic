@@ -21,8 +21,6 @@
 
 package org.corpus_tools.hexatomic.console.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
