@@ -1513,6 +1513,30 @@ public class TestGridEditor {
     assertNotNull(dialog);
     assertDialogTexts(dialog, "anno9");
   }
+  
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/258:
+   * Deleting all annotations should remove all visual columns.
+   */
+  @Test
+  void testRemoveVisualColumnsOnAnnotationsDeleted() {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Select all annotations
+    table.click(1, 2);
+    shiftClick(table, 5, 5);
+    // Delete all annotations
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.click(1, 1);
+    
+    assertEquals(6, table.widget.getRowCount());
+    assertEquals(2, table.widget.getColumnCount());
+  }
+
+  // #################### Helper methods ####################
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
