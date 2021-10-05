@@ -100,7 +100,8 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   @Override
   public void configureLayer(ILayer layer) {
-    layer.registerCommandHandler(new GridDeleteSelectionCommandHandler(this.selectionLayer, this.compositeFreezeLayer));
+    layer.registerCommandHandler(
+        new GridDeleteSelectionCommandHandler(this.selectionLayer, this.compositeFreezeLayer));
   }
 
 

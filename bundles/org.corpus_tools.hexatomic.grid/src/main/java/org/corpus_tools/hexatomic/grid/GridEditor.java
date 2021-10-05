@@ -91,8 +91,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
-  /** 
-   * SWT data key used to store a reference to {@link ControlDecoration} of a component. 
+  /**
+   * SWT data key used to store a reference to {@link ControlDecoration} of a component.
    */
   public static final String CONTROL_DECORATION = "CONTROL_DECORATION";
 
@@ -196,8 +196,8 @@ public class GridEditor {
     table.addConfiguration(new StyleConfiguration());
     table.addConfiguration(new ColumnHeaderMenuConfiguration(table));
     table.addConfiguration(new FreezeGridBindings());
-    table.addConfiguration(
-        new EditConfiguration(bodyDataProvider, labelAccumulator, selectionLayer, compositeFreezeLayer));
+    table.addConfiguration(new EditConfiguration(bodyDataProvider, labelAccumulator, selectionLayer,
+        compositeFreezeLayer));
     table.addConfiguration(new BodyMenuConfiguration(table, selectionLayer));
 
     table.configure();
