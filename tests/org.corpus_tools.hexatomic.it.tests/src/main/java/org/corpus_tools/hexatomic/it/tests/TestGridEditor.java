@@ -1530,8 +1530,7 @@ public class TestGridEditor {
     shiftClick(table, 5, 5);
     // Delete all annotations
     keyboard.pressShortcut(Keystrokes.DELETE);
-    table.click(1, 1);
-    
+    table.click(1, 1); // May be replaced by waiting for table to finish refreshing
     assertEquals(6, table.widget.getRowCount());
     assertEquals(2, table.widget.getColumnCount());
   }
