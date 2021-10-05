@@ -24,6 +24,8 @@ package org.corpus_tools.hexatomic.grid.internal.configuration;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.GridDisplayConverter;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
+import org.corpus_tools.hexatomic.grid.internal.handlers.GridDeleteSelectionCommandHandler;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
@@ -49,6 +51,7 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
   private final LabelAccumulator labelAccumulator;
   private final SelectionLayer selectionLayer;
   private final GraphDataProvider bodyDataProvider;
+  private final GridFreezeLayer compositeFreezeLayer;
 
   /**
    * Constructor setting fields.
@@ -56,12 +59,14 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
    * @param bodyDataProvider The current data provider for the table being configured
    * @param labelAccumulator The current label accumulator
    * @param selectionLayer The current selection layer
+   * @param compositeFreezeLayer The composite freeze layer
    */
   public EditConfiguration(GraphDataProvider bodyDataProvider, LabelAccumulator labelAccumulator,
-      SelectionLayer selectionLayer) {
+      SelectionLayer selectionLayer, GridFreezeLayer compositeFreezeLayer) {
     this.bodyDataProvider = bodyDataProvider;
     this.labelAccumulator = labelAccumulator;
     this.selectionLayer = selectionLayer;
+    this.compositeFreezeLayer = compositeFreezeLayer;
   }
 
   @Override
@@ -95,7 +100,7 @@ public class EditConfiguration extends AbstractRegistryConfiguration {
 
   @Override
   public void configureLayer(ILayer layer) {
-    layer.registerCommandHandler(new DeleteSelectionCommandHandler(this.selectionLayer));
+    layer.registerCommandHandler(new GridDeleteSelectionCommandHandler(this.selectionLayer, this.compositeFreezeLayer));
   }
 
 
