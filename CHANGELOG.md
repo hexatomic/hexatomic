@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add the GraphAnno format to the supported import formats (#112)
+
 ## [0.7.0] - 2021-09-28
 
 ### Added
