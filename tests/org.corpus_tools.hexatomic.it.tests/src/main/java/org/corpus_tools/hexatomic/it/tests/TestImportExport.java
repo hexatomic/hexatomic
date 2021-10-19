@@ -102,8 +102,9 @@ class TestImportExport {
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
-    
-    File graphAnnoExampleCorpusDirectory = new File("src/main/resources/graphanno-example-corpus/sampleCorpus/");
+
+    File graphAnnoExampleCorpusDirectory =
+        new File("src/main/resources/graphanno-example-corpus/sampleCorpus/");
     assertTrue(graphAnnoExampleCorpusDirectory.isDirectory());
     graphAnnoExampleCorpusUri =
         URI.createFileURI(graphAnnoExampleCorpusDirectory.getAbsolutePath());
