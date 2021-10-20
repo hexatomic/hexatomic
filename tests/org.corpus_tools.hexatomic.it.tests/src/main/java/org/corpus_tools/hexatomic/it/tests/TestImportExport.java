@@ -354,7 +354,7 @@ class TestImportExport {
   }
 
   /**
-   * This that importing the example corpus works for the GraphAnno format
+   * This that importing the example corpus works for the GraphAnno format.
    * 
    * @throws IOException Might throw an exception when there are no temporary directories to create
    */
