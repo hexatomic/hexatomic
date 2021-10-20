@@ -71,6 +71,28 @@ You can now make a release from this tag:
 
 ![Animation showing how to create a release on GitHub](release.gif)
 
+## Promoting releases to the community
+
+Hexatomic has a mailing list for users: `hexatomic-users@lists.hu-berlin.de`.
+The maintainers of the Hexatomic software project are also [maintainers of this mailing list](https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users).
+Whenever a new version of Hexatomic is released, the mailing list should be notified of this.
+To do so, write an email to `hexatomic-users@lists.hu-berlin.de` using the following template.
+Replace the \<PLACEHOLDERS\> with the actual values.
+
+> **Subject:** Hexatomic \<VERSION NUMBER OF THE NEW VERSION\> is released!
+> 
+> **Body:**  
+> Dear list,
+>
+> We have released a new version of Hexatomic (\<FULL VERSION NAME OF THE NEW VERSION, e.g., 0.6.0 Beta\>). You can download it here: https://github.com/hexatomic/hexatomic/releases/tag/\<TAG FOR THE NEW VERSION\>.
+> 
+> \<BRIEF SUMMARY OF THE CHANGELOG, MENTION THE MOST IMPORTANT CHANGES\>
+> 
+> If you have questions or feature requests, please open an issue on the Hexatomic GitHub repository: https://github.com/hexatomic/hexatomic/issues/new/choose.
+> 
+> Many thanks!  
+> \<NAME OF THE MAINTAINER\>
+
 ## What to do when releases go wrong?
 
 When a feature release doesn't work as expected, simply

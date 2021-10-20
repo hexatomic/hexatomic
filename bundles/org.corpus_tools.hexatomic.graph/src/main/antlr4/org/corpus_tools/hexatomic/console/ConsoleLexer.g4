@@ -1,6 +1,7 @@
 lexer grammar ConsoleLexer;
 
 NEW_NODE: 'n' -> pushMode(ARGUMENTS);
+NEW_SPAN: 's' -> pushMode(ARGUMENTS);
 NEW_EDGE: 'e' -> pushMode(ARGUMENTS);
 SET_ATTRIBUTE: 'a' -> pushMode(ARGUMENTS);
 DELETE: 'd' -> pushMode(ARGUMENTS);
