@@ -72,6 +72,24 @@ class TestConsoleController {
     assertEquals(n2, n4.getOutRelations().get(0).getTarget());
     assertEquals(n3, n4.getOutRelations().get(1).getTarget());
   }
+  
+  @Test
+  void testExampleNewSpans() {
+    // Add initial tokens
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
+    graph.sortTokenByText();
+    
+    // Make sure there are no spans yet
+    assertEquals(0, graph.getSpans().size());
+
+    // Add some annnotated spans
+    console.executeCommand("s sanno:1 #t1");
+    console.executeCommand("s sanno:2 #t2 #t3");
+    console.executeCommand("s #t4 #t5");
+    
+    assertEquals(3, graph.getSpans().size());
+  }
+
 
   @Test
   void testExampleAddEdge() {
