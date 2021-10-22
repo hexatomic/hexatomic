@@ -262,7 +262,7 @@ class TestImportExport {
         return shell.menu().menu("File");
       }
     }
-    return null;
+    throw new IllegalStateException("Could not find the File menu");
   }
 
   /**
