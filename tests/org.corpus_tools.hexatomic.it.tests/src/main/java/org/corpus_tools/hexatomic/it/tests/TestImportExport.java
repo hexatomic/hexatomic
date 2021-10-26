@@ -29,6 +29,7 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -62,7 +63,7 @@ class TestImportExport {
 
     @Override
     public boolean test() {
-      return wizard.widget.isDisposed();
+      return wizard.widget.isDisposed() || !wizard.isVisible();
     }
 
     @Override
@@ -70,7 +71,6 @@ class TestImportExport {
       return "Wizard was not closed";
     }
   }
-
 
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
@@ -80,7 +80,6 @@ class TestImportExport {
 
   private ErrorService errorService;
   private ProjectManager projectManager;
-
 
   @BeforeEach
   void setup() {
@@ -122,7 +121,6 @@ class TestImportExport {
     handlerService.executeHandler(cmd);
   }
 
-
   /**
    * This test first opens the default sample in the Salt format and then export and imports it
    * again. Using the exporter allows us to test the import without storing the exmaralda files as
@@ -132,13 +130,13 @@ class TestImportExport {
    */
   @Test
   void testExportAndImportExmaralda() throws IOException {
-    // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT).isEnabled());
+    // Check that export is disabled for empty default project (which has no
+    // location on disk)
+    assertFalse(getFileMenu().menu(EXPORT).isEnabled());
 
     // Open example corpus
     openDefaultExample();
-    assertTrue(bot.menu(EXPORT).isEnabled());
-
+    assertTrue(getFileMenu().menu(EXPORT).isEnabled());
 
     Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
@@ -147,10 +145,10 @@ class TestImportExport {
       assertFalse(doc1.get().getDocumentGraph().getPointingRelations().isEmpty());
     }
 
-    assertTrue(bot.menu(EXPORT).isEnabled());
+    assertTrue(getFileMenu().menu(EXPORT).isEnabled());
 
     // Click on the export menu add fill out the wizard
-    bot.menu(EXPORT).click();
+    getFileMenu().menu(EXPORT).click();
 
     SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
     assertNotNull(wizard);
@@ -178,11 +176,12 @@ class TestImportExport {
 
     // Re-import the just created exb files
     assertTrue(bot.menu(IMPORT).isEnabled());
-    bot.menu(IMPORT).click();
+    getFileMenu().menu(IMPORT).click();
     wizard = bot.shell(WIZARD_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
-    // The path should have been pre-set and the same as the one we exported the corpus to
+    // The path should have been pre-set and the same as the one we exported the
+    // corpus to
     assertEquals(tmpDir.resolve(ROOT_CORPUS).toAbsolutePath().toString(),
         wizard.bot().text().getText());
     wizard.bot().button(NEXT).click();
@@ -203,7 +202,8 @@ class TestImportExport {
     assertEquals(1, projectManager.getProject().getCorpusGraphs().size());
     assertEquals(4, projectManager.getProject().getCorpusGraphs().get(0).getDocuments().size());
 
-    // The corpus must have a special feature annotation marking its original location from the
+    // The corpus must have a special feature annotation marking its original
+    // location from the
     // import path
     Optional<String> originalCorpusLocation =
         SaltHelper.getOriginalCorpusLocation(projectManager.getProject());
@@ -218,14 +218,15 @@ class TestImportExport {
     if (doc1.isPresent()) {
       // Exporting to Exmaralda should have removed pointing annotations
       assertEquals(0, doc1.get().getDocumentGraph().getPointingRelations().size());
-      // Because of the import configuration, the text should not contain artificially generated
+      // Because of the import configuration, the text should not contain artificially
+      // generated
       // spaces
       assertEquals("Isthisexamplemorecomplicatedthanitappearstobe?",
           doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
     }
 
     // Import again, but this time with spaces
-    bot.menu(IMPORT).click();
+    getFileMenu().menu(IMPORT).click();
     wizard = bot.shell(WIZARD_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
@@ -244,13 +245,29 @@ class TestImportExport {
     doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
     if (doc1.isPresent()) {
-      // Because of the import configuration, the text should contain spaces between all tokens
+      // Because of the import configuration, the text should contain spaces between
+      // all tokens
       assertEquals("Is this example more complicated than it appears to be ? ",
           doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
     }
 
   }
 
+  /**
+   * Get the "File" menu of the Hexatomic main shell, which is retrieved programmatically rather
+   * than resorting to default or active values.
+   * 
+   * @return the file menu of the main Hexatomic shell
+   */
+  private SWTBotMenu getFileMenu() {
+    for (SWTBotShell shell : bot.shells()) {
+      if (shell.getText().startsWith("Hexatomic")) {
+
+        return shell.menu().menu("File");
+      }
+    }
+    throw new IllegalStateException("Could not find the File menu");
+  }
 
   /**
    * This test first opens the default sample in the Salt format and then export and imports it
@@ -261,15 +278,17 @@ class TestImportExport {
    */
   @Test
   void testExportImportPaula() throws IOException {
-    // Check that export is disabled for empty default project (which has no location on disk)
-    assertFalse(bot.menu(EXPORT).isEnabled());
+    // Check that export is disabled for empty default project (which has no
+    // location on disk)
+    assertFalse(getFileMenu().menu(EXPORT).isEnabled());
+    assertTrue(getFileMenu().menu(IMPORT).isEnabled());
 
     // Open example corpus
     openDefaultExample();
     SaltProject p = projectManager.getProject();
     assertEquals(1, p.getCorpusGraphs().size());
     assertEquals(4, p.getCorpusGraphs().get(0).getDocuments().size());
-    assertTrue(bot.menu(EXPORT).isEnabled());
+    assertTrue(getFileMenu().menu(EXPORT).isEnabled());
 
     Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID, true);
     assertTrue(doc1.isPresent());
@@ -281,7 +300,7 @@ class TestImportExport {
     }
 
     // Click on the export menu add fill out the wizard
-    bot.menu(EXPORT).click();
+    getFileMenu().menu(EXPORT).click();
 
     SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
     assertNotNull(wizard);
@@ -323,7 +342,8 @@ class TestImportExport {
     assertTrue(tmpDir.resolve("rootCorpus/subCorpus2/doc4/doc4.tok_pos.xml").toFile().isFile());
 
     // Import the just exported corpus
-    bot.menu(IMPORT).click();
+    assertTrue(getFileMenu().menu(IMPORT).isEnabled());
+    getFileMenu().menu(IMPORT).click();
 
     wizard = bot.shell(WIZARD_CAPTION);
     assertNotNull(wizard);
