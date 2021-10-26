@@ -11,6 +11,8 @@ There are, however, two ground rules for when a release is created:
 1. Whenever a bug in a previous release of Hexatomic is [hotfixed](../../development/workflow/#contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix), a [new hotfix release](#hotfix-releases) *must* be created.
 2. Whenever new functionality has been implemented and merged into the `develop` branch, a [new feature release](#feature-releases) *should* be created.
 
+Before you make a release, make sure that you have configured [commit signature verification with GPG](https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification/about-commit-signature-verification), or else the release workflow will fail.
+
 ## Feature releases
 
 To release a new *feature* (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.

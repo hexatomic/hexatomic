@@ -3,9 +3,9 @@
 Currently, Hexatomic is developed within a single repository at <https://github.com/hexatomic/hexatomic>.
 
 Push access to this repository is granted to the [Hexatomic core contributors](https://github.com/hexatomic/hexatomic#core-contributors).
-Other contributors must work in their own fork.
+Other contributors must work in their own fork. 
 
-Section [*Downloading the source code to your computer*](../getting-the-source-code.html#downloading-the-source-code-to-your-computer) describes how to create a fork.
+Section [*Downloading the source code to your computer*](../getting-the-source-code.html#downloading-the-source-code-to-your-computer) describes how to create a fork. If you have not worked in your own fork for a longer period of time, then you can use the GitHub's "Fetch Upstream" function (directly below the greed **Code** button in the fork overview) to synchronize your fork with the current main repository.
 
 ## Project setup
 
