@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SaltProject;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -44,11 +46,13 @@ class TestImportExport {
   private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String EXMARALDA_FORMAT_EXB = "EXMARaLDA format (*.exb)";
   private static final String PAULA_FORMAT = "PAULA format";
+  private static final String TEXT_FORMAT = "Plain text format (*.txt)";
   private static final String FINISH = "Finish";
   private static final String NEXT = "Next >";
   private static final String EXPORT = "Export";
   private static final String IMPORT = "Import";
-  private static final String ADD_SPACES_BETWEEN_TOKEN = "Add spaces between token";
+  private static final String ADD_SPACES_BETWEEN_TOKEN = "Add spaces between tokens";
+  private static final String TOKENIZE = "Tokenize after import";
 
   private final class WizardClosedCondition extends DefaultCondition {
     private final SWTBotShell wizard;
@@ -364,6 +368,126 @@ class TestImportExport {
       assertEquals(numberOfPointingRelations,
           doc1.get().getDocumentGraph().getPointingRelations().size());
     }
+  }
+
+  /**
+   * This test imports a plain text file from a directory and creates a Salt project structure with
+   * a single document containing the text from the file as textual resource. It also
+   * uses the default setting for the <code>pepper.after.tokenize</code> property
+   * (<code>true</code>), i.e., tokenizes the data after import, and the auto-detected format, which
+   * should be plain text.
+   * 
+   * @throws IOException May throw an exception when temporary directory creation fails
+   */
+  @Test
+  void testImportTextWithDefaults() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+
+    // Prepare the temp directory and plain text file
+    Path tmpDir = Files.createTempDirectory("textImportTest_");
+    String fileStr = "test-corpus.txt";
+    String testText = "Is this example more complicated than it appears to be?";
+    Path file = Files.writeString(tmpDir.resolve(fileStr), testText);
+    assertTrue(file.toFile().isFile());
+
+    // Import the created document
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+    
+    // Assert that plain text is the detected format
+    assertTrue(wizard.bot().radio(TEXT_FORMAT).isSelected());
+
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    String expectedDocName = SaltUtil.SALT_SCHEME + ":/" + tmpDir.getFileName()
+        + FileSystems.getDefault().getSeparator() + fileStr.substring(0, fileStr.length() - 4);
+    Optional<SDocument> doc1 = projectManager.getDocument(expectedDocName, true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // Importing should tokenize and set an STextualDS
+      assertEquals(1, doc1.get().getDocumentGraph().getTextualDSs().size());
+      assertEquals(testText, doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
+      assertEquals(11, doc1.get().getDocumentGraph().getTokens().size());
+    }
+
+    // Clean up
+    assertTrue(TestHelper.deleteDirectory(tmpDir));
+  }
+  
+  /**
+   * This test imports a plain text file from a directory and creates a Salt project structure with
+   * a single document containing the text from the file as textual resource. It also
+   * uses the default setting for the <code>pepper.after.tokenize</code> property
+   * (<code>true</code>), i.e., tokenizes the data after import.
+   * 
+   * @throws IOException May throw an exception when temporary directory creation fails
+   */
+  @Test
+  void testImportTextWithTokenizationOff() throws IOException {
+    // Check that export is disabled for empty default project (which has no location on disk)
+    assertFalse(bot.menu(EXPORT).isEnabled());
+
+    // Prepare the temp directory and plain text file
+    Path tmpDir = Files.createTempDirectory("textImportTest_");
+    String fileStr = "test-corpus.txt";
+    String testText = "Is this example more complicated than it appears to be?";
+    Path file = Files.writeString(tmpDir.resolve(fileStr), testText);
+    assertTrue(file.toFile().isFile());
+
+    // Import the created document
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+    
+    // Assert that plain text is the detected format
+    assertTrue(wizard.bot().radio(TEXT_FORMAT).isSelected());
+    // Next button should be enabled
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+    
+    assertTrue(wizard.bot().checkBox(TOKENIZE).isChecked());
+    wizard.bot().checkBox(TOKENIZE).click();
+    assertFalse(wizard.bot().checkBox(TOKENIZE).isChecked());
+    
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    String expectedDocName = SaltUtil.SALT_SCHEME + ":/" + tmpDir.getFileName()
+        + FileSystems.getDefault().getSeparator() + fileStr.substring(0, fileStr.length() - 4);
+    Optional<SDocument> doc1 = projectManager.getDocument(expectedDocName, true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // Importing should tokenize and set an STextualDS
+      assertEquals(1, doc1.get().getDocumentGraph().getTextualDSs().size());
+      assertEquals(testText, doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
+      assertEquals(0, doc1.get().getDocumentGraph().getTokens().size());
+    }
+
+    // Clean up
+    assertTrue(TestHelper.deleteDirectory(tmpDir));
   }
 
 }

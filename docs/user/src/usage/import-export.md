@@ -9,6 +9,7 @@ Currently, Hexatomic supports the following external file formats:
 
 - [PAULA XML](https://github.com/korpling/paula-xml)
 - [EXMARaLDA *.exb files](https://exmaralda.org)
+- Plain text *.txt files (import only)
 
 ## Import an existing corpus
 
