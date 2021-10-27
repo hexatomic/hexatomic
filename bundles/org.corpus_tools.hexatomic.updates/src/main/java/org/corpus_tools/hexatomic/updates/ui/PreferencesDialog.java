@@ -35,7 +35,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class PreferencesDialog extends Dialog {
   IEclipsePreferences prefs =
-      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core.project");
+      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.updates");
 
   /**
    * Create the dialog.
@@ -65,7 +65,8 @@ public class PreferencesDialog extends Dialog {
     label.setText("When checked Hexatomic will search for p2-Updates at each startup");
     Button button = new Button(area, SWT.CHECK);
     button.setText("Enable automatic update search at startup");
-
+    //button.setSelection(true);
+    button.setSelection(prefs.getBoolean("autoUpdate", false));
 
     // register listener for the selection event
     button.addSelectionListener(new SelectionAdapter() {

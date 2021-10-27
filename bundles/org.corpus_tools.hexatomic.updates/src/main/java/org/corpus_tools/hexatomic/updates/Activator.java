@@ -21,18 +21,23 @@
 package org.corpus_tools.hexatomic.updates;
 
 import javax.annotation.PostConstruct;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Activator.class);
-
+  private static final IEclipsePreferences prefs =
+      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.updates");
+  
   @PostConstruct
   @Override
   public void start(BundleContext context) throws Exception {
     log.info("Starting Updates-Plugin");
     // TODO Auto-generated method stub
-    
+    boolean test = prefs.getBoolean("autoUpdate", false);
+    System.out.println(test);
   }
 
   @Override
