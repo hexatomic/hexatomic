@@ -24,8 +24,6 @@ import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -36,6 +34,7 @@ import org.osgi.service.prefs.BackingStoreException;
 public class PreferencesDialog extends Dialog {
   IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.updates");
+  Button checkbox;
 
   /**
    * Create the dialog.
@@ -63,31 +62,27 @@ public class PreferencesDialog extends Dialog {
     Composite area = (Composite) super.createDialogArea(parent);
     Label label = new Label(area, SWT.BORDER);
     label.setText("When checked Hexatomic will search for p2-Updates at each startup");
-    Button button = new Button(area, SWT.CHECK);
-    button.setText("Enable automatic update search at startup");
-    //button.setSelection(true);
-    button.setSelection(prefs.getBoolean("autoUpdate", false));
-
-    // register listener for the selection event
-    button.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        if (prefs != null) {
-
-          prefs.putBoolean("autoUpdate", button.getSelection());
-          System.out.println("Präferenz gesendet.");
-
-          try {
-            prefs.flush();
-          } catch (BackingStoreException ex) {
-            ex.printStackTrace();
-          }
-        } else {
-          System.out.println("null");
-        }
-      }
-    });
+    checkbox = new Button(area, SWT.CHECK);
+    checkbox.setText("Enable automatic update search at startup");
+    checkbox.setSelection(prefs.getBoolean("autoUpdate", false));
     return area;
+  }
+  
+  @Override
+  protected void okPressed() {
+    if (prefs != null) {
+      prefs.putBoolean("autoUpdate", checkbox.getSelection());
+      System.out.println("Präferenz gesendet");
+      try {
+        prefs.flush();
+      } catch (BackingStoreException ex) {
+        ex.printStackTrace();
+      }
+    } else {
+      System.out.println("Path to Preferations not found.");
+      
+    }
+    super.okPressed();
   }
 }
 
