@@ -18,17 +18,32 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.updates;
+package org.corpus_tools.hexatomic.core.handlers;
 
-import org.corpus_tools.hexatomic.updates.ui.PreferencesDialog;
+import org.corpus_tools.hexatomic.core.update.P2Util;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.workbench.IWorkbench;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
 
-public class PreferencesHandler {
+public class UpdateHandler {
+  /**
+   * blabla.
+   * 
+   * @param agent blabla
+   * @param workbench blabla
+   * 
+   */
   @Execute
-  protected void execute(Shell shell) {
-    PreferencesDialog dialog = new PreferencesDialog(shell);
-    dialog.open();
+  public void execute(final IProvisioningAgent agent, 
+      IWorkbench workbench,  
+      UISynchronize sync,
+      IProgressMonitor monitor) {
+    P2Util p2helper = new P2Util();
+    p2helper.performUpdates(agent, workbench, sync, monitor);
   }
-
+  
 }
+
+

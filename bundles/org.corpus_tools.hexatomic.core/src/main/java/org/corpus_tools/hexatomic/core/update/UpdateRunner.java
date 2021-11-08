@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.updates;
+package org.corpus_tools.hexatomic.core.update;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -36,7 +36,7 @@ import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
 
 
-public class P2Util {
+public class UpdateRunner {
   //initialisierung des Loggers für Nachrichten
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
