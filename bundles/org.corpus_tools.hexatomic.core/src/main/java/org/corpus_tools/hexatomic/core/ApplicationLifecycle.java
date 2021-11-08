@@ -60,10 +60,7 @@ public class ApplicationLifecycle {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
-  @Inject
-  @Preference(nodePath = "org.corpus_tools.hexatomic.core.project", value = "autoUpdate")
-  private boolean autoUpdateEnabled;
-
+  
   /**
    * Called when the model is loaded and initializes the logging.
    */
@@ -93,18 +90,5 @@ public class ApplicationLifecycle {
     } catch (JoranException ex) {
       log.error("Could not configure logging", ex);
     }
-  }
-
-  @PostContextCreate
-  private void test() {
-    System.out.println("New user: " + autoUpdateEnabled);
-
-    // private void test(IProvisioningAgent agent, UISynchronize sync, IWorkbench workbench) {
-    // Boolean autoUpdateEnabled = pref.getBoolean("autoUpdate", true);
-    // P2Util util = new P2Util(agent, sync, workbench);
-    // util.platzhalter();
-    // if (autoUpdateEnabled) {
-    // util.performAutoUpdate();
-    // }
   }
 }
