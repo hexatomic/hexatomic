@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_5yjBwAsGEeykAbrpC3cyYg">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_5yjBwAsGEeykAbrpC3cyYg">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_IpHD0A_dEeyo7ZsPm7muSA" featurename="commands" parentElementId="org.eclipse.e4.application">
     <elements xsi:type="commands:Command" xmi:id="_IpHD0Q_dEeyo7ZsPm7muSA" elementId="org.corpus_tools.hexatomic.core.command.preferences" commandName="Preferences"/>
     <elements xsi:type="commands:Command" xmi:id="_fbchQA_fEeyo7ZsPm7muSA" elementId="org.corpus_tools.hexatomic.core.command.updates" commandName="Updates"/>
@@ -11,5 +11,8 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_7MuhwA_dEeyo7ZsPm7muSA" featurename="children" parentElementId="org.corpus_tools.hexatomic.core.menu.help">
     <elements xsi:type="menu:HandledMenuItem" xmi:id="_7MuhwQ_dEeyo7ZsPm7muSA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.preferences" label="Preferences" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/cog-solid.png" command="_IpHD0Q_dEeyo7ZsPm7muSA"/>
     <elements xsi:type="menu:HandledMenuItem" xmi:id="_rSjSIA_fEeyo7ZsPm7muSA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.updates" label="Update" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/sync-solid.png" command="_fbchQA_fEeyo7ZsPm7muSA"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_D1dmQD5OEeyEUJgVj7b0ug" featurename="descriptors" parentElementId="xpath:/">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_Q1j_gD5OEeyEUJgVj7b0ug" elementId="org.corpus_tools.hexatomic.updates.partdescriptor.updateseditor" label="Updates Editor" allowMultiple="true" category="org.corpus_tools.hexatomic.tag.editor" closeable="true" contributionURI="bundleclass://org.corpus_tools.hexatomic.updates/org.corpus_tools.hexatomic.updates.UpdatesEditor"/>
   </fragments>
 </fragment:ModelFragments>
