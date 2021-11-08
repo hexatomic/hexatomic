@@ -1,6 +1,6 @@
 /*-
  * #%L
- * org.corpus_tools.hexatomic.updates
+ * org.corpus_tools.hexatomic.core
  * %%
  * Copyright (C) 2018 - 2021 Stephan Druskat, Thomas Krause
  * %%
@@ -20,45 +20,154 @@
 
 package org.corpus_tools.hexatomic.updates;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+
 
 public class P2Util {
-  //XXX Check for updates to this application and return a status.
-  static IStatus checkForUpdates(IProvisioningAgent agent, IProgressMonitor monitor) 
-      throws OperationCanceledException {
+  //initialisierung des Loggers für Nachrichten
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
+  //Initialisierung der Location mit Updates
+  private static final String HOME_DIR = System.getProperty("user.home");
+  private static final String SEP = System.getProperty("file.separator");
+  private static final String REPOSITORY_LOC = System.getProperty("UpdateHandler.Repo", 
+      "file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP
+      + "hexatomic" + SEP + "releng" + SEP + "org.corpus_tools.hexatomic.update" + SEP 
+      + "target" + SEP + "repository" + SEP);
+  
+
+  /**
+  * blabla.
+  * 
+  * @param agent blabla
+  * @param workbench blabla
+  * @param sync blabla
+  * @param monitor zeigt Fortschritt an
+  */
+  
+  public void performUpdates(final IProvisioningAgent agent, 
+      IWorkbench workbench,
+      UISynchronize sync,
+      IProgressMonitor monitor) {
+    //Überprüfen, ob alle argumente valide sind
+    if (agent != null) {
+      log.info("Provisioning agent created");
+    } else {
+      log.info("Agent not valid");
+    }
+    if (workbench != null) {
+      log.info("Workbench created");
+    } else {
+      log.info("Workbench not valid");
+    }
+    if (monitor != null) {
+      log.info("Monitor created");
+    } else {
+      log.info("Monitor not valid");
+    }
+    if (sync != null) {
+      log.info("sync created");
+    } else {
+      log.info("sync not valid");
+    }
+    System.out.println(checkComponents(agent, workbench, sync, monitor));
+    
+    
     ProvisioningSession session = new ProvisioningSession(agent);
-    // the default update operation looks for updates to the currently
-    // running profile, using the default profile root marker. To change
-    // which installable units are being updated, use the more detailed
-    // constructors.
+    if (session != null) {
+      log.info("Provisioning session created");
+    }
+    // update all user-visible installable units
     UpdateOperation operation = new UpdateOperation(session);
-    SubMonitor sub = SubMonitor.convert(monitor,
-              "Checking for application updates...", 200);
-    IStatus status = operation.resolveModal(sub.newChild(100));
+    URI uri = null;
+
+    try {
+      uri = new URI(REPOSITORY_LOC);
+    } catch (URISyntaxException e) {
+      //errorService.handleException("Invalid repository location " + path.toString(), e);
+      throw new OperationCanceledException("Invalid repository location");
+
+    }
+    
+    operation.getProvisioningContext().setArtifactRepositories(uri);
+    operation.getProvisioningContext().setMetadataRepositories(uri);
+    IStatus status = operation.resolveModal(monitor);
     if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-      return status;
+      MessageDialog.openInformation(
+              null, 
+              "Information", 
+              "Nothing to update");
     }
-    if (status.getSeverity() == IStatus.CANCEL) {
-      throw new OperationCanceledException();
-    }
-    if (status.getSeverity() != IStatus.ERROR) {
-      // More complex status handling might include showing the user what updates
-      // are available if there are multiples, differentiating patches vs. updates, etc.
-      // In this example, we simply update as suggested by the operation.
-      ProvisioningJob job = operation.getProvisioningJob(null);
-      status = job.runModal(sub.newChild(100));
-      if (status.getSeverity() == IStatus.CANCEL) {
-        throw new OperationCanceledException();
+    
+    ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
+    
+    if (provisioningJob != null) {
+      sync.syncExec(new Runnable() {
+ 
+        @Override
+        public void run() {
+          boolean performUpdate = MessageDialog.openQuestion(
+                  null,
+                  "Updates available",
+                  "There are updates available. Do you want to install them now?");
+          if (performUpdate) {
+            provisioningJob.schedule();
+            boolean restart = MessageDialog.openQuestion(null,
+                "Updates installed, restart?",
+                "Updates have been installed successfully, do you want to restart?");
+            if (restart) {
+              workbench.restart();
+            }
+          }
+        }
+        }); 
+    } else {
+      if (operation.hasResolved()) {
+        MessageDialog.openError(
+            null, 
+            "Error", 
+            "Couldn't get provisioning job: " + operation.getResolutionResult());
+      } else {
+        MessageDialog.openError(
+            null, 
+            "Error", 
+            "Couldn't resolve provisioning job");
       }
     }
-    return status;
-  }
 
+    
+  }
+  
+  /**
+  * shfiaosf.
+  * @param agent bla
+  * @param workbench bla
+  * @param sync bla
+  * @param monitor bla
+  * @return nlala
+  */
+  public boolean checkComponents(IProvisioningAgent agent, 
+      IWorkbench workbench,
+      UISynchronize sync,
+      IProgressMonitor monitor) {
+    return ((agent != null && workbench != null && sync != null && monitor != null));
+  }  
 }
+
+
