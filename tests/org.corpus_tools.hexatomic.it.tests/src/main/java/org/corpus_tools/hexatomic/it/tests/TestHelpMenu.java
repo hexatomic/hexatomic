@@ -38,8 +38,21 @@ class TestHelpMenu {
   void testOpenUpdateConfiguration() {
     SWTBotMenu helpMenu = bot.menu("Help");
     helpMenu.menu("Update").click();
-    bot.waitUntil(
-        Conditions.shellIsActive("Error when searching for provisioning job."));
-    bot.button("OK").click();
+    //bot.waitUntil(
+    //    Conditions.shellIsActive("Error when searching for provisioning job."));
+    //bot.button("OK").click();
+  }
+  
+  @Test
+  void testOpenPreferenceDialog() {
+    SWTBotMenu helpMenu = bot.menu("Help");
+    helpMenu.menu("Preferences").click();
+    SWTBotShell preferencesShell = bot.shell("Enable Startup-Checks");
+    preferencesShell.bot().label(
+    "When checked Hexatomic will search for p2-Updates at each startup");
+    preferencesShell.bot().button("OK").click();
   }*/
+  
+  
+  
 }
