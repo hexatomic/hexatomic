@@ -20,7 +20,7 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
-import org.corpus_tools.hexatomic.core.update.P2Util;
+import org.corpus_tools.hexatomic.core.update.UpdateRunner;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -40,7 +40,7 @@ public class UpdateHandler {
       IWorkbench workbench,  
       UISynchronize sync,
       IProgressMonitor monitor) {
-    P2Util p2helper = new P2Util();
+    UpdateRunner p2helper = new UpdateRunner();
     p2helper.performUpdates(agent, workbench, sync, monitor);
   }
   
