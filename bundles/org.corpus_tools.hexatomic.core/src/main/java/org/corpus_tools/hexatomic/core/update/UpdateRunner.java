@@ -26,7 +26,6 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
@@ -93,7 +92,7 @@ public class UpdateRunner {
             boolean restart = MessageDialog.openQuestion(null,
                 "Updates installed, restart?",
                 "Updates have been installed successfully, do you want to restart?");
-            if (restart) {
+            if (restart && workbench != null) {
               workbench.restart();
             }
           }
@@ -117,47 +116,7 @@ public class UpdateRunner {
   }
   
   
-  /**
-  * ojfsdasof.
-  * @param agent blabla
-  * @param monitor blabal
-  * @return blalna
-  * @throws OperationCanceledException blabla
-  */
-     
-  static IStatus performUpdates(IProvisioningAgent agent, IProgressMonitor monitor) 
-      throws OperationCanceledException { 
-    
-    UpdateOperation operation = createUpdateOperation(agent);
-    SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200); 
-    IStatus status = operation.resolveModal(sub.newChild(100)); 
-    if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) { 
-      return status; 
-    } 
-    if (status.getSeverity() == IStatus.CANCEL) {
-      throw new OperationCanceledException(); 
-    }
-       
-    if (status.getSeverity() != IStatus.ERROR) { 
-      // More complex status handling might include showing the user what 
-      // updates are available if there are multiples, differentiating 
-      // patches vs. updates, etc. In this example, we simply update as 
-      // suggested by the operation. 
-      ProvisioningJob job = operation.getProvisioningJob(monitor); 
-      if (job == null) { 
-        log.info("ProvisioningJob could not be created - " 
-            + "does this application support p2 software installation?");
-        return status;
-      } 
-      status = job.runModal(sub.newChild(100)); 
-      if (status.getSeverity() == IStatus.CANCEL) { 
-        throw new OperationCanceledException(); 
-      }
-    }  
-    return status; 
-  }
   
-
   static boolean checkComponents(IProvisioningAgent agent, 
       IWorkbench workbench,
       UISynchronize sync,

@@ -25,10 +25,20 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import java.io.File;
 import java.net.URL;
+import org.corpus_tools.hexatomic.core.update.AppStartupCompleteEventHandler;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -49,6 +59,8 @@ public class ApplicationLifecycle {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
+  private static final IEclipsePreferences prefs =
+      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.updates");
   
   /**
    * Called when the model is loaded and initializes the logging.
@@ -80,4 +92,31 @@ public class ApplicationLifecycle {
       log.error("Could not configure logging", ex);
     }
   }
+  
+  @PostContextCreate
+  void postContextcreate(final IProvisioningAgent agent, 
+      UISynchronize sync,
+      IProgressMonitor monitor,
+      IEventBroker eventBroker,
+      IEclipseContext context) {
+    eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, 
+        new AppStartupCompleteEventHandler(eventBroker, 
+            context,
+            agent,
+            sync,
+            monitor));
+
+    if (prefs.getBoolean("autoUpdate", false)) {
+      System.out.println("true");
+    } else {
+      System.out.println("false");
+    }   
+    
+  }
+  
+
+  
+  
+
 }
+
