@@ -33,7 +33,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class PreferencesDialog extends Dialog {
   IEclipsePreferences prefs =
-      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.updates");
+      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   Button checkbox;
 
   /**

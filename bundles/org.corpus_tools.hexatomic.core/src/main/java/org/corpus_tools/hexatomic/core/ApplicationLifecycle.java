@@ -42,6 +42,7 @@ import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.service.prefs.BackingStoreException;
 import org.slf4j.LoggerFactory;
 
 
@@ -60,7 +61,7 @@ public class ApplicationLifecycle {
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
   private static final IEclipsePreferences prefs =
-      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.updates");
+      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   
   /**
    * Called when the model is loaded and initializes the logging.
@@ -99,17 +100,25 @@ public class ApplicationLifecycle {
       IProgressMonitor monitor,
       IEventBroker eventBroker,
       IEclipseContext context) {
-    eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, 
-        new AppStartupCompleteEventHandler(eventBroker, 
+    boolean justUpdated = prefs.getBoolean("justUpdated", false);
+    boolean autoUpdateEnabled = prefs.getBoolean("autoUpdate", false);
+    if (!justUpdated && autoUpdateEnabled) {
+      eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, 
+          new AppStartupCompleteEventHandler(eventBroker, 
             context,
             agent,
             sync,
             monitor));
 
-    if (prefs.getBoolean("autoUpdate", false)) {
+    
       System.out.println("true");
-    } else {
-      System.out.println("false");
+    } else if (justUpdated) {
+      prefs.putBoolean("justUpdated", false);
+      try {
+        prefs.flush();
+      } catch (BackingStoreException ex) {
+        ex.printStackTrace();
+      }
     }   
     
   }

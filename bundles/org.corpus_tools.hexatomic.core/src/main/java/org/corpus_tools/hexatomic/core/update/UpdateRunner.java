@@ -26,6 +26,8 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.preferences.ConfigurationScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
@@ -33,12 +35,15 @@ import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.osgi.service.prefs.BackingStoreException;
 
 
 public class UpdateRunner {
   //initialisierung des Loggers für Nachrichten
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(ProjectManager.class);
+  private static final IEclipsePreferences prefs =
+      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   //Initialisierung der Location mit Updates
   private static final String HOME_DIR = System.getProperty("user.home");
   private static final String SEP = System.getProperty("file.separator");
@@ -93,6 +98,12 @@ public class UpdateRunner {
                 "Updates installed, restart?",
                 "Updates have been installed successfully, do you want to restart?");
             if (restart && workbench != null) {
+              prefs.putBoolean("justUpdated", true);
+              try {
+                prefs.flush();
+              } catch (BackingStoreException ex) {
+                ex.printStackTrace();
+              }
               workbench.restart();
             }
           }
