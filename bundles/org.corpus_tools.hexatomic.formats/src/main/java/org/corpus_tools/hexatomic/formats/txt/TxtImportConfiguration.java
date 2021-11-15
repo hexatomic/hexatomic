@@ -1,8 +1,8 @@
 /*-
  * #%L
- * org.corpus_tools.hexatomic.formats
+ * [bundle] Corpus file formats
  * %%
- * Copyright (C) 2018 - 2020 Stephan Druskat, Thomas Krause
+ * Copyright (C) 2018 - 2021 Stephan Druskat, Thomas Krause
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,27 +18,32 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.formats.exb;
+package org.corpus_tools.hexatomic.formats.txt;
 
 import java.util.Properties;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
-import org.corpus_tools.hexatomic.formats.importer.ImportFormat;
+import org.corpus_tools.pepper.modules.coreModules.TextImporter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-public class ExbImportConfiguration extends ConfigurationPage {
+/**
+ * Configuration for the wizard page that lets users configure the {@link TextImporter}.
+ * 
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+ */
+public class TxtImportConfiguration extends ConfigurationPage {
 
-  private Button btnAddSpaces;
+  private Button btnTokenize = null;
 
   /**
-   * Constructs a new import configuration for the {@link ImportFormat#EXB} format.
+   * Constructs a new import configuration for the {@link ImportFormat#TXT} format.
    */
-  public ExbImportConfiguration() {
+  public TxtImportConfiguration() {
     super("Configure import");
-    setTitle("Configure EXMARaLDA import");
+    setTitle("Configure plain text import");
     setDescription("You can leave the default values or customize the import process.");
   }
 
@@ -50,22 +55,21 @@ public class ExbImportConfiguration extends ConfigurationPage {
     setControl(container);
     container.setLayout(new GridLayout(1, false));
 
-    btnAddSpaces = new Button(container, SWT.CHECK);
-    btnAddSpaces.setText("Add spaces between tokens");
-    btnAddSpaces.setSelection(true);
-    btnAddSpaces.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+    btnTokenize = new Button(container, SWT.CHECK);
+    btnTokenize.setText("Tokenize after import");
+    btnTokenize.setSelection(true);
+    btnTokenize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
   }
 
   @Override
   public Properties getConfiguration() {
     Properties result = new Properties();
 
-    if (btnAddSpaces == null || btnAddSpaces.getSelection()) {
-      result.setProperty("salt.tokenSeparator", "\" \"");
+    if (btnTokenize == null || btnTokenize.getSelection()) {
+      result.setProperty("pepper.after.tokenize", "true");
     }
 
     return result;
   }
-
 
 }
