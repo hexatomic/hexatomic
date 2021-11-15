@@ -82,6 +82,7 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
             setPageComplete(true);
           } else if (format.get() == ImportFormat.GRAPHANNO) {
             btnGraphAnno.setSelection(true);
+            setPageComplete(true);
           } else if (format.get() == ImportFormat.TXT) {
             btnTxt.setSelection(true);
             setPageComplete(true);
