@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add import of plain text files with optional tokenization (#110)
+- Add the GraphAnno format to the supported import formats (#112)
 - Add tutorial for creating a corpus from scratch
 
 ### Fixed

@@ -46,6 +46,7 @@ class TestImportExport {
   private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String EXMARALDA_FORMAT_EXB = "EXMARaLDA format (*.exb)";
   private static final String PAULA_FORMAT = "PAULA format";
+  private static final String GRAPHANNOS_FORMAT = "GraphAnno format";
   private static final String TEXT_FORMAT = "Plain text format (*.txt)";
   private static final String FINISH = "Finish";
   private static final String NEXT = "Next >";
@@ -75,6 +76,7 @@ class TestImportExport {
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
+  private URI graphAnnoExampleCorpusUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
 
@@ -102,8 +104,13 @@ class TestImportExport {
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
-
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
+
+    File graphAnnoExampleCorpusDirectory =
+        new File("src/main/resources/graphanno-example-corpus/sampleCorpus/");
+    assertTrue(graphAnnoExampleCorpusDirectory.isDirectory());
+    graphAnnoExampleCorpusUri =
+        URI.createFileURI(graphAnnoExampleCorpusDirectory.getAbsolutePath());
 
     errorService.clearLastException();
 
@@ -370,12 +377,50 @@ class TestImportExport {
     }
   }
 
+
+  /**
+   * This that importing the example corpus works for the GraphAnno format.
+   * 
+   * @throws IOException Might throw an exception when there are no temporary directories to create
+   */
+  @Test
+  void testImportGraphAnno() throws IOException {
+
+
+    // Import the just exported corpus
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().text().setText(graphAnnoExampleCorpusUri.toFileString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+
+    wizard.bot().radio(GRAPHANNOS_FORMAT).click();
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    Optional<SDocument> doc1 = projectManager.getDocument("salt:/sampleCorpus/0001", true);
+    assertTrue(doc1.isPresent());
+    if (doc1.isPresent()) {
+      // test imported graph
+      assertEquals("Is this example more complicated than it appears to be ? ",
+          doc1.get().getDocumentGraph().getTextualDSs().get(0).getText());
+      assertFalse(doc1.get().getDocumentGraph().getDominanceRelations().isEmpty());
+    }
+  }
+
   /**
    * This test imports a plain text file from a directory and creates a Salt project structure with
-   * a single document containing the text from the file as textual resource. It also
-   * uses the default setting for the <code>pepper.after.tokenize</code> property
-   * (<code>true</code>), i.e., tokenizes the data after import, and the auto-detected format, which
-   * should be plain text.
+   * a single document containing the text from the file as textual resource. It also uses the
+   * default setting for the <code>pepper.after.tokenize</code> property (<code>true</code>), i.e.,
+   * tokenizes the data after import, and the auto-detected format, which should be plain text.
    * 
    * @throws IOException May throw an exception when temporary directory creation fails
    */
@@ -405,7 +450,7 @@ class TestImportExport {
     // Valid path was selected, this should enable the next button
     assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
-    
+
     // Assert that plain text is the detected format
     assertTrue(wizard.bot().radio(TEXT_FORMAT).isSelected());
 
@@ -426,12 +471,12 @@ class TestImportExport {
     // Clean up
     assertTrue(TestHelper.deleteDirectory(tmpDir));
   }
-  
+
   /**
    * This test imports a plain text file from a directory and creates a Salt project structure with
-   * a single document containing the text from the file as textual resource. It also
-   * uses the default setting for the <code>pepper.after.tokenize</code> property
-   * (<code>true</code>), i.e., tokenizes the data after import.
+   * a single document containing the text from the file as textual resource. It also uses the
+   * default setting for the <code>pepper.after.tokenize</code> property (<code>true</code>), i.e.,
+   * tokenizes the data after import.
    * 
    * @throws IOException May throw an exception when temporary directory creation fails
    */
@@ -461,17 +506,17 @@ class TestImportExport {
     // Valid path was selected, this should enable the next button
     assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
-    
+
     // Assert that plain text is the detected format
     assertTrue(wizard.bot().radio(TEXT_FORMAT).isSelected());
     // Next button should be enabled
     assertTrue(wizard.bot().button(NEXT).isEnabled());
     wizard.bot().button(NEXT).click();
-    
+
     assertTrue(wizard.bot().checkBox(TOKENIZE).isChecked());
     wizard.bot().checkBox(TOKENIZE).click();
     assertFalse(wizard.bot().checkBox(TOKENIZE).isChecked());
-    
+
     wizard.bot().button(FINISH).click();
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
