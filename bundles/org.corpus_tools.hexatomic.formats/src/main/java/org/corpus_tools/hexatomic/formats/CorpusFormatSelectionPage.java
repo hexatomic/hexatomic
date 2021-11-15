@@ -37,6 +37,7 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
 
   protected Button btnExb;
   protected Button btnPaulaXml;
+  protected Button btnGraphAnno;
   protected Button btnTxt;
 
   protected CorpusFormatSelectionPage(String pageName) {
@@ -49,30 +50,34 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
 
   @Override
   public void createControl(Composite parent) {
-  
+
     setPageComplete(false);
-  
+
     Composite container = new Composite(parent, SWT.NULL);
     setControl(container);
     container.setLayout(new GridLayout(1, false));
-  
+
     SelectionAdapter checkboxSelectionAdapter = new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         setPageComplete(getSelectedFormat().isPresent());
       }
     };
-  
+
     btnExb = new Button(container, SWT.RADIO);
     btnExb.addSelectionListener(checkboxSelectionAdapter);
     btnExb.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
     btnExb.setBounds(0, 0, 112, 17);
     btnExb.setText("EXMARaLDA format (*.exb)");
-  
+
     btnPaulaXml = new Button(container, SWT.RADIO);
     btnPaulaXml.addSelectionListener(checkboxSelectionAdapter);
     btnPaulaXml.setText("PAULA format");
-    
+
+    btnGraphAnno = new Button(container, SWT.RADIO);
+    btnGraphAnno.addSelectionListener(checkboxSelectionAdapter);
+    btnGraphAnno.setText("GraphAnno format");
+
     btnTxt = new Button(container, SWT.RADIO);
     btnTxt.addSelectionListener(checkboxSelectionAdapter);
     btnTxt.setText("Plain text format (*.txt)");

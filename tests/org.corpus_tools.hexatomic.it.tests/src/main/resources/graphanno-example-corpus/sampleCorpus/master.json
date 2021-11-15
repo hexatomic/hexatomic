@@ -1,0 +1,52 @@
+{
+    "nodes": [],
+    "edges": [],
+    "version": 11,
+    "conf": {
+        "default_color": "#7f7f7f",
+        "token_color": "#000000",
+        "found_color": "#ff0000",
+        "filtered_color": "#cccccc",
+        "edge_weight": 1,
+        "xlabel": false,
+        "layers": [
+            {
+                "name": "functional layer",
+                "shortcut": "f",
+                "color": "#00cc00",
+                "weight": 1
+            },
+            {
+                "name": "structural layer",
+                "shortcut": "s",
+                "color": "#0000ff",
+                "weight": 10
+            }
+        ],
+        "combinations": [
+            {
+                "name": "fs layer",
+                "shortcut": "fs",
+                "layers": [
+                    "f",
+                    "s"
+                ],
+                "color": "#000000",
+                "weight": 10
+            }
+        ]
+    },
+    "info": {},
+    "anno_makros": {},
+    "search_makros": [],
+    "tagset": [],
+    "annotators": [],
+    "file_settings": {},
+    "max_node_id": 27,
+    "max_edge_id": 70,
+    "files": [
+        "0001.json",
+        "0002.json",
+        "0003.json"  
+    ]
+}
