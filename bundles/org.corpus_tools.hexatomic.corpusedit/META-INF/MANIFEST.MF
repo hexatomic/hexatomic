@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Corpus Structure Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.corpusstructureeditor;singleton:=true
-Bundle-Version: 0.7.1
+Bundle-Version: 0.8.0
 Require-Bundle: javax.inject,
  org.eclipse.osgi,
  org.eclipse.jface,

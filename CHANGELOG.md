@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2021-11-16
+
+### Added
+
+- Add import of plain text files with optional tokenization (#110)
+- Add the GraphAnno format to the supported import formats (#112)
+- Add tutorial for creating a corpus from scratch
+
+### Fixed
+
+- Fixed some minor typos in the GUI
+
 ## [0.7.1] - 2021-10-26
 
 ### Fixed
@@ -192,7 +204,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/hexatomic/hexatomic/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/hexatomic/hexatomic/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/hexatomic/hexatomic/compare/v0.6.1...v0.7.0
 [0.6.1]: https://github.com/hexatomic/hexatomic/compare/v0.6.0...v0.6.1

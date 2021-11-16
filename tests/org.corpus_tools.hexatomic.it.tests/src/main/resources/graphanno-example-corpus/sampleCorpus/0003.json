@@ -1,0 +1,88 @@
+{
+    "version": 11,
+    "master": "master.json",
+    "nodes": [
+        {
+            "id": 1,
+            "type": "s",
+            "attr": {
+                "name": "a"
+            }
+        },
+        {
+            "id": 2,
+            "type": "s",
+            "attr": {
+                "name": "b"
+            }
+        },
+        {
+            "id": 3,
+            "type": "t",
+            "attr": {
+                "token": "A1"
+            },
+            "start": 1.0,
+            "end": 2.0
+        },
+        {
+            "id": 4,
+            "type": "t",
+            "attr": {
+                "token": "A2"
+            },
+            "start": 2.0,
+            "end": 3.0
+        },
+        {
+            "id": 5,
+            "type": "t",
+            "attr": {
+                "token": "B1"
+            },
+            "start": 1.0,
+            "end": 2.0
+        },
+        {
+            "id": 6,
+            "type": "t",
+            "attr": {
+                "token": "B2"
+            },
+            "start": 2.0,
+            "end": 3.0
+        }
+    ],
+    "edges": [
+        {
+            "start": 1,
+            "end": 2,
+            "id": 1,
+            "type": "o"
+        },
+        {
+            "start": 1,
+            "end": 3,
+            "id": 2,
+            "type": "s"
+        },
+        {
+            "start": 1,
+            "end": 4,
+            "id": 3,
+            "type": "s"
+        },
+        {
+            "start": 2,
+            "end": 5,
+            "id": 4,
+            "type": "s"
+        },
+        {
+            "start": 2,
+            "end": 6,
+            "id": 5,
+            "type": "s"
+        }
+    ]
+}
