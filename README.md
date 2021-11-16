@@ -188,7 +188,6 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 ### Maintainer
 
 - Thomas Krause ([@thomaskrause](https://github.com/thomaskrause))
-- Bastian Bunzeck ([@bbunzeck](https://github.com/bbunzeck))
 
 ### Core contributors
 
