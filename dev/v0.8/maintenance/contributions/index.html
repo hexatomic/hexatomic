@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Working with contributions - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="../../development/architecture/index.html"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="../../development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="../../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="../../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="../../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="../../development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/taking-over/index.html"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="../../maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="../../maintenance/contributions/index.html" class="active"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="../../maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="../../maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="../../maintenance/prepare-end/index.html"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="../../common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="../../governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#working-with-contributions" id="working-with-contributions">Working with contributions</a></h1>
+<p>As documented in the <a href="../../development/workflow/"><em>Workflow</em></a> section, all code and documentation contributions to Hexatomic are made via <a href="#maintaining-pull-requests">pull requests</a> from branches or forks, while <a href="#maintaining-contributions-that-are-not-code-contributions">other types of contributions</a> may not.</p>
+<p>Pull requests can come from within the Hexatomic core development team that works on branches in the Hexatomic repository (<em>internal pull requests</em>), or from others that have forked the Hexatomic repository and work on branches in their repository copy (<em>external pull requests</em>).</p>
+<h2><a class="header" href="#maintaining-pull-requests" id="maintaining-pull-requests">Maintaining pull requests</a></h2>
+<p>The maintainer is in charge of supervising pull requests from their creation to the point when they are merged into the target branched, or dismissed and closed.</p>
+<p>It is recommended to turn on notifications for pull requests, e.g. by changing the notification settings with the &quot;Watch&quot; button in the upper right corner of the GitHub interface.</p>
+<h3><a class="header" href="#communication-with-the-creator-of-the-pull-request" id="communication-with-the-creator-of-the-pull-request">Communication with the creator of the pull request</a></h3>
+<p>Communication with the creator of the pull request is by far the most important task in pull request maintenance.
+Communication should be timely, and in line with the <a href="https://github.com/hexatomic/hexatomic/blob/develop/CODE_OF_CONDUCT.md">Hexatomic Code of Conduct</a>.</p>
+<p>The primary aim of communication in pull requests is to ensure that the contribution 
+is <strong>suitable for merging</strong> into Hexatomic, and of <strong>sufficient quality</strong>.</p>
+<p>The secondary aim of communication is to provide a <strong>welcoming, helpful, appreciative experience</strong> for the contributor,
+that helps to build a community around the software.</p>
+<h3><a class="header" href="#evaluating-contributions" id="evaluating-contributions">Evaluating contributions</a></h3>
+<p>The contribution must be evaluated in terms of </p>
+<ul>
+<li><strong>suitability, e.g.:</strong>
+<ul>
+<li>Is the contribution going into the right place?</li>
+<li>Does it have the right scope?</li>
+<li>Is it of the right size, or should it be split into different pull requests?</li>
+<li>Does it do what it is meant to do?</li>
+<li>Will it improve Hexatomic?</li>
+</ul>
+</li>
+<li><strong>quality, e.g.:</strong>
+<ul>
+<li>Is the contribution free of security issues, bugs, code smells and style issues?</li>
+<li>Is the contribution well-tested?</li>
+<li>Will the contribution introduce regressions?</li>
+<li>Is the contribution documented?</li>
+</ul>
+</li>
+</ul>
+<p>Evaluation is done through different tools:</p>
+<ul>
+<li><a href="#communication-with-the-creator-of-the-pull-request">communication</a> to clarify suitability and help fulfill non-functional requirements</li>
+<li>automated testing by the <a href="../continuous-integration/">continuous integration workflows</a> that run automated tests on all pull requests</li>
+<li><a href="#manual-testing-of-pull-requests">manual testing</a> and code review to evaluate functional requirements</li>
+<li><a href="../continuous-integration/#static-code-analysis">static code analysis</a> to evaluate quality</li>
+</ul>
+<h4><a class="header" href="#manual-testing-of-pull-requests" id="manual-testing-of-pull-requests">Manual testing of pull requests</a></h4>
+<p>In addition to the automated tests run by the continuous integration pipeline, <strong>all pull requests must be manually tested</strong>.
+The steps for manual testing depend on whether the pull request is internal or external.
+The reason for this is that <em>external</em> pull requests should never be afforded the same level of <strong>trust</strong> as <em>internal</em> pull requests, i.e., pull requests from the core contributors.</p>
+<!--TODO To read more about how to review the changes as part of this process, read the section on [code review](TODO).-->
+<h5><a class="header" href="#manually-testing-external-untrusted-pull-requests" id="manually-testing-external-untrusted-pull-requests">Manually testing <em>external</em>, untrusted pull requests</a></h5>
+<ol>
+<li><strong>Code review on GitHub:</strong> Perform a code review of every single change on GitHub before doing anything else with the pull request.<br />
+<i class="fa fa-warning"></i> This is because <em>external pull requests may contain malign changes</em>, e.g., the continuous integration workflow, or any portion of code, could have been changed to expose secrets such as API or access tokens.</li>
+<li><strong>Test a local checkout of the pull request:</strong> Check out the pull request locally by cloning its source repository into a new local directory, and pulling and switching to its source branch. You may then use the IDE to review the changes and their interrelations and context more comfortably together with the view on the changes that GitHub provides.</li>
+<li><strong>Build and run the pull request version of Hexatomic locally:</strong> Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.</li>
+</ol>
+<h5><a class="header" href="#manually-testing-internal-trusted-pull-requests" id="manually-testing-internal-trusted-pull-requests">Manually testing <em>internal</em>, trusted pull requests</a></h5>
+<p>To avoid potential duplication of code review, you may change the manual testing steps for internal pull requests as follows.</p>
+<ol>
+<li><strong>Review a local checkout of the pull request:</strong> Check out the pull request locally by pulling and switching to its source branch. Use the IDE to review the changes and their interrelations and context comfortably, based on the list of changes on GitHub. </li>
+<li><strong>Build and run the pull request version of Hexatomic locally:</strong> Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.</li>
+</ol>
+<h3><a class="header" href="#moving-pull-requests-forward" id="moving-pull-requests-forward">Moving pull requests forward</a></h3>
+<p>Pull requests should have a maximally short life-span.
+The maintainer should help moving pull requests forward by completing their tasks in a timely fashion.
+If a pull request stalls, they should inquire what they can do to help, to move it forward towards merging.
+If a pull request is orphaned, the maintainer can decide to adopt and complete it themself, or find other contributors to complete it.
+Alternatively, it should be closed with a comment that explains the reasons for closing.</p>
+<h3><a class="header" href="#merging-pull-requests" id="merging-pull-requests">Merging pull requests</a></h3>
+<p>The way that pull requests are merged into their target branch depends on their type.</p>
+<ol>
+<li>Pull requests that provide <strong>hotfixes</strong>, i.e., repair functionality that is broken rather than provide 
+new or change existing functionality, <strong>must not be merged</strong> from the GitHub UI directly. This is
+because they target the <code>master</code> branch, which only contains released code. Therefore, code that
+goes into the <code>master</code> branch must be formally released, which cannot be done from the GitHub UI.
+Instead, refer to the section about <a href="../releases/README.html#hotfix-releases">releasing hotfixes</a> to learn how to do this.</li>
+<li>Pull requests that target the <code>develop</code> branch must not necessarily be released on merge. Instead,
+code changes from different pull requests can be bundled into a release. Therefore, it is safe to
+merge the pull request from the GitHub UI by clicking the green <strong>Merge pull request</strong> button (see figure below).</li>
+</ol>
+<h4><a class="header" href="#requirements-for-merging" id="requirements-for-merging">Requirements for merging</a></h4>
+<p>You must only merge pull requests</p>
+<ol>
+<li>that have undergone code review, have been approved by the reviewer, and have no unresolved questions or change suggestions;</li>
+<li>that have passed static code analysis;</li>
+<li>that have passed all CI workflows;</li>
+<li>for which all tasks on the pull request checklist have been completed;</li>
+<li>for which copyright, license and citation information are complete.</li>
+</ol>
+<p><img src="merge-pull-request.png" alt="When all requirements are fulfilled, pull requests to develop can be merged by clicking the green button &quot;Merge pull request&quot;." /></p>
+<h2><a class="header" href="#maintaining-contributions-that-are-not-code-contributions" id="maintaining-contributions-that-are-not-code-contributions">Maintaining contributions that are not code contributions</a></h2>
+<p>People can contribute to Hexatomic without creating a pull request.
+Such contributions can be feature requests, bug reports, code reviews, user testing, organizing events, writing or talking about Hexatomic, asking questions, etc.
+These contributions should be treated on par with <a href="#maintaining-pull-requests">pull requests</a> and maintained just as timely and conscientiously.
+Also, non-code contributions should be attributed and credited. <!-- TODO Add link to crediting section --></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../maintenance/continuous-integration/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../maintenance/licensing/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../maintenance/continuous-integration/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../maintenance/licensing/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
