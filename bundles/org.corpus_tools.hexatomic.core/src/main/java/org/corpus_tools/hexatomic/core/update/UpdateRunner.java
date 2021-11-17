@@ -54,12 +54,12 @@ public class UpdateRunner {
   
 
   /**
-  * blabla.
+  * Search for updates and perform them if wanted.
   * 
-  * @param agent blabla
-  * @param workbench blabla
-  * @param sync blabla
-  * @param monitor zeigt Fortschritt an
+  * @param agent OSGi service to create an update operation
+  * @param workbench current workbench to restart the application
+  * @param sync Helper class to execute code in the UI thread
+  * @param monitor interface to show progress of update operation
   */
   
   public void performUpdates(final IProvisioningAgent agent, 
@@ -125,15 +125,7 @@ public class UpdateRunner {
 
     
   }
-  
-  
-  
-  static boolean checkComponents(IProvisioningAgent agent, 
-      IWorkbench workbench,
-      UISynchronize sync,
-      IProgressMonitor monitor) {
-    return ((agent != null && workbench != null && sync != null && monitor != null));
-  }
+
   
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
     ProvisioningSession session = new ProvisioningSession(agent);

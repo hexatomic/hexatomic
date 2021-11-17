@@ -29,10 +29,11 @@ import org.eclipse.equinox.p2.core.IProvisioningAgent;
 
 public class UpdateHandler {
   /**
-   * blabla.
-   * 
-   * @param agent blabla
-   * @param workbench blabla
+   * Execute updates.
+   * @param agent OSGi service to create an update operation
+   * @param workbench current workbench to restart the application
+   * @param sync Helper class to execute code in the UI thread
+   * @param monitor interface to show progress of update operation
    * 
    */
   @Execute

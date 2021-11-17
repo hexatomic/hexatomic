@@ -37,12 +37,12 @@ public class AppStartupCompleteEventHandler implements EventHandler {
   IProgressMonitor monitor;
 
   /**
-   * ljlkaadsf.
-   * @param eventBroker sdfsd
-   * @param context sdafsf
-   * @param agent asdfsdf
-   * @param sync sdfdsf
-   * @param monitor sdfdsf
+   * Create instance of AppStartupCompleteEventHandler.
+   * @param eventBroker Event broker service to unsubscribe from subscribed event
+   * @param context Context of application to recieve workbench
+   * @param agent OSGi service to create an update operation
+   * @param sync Helper class to execute code in the UI thread
+   * @param monitor interface to show progress of update operation
    */
   public AppStartupCompleteEventHandler(
       IEventBroker eventBroker, 
