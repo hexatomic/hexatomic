@@ -48,9 +48,9 @@ public class UpdateRunner {
   private static final String HOME_DIR = System.getProperty("user.home");
   private static final String SEP = System.getProperty("file.separator");
   private static final String REPOSITORY_LOC = System.getProperty("UpdateHandler.Repo", 
-      "file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP
-      + "hexatomic" + SEP + "releng" + SEP + "org.corpus_tools.hexatomic.update" + SEP 
-      + "target" + SEP + "repository" + SEP);
+      "file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP + "updatetests" + SEP
+      + "test1" + SEP + "hexatomic" + SEP + "releng" + SEP 
+      + "org.corpus_tools.hexatomic.update" + SEP + "target" + SEP + "repository" + SEP);
   
 
   /**
