@@ -43,13 +43,11 @@ class TestHelpMenu {
   
   @Test
   void testOpenUpdateConfiguration() {
-    //boolean autoupdate = prefs.getBoolean("autoUpdate", false);
-    //assertFalse("Preference allready set", autoupdate);
-    //SWTBotMenu helpMenu = bot.menu("Help");
-    //helpMenu.menu("Update").click();
-    //bot.waitUntil(
-    //    Conditions.shellIsActive("Error when searching for provisioning job."));
-    //bot.button("OK").click();
+    SWTBotMenu helpMenu = bot.menu("Help");
+    helpMenu.menu("Update").click();
+    bot.waitUntil(
+        Conditions.shellIsActive("Error"));
+    bot.button("OK").click();
   }
   
   @Test
@@ -66,10 +64,6 @@ class TestHelpMenu {
     preferencesShell.bot().button("OK").click();
     autoupdate = prefs.getBoolean("autoUpdate", false);
     assertTrue("Preference not set", autoupdate);
-    helpMenu.menu("Update").click();
-    bot.waitUntil(
-        Conditions.shellIsActive("Error"));
-    bot.button("OK").click();
   }  
   
 }
