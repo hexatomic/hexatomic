@@ -46,6 +46,8 @@ public class PreferencesDialog extends Dialog {
     super(parentShell);
   }
 
+  
+  @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
     newShell.setText("Enable Startup-Checks");
