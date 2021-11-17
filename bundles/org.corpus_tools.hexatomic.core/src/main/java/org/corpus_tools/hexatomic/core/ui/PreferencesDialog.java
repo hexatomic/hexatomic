@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
+import org.corpus_tools.hexatomic.core.ApplicationLifecycle;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.Dialog;
@@ -32,6 +33,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 
 public class PreferencesDialog extends Dialog {
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
   IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   Button checkbox;
@@ -74,14 +77,13 @@ public class PreferencesDialog extends Dialog {
   protected void okPressed() {
     if (prefs != null) {
       prefs.putBoolean("autoUpdate", checkbox.getSelection());
-      System.out.println("Präferenz gesendet");
       try {
         prefs.flush();
       } catch (BackingStoreException ex) {
         ex.printStackTrace();
       }
     } else {
-      System.out.println("Path to Preferations not found.");
+      log.info("Path to preferences not found");
       
     }
     super.okPressed();
