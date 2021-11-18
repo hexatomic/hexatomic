@@ -226,6 +226,13 @@ public class TestGridEditor {
     return view;
   }
 
+  /**
+   * Opens the default example corpus document in grid editor.
+   * 
+   * <p>
+   * 1 token col, 11 rows; 2 token annotation columns, 1 span annotation column (2 spancs: cell 1, cells 2-11) 
+   * </p>
+   */
   SWTBotView openDefaultExample() {
     // Programmatically open the example corpus
     openExample(exampleProjectUri);
@@ -1437,6 +1444,35 @@ public class TestGridEditor {
     assertTrue(potentialSpan instanceof SSpan);
     SSpan span = (SSpan) potentialSpan;
     assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+  }
+  
+  /**
+   * Tests column behaviour to remain in existence after the last cell in it has been deleted.
+   */
+  @Test
+  void testColumnExistsAfterDeletionOfCells() {
+    openDefaultExample();
+    
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    
+    // Select second token annotation column
+    table.click(0, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    // Check that cells exist but are empty
+    for (int i = 1; i < 12; i++) {
+      assertEquals("", table.getCellDataValueByPosition(i, 3));
+    }
+    assertEquals(5, table.widget.getColumnCount());
+    
+    // Select span annotation column
+    table.click(0, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    // Check that cells exist but are empty
+    for (int i = 1; i < 12; i++) {
+      assertEquals("", table.getCellDataValueByPosition(i, 3));
+    }
+    assertEquals(5, table.widget.getColumnCount());
   }
 
   /**
