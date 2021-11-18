@@ -231,7 +231,9 @@ public class GridEditor {
    */
   @Inject
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
-    if (ds != null && ds != this.activeDs) {
+    if (selectionService.getSelection() instanceof STextualDS &&
+        ds != null &&
+        ds != this.activeDs) {
       log.debug("The textual data source {} has been selected.", ds.getId());
       this.activeDs = ds;
       bodyDataProvider.resolveDataSource(ds);
