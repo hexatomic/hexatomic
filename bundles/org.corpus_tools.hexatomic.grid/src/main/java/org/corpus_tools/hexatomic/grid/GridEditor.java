@@ -233,7 +233,7 @@ public class GridEditor {
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
     if (ds != null) {
       log.debug("The textual data source {} has been selected.", ds.getId());
-      setActiveDS(ds);
+      this.activeDs = ds;
       bodyDataProvider.resolveDataSource(ds);
       // Refresh all layers
       table.refresh();
@@ -341,16 +341,6 @@ public class GridEditor {
         return super.getText(element);
       }
     };
-  }
-
-  /**
-   * Sets the active textual data source the table displays.
-   * 
-   * @param ds The active data source.
-   */
-  private void setActiveDS(STextualDS ds) {
-    this.activeDs = ds;
-
   }
 
   /**
