@@ -500,7 +500,7 @@ public class GraphDataProvider implements IDataProvider {
    * 
    * @param ds the ds to set
    */
-  public void setDsAndResolveGraph(STextualDS ds) {
+  public void resolveDataSource(STextualDS ds) {
     log.debug("Setting data source {}.", ds);
     this.dataSource = ds;
     resolveGraph();
