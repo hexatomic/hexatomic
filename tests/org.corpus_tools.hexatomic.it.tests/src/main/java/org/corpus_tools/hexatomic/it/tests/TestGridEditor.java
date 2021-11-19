@@ -230,7 +230,8 @@ public class TestGridEditor {
    * Opens the default example corpus document in grid editor.
    * 
    * <p>
-   * 1 token col, 11 rows; 2 token annotation columns, 1 span annotation column (2 spancs: cell 1, cells 2-11) 
+   * 1 token col, 11 rows; 2 token annotation columns, 1 span annotation column (2 spancs: cell 1,
+   * cells 2-11)
    * </p>
    */
   SWTBotView openDefaultExample() {
@@ -1273,7 +1274,7 @@ public class TestGridEditor {
     try {
       assertEquals(
           "Could not rename some annotations, as annotations with the qualified target name 'pos'"
-              + " already exist on the respective nodes:\n- Token with text 'more'",
+              + " already exist on the respective nodes:\n- Token with text 'more' (existing annotation: 'RBR')",
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
