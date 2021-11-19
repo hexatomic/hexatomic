@@ -68,7 +68,9 @@ public class UnrenamedAnnotationsDialog {
     for (SStructuredNode node : unchangedNodes) {
       if (node instanceof SToken) {
         SToken token = (SToken) node;
-        sb.append("- Token with text '" + token.getGraph().getText(token) + "'\n");
+        sb.append(
+            "- Token with text '" + token.getGraph().getText(token) + "' (existing annotation: '"
+                + node.getAnnotation(namespace, name).getValue() + "')\n");
       } else if (node instanceof SSpan) {
         SSpan span = (SSpan) node;
         SDocumentGraph graph = span.getGraph();
