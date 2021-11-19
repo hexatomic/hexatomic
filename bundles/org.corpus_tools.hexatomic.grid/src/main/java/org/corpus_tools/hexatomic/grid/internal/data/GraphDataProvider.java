@@ -85,7 +85,12 @@ public class GraphDataProvider implements IDataProvider {
   @Inject
   ProjectManager projectManager;
 
+  /**
+   * Rebuilds the column model completely from scratch by resolving the {@link SDocumentGraph} from
+   * scratch.
+   */
   private void resolveGraph() {
+    System.err.println("FULL RESOLVE");
     // Reset data
     orderedDsTokens.clear();
     tokenColumns.clear();
@@ -275,9 +280,7 @@ public class GraphDataProvider implements IDataProvider {
    * Returns the value to display for the given cell, as identified by column and row index.
    * 
    * <p>
-   * This is either an annotation value; or a token text; or, if no {@link STextualDS} has been
-   * selected, a message to select a text; or, if the selected {@link STextualDS} contains no
-   * tokens, a message notifying the user of this.
+   * This is either an annotation value; or a token text.
    * </p>
    */
   @Override
