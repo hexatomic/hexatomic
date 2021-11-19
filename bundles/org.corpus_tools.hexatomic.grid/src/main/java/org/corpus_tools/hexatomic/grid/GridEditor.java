@@ -28,8 +28,6 @@ import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
-import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.grid.internal.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.configuration.ColumnHeaderMenuConfiguration;
@@ -40,6 +38,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
@@ -74,7 +73,9 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
+import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.swt.SWT;
@@ -91,8 +92,8 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
-  /** 
-   * SWT data key used to store a reference to {@link ControlDecoration} of a component. 
+  /**
+   * SWT data key used to store a reference to {@link ControlDecoration} of a component.
    */
   public static final String CONTROL_DECORATION = "CONTROL_DECORATION";
 
@@ -167,6 +168,18 @@ public class GridEditor {
     final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
         bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
+    compositeFreezeLayer.addLayerListener(new ILayerListener() {
+      /**
+       * Checks if the column model has changed and refreshes the table if so.
+       */
+      @Override
+      public void handleLayerEvent(ILayerEvent event) {
+        if (event.getClass() == ColumnsChangedEvent.class) {
+          table.refresh();
+        }
+      }
+    });
+
     // Column header
     final IDataProvider columnHeaderDataProvider =
         new ColumnHeaderDataProvider(bodyDataProvider, projectManager);
@@ -212,28 +225,28 @@ public class GridEditor {
         part.getPersistedState().get("org.corpus_tools.hexatomic.document-id"));
   }
 
+  /**
+   * Listen to undo/redo operation events and do a full resolve.
+   *
+   * @param element The element
+   */
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
-    if (element instanceof ChangeSet) {
-      ChangeSet changeSet = (ChangeSet) element;
-      if (changeSet.containsDocument(
-          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
-        setSelection(getActiveDs());
-      }
-    }
+  void subscribeUndoOperationAdded(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
+    bodyDataProvider.resolveDataSource(activeDs);
+    table.refresh();
   }
 
   /**
    * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.
-   * 
+   *
    * @param ds The {@link STextualDS} that has been selected via the {@link ESelectionService}.
    */
   @Inject
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
-    if (selectionService.getSelection() instanceof STextualDS &&
-        ds != null &&
-        ds != this.activeDs) {
+    if (selectionService.getSelection() instanceof STextualDS && ds != null
+        && ds != this.activeDs) {
       log.debug("The textual data source {} has been selected.", ds.getId());
       this.activeDs = ds;
       bodyDataProvider.resolveDataSource(ds);
@@ -343,15 +356,6 @@ public class GridEditor {
         return super.getText(element);
       }
     };
-  }
-
-  /**
-   * Returns the currently active textual data source.
-   * 
-   * @return the currently active textual data source
-   */
-  private STextualDS getActiveDs() {
-    return this.activeDs;
   }
 
   private SDocumentGraph getGraph() {
