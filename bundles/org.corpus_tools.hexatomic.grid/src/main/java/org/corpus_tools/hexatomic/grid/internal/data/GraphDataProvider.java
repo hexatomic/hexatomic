@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -342,6 +343,30 @@ public class GraphDataProvider implements IDataProvider {
 
   }
 
+  /**
+   * Retrieves a column for a given qualified annotation name.
+   * 
+   * <p>
+   * This may be an existing column for the qualified annotation name, or a newly created column, if
+   * no column for the given qualified annotation name exists. Newly created columns are added to
+   * the list of columns at the end.
+   * </p>
+   * 
+   * @param columnType The type of the column to be retrieved
+   * @param annotationQName The qualified annotation name for the column
+   */
+  public Column getColumnForAnnotation(ColumnType columnType, String annotationQName) {
+    Optional<Column> column =
+        columns.stream().filter(c -> c.getColumnValue().equals(annotationQName)).findFirst();
+    if (column.isPresent()) {
+      return column.get();
+    } else {
+      Column newColumn = new Column(columnType, annotationQName);
+      columns.add(newColumn);
+      return newColumn;
+    }
+  }
+
   private void setMultipleCells(List<Integer> tokenIndices, Column column,
       SStructuredNode annotationNode) {
     for (Integer idx : tokenIndices) {
@@ -408,13 +433,6 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   /**
-   * Inserts a new column into the column model.
-   */
-  public void insertColumn() {
-
-  }
-
-  /**
    * Renames annotation on a set of given cells in bulk. The cells are identified by their
    * {@link PositionCoordinate}s, which are provided as a map of cell positions to sets of row
    * positions.
@@ -431,8 +449,8 @@ public class GraphDataProvider implements IDataProvider {
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       Integer columnPosition = columnCoordinates.getKey();
-      Column column = getColumns().get(columnPosition);
-      String currentQName = column.getColumnValue();
+      Column sourceColumn = getColumns().get(columnPosition);
+      String currentQName = sourceColumn.getColumnValue();
       if (currentQName.equals(newQName)) {
         // Simply ignore this column, as the name is the same
         log.debug("Ignoring rename operation on column {}, "
@@ -440,25 +458,36 @@ public class GraphDataProvider implements IDataProvider {
             + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
         continue;
       }
-      for (Integer rowPosition : columnCoordinates.getValue()) {
-        SStructuredNode node = column.getDataObject(rowPosition);
-        if (node != null && !touchedNodes.contains(node)) {
-          // Only proceed if the node is not null and if the node hasn't been touched yet.
-          SAnnotation currentAnnotation = node.getAnnotation(currentQName);
-          // Check if target annotation already exists
-          if (node.getAnnotation(newQName) != null) {
-            log.debug(
-                "The following node already has an annotation with the qualified name '{}'. "
-                    + "Ignoring it to avoid throwing {}:\n{}",
-                newQName, SaltInsertionException.class.getSimpleName(), node);
-            unchangedNodes.add(node);
-            continue;
-          }
-          Object annotationValue = currentAnnotation.getValue();
-          node.removeLabel(currentQName);
-          node.createAnnotation(namespace, name, annotationValue);
-          // Remember that the node has already been touched.
+      Column targetColumn = getColumnForAnnotation(sourceColumn.getColumnType(), newQName);
+      if (targetColumn.getBits().isEmpty()) {
+        // Add new cells, as no further check is needed
+        for (Integer rowPosition : columnCoordinates.getValue()) {
+          SStructuredNode node = sourceColumn.getDataObject(rowPosition);
+          Object currentValue = node.getAnnotation(currentQName).getValue();
+          renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
+              node, currentValue);
           touchedNodes.add(node);
+        }
+      } else {
+        // Check for each cell if it is taken already
+        for (Integer rowPosition : columnCoordinates.getValue()) {
+          SStructuredNode node = sourceColumn.getDataObject(rowPosition);
+          if (node != null && !touchedNodes.contains(node)) {
+            // Only proceed if the node is not null and if the node hasn't been touched yet.
+            Object currentValue = node.getAnnotation(currentQName).getValue();
+            // Check if target annotation already exists
+            if (node.getAnnotation(newQName) != null) {
+              log.debug(
+                  "The following node already has an annotation with the qualified name '{}'. "
+                      + "Ignoring it to avoid throwing {}:\n{}",
+                  newQName, SaltInsertionException.class.getSimpleName(), node);
+              unchangedNodes.add(node);
+              continue;
+            }
+            renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
+                node, currentValue);
+            touchedNodes.add(node);
+          }
         }
       }
     }
@@ -466,7 +495,33 @@ public class GraphDataProvider implements IDataProvider {
       UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes);
     }
     projectManager.addCheckpoint();
+  }
 
+  /**
+   * Renames an annotation.
+   * 
+   * <p>
+   * Removes the annotation with the old name, and adds the annotation with the new name to the
+   * respective node, and moves the annotation to the respective column.
+   * </p>
+   * 
+   * @param namespace The namespace of the new annotation
+   * @param name The name of the new annotation
+   * @param sourceColumn The column that the annotation is currently in
+   * @param currentQName The current qualified annotation name
+   * @param targetColumn The column where the new annotation should be moved to
+   * @param rowPosition The row position of the edited cell
+   * @param node The node that has the annotation
+   * @param currentValue The value of the annotation that is renamed
+   */
+  private void renameAnnotation(final String namespace, final String name, Column sourceColumn,
+      String currentQName, Column targetColumn, Integer rowPosition, SStructuredNode node,
+      Object currentValue) {
+    node.removeLabel(currentQName);
+    node.createAnnotation(namespace, name, currentValue);
+    // Remember that the node has already been touched.
+    targetColumn.setRow(rowPosition, node);
+    sourceColumn.setRow(rowPosition, null);
   }
 
   /**
