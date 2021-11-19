@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.grid.internal.handlers;
 
 import org.corpus_tools.hexatomic.grid.LayerSetupException;
 import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
@@ -52,6 +53,7 @@ public class RenameAnnotationOnCellsCommandHandler
     log.trace("Executing command to rename annotations in cells.");
     GridFreezeLayer freezeLayer = getBodyLayer(command.getNatTable());
     freezeLayer.bulkRenameCellPositions(command.getCellMapByColumn(), command.getNewQName());
+    freezeLayer.fireLayerEvent(new ColumnsChangedEvent());
     return true;
   }
 
