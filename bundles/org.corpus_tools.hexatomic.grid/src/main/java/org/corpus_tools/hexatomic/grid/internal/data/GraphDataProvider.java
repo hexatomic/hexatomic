@@ -92,6 +92,7 @@ public class GraphDataProvider implements IDataProvider {
    * @param ds the ds to set
    */
   public void resolveDataSource(STextualDS ds) {
+    System.err.println("DS RESOLVE");
     log.debug("Setting data source {}.", ds);
     this.dataSource = ds;
     resolveGraph();
@@ -356,8 +357,9 @@ public class GraphDataProvider implements IDataProvider {
    * @param annotationQName The qualified annotation name for the column
    */
   public Column getColumnForAnnotation(ColumnType columnType, String annotationQName) {
-    Optional<Column> column =
-        columns.stream().filter(c -> c.getColumnValue().equals(annotationQName)).findFirst();
+    Optional<Column> column = columns.stream()
+        .filter(c -> c.getColumnValue().equals(annotationQName) && c.getColumnType() == columnType)
+        .findFirst();
     if (column.isPresent()) {
       return column.get();
     } else {
@@ -458,22 +460,31 @@ public class GraphDataProvider implements IDataProvider {
             + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
         continue;
       }
+      System.err.println("SOURCE COLUMN TYPE " + sourceColumn.getColumnType());
       Column targetColumn = getColumnForAnnotation(sourceColumn.getColumnType(), newQName);
       if (targetColumn.getBits().isEmpty()) {
         // Add new cells, as no further check is needed
         for (Integer rowPosition : columnCoordinates.getValue()) {
           SStructuredNode node = sourceColumn.getDataObject(rowPosition);
-          Object currentValue = node.getAnnotation(currentQName).getValue();
-          renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
-              node, currentValue);
+          if (node.getAnnotation(currentQName) != null) {
+            Object currentValue = node.getAnnotation(currentQName).getValue();
+            renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
+                node, currentValue);
+          }
+          // Move the cell
+          targetColumn.setRow(rowPosition, node);
+          sourceColumn.setRow(rowPosition, null);
+
+          // Remember that the node has already been touched.
           touchedNodes.add(node);
         }
       } else {
         // Check for each cell if it is taken already
         for (Integer rowPosition : columnCoordinates.getValue()) {
           SStructuredNode node = sourceColumn.getDataObject(rowPosition);
+          // Only proceed if the node is not null, node hasn't been touched yet, node has annotation
+          // (may not be the case for spans whose first covered cell has been touched.
           if (node != null && !touchedNodes.contains(node)) {
-            // Only proceed if the node is not null and if the node hasn't been touched yet.
             Object currentValue = node.getAnnotation(currentQName).getValue();
             // Check if target annotation already exists
             if (node.getAnnotation(newQName) != null) {
@@ -486,6 +497,10 @@ public class GraphDataProvider implements IDataProvider {
             }
             renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
                 node, currentValue);
+
+            targetColumn.setRow(rowPosition, node);
+            sourceColumn.setRow(rowPosition, null);
+            // Remember that the node has already been touched.
             touchedNodes.add(node);
           }
         }
@@ -519,9 +534,6 @@ public class GraphDataProvider implements IDataProvider {
       Object currentValue) {
     node.removeLabel(currentQName);
     node.createAnnotation(namespace, name, currentValue);
-    // Remember that the node has already been touched.
-    targetColumn.setRow(rowPosition, node);
-    sourceColumn.setRow(rowPosition, null);
   }
 
   /**
