@@ -92,7 +92,6 @@ public class GraphDataProvider implements IDataProvider {
    * @param ds the ds to set
    */
   public void resolveDataSource(STextualDS ds) {
-    System.err.println("DS RESOLVE");
     log.debug("Setting data source {}.", ds);
     this.dataSource = ds;
     resolveGraph();
@@ -103,7 +102,6 @@ public class GraphDataProvider implements IDataProvider {
    * scratch.
    */
   private void resolveGraph() {
-    System.err.println("FULL RESOLVE");
     // Reset data
     orderedDsTokens.clear();
     tokenColumns.clear();
@@ -460,7 +458,6 @@ public class GraphDataProvider implements IDataProvider {
             + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
         continue;
       }
-      System.err.println("SOURCE COLUMN TYPE " + sourceColumn.getColumnType());
       Column targetColumn = getColumnForAnnotation(sourceColumn.getColumnType(), newQName);
       if (targetColumn.getBits().isEmpty()) {
         // Add new cells, as no further check is needed
