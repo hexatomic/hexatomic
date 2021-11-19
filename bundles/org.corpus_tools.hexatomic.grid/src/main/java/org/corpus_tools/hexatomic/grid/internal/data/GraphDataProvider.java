@@ -139,7 +139,7 @@ public class GraphDataProvider implements IDataProvider {
       try {
         tokenColumn.setRow(i, token);
       } catch (RuntimeException e) {
-        reportSetRow(e);
+        reportSetCell(e);
       }
     }
     columns.add(tokenColumn);
@@ -226,7 +226,7 @@ public class GraphDataProvider implements IDataProvider {
     if (column != null) {
       // Try to add, otherwise iterate and re-run
       if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
-        setMultipleRows(tokenIndices, column, span);
+        setMultipleCells(tokenIndices, column, span);
       } else {
         // Bump counter and re-run
         spanColumnIndex = spanColumnIndex + 1;
@@ -238,7 +238,7 @@ public class GraphDataProvider implements IDataProvider {
       } else {
         column = new Column(ColumnType.SPAN_ANNOTATION, annotationQName, spanColumnIndex);
       }
-      setMultipleRows(tokenIndices, column, span);
+      setMultipleCells(tokenIndices, column, span);
       spanColumns.put(columnName, column);
     }
   }
@@ -252,11 +252,11 @@ public class GraphDataProvider implements IDataProvider {
         if (column != null) {
           // There can be no two annotations of the same qualified name for a single token, so no
           // need to check for multiple rows as we do have to for spans.
-          setSingleRow(column, orderedTokens.indexOf(token), token);
+          setSingleCell(column, orderedTokens.indexOf(token), token);
         } else {
           column = new Column(ColumnType.TOKEN_ANNOTATION, anno.getQName());
           // No overlap possible, so we can simply set the header to the qName
-          setSingleRow(column, orderedTokens.indexOf(token), token);
+          setSingleCell(column, orderedTokens.indexOf(token), token);
           tokenColumns.put(anno.getQName(), column);
         }
       }
@@ -308,7 +308,7 @@ public class GraphDataProvider implements IDataProvider {
     ColumnType columnType = column.getColumnType();
     SStructuredNode node = column.getDataObject(rowIndex);
     String annotationQName = column.getColumnValue();
-  
+
     // If new value is empty, remove annotation
     if (newValue == null || newValue.equals("")) {
       removeAnnotation(annotationQName, node, column, rowIndex);
@@ -339,25 +339,25 @@ public class GraphDataProvider implements IDataProvider {
       }
     }
     projectManager.addCheckpoint();
-  
+
   }
 
-  private void setMultipleRows(List<Integer> tokenIndices, Column column,
+  private void setMultipleCells(List<Integer> tokenIndices, Column column,
       SStructuredNode annotationNode) {
     for (Integer idx : tokenIndices) {
-      setSingleRow(column, idx, annotationNode);
+      setSingleCell(column, idx, annotationNode);
     }
   }
 
-  private void setSingleRow(Column column, Integer idx, SStructuredNode annotationNode) {
+  private void setSingleCell(Column column, Integer idx, SStructuredNode annotationNode) {
     try {
       column.setRow(idx, annotationNode);
     } catch (RuntimeException e) {
-      reportSetRow(e);
+      reportSetCell(e);
     }
   }
 
-  private void reportSetRow(RuntimeException e) {
+  private void reportSetCell(RuntimeException e) {
     errors.handleException(
         "Encountered a set cell that should be empty. This is a bug, please create a new issue at https://github.com/hexatomic/hexatomic.",
         e, this.getClass());
@@ -405,6 +405,13 @@ public class GraphDataProvider implements IDataProvider {
           dataObject.getClass().getSimpleName(), dataObject.hashCode(), dataObject, newValue);
       anno.setValue(newValue);
     }
+  }
+
+  /**
+   * Inserts a new column into the column model.
+   */
+  public void insertColumn() {
+
   }
 
   /**
