@@ -42,6 +42,7 @@ public class FreezeGridBindings extends AbstractUiBindingConfiguration implement
     // Shift + Alt + F toggles freeze
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 'f'),
         new FreezeGridAction(true));
+    // F5 triggers grid refresh
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.F5), new ResolveAction());
   }
 
