@@ -1040,13 +1040,13 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
+    assertTrue(table.widget.getDataValueByPosition(3, 3) instanceof SToken);
     // Old cell should now be null, old column has been pushed from col position 2 to 3
-    assertNull(table.widget.getDataValueByPosition(3, 3));
+    assertNull(table.widget.getDataValueByPosition(2, 3));
     // token should be the same as before
-    assertEquals(token, table.widget.getDataValueByPosition(2, 3));
+    assertEquals(token, table.widget.getDataValueByPosition(3, 3));
     assertEquals(EXAMPLE_VALUE,
         token.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
@@ -1136,6 +1136,7 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
     bot.sleep(500);
+    // FAILS HERE
     assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
     assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
@@ -1203,6 +1204,7 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed, the span annotation is added to a second new column
     // with the name TEST, as columns are specific to model element types.
+    // FAILS HERE
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
     assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
     assertEquals(SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + POS_NAME,
