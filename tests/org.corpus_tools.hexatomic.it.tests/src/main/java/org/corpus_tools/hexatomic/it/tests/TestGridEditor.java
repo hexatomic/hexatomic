@@ -761,28 +761,26 @@ public class TestGridEditor {
   }
 
   @Test
-  void testPopupMenuInvisibleOnSelectedTokenText() {
+  void testPopupMenuItemsOnSelectedTokenText() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist
-    assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
+    // Context menu should only have 2 items, separator and "refresh grid" item
+    assertEquals(2, contextMenu.menuItems().size());
   }
 
   @Test
-  void testPopupMenuInvisibleOnNoSelection() {
+  void testPopupMenuItemsOnNoSelection() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist
-    assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
+    // Should always have the "refresh grid" item
+    assertEquals(2, contextMenu.menuItems().size());
   }
 
   @Test
@@ -1137,6 +1135,7 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
+    bot.sleep(500);
     assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
     assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
@@ -1198,7 +1197,7 @@ public class TestGridEditor {
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     // Check that the fields are pre-filled
-    assertDialogTexts(dialog, null);
+    assertDialogTexts(dialog, "<annotation name/key>");
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
