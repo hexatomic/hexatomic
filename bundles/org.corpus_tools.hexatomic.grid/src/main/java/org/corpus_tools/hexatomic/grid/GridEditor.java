@@ -39,6 +39,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
+import org.corpus_tools.hexatomic.grid.internal.events.TriggerResolutionEvent;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
@@ -175,7 +176,11 @@ public class GridEditor {
       @Override
       public void handleLayerEvent(ILayerEvent event) {
         if (event.getClass() == ColumnsChangedEvent.class) {
+          log.trace("Refreshing table");
           table.refresh();
+        } else if (event.getClass() == TriggerResolutionEvent.class) {
+          log.trace("Triggering complete data model resolution");
+          resolveDataSource();
         }
       }
     });
@@ -226,6 +231,15 @@ public class GridEditor {
   }
 
   /**
+   * Does a full resolve of the current textual data source ({@link STextualDS}), and refreshes the
+   * table view.
+   */
+  private void resolveDataSource() {
+    bodyDataProvider.resolveDataSource(activeDs);
+    table.refresh();
+  }
+
+  /**
    * Listen to undo/redo operation events and do a full resolve.
    *
    * @param element The element
@@ -234,8 +248,7 @@ public class GridEditor {
   @org.eclipse.e4.core.di.annotations.Optional
   void subscribeUndoOperationAdded(
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
-    bodyDataProvider.resolveDataSource(activeDs);
-    table.refresh();
+    resolveDataSource();
   }
 
   /**
@@ -249,9 +262,7 @@ public class GridEditor {
         && ds != this.activeDs) {
       log.debug("The textual data source {} has been selected.", ds.getId());
       this.activeDs = ds;
-      bodyDataProvider.resolveDataSource(ds);
-      // Refresh all layers
-      table.refresh();
+      resolveDataSource();
     }
   }
 
