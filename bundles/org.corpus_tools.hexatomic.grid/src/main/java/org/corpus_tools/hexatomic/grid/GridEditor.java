@@ -173,7 +173,7 @@ public class GridEditor {
 
     compositeFreezeLayer.addLayerListener(new ILayerListener() {
       /**
-       * Checks if the column model has changed and refreshes the table if so.
+       * Reacts to events that should trigger a table refresh or complete model resolution.
        */
       @Override
       public void handleLayerEvent(ILayerEvent event) {
