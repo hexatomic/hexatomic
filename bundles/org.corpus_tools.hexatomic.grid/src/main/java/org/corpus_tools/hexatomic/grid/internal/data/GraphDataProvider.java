@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.commons.lang3.tuple.Pair;
@@ -347,16 +349,13 @@ public class GraphDataProvider implements IDataProvider {
    * 
    * <p>
    * This may be an existing column for the qualified annotation name, or a newly created column, if
-   * no column for the given qualified annotation name exists. Newly created columns are added to
-   * the right of the source column.
+   * no column for the given qualified annotation name exists.
    * </p>
    * 
    * @param columnType The type of the column to be retrieved
    * @param annotationQName The qualified annotation name for the column
-   * @param sourceColumnIndex The index of the source column
    */
-  public Column getColumnForAnnotation(ColumnType columnType, String annotationQName,
-      Integer sourceColumnIndex) {
+  public Column getColumnForAnnotation(ColumnType columnType, String annotationQName) {
     Optional<Column> column = columns.stream()
         .filter(c -> c.getColumnValue().equals(annotationQName) && c.getColumnType() == columnType)
         .findFirst();
@@ -364,7 +363,6 @@ public class GraphDataProvider implements IDataProvider {
       return column.get();
     } else {
       Column newColumn = new Column(columnType, annotationQName);
-      columns.add(sourceColumnIndex + 1, newColumn);
       return newColumn;
     }
   }
@@ -448,11 +446,24 @@ public class GraphDataProvider implements IDataProvider {
     Pair<String, String> namespaceNamePair = SaltUtil.splitQName(newQName);
     final String namespace = namespaceNamePair.getLeft();
     final String name = namespaceNamePair.getRight();
+    // Retrieve the (maximally two, one for each node type) target columns first, to avoid race
+    // conditions, in which new columns may be added to the list of columns before the next column
+    // index is worked on (and therefore the wrong cell is moved).
+    Column tokenAnnoTargetColumn = getColumnForAnnotation(ColumnType.TOKEN_ANNOTATION, newQName);
+    Column spanAnnoTargetColumn = getColumnForAnnotation(ColumnType.SPAN_ANNOTATION, newQName);
+    TreeSet<Integer> tokenAnnoSourceIndices = new TreeSet<>();
+    TreeSet<Integer> spanAnnoSourceIndices = new TreeSet<>();
+    // Determine the number of indices to add to the highest index of any span annotation source
+    // column. If there is no token annotation source column, this is simply 1, otherwise it's 2
+    // (because any token annoation columns will always be added before any span annotation
+    // columns).
+    int toAddToSpanIndex = tokenAnnoTargetColumn == null ? 1 : 2;
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       Integer columnPosition = columnCoordinates.getKey();
       Column sourceColumn = getColumns().get(columnPosition);
       String currentQName = sourceColumn.getColumnValue();
+      ColumnType sourceColumnType = sourceColumn.getColumnType();
       if (currentQName.equals(newQName)) {
         // Simply ignore this column, as the name is the same
         log.debug("Ignoring rename operation on column {}, "
@@ -460,8 +471,16 @@ public class GraphDataProvider implements IDataProvider {
             + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
         continue;
       }
-      Column targetColumn = getColumnForAnnotation(sourceColumn.getColumnType(), newQName,
-          columnCoordinates.getKey());
+      Column targetColumn = null;
+      if (sourceColumnType == ColumnType.TOKEN_ANNOTATION) {
+        targetColumn = tokenAnnoTargetColumn;
+        tokenAnnoSourceIndices.add(columnPosition);
+      } else if (sourceColumnType == ColumnType.SPAN_ANNOTATION) {
+        targetColumn = spanAnnoTargetColumn;
+        spanAnnoSourceIndices.add(columnPosition);
+      } else {
+        log.error("Source column is not of any permitted type: {}.", sourceColumnType);
+      }
       if (targetColumn.getBits().isEmpty()) {
         // Add new cells, as no further check is needed
         for (Integer rowPosition : columnCoordinates.getValue()) {
@@ -505,6 +524,13 @@ public class GraphDataProvider implements IDataProvider {
           }
         }
       }
+    }
+    // Add any newly created columns to the list of columns
+    if (!tokenAnnoSourceIndices.isEmpty() && !columns.contains(tokenAnnoTargetColumn)) {
+      columns.add(tokenAnnoSourceIndices.last() + 1, tokenAnnoTargetColumn);
+    }
+    if (!spanAnnoSourceIndices.isEmpty() && !columns.contains(spanAnnoTargetColumn)) {
+      columns.add(spanAnnoSourceIndices.last() + toAddToSpanIndex, spanAnnoTargetColumn);
     }
     if (!unchangedNodes.isEmpty()) {
       UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes);
