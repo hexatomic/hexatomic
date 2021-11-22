@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.corpus_tools.hexatomic.grid;
 
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
