@@ -21,13 +21,11 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
-import org.corpus_tools.hexatomic.grid.LayerSetupException;
+import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.RenameAnnotationOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
-import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
-import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,24 +49,10 @@ public class RenameAnnotationOnCellsCommandHandler
   @Override
   protected boolean doCommand(RenameAnnotationOnCellsCommand command) {
     log.trace("Executing command to rename annotations in cells.");
-    GridFreezeLayer freezeLayer = getBodyLayer(command.getNatTable());
+    GridFreezeLayer freezeLayer = GridHelper.getBodyLayer(command.getNatTable());
     freezeLayer.bulkRenameCellPositions(command.getCellMapByColumn(), command.getNewQName());
     freezeLayer.fireLayerEvent(new ColumnsChangedEvent());
     return true;
-  }
-
-  private GridFreezeLayer getBodyLayer(NatTable natTable) {
-    // Due to how the NatTable is set up, this returns a GridLayer
-    ILayer layer = natTable.getUnderlyingLayerByPosition(0, 0);
-    while (layer != null) {
-      if (layer instanceof GridFreezeLayer) {
-        return (GridFreezeLayer) layer;
-      }
-      // Getting the underlying layer by position 1, 1 is necessary to hit a position in the grid
-      // body, i.e., excluding the header rows and columns.
-      layer = layer.getUnderlyingLayerByPosition(1, 1);
-    }
-    throw new LayerSetupException("Bottom layer of NatTable", layer, GridFreezeLayer.class);
   }
 
 }
