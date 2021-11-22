@@ -177,10 +177,11 @@ public class GridEditor {
        */
       @Override
       public void handleLayerEvent(ILayerEvent event) {
-        if (event.getClass() == ColumnsChangedEvent.class) {
+        Class<? extends ILayerEvent> eventClass = event.getClass();
+        if (eventClass == ColumnsChangedEvent.class) {
           log.trace("Refreshing table");
           table.refresh();
-        } else if (event.getClass() == TriggerResolutionEvent.class) {
+        } else if (eventClass == TriggerResolutionEvent.class) {
           log.trace("Triggering complete data model resolution");
           resolveDataSource();
         }
