@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -1203,23 +1202,23 @@ public class TestGridEditor {
     // Assert names and positions have changed, the span annotation is added to a second new column
     // with the name TEST, as columns are specific to model element types.
     assertEquals(7, table.columnCount());
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
     assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
     assertEquals(SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + POS_NAME,
-        table.getCellDataValueByPosition(0, 4));
+        table.getCellDataValueByPosition(0, 3));
     assertEquals(INF_STRUCT_NAME, table.getCellDataValueByPosition(0, 5));
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 6));
-    assertTrue(table.widget.getDataValueByPosition(3, 4) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(3, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(4, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(4, 5) instanceof SToken);
     assertTrue(table.widget.getDataValueByPosition(6, 1) instanceof SSpan);
     // Old cells should now be null
     assertNull(table.widget.getDataValueByPosition(2, 4));
-    assertNull(table.widget.getDataValueByPosition(4, 5));
+    assertNull(table.widget.getDataValueByPosition(3, 5));
     assertNull(table.widget.getDataValueByPosition(5, 1));
     // Model elements should be the same as before
-    assertEquals(lemmaToken, table.widget.getDataValueByPosition(3, 4));
+    assertEquals(lemmaToken, table.widget.getDataValueByPosition(4, 4));
     assertEquals(MORE_VALUE, lemmaToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(posToken, table.widget.getDataValueByPosition(3, 5));
+    assertEquals(posToken, table.widget.getDataValueByPosition(4, 5));
     assertEquals(JJ_VALUE, posToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
     assertEquals(infSpan, table.widget.getDataValueByPosition(6, 1));
     assertEquals(CONTRAST_FOCUS_VALUE, infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
@@ -1262,6 +1261,7 @@ public class TestGridEditor {
     lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
     assertEquals(MORE_VALUE,
         lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
+
 
     // Assert that dialog is displayed
     SWTBotShell infoDialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
