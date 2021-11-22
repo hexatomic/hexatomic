@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -90,6 +91,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     ValidSingleSpanColumnEmptySelectionState validSingleSpanColumnEmptySelectionState =
         new ValidSingleSpanColumnEmptySelectionState();
     builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
+    builder.withSeparator().withMenuItemProvider(new ResolveMenuItemProvider());
     return builder.build();
   }
 
@@ -102,12 +104,33 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
   }
 
   /**
+   * Provides a menu item for resolving the data model.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private final class ResolveMenuItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText(GridEditor.REFRESH_POPUP_MENU_LABEL);
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          new ResolveAction().run(natTable, null);
+        }
+      });
+    }
+
+  }
+
+  /**
    * Provides a menu item for deleting cells.
    * 
    * @author Stephan Druskat (mail@sdruskat.net)
    */
-  private class DeleteItemProvider implements IMenuItemProvider {
-
+  private final class DeleteItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
@@ -129,7 +152,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  private class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
+  private final class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
@@ -177,7 +200,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  private class CreateSpanItemProvider implements IMenuItemProvider {
+  private final class CreateSpanItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
