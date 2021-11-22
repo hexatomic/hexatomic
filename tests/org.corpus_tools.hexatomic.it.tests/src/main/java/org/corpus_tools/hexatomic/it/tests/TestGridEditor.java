@@ -1473,6 +1473,35 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests whether the manual data model resolution triggered by a user selecting the refresh item
+   * from the body menu.
+   */
+  @Test
+  void testManualResolveViaBodyMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals(5, table.columnCount());
+
+    // Remove all cells in first token annotation column
+    table.click(1, 2);
+    shiftClick(table, 11, 2);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.click(1, 3);
+
+    assertEquals(5, table.columnCount());
+
+    List<String> columnItems = table.contextMenu(1, 1).menuItems();
+    System.err.println(columnItems);
+    assertTrue(columnItems.contains("Refresh grid"));
+    table.contextMenu(1, 1).contextMenu("Refresh grid").click();
+
+    assertEquals(4, table.columnCount());
+  }
+
+  /**
    * Tests column behaviour to remain in existence after the last cell in it has been deleted.
    */
   @Test
