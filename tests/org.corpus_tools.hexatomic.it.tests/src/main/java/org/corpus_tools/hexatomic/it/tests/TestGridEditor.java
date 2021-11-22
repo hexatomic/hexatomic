@@ -1135,25 +1135,23 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    bot.sleep(500);
-    // FAILS HERE
-    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 7) instanceof SToken);
-    // Old cell should now be null, old column has been pushed from col position 2 to 3
-    assertNull(table.widget.getDataValueByPosition(3, 4));
-    assertNull(table.widget.getDataValueByPosition(3, 5));
-    assertNull(table.widget.getDataValueByPosition(3, 7));
+    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
+    assertTrue(table.widget.getDataValueByPosition(3, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(3, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(3, 7) instanceof SToken);
+    // Old cell should now be null
+    assertNull(table.widget.getDataValueByPosition(2, 4));
+    assertNull(table.widget.getDataValueByPosition(2, 5));
+    assertNull(table.widget.getDataValueByPosition(2, 7));
     // Tokens should be the same as before
-    assertEquals(token1, table.widget.getDataValueByPosition(2, 4));
+    assertEquals(token1, table.widget.getDataValueByPosition(3, 4));
     assertEquals(MORE_VALUE,
         token1.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(token2, table.widget.getDataValueByPosition(2, 5));
+    assertEquals(token2, table.widget.getDataValueByPosition(3, 5));
     assertEquals(COMPLICATED_VALUE,
         token2.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(token3, table.widget.getDataValueByPosition(2, 7));
+    assertEquals(token3, table.widget.getDataValueByPosition(3, 7));
     assertEquals(IT_VALUE,
         token3.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
