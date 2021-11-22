@@ -348,13 +348,15 @@ public class GraphDataProvider implements IDataProvider {
    * <p>
    * This may be an existing column for the qualified annotation name, or a newly created column, if
    * no column for the given qualified annotation name exists. Newly created columns are added to
-   * the list of columns at the end.
+   * the right of the source column.
    * </p>
    * 
    * @param columnType The type of the column to be retrieved
    * @param annotationQName The qualified annotation name for the column
+   * @param sourceColumnIndex The index of the source column
    */
-  public Column getColumnForAnnotation(ColumnType columnType, String annotationQName) {
+  public Column getColumnForAnnotation(ColumnType columnType, String annotationQName,
+      Integer sourceColumnIndex) {
     Optional<Column> column = columns.stream()
         .filter(c -> c.getColumnValue().equals(annotationQName) && c.getColumnType() == columnType)
         .findFirst();
@@ -362,7 +364,7 @@ public class GraphDataProvider implements IDataProvider {
       return column.get();
     } else {
       Column newColumn = new Column(columnType, annotationQName);
-      columns.add(newColumn);
+      columns.add(sourceColumnIndex + 1, newColumn);
       return newColumn;
     }
   }
@@ -458,7 +460,8 @@ public class GraphDataProvider implements IDataProvider {
             + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
         continue;
       }
-      Column targetColumn = getColumnForAnnotation(sourceColumn.getColumnType(), newQName);
+      Column targetColumn = getColumnForAnnotation(sourceColumn.getColumnType(), newQName,
+          columnCoordinates.getKey());
       if (targetColumn.getBits().isEmpty()) {
         // Add new cells, as no further check is needed
         for (Integer rowPosition : columnCoordinates.getValue()) {
