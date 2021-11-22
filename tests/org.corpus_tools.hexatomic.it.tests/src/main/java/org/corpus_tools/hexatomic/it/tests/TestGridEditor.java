@@ -1494,7 +1494,6 @@ public class TestGridEditor {
     assertEquals(5, table.columnCount());
 
     List<String> columnItems = table.contextMenu(1, 1).menuItems();
-    System.err.println(columnItems);
     assertTrue(columnItems.contains("Refresh grid"));
     table.contextMenu(1, 1).contextMenu("Refresh grid").click();
 
