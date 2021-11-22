@@ -453,11 +453,6 @@ public class GraphDataProvider implements IDataProvider {
     Column spanAnnoTargetColumn = getColumnForAnnotation(ColumnType.SPAN_ANNOTATION, newQName);
     TreeSet<Integer> tokenAnnoSourceIndices = new TreeSet<>();
     TreeSet<Integer> spanAnnoSourceIndices = new TreeSet<>();
-    // Determine the number of indices to add to the highest index of any span annotation source
-    // column. If there is no token annotation source column, this is simply 1, otherwise it's 2
-    // (because any token annoation columns will always be added before any span annotation
-    // columns).
-    int toAddToSpanIndex = tokenAnnoTargetColumn == null ? 1 : 2;
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       Integer columnPosition = columnCoordinates.getKey();
@@ -525,6 +520,12 @@ public class GraphDataProvider implements IDataProvider {
         }
       }
     }
+    // Determine the number of indices to add to the highest index of any span annotation source
+    // column. If there are no token annotation source columns, this is simply 1, otherwise it's 2
+    // (because any token annoation columns will always be added before any span annotation
+    // columns).
+    int toAddToSpanIndex = tokenAnnoSourceIndices.isEmpty() ? 1 : 2;
+
     // Add any newly created columns to the list of columns
     if (!tokenAnnoSourceIndices.isEmpty() && !columns.contains(tokenAnnoTargetColumn)) {
       columns.add(tokenAnnoSourceIndices.last() + 1, tokenAnnoTargetColumn);
