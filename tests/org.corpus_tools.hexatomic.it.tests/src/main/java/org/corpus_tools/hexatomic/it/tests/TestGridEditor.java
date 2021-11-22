@@ -1446,26 +1446,54 @@ public class TestGridEditor {
     SSpan span = (SSpan) potentialSpan;
     assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
-  
+
+  /**
+   * Tests whether the manual data model resolution triggered by a user pressing the F5 key works.
+   */
+  @Test
+  void testManualResolveViaF5() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals(5, table.columnCount());
+
+    // Remove all cells in first token annotation column
+    table.click(1, 2);
+    shiftClick(table, 11, 2);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.click(1, 3);
+
+    assertEquals(5, table.columnCount());
+
+    keyboard.pressShortcut(Keystrokes.F5);
+
+    assertEquals(4, table.columnCount());
+  }
+
   /**
    * Tests column behaviour to remain in existence after the last cell in it has been deleted.
    */
   @Test
   void testColumnExistsAfterDeletionOfCells() {
     openDefaultExample();
-    
+
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    
-    // Select second token annotation column
+
+    // TODO Attach listener and wait until all events have been fired
+
+    // Select second token annotation column (salt::pos)
     table.click(0, 3);
     keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
     // Check that cells exist but are empty
     for (int i = 1; i < 12; i++) {
       assertEquals("", table.getCellDataValueByPosition(i, 3));
     }
     assertEquals(5, table.widget.getColumnCount());
-    
+
     // Select span annotation column
     table.click(0, 4);
     keyboard.pressShortcut(Keystrokes.DELETE);
