@@ -1273,7 +1273,8 @@ public class TestGridEditor {
     try {
       assertEquals(
           "Could not rename some annotations, as annotations with the qualified target name 'pos'"
-              + " already exist on the respective nodes:\n- Token with text 'more' (existing annotation: 'RBR')",
+              + " already exist on the respective nodes:\n- Token with text 'more' "
+              + "(existing annotation: 'RBR')",
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
