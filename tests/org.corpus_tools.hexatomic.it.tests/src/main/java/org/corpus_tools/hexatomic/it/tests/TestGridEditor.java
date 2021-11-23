@@ -1552,6 +1552,13 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
+    bot.waitUntil(Conditions.shellIsActive("Some annotations were not renamed!"));
+    dialog = tableBot.shell("Some annotations were not renamed!");
+    assertNotNull(dialog);
+    assertTrue(dialog.isActive());
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
     // Number of columns shouldn't have grown
     assertEquals(5, table.columnCount());
   }
