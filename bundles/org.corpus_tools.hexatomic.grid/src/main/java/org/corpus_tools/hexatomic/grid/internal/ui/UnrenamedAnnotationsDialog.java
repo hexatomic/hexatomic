@@ -52,34 +52,44 @@ public class UnrenamedAnnotationsDialog {
    * @param name The name the user wanted to set the annotation to.
    * @param unchangedNodes The set of nodes that have remained unchanged, as an annotation by the
    *        qualified target annotation name already exists on them.
+   * @param duplicateRows Any cells that are neighbouring and therefore aren't processed
    */
-  public static void open(String namespace, String name, Set<SStructuredNode> unchangedNodes) {
+  public static void open(String namespace, String name, Set<SStructuredNode> unchangedNodes,
+      Set<Integer> duplicateRows) {
     MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
         SOME_ANNOTATIONS_WERE_NOT_RENAMED,
-        constructMessageForNodes(unchangedNodes, namespace, name));
+        constructMessageForNodes(unchangedNodes, namespace, name, duplicateRows));
   }
 
   private static String constructMessageForNodes(Set<SStructuredNode> unchangedNodes,
-      String namespace, String name) {
-    StringBuilder sb = new StringBuilder(
-        "Could not rename some annotations, as annotations with the qualified target name '"
-            + (namespace != null ? "" : namespace + ":") + name
-            + "' already exist on the respective nodes:\n");
-    for (SStructuredNode node : unchangedNodes) {
-      if (node instanceof SToken) {
-        SToken token = (SToken) node;
-        sb.append(
-            "- Token with text '" + token.getGraph().getText(token) + "' (existing annotation: '"
-                + node.getAnnotation(namespace, name).getValue() + "')\n");
-      } else if (node instanceof SSpan) {
-        SSpan span = (SSpan) node;
-        SDocumentGraph graph = span.getGraph();
-        sb.append("- Span covering the tokens ");
-        for (SToken token : graph.getOverlappedTokens(span)) {
-          sb.append(" '" + graph.getText(token) + "' ");
+      String namespace, String name, Set<Integer> duplicateRows) {
+    StringBuilder sb = new StringBuilder();
+    if (!unchangedNodes.isEmpty()) {
+      sb.append("Could not rename some annotations, as annotations with the qualified target name '"
+          + (namespace != null ? "" : namespace + ":") + name
+          + "' already exist on the respective nodes:\n");
+      for (SStructuredNode node : unchangedNodes) {
+        if (node instanceof SToken) {
+          SToken token = (SToken) node;
+          sb.append(
+              "- Token with text '" + token.getGraph().getText(token) + "' (existing annotation: '"
+                  + node.getAnnotation(namespace, name).getValue() + "')\n");
+        } else if (node instanceof SSpan) {
+          SSpan span = (SSpan) node;
+          SDocumentGraph graph = span.getGraph();
+          sb.append("- Span covering the tokens ");
+          for (SToken token : graph.getOverlappedTokens(span)) {
+            sb.append(" '" + graph.getText(token) + "' ");
+          }
+          sb.append("\n");
         }
-        sb.append("\n");
       }
+    }
+    if (!duplicateRows.isEmpty()) {
+      sb.append(
+          "Some annotations were not renamed, as they targeted the same cell in the renamed column.\n");
+      sb.append("Affected rows: \n");
+      duplicateRows.stream().forEach(r -> sb.append("- " + (r + 1) + "\n"));
     }
     return sb.toString().trim();
   }
