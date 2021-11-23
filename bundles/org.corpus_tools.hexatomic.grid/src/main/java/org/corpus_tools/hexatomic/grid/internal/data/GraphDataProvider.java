@@ -453,6 +453,22 @@ public class GraphDataProvider implements IDataProvider {
     Column spanAnnoTargetColumn = getColumnForAnnotation(ColumnType.SPAN_ANNOTATION, newQName);
     TreeSet<Integer> tokenAnnoSourceIndices = new TreeSet<>();
     TreeSet<Integer> spanAnnoSourceIndices = new TreeSet<>();
+
+    // Determine if there are any neighbouring cells in the changeset
+    Set<Integer> duplicateRows = new HashSet<>();
+    Set<Integer> testSet = new HashSet<>();
+    cellMapByColumn.values().stream().forEach(rowSet -> {
+      for (Integer row : rowSet) {
+        if (!testSet.add(row)) {
+          duplicateRows.add(row);
+        }
+      }
+    });
+    // Remove duplicates from changeset
+    for (Set<Integer> rows : cellMapByColumn.values()) {
+      rows.removeIf(row -> duplicateRows.contains(row));
+    }
+
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       Integer columnPosition = columnCoordinates.getKey();
@@ -533,8 +549,8 @@ public class GraphDataProvider implements IDataProvider {
     if (!spanAnnoSourceIndices.isEmpty() && !columns.contains(spanAnnoTargetColumn)) {
       columns.add(spanAnnoSourceIndices.last() + toAddToSpanIndex, spanAnnoTargetColumn);
     }
-    if (!unchangedNodes.isEmpty()) {
-      UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes);
+    if (!unchangedNodes.isEmpty() || !duplicateRows.isEmpty()) {
+      UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes, duplicateRows);
     }
     projectManager.addCheckpoint();
   }
