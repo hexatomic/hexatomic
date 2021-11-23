@@ -87,7 +87,8 @@ public class UnrenamedAnnotationsDialog {
     }
     if (!duplicateRows.isEmpty()) {
       sb.append(
-          "Some annotations were not renamed, as they targeted the same cell in the renamed column.\n");
+          "Some annotations were not renamed, "
+              + "as they targeted the same cell in the renamed column.\n");
       sb.append("Affected rows: \n");
       duplicateRows.stream().forEach(r -> sb.append("- " + (r + 1) + "\n"));
     }
