@@ -1552,8 +1552,8 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
-    bot.waitUntil(Conditions.shellIsActive("Some annotations were not renamed!"));
-    dialog = tableBot.shell("Some annotations were not renamed!");
+    bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
+    dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
     assertNotNull(dialog);
     assertTrue(dialog.isActive());
     tableBot.button("OK").click();
@@ -1590,8 +1590,8 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
 
     // Assert notification dialog
-    bot.waitUntil(Conditions.shellIsActive("Some annotations were not renamed!"));
-    dialog = tableBot.shell("Some annotations were not renamed!");
+    bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
+    dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
     assertNotNull(dialog);
     assertTrue(dialog.isActive());
     tableBot.button("OK").click();
