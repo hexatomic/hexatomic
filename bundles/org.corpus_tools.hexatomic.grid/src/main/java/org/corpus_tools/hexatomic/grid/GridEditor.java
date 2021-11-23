@@ -74,7 +74,6 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
-import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
@@ -171,23 +170,17 @@ public class GridEditor {
     final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
         bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
-    compositeFreezeLayer.addLayerListener(new ILayerListener() {
-      /**
-       * Reacts to events that should trigger a table refresh or complete model resolution.
-       */
-      @Override
-      public void handleLayerEvent(ILayerEvent event) {
-        Class<? extends ILayerEvent> eventClass = event.getClass();
-        if (eventClass == ColumnsChangedEvent.class) {
-          log.trace("Refreshing table");
-          table.refresh();
-        } else if (eventClass == TriggerResolutionEvent.class) {
-          log.trace("Triggering complete data model resolution");
-          resolveDataSource();
-        }
+    compositeFreezeLayer.addLayerListener((event) -> { 
+      Class<? extends ILayerEvent> eventClass = event.getClass();
+      if (eventClass == ColumnsChangedEvent.class) {
+        log.trace("Refreshing table");
+        table.refresh();
+      } else if (eventClass == TriggerResolutionEvent.class) {
+        log.trace("Triggering complete data model resolution");
+        resolveDataSource();
       }
     });
-
+     
     // Column header
     final IDataProvider columnHeaderDataProvider =
         new ColumnHeaderDataProvider(bodyDataProvider, projectManager);
