@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1528,6 +1529,77 @@ public class TestGridEditor {
       assertEquals("", table.getCellDataValueByPosition(i, 3));
     }
     assertEquals(5, table.widget.getColumnCount());
+  }
+
+  /**
+   * Tests that a notification pops up when the user tries to rename two horizontally neighbouring
+   * cells, which compete for the same cell in the renamed column.
+   */
+  @Test
+  void testSingleNeighbouringSelectionBlockNameChange() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    table.click(1, 2);
+    ctrlClick(table, 1, 3);
+    table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Number of columns shouldn't have grown
+    assertEquals(5, table.columnCount());
+  }
+
+  /**
+   * Tests that a notification pops up when the user tries to rename horizontally neighbouring
+   * cells, which compete for the same cell in the renamed column, as part of a selection of more
+   * than just the neighbouring cells. Also tests that the concerned cells aren't moved, but all
+   * others are.
+   */
+  @Test
+  void testNeighbouringInMultiSelectionBlockNameChange() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    table.click(1, 2);
+    ctrlClick(table, 1, 3);
+    ctrlClick(table, 3, 3);
+    table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Number of columns shouldn't have grown
+    assertEquals(6, table.columnCount());
+    // Cells shouldn't be empty as they weren't moved (neighbouring)
+    assertFalse(table.getCellDataValueByPosition(1, 2).isEmpty());
+    assertFalse(table.getCellDataValueByPosition(1, 3).isEmpty());
+    // Cell should be empty as it was moved (no neighbours)
+    assertTrue(table.getCellDataValueByPosition(3, 3).isEmpty());
+    // New column has been created and contains only one cell
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
+    int nonEmptyColumns = 0;
+    for (int i = 1; i < 12; i++) {
+      String value = table.getCellDataValueByPosition(i, 4);
+      if (!value.isEmpty()) {
+        nonEmptyColumns++;
+      }
+    }
+    assertEquals(1, nonEmptyColumns);
+
   }
 
   /**
