@@ -23,7 +23,6 @@ package org.corpus_tools.hexatomic.grid.internal.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -464,6 +463,7 @@ public class GraphDataProvider implements IDataProvider {
         }
       }
     });
+
     // Remove duplicates from changeset
     for (Set<Integer> rows : cellMapByColumn.values()) {
       rows.removeIf(row -> duplicateRows.contains(row));
@@ -471,6 +471,10 @@ public class GraphDataProvider implements IDataProvider {
 
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
+      // Abort for empty cellSets
+      if (columnCoordinates.getValue().isEmpty()) {
+        continue;
+      }
       Integer columnPosition = columnCoordinates.getKey();
       Column sourceColumn = getColumns().get(columnPosition);
       String currentQName = sourceColumn.getColumnValue();
