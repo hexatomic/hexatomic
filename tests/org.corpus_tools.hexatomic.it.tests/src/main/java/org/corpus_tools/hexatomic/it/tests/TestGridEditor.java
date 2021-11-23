@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1573,6 +1572,7 @@ public class TestGridEditor {
     // Baseline
     assertEquals(5, table.columnCount());
 
+    // Rename
     table.click(1, 2);
     ctrlClick(table, 1, 3);
     ctrlClick(table, 3, 3);
@@ -1582,7 +1582,15 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
-    // Number of columns shouldn't have grown
+    // Assert notification dialog
+    bot.waitUntil(Conditions.shellIsActive("Some annotations were not renamed!"));
+    dialog = tableBot.shell("Some annotations were not renamed!");
+    assertNotNull(dialog);
+    assertTrue(dialog.isActive());
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // There should be one new column
     assertEquals(6, table.columnCount());
     // Cells shouldn't be empty as they weren't moved (neighbouring)
     assertFalse(table.getCellDataValueByPosition(1, 2).isEmpty());
@@ -1599,7 +1607,6 @@ public class TestGridEditor {
       }
     }
     assertEquals(1, nonEmptyColumns);
-
   }
 
   /**
