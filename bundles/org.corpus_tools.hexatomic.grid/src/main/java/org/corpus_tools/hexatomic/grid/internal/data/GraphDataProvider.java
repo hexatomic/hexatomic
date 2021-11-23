@@ -361,8 +361,7 @@ public class GraphDataProvider implements IDataProvider {
     if (column.isPresent()) {
       return column.get();
     } else {
-      Column newColumn = new Column(columnType, annotationQName);
-      return newColumn;
+      return new Column(columnType, annotationQName);
     }
   }
 
