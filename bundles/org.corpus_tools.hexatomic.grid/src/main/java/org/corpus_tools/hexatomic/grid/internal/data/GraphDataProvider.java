@@ -501,8 +501,7 @@ public class GraphDataProvider implements IDataProvider {
           SStructuredNode node = sourceColumn.getDataObject(rowPosition);
           if (node.getAnnotation(currentQName) != null) {
             Object currentValue = node.getAnnotation(currentQName).getValue();
-            renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
-                node, currentValue);
+            renameAnnotation(namespace, name, currentQName, node, currentValue);
           }
           // Move the cell
           targetColumn.setRow(rowPosition, node);
@@ -528,8 +527,7 @@ public class GraphDataProvider implements IDataProvider {
               unchangedNodes.add(node);
               continue;
             }
-            renameAnnotation(namespace, name, sourceColumn, currentQName, targetColumn, rowPosition,
-                node, currentValue);
+            renameAnnotation(namespace, name, currentQName, node, currentValue);
 
             targetColumn.setRow(rowPosition, node);
             sourceColumn.setRow(rowPosition, null);
@@ -575,8 +573,8 @@ public class GraphDataProvider implements IDataProvider {
    * @param node The node that has the annotation
    * @param currentValue The value of the annotation that is renamed
    */
-  private void renameAnnotation(final String namespace, final String name, Column sourceColumn,
-      String currentQName, Column targetColumn, Integer rowPosition, SStructuredNode node,
+  private void renameAnnotation(final String namespace, final String name, String currentQName,
+      SStructuredNode node,
       Object currentValue) {
     node.removeLabel(currentQName);
     node.createAnnotation(namespace, name, currentValue);
