@@ -170,7 +170,7 @@ public class GridEditor {
     final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
         bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
-    compositeFreezeLayer.addLayerListener((event) -> { 
+    compositeFreezeLayer.addLayerListener(event -> {
       Class<? extends ILayerEvent> eventClass = event.getClass();
       if (eventClass == ColumnsChangedEvent.class) {
         log.trace("Refreshing table");
