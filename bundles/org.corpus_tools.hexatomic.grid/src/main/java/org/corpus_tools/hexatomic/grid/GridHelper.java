@@ -32,6 +32,10 @@ import org.eclipse.nebula.widgets.nattable.layer.ILayer;
  */
 public class GridHelper {
 
+  private GridHelper() {
+    // Private constructor to avoid instantiations
+  }
+
   /**
    * Retrieves the body data layer, i.e., the {@link GridFreezeLayer} for a given {@link NatTable}.
    * 
