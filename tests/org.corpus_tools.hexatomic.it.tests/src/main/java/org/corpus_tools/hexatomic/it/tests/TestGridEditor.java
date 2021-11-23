@@ -240,6 +240,30 @@ public class TestGridEditor {
     return openEditorForDefaultDocument();
   }
 
+  private SWTBotView openEditorOnSameDocument() {
+    // Activate corpus structure editor
+    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+
+
+    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+        .expandNode("subCorpus1").expandNode("doc1");
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Text Viewer").click());
+
+    SWTBotView view = bot.partByTitle("doc1 (Text Viewer)");
+    assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+
+  }
+
   SWTBotView openOverlapExample() {
     // Programmatically open the example corpus
     openExample(overlappingExampleProjectUri);
@@ -1614,6 +1638,42 @@ public class TestGridEditor {
       }
     }
     assertEquals(1, nonEmptyColumns);
+  }
+
+  /**
+   * Tests that columns are retained when opening other editors on the same document.
+   */
+  @Test
+  void testColumnsRetained() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    // Select second token annotation column (salt::pos)
+    table.click(0, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals(5, table.columnCount());
+
+    // Open Text Viewer
+    openEditorOnSameDocument();
+
+    // Reactivate grid editor
+    bot.partById("org.corpus_tools.hexatomic.grid.partdescriptor.grideditor").show();
+    assertEquals(5, table.columnCount());
+
+    // Show and close text viewer
+    bot.partById("org.corpus_tools.hexatomic.textviewer").show();
+    bot.partById("org.corpus_tools.hexatomic.textviewer").close();
+    assertEquals(5, table.columnCount());
+
+    // Reactivate grid editor
+    bot.partById("org.corpus_tools.hexatomic.grid.partdescriptor.grideditor").show();
+    assertEquals(5, table.columnCount());
   }
 
   /**
