@@ -465,24 +465,17 @@ public class GraphDataProvider implements IDataProvider {
 
     // Remove duplicates from changeset
     for (Set<Integer> rows : cellMapByColumn.values()) {
-      rows.removeIf(row -> duplicateRows.contains(row));
+      rows.removeIf(duplicateRows::contains);
     }
 
     // Run the rename for all cells by column
     for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
       // Abort for empty cellSets
-      if (columnCoordinates.getValue().isEmpty()) {
-        continue;
-      }
       Integer columnPosition = columnCoordinates.getKey();
       Column sourceColumn = getColumns().get(columnPosition);
       String currentQName = sourceColumn.getColumnValue();
       ColumnType sourceColumnType = sourceColumn.getColumnType();
-      if (currentQName.equals(newQName)) {
-        // Simply ignore this column, as the name is the same
-        log.debug("Ignoring rename operation on column {}, "
-            + "as the current and new qualified annotation names are the same: "
-            + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
+      if (columnCoordinates.getValue().isEmpty() || currentQName.equals(newQName)) {
         continue;
       }
       Column targetColumn = null;
