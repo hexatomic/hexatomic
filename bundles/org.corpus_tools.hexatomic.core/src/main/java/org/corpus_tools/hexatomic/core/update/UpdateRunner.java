@@ -129,9 +129,8 @@ public class UpdateRunner {
   
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
     ProvisioningSession session = new ProvisioningSession(agent);
-    if (session != null) {
-      log.info("Provisioning session created");
-    }
+    log.info("Provisioning session created");
+    
     // update all user-visible installable units
     UpdateOperation operation = new UpdateOperation(session);
     URI uri = null;
