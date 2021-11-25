@@ -34,7 +34,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class PreferencesDialog extends Dialog {
   private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
+      org.slf4j.LoggerFactory.getLogger(PreferencesDialog.class);
   IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   Button checkbox;
