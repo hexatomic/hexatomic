@@ -59,7 +59,7 @@ public class AppStartupCompleteEventHandler implements EventHandler {
   
   @Override
   public void handleEvent(Event event) {
-    eventBroker.unsubscribe((EventHandler) this);
+    eventBroker.unsubscribe(this);
     IWorkbench workbench = context.get(IWorkbench.class);
     UpdateRunner p2runner = new UpdateRunner();
     p2runner.performUpdates(agent, workbench, sync, monitor);
