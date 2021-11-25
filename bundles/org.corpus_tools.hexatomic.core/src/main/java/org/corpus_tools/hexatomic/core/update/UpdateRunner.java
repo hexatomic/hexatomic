@@ -82,33 +82,29 @@ public class UpdateRunner {
     
     //run update job
     if (provisioningJob != null) {
-      sync.syncExec(new Runnable() {
- 
-        @Override
-        public void run() {
-          boolean performUpdate = MessageDialog.openQuestion(
-                  null,
-                  "Updates available",
-                  "There are updates available. Do you want to install them now?");
-          if (performUpdate) {
-            provisioningJob.schedule();
-            
-            //restart Application if wanted
-            boolean restart = MessageDialog.openQuestion(null,
-                "Updates installed, restart?",
-                "Updates have been installed successfully, do you want to restart?");
-            if (restart && workbench != null) {
-              prefs.putBoolean("justUpdated", true);
-              try {
-                prefs.flush();
-              } catch (BackingStoreException ex) {
-                ex.printStackTrace();
-              }
-              workbench.restart();
+      sync.syncExec(() -> {
+        boolean performUpdate = MessageDialog.openQuestion(
+              null,
+              "Updates available",
+              "There are updates available. Do you want to install them now?");
+        if (performUpdate) {
+          provisioningJob.schedule();
+        
+          //restart Application if wanted
+          boolean restart = MessageDialog.openQuestion(null,
+              "Updates installed, restart?",
+              "Updates have been installed successfully, do you want to restart?");
+          if (restart && workbench != null) {
+            prefs.putBoolean("justUpdated", true);
+            try {
+              prefs.flush();
+            } catch (BackingStoreException ex) {
+              ex.printStackTrace();
             }
+            workbench.restart();
           }
         }
-        }); 
+      }); 
     } else {
       if (operation.hasResolved()) {
         MessageDialog.openError(
