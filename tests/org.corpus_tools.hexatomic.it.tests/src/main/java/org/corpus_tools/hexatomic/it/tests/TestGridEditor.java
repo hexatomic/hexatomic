@@ -36,6 +36,7 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -1621,7 +1622,10 @@ public class TestGridEditor {
    */
   @Test
   void testColumnsRetained() {
-    openDefaultExample();
+    String timeStamp = String.valueOf(System.currentTimeMillis());
+    SWTBotView view = openDefaultExample();
+    MPart part = view.getPart();
+    part.setElementId(timeStamp);
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
@@ -1639,7 +1643,7 @@ public class TestGridEditor {
     openEditorOnSameDocument();
 
     // Reactivate grid editor
-    bot.partById("org.corpus_tools.hexatomic.grid.partdescriptor.grideditor").show();
+    bot.partById(timeStamp).show();
     assertEquals(5, table.columnCount());
 
     // Show and close text viewer
@@ -1648,7 +1652,7 @@ public class TestGridEditor {
     assertEquals(5, table.columnCount());
 
     // Reactivate grid editor
-    bot.partById("org.corpus_tools.hexatomic.grid.partdescriptor.grideditor").show();
+    bot.partById(timeStamp).show();
     assertEquals(5, table.columnCount());
   }
 
