@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Optimize column lifecycle in the Grid Editor, so that emptied columns don't disappear (#258, #346)
+
 ## [0.8.0] - 2021-11-16
 
 ### Added
