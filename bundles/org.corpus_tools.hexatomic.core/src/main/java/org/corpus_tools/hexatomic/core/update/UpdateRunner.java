@@ -44,14 +44,6 @@ public class UpdateRunner {
       org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
-  //Initialisierung der Location mit Updates
-  private static final String HOME_DIR = System.getProperty("user.home");
-  private static final String SEP = System.getProperty("file.separator");
-  private static final String REPOSITORY_LOC = System.getProperty("UpdateHandler.Repo", 
-      "file:" + SEP + SEP + HOME_DIR + SEP + "Schreibtisch" + SEP + "updatetests" + SEP
-      + "test1" + SEP + "hexatomic" + SEP + "releng" + SEP 
-      + "org.corpus_tools.hexatomic.update" + SEP + "target" + SEP + "repository" + SEP);
-  
 
   /**
   * Search for updates and perform them if wanted.
@@ -67,14 +59,15 @@ public class UpdateRunner {
       UISynchronize sync,
       IProgressMonitor monitor) {
     UpdateOperation operation = createUpdateOperation(agent);
-    
+    log.info("Updateoperation created");
     //Check if there are Updates available
     IStatus status = operation.resolveModal(monitor);
+      
     if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
       MessageDialog.openInformation(
-              null, 
-              "Information", 
-              "Nothing to update");
+            null, 
+            "Information", 
+            "Nothing to update");
     }
     
     //create update job
@@ -87,14 +80,14 @@ public class UpdateRunner {
       }); 
     } else if (operation.hasResolved()) {
       MessageDialog.openError(
-          null, 
-          "Error", 
-          "Couldn't get provisioning job: " + operation.getResolutionResult());
+            null, 
+            "Error", 
+            "Couldn't get provisioning job: " + operation.getResolutionResult());
     } else {
       MessageDialog.openError(
-          null, 
-          "Error", 
-          "Couldn't resolve provisioning job");
+            null, 
+            "Error", 
+            "Couldn't resolve provisioning job");
     }
   }
 
@@ -107,7 +100,8 @@ public class UpdateRunner {
     
     // update all user-visible installable units
     UpdateOperation operation = new UpdateOperation(session);
-    URI uri = null;
+    log.info("UpdateOperation created");
+    /*URI uri = null;
 
     try {
       uri = new URI(REPOSITORY_LOC);
@@ -118,7 +112,7 @@ public class UpdateRunner {
     
     //Define location of p2-repository
     operation.getProvisioningContext().setArtifactRepositories(uri);
-    operation.getProvisioningContext().setMetadataRepositories(uri);
+    operation.getProvisioningContext().setMetadataRepositories(uri);*/
     return operation;
     
   }
