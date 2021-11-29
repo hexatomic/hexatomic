@@ -447,9 +447,9 @@ public class GraphDataProvider implements IDataProvider {
     TreeSet<Integer> tokenAnnoSourceIndices = new TreeSet<>();
     TreeSet<Integer> spanAnnoSourceIndices = new TreeSet<>();
 
-    Set<Integer> duplicateRows = deduplicateChangeSet(cellMapByColumn);
+    final Set<Integer> duplicateRows = deduplicateChangeSet(cellMapByColumn);
 
-    Set<SStructuredNode> unchangedNodes = renameAnnotationsByColumn(cellMapByColumn, newQName,
+    final Set<SStructuredNode> unchangedNodes = renameAnnotationsByColumn(cellMapByColumn, newQName,
         tokenAnnoTargetColumn, spanAnnoTargetColumn, tokenAnnoSourceIndices, spanAnnoSourceIndices);
     // Determine the number of indices to add to the highest index of any span annotation source
     // column. If there are no token annotation source columns, this is simply 1, otherwise it's 2
