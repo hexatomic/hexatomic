@@ -1749,6 +1749,7 @@ public class TestGridEditor {
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     assertDialogTexts(dialog, "anno9");
+    dialog.close();
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
