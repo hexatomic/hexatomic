@@ -185,13 +185,13 @@ public class TestGridEditor {
   SWTBotView openEditorForDefaultDocument() {
     // Select the first example document
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
+    SWTBotView view = bot.partByTitle("doc2 (Grid Editor)");
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -223,13 +223,13 @@ public class TestGridEditor {
 
 
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Text Viewer").click());
 
-    SWTBotView view = bot.partByTitle("doc1 (Text Viewer)");
+    SWTBotView view = bot.partByTitle("doc2 (Text Viewer)");
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -480,7 +480,7 @@ public class TestGridEditor {
 
     // Delete all token of the first document (but keep the STextualDS)
     Optional<SDocument> document =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2", true);
     assertTrue(document.isPresent());
     if (document.isPresent()) {
       SDocumentGraph docGraph = document.get().getDocumentGraph();
@@ -1469,7 +1469,6 @@ public class TestGridEditor {
     assertEquals(5, table.columnCount());
 
     keyboard.pressShortcut(Keystrokes.F5);
-
     assertEquals(4, table.columnCount());
   }
 
