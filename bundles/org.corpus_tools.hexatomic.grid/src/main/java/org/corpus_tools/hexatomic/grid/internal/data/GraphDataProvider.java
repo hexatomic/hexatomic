@@ -511,8 +511,10 @@ public class GraphDataProvider implements IDataProvider {
       } else {
         log.warn("Source column is not of any permitted type: {}.", sourceColumnType);
       }
-      moveCells(newQName, touchedNodes, unchangedNodes, columnCoordinates,
-          sourceColumn, currentQName, targetColumn);
+      if (targetColumn != null) {
+        moveCells(newQName, touchedNodes, unchangedNodes, columnCoordinates,
+            sourceColumn, currentQName, targetColumn);
+      }
     }
     return unchangedNodes;
   }
