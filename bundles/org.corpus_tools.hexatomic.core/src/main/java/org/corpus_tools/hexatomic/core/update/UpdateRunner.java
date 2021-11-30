@@ -20,12 +20,8 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -97,22 +93,8 @@ public class UpdateRunner {
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
     ProvisioningSession session = new ProvisioningSession(agent);
     log.info("Provisioning session created");
-    
     // update all user-visible installable units
     UpdateOperation operation = new UpdateOperation(session);
-    log.info("UpdateOperation created");
-    /*URI uri = null;
-
-    try {
-      uri = new URI(REPOSITORY_LOC);
-    } catch (URISyntaxException e) {
-      throw new OperationCanceledException("Invalid repository location");
-
-    }
-    
-    //Define location of p2-repository
-    operation.getProvisioningContext().setArtifactRepositories(uri);
-    operation.getProvisioningContext().setMetadataRepositories(uri);*/
     return operation;
     
   }

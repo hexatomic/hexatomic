@@ -20,7 +20,6 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
-import org.corpus_tools.hexatomic.core.ApplicationLifecycle;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.Dialog;
