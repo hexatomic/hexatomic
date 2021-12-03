@@ -20,8 +20,11 @@
 
 package org.corpus_tools.hexatomic.grid;
 
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 
 /**
@@ -54,6 +57,29 @@ public class GridHelper {
       layer = layer.getUnderlyingLayerByPosition(1, 1);
     }
     throw new LayerSetupException("Bottom layer of NatTable", layer, GridFreezeLayer.class);
+  }
+
+  /**
+   * Retrieves the column header layer, i.e., the {@link GridColumnHeaderLayer} for a given
+   * {@link NatTable}
+   * 
+   * @param natTable The {@link NatTable} hosting the {@link GridColumnHeaderLayer} to retrieve
+   * @return the given {@link NatTable}'s column header layer
+   */
+  public static GridColumnHeaderLayer getColumnHeaderLayer(NatTable natTable) {
+    ILayer layer = natTable.getUnderlyingLayerByPosition(0, 0);
+    if (layer instanceof GridLayer) {
+      ILayer columnHeaderLayer = ((GridLayer) layer).getColumnHeaderLayer();
+      if (columnHeaderLayer instanceof GridColumnHeaderLayer) {
+        return (GridColumnHeaderLayer) columnHeaderLayer;
+      } else {
+        throw new LayerSetupException("Column header layer of NatTable", columnHeaderLayer,
+            GridColumnHeaderLayer.class);
+      }
+    }
+    throw new HexatomicRuntimeException(
+        "Could not find a layer of type " + GridColumnHeaderLayer.class.getSimpleName()
+            + " in the NatTable. Please report this as a bug.");
   }
 
 }
