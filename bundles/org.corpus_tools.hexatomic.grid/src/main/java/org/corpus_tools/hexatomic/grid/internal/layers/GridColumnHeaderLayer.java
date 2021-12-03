@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnColumnCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnColumnCommandHandler;
@@ -38,6 +40,9 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
  * @author Stephan Druskat (mail@sdruskat.net)
  */
 public class GridColumnHeaderLayer extends ColumnHeaderLayer {
+
+  @Inject
+  ErrorService errors;
 
   /**
    * Constructor delegating to a ColumnHeaderLayer constructor.
@@ -83,15 +88,13 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
    * @return The qualified annotation name as determined by splitting on ' ('.
    */
   public String getAnnotationQName(int columnPosition) {
-    Object dataValue = super.getDataValueByPosition(columnPosition, 0);
-    if (!(dataValue instanceof String)) {
-      throw new IllegalArgumentException(
-          "Column header data values should always be strings, but got "
-              + dataValue.getClass().getCanonicalName());
-    } else {
-      String dataString = (String) dataValue;
-      return dataString.split(" \\(")[0];
+    Object dataValue = getDataValueByPosition(columnPosition, 0);
+    if (dataValue instanceof String) {
+      return ((String) dataValue).split(" \\(")[0];
     }
+    else
+      throw new IllegalArgumentException("Expected column header data value at column position "
+          + columnPosition + " to be a string, but got " + dataValue.getClass().getSimpleName());
   }
 
 }
