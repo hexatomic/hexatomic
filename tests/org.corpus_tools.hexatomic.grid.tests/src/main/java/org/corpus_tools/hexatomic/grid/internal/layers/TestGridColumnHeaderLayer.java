@@ -19,16 +19,12 @@ import org.junit.jupiter.api.Test;
 class TestGridColumnHeaderLayer {
 
   private GridColumnHeaderLayer fixture = null;
-  // Mockito.spy(new GridColumnHeaderLayer(mock(IUniqueIndexLayer.class), mock(ILayer.class),
-  // mock(SelectionLayer.class)));
 
   /**
    * Sets up the fixture.
-   *
-   * @throws java.lang.Exception Any exception that occurs
    */
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
     fixture = new GridColumnHeaderLayer(mock(IUniqueIndexLayer.class), mock(ILayer.class),
         mock(SelectionLayer.class));
   }
