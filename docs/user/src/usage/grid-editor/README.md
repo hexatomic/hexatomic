@@ -34,6 +34,11 @@ Instead, the annotation values are spread over more than one adjacent columns, w
 >
 > ![Screenshot of an annotation grid showing overlapping spans](overlap.png)
 
+Columns are not part of Hexatomic's internal [data model Salt](../projects.md#data-model).
+Therefore, they are not saved in the project when you save your changes.
+While columns may be empty with no values in their cells, e.g., after their initial creation or the deletion of all cells,
+they will be deleted as soon as the editor is closed, or another editor is opened on another document.
+
 **Merged cells** represent annotations on spans that cover more than one token.
 You can see this in the last grid column in the [screenshot](#screenshot) above.
 
@@ -93,6 +98,12 @@ To do so, simply select one or more rows or columns and click **Auto-resize row(
 ### Moving columns
 
 You can move columns to another position in the grid by clicking on and holding the header of a column, and dragging it to its new position.
+
+### Manual refresh
+
+You can manually refresh the grid, which will rebuild it from scratch.
+In the process, any empty columns will be removed, and column order may be affected.
+To refresh the grid manually, press <kbd>F5</kbd> or right-click on the grid, and click the option **Refresh grid** in the popup menu.
 
 ## Export to Excel
 
