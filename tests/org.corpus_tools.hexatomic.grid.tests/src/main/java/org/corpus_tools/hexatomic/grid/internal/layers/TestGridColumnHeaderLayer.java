@@ -25,7 +25,7 @@ class TestGridColumnHeaderLayer {
   /**
    * Sets up the fixture.
    *
-   * @throws java.lang.Exception
+   * @throws java.lang.Exception Any exception that occurs
    */
   @BeforeEach
   void setUp() throws Exception {
@@ -34,19 +34,22 @@ class TestGridColumnHeaderLayer {
   }
 
   /**
-   * Test method for {@link org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer#getDataValueByPosition(int, int)}.
+   * Test method for
+   * {@link org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer#getDataValueByPosition(int, int)}.
    */
   @Test
   void testThrowsOnGetDataValueByPosition() {
     when(fixture.getDataValueByPosition(1, 0)).thenReturn(1L);
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> fixture.getAnnotationQName(1));
+    IllegalArgumentException e =
+        assertThrows(IllegalArgumentException.class, () -> fixture.getAnnotationQName(1));
     assertEquals(
         "Expected column header data value at column position 1 to be a string, but got Long",
         e.getMessage());
   }
 
   /**
-   * Test method for {@link org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer#getDataValueByPosition(int, int)}.
+   * Test method for
+   * {@link org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer#getDataValueByPosition(int, int)}.
    */
   @Test
   void testGetAnnotationQNameWithNumber() {

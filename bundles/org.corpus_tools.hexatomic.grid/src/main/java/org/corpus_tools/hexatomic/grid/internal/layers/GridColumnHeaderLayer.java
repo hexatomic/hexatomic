@@ -91,10 +91,10 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
     Object dataValue = getDataValueByPosition(columnPosition, 0);
     if (dataValue instanceof String) {
       return ((String) dataValue).split(" \\(")[0];
-    }
-    else
+    } else {
       throw new IllegalArgumentException("Expected column header data value at column position "
           + columnPosition + " to be a string, but got " + dataValue.getClass().getSimpleName());
+    }
   }
 
 }
