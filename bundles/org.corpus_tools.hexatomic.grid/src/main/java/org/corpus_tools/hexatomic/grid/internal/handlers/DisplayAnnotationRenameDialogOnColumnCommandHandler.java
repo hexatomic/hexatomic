@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
+import org.corpus_tools.hexatomic.grid.LayerSetupException;
+import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.ui.AnnotationRenameDialog;
 import org.eclipse.nebula.widgets.nattable.columnRename.DisplayColumnRenameDialogCommand;
 import org.eclipse.nebula.widgets.nattable.columnRename.RenameColumnHeaderCommand;
@@ -52,8 +54,15 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
   protected boolean doCommand(DisplayColumnRenameDialogCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
     int columnPosition = command.getColumnPosition();
-    String displayName = this.columnHeaderLayer.getOriginalColumnLabel(columnPosition);
-    String originalQName = displayName.split(" \\(")[0];
+    String originalQName = null;
+    if (!(columnHeaderLayer instanceof GridColumnHeaderLayer)) {
+      throw new LayerSetupException("ColumnHeaderLayer", this.columnHeaderLayer,
+          GridColumnHeaderLayer.class);
+    }
+    else {
+      GridColumnHeaderLayer gridColumnHeaderLayer = (GridColumnHeaderLayer) this.columnHeaderLayer;
+      originalQName = (String) gridColumnHeaderLayer.getAnnotationQName(columnPosition);
+    }
 
     AnnotationRenameDialog dialog =
         new AnnotationRenameDialog(Display.getDefault().getActiveShell(), originalQName);
