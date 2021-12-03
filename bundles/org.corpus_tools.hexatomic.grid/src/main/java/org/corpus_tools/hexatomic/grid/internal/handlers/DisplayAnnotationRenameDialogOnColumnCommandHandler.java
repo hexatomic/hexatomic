@@ -60,7 +60,7 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
           GridColumnHeaderLayer.class);
     } else {
       GridColumnHeaderLayer gridColumnHeaderLayer = (GridColumnHeaderLayer) this.columnHeaderLayer;
-      originalQName = (String) gridColumnHeaderLayer.getAnnotationQName(columnPosition);
+      originalQName = gridColumnHeaderLayer.getAnnotationQName(columnPosition);
     }
 
     AnnotationRenameDialog dialog =

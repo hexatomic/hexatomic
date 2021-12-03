@@ -63,7 +63,7 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
           GridHelper.getColumnHeaderLayer(command.getNatTable());
       Integer columnIndex = command.getCellMapByColumn().keySet().iterator().next();
       int columnPosition = freezeLayer.getColumnPositionByIndex(columnIndex);
-      oldQName = (String) columnHeaderLayer.getAnnotationQName(columnPosition);
+      oldQName = columnHeaderLayer.getAnnotationQName(columnPosition);
     }
 
     AnnotationRenameDialog dialog =
