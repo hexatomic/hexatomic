@@ -1731,6 +1731,34 @@ public class TestGridEditor {
     dialog.close();
   }
 
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/259.
+   * 
+   * Tests that the annotation name, not the display name, is shown on columns that are secondary
+   * columns (e.g., "namespace::name (2)").
+   * 
+   * @throws ExecutionException
+   * @throws InterruptedException
+   */
+  @Test
+  void testShowCorrectAnnotationNameInDialog() throws InterruptedException, ExecutionException {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
+
+    table.click(1, 4);
+    table.contextMenu(1, 4).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+
+    bot.waitUntil(Conditions.shellIsActive(RENAME_DIALOG_TITLE));
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertDialogTexts(dialog, "five::span_1");
+    dialog.close();
+  }
+
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
       throws InterruptedException, ExecutionException {
     String namespace = null;
