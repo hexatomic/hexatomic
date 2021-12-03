@@ -74,4 +74,25 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
     registerCommandHandler(new DisplayAnnotationRenameDialogOnColumnCommandHandler(this));
   }
 
+  /**
+   * Returns the first part of the column's display name as split on whitespace + '('. Using
+   * whitespaces and brackets in annotation names are discouraged, but the display name may contain
+   * them if there are more than one columns for the same qualified annotation name.
+   * 
+   * @param columnPosition The position of the column for which to retrieve the annotation name
+   * @return The qualified annotation name as determined by splitting on ' ('.
+   */
+  public String getAnnotationQName(int columnPosition) {
+    Object dataValue = super.getDataValueByPosition(columnPosition, 0);
+    if (!(dataValue instanceof String)) {
+      throw new IllegalArgumentException(
+          "Column header data values should always be strings, but got "
+              + dataValue.getClass().getCanonicalName());
+    }
+    else {
+      String dataString = (String) dataValue;
+      return dataString.split(" \\(")[0];
+    }
+  }
+
 }
