@@ -1,5 +1,12 @@
 # Working with projects
 
+## Data model
+
+Hexatomic uses the graph-based data model Salt as its native data model.
+Read more about the data model in the [Salt documentation](https://corpus-tools.org/salt/#documentation).
+
+## Projects
+
 Hexatomic works on a single Salt project at any one time.
 A project consists of a directory containing a project file (`saltProject.salt`) and a number of sub-directories containing the Salt document files.
 

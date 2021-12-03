@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -37,6 +36,7 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -73,7 +73,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -183,39 +182,16 @@ public class TestGridEditor {
         URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
   }
 
-  @AfterEach
-  void cleanup() {
-    // Close all editors manually.
-    // If the editor is not closed, it might trigger bugs when executing other tests.
-    // For example, notifications about project changes might trigger exception when the document
-    // is already gone.
-    for (SWTBotView view : bot.parts()) {
-      if (view.getPart().getPersistedState()
-          .containsKey("org.corpus_tools.hexatomic.document-id")) {
-        view.close();
-      }
-    }
-    // Close any open rename dialogs
-    for (SWTBotShell shell : bot.shells()) {
-      if (shell.getText().equals(RENAME_DIALOG_TITLE)) {
-        shell.close();
-      }
-    }
-    // TODO: when close project is implemented with save functionality, change this to close the
-    // project and its editors
-
-  }
-
   SWTBotView openEditorForDefaultDocument() {
     // Select the first example document
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
+    SWTBotView view = bot.partByTitle("doc2 (Grid Editor)");
     assertNotNull(view);
 
     // Use all available windows space (the table needs to be fully visible for some of the tests)
@@ -226,11 +202,43 @@ public class TestGridEditor {
     return view;
   }
 
+  /**
+   * Opens the default example corpus document in grid editor.
+   * 
+   * <p>
+   * 1 token col, 11 rows; 2 token annotation columns, 1 span annotation column (2 spancs: cell 1,
+   * cells 2-11)
+   * </p>
+   */
   SWTBotView openDefaultExample() {
     // Programmatically open the example corpus
     openExample(exampleProjectUri);
 
     return openEditorForDefaultDocument();
+  }
+
+  private SWTBotView openEditorOnSameDocument() {
+    // Activate corpus structure editor
+    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+
+
+    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+        .expandNode("subCorpus1").expandNode("doc2");
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Text Viewer").click());
+
+    SWTBotView view = bot.partByTitle("doc2 (Text Viewer)");
+    assertNotNull(view);
+
+    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+
   }
 
   SWTBotView openOverlapExample() {
@@ -472,7 +480,7 @@ public class TestGridEditor {
 
     // Delete all token of the first document (but keep the STextualDS)
     Optional<SDocument> document =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2", true);
     assertTrue(document.isPresent());
     if (document.isPresent()) {
       SDocumentGraph docGraph = document.get().getDocumentGraph();
@@ -753,28 +761,26 @@ public class TestGridEditor {
   }
 
   @Test
-  void testPopupMenuInvisibleOnSelectedTokenText() {
+  void testPopupMenuItemsOnSelectedTokenText() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist
-    assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
+    // Context menu should only have 2 items, separator and "refresh grid" item
+    assertEquals(2, contextMenu.menuItems().size());
   }
 
   @Test
-  void testPopupMenuInvisibleOnNoSelection() {
+  void testPopupMenuItemsOnNoSelection() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist
-    assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
+    // Should always have the "refresh grid" item
+    assertEquals(2, contextMenu.menuItems().size());
   }
 
   @Test
@@ -1034,13 +1040,13 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
+    assertTrue(table.widget.getDataValueByPosition(3, 3) instanceof SToken);
     // Old cell should now be null, old column has been pushed from col position 2 to 3
-    assertNull(table.widget.getDataValueByPosition(3, 3));
+    assertNull(table.widget.getDataValueByPosition(2, 3));
     // token should be the same as before
-    assertEquals(token, table.widget.getDataValueByPosition(2, 3));
+    assertEquals(token, table.widget.getDataValueByPosition(3, 3));
     assertEquals(EXAMPLE_VALUE,
         token.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
@@ -1129,23 +1135,23 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 7) instanceof SToken);
-    // Old cell should now be null, old column has been pushed from col position 2 to 3
-    assertNull(table.widget.getDataValueByPosition(3, 4));
-    assertNull(table.widget.getDataValueByPosition(3, 5));
-    assertNull(table.widget.getDataValueByPosition(3, 7));
+    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
+    assertTrue(table.widget.getDataValueByPosition(3, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(3, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(3, 7) instanceof SToken);
+    // Old cell should now be null
+    assertNull(table.widget.getDataValueByPosition(2, 4));
+    assertNull(table.widget.getDataValueByPosition(2, 5));
+    assertNull(table.widget.getDataValueByPosition(2, 7));
     // Tokens should be the same as before
-    assertEquals(token1, table.widget.getDataValueByPosition(2, 4));
+    assertEquals(token1, table.widget.getDataValueByPosition(3, 4));
     assertEquals(MORE_VALUE,
         token1.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(token2, table.widget.getDataValueByPosition(2, 5));
+    assertEquals(token2, table.widget.getDataValueByPosition(3, 5));
     assertEquals(COMPLICATED_VALUE,
         token2.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(token3, table.widget.getDataValueByPosition(2, 7));
+    assertEquals(token3, table.widget.getDataValueByPosition(3, 7));
     assertEquals(IT_VALUE,
         token3.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
@@ -1190,29 +1196,30 @@ public class TestGridEditor {
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     // Check that the fields are pre-filled
-    assertDialogTexts(dialog, null);
+    assertDialogTexts(dialog, "<annotation name/key>");
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed, the span annotation is added to a second new column
     // with the name TEST, as columns are specific to model element types.
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
+    assertEquals(7, table.columnCount());
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
     assertEquals(SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + POS_NAME,
-        table.getCellDataValueByPosition(0, 4));
+        table.getCellDataValueByPosition(0, 3));
     assertEquals(INF_STRUCT_NAME, table.getCellDataValueByPosition(0, 5));
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 6));
-    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(4, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(4, 5) instanceof SToken);
     assertTrue(table.widget.getDataValueByPosition(6, 1) instanceof SSpan);
     // Old cells should now be null
-    assertNull(table.widget.getDataValueByPosition(3, 4));
-    assertNull(table.widget.getDataValueByPosition(4, 5));
+    assertNull(table.widget.getDataValueByPosition(2, 4));
+    assertNull(table.widget.getDataValueByPosition(3, 5));
     assertNull(table.widget.getDataValueByPosition(5, 1));
     // Model elements should be the same as before
-    assertEquals(lemmaToken, table.widget.getDataValueByPosition(2, 4));
+    assertEquals(lemmaToken, table.widget.getDataValueByPosition(4, 4));
     assertEquals(MORE_VALUE, lemmaToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(posToken, table.widget.getDataValueByPosition(2, 5));
+    assertEquals(posToken, table.widget.getDataValueByPosition(4, 5));
     assertEquals(JJ_VALUE, posToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
     assertEquals(infSpan, table.widget.getDataValueByPosition(6, 1));
     assertEquals(CONTRAST_FOCUS_VALUE, infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
@@ -1256,6 +1263,7 @@ public class TestGridEditor {
     assertEquals(MORE_VALUE,
         lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
 
+
     // Assert that dialog is displayed
     SWTBotShell infoDialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
     assertNotNull(infoDialog);
@@ -1266,7 +1274,8 @@ public class TestGridEditor {
     try {
       assertEquals(
           "Could not rename some annotations, as annotations with the qualified target name 'pos'"
-              + " already exist on the respective nodes:\n- Token with text 'more'",
+              + " already exist on the respective nodes:\n- Token with text 'more' "
+              + "(existing annotation: 'RBR')",
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
@@ -1440,6 +1449,213 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests whether the manual data model resolution triggered by a user pressing the F5 key works.
+   */
+  @Test
+  void testManualResolveViaF5() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals(5, table.columnCount());
+
+    // Remove all cells in first token annotation column
+    table.click(1, 2);
+    shiftClick(table, 11, 2);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.click(1, 3);
+
+    assertEquals(5, table.columnCount());
+
+    keyboard.pressShortcut(Keystrokes.F5);
+    assertEquals(4, table.columnCount());
+  }
+
+  /**
+   * Tests whether the manual data model resolution triggered by a user selecting the refresh item
+   * from the body menu.
+   */
+  @Test
+  void testManualResolveViaBodyMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals(5, table.columnCount());
+
+    // Remove all cells in first token annotation column
+    table.click(1, 2);
+    shiftClick(table, 11, 2);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.click(1, 3);
+
+    assertEquals(5, table.columnCount());
+
+    List<String> columnItems = table.contextMenu(1, 1).menuItems();
+    assertTrue(columnItems.contains("Refresh grid"));
+    table.contextMenu(1, 1).contextMenu("Refresh grid").click();
+
+    assertEquals(4, table.columnCount());
+  }
+
+  /**
+   * Tests column behaviour to remain in existence after the last cell in it has been deleted.
+   */
+  @Test
+  void testColumnExistsAfterDeletionOfCells() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Select second token annotation column (salt::pos)
+    table.click(0, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    // Check that cells exist but are empty
+    for (int i = 1; i < 12; i++) {
+      assertEquals("", table.getCellDataValueByPosition(i, 3));
+    }
+    assertEquals(5, table.widget.getColumnCount());
+
+    // Select span annotation column
+    table.click(0, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    // Check that cells exist but are empty
+    for (int i = 1; i < 12; i++) {
+      assertEquals("", table.getCellDataValueByPosition(i, 3));
+    }
+    assertEquals(5, table.widget.getColumnCount());
+  }
+
+  /**
+   * Tests that a notification pops up when the user tries to rename two horizontally neighbouring
+   * cells, which compete for the same cell in the renamed column.
+   */
+  @Test
+  void testSingleNeighbouringSelectionBlockNameChange() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    table.click(1, 2);
+    ctrlClick(table, 1, 3);
+    table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
+    dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertTrue(dialog.isActive());
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Number of columns shouldn't have grown
+    assertEquals(5, table.columnCount());
+  }
+
+  /**
+   * Tests that a notification pops up when the user tries to rename horizontally neighbouring
+   * cells, which compete for the same cell in the renamed column, as part of a selection of more
+   * than just the neighbouring cells. Also tests that the concerned cells aren't moved, but all
+   * others are.
+   */
+  @Test
+  void testNeighbouringInMultiSelectionBlockNameChange() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    // Rename
+    table.click(1, 2);
+    ctrlClick(table, 1, 3);
+    ctrlClick(table, 3, 3);
+    table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Assert notification dialog
+    bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
+    dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertTrue(dialog.isActive());
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // There should be one new column
+    assertEquals(6, table.columnCount());
+    // Cells shouldn't be empty as they weren't moved (neighbouring)
+    assertFalse(table.getCellDataValueByPosition(1, 2).isEmpty());
+    assertFalse(table.getCellDataValueByPosition(1, 3).isEmpty());
+    // Cell should be empty as it was moved (no neighbours)
+    assertTrue(table.getCellDataValueByPosition(3, 3).isEmpty());
+    // New column has been created and contains only one cell
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
+    int nonEmptyColumns = 0;
+    for (int i = 1; i < 12; i++) {
+      String value = table.getCellDataValueByPosition(i, 4);
+      if (!value.isEmpty()) {
+        nonEmptyColumns++;
+      }
+    }
+    assertEquals(1, nonEmptyColumns);
+  }
+
+  /**
+   * Tests that columns are retained when opening other editors on the same document.
+   */
+  @Test
+  void testColumnsRetained() {
+    String timeStamp = String.valueOf(System.currentTimeMillis());
+    SWTBotView view = openDefaultExample();
+    MPart part = view.getPart();
+    part.setElementId(timeStamp);
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    // Select second token annotation column (salt::pos)
+    table.click(0, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals(5, table.columnCount());
+
+    // Open Text Viewer
+    openEditorOnSameDocument();
+
+    // Reactivate grid editor
+    bot.partById(timeStamp).show();
+    assertEquals(5, table.columnCount());
+
+    // Show and close text viewer
+    bot.partById("org.corpus_tools.hexatomic.textviewer").show();
+    bot.partById("org.corpus_tools.hexatomic.textviewer").close();
+    assertEquals(5, table.columnCount());
+
+    // Reactivate grid editor
+    bot.partById(timeStamp).show();
+    assertEquals(5, table.columnCount());
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
@@ -1512,6 +1728,7 @@ public class TestGridEditor {
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     assertDialogTexts(dialog, "anno9");
+    dialog.close();
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
