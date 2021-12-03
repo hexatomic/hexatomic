@@ -58,8 +58,7 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
     if (!(columnHeaderLayer instanceof GridColumnHeaderLayer)) {
       throw new LayerSetupException("ColumnHeaderLayer", this.columnHeaderLayer,
           GridColumnHeaderLayer.class);
-    }
-    else {
+    } else {
       GridColumnHeaderLayer gridColumnHeaderLayer = (GridColumnHeaderLayer) this.columnHeaderLayer;
       originalQName = (String) gridColumnHeaderLayer.getAnnotationQName(columnPosition);
     }

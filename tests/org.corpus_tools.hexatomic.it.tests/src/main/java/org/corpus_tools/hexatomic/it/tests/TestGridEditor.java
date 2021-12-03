@@ -1734,11 +1734,14 @@ public class TestGridEditor {
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/259.
    * 
+   * <p>
    * Tests that the annotation name, not the display name, is shown on columns that are secondary
    * columns (e.g., "namespace::name (2)").
+   * </p>
    * 
-   * @throws ExecutionException
-   * @throws InterruptedException
+   * @throws InterruptedException If the thread extracting the label text in the given dialog is
+   *         interrupted, or if there is an error during execution.
+   * @throws ExecutionException See InterruptedException
    */
   @Test
   void testShowCorrectAnnotationNameInDialog() throws InterruptedException, ExecutionException {

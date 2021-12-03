@@ -88,8 +88,7 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
       throw new IllegalArgumentException(
           "Column header data values should always be strings, but got "
               + dataValue.getClass().getCanonicalName());
-    }
-    else {
+    } else {
       String dataString = (String) dataValue;
       return dataString.split(" \\(")[0];
     }
