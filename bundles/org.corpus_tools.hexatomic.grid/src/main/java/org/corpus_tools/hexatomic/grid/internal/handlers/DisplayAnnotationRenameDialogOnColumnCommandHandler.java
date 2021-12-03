@@ -52,7 +52,8 @@ public class DisplayAnnotationRenameDialogOnColumnCommandHandler
   protected boolean doCommand(DisplayColumnRenameDialogCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
     int columnPosition = command.getColumnPosition();
-    String originalQName = this.columnHeaderLayer.getOriginalColumnLabel(columnPosition);
+    String displayName = this.columnHeaderLayer.getOriginalColumnLabel(columnPosition);
+    String originalQName = displayName.split(" \\(")[0];
 
     AnnotationRenameDialog dialog =
         new AnnotationRenameDialog(Display.getDefault().getActiveShell(), originalQName);

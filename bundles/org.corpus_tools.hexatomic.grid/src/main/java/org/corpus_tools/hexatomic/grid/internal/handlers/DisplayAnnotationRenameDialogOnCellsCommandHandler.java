@@ -66,7 +66,9 @@ public class DisplayAnnotationRenameDialogOnCellsCommandHandler
       GridColumnHeaderLayer columnHeaderLayer = getColumnHeaderLayer(command.getNatTable());
       Integer columnIndex = command.getCellMapByColumn().keySet().iterator().next();
       int columnPosition = freezeLayer.getColumnPositionByIndex(columnIndex);
-      oldQName = (String) columnHeaderLayer.getDataValueByPosition(columnPosition, 0);
+      String displayName = (String) columnHeaderLayer.getDataValueByPosition(columnPosition, 0);
+      // Split at whitespace + '(' as this mustn't be in an annotation name
+      oldQName = displayName.split(" \\(")[0];
     }
 
     AnnotationRenameDialog dialog =
