@@ -1656,6 +1656,41 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests creation of spans via keyboard shortcut Alt + S
+   */
+  @Test
+  void testCreateSpanWithKeyboardShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Clear the span column
+    table.click(0, 4);
+    table.contextMenu(1, 4).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
+
+    // Select a range of cells
+    table.click(2, 4);
+    shiftClick(table, 6, 4);
+
+    // Fire the keyboard shortcut
+    keyboard.pressShortcut(SWT.ALT, 'S');
+    typeTextPressReturn(table);
+
+    // Make sure that the whole range is one and the same span
+    NatTable natTable = table.widget;
+    assertNull(natTable.getDataValueByPosition(4, 1));
+    Object potentialSpan = natTable.getDataValueByPosition(4, 2);
+    assertTrue(potentialSpan instanceof SSpan);
+    SSpan span = (SSpan) potentialSpan;
+    assertEquals("TEST", span.getAnnotation(INF_STRUCT_NAME).getValue());
+    assertEquals(span, natTable.getDataValueByPosition(4, 3));
+    assertEquals(span, natTable.getDataValueByPosition(4, 4));
+    assertEquals(span, natTable.getDataValueByPosition(4, 5));
+    assertEquals(span, natTable.getDataValueByPosition(4, 6));
+    assertNull(natTable.getDataValueByPosition(4, 7));
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
