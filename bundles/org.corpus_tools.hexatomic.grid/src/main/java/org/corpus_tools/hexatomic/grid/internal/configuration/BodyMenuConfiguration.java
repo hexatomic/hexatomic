@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
+import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
@@ -210,22 +211,10 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new CreateSpanSelectionAction(getSelectedNonTokenCells()).run(natTable);
+          new CreateSpanSelectionAction().run(natTable);
         }
       });
     }
-
-    private Set<PositionCoordinate> getSelectedNonTokenCells() {
-      Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
-      PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-      for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-        if (!isTokenCell(cellPosition)) {
-          selectedNonTokenCells.add(cellPosition);
-        }
-      }
-      return selectedNonTokenCells;
-    }
-
   }
 
   /**
@@ -275,31 +264,9 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-
-        int singleColumnPosition = -1;
-        for (PositionCoordinate coord : selectedCellCoordinates) {
-          int columnPosition = coord.getColumnPosition();
-          int rowPosition = coord.getRowPosition();
-          // Check for each coordinate pair whether it has the same column position as the first
-          // pair (otherwise the cell is in a different column).
-          if (singleColumnPosition == -1) {
-            singleColumnPosition = columnPosition;
-          } else if (columnPosition != singleColumnPosition) {
-            return false;
-          }
-          if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
-            return false;
-          }
-        }
-        // At this point, singleColumnPosition should be set
-        // Return whether the single column is a span column
-        return isSpanColumn(singleColumnPosition);
+        return GridHelper.areSelectedCellsInSingleSpanColumn(selectedCellCoordinates,
+            selectionLayer);
       }
-    }
-
-    private boolean isSpanColumn(int singleColumnPosition) {
-      LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
-      return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
     }
   }
 
