@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Test;
  */
 class TestDisplayAnnotationRenameDialogOnColumnCommandHandler {
 
-  private static DisplayAnnotationRenameDialogOnColumnCommandHandler fixture = null;
-
   /**
    * <p>
    * Tests that a {@link LayerSetupException} is thrown when the column header layer is not of the
@@ -29,7 +27,8 @@ class TestDisplayAnnotationRenameDialogOnColumnCommandHandler {
     ColumnHeaderLayer layer = mock(ColumnHeaderLayer.class);
     DisplayColumnRenameDialogCommand command = mock(DisplayColumnRenameDialogCommand.class);
     when(command.getColumnPosition()).thenReturn(1);
-    fixture = new DisplayAnnotationRenameDialogOnColumnCommandHandler(layer);
+    DisplayAnnotationRenameDialogOnColumnCommandHandler fixture =
+        new DisplayAnnotationRenameDialogOnColumnCommandHandler(layer);
     assertThrows(LayerSetupException.class, () -> fixture.doCommand(command));
   }
 
