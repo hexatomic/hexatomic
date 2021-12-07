@@ -1674,7 +1674,6 @@ public class TestGridEditor {
 
     // Fire the keyboard shortcut
     keyboard.pressShortcut(SWT.ALT, 'S');
-    typeTextPressReturn(table);
 
     // Make sure that the whole range is one and the same span
     NatTable natTable = table.widget;
@@ -1682,7 +1681,6 @@ public class TestGridEditor {
     Object potentialSpan = natTable.getDataValueByPosition(4, 2);
     assertTrue(potentialSpan instanceof SSpan);
     SSpan span = (SSpan) potentialSpan;
-    assertEquals("TEST", span.getAnnotation(INF_STRUCT_NAME).getValue());
     assertEquals(span, natTable.getDataValueByPosition(4, 3));
     assertEquals(span, natTable.getDataValueByPosition(4, 4));
     assertEquals(span, natTable.getDataValueByPosition(4, 5));
