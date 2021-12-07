@@ -92,7 +92,9 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   }
 
   /**
-   * @return the selectionLayer
+   * Returns the selection layer for this body layer.
+   * 
+   * @return the selectionLayer the {@link SelectionLayer} of the body layer
    */
   public final SelectionLayer getSelectionLayer() {
     return selectionLayer;
