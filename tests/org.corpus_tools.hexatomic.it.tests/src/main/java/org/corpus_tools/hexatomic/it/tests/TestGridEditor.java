@@ -1675,6 +1675,8 @@ public class TestGridEditor {
     // Fire the keyboard shortcut
     keyboard.pressShortcut(SWT.ALT, 's');
 
+    bot.sleep(500);
+
     // Make sure that the whole range is one and the same span
     NatTable natTable = table.widget;
     assertNull(natTable.getDataValueByPosition(4, 1));
