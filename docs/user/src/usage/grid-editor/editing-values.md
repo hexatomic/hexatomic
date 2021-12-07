@@ -45,7 +45,7 @@ If you have selected a mixture of empty cells and ones with existing annotation 
 You can create new spans in existing span columns and add annotation values for them:
 
 1. Select the empty cells in a span column you want to annotate as a span.
-2. Right-click with the mouse and select <strong>Create new span</strong> from the context menu.
+2. Press <kbd>Alt</kbd>+<kbd>S</kbd> *or* right-click with the mouse and select <strong>Create new span</strong> from the context menu.
 This will create a new span cell, and open its *single cell editor*.
 3. Type in the new annotation value and press <kbd>Enter</kbd> to commit the new value.
 
