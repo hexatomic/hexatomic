@@ -1673,7 +1673,7 @@ public class TestGridEditor {
     shiftClick(table, 6, 4);
 
     // Fire the keyboard shortcut
-    keyboard.pressShortcut(SWT.ALT, 'S');
+    keyboard.pressShortcut(SWT.ALT, 's');
 
     // Make sure that the whole range is one and the same span
     NatTable natTable = table.widget;
