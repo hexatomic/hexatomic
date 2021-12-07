@@ -1656,7 +1656,7 @@ public class TestGridEditor {
   }
 
   /**
-   * Tests creation of spans via keyboard shortcut Alt + S
+   * Tests creation of spans via keyboard shortcut Alt + S.
    */
   @Test
   void testCreateSpanWithKeyboardShortcut() {
