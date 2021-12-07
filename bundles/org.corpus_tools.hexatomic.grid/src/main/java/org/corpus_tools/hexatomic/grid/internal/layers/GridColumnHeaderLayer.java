@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnColumnCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnColumnCommandHandler;
@@ -38,6 +40,9 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
  * @author Stephan Druskat (mail@sdruskat.net)
  */
 public class GridColumnHeaderLayer extends ColumnHeaderLayer {
+
+  @Inject
+  ErrorService errors;
 
   /**
    * Constructor delegating to a ColumnHeaderLayer constructor.
@@ -72,6 +77,24 @@ public class GridColumnHeaderLayer extends ColumnHeaderLayer {
   protected void registerCommandHandlers() {
     registerCommandHandler(new RenameAnnotationOnColumnCommandHandler(this));
     registerCommandHandler(new DisplayAnnotationRenameDialogOnColumnCommandHandler(this));
+  }
+
+  /**
+   * Returns the first part of the column's display name as split on whitespace + '('. Using
+   * whitespaces and brackets in annotation names are discouraged, but the display name may contain
+   * them if there are more than one columns for the same qualified annotation name.
+   * 
+   * @param columnPosition The position of the column for which to retrieve the annotation name
+   * @return The qualified annotation name as determined by splitting on ' ('.
+   */
+  public String getAnnotationQName(int columnPosition) {
+    Object dataValue = getDataValueByPosition(columnPosition, 0);
+    if (dataValue instanceof String) {
+      return ((String) dataValue).split(" \\(")[0];
+    } else {
+      throw new IllegalArgumentException("Expected column header data value at column position "
+          + columnPosition + " to be a string, but got " + dataValue.getClass().getSimpleName());
+    }
   }
 
 }
