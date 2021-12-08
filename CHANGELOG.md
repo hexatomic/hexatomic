@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add keyboard shortcut to create spans in Grid Editor (#243)
+
 ### Fixed
 
 - Optimize column lifecycle in the Grid Editor, so that emptied columns don't disappear (#258, #346)

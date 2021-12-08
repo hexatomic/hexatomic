@@ -23,9 +23,13 @@ package org.corpus_tools.hexatomic.grid;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
+import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 
 /**
  * A type providing static helper methods.
@@ -80,6 +84,41 @@ public class GridHelper {
     throw new HexatomicRuntimeException(
         "Could not find a layer of type " + GridColumnHeaderLayer.class.getSimpleName()
             + " in the NatTable. Please report this as a bug.");
+  }
+
+  /**
+   * Tests whether all passed {@link PositionCoordinate}s are in the same column, and that the
+   * column is a span annotation column.
+   * 
+   * @param selectedCellCoordinates the {@link PositionCoordinate}s of the currently selected cells
+   * @param selectionLayer The {@link NatTable}s {@link SelectionLayer}
+   * @return whether all selected cells are in a single span annotation column
+   */
+  public static boolean areSelectedCellsInSingleSpanColumn(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    int singleColumnPosition = -1;
+    for (PositionCoordinate coord : selectedCellCoordinates) {
+      int columnPosition = coord.getColumnPosition();
+      int rowPosition = coord.getRowPosition();
+      // Check for each coordinate pair whether it has the same column position as the first
+      // pair (otherwise the cell is in a different column).
+      if (singleColumnPosition == -1) {
+        singleColumnPosition = columnPosition;
+      } else if (columnPosition != singleColumnPosition) {
+        return false;
+      }
+      if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
+        return false;
+      }
+    }
+    // At this point, singleColumnPosition should be set
+    // Return whether the single column is a span column
+    return isSpanColumn(singleColumnPosition, selectionLayer);
+  }
+  
+  private static boolean isSpanColumn(int singleColumnPosition, SelectionLayer selectionLayer) {
+    LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
+    return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
   }
 
 }
