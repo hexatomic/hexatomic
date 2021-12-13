@@ -320,7 +320,7 @@ public class GraphEditor {
   }
 
   @SuppressWarnings("unchecked")
-  private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
+  protected void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
     try {
       SDocumentGraph graph = getGraph();

@@ -1,10 +1,13 @@
-package org.corpus_tools.hexatomic.it.tests;
+package org.corpus_tools.hexatomic.graph;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +25,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.graph.GraphEditor;
+import org.corpus_tools.hexatomic.it.tests.PartMaximizedCondition;
+import org.corpus_tools.hexatomic.it.tests.TestCorpusStructure;
+import org.corpus_tools.hexatomic.it.tests.TestHelper;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -63,12 +68,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.mockito.Mockito;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-class TestGraphEditor {
+class IntegrationTestGraphEditor {
 
-  private static final String PART_ID =
+  private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
   private static final String INCLUDE_SPANS = "Include spans";
   private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
@@ -160,7 +166,7 @@ class TestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
-      SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
+      SWTBotView view = IntegrationTestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
@@ -302,7 +308,7 @@ class TestGraphEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    SWTBotView corpusStructurePart = bot.partById(PART_ID);
+    SWTBotView corpusStructurePart = bot.partById(CORPUS_EDITOR_PART_ID);
     corpusStructurePart.restore();
     corpusStructurePart.show();
 
@@ -321,7 +327,8 @@ class TestGraphEditor {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 
     // Select the first example document
-    SWTBotTreeItem docMenu = bot.partById(PART_ID).bot().tree().expandNode("corpus_graph_1")
+    SWTBotTreeItem docMenu =
+        bot.partById(CORPUS_EDITOR_PART_ID).bot().tree().expandNode("corpus_graph_1")
         .expandNode("corpus_1").expandNode("document_1");
 
     // Select and open the editor
@@ -810,6 +817,10 @@ class TestGraphEditor {
   void testUpdateAnnosOnExternalChange() {
     openDefaultExample();
 
+
+    SWTBotView graphPart = bot.partByTitle("doc1 (Graph Editor)");
+    GraphEditor graphEditor = spy((GraphEditor) graphPart.getPart().getObject());
+
     // Make sure the relevant spans are shown
     bot.checkBox(INCLUDE_SPANS).select();
     SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
@@ -818,7 +829,7 @@ class TestGraphEditor {
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 
     // Open the same document in the grid editor
-    SWTBotView corpusStructurePart = bot.partById(PART_ID);
+    SWTBotView corpusStructurePart = bot.partById(CORPUS_EDITOR_PART_ID);
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
         .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
     docMenu.click();
@@ -831,13 +842,30 @@ class TestGraphEditor {
     keyboard.typeText("anothertest");
     keyboard.pressShortcut(Keystrokes.CR);
 
-    // Select the Graph Editor again and wait for the annotation value to change
-    SWTBotView gridEditor = TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)");
-    gridEditor.close();
+    // Close the Grid editor, which selects the Graph Editor again and
+    // wait for the annotation value to change
+    IntegrationTestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
+    
 
-
+    // Open a grid editor on another document and check updates to it are ignored
+    docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+        .expandNode("subCorpus1").expandNode("doc2");
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
+    tableBot = new SWTNatTableBot();
+    table = tableBot.nattable();
+    table.click(1, 4);
+    keyboard.typeText("abc");
+    keyboard.pressShortcut(Keystrokes.CR);
+    IntegrationTestGraphEditor.this.bot.partByTitle("doc2 (Grid Editor)").close();
+    bot.waitUntil(new GraphLoadedCondition());
+    
+    verify(graphEditor, Mockito.never()).updateView(anyBoolean(), anyBoolean());
+    
+    
   }
+
 
 }
