@@ -68,6 +68,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String PART_ID =
+      "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
   private static final String INCLUDE_SPANS = "Include spans";
   private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
   private static final String TEST_TOKEN = "abc";
@@ -81,7 +83,7 @@ class TestGraphEditor {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  
+
   private ErrorService errorService;
   private ProjectManager projectManager;
 
@@ -300,8 +302,7 @@ class TestGraphEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    SWTBotView corpusStructurePart =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    SWTBotView corpusStructurePart = bot.partById(PART_ID);
     corpusStructurePart.restore();
     corpusStructurePart.show();
 
@@ -320,9 +321,8 @@ class TestGraphEditor {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
-            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+    SWTBotTreeItem docMenu = bot.partById(PART_ID).bot().tree().expandNode("corpus_graph_1")
+        .expandNode("corpus_1").expandNode("document_1");
 
     // Select and open the editor
     docMenu.click();
@@ -713,21 +713,21 @@ class TestGraphEditor {
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() - 1, console));
   }
-  
+
   @Test
   void testShowNewlyCreatedSpan() {
     openDefaultExample();
-    
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
-    
+
     // Deactivate/activate spans in view and check the view has less/more nodes
     SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
     bot.waitUntil(new NumberOfNodesCondition(26));
-    
+
     // Add some span
     enterCommand("s spanno:test #sTok1 #sTok2");
 
@@ -758,11 +758,11 @@ class TestGraphEditor {
     ScalableFigure figure = g.getRootLayer();
     assertEquals(1.0, figure.getScale());
   }
-  
-  
+
+
   /**
-   * Tests that the segmentation list is updated when a token is deleted.
-   * Regression test for https://github.com/hexatomic/hexatomic/issues/261
+   * Tests that the segmentation list is updated when a token is deleted. Regression test for
+   * https://github.com/hexatomic/hexatomic/issues/261
    */
   @Test
   void testUpdateSegmentsOnDeletedToken() {
@@ -818,8 +818,7 @@ class TestGraphEditor {
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 
     // Open the same document in the grid editor
-    SWTBotView corpusStructurePart =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    SWTBotView corpusStructurePart = bot.partById(PART_ID);
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
         .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
     docMenu.click();
