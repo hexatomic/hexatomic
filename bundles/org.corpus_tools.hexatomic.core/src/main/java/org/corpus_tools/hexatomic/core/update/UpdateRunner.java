@@ -22,6 +22,10 @@ package org.corpus_tools.hexatomic.core.update;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.ui.di.UISynchronize;
@@ -46,45 +50,61 @@ public class UpdateRunner {
   * 
   * @param agent OSGi service to create an update operation
   * @param workbench current workbench to restart the application
-  * @param sync Helper class to execute code in the UI thread
   * @param monitor interface to show progress of update operation
   */
   
-  public void performUpdates(final IProvisioningAgent agent, 
+  public IStatus performUpdates(final IProvisioningAgent agent, 
       IWorkbench workbench,
-      UISynchronize sync,
+      //UISynchronize sync,
       IProgressMonitor monitor) {
     UpdateOperation operation = createUpdateOperation(agent);
     log.info("Updateoperation created");
     //Check if there are Updates available
-    IStatus status = operation.resolveModal(monitor);
+    SubMonitor sub = SubMonitor.convert(monitor,
+        "Checking for application updates...", 200);
+    final IStatus status = operation.resolveModal(sub.newChild(100));
+    //IStatus status = operation.resolveModal(null);
       
     if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
       MessageDialog.openInformation(
             null, 
             "Information", 
             "Nothing to update");
+      log.info("Nothing to update");
+      return Status.CANCEL_STATUS;
     }
     
     //create update job
-    ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
+    ProvisioningJob provisioningJob = operation.getProvisioningJob(monitor);
     
     //run update job
     if (provisioningJob != null) {
-      sync.syncExec(() -> { 
-        runUpdateJob(provisioningJob, workbench); 
-      }); 
-    } else if (operation.hasResolved()) {
-      MessageDialog.openError(
-            null, 
-            "Error", 
-            "Couldn't get provisioning job: " + operation.getResolutionResult());
+      configureProvisioningJob(provisioningJob);
+      provisioningJob.schedule();
+      return Status.OK_STATUS;
     } else {
-      MessageDialog.openError(
-            null, 
-            "Error", 
-            "Couldn't resolve provisioning job");
+      log.info("Couldn't find provisioning Job");
+      MessageDialog.openInformation(null, "Information","Couldn't resolve provisioning job");
+      return Status.CANCEL_STATUS;
     }
+    
+  }
+  
+  private void configureProvisioningJob(ProvisioningJob provisioningJob) {
+
+    // register a job change listener to track
+
+    // installation progress and restart application in case of updates
+
+    provisioningJob.addJobChangeListener(new JobChangeAdapter() {
+      @Override
+      public void done(IJobChangeEvent event) {
+        if (event.getResult().isOK()) {
+          log.info("ProvisioningJob done");
+        }
+        super.done(event);
+      }
+    });
   }
 
     
@@ -94,7 +114,7 @@ public class UpdateRunner {
     ProvisioningSession session = new ProvisioningSession(agent);
     log.info("Provisioning session created");
     // update all user-visible installable units
-    UpdateOperation operation = new UpdateOperation(session);
+    final UpdateOperation operation = new UpdateOperation(session);
     return operation;
     
   }
