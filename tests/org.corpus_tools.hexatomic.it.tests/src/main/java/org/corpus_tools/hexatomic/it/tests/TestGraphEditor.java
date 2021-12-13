@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -66,6 +67,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
   private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
@@ -230,18 +232,24 @@ class TestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
+      AtomicBoolean found = new AtomicBoolean(false);
+
       Graph g = bot.widget(widgetOfType(Graph.class));
       if (g != null) {
-        for(Object o : g.getNodes()) {
-          if(o instanceof GraphNode) {
-            GraphNode n = (GraphNode) o;
-            if (Objects.equals(this.expectedText, n.getText())) {
-              return true;
+        bot.getDisplay().syncExec(() -> {
+          List nodes = g.getNodes();
+
+          for (Object o : nodes) {
+            if (o instanceof GraphNode) {
+              GraphNode n = (GraphNode) o;
+              if (Objects.equals(this.expectedText, n.getText())) {
+                found.set(true);
+              }
             }
           }
-        }
+        });
       }
-      return false;
+      return found.get();
     }
 
     @Override
@@ -573,7 +581,7 @@ class TestGraphEditor {
     includeSpans.select();
     bot.waitUntil(new NumberOfNodesCondition(26));
     // With spans enabled, filter for annotation names
-    SWTBotText annoFilter = bot.textWithMessage("Filter by node annotation name");
+    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
 
     // Tokens and the matching structure nodes
     annoFilter.setText("const");
@@ -801,6 +809,8 @@ class TestGraphEditor {
     // Make sure the relevant spans are shown
     SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
     includeSpans.select();
+    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
+    annoFilter.setText("Inf");
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 
