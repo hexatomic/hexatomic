@@ -808,8 +808,7 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Make sure the relevant spans are shown
-    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
-    includeSpans.select();
+    bot.checkBox("Include spans").select();
     SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
     annoFilter.setText("Inf");
 
@@ -831,9 +830,8 @@ class TestGraphEditor {
     keyboard.pressShortcut(Keystrokes.CR);
 
     // Select the Graph Editor again and wait for the annotation value to change
-    SWTBotView graphPart = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
-    assertNotNull(graphPart);
-    graphPart.show();
+    SWTBotView gridEditor = TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)");
+    gridEditor.close();
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
 
