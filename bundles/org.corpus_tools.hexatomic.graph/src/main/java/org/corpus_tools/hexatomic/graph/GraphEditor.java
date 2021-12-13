@@ -137,10 +137,10 @@ public class GraphEditor {
 
 
   @Inject
-  private ProjectManager projectManager;
+  ProjectManager projectManager;
 
   @Inject
-  private MPart thisPart;
+  MPart thisPart;
 
   @Inject
   ErrorService errorService;
@@ -328,7 +328,7 @@ public class GraphEditor {
    *        complete.
    */
   @SuppressWarnings("unchecked")
-  public void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
+  protected void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
     try {
       SDocumentGraph graph = getGraph();
@@ -718,9 +718,10 @@ public class GraphEditor {
     }
   }
 
+
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onCheckpointCreated(
+  protected void onCheckpointCreated(
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_CREATED) Object element) {
 
     if (element instanceof ChangeSet) {

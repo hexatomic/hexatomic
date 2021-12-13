@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +64,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.Mockito;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
@@ -845,21 +842,5 @@ class TestGraphEditor {
     TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
-
-
-    // Open a grid editor on another document and check updates to it are ignored
-    docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc2");
-    docMenu.click();
-    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
-    tableBot = new SWTNatTableBot();
-    table = tableBot.nattable();
-    table.click(1, 4);
-    keyboard.typeText("abc");
-    keyboard.pressShortcut(Keystrokes.CR);
-    TestGraphEditor.this.bot.partByTitle("doc2 (Grid Editor)").close();
-    bot.waitUntil(new GraphLoadedCondition());
-
-    verify(graphEditor, Mockito.never()).updateView(anyBoolean(), anyBoolean());
   }
 }
