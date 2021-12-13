@@ -72,7 +72,7 @@ import org.mockito.Mockito;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-class IntegrationTestGraphEditor {
+class TestGraphEditorIntegration {
 
   private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
@@ -166,7 +166,8 @@ class IntegrationTestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
-      SWTBotView view = IntegrationTestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
+      SWTBotView view =
+          TestGraphEditorIntegration.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
@@ -327,9 +328,8 @@ class IntegrationTestGraphEditor {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.partById(CORPUS_EDITOR_PART_ID).bot().tree().expandNode("corpus_graph_1")
-        .expandNode("corpus_1").expandNode("document_1");
+    SWTBotTreeItem docMenu = bot.partById(CORPUS_EDITOR_PART_ID).bot().tree()
+        .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
 
     // Select and open the editor
     docMenu.click();
@@ -844,10 +844,10 @@ class IntegrationTestGraphEditor {
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change
-    IntegrationTestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
+    TestGraphEditorIntegration.this.bot.partByTitle("doc1 (Grid Editor)").close();
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
-    
+
 
     // Open a grid editor on another document and check updates to it are ignored
     docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1").expandNode("rootCorpus")
@@ -859,12 +859,12 @@ class IntegrationTestGraphEditor {
     table.click(1, 4);
     keyboard.typeText("abc");
     keyboard.pressShortcut(Keystrokes.CR);
-    IntegrationTestGraphEditor.this.bot.partByTitle("doc2 (Grid Editor)").close();
+    TestGraphEditorIntegration.this.bot.partByTitle("doc2 (Grid Editor)").close();
     bot.waitUntil(new GraphLoadedCondition());
-    
+
     verify(graphEditor, Mockito.never()).updateView(anyBoolean(), anyBoolean());
-    
-    
+
+
   }
 
 
