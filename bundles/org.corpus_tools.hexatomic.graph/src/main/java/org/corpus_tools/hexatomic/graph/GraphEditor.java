@@ -54,6 +54,7 @@ import org.corpus_tools.hexatomic.graph.internal.SaltGraphStyler;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.SDocumentGraphObject;
 import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.SSpan;
@@ -263,8 +264,7 @@ public class GraphEditor {
     Document consoleDocument = new Document();
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
-    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
-        CONSOLE_ID);
+    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
     consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
@@ -712,7 +712,7 @@ public class GraphEditor {
       }
     }
   }
-  
+
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onCheckpointCreated(
@@ -724,15 +724,22 @@ public class GraphEditor {
 
       // Filter for change set events that belong to the loaded document graph
       SDocumentGraph loadedGraph = getGraph();
-      Set<Object> changedObjects =
-          changeSet.getChanges().stream().filter(c -> c.getChangedContainer() == loadedGraph)
-              .map(ReversibleOperation::getChangedElement).collect(Collectors.toSet());
+      Set<Object> changedObjects = changeSet.getChanges().stream().filter(c -> {
+        Object container = c.getChangedContainer();
+        if (container instanceof SDocumentGraphObject) {
+          // The container can be a node or edge but we need the actual
+          // document graph to compare it to our loaded graph.
+          SDocumentGraphObject object = (SDocumentGraphObject) container;
+          container = object.getGraph();
+        }
+        return container == loadedGraph;
+      }).map(ReversibleOperation::getChangedElement).collect(Collectors.toSet());
+
       if (!changedObjects.isEmpty()) {
         // Only relations with text coverage semantics can change the structure of the graph and
         // modify segments
-        boolean recalculateSegments =
-            changedObjects.stream().anyMatch(
-                c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
+        boolean recalculateSegments = changedObjects.stream().anyMatch(
+            c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
         updateView(recalculateSegments, false);
       }
     }
