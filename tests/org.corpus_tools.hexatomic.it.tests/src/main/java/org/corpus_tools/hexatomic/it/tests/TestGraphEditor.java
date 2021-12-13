@@ -812,10 +812,6 @@ class TestGraphEditor {
   void testUpdateAnnosOnExternalChange() {
     openDefaultExample();
 
-    SWTBotView graphPart = bot.partByTitle("doc1 (Graph Editor)");
-    assertTrue(graphPart.getPart().getObject() instanceof GraphEditor);
-    final GraphEditor graphEditor = spy((GraphEditor) graphPart.getPart().getObject());
-
     // Make sure the relevant spans are shown
     bot.checkBox(INCLUDE_SPANS).select();
     SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
