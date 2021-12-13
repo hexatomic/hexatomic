@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.it.tests;
 
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;

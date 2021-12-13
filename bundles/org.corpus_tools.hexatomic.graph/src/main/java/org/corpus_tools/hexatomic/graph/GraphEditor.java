@@ -318,9 +318,16 @@ public class GraphEditor {
       consoleView.setGraph(getGraph());
     }
   }
-
+  /**
+   * Force update of the graph view.
+   * 
+   * @param recalculateSegments Allows to control whether to re-calculate the segments. This is a
+   *        costly operation should be avoided when there is no structural change.
+   * @param scrollToFirstToken If true, reset the view to show the first token after the update is
+   *        complete.
+   */
   @SuppressWarnings("unchecked")
-  protected void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
+  public void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
     try {
       SDocumentGraph graph = getGraph();

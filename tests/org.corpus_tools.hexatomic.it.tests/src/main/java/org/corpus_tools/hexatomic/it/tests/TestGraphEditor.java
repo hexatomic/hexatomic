@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.graph;
+package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,9 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.it.tests.PartMaximizedCondition;
-import org.corpus_tools.hexatomic.it.tests.TestCorpusStructure;
-import org.corpus_tools.hexatomic.it.tests.TestHelper;
+import org.corpus_tools.hexatomic.graph.GraphEditor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -72,7 +70,7 @@ import org.mockito.Mockito;
 
 @SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-class TestGraphEditorIntegration {
+class TestGraphEditor {
 
   private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
@@ -167,7 +165,7 @@ class TestGraphEditorIntegration {
     @Override
     public boolean test() throws Exception {
       SWTBotView view =
-          TestGraphEditorIntegration.this.bot.partByTitle(this.documentName + " (Graph Editor)");
+          TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
@@ -817,8 +815,8 @@ class TestGraphEditorIntegration {
   void testUpdateAnnosOnExternalChange() {
     openDefaultExample();
 
-
     SWTBotView graphPart = bot.partByTitle("doc1 (Graph Editor)");
+    assertTrue(graphPart.getPart().getObject() instanceof GraphEditor);
     final GraphEditor graphEditor = spy((GraphEditor) graphPart.getPart().getObject());
 
     // Make sure the relevant spans are shown
@@ -844,7 +842,7 @@ class TestGraphEditorIntegration {
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change
-    TestGraphEditorIntegration.this.bot.partByTitle("doc1 (Grid Editor)").close();
+    TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
 
@@ -859,7 +857,7 @@ class TestGraphEditorIntegration {
     table.click(1, 4);
     keyboard.typeText("abc");
     keyboard.pressShortcut(Keystrokes.CR);
-    TestGraphEditorIntegration.this.bot.partByTitle("doc2 (Grid Editor)").close();
+    TestGraphEditor.this.bot.partByTitle("doc2 (Grid Editor)").close();
     bot.waitUntil(new GraphLoadedCondition());
 
     verify(graphEditor, Mockito.never()).updateView(anyBoolean(), anyBoolean());
