@@ -24,6 +24,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 class TestGraphEditor {
 
   private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
@@ -77,20 +78,22 @@ class TestGraphEditor {
     editor.thisPart = mock(MPart.class);
     when(editor.thisPart.getPersistedState()).thenReturn(persistedState);
 
-    // Add change for same document the editor is supposed to have opened
-    List<ReversibleOperation> changes = new ArrayList<>();
-    SDocumentGraph graph = SaltFactory.createSDocumentGraph();
+    // Create a graph and document which are used as the objects
+    // the graph editor should work on.
+    final SDocumentGraph graph = SaltFactory.createSDocumentGraph();
     graph.setId(DOC1_ID);
-    SDocument doc = SaltFactory.createSDocument();
+    final SDocument doc = SaltFactory.createSDocument();
     doc.setDocumentGraph(graph);
     doc.setId(DOC1_ID);
-    
+
     ProjectManager projectManager = mock(ProjectManager.class);
     editor.projectManager = projectManager;
     when(projectManager.getDocument(anyString())).thenReturn(Optional.of(doc));
 
+    // Add change for same document the editor is supposed to have opened
     ReversibleOperation op1 = mock(ReversibleOperation.class);
     when(op1.getChangedContainer()).thenReturn(graph);
+    List<ReversibleOperation> changes = new ArrayList<>();
     changes.add(op1);
 
     ChangeSet changeSet = new ChangeSet(changes);
