@@ -26,7 +26,6 @@ import org.corpus_tools.hexatomic.graph.GraphEditor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
-import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.draw2d.ScalableFigure;
@@ -42,6 +41,8 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
+import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -814,29 +815,30 @@ class TestGraphEditor {
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 
-    Optional<SDocument> optionalDoc =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
-    assertTrue(optionalDoc.isPresent());
-    if (optionalDoc.isPresent()) {
-      SDocument doc = optionalDoc.get();
-      SDocumentGraph graph = doc.getDocumentGraph();
-   
-      Optional<SSpan> optionalSpan = graph.getSpans().stream()
-          .filter(s -> Objects.equals("contrast-focus", s.getAnnotation("Inf-Struct").getValue())).findAny();
-      assertTrue(optionalSpan.isPresent());
-      if (optionalSpan.isPresent()) {
-        SSpan span = optionalSpan.get();
+    // Open the same document in the grid editor
+    SWTBotView corpusStructurePart =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
 
-        span.getAnnotation("Inf-Struct").setValue("anothertest");
-        projectManager.addCheckpoint();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
 
-        Graph g = bot.widget(widgetOfType(Graph.class));
-        assertNotNull(g);
-        
-        bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
+    table.click(1, 4);
+    Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+    keyboard.typeText("anothertest");
+    keyboard.pressShortcut(Keystrokes.CR);
 
-      }
-    }
+    // Select the Graph Editor again and wait for the annotation value to change
+    SWTBotView graphPath = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
+    assertNotNull(graphPath);
+    graphPath.show();
+
+    bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
+
+
   }
 
 }
