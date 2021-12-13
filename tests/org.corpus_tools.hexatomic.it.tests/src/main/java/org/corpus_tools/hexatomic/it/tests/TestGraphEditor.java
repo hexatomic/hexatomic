@@ -238,12 +238,12 @@ class TestGraphEditor {
       Graph g = bot.widget(widgetOfType(Graph.class));
       if (g != null) {
         bot.getDisplay().syncExec(() -> {
-          List nodes = g.getNodes();
+          List<?> nodes = g.getNodes();
 
           for (Object o : nodes) {
             if (o instanceof GraphNode) {
               GraphNode n = (GraphNode) o;
-              if (Objects.equals(this.expectedText, n.getText())) {
+              if (Objects.equals(this.expectedText, n.getText().strip())) {
                 found.set(true);
               }
             }
@@ -827,14 +827,13 @@ class TestGraphEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(1, 4);
-    Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
     keyboard.typeText("anothertest");
     keyboard.pressShortcut(Keystrokes.CR);
 
     // Select the Graph Editor again and wait for the annotation value to change
-    SWTBotView graphPath = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
-    assertNotNull(graphPath);
-    graphPath.show();
+    SWTBotView graphPart = TestGraphEditor.this.bot.partByTitle("doc1 (Graph Editor)");
+    assertNotNull(graphPart);
+    graphPart.show();
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
 
