@@ -25,6 +25,7 @@ import org.corpus_tools.hexatomic.graph.GraphEditor;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
+import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.STextualDS;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.draw2d.ScalableFigure;
@@ -55,6 +56,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
+import org.eclipse.zest.core.widgets.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
@@ -215,6 +217,36 @@ class TestGraphEditor {
     @Override
     public String getFailureMessage() {
       return "Showing the expected number of " + expected + " nodes took too long";
+    }
+  }
+
+  private final class HasNodeWithText extends DefaultCondition {
+
+    private final String expectedText;
+
+    public HasNodeWithText(String expectedText) {
+      this.expectedText = expectedText;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      Graph g = bot.widget(widgetOfType(Graph.class));
+      if (g != null) {
+        for(Object o : g.getNodes()) {
+          if(o instanceof GraphNode) {
+            GraphNode n = (GraphNode) o;
+            if (Objects.equals(this.expectedText, n.getText())) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Could not find any node with the text '" + this.expectedText + "'";
     }
   }
 
@@ -755,8 +787,46 @@ class TestGraphEditor {
         return "Segmentation for deleted token was not removed";
       }
     }, 5000);
-    
+  }
+
+  /**
+   * Tests that the view is updated when another editor changes the annotation value.
+   * 
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/362
+   */
+  @Test
+  void testUpdateAnnosOnExternalChange() {
+    openDefaultExample();
+
+    // Make sure the relevant spans are shown
+    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    includeSpans.select();
+
+    bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
+
+    Optional<SDocument> optionalDoc =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    assertTrue(optionalDoc.isPresent());
+    if (optionalDoc.isPresent()) {
+      SDocument doc = optionalDoc.get();
+      SDocumentGraph graph = doc.getDocumentGraph();
+   
+      Optional<SSpan> optionalSpan = graph.getSpans().stream()
+          .filter(s -> Objects.equals("contrast-focus", s.getAnnotation("Inf-Struct").getValue())).findAny();
+      assertTrue(optionalSpan.isPresent());
+      if (optionalSpan.isPresent()) {
+        SSpan span = optionalSpan.get();
+
+        span.getAnnotation("Inf-Struct").setValue("anothertest");
+        projectManager.addCheckpoint();
+
+        Graph g = bot.widget(widgetOfType(Graph.class));
+        assertNotNull(g);
         
+        bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
+
+      }
+    }
   }
 
 }
