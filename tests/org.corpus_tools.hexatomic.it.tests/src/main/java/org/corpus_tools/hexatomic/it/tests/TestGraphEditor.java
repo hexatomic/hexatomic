@@ -802,7 +802,9 @@ class TestGraphEditor {
   /**
    * Tests that the view is updated when another editor changes the annotation value.
    * 
+   * <p>
    * Regression test for https://github.com/hexatomic/hexatomic/issues/362
+   * </p>
    */
   @Test
   void testUpdateAnnosOnExternalChange() {
