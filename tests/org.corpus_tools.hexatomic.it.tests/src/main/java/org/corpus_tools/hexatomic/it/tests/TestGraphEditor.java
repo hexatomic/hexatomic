@@ -68,6 +68,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String INCLUDE_SPANS = "Include spans";
   private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
   private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
@@ -576,7 +577,7 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
@@ -721,7 +722,7 @@ class TestGraphEditor {
     assertNotNull(g);
     
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
@@ -808,7 +809,7 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Make sure the relevant spans are shown
-    bot.checkBox("Include spans").select();
+    bot.checkBox(INCLUDE_SPANS).select();
     SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
     annoFilter.setText("Inf");
 
