@@ -318,6 +318,7 @@ public class GraphEditor {
       consoleView.setGraph(getGraph());
     }
   }
+
   /**
    * Force update of the graph view.
    * 
