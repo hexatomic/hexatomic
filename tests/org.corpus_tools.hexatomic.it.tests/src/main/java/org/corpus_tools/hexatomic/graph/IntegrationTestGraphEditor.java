@@ -819,7 +819,7 @@ class IntegrationTestGraphEditor {
 
 
     SWTBotView graphPart = bot.partByTitle("doc1 (Graph Editor)");
-    GraphEditor graphEditor = spy((GraphEditor) graphPart.getPart().getObject());
+    final GraphEditor graphEditor = spy((GraphEditor) graphPart.getPart().getObject());
 
     // Make sure the relevant spans are shown
     bot.checkBox(INCLUDE_SPANS).select();
