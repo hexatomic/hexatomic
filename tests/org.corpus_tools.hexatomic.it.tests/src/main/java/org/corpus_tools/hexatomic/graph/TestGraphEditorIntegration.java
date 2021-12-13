@@ -863,9 +863,5 @@ class TestGraphEditorIntegration {
     bot.waitUntil(new GraphLoadedCondition());
 
     verify(graphEditor, Mockito.never()).updateView(anyBoolean(), anyBoolean());
-
-
   }
-
-
 }
