@@ -719,7 +719,7 @@ public class GraphEditor {
       ChangeSet changeSet = (ChangeSet) element;
       log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
 
-      // check graph updates contain changes for this graph or if elements have been deleted
+      // check graph updates contain changes for this graph
       if (changeSet.containsDocument(
           thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
         // Only relations with text coverage semantics can change the structure of the graph and
