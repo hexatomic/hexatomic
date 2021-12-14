@@ -84,6 +84,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -98,7 +100,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -120,7 +123,6 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  */
 public class GraphEditor {
 
-
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   /**
@@ -137,7 +139,6 @@ public class GraphEditor {
   static final int DEFAULT_DIFF = 25;
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
-
   @Inject
   private ProjectManager projectManager;
 
@@ -150,14 +151,12 @@ public class GraphEditor {
   @Inject
   Shell shell;
 
-
   private Button btnIncludeSpans;
   private Table textRangeTable;
   private Text txtSegmentFilter;
   private Button btnIncludePointingRelations;
 
   private GraphViewer viewer;
-
 
   @Inject
   UISynchronize sync;
@@ -167,7 +166,6 @@ public class GraphEditor {
 
   @Inject
   private IEventBroker events;
-
 
   private ConsoleView consoleView;
 
@@ -214,41 +212,71 @@ public class GraphEditor {
     viewer.getGraphControl().setDragDetect(true);
     viewer.setFilters(graphFilter);
 
-    Composite filterComposite = new Composite(graphSash, SWT.NONE);
-    GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
-    gridLayoutFilterComposite.marginWidth = 0;
-    filterComposite.setLayout(gridLayoutFilterComposite);
+    Composite sideBar = new Composite(graphSash, SWT.NONE);
+    sideBar.setLayout(new GridLayout(1, false));
 
-    Label lblFilterByAnnotation = new Label(filterComposite, SWT.NONE);
-    lblFilterByAnnotation.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-    lblFilterByAnnotation.setText("Filter by annotation type");
+    ExpandBar optionalFilterBars = new ExpandBar(sideBar, SWT.NONE);
+    optionalFilterBars.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    optionalFilterBars.addExpandListener(new ExpandListener() {
 
-    btnIncludeSpans = new Button(filterComposite, SWT.CHECK);
-    btnIncludeSpans.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+      @Override
+      public void itemExpanded(ExpandEvent e) {
+        relayout();
+      }
+
+      @Override
+      public void itemCollapsed(ExpandEvent e) {
+        relayout();
+      }
+
+      private void relayout() {
+        Display.getDefault().timerExec(1, new Runnable() {
+          @Override
+          public void run() {
+            sideBar.layout();
+          }
+        });
+      }
+    });
+
+    Composite filterTypeComposite = new Composite(optionalFilterBars, SWT.NONE);
+    filterTypeComposite.setLayout(new GridLayout());
+
+    btnIncludeSpans = new Button(filterTypeComposite, SWT.CHECK);
+    btnIncludeSpans.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
     btnIncludeSpans.setSelection(false);
     btnIncludeSpans.setText("Include spans");
 
-    btnIncludePointingRelations = new Button(filterComposite, SWT.CHECK);
+    btnIncludePointingRelations = new Button(filterTypeComposite, SWT.CHECK);
     btnIncludePointingRelations.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
     btnIncludePointingRelations.setSelection(true);
     btnIncludePointingRelations.setText("Include pointing relations");
+    ExpandItem itemType = new ExpandItem(optionalFilterBars, SWT.NONE);
+    itemType.setText("Annotation type filter");
+    itemType.setControl(filterTypeComposite);
+    itemType.setHeight(filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    txtSegmentFilter = new Text(filterComposite, SWT.BORDER);
+    txtSegmentFilter = new Text(optionalFilterBars, SWT.BORDER);
     txtSegmentFilter.setMessage("Filter by node annotation name");
     txtSegmentFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
+    itemAnno.setText("Annotation name filter");
+    itemAnno.setControl(txtSegmentFilter);
+    itemAnno.setHeight(txtSegmentFilter.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    textRangeTable =
-        new Table(filterComposite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
+
+    textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     textRangeTable.setHeaderVisible(true);
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
     textRangeTable.getVerticalBar().setEnabled(true);
     textRangeTable.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, TEXT_RANGE_ID);
-
     TableColumn tblclmnFilterBySegment = new TableColumn(textRangeTable, SWT.NONE);
     tblclmnFilterBySegment.setWidth(100);
     tblclmnFilterBySegment.setText("Filter by segment");
+
+
     graphSash.setWeights(new int[] {300, 100});
 
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
@@ -263,8 +291,7 @@ public class GraphEditor {
     Document consoleDocument = new Document();
     SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
     consoleViewer.setDocument(consoleDocument);
-    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY,
-        CONSOLE_ID);
+    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
     consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
     mainSash.setWeights(new int[] {200, 100});
 
@@ -362,7 +389,6 @@ public class GraphEditor {
       scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, segmentFilterText,
           includeSpans, graph, recalculateSegments, scrollToFirstToken);
 
-
     } catch (RuntimeException ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
           GraphEditor.class);
@@ -410,7 +436,6 @@ public class GraphEditor {
     });
     job.schedule();
   }
-
 
   @SuppressWarnings("unchecked")
   private List<SegmentSelectionEntry> recalculateAvailableSegments(
@@ -480,7 +505,8 @@ public class GraphEditor {
 
     if (scrollToFirstToken) {
       viewer.getGraphControl().getRootLayer().setScale(0.0);
-      // We can only scroll to the first token after the layout has been applied, which can be
+      // We can only scroll to the first token after the layout has been applied,
+      // which can be
       // asynchronous
       viewer.getGraphControl().getLayoutAlgorithm()
           .addProgressListener(this.scrollToFirstTokenListener);
@@ -491,8 +517,6 @@ public class GraphEditor {
 
     viewer.applyLayout();
   }
-
-
 
   private static Range<Long> getRangeForToken(SToken tok) {
     @SuppressWarnings("rawtypes")
@@ -537,7 +561,6 @@ public class GraphEditor {
 
     TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
 
-
     DataSourceSequence<Integer> textSeq = new DataSourceSequence<>();
     textSeq.setDataSource(ds);
     textSeq.setStart(ds.getStart());
@@ -578,7 +601,6 @@ public class GraphEditor {
     return sortedRangesForDS;
   }
 
-
   private LayoutAlgorithm createLayout() {
 
     SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
@@ -603,7 +625,8 @@ public class GraphEditor {
 
   private static boolean hasMatchingAnnotation(SNode node, String segmentFilterText) {
     if (segmentFilterText == null || segmentFilterText.isEmpty() || node instanceof SToken) {
-      // If no filter is set or the type of node should always be included, always return true
+      // If no filter is set or the type of node should always be included, always
+      // return true
       return true;
     }
     if (node.getAnnotations() != null) {
@@ -641,7 +664,6 @@ public class GraphEditor {
       centerViewportToPoint(scaledClicked);
     }
   }
-
 
   void scrollGraphView(int xoffset, int yoffset) {
     Viewport viewPort = viewer.getGraphControl().getViewport();
@@ -712,7 +734,7 @@ public class GraphEditor {
       }
     }
   }
-  
+
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
   private void onCheckpointCreated(
@@ -728,16 +750,15 @@ public class GraphEditor {
           changeSet.getChanges().stream().filter(c -> c.getChangedContainer() == loadedGraph)
               .map(ReversibleOperation::getChangedElement).collect(Collectors.toSet());
       if (!changedObjects.isEmpty()) {
-        // Only relations with text coverage semantics can change the structure of the graph and
+        // Only relations with text coverage semantics can change the structure of the
+        // graph and
         // modify segments
-        boolean recalculateSegments =
-            changedObjects.stream().anyMatch(
-                c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
+        boolean recalculateSegments = changedObjects.stream().anyMatch(
+            c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
         updateView(recalculateSegments, false);
       }
     }
   }
-
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
@@ -745,7 +766,6 @@ public class GraphEditor {
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
     updateView(true, false);
   }
-
 
   private class RootFilter extends ViewerFilter {
 
@@ -810,7 +830,6 @@ public class GraphEditor {
       }
     }
 
-
     private boolean overlapsSelectedRange(SDocumentGraph graph, SNode node) {
       List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
       for (SToken t : overlappedTokens) {
@@ -855,8 +874,6 @@ public class GraphEditor {
     }
   }
 
-
-
   private static class STextualDataSourceComparator implements Comparator<STextualDS> {
 
     @Override
@@ -864,7 +881,6 @@ public class GraphEditor {
       return ComparisonChain.start().compare(o1.getName(), o2.getName()).result();
     }
   }
-
 
   private static class RangeStartComparator<C extends Comparable<?>>
       implements Comparator<Range<C>> {
@@ -906,13 +922,15 @@ public class GraphEditor {
 
     @Override
     public void progressStarted(ProgressEvent e) {
-      // We only start to scroll after the task has ended, but we still have to implement all
+      // We only start to scroll after the task has ended, but we still have to
+      // implement all
       // methods of the interface.
     }
 
     @Override
     public void progressUpdated(ProgressEvent e) {
-      // We only start to scroll after the task has ended, but we still have to implement all
+      // We only start to scroll after the task has ended, but we still have to
+      // implement all
       // methods of the interface.
     }
 
@@ -931,6 +949,4 @@ public class GraphEditor {
       });
     }
   }
-
 }
-
