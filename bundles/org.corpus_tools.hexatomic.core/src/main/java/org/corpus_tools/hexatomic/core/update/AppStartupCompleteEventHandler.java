@@ -21,26 +21,25 @@
 package org.corpus_tools.hexatomic.core.update;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
 public class AppStartupCompleteEventHandler implements EventHandler {
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(AppStartupCompleteEventHandler.class);
   private IEventBroker eventBroker;
   private IEclipseContext context;
   IProvisioningAgent agent;
   UISynchronize sync;
   IProgressMonitor monitor;
   IWorkbench workbench; 
+  Shell shell;
 
   /**
    * Create instance of AppStartupCompleteEventHandler.
@@ -55,52 +54,28 @@ public class AppStartupCompleteEventHandler implements EventHandler {
       IEclipseContext context,
       IProvisioningAgent agent,
       UISynchronize sync,
-      IProgressMonitor monitor) {
+      IProgressMonitor monitor,
+      Shell shell) {
     this.eventBroker = eventBroker;
     this.context = context;
     this.agent = agent;
     this.sync = sync;
     this.monitor = monitor; 
+    this.shell = shell;
   }
-  /*
-  @Override
-  public void handleEvent(Event event) {
-    eventBroker.unsubscribe(this);
-    this.workbench = context.get(IWorkbench.class);
-    UpdateRunner p2runner = new UpdateRunner();
-    p2runner.performUpdates(agent, this.workbench, sync, monitor);
-  }*/
+ 
   
   @Override 
   public void handleEvent(Event event) {
     eventBroker.unsubscribe(this);
     this.workbench = context.get(IWorkbench.class);
-    Job updateJob = Job.create("UpdateJob", monitor -> {
-      UpdateRunner p2runner = new UpdateRunner();
-      p2runner.performUpdates(agent, workbench, monitor);
-    });
-    configureUpdateJob(updateJob);
-    updateJob.schedule();
-  }
-  
-  
-  private void configureUpdateJob(Job updateJob) {
-
-    // register a job change listener to track
-
-    // installation progress and restart application in case of updates
-
-    updateJob.addJobChangeListener(new JobChangeAdapter() {
+    Job updateJob = new Job("Update Job") {
       @Override
-      public void done(IJobChangeEvent event) {
-        if (event.getResult().isOK()) {
-          log.info("Second job done");
-          workbench.restart();
-        }
-        super.done(event);
+      protected IStatus run(final IProgressMonitor monitor) {
+        UpdateRunner ur = new UpdateRunner();
+        return ur.checkForUpdates(agent,workbench, monitor, shell, sync);
       }
-    });
-  }
-
-  
+    };
+    updateJob.schedule();
+  }  
 }

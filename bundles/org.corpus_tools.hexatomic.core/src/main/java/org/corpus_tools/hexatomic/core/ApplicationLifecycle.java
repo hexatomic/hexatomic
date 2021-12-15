@@ -110,7 +110,8 @@ public class ApplicationLifecycle {
             context,
             agent,
             sync,
-            monitor));
+            monitor,
+            null));
     } else if (justUpdated) {
       prefs.putBoolean("justUpdated", false);
       try {

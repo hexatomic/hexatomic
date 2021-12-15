@@ -1,5 +1,3 @@
-instructions.configure=\
-  addRepository(type:0,location:file${#58}/home/clara/Schreibtisch/updatetests/test1/hexatomic/releng/org.corpus_tools.hexatomic.update/target/repository/, name:UpdateHandler Repo);\
-  addRepository(type:1,location:file${#58}/home/clara/Schreibtisch/updatetests/test1/hexatomic/releng/org.corpus_tools.hexatomic.update/target/repository/, name:UpdateHandler Repo);\
+  instructions.configure=\
   addRepository(type:0,location:https${#58}//hexatomic.github.io/hexatomic/updates/v0/,name:Update Site,enabled:false);\
-  addRepository(type:1,location:https${#58}//hexatomic.github.io/hexatomic/updates/v0/,name:Update Site,enabled:false);
+  addRepository(type:1,location:https${#58}//hexatomic.github.io/hexatomic/updates/v0/,name:Update Site,enabled:false);\

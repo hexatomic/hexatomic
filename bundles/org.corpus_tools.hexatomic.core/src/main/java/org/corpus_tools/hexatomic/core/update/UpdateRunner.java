@@ -35,6 +35,7 @@ import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 
 
@@ -44,71 +45,90 @@ public class UpdateRunner {
       org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
-
+  
   /**
   * Search for updates and perform them if wanted.
   * 
   * @param agent OSGi service to create an update operation
   * @param workbench current workbench to restart the application
   * @param monitor interface to show progress of update operation
+  * 
   */
-  
-  public IStatus performUpdates(final IProvisioningAgent agent, 
-      IWorkbench workbench,
-      //UISynchronize sync,
-      IProgressMonitor monitor) {
-    UpdateOperation operation = createUpdateOperation(agent);
+  public IStatus checkForUpdates(final IProvisioningAgent agent, 
+      final IWorkbench workbench,
+      IProgressMonitor monitor, final Shell shell, final UISynchronize sync) {
+    final UpdateOperation operation = createUpdateOperation(agent);
     log.info("Updateoperation created");
     //Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor,
         "Checking for application updates...", 200);
     final IStatus status = operation.resolveModal(sub.newChild(100));
-    //IStatus status = operation.resolveModal(null);
-      
     if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-      MessageDialog.openInformation(
-            null, 
-            "Information", 
-            "Nothing to update");
-      log.info("Nothing to update");
+      showMessage(shell, sync);
       return Status.CANCEL_STATUS;
     }
-    
     //create update job
     ProvisioningJob provisioningJob = operation.getProvisioningJob(monitor);
     
     //run update job
     if (provisioningJob != null) {
-      configureProvisioningJob(provisioningJob);
+      configureProvisioningJob(provisioningJob, shell, sync, workbench);
       provisioningJob.schedule();
       return Status.OK_STATUS;
     } else {
-      log.info("Couldn't find provisioning Job");
-      MessageDialog.openInformation(null, "Information","Couldn't resolve provisioning job");
+      showProvisioningMessage(shell, sync);
+      System.err.println("Trying to update from the Eclipse IDE? This won't work !");
       return Status.CANCEL_STATUS;
     }
     
   }
+
   
-  private void configureProvisioningJob(ProvisioningJob provisioningJob) {
+  private void configureProvisioningJob(ProvisioningJob provisioningJob, 
+      final Shell shell, final UISynchronize sync,
+      final IWorkbench workbench) {
 
     // register a job change listener to track
-
-    // installation progress and restart application in case of updates
-
+    // installation progress and notify user upon success
     provisioningJob.addJobChangeListener(new JobChangeAdapter() {
       @Override
       public void done(IJobChangeEvent event) {
         if (event.getResult().isOK()) {
-          log.info("ProvisioningJob done");
-        }
+          sync.syncExec(new Runnable() {
+
+            @Override
+            public void run() {
+              boolean restart = MessageDialog.openQuestion(shell, 
+                  "Updates installed, restart?",
+                  "Updates have been installed. Do you want to restart?");
+              if (restart) {
+                prefs.putBoolean("justUpdated", true);
+                try {
+                  prefs.flush();
+                } catch (BackingStoreException ex) {
+                  ex.printStackTrace();
+                }
+                workbench.restart();
+              }
+            }
+          });
+        } 
         super.done(event);
       }
     });
+
   }
-
-    
-
+  
+  private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
+    sync.syncExec(new Runnable() {
+      @Override
+      public void run() {
+        MessageDialog.openWarning(parent, 
+            "Couldn't find ProvisioningJob",
+            "Did you start Update from within eclipse ide?");
+      }
+    });
+  }
   
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
     ProvisioningSession session = new ProvisioningSession(agent);
@@ -119,28 +139,17 @@ public class UpdateRunner {
     
   }
   
-  static void runUpdateJob(ProvisioningJob provisioningJob, IWorkbench workbench) {
-    boolean performUpdate = MessageDialog.openQuestion(
-           null,
-           "Updates available",
-           "There are updates available. Do you want to install them now?");
-    if (performUpdate) {
-      provisioningJob.schedule();
-        
-      //restart Application if wanted
-      boolean restart = MessageDialog.openQuestion(null,
-              "Updates installed, restart?",
-              "Updates have been installed successfully, do you want to restart?");
-      if (restart && workbench != null) {
-        prefs.putBoolean("justUpdated", true);
-        try {
-          prefs.flush();
-        } catch (BackingStoreException ex) {
-          ex.printStackTrace();
-        }
-        workbench.restart();
+
+  
+  private void showMessage(final Shell parent, final UISynchronize sync) {
+    sync.syncExec(new Runnable() {
+
+      @Override
+      public void run() {
+        MessageDialog.openWarning(parent, "No update",
+                    "No updates for the current installation have been found.");
       }
-    }
+    });
   }
  
   
