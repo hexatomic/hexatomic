@@ -64,6 +64,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
   private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
@@ -74,8 +75,7 @@ class TestGraphEditor {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  private EPartService partService;
-
+  
   private ErrorService errorService;
   private ProjectManager projectManager;
 
@@ -214,7 +214,7 @@ class TestGraphEditor {
 
     @Override
     public String getFailureMessage() {
-      return "Showing the expected number of " + expected + " connections took too long";
+      return "Showing the expected number of " + expected + " nodes took too long";
     }
   }
 
@@ -233,7 +233,7 @@ class TestGraphEditor {
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
-    partService = ctx.get(EPartService.class);
+    EPartService partService = ctx.get(EPartService.class);
     assertNotNull(partService);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
@@ -671,6 +671,27 @@ class TestGraphEditor {
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() - 1, console));
   }
+  
+  @Test
+  void testShowNewlyCreatedSpan() {
+    openDefaultExample();
+    
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+    
+    // Deactivate/activate spans in view and check the view has less/more nodes
+    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    includeSpans.deselect();
+    bot.waitUntil(new NumberOfNodesCondition(23));
+    includeSpans.select();
+    bot.waitUntil(new NumberOfNodesCondition(26));
+    
+    // Add some span
+    enterCommand("s spanno:test #sTok1 #sTok2");
+
+    // Check that an extra node (the span) has been created and is visible
+    bot.waitUntil(new NumberOfNodesCondition(27));
+  }
 
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/224
@@ -695,4 +716,47 @@ class TestGraphEditor {
     ScalableFigure figure = g.getRootLayer();
     assertEquals(1.0, figure.getScale());
   }
+  
+  
+  /**
+   * Tests that the segmentation list is updated when a token is deleted.
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/261
+   */
+  @Test
+  void testUpdateSegmentsOnDeletedToken() {
+    openDefaultExample();
+
+    SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
+
+    enterCommand("t abc");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return textRangeTable.containsItem(TEST_TOKEN);
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Segment for new token was not shown";
+      }
+    }, 5000);
+
+    enterCommand("d #t12");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return !textRangeTable.containsItem(TEST_TOKEN);
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Segmentation for deleted token was not removed";
+      }
+    }, 5000);
+    
+        
+  }
+
 }

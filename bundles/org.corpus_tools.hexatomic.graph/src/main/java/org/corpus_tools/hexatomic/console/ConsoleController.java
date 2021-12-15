@@ -95,7 +95,7 @@ public class ConsoleController {
 
     StartContext startCtx = parser.start();
 
-    List<String> output = new LinkedList<String>();
+    List<String> output = new LinkedList<>();
 
     if (errorListener.errors.isEmpty()) {
       // Collect the relevant elements of the AST and execute the command

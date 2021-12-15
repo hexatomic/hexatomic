@@ -7,7 +7,7 @@
     <parent>
         <artifactId>org.corpus_tools.hexatomic.bundles</artifactId>
         <groupId>org.corpus_tools</groupId>
-        <version>0.6.0</version>
+        <version>0.9.0-SNAPSHOT</version>
     </parent>
 
 
@@ -16,8 +16,8 @@
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
-                <configuration>                    
-                     <sourceDirectory>src/main/antlr4</sourceDirectory>
+                <configuration>
+	                 <sourceDirectory>src/main/antlr4</sourceDirectory>
                 </configuration>
                 <executions>
                     <execution>

@@ -89,8 +89,14 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
     panel.setLayoutData(fillGridData);
 
     this.columnLabelPanel = new AnnotationLabelPanel(panel, this.newQName);
+    String initialString = null;
+    if (this.oldQName != null && !this.oldQName.isEmpty()) {
+      initialString = this.oldQName;
+    } else {
+      initialString = "<annotation name/key>";
+    }
     try {
-      this.columnLabelPanel.edit(this.oldQName);
+      this.columnLabelPanel.edit(initialString);
     } catch (Exception e) {
       log.warn("An error occurred!", e);
     }

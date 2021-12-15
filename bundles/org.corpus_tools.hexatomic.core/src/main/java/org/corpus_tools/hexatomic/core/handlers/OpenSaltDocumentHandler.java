@@ -63,7 +63,7 @@ public class OpenSaltDocumentHandler {
    * @param parent The SWT display shell.
    */
   @Execute
-  protected static void execute(Shell parent, ProjectManager projectManager,
+  protected void execute(Shell parent, ProjectManager projectManager,
       EPartService partService, ESelectionService selectionService, ErrorService errorService,
       UISynchronize sync, @Named(CommandParams.EDITOR_ID) String editorID) {
 
@@ -72,7 +72,7 @@ public class OpenSaltDocumentHandler {
     if (selection instanceof SDocument) {
 
       String id = ((SDocument) selection).getId();
-      Job job = Job.create("Loading document " + id, (monitor) -> {
+      Job job = Job.create("Loading document " + id, monitor -> {
         monitor.beginTask("Loading document " + id, 0);
         Optional<SDocument> document = projectManager.getDocument(id, true);
 
@@ -113,7 +113,7 @@ public class OpenSaltDocumentHandler {
    * @return
    */
   @CanExecute
-  public static boolean canExecute(ESelectionService selectionService) {
+  public boolean canExecute(ESelectionService selectionService) {
     return selectionService.getSelection() instanceof SDocument;
   }
 

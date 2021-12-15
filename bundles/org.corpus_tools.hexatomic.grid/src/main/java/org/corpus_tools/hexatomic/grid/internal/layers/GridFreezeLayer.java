@@ -41,6 +41,7 @@ import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 public class GridFreezeLayer extends CompositeFreezeLayer {
 
   private final GraphDataProvider bodyDataProvider;
+  private final SelectionLayer selectionLayer;
 
   /**
    * Creates a {@link GridFreezeLayer}.
@@ -53,6 +54,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   public GridFreezeLayer(FreezeLayer freezeLayer, ViewportLayer viewportLayer,
       SelectionLayer selectionLayer, GraphDataProvider bodyDataProvider) {
     super(freezeLayer, viewportLayer, selectionLayer);
+    this.selectionLayer = selectionLayer;
     this.bodyDataProvider = bodyDataProvider;
 
   }
@@ -87,5 +89,14 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
     registerCommandHandler(new CreateSpanCommandHandler(this));
+  }
+
+  /**
+   * Returns the selection layer for this body layer.
+   * 
+   * @return the selectionLayer the {@link SelectionLayer} of the body layer
+   */
+  public final SelectionLayer getSelectionLayer() {
+    return selectionLayer;
   }
 }

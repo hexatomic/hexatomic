@@ -4,6 +4,7 @@
 - [Installation](./installation.md)
 - [Usage](usage/README.md)
     - [Working with projects](usage/projects.md)
+       - [Importing and exporting corpora](usage/import-export.md)
 	- [Editing the corpus structure](usage/corpus-structure.md)
 	- [Opening an editor](usage/open-editor.md)
 	- [Graph Editor](usage/graph-editor/README.md)
@@ -14,3 +15,5 @@
         	- [Editing annotation names](usage/grid-editor/editing-names.md)
         	- [Deleting annotations](usage/grid-editor/deleting-annotations.md)
 - [Troubleshooting & getting help](./troubleshooting.md)
+- [HOW-TOs](./howtos/README.md)
+    - [Creating a corpus from scratch](howtos/corpus-creation.md)

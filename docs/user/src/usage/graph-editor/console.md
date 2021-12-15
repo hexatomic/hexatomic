@@ -13,6 +13,7 @@ Currently, the following commands are supported.
 > - [`t`: Tokenize](#tokenize-t)
 > - [`tb`/`ta`: Tokenize before /after a token](`#tokenize-before-tb-and-after-ta-a-given-token`)
 > - [`n`: New node](#new-node-n)
+> - [`s`: New span](#new-span-s)
 > - [`e`: New edge](#new-edge-e)
 > - [`a`: Annotate](#annotate-a)
 > - [`d`: Delete elements](#delete-elements-d)
@@ -101,6 +102,51 @@ n cat:VP #t2 #n1
 n cat:S #n2 #n3
 ```
 ![Complete syntax annotation](newnode-example-3.png)
+
+#### See also
+
+- [Identifying elements](#identifying-elements)
+- [Defining annotations](#defining-annotations)
+
+## New span: `s`
+
+The command `s` will create a new span, and spanning relations between the new span and existing tokens.
+
+Additionally, it can be used to annotate the new span in the same command.
+
+Arguments starting with `#` refer to the token names to which spanning edges are added (e.g. `#someTokenName`).
+
+When the creation was successful, the console will print a message giving the name of the new span and its annotations.
+
+Note that spans can created over tokens only.
+
+### Examples
+
+Starting with the tokens `[This] [is] [an] [example] [.]`, the following command will group the whole sentence to a span
+with the label "cat=sent".
+
+```text
+s cat:sent #t1 #t2 #t3 #t4 #t5
+```
+
+![Output after adding an NP node](newspan-example-1.png)
+
+The following command creates a new span using the namespace "tiger" for the annotation.
+
+```text
+s tiger:cat:NP #t1
+```
+
+![Output after adding an NP and a namespace](newspan-example-2.png)
+
+You can only use tokens in the `s` command.
+Also, the number of spanned nodes is not restricted.
+
+```text
+n #t5 cat:punct
+s cat:impossible #t1 #n1
+```
+![Error message](newspan-example-3.png)
 
 #### See also
 

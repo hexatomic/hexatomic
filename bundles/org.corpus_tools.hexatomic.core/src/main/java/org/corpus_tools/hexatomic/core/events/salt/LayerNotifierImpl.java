@@ -115,4 +115,9 @@ public class LayerNotifierImpl<N extends Node, R extends Relation<N, N>> extends
           new RemoveRelationFromLayerOperation<N, R>(typedDelegation, (R) rel));
     }
   }
+
+  @Override
+  public void setId(String id) {
+    setNotficiationAwareId(this, id);
+  }
 }

@@ -28,11 +28,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.apache.commons.lang3.tuple.Pair;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
@@ -70,7 +71,7 @@ public class GraphDataProvider implements IDataProvider {
   private STextualDS dataSource = null;
   private SDocumentGraph graph;
 
-  private final List<SToken> orderedDsTokens = new ArrayList<SToken>();
+  private final List<SToken> orderedDsTokens = new ArrayList<>();
   private final LinkedHashMap<SSpan, Set<SToken>> spanTokenMap = new LinkedHashMap<>();
 
   // Alphabetically ordered maps of column titles to columns for the two annotated types
@@ -85,6 +86,21 @@ public class GraphDataProvider implements IDataProvider {
   @Inject
   ProjectManager projectManager;
 
+  /**
+   * Sets the data source field.
+   * 
+   * @param ds the ds to set
+   */
+  public void resolveDataSource(STextualDS ds) {
+    log.debug("Setting data source {}.", ds);
+    this.dataSource = ds;
+    resolveGraph();
+  }
+
+  /**
+   * Rebuilds the column model completely from scratch by resolving the {@link SDocumentGraph} from
+   * scratch.
+   */
   private void resolveGraph() {
     // Reset data
     orderedDsTokens.clear();
@@ -97,7 +113,7 @@ public class GraphDataProvider implements IDataProvider {
         dataSource);
 
     // Only consider tokens that are based on the selected data source.
-    List<SToken> unorderedTokens = new ArrayList<SToken>();
+    List<SToken> unorderedTokens = new ArrayList<>();
     for (SRelation<?, ?> inRel : dataSource.getInRelations()) {
       if (inRel instanceof STextualRelation) {
         // Source of STextualRelation can only be token
@@ -123,7 +139,7 @@ public class GraphDataProvider implements IDataProvider {
       try {
         tokenColumn.setRow(i, token);
       } catch (RuntimeException e) {
-        reportSetRow(e);
+        reportSetCell(e);
       }
     }
     columns.add(tokenColumn);
@@ -144,21 +160,22 @@ public class GraphDataProvider implements IDataProvider {
     if (set != null) {
       set.add(token);
     } else {
-      set = new HashSet<SToken>();
+      set = new HashSet<>();
       set.add(token);
     }
     spanTokenMap.put(span, set);
   }
 
   private void resolveSpanAnnotations(List<SToken> orderedTokens) {
-    for (SSpan span : spanTokenMap.keySet()) {
-      Set<SToken> overlappedTokens = spanTokenMap.get(span);
+    for (Entry<SSpan, Set<SToken>> entry : spanTokenMap.entrySet()) {
+      Set<SToken> overlappedTokens = entry.getValue();
       List<Integer> tokenIndices = new ArrayList<>();
       // Build token index list, i.e., row indices covered by this span
       for (SToken token : overlappedTokens) {
         tokenIndices.add(orderedTokens.indexOf(token));
       }
       Collections.sort(tokenIndices);
+      SSpan span = entry.getKey();
       for (SAnnotation annotation : span.getAnnotations()) {
         resolveAnnotationRecursively(tokenIndices, span, annotation, 1);
       }
@@ -209,7 +226,7 @@ public class GraphDataProvider implements IDataProvider {
     if (column != null) {
       // Try to add, otherwise iterate and re-run
       if (column.areRowsEmpty(tokenIndices.get(0), tokenIndices.get(tokenIndices.size() - 1))) {
-        setMultipleRows(tokenIndices, column, span);
+        setMultipleCells(tokenIndices, column, span);
       } else {
         // Bump counter and re-run
         spanColumnIndex = spanColumnIndex + 1;
@@ -221,7 +238,7 @@ public class GraphDataProvider implements IDataProvider {
       } else {
         column = new Column(ColumnType.SPAN_ANNOTATION, annotationQName, spanColumnIndex);
       }
-      setMultipleRows(tokenIndices, column, span);
+      setMultipleCells(tokenIndices, column, span);
       spanColumns.put(columnName, column);
     }
   }
@@ -235,11 +252,11 @@ public class GraphDataProvider implements IDataProvider {
         if (column != null) {
           // There can be no two annotations of the same qualified name for a single token, so no
           // need to check for multiple rows as we do have to for spans.
-          setSingleRow(column, orderedTokens.indexOf(token), token);
+          setSingleCell(column, orderedTokens.indexOf(token), token);
         } else {
           column = new Column(ColumnType.TOKEN_ANNOTATION, anno.getQName());
           // No overlap possible, so we can simply set the header to the qName
-          setSingleRow(column, orderedTokens.indexOf(token), token);
+          setSingleCell(column, orderedTokens.indexOf(token), token);
           tokenColumns.put(anno.getQName(), column);
         }
       }
@@ -249,34 +266,11 @@ public class GraphDataProvider implements IDataProvider {
 
   }
 
-  private void setMultipleRows(List<Integer> tokenIndices, Column column,
-      SStructuredNode annotationNode) {
-    for (Integer idx : tokenIndices) {
-      setSingleRow(column, idx, annotationNode);
-    }
-  }
-
-  private void setSingleRow(Column column, Integer idx, SStructuredNode annotationNode) {
-    try {
-      column.setRow(idx, annotationNode);
-    } catch (RuntimeException e) {
-      reportSetRow(e);
-    }
-  }
-
-  private void reportSetRow(RuntimeException e) {
-    errors.handleException(
-        "Encountered a set cell that should be empty. This is a bug, please create a new issue at https://github.com/hexatomic/hexatomic.",
-        e, this.getClass());
-  }
-
   /**
    * Returns the value to display for the given cell, as identified by column and row index.
    * 
    * <p>
-   * This is either an annotation value; or a token text; or, if no {@link STextualDS} has been
-   * selected, a message to select a text; or, if the selected {@link STextualDS} contains no
-   * tokens, a message notifying the user of this.
+   * This is either an annotation value; or a token text.
    * </p>
    */
   @Override
@@ -286,7 +280,7 @@ public class GraphDataProvider implements IDataProvider {
         return null;
       }
     } else {
-      if (orderedDsTokens.size() == 0 && columnIndex == 0 && rowIndex == 0) {
+      if (orderedDsTokens.isEmpty() && columnIndex == 0 && rowIndex == 0) {
         return null;
       } else {
         Column column = null;
@@ -300,30 +294,6 @@ public class GraphDataProvider implements IDataProvider {
       }
     }
     return null;
-  }
-
-  private void removeAnnotation(String annotationQName, SStructuredNode node, Column column,
-      int rowIndex) {
-    // Remove annotation from Salt model
-    if (node != null) {
-      node.removeLabel(column.getColumnValue());
-      log.debug("Removed annotation {} from node {}.", annotationQName, node);
-    }
-    // Remove annotation from all column cells
-    if (node instanceof SToken) {
-      // Annotation can only span a single token, i.e., a single row
-      column.setRow(rowIndex, null);
-    } else if (node instanceof SSpan) {
-      List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
-      for (SToken token : overlappedTokens) {
-        column.setRow(orderedDsTokens.indexOf(token), null);
-      }
-      // If, now, the span has no annotations, remove it
-      if (node.getAnnotations().isEmpty()) {
-        graph.removeNode(node);
-        log.debug("Removed empty span {} from graph {}.", node, graph);
-      }
-    }
   }
 
   @Override
@@ -365,11 +335,78 @@ public class GraphDataProvider implements IDataProvider {
           log.debug("Action not implemented: Create token.");
         }
       } else {
-        log.debug("Action not implemented: Set text on '{}' to '{}'.", node.toString(), newValue);
+        log.debug("Action not implemented: Set text on '{}' to '{}'.", node, newValue);
       }
     }
     projectManager.addCheckpoint();
 
+  }
+
+  /**
+   * Retrieves a column for a given qualified annotation name.
+   * 
+   * <p>
+   * This may be an existing column for the qualified annotation name, or a newly created column, if
+   * no column for the given qualified annotation name exists.
+   * </p>
+   * 
+   * @param columnType The type of the column to be retrieved
+   * @param annotationQName The qualified annotation name for the column
+   */
+  public Column getColumnForAnnotation(ColumnType columnType, String annotationQName) {
+    Optional<Column> column = columns.stream()
+        .filter(c -> c.getColumnValue().equals(annotationQName) && c.getColumnType() == columnType)
+        .findFirst();
+    if (column.isPresent()) {
+      return column.get();
+    } else {
+      return new Column(columnType, annotationQName);
+    }
+  }
+
+  private void setMultipleCells(List<Integer> tokenIndices, Column column,
+      SStructuredNode annotationNode) {
+    for (Integer idx : tokenIndices) {
+      setSingleCell(column, idx, annotationNode);
+    }
+  }
+
+  private void setSingleCell(Column column, Integer idx, SStructuredNode annotationNode) {
+    try {
+      column.setRow(idx, annotationNode);
+    } catch (RuntimeException e) {
+      reportSetCell(e);
+    }
+  }
+
+  private void reportSetCell(RuntimeException e) {
+    errors.handleException(
+        "Encountered a set cell that should be empty. This is a bug, please create a new issue at https://github.com/hexatomic/hexatomic.",
+        e, this.getClass());
+  }
+
+  private void removeAnnotation(String annotationQName, SStructuredNode node, Column column,
+      int rowIndex) {
+    // Remove annotation from Salt model
+    if (node != null) {
+      node.removeLabel(column.getColumnValue());
+      log.debug("Removed annotation {} from node {}.", annotationQName, node);
+    }
+    // Remove annotation from all column cells
+    if (node instanceof SToken) {
+      // Annotation can only span a single token, i.e., a single row
+      column.setRow(rowIndex, null);
+    } else if (node instanceof SSpan) {
+      List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
+      for (SToken token : overlappedTokens) {
+        column.setRow(orderedDsTokens.indexOf(token), null);
+      }
+      // If, now, the span has no annotations, remove it
+      if (node.getAnnotations().isEmpty()) {
+        graph.removeNode(node);
+        log.debug("Removed empty span {} from graph {}.", node, graph);
+      }
+    }
   }
 
   private void createAnnotation(Object newValue, int columnIndex, SStructuredNode node) {
@@ -380,7 +417,7 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   private void changeAnnotationValue(Object newValue, Column column, SStructuredNode dataObject) {
-    SStructuredNode node = (SStructuredNode) dataObject;
+    SStructuredNode node = dataObject;
     SAnnotation anno = node.getAnnotation(column.getColumnValue());
     if (anno == null) {
       throw new HexatomicRuntimeException(
@@ -400,51 +437,224 @@ public class GraphDataProvider implements IDataProvider {
    * @param cellMapByColumn a map of cells from column positions to sets of row positions.
    * @param newQName the new qualified annotation name for the annotations to be renamed
    */
-  public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
-    Set<SStructuredNode> touchedNodes = new HashSet<>();
-    Set<SStructuredNode> unchangedNodes = new HashSet<>();
-    Pair<String, String> namespaceNamePair = SaltUtil.splitQName(newQName);
-    final String namespace = namespaceNamePair.getLeft();
-    final String name = namespaceNamePair.getRight();
-    // Run the rename for all cells by column
-    for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
-      Integer columnPosition = columnCoordinates.getKey();
-      Column column = getColumns().get(columnPosition);
-      String currentQName = column.getColumnValue();
-      if (currentQName.equals(newQName)) {
-        // Simply ignore this column, as the name is the same
-        log.debug("Ignoring rename operation on column {}, "
-            + "as the current and new qualified annotation names are the same: "
-            + "[current: {}]..[new: {}].", columnPosition, currentQName, newQName);
-        continue;
-      }
-      for (Integer rowPosition : columnCoordinates.getValue()) {
-        SStructuredNode node = column.getDataObject(rowPosition);
-        if (node != null && !touchedNodes.contains(node)) {
-          // Only proceed if the node is not null and if the node hasn't been touched yet.
-          SAnnotation currentAnnotation = node.getAnnotation(currentQName);
-          // Check if target annotation already exists
-          if (node.getAnnotation(newQName) != null) {
-            log.debug(
-                "The following node already has an annotation with the qualified name '{}'. "
-                    + "Ignoring it to avoid throwing {}:\n{}",
-                newQName, SaltInsertionException.class.getSimpleName(), node);
-            unchangedNodes.add(node);
-            continue;
-          }
-          Object annotationValue = currentAnnotation.getValue();
-          node.removeLabel(currentQName);
-          node.createAnnotation(namespace, name, annotationValue);
-          // Remember that the node has already been touched.
-          touchedNodes.add(node);
-        }
-      }
+  public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn,
+      String newQName) {
+    // Retrieve the (maximally two, one for each node type) target columns first, to avoid race
+    // conditions, in which new columns may be added to the list of columns before the next column
+    // index is worked on (and therefore the wrong cell is moved).
+    Column tokenAnnoTargetColumn = getColumnForAnnotation(ColumnType.TOKEN_ANNOTATION, newQName);
+    Column spanAnnoTargetColumn = getColumnForAnnotation(ColumnType.SPAN_ANNOTATION, newQName);
+    TreeSet<Integer> tokenAnnoSourceIndices = new TreeSet<>();
+    TreeSet<Integer> spanAnnoSourceIndices = new TreeSet<>();
+
+    final Set<Integer> duplicateRows = deduplicateChangeSet(cellMapByColumn);
+
+    final Set<SStructuredNode> unchangedNodes = renameAnnotationsByColumn(cellMapByColumn, newQName,
+        tokenAnnoTargetColumn, spanAnnoTargetColumn, tokenAnnoSourceIndices, spanAnnoSourceIndices);
+    // Determine the number of indices to add to the highest index of any span annotation source
+    // column. If there are no token annotation source columns, this is simply 1, otherwise it's 2
+    // (because any token annoation columns will always be added before any span annotation
+    // columns).
+    int toAddToSpanIndex = tokenAnnoSourceIndices.isEmpty() ? 1 : 2;
+
+    // Add any newly created columns to the list of columns
+    if (!tokenAnnoSourceIndices.isEmpty() && !columns.contains(tokenAnnoTargetColumn)) {
+      columns.add(tokenAnnoSourceIndices.last() + 1, tokenAnnoTargetColumn);
     }
-    if (!unchangedNodes.isEmpty()) {
-      UnrenamedAnnotationsDialog.open(namespace, name, unchangedNodes);
+    if (!spanAnnoSourceIndices.isEmpty() && !columns.contains(spanAnnoTargetColumn)) {
+      columns.add(spanAnnoSourceIndices.last() + toAddToSpanIndex, spanAnnoTargetColumn);
+    }
+    if (!unchangedNodes.isEmpty() || !duplicateRows.isEmpty()) {
+      UnrenamedAnnotationsDialog.open(splitNamespace(newQName), splitName(newQName), unchangedNodes,
+          duplicateRows);
     }
     projectManager.addCheckpoint();
+  }
 
+  /**
+   * Renames annotations on a per-column basis.
+   * 
+   * @param cellMapByColumn The map of to-be-renamed cells per column
+   * @param newQName The new qualified annotation name
+   * @param tokenAnnoTargetColumn The target column for token annotations
+   * @param spanAnnoTargetColumn The target column for span annotations
+   * @param tokenAnnoSourceIndices The indices of the source (current) token annotation columns in
+   *        which cells have been selected
+   * @param spanAnnoSourceIndices The indices of the source (current) span annotation columns in
+   *        which cells have been selected
+   * @return a set of nodes that have been left unchanged because they couldn't be renamed
+   */
+  private Set<SStructuredNode> renameAnnotationsByColumn(Map<Integer, Set<Integer>> cellMapByColumn,
+      String newQName,
+      Column tokenAnnoTargetColumn,
+      Column spanAnnoTargetColumn, TreeSet<Integer> tokenAnnoSourceIndices,
+      TreeSet<Integer> spanAnnoSourceIndices) {
+    Set<SStructuredNode> touchedNodes = new HashSet<>();
+    Set<SStructuredNode> unchangedNodes = new HashSet<>();
+    // Run the rename for all cells by column
+    for (Entry<Integer, Set<Integer>> columnCoordinates : cellMapByColumn.entrySet()) {
+      // Abort for empty cellSets
+      Integer columnPosition = columnCoordinates.getKey();
+      Column sourceColumn = getColumns().get(columnPosition);
+      String currentQName = sourceColumn.getColumnValue();
+      ColumnType sourceColumnType = sourceColumn.getColumnType();
+      if (columnCoordinates.getValue().isEmpty() || currentQName.equals(newQName)) {
+        continue;
+      }
+      Column targetColumn = null;
+      if (sourceColumnType == ColumnType.TOKEN_ANNOTATION) {
+        targetColumn = tokenAnnoTargetColumn;
+        tokenAnnoSourceIndices.add(columnPosition);
+      } else if (sourceColumnType == ColumnType.SPAN_ANNOTATION) {
+        targetColumn = spanAnnoTargetColumn;
+        spanAnnoSourceIndices.add(columnPosition);
+      } else {
+        log.warn("Source column is not of any permitted type: {}.", sourceColumnType);
+      }
+      if (targetColumn != null) {
+        moveCells(newQName, touchedNodes, unchangedNodes, columnCoordinates,
+            sourceColumn, currentQName, targetColumn);
+      }
+    }
+    return unchangedNodes;
+  }
+
+  /**
+   * Controls the movement of annotations to the new cells in the column for the target annotation
+   * name.
+   * 
+   * @param newQName The new qualified annotation name
+   * @param touchedNodes The set of nodes that has already been processed
+   * @param unchangedNodes The set of nodes that have remained unchanged becuase they couldn't have
+   *        been renamed
+   * @param columnCoordinates The coordinates for the column that is processed
+   * @param sourceColumn The source column of the to-be-renamed annotations
+   * @param currentQName The current qualified name
+   * @param targetColumn The target column for the to-be-renamed annotations
+   */
+  private void moveCells(String newQName, 
+      Set<SStructuredNode> touchedNodes,
+      Set<SStructuredNode> unchangedNodes,
+      Entry<Integer, Set<Integer>> columnCoordinates, Column sourceColumn, String currentQName,
+      Column targetColumn) {
+    if (targetColumn.getBits().isEmpty()) {
+      // Add new cells, as no further check is needed
+      moveAnnotationsToEmptyCells(touchedNodes, columnCoordinates, sourceColumn, currentQName,
+          targetColumn, newQName);
+    } else {
+      // Check for each cell if it is taken already
+      moveCheckedAnnotationsToCells(newQName, touchedNodes, unchangedNodes, columnCoordinates,
+          sourceColumn, currentQName, targetColumn);
+    }
+  }
+
+  private void moveCheckedAnnotationsToCells(String newQName, Set<SStructuredNode> touchedNodes,
+      Set<SStructuredNode> unchangedNodes, Entry<Integer, Set<Integer>> columnCoordinates,
+      Column sourceColumn, String currentQName, Column targetColumn) {
+    for (Integer rowPosition : columnCoordinates.getValue()) {
+      SStructuredNode node = sourceColumn.getDataObject(rowPosition);
+      // Only proceed if the node is not null, node hasn't been touched yet, node has annotation
+      // (may not be the case for spans whose first covered cell has been touched.
+      if (node != null && !touchedNodes.contains(node)) {
+        Object currentValue = node.getAnnotation(currentQName).getValue();
+        // Check if target annotation already exists
+        if (node.getAnnotation(newQName) != null) {
+          log.debug(
+              "The following node already has an annotation with the qualified name '{}'. "
+                  + "Ignoring it to avoid throwing {}:\n{}",
+              newQName, SaltInsertionException.class.getSimpleName(), node);
+          unchangedNodes.add(node);
+          continue;
+        }
+        renameAnnotation(splitNamespace(newQName), splitName(newQName), currentQName, node,
+            currentValue);
+ 
+        targetColumn.setRow(rowPosition, node);
+        sourceColumn.setRow(rowPosition, null);
+        // Remember that the node has already been touched.
+        touchedNodes.add(node);
+      }
+    }
+  }
+
+  private void moveAnnotationsToEmptyCells(
+      Set<SStructuredNode> touchedNodes,
+      Entry<Integer, Set<Integer>> columnCoordinates, Column sourceColumn, String currentQName,
+      Column targetColumn, String newQName) {
+    for (Integer rowPosition : columnCoordinates.getValue()) {
+      SStructuredNode node = sourceColumn.getDataObject(rowPosition);
+      if (node.getAnnotation(currentQName) != null) {
+        Object currentValue = node.getAnnotation(currentQName).getValue();
+        renameAnnotation(splitNamespace(newQName), splitName(newQName), currentQName, node,
+            currentValue);
+      }
+      // Move the cell
+      targetColumn.setRow(rowPosition, node);
+      sourceColumn.setRow(rowPosition, null);
+ 
+      // Remember that the node has already been touched.
+      touchedNodes.add(node);
+    }
+  }
+
+  private String splitName(String newQName) {
+    return SaltUtil.splitQName(newQName).getRight();
+  }
+
+  private String splitNamespace(String newQName) {
+    return SaltUtil.splitQName(newQName).getLeft();
+  }
+
+  /**
+   * Removes rows from the given cell map that are included more than once, i.e., from which more
+   * than one cell has been selected. These duplicate entries cannot be processed, as they would be
+   * mapped to the same qualified annotation name (n:1) which is not possible.
+   * 
+   * @param cellMapByColumn The original map of cells over columns
+   * @return a set of indices for rows that had been included more than once in the cell map
+   */
+  private Set<Integer> deduplicateChangeSet(
+      Map<Integer, Set<Integer>> cellMapByColumn) {
+    // Determine if there are any neighbouring cells in the changeset
+    Set<Integer> duplicateRows = new HashSet<>();
+    Set<Integer> testSet = new HashSet<>();
+    cellMapByColumn.values().stream().forEach(rowSet -> {
+      for (Integer row : rowSet) {
+        if (!testSet.add(row)) {
+          duplicateRows.add(row);
+        }
+      }
+    });
+
+    // Remove duplicates from changeset
+    for (Set<Integer> rows : cellMapByColumn.values()) {
+      rows.removeIf(duplicateRows::contains);
+    }
+    return duplicateRows;
+  }
+
+  /**
+   * Renames an annotation.
+   * 
+   * <p>
+   * Removes the annotation with the old name, and adds the annotation with the new name to the
+   * respective node, and moves the annotation to the respective column.
+   * </p>
+   * 
+   * @param namespace The namespace of the new annotation
+   * @param name The name of the new annotation
+   * @param sourceColumn The column that the annotation is currently in
+   * @param currentQName The current qualified annotation name
+   * @param targetColumn The column where the new annotation should be moved to
+   * @param rowPosition The row position of the edited cell
+   * @param node The node that has the annotation
+   * @param currentValue The value of the annotation that is renamed
+   */
+  private void renameAnnotation(final String namespace, final String name, String currentQName,
+      SStructuredNode node,
+      Object currentValue) {
+    node.removeLabel(currentQName);
+    node.createAnnotation(namespace, name, currentValue);
   }
 
   /**
@@ -484,27 +694,6 @@ public class GraphDataProvider implements IDataProvider {
   }
 
 
-  @Override
-  public int getColumnCount() {
-    return columns.size();
-  }
-
-  @Override
-  public int getRowCount() {
-    return orderedDsTokens.size();
-  }
-
-  /**
-   * Sets the data source field.
-   * 
-   * @param ds the ds to set
-   */
-  public void setDsAndResolveGraph(STextualDS ds) {
-    log.debug("Setting data source {}.", ds);
-    this.dataSource = ds;
-    resolveGraph();
-  }
-
   /**
    * Set the {@link SDocumentGraph} that the data provider operates on.
    * 
@@ -521,6 +710,16 @@ public class GraphDataProvider implements IDataProvider {
    */
   public List<Column> getColumns() {
     return columns;
+  }
+
+  @Override
+  public int getColumnCount() {
+    return columns.size();
+  }
+
+  @Override
+  public int getRowCount() {
+    return orderedDsTokens.size();
   }
 
   private String getAnnotationNamespace(int columnIndex) {

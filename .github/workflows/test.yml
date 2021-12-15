@@ -2,29 +2,14 @@ name: Automated tests
 on: push
 
 jobs:
-  test_jdk8:
-    name: OpenJDK 8
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-8-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-8-
-      - name: Set JAVA_HOME to OpenJDK 8
-        run: echo JAVA_HOME=$JAVA_HOME_8_X64 >> $GITHUB_ENV
-      - name: Run Maven install (includes tests)
-        run: xvfb-run mvn verify
-        env:
-          LANG: en_US.UTF-8
   test_jdk11:
     name: OpenJDK 11 + SonarCloud code analysis
     runs-on: ubuntu-20.04
     steps:
+      - name: Update packages
+        run: sudo apt-get update
+      - name: Install metacity window manager for background tests
+        run: sudo apt-get install metacity
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -40,7 +25,7 @@ jobs:
       - name: Set JAVA_HOME to OpenJDK 11
         run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
       - name: Run Maven Tests with enabled code coverage and upload results to SonarCloud
-        run: xvfb-run mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+        run: ./releng/sh/metacity-run.sh mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=hexatomic_hexatomic -Dsonar.organization=hexatomic -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

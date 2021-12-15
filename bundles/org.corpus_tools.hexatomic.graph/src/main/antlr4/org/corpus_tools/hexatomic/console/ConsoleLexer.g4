@@ -1,6 +1,7 @@
 lexer grammar ConsoleLexer;
 
 NEW_NODE: 'n' -> pushMode(ARGUMENTS);
+NEW_SPAN: 's' -> pushMode(ARGUMENTS);
 NEW_EDGE: 'e' -> pushMode(ARGUMENTS);
 SET_ATTRIBUTE: 'a' -> pushMode(ARGUMENTS);
 DELETE: 'd' -> pushMode(ARGUMENTS);
@@ -15,10 +16,9 @@ UNKNOWN: .;
 
 mode ARGUMENTS;
 
-NUMBER: [0-9]+;
-NODE_REF: '#'[a-zA-Z0-9_]+;
-IDENTIFIER: [a-zA-Z0-9_]+;
-PUNCTUATION: [.,\-!?]+;
+NODE_REF: '#' [\p{Letter}0-9_]+;
+IDENTIFIER: [\p{Letter}0-9_]+;
+PUNCTUATION: [.,\-!?\u3002]+;
 TYPE_STR : ('-d' | '-p' | '-r' | '-o') ;
 QUOTED_STRING: '"' ~('"' | '\\')* (.~('"'|'\\'))* '"';
 NEWLINE: [\r\n]+;

@@ -21,9 +21,13 @@
 package org.corpus_tools.hexatomic.grid.internal.actions;
 
 import java.util.Set;
+import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.CreateSpanCommand;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
+import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
+import org.eclipse.nebula.widgets.nattable.ui.action.IKeyAction;
+import org.eclipse.swt.events.KeyEvent;
 
 /**
  * An {@link IContextFreeAction} that triggers a {@link CreateSpanCommand} for the currently
@@ -31,24 +35,20 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
-public class CreateSpanSelectionAction implements IContextFreeAction {
-
-  private final Set<PositionCoordinate> selectedNonTokenCells;
-
-  /**
-   * Creates a new {@link CreateSpanSelectionAction}.
-   * 
-   * @param selectedNonTokenCells a set of {@link PositionCoordinate}s of the currently selected
-   *        cells.
-   */
-  public CreateSpanSelectionAction(Set<PositionCoordinate> selectedNonTokenCells) {
-    this.selectedNonTokenCells = selectedNonTokenCells;
-  }
+public class CreateSpanSelectionAction implements IContextFreeAction, IKeyAction {
 
   @Override
   public void run(NatTable natTable) {
-    natTable.doCommand(new CreateSpanCommand(natTable, selectedNonTokenCells));
+    SelectionLayer selectionLayer = GridHelper.getBodyLayer(natTable).getSelectionLayer();
+    PositionCoordinate[] cellPositions = selectionLayer.getSelectedCellPositions();
+    if (GridHelper.areSelectedCellsInSingleSpanColumn(cellPositions, selectionLayer)) {
+      natTable.doCommand(new CreateSpanCommand(natTable, Set.of(cellPositions)));
+    }
+  }
 
+  @Override
+  public void run(NatTable natTable, KeyEvent event) {
+    run(natTable);
   }
 
 }

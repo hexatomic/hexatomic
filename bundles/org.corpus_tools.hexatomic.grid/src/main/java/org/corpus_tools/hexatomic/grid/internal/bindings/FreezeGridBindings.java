@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.grid.internal.bindings;
 
+import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfiguration;
 import org.eclipse.nebula.widgets.nattable.freeze.action.FreezeGridAction;
@@ -41,6 +43,11 @@ public class FreezeGridBindings extends AbstractUiBindingConfiguration implement
     // Shift + Alt + F toggles freeze
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 'f'),
         new FreezeGridAction(true));
+    // F5 triggers grid refresh
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.F5), new ResolveAction());
+    // Alt + S creates a new span
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT, 's'),
+        new CreateSpanSelectionAction());
   }
 
 }

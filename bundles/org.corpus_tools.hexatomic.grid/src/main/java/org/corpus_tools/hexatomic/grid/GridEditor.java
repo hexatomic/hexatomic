@@ -28,8 +28,6 @@ import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
-import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.grid.internal.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.configuration.ColumnHeaderMenuConfiguration;
@@ -40,6 +38,8 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
+import org.corpus_tools.hexatomic.grid.internal.events.TriggerResolutionEvent;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.internal.style.SelectionStyleConfiguration;
@@ -75,6 +75,7 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
+import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.layer.stack.DefaultBodyLayerStack;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.swt.SWT;
@@ -91,6 +92,11 @@ import org.eclipse.swt.widgets.Label;
  */
 public class GridEditor {
 
+  /**
+   * SWT data key used to store a reference to {@link ControlDecoration} of a component.
+   */
+  public static final String CONTROL_DECORATION = "CONTROL_DECORATION";
+
   private static final String NO_TOKENS_MESSAGE =
       "The data source does not contain any tokens, and cannot be displayed.";
 
@@ -101,6 +107,8 @@ public class GridEditor {
   public static final String CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL = "Change annotation name";
 
   public static final String CREATE_SPAN_POPUP_MENU_LABEL = "Create span";
+
+  public static final String REFRESH_POPUP_MENU_LABEL = "Refresh grid";
 
   @Inject
   ErrorService errors;
@@ -162,6 +170,17 @@ public class GridEditor {
     final GridFreezeLayer compositeFreezeLayer = new GridFreezeLayer(freezeLayer,
         bodyLayer.getViewportLayer(), selectionLayer, bodyDataProvider);
 
+    compositeFreezeLayer.addLayerListener(event -> {
+      Class<? extends ILayerEvent> eventClass = event.getClass();
+      if (eventClass == ColumnsChangedEvent.class) {
+        log.trace("Refreshing table");
+        table.refresh();
+      } else if (eventClass == TriggerResolutionEvent.class) {
+        log.trace("Triggering complete data model resolution");
+        resolveDataSource();
+      }
+    });
+     
     // Column header
     final IDataProvider columnHeaderDataProvider =
         new ColumnHeaderDataProvider(bodyDataProvider, projectManager);
@@ -207,31 +226,39 @@ public class GridEditor {
         part.getPersistedState().get("org.corpus_tools.hexatomic.document-id"));
   }
 
+  /**
+   * Does a full resolve of the current textual data source ({@link STextualDS}), and refreshes the
+   * table view.
+   */
+  private void resolveDataSource() {
+    bodyDataProvider.resolveDataSource(activeDs);
+    table.refresh();
+  }
+
+  /**
+   * Listen to undo/redo operation events and do a full resolve.
+   *
+   * @param element The element
+   */
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
-    if (element instanceof ChangeSet) {
-      ChangeSet changeSet = (ChangeSet) element;
-      if (changeSet.containsDocument(
-          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
-        setSelection(getActiveDs());
-      }
-    }
+  void subscribeUndoOperationAdded(
+      @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
+    resolveDataSource();
   }
 
   /**
    * Consumes the selection of an {@link STextualDS} from the {@link ESelectionService}.
-   * 
+   *
    * @param ds The {@link STextualDS} that has been selected via the {@link ESelectionService}.
    */
   @Inject
   void setSelection(@Optional @Named(IServiceConstants.ACTIVE_SELECTION) STextualDS ds) {
-    if (ds != null) {
+    if (selectionService.getSelection() instanceof STextualDS && ds != null
+        && ds != this.activeDs) {
       log.debug("The textual data source {} has been selected.", ds.getId());
-      setActiveDS(ds);
-      bodyDataProvider.setDsAndResolveGraph(ds);
-      // Refresh all layers
-      table.refresh();
+      this.activeDs = ds;
+      resolveDataSource();
     }
   }
 
@@ -272,6 +299,7 @@ public class GridEditor {
 
     final ControlDecoration deco = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
     deco.setShowOnlyOnFocus(false);
+    viewer.getControl().setData(CONTROL_DECORATION, deco);
 
     viewer.setContentProvider(ArrayContentProvider.getInstance());
     viewer.setLabelProvider(createLabelProvider());
@@ -284,6 +312,14 @@ public class GridEditor {
       messageLabel.setVisible(true);
       parent.layout();
     }
+  }
+
+  private void changeTableVisibility(NatTable currTable, Composite currParent, Boolean visible) {
+    if (currTable != null) {
+      currTable.setVisible(visible);
+      currParent.layout();
+    }
+
   }
 
   private ISelectionChangedListener createSelectionChangeListener(Label messageLabel,
@@ -299,26 +335,18 @@ public class GridEditor {
         // This is found out by checking whether the data source has incoming relations of type
         // STextualRelation.
         if (((STextualDS) selection.getFirstElement()).getInRelations().stream()
-            .noneMatch(rel -> rel instanceof STextualRelation)) {
+            .noneMatch(STextualRelation.class::isInstance)) {
           deco.setDescriptionText(NO_TOKENS_MESSAGE);
           Image errorImage = FieldDecorationRegistry.getDefault()
               .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
           deco.setImage(errorImage);
-          if (table != null) {
-            // Hide table
-            table.setVisible(false);
-            parent.layout();
-          }
+          changeTableVisibility(table, parent, false);
         } else {
           deco.setDescriptionText(null);
           deco.setImage(null);
           selectionService.setSelection(
               selection.size() == 1 ? selection.getFirstElement() : selection.toArray());
-          if (table != null) {
-            // Show table
-            table.setVisible(true);
-            parent.layout();
-          }
+          changeTableVisibility(table, parent, true);
         }
       }
     };
@@ -335,25 +363,6 @@ public class GridEditor {
         return super.getText(element);
       }
     };
-  }
-
-  /**
-   * Sets the active textual data source the table displays.
-   * 
-   * @param ds The active data source.
-   */
-  private void setActiveDS(STextualDS ds) {
-    this.activeDs = ds;
-
-  }
-
-  /**
-   * Returns the currently active textual data source.
-   * 
-   * @return the currently active textual data source
-   */
-  private STextualDS getActiveDs() {
-    return this.activeDs;
   }
 
   private SDocumentGraph getGraph() {

@@ -42,7 +42,10 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -127,6 +130,23 @@ class TestProjectManager {
       projectManager.addCheckpoint();
 
       assertTrue(projectManager.isDirty());
+      bot.waitUntil(new ICondition() {
+        
+        @Override
+        public boolean test() throws Exception {
+          return bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled();
+        }
+        
+        @Override
+        public void init(SWTBot bot) {
+          // No initialization needed
+        }
+        
+        @Override
+        public String getFailureMessage() {
+          return "Undo toolbar button not enabled";
+        }
+      });
       // Also check that the undo toolbar item has been enabled
       assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
       assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
@@ -139,9 +159,7 @@ class TestProjectManager {
       final ParameterizedCommand cmdSaveAs = commandService
           .createCommand("org.corpus_tools.hexatomic.core.command.save_as_salt_project", params);
 
-      UIThreadRunnable.syncExec(() -> {
-        handlerService.executeHandler(cmdSaveAs);
-      });
+      UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSaveAs));
 
       assertFalse(projectManager.isDirty());
 
@@ -229,18 +247,44 @@ class TestProjectManager {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    UIThreadRunnable.syncExec(() -> {
-      // Call saveTo which should show an error
-      spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
-          bot.getDisplay().getActiveShell());
-
-    });
+    UIThreadRunnable.syncExec(() -> 
+        // Call saveTo which should show an error
+        spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
+          bot.getDisplay().getActiveShell()));
+    
     Optional<IStatus> lastException =
         UIThreadRunnable.syncExec(() -> errorService.getLastException());
     // Check the error has been recorded
     assertTrue(lastException.isPresent());
     if (lastException.isPresent()) {
       assertTrue(lastException.get().getException() instanceof InterruptedException);
+    }
+  }
+  
+  @Test
+  @Order(4)
+  void testCloseUnsavedChangesWarning() {
+    projectManager.open(exampleProjectUri);
+    Optional<SDocument> optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
+    assertTrue(optionalDoc1.isPresent());
+    if (optionalDoc1.isPresent()) {
+      SDocumentGraph doc1Graph = optionalDoc1.get().getDocumentGraph();
+      assertNotNull(doc1Graph);
+      List<SToken> tokens = doc1Graph.getSortedTokenByText();
+      doc1Graph.createSpan(tokens.get(2), tokens.get(3));
+
+      projectManager.addCheckpoint();
+
+      assertTrue(projectManager.isDirty());
+
+      // Click on the exit menu entry
+      bot.menu("Exit").click();
+      
+      // A warning dialog should appear
+      SWTBotShell warningDialog = bot.shell("Discard unsaved changes?");
+      assertNotNull(warningDialog);
+      assertTrue(warningDialog.isOpen());
+      warningDialog.bot().button("Cancel").click();
     }
   }
 }
