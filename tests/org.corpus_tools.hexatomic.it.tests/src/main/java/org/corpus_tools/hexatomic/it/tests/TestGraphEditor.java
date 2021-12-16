@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -40,6 +41,8 @@ import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
+import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -55,6 +58,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
+import org.eclipse.zest.core.widgets.GraphNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
@@ -64,6 +68,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String CORPUS_EDITOR_PART_ID =
+      "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
+  private static final String INCLUDE_SPANS = "Include spans";
+  private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
   private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
@@ -75,7 +83,7 @@ class TestGraphEditor {
   private URI exampleProjectUri;
   private ECommandService commandService;
   private EHandlerService handlerService;
-  
+
   private ErrorService errorService;
   private ProjectManager projectManager;
 
@@ -152,7 +160,8 @@ class TestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
-      SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
+      SWTBotView view =
+          TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
@@ -218,6 +227,42 @@ class TestGraphEditor {
     }
   }
 
+  private final class HasNodeWithText extends DefaultCondition {
+
+    private final String expectedText;
+
+    public HasNodeWithText(String expectedText) {
+      this.expectedText = expectedText;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      AtomicBoolean found = new AtomicBoolean(false);
+
+      Graph g = bot.widget(widgetOfType(Graph.class));
+      if (g != null) {
+        bot.getDisplay().syncExec(() -> {
+          List<?> nodes = g.getNodes();
+
+          for (Object o : nodes) {
+            if (o instanceof GraphNode) {
+              GraphNode n = (GraphNode) o;
+              if (Objects.equals(this.expectedText, n.getText().strip())) {
+                found.set(true);
+              }
+            }
+          }
+        });
+      }
+      return found.get();
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Could not find any node with the text '" + this.expectedText + "'";
+    }
+  }
+
   @BeforeEach
   void setup() {
     TestHelper.setKeyboardLayout();
@@ -258,8 +303,7 @@ class TestGraphEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    SWTBotView corpusStructurePart =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    SWTBotView corpusStructurePart = bot.partById(CORPUS_EDITOR_PART_ID);
     corpusStructurePart.restore();
     corpusStructurePart.show();
 
@@ -278,9 +322,8 @@ class TestGraphEditor {
     TestCorpusStructure.createMinimalCorpusStructure(bot);
 
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").bot().tree()
-            .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
+    SWTBotTreeItem docMenu = bot.partById(CORPUS_EDITOR_PART_ID).bot().tree()
+        .expandNode("corpus_graph_1").expandNode("corpus_1").expandNode("document_1");
 
     // Select and open the editor
     docMenu.click();
@@ -535,13 +578,13 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
     bot.waitUntil(new NumberOfNodesCondition(26));
     // With spans enabled, filter for annotation names
-    SWTBotText annoFilter = bot.textWithMessage("Filter by node annotation name");
+    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
 
     // Tokens and the matching structure nodes
     annoFilter.setText("const");
@@ -671,21 +714,21 @@ class TestGraphEditor {
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     bot.waitUntil(new ConsoleFontSizeCondition(initialSize.get() - 1, console));
   }
-  
+
   @Test
   void testShowNewlyCreatedSpan() {
     openDefaultExample();
-    
+
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
-    
+
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox("Include spans");
+    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
     bot.waitUntil(new NumberOfNodesCondition(26));
-    
+
     // Add some span
     enterCommand("s spanno:test #sTok1 #sTok2");
 
@@ -716,11 +759,11 @@ class TestGraphEditor {
     ScalableFigure figure = g.getRootLayer();
     assertEquals(1.0, figure.getScale());
   }
-  
-  
+
+
   /**
-   * Tests that the segmentation list is updated when a token is deleted.
-   * Regression test for https://github.com/hexatomic/hexatomic/issues/261
+   * Tests that the segmentation list is updated when a token is deleted. Regression test for
+   * https://github.com/hexatomic/hexatomic/issues/261
    */
   @Test
   void testUpdateSegmentsOnDeletedToken() {
@@ -755,8 +798,44 @@ class TestGraphEditor {
         return "Segmentation for deleted token was not removed";
       }
     }, 5000);
-    
-        
   }
 
+  /**
+   * Tests that the view is updated when another editor changes the annotation value.
+   * 
+   * <p>
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/362
+   * </p>
+   */
+  @Test
+  void testUpdateAnnosOnExternalChange() {
+    openDefaultExample();
+
+    // Make sure the relevant spans are shown
+    bot.checkBox(INCLUDE_SPANS).select();
+    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
+    annoFilter.setText("Inf");
+
+    bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
+
+    // Open the same document in the grid editor
+    SWTBotView corpusStructurePart = bot.partById(CORPUS_EDITOR_PART_ID);
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Grid Editor").click());
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    keyboard.typeText("anothertest");
+    keyboard.pressShortcut(Keystrokes.CR);
+
+    // Close the Grid editor, which selects the Graph Editor again and
+    // wait for the annotation value to change
+    TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
+
+    bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
+  }
 }
