@@ -194,7 +194,8 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle("doc2 (Grid Editor)");
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -232,7 +233,8 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle("doc2 (Text Viewer)");
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -255,7 +257,8 @@ public class TestGridEditor {
     final SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -276,7 +279,8 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -298,7 +302,8 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -661,10 +666,10 @@ public class TestGridEditor {
   }
 
   /**
-   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
-   * cell editors, up to 1000ms.
+   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the tableToTest has no
+   * active cell editors, up to 1000ms.
    * 
-   * @param table The {@link NatTable} to operate on
+   * @param tableToTest The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
   private void typeTextPressReturn(SWTBotNatTable table) {
@@ -1120,7 +1125,7 @@ public class TestGridEditor {
     NatTable natTable = table.widget;
     Display.getDefault().syncExec(() -> {
       // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
-      // within the table widget.
+      // within the tableToTest widget.
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 4, false, true));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 6, false, true));
@@ -1187,7 +1192,7 @@ public class TestGridEditor {
     NatTable natTable = table.widget;
     Display.getDefault().asyncExec(() -> {
       // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
-      // within the table widget.
+      // within the tableToTest widget.
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 2, 4, false, true));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 3, 0, false, true));
@@ -1464,12 +1469,13 @@ public class TestGridEditor {
     table.click(1, 2);
     shiftClick(table, 11, 2);
     keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new ColumnIsEmptyCondition(table, 2));
     table.click(1, 3);
 
-    assertEquals(5, table.columnCount());
+    bot.waitUntil(new ColumnCountCondition(table, 5));
 
     keyboard.pressShortcut(Keystrokes.F5);
-    assertEquals(4, table.columnCount());
+    bot.waitUntil(new ColumnCountCondition(table, 4));
   }
 
   /**
@@ -1489,15 +1495,16 @@ public class TestGridEditor {
     table.click(1, 2);
     shiftClick(table, 11, 2);
     keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new ColumnIsEmptyCondition(table, 2));
     table.click(1, 3);
 
-    assertEquals(5, table.columnCount());
+    bot.waitUntil(new ColumnCountCondition(table, 5));
 
     List<String> columnItems = table.contextMenu(1, 1).menuItems();
     assertTrue(columnItems.contains("Refresh grid"));
     table.contextMenu(1, 1).contextMenu("Refresh grid").click();
 
-    assertEquals(4, table.columnCount());
+    bot.waitUntil(new ColumnCountCondition(table, 4));
   }
 
   /**
@@ -1876,6 +1883,70 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     return (CompositeFreezeLayer) layerUl;
+  }
+
+  /**
+   * The condition where the number of columns in a given table equals the expected count.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class ColumnCountCondition extends DefaultCondition {
+
+    private final int targetColumnCount;
+    private final SWTBotNatTable tableToTest;
+
+    public ColumnCountCondition(SWTBotNatTable tableToTest, int targetColumnCount) {
+      this.tableToTest = tableToTest;
+      this.targetColumnCount = targetColumnCount;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return this.tableToTest.columnCount() == this.targetColumnCount;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "The current column count is " + this.tableToTest.columnCount() + ", not "
+          + this.targetColumnCount + " as expected.";
+    }
+
+  }
+
+  /**
+   * The condition where all annotation cells in a table are empty.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class ColumnIsEmptyCondition extends DefaultCondition {
+
+    private final int columnIndex;
+    private final SWTBotNatTable tableToTest;
+
+    public ColumnIsEmptyCondition(SWTBotNatTable tableToTest, int columnIndex) {
+      this.tableToTest = tableToTest;
+      this.columnIndex = columnIndex;
+    }
+
+    /**
+     * Tests whether all cells from the second row to the last are empty. The first row is not
+     * checked as it contains the qualified annotation name.
+     */
+    @Override
+    public boolean test() throws Exception {
+      for (int i = 1; i < tableToTest.rowCount(); i++) {
+        if (!tableToTest.getCellDataValueByPosition(i, columnIndex).isEmpty()) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Column " + this.columnIndex + " is not empty as expected.";
+    }
+
   }
 
   /**
