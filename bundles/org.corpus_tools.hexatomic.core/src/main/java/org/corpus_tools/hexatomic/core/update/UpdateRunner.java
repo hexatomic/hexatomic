@@ -49,9 +49,11 @@ public class UpdateRunner {
   /**
   * Search for updates and perform them if wanted.
   * 
-  * @param agent OSGi service to create an update operation
-  * @param workbench current workbench to restart the application
-  * @param monitor interface to show progress of update operation
+  * @param agent OSGi service to create an update operation.
+  * @param workbench current workbench to restart the application.
+  * @param monitor interface to show progress of update operation.
+  * @param shell The user interface shell.
+  * @param sync Helper class to execute code in the UI thread.
   * 
   */
   public IStatus checkForUpdates(final IProvisioningAgent agent, 

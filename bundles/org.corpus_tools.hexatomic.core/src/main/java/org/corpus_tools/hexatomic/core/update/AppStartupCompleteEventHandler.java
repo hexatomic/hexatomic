@@ -48,6 +48,7 @@ public class AppStartupCompleteEventHandler implements EventHandler {
    * @param agent OSGi service to create an update operation
    * @param sync Helper class to execute code in the UI thread
    * @param monitor interface to show progress of update operation
+   * @param shell The user interface shell.
    */
   public AppStartupCompleteEventHandler(
       IEventBroker eventBroker, 

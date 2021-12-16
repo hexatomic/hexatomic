@@ -33,11 +33,11 @@ import org.eclipse.swt.widgets.Shell;
 public class UpdateHandler {
   
   /**
-   * sdadfs.
-   * @param agent sdfdsf
-   * @param shell dsfsdf
-   * @param sync sdfsd
-   * @param workbench sdfsd
+   * Execute Update search.
+   * @param agent OSGi service to create an update operation.
+   * @param shell The user interface shell.
+   * @param sync Helper class to execute code in the UI thread.
+   * @param workbench current workbench to restart the application.
    */
   @Execute
   public void execute(final IProvisioningAgent agent, final Shell shell, final UISynchronize sync,
