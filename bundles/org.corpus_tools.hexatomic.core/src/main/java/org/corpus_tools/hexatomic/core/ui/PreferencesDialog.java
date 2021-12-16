@@ -20,6 +20,8 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.Dialog;
@@ -37,6 +39,7 @@ public class PreferencesDialog extends Dialog {
   IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   Button checkbox;
+  @Inject ErrorService errorService;
 
   /**
    * Create the dialog.
@@ -79,7 +82,7 @@ public class PreferencesDialog extends Dialog {
       try {
         prefs.flush();
       } catch (BackingStoreException ex) {
-        ex.printStackTrace();
+        errorService.handleException("Couldn't update preferences", ex, PreferencesDialog.class);
       }
     } else {
       log.info("Path to preferences not found");

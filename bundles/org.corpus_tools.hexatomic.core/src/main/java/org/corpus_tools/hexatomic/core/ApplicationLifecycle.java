@@ -25,6 +25,8 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import java.io.File;
 import java.net.URL;
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.update.AppStartupCompleteEventHandler;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,6 +64,8 @@ public class ApplicationLifecycle {
       org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
+  @Inject
+  ErrorService errorService;
   
   /**
    * Called when the model is loaded and initializes the logging.
@@ -117,7 +121,7 @@ public class ApplicationLifecycle {
       try {
         prefs.flush();
       } catch (BackingStoreException ex) {
-        ex.printStackTrace();
+        errorService.handleException("Couldn't update preferences", ex, ApplicationLifecycle.class);
       }
     }   
     

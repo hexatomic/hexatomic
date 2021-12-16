@@ -20,6 +20,8 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
+import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -45,6 +47,8 @@ public class UpdateRunner {
       org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
+  @Inject
+  ErrorService errorService;
   
   /**
   * Search for updates and perform them if wanted.
@@ -105,7 +109,7 @@ public class UpdateRunner {
               try {
                 prefs.flush();
               } catch (BackingStoreException ex) {
-                ex.printStackTrace();
+                errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
               }
               workbench.restart();
             }
@@ -120,7 +124,7 @@ public class UpdateRunner {
   
   private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
     sync.syncExec(() ->
-      MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob", 
+        MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob", 
           "Did you start Update from within the Eclipse IDE?"));
   }
   
@@ -135,7 +139,7 @@ public class UpdateRunner {
   
   private void showMessage(final Shell parent, final UISynchronize sync) {
     sync.syncExec(() -> 
-      MessageDialog.openWarning( parent, "No update",
+        MessageDialog.openWarning(parent, "No update",
           "No updates for the current installation have been found."));
   }
   
