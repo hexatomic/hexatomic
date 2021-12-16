@@ -46,6 +46,7 @@ import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
+import org.corpus_tools.hexatomic.graph.internal.AnnotationFilterWidget;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -106,7 +107,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
@@ -153,7 +153,6 @@ public class GraphEditor {
 
   private Button btnIncludeSpans;
   private Table textRangeTable;
-  private Text txtSegmentFilter;
   private Button btnIncludePointingRelations;
 
   private GraphViewer viewer;
@@ -173,6 +172,8 @@ public class GraphEditor {
 
   private final ScrollToFirstTokenListener scrollToFirstTokenListener =
       new ScrollToFirstTokenListener();
+
+  private AnnotationFilterWidget annoFilter;
 
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -256,14 +257,13 @@ public class GraphEditor {
     itemType.setControl(filterTypeComposite);
     itemType.setHeight(filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    txtSegmentFilter = new Text(optionalFilterBars, SWT.BORDER);
-    txtSegmentFilter.setMessage("Filter by node annotation name");
-    txtSegmentFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    annoFilter = new AnnotationFilterWidget(optionalFilterBars);
+    annoFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemAnno.setText("Annotation name filter");
-    itemAnno.setControl(txtSegmentFilter);
-    itemAnno.setHeight(txtSegmentFilter.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-
+    itemAnno.setControl(annoFilter);
+    itemAnno.setHeight(annoFilter.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -280,7 +280,7 @@ public class GraphEditor {
     graphSash.setWeights(new int[] {300, 100});
 
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
-    txtSegmentFilter.addModifyListener(new UpdateViewListener(true));
+    annoFilter.addModifyListener(new UpdateViewListener(true));
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
     btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
 
@@ -362,7 +362,7 @@ public class GraphEditor {
         return;
       }
 
-      final String segmentFilterText = txtSegmentFilter.getText();
+      final String segmentFilterText = annoFilter.getFilterText();
       final boolean includeSpans = btnIncludeSpans.getSelection();
 
       final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
@@ -859,7 +859,7 @@ public class GraphEditor {
           include = include && btnIncludeSpans.getSelection();
         }
         // additionally check if the node has a matching annotation
-        return include && hasMatchingAnnotation(node, txtSegmentFilter.getText());
+        return include && hasMatchingAnnotation(node, annoFilter.getFilterText());
 
       } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
