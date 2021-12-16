@@ -11,6 +11,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.osgi.service.prefs.BackingStoreException;
 
 class TestHelpMenu {
   private IEclipsePreferences prefs =
@@ -49,7 +50,7 @@ class TestHelpMenu {
   @Test
   void testOpenPreferenceDialog() {
     boolean autoupdate = prefs.getBoolean("autoUpdate", false);
-    assertFalse("Preference allready set", autoupdate);
+    //assertFalse("Preference allready set", autoupdate);
     SWTBotMenu helpMenu = bot.menu("Help");
     helpMenu.menu("Preferences").click();
     SWTBotShell preferencesShell = bot.shell("Enable Startup-Checks");
@@ -58,8 +59,9 @@ class TestHelpMenu {
       .isVisible();
     preferencesShell.bot().checkBox().select();
     preferencesShell.bot().button("OK").click();
-    autoupdate = prefs.getBoolean("autoUpdate", false);
-    assertTrue("Preference not set", autoupdate);
+    boolean autoupdateAfterCheck = prefs.getBoolean("autoUpdate", false);
+    assertTrue("Preference didn't change", autoupdate != autoupdateAfterCheck);
+    
   }  
   
 }
