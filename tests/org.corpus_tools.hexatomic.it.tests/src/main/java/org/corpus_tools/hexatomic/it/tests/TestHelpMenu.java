@@ -49,14 +49,13 @@ class TestHelpMenu {
   
   @Test
   void testOpenPreferenceDialog() {
-    boolean autoupdate = prefs.getBoolean("autoUpdate", false);
-    //assertFalse("Preference allready set", autoupdate);
     SWTBotMenu helpMenu = bot.menu("Help");
     helpMenu.menu("Preferences").click();
     SWTBotShell preferencesShell = bot.shell("Enable Startup-Checks");
     preferencesShell.bot().label(
       "When checked Hexatomic will search for p2-Updates at each startup")
       .isVisible();
+    boolean autoupdate = prefs.getBoolean("autoUpdate", false);
     preferencesShell.bot().checkBox().select();
     preferencesShell.bot().button("OK").click();
     boolean autoupdateAfterCheck = prefs.getBoolean("autoUpdate", false);
