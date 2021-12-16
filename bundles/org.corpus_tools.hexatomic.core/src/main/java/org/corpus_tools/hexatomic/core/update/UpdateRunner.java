@@ -77,7 +77,7 @@ public class UpdateRunner {
       return Status.OK_STATUS;
     } else {
       showProvisioningMessage(shell, sync);
-      System.err.println("Trying to update from the Eclipse IDE? This won't work !");
+      log.info("Couldn't find ProvisioningJob.");
       return Status.CANCEL_STATUS;
     }
     
@@ -94,39 +94,32 @@ public class UpdateRunner {
       @Override
       public void done(IJobChangeEvent event) {
         if (event.getResult().isOK()) {
-          sync.syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-              boolean restart = MessageDialog.openQuestion(shell, 
-                  "Updates installed, restart?",
-                  "Updates have been installed. Do you want to restart?");
-              if (restart) {
-                prefs.putBoolean("justUpdated", true);
-                try {
-                  prefs.flush();
-                } catch (BackingStoreException ex) {
-                  ex.printStackTrace();
-                }
-                workbench.restart();
+          sync.syncExec(() -> {
+            boolean restart = MessageDialog.openQuestion(shell, 
+                "Updates installed, restart?",
+                "Updates have been installed. Do you want to restart?");
+            if (restart) {
+              prefs.putBoolean("justUpdated", true);
+              try {
+                prefs.flush();
+              } catch (BackingStoreException ex) {
+                ex.printStackTrace();
               }
+              workbench.restart();
             }
           });
         } 
         super.done(event);
       }
     });
-
   }
   
+  
+  
   private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(new Runnable() {
-      @Override
-      public void run() {
-        MessageDialog.openWarning(parent, 
-            "Couldn't find ProvisioningJob",
-            "Did you start Update from within eclipse ide?");
-      }
+    sync.syncExec(() -> {
+      MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob", 
+          "Did you start Update from within the Eclipse IDE?");
     });
   }
   
@@ -134,24 +127,17 @@ public class UpdateRunner {
     ProvisioningSession session = new ProvisioningSession(agent);
     log.info("Provisioning session created");
     // update all user-visible installable units
-    final UpdateOperation operation = new UpdateOperation(session);
-    return operation;
-    
+    return new UpdateOperation(session);    
   }
-  
+
 
   
   private void showMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(new Runnable() {
-
-      @Override
-      public void run() {
-        MessageDialog.openWarning(parent, "No update",
-                    "No updates for the current installation have been found.");
-      }
+    sync.syncExec(() -> {
+      MessageDialog.openWarning(parent, "No update",
+          "No updates for the current installation have been found.");
     });
   }
- 
   
 }
 
