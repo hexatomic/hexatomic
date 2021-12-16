@@ -117,10 +117,9 @@ public class UpdateRunner {
   
   
   private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(() -> {
+    sync.syncExec(() ->
       MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob", 
-          "Did you start Update from within the Eclipse IDE?");
-    });
+          "Did you start Update from within the Eclipse IDE?"));
   }
   
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
@@ -133,10 +132,9 @@ public class UpdateRunner {
 
   
   private void showMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(() -> {
-      MessageDialog.openWarning(parent, "No update",
-          "No updates for the current installation have been found.");
-    });
+    sync.syncExec(() -> 
+      MessageDialog.openWarning( parent, "No update",
+          "No updates for the current installation have been found."));
   }
   
 }

@@ -1,6 +1,5 @@
 package org.corpus_tools.hexatomic.it.tests;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -11,7 +10,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.osgi.service.prefs.BackingStoreException;
 
 class TestHelpMenu {
   private IEclipsePreferences prefs =
