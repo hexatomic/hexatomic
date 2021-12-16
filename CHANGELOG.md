@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add keyboard shortcut to create spans in Grid Editor (#243)
+- Add "update functionality" in the "Help Menu"
+- Add "Preferences" dialog to allow auto-updates at startup in the "Help Menu"
 
 ### Fixed
 
