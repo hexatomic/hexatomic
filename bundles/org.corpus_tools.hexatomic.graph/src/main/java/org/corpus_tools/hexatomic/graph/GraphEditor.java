@@ -257,7 +257,7 @@ public class GraphEditor {
     itemType.setControl(filterTypeComposite);
     itemType.setHeight(filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    annoFilter = new AnnotationFilterWidget(optionalFilterBars);
+    annoFilter = new AnnotationFilterWidget(optionalFilterBars, getGraph());
     annoFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
