@@ -245,9 +245,9 @@ Deletes the pointing relation between "t2" and "t1".
 ## Identifying elements
 
 Elements in the graph are identified by the identifier on the node/edge in the graph. In the example below, the tokens have
-the identifiers `sTok1`, `sTok2`, `sTok3`, and `t28`. 
+the identifiers `sTok1`, `sTok2`, `sTok3`, and `t12`. 
 
-Note that identifiers for the same type of element may look different within one and the same document (as in `sTok1` and `t28`).
+Note that identifiers for the same type of element may look different within one and the same document (as in `sTok1` and `t12`).
 
 ![Labelled token nodes](node-labels.png)
 
