@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -51,13 +52,18 @@ class TestHelpMenu {
     helpMenu.menu("Preferences").click();
     SWTBotShell preferencesShell = bot.shell("Enable Startup-Checks");
     preferencesShell.bot().label(
-      "When checked Hexatomic will search for p2-Updates at each startup")
-      .isVisible();
-    boolean autoupdate = prefs.getBoolean("autoUpdate", false);
-    preferencesShell.bot().checkBox().select();
+        "When checked Hexatomic will search for p2-Updates at each startup")
+    .isVisible();
+    boolean autoUpdatePreSelect = prefs.getBoolean("autoUpdate", false);
+    if (preferencesShell.bot().checkBox().isChecked()) {
+      preferencesShell.bot().checkBox().deselect();
+    } else {
+      preferencesShell.bot().checkBox().select();
+    }
     preferencesShell.bot().button("OK").click();
-    boolean autoupdateAfterCheck = prefs.getBoolean("autoUpdate", false);
-    assertTrue("Preference didn't change", autoupdate != autoupdateAfterCheck);
+    boolean autoUpdatePostSelect = prefs.getBoolean("autoUpdate", false);
+    boolean comparePreferences = (autoUpdatePreSelect != autoUpdatePostSelect) ? true : false;
+    assertTrue("Preference not set", comparePreferences);
     
   }  
   
