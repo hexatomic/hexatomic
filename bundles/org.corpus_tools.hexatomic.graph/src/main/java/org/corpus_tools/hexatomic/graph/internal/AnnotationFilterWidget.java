@@ -4,7 +4,11 @@ import static org.eclipse.jface.widgets.WidgetFactory.text;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
@@ -12,7 +16,6 @@ import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -26,7 +29,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class AnnotationFilterWidget extends Composite {
 
-  private final Text txtSegmentFilter;
+  public static final String ANNO_FILTER_CHANGED_TOPIC = "GRAPH_EDITOR/ANNOTATION_FILTER/CHANGED";
+
+  private final Text txtAddAnnotatioName;
 
   private final AnnotationNameProposalProvider proposalProvider;
 
@@ -36,6 +41,7 @@ public class AnnotationFilterWidget extends Composite {
 
   private ScrolledComposite chipScroll;
 
+  private final IEventBroker eventBroker;
 
   /**
    * Create a new filter widget.
@@ -43,9 +49,12 @@ public class AnnotationFilterWidget extends Composite {
    * @param parent The SWT parent composite
    * @param saltGraph The document graph that will be filtered. Needed to extract the annotation
    *        names.
+   * @param eventBroker Is used to post events whenever there is an update on the filter model.
    */
-  public AnnotationFilterWidget(Composite parent, SDocumentGraph saltGraph) {
+  public AnnotationFilterWidget(Composite parent, SDocumentGraph saltGraph,
+      IEventBroker eventBroker) {
     super(parent, SWT.BORDER);
+    this.eventBroker = eventBroker;
     this.setLayout(new GridLayout(1, false));
 
     chipScroll = new ScrolledComposite(this, SWT.V_SCROLL);
@@ -63,12 +72,12 @@ public class AnnotationFilterWidget extends Composite {
     chipScroll.setExpandVertical(true);
     chipScroll.setContent(chipComposite);
 
-    txtSegmentFilter =
+    txtAddAnnotatioName =
         text(SWT.BORDER).layoutData(new GridData(SWT.FILL, SWT.TOP, true, false))
             .create(this);
 
     proposalProvider = new AnnotationNameProposalProvider(saltGraph);
-    ContentProposalAdapter adapter = new ContentProposalAdapter(txtSegmentFilter,
+    ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotatioName,
         new TextContentAdapter(), proposalProvider, null,
         null);
     adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
@@ -79,36 +88,38 @@ public class AnnotationFilterWidget extends Composite {
         Chips chip = new Chips(chipComposite, SWT.CLOSE);
         chip.setText(proposal.getContent());
         chip.addCloseListener(event -> {
-          chip.setVisible(false);
           activeChips.remove(chip);
+          chip.setVisible(false);
           chip.dispose();
           chipComposite.layout();
+          eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
         });
         activeChips.add(chip);
         chipComposite.layout();
 
+        // TODO find a better way to calculate the height
         chipScroll.setMinHeight(activeChips.size() * 20);
         chipScroll.layout();
         AnnotationFilterWidget.this.layout();
+        
+        eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
       }
     });
   }
 
   /**
-   * Add listener for modifications of the filtered annotation names.
+   * Get allowed annotation names to include in the view.
    * 
-   * @param listener The listener which is called when the value is modified.
+   * @return The the list of names or {@link Optional#empty()} when no filter should be applied.
    */
-  public void addModifyListener(ModifyListener listener) {
-    txtSegmentFilter.addModifyListener(listener);
-  }
+  public Optional<Set<String>> getFilter() {
+    if (activeChips.isEmpty()) {
+      return Optional.empty();
+    } else {
+      Set<String> activeFilter =
+          activeChips.stream().map(c -> c.getText()).collect(Collectors.toSet());
+      return Optional.of(activeFilter);
+    }
 
-  /**
-   * Get the current annotation name to filter for.
-   * 
-   * @return The filtered annotation name (or part of it).
-   */
-  public String getFilterText() {
-    return txtSegmentFilter.getText();
   }
 }

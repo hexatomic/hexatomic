@@ -64,7 +64,6 @@ import org.corpus_tools.salt.common.STextOverlappingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.graph.IdentifiableElement;
@@ -173,7 +172,7 @@ public class GraphEditor {
   private final ScrollToFirstTokenListener scrollToFirstTokenListener =
       new ScrollToFirstTokenListener();
 
-  private AnnotationFilterWidget annoFilter;
+  private AnnotationFilterWidget annoFilterWidget;
 
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -257,13 +256,13 @@ public class GraphEditor {
     itemType.setControl(filterTypeComposite);
     itemType.setHeight(filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    annoFilter = new AnnotationFilterWidget(optionalFilterBars, getGraph());
-    annoFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    annoFilterWidget = new AnnotationFilterWidget(optionalFilterBars, getGraph(), events);
+    annoFilterWidget.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemAnno.setText("Annotation name filter");
-    itemAnno.setControl(annoFilter);
-    itemAnno.setHeight(annoFilter.computeSize(SWT.DEFAULT, 100).y);
+    itemAnno.setControl(annoFilterWidget);
+    itemAnno.setHeight(annoFilterWidget.computeSize(SWT.DEFAULT, 100).y);
 
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -280,7 +279,6 @@ public class GraphEditor {
     graphSash.setWeights(new int[] {300, 100});
 
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
-    annoFilter.addModifyListener(new UpdateViewListener(true));
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
     btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
 
@@ -362,7 +360,9 @@ public class GraphEditor {
         return;
       }
 
-      final String segmentFilterText = annoFilter.getFilterText();
+
+      Optional<Set<String>> filter = annoFilterWidget.getFilter();
+
       final boolean includeSpans = btnIncludeSpans.getSelection();
 
       final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
@@ -386,7 +386,7 @@ public class GraphEditor {
         }
       }
 
-      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, filter,
           includeSpans, graph, recalculateSegments, scrollToFirstToken);
 
     } catch (RuntimeException ex) {
@@ -396,7 +396,7 @@ public class GraphEditor {
   }
 
   private void scheduleUpdateViewJob(List<SegmentSelectionEntry> newSelectedSegments,
-      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      List<SegmentSelectionEntry> oldSelectedSegments, Optional<Set<String>> annotationFilters,
       boolean includeSpans, SDocumentGraph graph, boolean recalculateSegments,
       boolean scrollToFirstToken) {
 
@@ -405,7 +405,7 @@ public class GraphEditor {
 
       if (recalculateSegments) {
         monitor.subTask("Recalculating available segments");
-        recalculateAvailableSegments(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+        recalculateAvailableSegments(newSelectedSegments, oldSelectedSegments, annotationFilters,
             includeSpans, graph);
       }
 
@@ -440,12 +440,12 @@ public class GraphEditor {
   @SuppressWarnings("unchecked")
   private List<SegmentSelectionEntry> recalculateAvailableSegments(
       List<SegmentSelectionEntry> newSelectedSegments,
-      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      List<SegmentSelectionEntry> oldSelectedSegments, Optional<Set<String>> annotationFilters,
       boolean includeSpans, SDocumentGraph graph) {
 
     newSelectedSegments.clear();
 
-    ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
+    ViewerFilter currentFilter = new RootFilter(annotationFilters, includeSpans);
 
     final Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
 
@@ -623,23 +623,14 @@ public class GraphEditor {
     return layout;
   }
 
-  private static boolean hasMatchingAnnotation(SNode node, String segmentFilterText) {
-    if (segmentFilterText == null || segmentFilterText.isEmpty() || node instanceof SToken) {
+  private static boolean hasMatchingAnnotation(SNode node, Set<String> annotationFilters) {
+    if (annotationFilters == null || annotationFilters.isEmpty() || node instanceof SToken) {
       // If no filter is set or the type of node should always be included, always
       // return true
       return true;
     }
-    if (node.getAnnotations() != null) {
-      for (SAnnotation anno : node.getAnnotations()) {
-        if (anno.getName().contains(segmentFilterText)) {
-          // Annotation found
-          return true;
-        }
-      }
-    }
-
-    // No matching annotation found
-    return false;
+    return node.getAnnotations().parallelStream()
+        .anyMatch(a -> annotationFilters.contains(a.getQName()));
   }
 
   void zoomGraphView(double factor, Point originallyClicked) {
@@ -762,6 +753,15 @@ public class GraphEditor {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationFilterChanged(
+      @UIEventTopic(AnnotationFilterWidget.ANNO_FILTER_CHANGED_TOPIC) Object sender) {
+    if (sender == annoFilterWidget) {
+      updateView(true, false);
+    }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
   private void onCheckpointRestored(
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
     updateView(true, false);
@@ -769,11 +769,11 @@ public class GraphEditor {
 
   private class RootFilter extends ViewerFilter {
 
-    private final String segmentFilterText;
+    private final Set<String> annotationFilters;
     private final boolean includeSpans;
 
-    public RootFilter(String segmentFilterText, boolean includeSpans) {
-      this.segmentFilterText = segmentFilterText;
+    public RootFilter(Optional<Set<String>> annotationFilters, boolean includeSpans) {
+      this.annotationFilters = annotationFilters.orElse(null);
       this.includeSpans = includeSpans;
     }
 
@@ -783,7 +783,7 @@ public class GraphEditor {
       if (element instanceof SNode) {
         SNode node = (SNode) element;
 
-        boolean include = hasMatchingAnnotation(node, segmentFilterText);
+        boolean include = hasMatchingAnnotation(node, annotationFilters);
 
         if (node instanceof SSpan) {
           include = include && includeSpans;
@@ -859,7 +859,7 @@ public class GraphEditor {
           include = include && btnIncludeSpans.getSelection();
         }
         // additionally check if the node has a matching annotation
-        return include && hasMatchingAnnotation(node, annoFilter.getFilterText());
+        return include && hasMatchingAnnotation(node, annoFilterWidget.getFilter().orElse(null));
 
       } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
