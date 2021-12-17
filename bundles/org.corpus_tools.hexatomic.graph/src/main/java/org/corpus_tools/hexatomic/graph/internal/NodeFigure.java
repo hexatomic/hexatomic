@@ -32,7 +32,6 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
-import org.eclipse.draw2d.GroupBoxBorder;
 import org.eclipse.draw2d.Label;
 import org.eclipse.swt.widgets.Display;
 
@@ -54,19 +53,17 @@ public class NodeFigure extends Figure {
 
     FlowLayout layout = new FlowLayout(false);
     setLayoutManager(layout);
-    GroupBoxBorder border = new GroupBoxBorder(caption);
-    border.setTextColor(ColorPalette.GRAY);
+    NodeBorder border = new NodeBorder(caption);
+
     setBorder(border);
     setOpaque(true);
+    setBackgroundColor(ColorConstants.white);
+    setForegroundColor(ColorConstants.black);
 
     if (item instanceof SSpan) {
       setForegroundColor(ColorPalette.BLUISH_GREEN);
     } else if (item instanceof SStructure) {
-      setBackgroundColor(ColorPalette.VERMILLION);
-      setForegroundColor(ColorConstants.white);
-      border.setTextColor(ColorConstants.white);
-    } else {
-      setBackgroundColor(ColorConstants.white);
+      setForegroundColor(ColorPalette.VERMILLION);
     }
 
     if (item instanceof SToken) {
