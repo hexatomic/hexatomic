@@ -62,8 +62,7 @@ class TestHelpMenu {
     }
     preferencesShell.bot().button("OK").click();
     boolean autoUpdatePostSelect = prefs.getBoolean("autoUpdate", false);
-    boolean comparePreferences = (autoUpdatePreSelect != autoUpdatePostSelect) ? true : false;
-    assertTrue("Preference not set", comparePreferences);
+    assertTrue("Preference not set", (autoUpdatePreSelect != autoUpdatePostSelect));
     
   }  
   
