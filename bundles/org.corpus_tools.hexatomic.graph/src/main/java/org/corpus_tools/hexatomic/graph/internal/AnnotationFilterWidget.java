@@ -48,17 +48,20 @@ public class AnnotationFilterWidget extends Composite {
     super(parent, SWT.BORDER);
     this.setLayout(new GridLayout(1, false));
 
-    // chipScroll = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
+    chipScroll = new ScrolledComposite(this, SWT.V_SCROLL);
+    chipScroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    chipScroll.setLayout(new GridLayout(1, false));
 
-    chipComposite = new Composite(this, SWT.BORDER);
-    chipComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+    chipComposite = new Composite(chipScroll, SWT.BORDER);
+    chipComposite.setLayoutData(new GridData(SWT.TOP, SWT.CENTER, true, true));
     chipComposite.setLayout(new RowLayout());
 
 
-    // chipScroll.setContent(chipComposite);
-    // chipScroll.setExpandHorizontal(true);
-    // chipScroll.setExpandVertical(true);
-    // chipScroll.setMinSize(100, 60);
+    chipScroll.setAlwaysShowScrollBars(true);
+    chipScroll.setExpandHorizontal(true);
+    chipScroll.setExpandVertical(true);
+    chipScroll.setContent(chipComposite);
 
     txtSegmentFilter =
         text(SWT.BORDER).layoutData(new GridData(SWT.FILL, SWT.TOP, true, false))
@@ -83,6 +86,9 @@ public class AnnotationFilterWidget extends Composite {
         });
         activeChips.add(chip);
         chipComposite.layout();
+
+        chipScroll.setMinHeight(activeChips.size() * 20);
+        chipScroll.layout();
         AnnotationFilterWidget.this.layout();
       }
     });

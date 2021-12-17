@@ -263,7 +263,7 @@ public class GraphEditor {
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemAnno.setText("Annotation name filter");
     itemAnno.setControl(annoFilter);
-    itemAnno.setHeight(annoFilter.computeSize(SWT.DEFAULT, 200).y);
+    itemAnno.setHeight(annoFilter.computeSize(SWT.DEFAULT, 100).y);
 
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
