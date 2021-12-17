@@ -234,7 +234,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         if (range.hasLowerBound()) {
           if (range.hasUpperBound()) {
             // position at the center
-            x = range.lowerEndpoint() + (range.upperEndpoint() - range.lowerEndpoint()) / 2.0;
+            x = range.lowerEndpoint() + (range.upperEndpoint() - range.lowerEndpoint()) / 1.75;
           } else {
             // position left-aligned
             x = range.lowerEndpoint();
