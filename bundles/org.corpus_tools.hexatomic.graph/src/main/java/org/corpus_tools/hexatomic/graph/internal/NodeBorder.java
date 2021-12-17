@@ -6,6 +6,7 @@ import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.TitleBarBorder;
+import org.eclipse.swt.graphics.Color;
 
 public class NodeBorder extends CompoundBorder {
 
@@ -32,5 +33,14 @@ public class NodeBorder extends CompoundBorder {
    */
   public void setLineStyle(int style) {
     line.setStyle(style);
+  }
+
+  /**
+   * Sets the line color for this border.
+   * 
+   * @param color The line color
+   */
+  public void setLineColor(Color color) {
+    line.setColor(color);
   }
 }

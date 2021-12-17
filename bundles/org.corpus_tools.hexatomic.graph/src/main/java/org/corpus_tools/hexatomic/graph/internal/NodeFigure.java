@@ -55,7 +55,6 @@ public class NodeFigure extends Figure {
     FlowLayout layout = new FlowLayout(false);
     setLayoutManager(layout);
     NodeBorder border = new NodeBorder(caption);
-    border.setLineStyle(Graphics.LINE_DOT);
 
     setBorder(border);
     setOpaque(true);
@@ -64,10 +63,13 @@ public class NodeFigure extends Figure {
 
     if (item instanceof SSpan) {
       setForegroundColor(ColorPalette.BLUISH_GREEN);
-      border.setLineStyle(Graphics.LINE_DASH);
+      border.setLineStyle(Graphics.LINE_DOT);
     } else if (item instanceof SStructure) {
       setForegroundColor(ColorPalette.VERMILLION);
       border.setLineStyle(Graphics.LINE_SOLID);
+    } else if (item instanceof SToken) {
+      setForegroundColor(ColorConstants.black);
+      border.setLineColor(ColorPalette.GRAY);
     }
 
     if (item instanceof SToken) {

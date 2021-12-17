@@ -42,6 +42,7 @@ import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
@@ -106,7 +107,8 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
             Arrays.asList(bpSource, bpTarget));
       }
 
-      connection.changeLineColor(ColorPalette.BLUE);
+      connection.setLineColor(ColorPalette.BLUE);
+      connection.setLineStyle(SWT.LINE_DASH);
       connection.getConnectionFigure().setConnectionRouter(pointingConnectionRouter);
 
       //
@@ -126,9 +128,10 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       }
 
     } else if (element instanceof SDominanceRelation) {
-      connection.changeLineColor(ColorPalette.VERMILLION);
+      connection.setLineColor(ColorPalette.VERMILLION);
     } else if (element instanceof SSpanningRelation) {
-      connection.changeLineColor(ColorPalette.BLUISH_GREEN);
+      connection.setLineColor(ColorPalette.BLUISH_GREEN);
+      connection.setLineStyle(SWT.LINE_DOT);
     }
   }
 
