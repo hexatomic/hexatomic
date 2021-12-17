@@ -32,6 +32,7 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
 import org.eclipse.swt.widgets.Display;
 
@@ -54,6 +55,7 @@ public class NodeFigure extends Figure {
     FlowLayout layout = new FlowLayout(false);
     setLayoutManager(layout);
     NodeBorder border = new NodeBorder(caption);
+    border.setLineStyle(Graphics.LINE_DOT);
 
     setBorder(border);
     setOpaque(true);
@@ -62,8 +64,10 @@ public class NodeFigure extends Figure {
 
     if (item instanceof SSpan) {
       setForegroundColor(ColorPalette.BLUISH_GREEN);
+      border.setLineStyle(Graphics.LINE_DASH);
     } else if (item instanceof SStructure) {
       setForegroundColor(ColorPalette.VERMILLION);
+      border.setLineStyle(Graphics.LINE_SOLID);
     }
 
     if (item instanceof SToken) {
