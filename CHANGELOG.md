@@ -10,11 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add keyboard shortcut to create spans in Grid Editor (#243)
 
+
+### Changed
+
+- Enhanced colors used in the graph editor and make them more colorblind-friendly
+
 ### Fixed
 
 - Optimize column lifecycle in the Grid Editor, so that emptied columns don't disappear (#258, #346)
 - Let annotation rename dialog display the actual annotation name, not the display name of the column (#259)
 - Graph Editor did not update view when an annotation value was changed (#362)
+
 
 ## [0.8.0] - 2021-11-16
 
