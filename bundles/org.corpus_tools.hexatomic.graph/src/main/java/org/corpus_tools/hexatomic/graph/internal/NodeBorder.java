@@ -8,11 +8,22 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.TitleBarBorder;
 import org.eclipse.swt.graphics.Color;
 
+/**
+ * A border to display the annotation nodes and tokens.
+ * 
+ * @author Thomas Krause {@literal thomas.krause@hu-berlin.de}
+ *
+ */
 public class NodeBorder extends CompoundBorder {
 
 
   private final LineBorder line;
 
+  /**
+   * Constructor
+   * 
+   * @param caption The label to use as caption.
+   */
   public NodeBorder(String caption) {
     TitleBarBorder title = new TitleBarBorder(caption);
     title.setBackgroundColor(ColorConstants.white);
