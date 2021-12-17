@@ -12,7 +12,6 @@ import org.eclipse.swt.graphics.Color;
  * A border to display the annotation nodes and tokens.
  * 
  * @author Thomas Krause {@literal thomas.krause@hu-berlin.de}
- *
  */
 public class NodeBorder extends CompoundBorder {
 
@@ -20,7 +19,7 @@ public class NodeBorder extends CompoundBorder {
   private final LineBorder line;
 
   /**
-   * Constructor
+   * Constructor of this class.
    * 
    * @param caption The label to use as caption.
    */
@@ -40,7 +39,7 @@ public class NodeBorder extends CompoundBorder {
   /**
    * Sets the line type of this border.
    * 
-   * @param style For the list of valid values, see {@link org.eclipse.draw2d.Graphics}
+   * @param style For the list of valid values, see {@link org.eclipse.draw2d.Graphics}.
    */
   public void setLineStyle(int style) {
     line.setStyle(style);
@@ -49,7 +48,7 @@ public class NodeBorder extends CompoundBorder {
   /**
    * Sets the line color for this border.
    * 
-   * @param color The line color
+   * @param color The line color.
    */
   public void setLineColor(Color color) {
     line.setColor(color);
