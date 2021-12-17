@@ -25,8 +25,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
+import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -34,7 +36,6 @@ import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.Bendpoint;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
@@ -105,7 +106,7 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
             Arrays.asList(bpSource, bpTarget));
       }
 
-      connection.changeLineColor(ColorConstants.blue);
+      connection.changeLineColor(ColorPalette.BLUE);
       connection.getConnectionFigure().setConnectionRouter(pointingConnectionRouter);
 
       //
@@ -125,7 +126,9 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
       }
 
     } else if (element instanceof SDominanceRelation) {
-      connection.changeLineColor(ColorConstants.red);
+      connection.changeLineColor(ColorPalette.VERMILLION);
+    } else if (element instanceof SSpanningRelation) {
+      connection.changeLineColor(ColorPalette.BLUISH_GREEN);
     }
   }
 

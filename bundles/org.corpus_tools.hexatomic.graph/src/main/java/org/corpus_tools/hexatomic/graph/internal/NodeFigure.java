@@ -22,6 +22,9 @@
 package org.corpus_tools.hexatomic.graph.internal;
 
 import java.util.TreeMap;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
@@ -52,15 +55,18 @@ public class NodeFigure extends Figure {
     FlowLayout layout = new FlowLayout(false);
     setLayoutManager(layout);
     GroupBoxBorder border = new GroupBoxBorder(caption);
-    border.setTextColor(ColorConstants.gray);
+    border.setTextColor(ColorPalette.GRAY);
     setBorder(border);
     setOpaque(true);
 
-    if (item instanceof SToken) {
-      setBackgroundColor(ColorConstants.lightGreen);
+    if (item instanceof SSpan) {
+      setForegroundColor(ColorPalette.BLUISH_GREEN);
+    } else if (item instanceof SStructure) {
+      setBackgroundColor(ColorPalette.VERMILLION);
+      setForegroundColor(ColorConstants.white);
+      border.setTextColor(ColorConstants.white);
     } else {
       setBackgroundColor(ColorConstants.white);
-
     }
 
     if (item instanceof SToken) {

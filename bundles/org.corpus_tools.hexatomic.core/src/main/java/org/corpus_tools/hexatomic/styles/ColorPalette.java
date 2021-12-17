@@ -75,7 +75,7 @@ public final class ColorPalette {
 
 
   /**
-   * A matt <strong style="color:#0072B2">blue</strong> tone.
+   * A darker <strong style="color:#0072B2">blue</strong> tone.
    * 
    * @see ColorPalette#SKY_BLUE
    */
