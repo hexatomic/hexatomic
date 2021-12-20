@@ -8,8 +8,8 @@ authors:
 - family-names: Krause
   given-names: Thomas
   orcid: https://orcid.org/0000-0003-3731-2422
-version: 0.6.0-SNAPSHOT
-date-released: 2021-03-17
+version: 0.9.0-SNAPSHOT
+date-released: 2021-12-20
 references:
 - type: software
   title: SWT Resource Manager
@@ -96,6 +96,31 @@ references:
   authors:
   - name: Tatu Saloranta
   repository-code: https://github.com/FasterXML/woodstox
+- type: software
+  title: '[bundle] Corpus Structure Editor'
+  version: 0.9.0-SNAPSHOT
+  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.corpusstructureeditor
+  authors: []
+- type: software
+  title: '[bundle] Corpus file formats'
+  version: 0.9.0-SNAPSHOT
+  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.formats
+  authors: []
+- type: software
+  title: '[bundle] Hexatomic Core Plugin'
+  version: 0.9.0-SNAPSHOT
+  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.core
+  authors: []
+- type: software
+  title: '[bundle] Hexatomic Grid Editor'
+  version: 0.9.0-SNAPSHOT
+  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.grid
+  authors: []
+- type: software
+  title: '[bundle] org.corpus_tools.hexatomic.textviewer'
+  version: 0.9.0-SNAPSHOT
+  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.textviewer
+  authors: []
 - type: software
   title: ch.qos.logback.classic
   version: 1.2.3.v20200428-2012
@@ -234,7 +259,12 @@ references:
     directory.
 - type: software
   title: org.corpus-tools.pepper-framework
-  version: 3.5.3
+  version: 3.6.0
+  authors: []
+- type: software
+  title: org.corpus_tools.hexatomic.graph
+  version: 0.9.0-SNAPSHOT
+  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.graph
   authors: []
 - type: software
   title: org.eclipse.core.commands
@@ -579,6 +609,96 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.event
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.artifact.repository
+  version: 1.4.0.v20210129-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.artifact.repository
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.core
+  version: 2.6.300.v20200211-1504
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.core
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.director
+  version: 2.4.700.v20200511-1530
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.director
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.engine
+  version: 2.6.700.v20200511-1530
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.engine
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.jarprocessor
+  version: 1.1.700.v20210227-0235
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.jarprocessor
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.metadata
+  version: 2.5.100.v20200908-1020
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.metadata.repository
+  version: 1.3.500.v20210108-0738
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata.repository
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.operations
+  version: 2.5.1000.v20201106-1246
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.operations
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.repository
+  version: 2.5.0.v20201013-0853
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.repository
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui
+  version: 2.7.0.v20210114-1216
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui
+    directory.
+- type: software
   title: org.eclipse.equinox.preferences
   version: 3.8.200.v20210212-1143
   license: EPL-2.0
@@ -595,6 +715,33 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.registry
+    directory.
+- type: software
+  title: org.eclipse.equinox.security
+  version: 1.3.600.v20210126-1005
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security
+    directory.
+- type: software
+  title: org.eclipse.equinox.security.ui
+  version: 1.3.0.v20210121-0947
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.ui
+    directory.
+- type: software
+  title: org.eclipse.equinox.simpleconfigurator
+  version: 1.3.600.v20200721-1308
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.simpleconfigurator
     directory.
 - type: software
   title: org.eclipse.help
@@ -801,6 +948,20 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.hamcrest.library
     directory.
 - type: software
+  title: org.sat4j.core
+  version: 2.3.5.v201308161310
+  license: LGPL-2.1
+  authors: []
+- type: software
+  title: org.sat4j.pb
+  version: 2.3.5.v201404071733
+  license: LGPL-2.1
+  authors: []
+- type: software
+  title: org.tukaani.xz
+  version: 1.8.0.v20180207-1613
+  authors: []
+- type: software
   title: org.w3c.css.sac
   version: 1.3.1.v200903091627
   license: NOASSERTION
@@ -834,7 +995,7 @@ references:
     directory.
 - type: software
   title: pepper-framework
-  version: 3.5.3
+  version: 3.6.0
   abbreviation: org.corpus-tools:pepper-framework
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/pepper_framework
