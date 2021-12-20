@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add keyboard shortcut to create spans in Grid Editor (#243)
+- Add overview tables for grid editor keyboard shortcuts to user documentation (#361)
 
 ### Fixed
 
