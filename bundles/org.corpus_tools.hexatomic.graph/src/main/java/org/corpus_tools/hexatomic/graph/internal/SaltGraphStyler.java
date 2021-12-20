@@ -90,6 +90,9 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
   @Override
   public void selfStyleConnection(Object element, GraphConnection connection) {
+
+    connection.setLineWidth(3);
+
     if (element instanceof SPointingRelation) {
 
       SPointingRelation pointing = (SPointingRelation) element;

@@ -36,6 +36,7 @@ import org.eclipse.swt.graphics.Color;
 public class NodeBorder extends CompoundBorder {
 
 
+  private static final int MARGIN = 3;
   private final LineBorder line;
 
   /**
@@ -47,11 +48,14 @@ public class NodeBorder extends CompoundBorder {
     TitleBarBorder title = new TitleBarBorder(caption);
     title.setBackgroundColor(ColorConstants.white);
     title.setTextColor(ColorPalette.GRAY);
-
-    line = new LineBorder();
+    
+    
+    line = new LineBorder(3);
     line.setStyle(Graphics.LINE_SOLID);
-
-    inner = title;
+    
+    org.eclipse.draw2d.MarginBorder margin = new org.eclipse.draw2d.MarginBorder(MARGIN);
+    
+    inner = new CompoundBorder(margin, title);
     outer = line;
 
   }
