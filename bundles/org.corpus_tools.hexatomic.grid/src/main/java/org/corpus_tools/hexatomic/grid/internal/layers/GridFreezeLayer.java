@@ -90,11 +90,16 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    * @param type The type of the column to be created
    * @param annoQName The qualified annotation name of the column
    * @param insertionIndex The index at which the column to be created should be inserted into the
-   *        list of columns
+   *        list of columns, or -1 when it should be added at the end of the list
    */
   public void addAnnotationColumn(ColumnType type, String annoQName, int insertionIndex) {
     Column newColumn = new Column(type, annoQName);
-    bodyDataProvider.getColumns().add(insertionIndex, newColumn);
+    if (insertionIndex == -1) {
+      bodyDataProvider.getColumns().add(newColumn);
+    }
+    else {
+      bodyDataProvider.getColumns().add(insertionIndex, newColumn);
+    }
   }
 
   /**
