@@ -26,6 +26,7 @@ import org.eclipse.draw2d.CompoundBorder;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.TitleBarBorder;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -43,13 +44,17 @@ public class NodeBorder extends CompoundBorder {
    * Constructor of this class.
    * 
    * @param caption The label to use as caption.
+   * @param fontHeight Height of the used font in pixels, 
+   *        used to determine the padding between the node name
+   *        and the annotation values.
    */
-  public NodeBorder(String caption) {
+  public NodeBorder(String caption, int fontHeight) {
     TitleBarBorder title = new TitleBarBorder(caption);
     title.setBackgroundColor(ColorConstants.white);
     title.setTextColor(ColorPalette.GRAY);
-    
-    
+    // Add padding based on font height
+    title.setPadding(new Insets(0, 0, Math.round(((float) fontHeight) * 0.4f), 0));
+
     line = new LineBorder(3);
     line.setStyle(Graphics.LINE_SOLID);
     
