@@ -257,18 +257,17 @@ public class GraphEditor {
     btnIncludePointingRelations.setText("Pointing relations");
     ExpandItem itemType = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemType.setText("Annotation Types");
-    itemType.setControl(filterTypeComposite);
     int filterTypeCompositeHeight = filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
-    itemType.setHeight(filterTypeCompositeHeight > 0 ? filterTypeCompositeHeight : 1);
+    itemType.setHeight(filterTypeCompositeHeight);
+    itemType.setControl(filterTypeComposite);
 
     annoFilterWidget = new AnnotationFilterWidget(optionalFilterBars, getGraph(), events);
     annoFilterWidget.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemAnno.setText("Annotation Name");
+    itemAnno.setHeight(150);
     itemAnno.setControl(annoFilterWidget);
-    int annoFilterWidgetHeight = annoFilterWidget.computeSize(SWT.DEFAULT, 100).y;
-    itemAnno.setHeight(annoFilterWidgetHeight > 0 ? annoFilterWidgetHeight : 1);
 
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

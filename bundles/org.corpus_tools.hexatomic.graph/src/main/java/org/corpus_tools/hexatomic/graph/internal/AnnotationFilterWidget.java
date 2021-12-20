@@ -75,19 +75,16 @@ public class AnnotationFilterWidget extends Composite {
     this.setLayout(new GridLayout(1, false));
 
     chipScroll = new ScrolledComposite(this, SWT.V_SCROLL);
-    chipScroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-    chipScroll.setLayout(new GridLayout(1, false));
+    chipScroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
 
+    chipComposite = new Composite(chipScroll, SWT.NONE);
 
-    chipComposite = new Composite(chipScroll, SWT.BORDER);
-    chipComposite.setLayoutData(new GridData(SWT.TOP, SWT.CENTER, true, true));
-    chipComposite.setLayout(new RowLayout());
+    RowLayout chipLayout = new RowLayout(SWT.VERTICAL);
+    chipLayout.wrap = true;
+    chipComposite.setLayout(chipLayout);
 
-
-    chipScroll.setAlwaysShowScrollBars(true);
-    chipScroll.setExpandHorizontal(true);
-    chipScroll.setExpandVertical(true);
     chipScroll.setContent(chipComposite);
+    updateScrollSize();
 
     txtAddAnnotatioName =
         text(SWT.BORDER).layoutData(new GridData(SWT.FILL, SWT.TOP, true, false))
@@ -109,20 +106,21 @@ public class AnnotationFilterWidget extends Composite {
           activeChips.remove(chip);
           chip.setVisible(false);
           chip.dispose();
-          chipComposite.layout();
+          updateScrollSize();
           eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
         });
         activeChips.add(chip);
-        chipComposite.layout();
-
-        // TODO find a better way to calculate the height
-        chipScroll.setMinHeight(activeChips.size() * 20);
-        chipScroll.layout();
-        AnnotationFilterWidget.this.layout();
+        updateScrollSize();
         
         eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
       }
     });
+  }
+
+  private void updateScrollSize() {
+    chipComposite.layout();
+    chipComposite.setSize(chipComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+    chipScroll.layout();
   }
 
   /**
@@ -138,6 +136,6 @@ public class AnnotationFilterWidget extends Composite {
           activeChips.stream().map(c -> c.getText()).collect(Collectors.toSet());
       return Optional.of(activeFilter);
     }
-
   }
+
 }
