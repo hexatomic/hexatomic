@@ -44,6 +44,7 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.graph.internal.AnnotationFilterWidget;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -99,6 +100,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -212,8 +214,12 @@ public class GraphEditor {
     Composite sideBar = new Composite(graphSash, SWT.NONE);
     sideBar.setLayout(new GridLayout(1, false));
 
-    ExpandBar optionalFilterBars = new ExpandBar(sideBar, SWT.NONE);
-    optionalFilterBars.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    Group filterOptions = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
+    filterOptions.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    filterOptions.setLayout(new FillLayout());
+    filterOptions.setText("Filter View");
+
+    ExpandBar optionalFilterBars = new ExpandBar(filterOptions, SWT.NONE);
     optionalFilterBars.addExpandListener(new ExpandListener() {
 
       @Override
@@ -236,20 +242,21 @@ public class GraphEditor {
       }
     });
 
+
     Composite filterTypeComposite = new Composite(optionalFilterBars, SWT.NONE);
     filterTypeComposite.setLayout(new GridLayout());
 
     btnIncludeSpans = new Button(filterTypeComposite, SWT.CHECK);
     btnIncludeSpans.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
     btnIncludeSpans.setSelection(false);
-    btnIncludeSpans.setText("Include spans");
+    btnIncludeSpans.setText("Spans");
 
     btnIncludePointingRelations = new Button(filterTypeComposite, SWT.CHECK);
     btnIncludePointingRelations.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
     btnIncludePointingRelations.setSelection(true);
-    btnIncludePointingRelations.setText("Include pointing relations");
+    btnIncludePointingRelations.setText("Pointing relations");
     ExpandItem itemType = new ExpandItem(optionalFilterBars, SWT.NONE);
-    itemType.setText("Annotation type filter");
+    itemType.setText("Annotation Types");
     itemType.setControl(filterTypeComposite);
     itemType.setHeight(filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
@@ -257,7 +264,7 @@ public class GraphEditor {
     annoFilterWidget.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
-    itemAnno.setText("Annotation name filter");
+    itemAnno.setText("Annotation Name");
     itemAnno.setControl(annoFilterWidget);
     itemAnno.setHeight(annoFilterWidget.computeSize(SWT.DEFAULT, 100).y);
 
