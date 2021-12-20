@@ -22,7 +22,10 @@ package org.corpus_tools.hexatomic.grid.internal.layers;
 
 import java.util.Map;
 import java.util.Set;
+import org.corpus_tools.hexatomic.grid.internal.data.Column;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.handlers.AddColumnCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
@@ -81,6 +84,20 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   }
 
   /**
+   * Creates a new column of the given type, with the given qualified annotation name, and adds it
+   * to the list of columns at the given insertion index.
+   * 
+   * @param type The type of the column to be created
+   * @param annoQName The qualified annotation name of the column
+   * @param insertionIndex The index at which the column to be created should be inserted into the
+   *        list of columns
+   */
+  public void addAnnotationColumn(ColumnType type, String annoQName, int insertionIndex) {
+    Column newColumn = new Column(type, annoQName);
+    bodyDataProvider.getColumns().add(insertionIndex, newColumn);
+  }
+
+  /**
    * Registers custom command handlers.
    */
   @Override
@@ -89,6 +106,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
     registerCommandHandler(new CreateSpanCommandHandler(this));
+    registerCommandHandler(new AddColumnCommandHandler(this));
   }
 
   /**
