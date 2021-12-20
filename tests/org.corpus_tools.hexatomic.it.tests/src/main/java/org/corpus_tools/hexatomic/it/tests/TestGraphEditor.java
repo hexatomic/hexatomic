@@ -23,6 +23,7 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.GraphEditor;
+import org.corpus_tools.hexatomic.it.tests.utils.SWTBotChips;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -40,7 +41,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
@@ -572,6 +572,7 @@ class TestGraphEditor {
     // Add a pointing relation between the two structures
     enterCommand(ADD_POINTING_COMMMAND);
 
+
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
@@ -596,31 +597,13 @@ class TestGraphEditor {
     // Tokens and the matching structure nodes
     annoFilter.typeText("const");
     annoFilter.pressShortcut(Keystrokes.LF);
-    Chips annoChip =
-        bot.widget(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget);
+    SWTBotChips annoChip = new SWTBotChips(
+        bot.widget(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget));
     assertNotNull(annoChip);
 
     bot.waitUntil(new NumberOfNodesCondition(23));
     // Remove chip again by simulating a mouse click
-    bot.getDisplay().syncExec(() -> {
-      Event e = new Event();
-      org.eclipse.swt.graphics.Point p = annoChip.toDisplay(annoChip.getClientArea().width - 20,
-          annoChip.getClientArea().height / 2);
-      e.x = p.x;
-      e.y = p.y;
-      e.type = SWT.MouseMove;
-      annoChip.getDisplay().post(e);
-    });
-    bot.getDisplay().syncExec(() -> {
-      Event e1 = new Event();
-      e1.x = 62;
-      e1.y = 11;
-      e1.type = SWT.MouseUp;
-      e1.widget = annoChip;
-      e1.display = annoChip.getDisplay();
-      annoChip.getDisplay().post(e1);
-    });
-
+    annoChip.click();
 
     // Tokens and the matching spans
     annoFilter.setText("");
