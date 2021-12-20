@@ -24,7 +24,7 @@ package org.corpus_tools.hexatomic.styles;
 import org.eclipse.swt.graphics.Color;
 
 /**
- * Contains constants for a colorblind-friendly palette.
+ * Contains constants for an accessible palette.
  * 
  * <p>
  * These are the same colors that are <a href=
