@@ -1699,7 +1699,7 @@ public class TestGridEditor {
   }
 
   /**
-   * Tests the existence of the menu items for adding annotation columns in the popup menu
+   * Tests the existence of the menu items for adding annotation columns in the popup menu.
    */
   @Test
   void testAddColumnPopup() {
@@ -1926,7 +1926,7 @@ public class TestGridEditor {
   private int addColumnOnCell(int rowIndex, int columnIndex, String columnType,
       SWTNatTableBot tableBot) {
     SWTBotNatTable table = tableBot.nattable();
-    int columnCount = table.columnCount();
+    final int columnCount = table.columnCount();
     SWTBotRootMenu menu = table.contextMenu(rowIndex, columnIndex);
     menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
@@ -1941,7 +1941,6 @@ public class TestGridEditor {
     assertEquals(6, newColumnCount);
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE,
         tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
-    assertEquals(null, null);
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
