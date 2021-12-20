@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.style;
 
+import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
@@ -59,7 +60,7 @@ public class StyleConfiguration extends DefaultNatTableStyleConfiguration {
     // Create a new style to apply to cells containing span annotation values (green text color)
     Style spanAnnotationCellStyle = new Style();
     spanAnnotationCellStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR,
-        GUIHelper.getColor(35, 124, 82));
+        ColorPalette.BLUISH_GREEN);
     configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, spanAnnotationCellStyle,
         DisplayMode.NORMAL, StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
 
