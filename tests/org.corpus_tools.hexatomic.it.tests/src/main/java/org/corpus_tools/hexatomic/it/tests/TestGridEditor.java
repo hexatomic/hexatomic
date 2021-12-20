@@ -1906,11 +1906,11 @@ public class TestGridEditor {
   private void addColumn(SWTNatTableBot tableBot, String tokenValue) {
     switch (tokenValue) {
       case TOKEN_VALUE:
-        keyboard.pressShortcut(SWT.CTRL | SWT.SHIFT, 't');
+        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 't');
         break;
         
       case SPAN_VALUE:
-        keyboard.pressShortcut(SWT.CTRL | SWT.SHIFT, 's');
+        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 's');
         break;
 
       default:
