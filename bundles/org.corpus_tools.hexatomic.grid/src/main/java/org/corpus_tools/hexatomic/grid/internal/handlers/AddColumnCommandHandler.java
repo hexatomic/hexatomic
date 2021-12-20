@@ -71,7 +71,14 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
       log.debug("Execution of command {} cancelled.", getCommandClass().getSimpleName());
       return true;
     }
-    this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), currentColumnIndex + 1);
+
+    // If the index is -1, then we don't know where to insert the new column, so call the layer
+    // function respectively with -1
+    if (currentColumnIndex == -1) {
+      this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), currentColumnIndex);
+    } else {
+      this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), currentColumnIndex + 1);
+    }
     command.getNatTable().refresh();
     return true;
   }

@@ -23,6 +23,8 @@ package org.corpus_tools.hexatomic.grid.internal.actions;
 import org.corpus_tools.hexatomic.grid.internal.commands.AddColumnCommand;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.ui.action.IKeyAction;
+import org.eclipse.swt.events.KeyEvent;
 
 /**
  * An {@link IContextFreeAction} that triggers an {@link AddColumnCommand} for a given cell and a
@@ -30,10 +32,10 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
-public class AddColumnAction implements IContextFreeAction {
+public class AddColumnAction implements IContextFreeAction, IKeyAction {
 
-  private final int colIndex;
-  private ColumnType columnType;
+  private int colIndex;
+  private final ColumnType columnType;
 
   /**
    * Creates an {@link AddColumnAction} with the given parameters.
@@ -49,6 +51,11 @@ public class AddColumnAction implements IContextFreeAction {
   @Override
   public void run(NatTable natTable) {
     natTable.doCommand(new AddColumnCommand(columnType, colIndex, natTable));
+  }
+
+  @Override
+  public void run(NatTable natTable, KeyEvent event) {
+    run(natTable);
   }
 
 }

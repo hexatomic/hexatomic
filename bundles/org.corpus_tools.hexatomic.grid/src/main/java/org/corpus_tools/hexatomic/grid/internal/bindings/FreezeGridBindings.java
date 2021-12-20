@@ -21,8 +21,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.bindings;
 
+import org.corpus_tools.hexatomic.grid.internal.actions.AddColumnAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfiguration;
 import org.eclipse.nebula.widgets.nattable.freeze.action.FreezeGridAction;
@@ -48,6 +50,14 @@ public class FreezeGridBindings extends AbstractUiBindingConfiguration implement
     // Alt + S creates a new span
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT, 's'),
         new CreateSpanSelectionAction());
+    // Shift + Alt + T creates a new token annotation column, an insertion index of -1 signifies
+    // that we don't know where exactly to add the new column
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 't'),
+        new AddColumnAction(ColumnType.TOKEN_ANNOTATION, -1));
+    // Shift + Alt + T creates a new span annotation column, an insertion index of -1 signifies
+    // that we don't know where exactly to add the new column
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 's'),
+        new AddColumnAction(ColumnType.SPAN_ANNOTATION, -1));
   }
 
 }
