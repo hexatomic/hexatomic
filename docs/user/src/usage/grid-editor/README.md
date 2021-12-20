@@ -1,6 +1,10 @@
 # Grid Editor
 
-The grid editor is for annotating tokens and spans.
+The grid editor is used for annotating tokens and spans.
+It displays a document's token and annotation data in a vertical grid, i.e.,
+the textual source data runs from top to bottom.
+[Navigation](#navigation-and-selection) and [editing](editing.md) is done by mouse and keyboard.
+An overview of keyboard shortcuts can be found in the section [Keyboard shortcuts](#keyboard-shortcuts).
 
 Tokens are the smallest countable units in a data source.
 Spans are units that span tokens.
@@ -113,3 +117,42 @@ Press <kbd>Ctrl</kbd> + <kbd>E</kbd>. This brings up a dialog for saving the fil
 Note that exporting to an Excel spreadsheet will lose the actual data model.
 Only the string values of annotations, the headers, and the token texts will be exported.
 Additionally, merged cells will be separated.
+
+## Keyboard shortcuts
+
+### Navigation
+
+|                        Shortcut                        | What the shortcut does                           | Constraints                     |
+| :----------------------------------------------------: | :----------------------------------------------- | :------------------------------ |
+|             <kbd>Shift</kbd> + mouse wheel             | Scrolls through the grid vertically              |                                 |
+| <kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, <kbd>↓</kbd> | Move through the grid selecting individual cells | A cell must already be selected |
+|                    <kbd>Home</kbd>                     | Jump to the first column                         | A cell must already be selected |
+|                     <kbd>End</kbd>                     | Jump to the last column                          | A cell must already be selected |
+|         <kbd>PageUp</kbd>, <kbd>PageDown</kbd>         | Jump a page up or down                           | A cell must already be selected |
+|                                                        |                                                  |                                 |
+
+### Selection
+
+|                     Shortcut                     | What the shortcut does                                                        | Constraints                             |
+| :----------------------------------------------: | :---------------------------------------------------------------------------- | :-------------------------------------- |
+|             <kbd>Shift</kbd> + click             | Select the range of cells from the currently selected one to the clicked cell | A cell must already be selected         |
+|             <kbd>Ctrl</kbd> + click              | Add/remove the clicked cell to the current selection of cells                 | A cell must already be selected         |
+|          <kbd>Ctrl</kbd> + <kbd>F</kbd>          | Open text search                                                              |                                         |
+| <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> | Toggle freezing of rows and columns                                           | A cell, column, or row must be selected |
+|                                                  |                                                                               |                                         |
+
+### Data operations
+
+|            Shortcut            | What the shortcut does         | Constraints                                |
+| :----------------------------: | :----------------------------- | :----------------------------------------- |
+|        <kbd>Space</kbd>        | Activate cell for editing      | Cell(s) must be selected                   |
+|        <kbd>Enter</kbd>        | Commit edited annotation value | Cell must be in editing mode               |
+|         <kbd>Del</kbd>         | Delete selected cells          |                                            |
+| <kbd>Alt</kbd> + <kbd>S</kbd>  | Create a new span              | >1 cells in a span column must be selected |
+|         <kbd>F5</kbd>          | Refresh editor from data model |                                            |
+| <kbd>Ctrl</kbd> + <kbd>E</kbd> | Export to Excel format         |                                            |
+
+
+
+
+<kbd></kbd>
