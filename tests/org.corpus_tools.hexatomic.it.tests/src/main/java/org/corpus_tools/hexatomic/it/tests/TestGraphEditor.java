@@ -38,7 +38,9 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
@@ -68,10 +70,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String SEARCH = "Search";
+  private static final String ANNOTATION_NAME = "Annotation Name";
+  private static final String SPANS = "Spans";
+  private static final String FILTER_VIEW = "Filter View";
+  private static final String ANNOTATION_TYPES = "Annotation Types";
   private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
-  private static final String INCLUDE_SPANS = "Include spans";
-  private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
   private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
@@ -571,32 +576,57 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate pointing relations in view and check the view has less/more connections
-    SWTBotCheckBox includePointing = bot.checkBox("Include pointing relations");
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
+    SWTBotCheckBox includePointing = bot.checkBox("Pointing relations");
     includePointing.deselect();
     bot.waitUntil(new NumberOfConnectionsCondition(22));
     includePointing.select();
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
+    SWTBotCheckBox includeSpans = bot.checkBox(SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
     bot.waitUntil(new NumberOfNodesCondition(26));
     // With spans enabled, filter for annotation names
-    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_NAME);
+    SWTBotText annoFilter = bot.textWithMessage(SEARCH);
 
     // Tokens and the matching structure nodes
-    annoFilter.setText("const");
+    annoFilter.typeText("const");
+    annoFilter.pressShortcut(Keystrokes.LF);
+    Chips annoChip =
+        bot.widget(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget);
+    assertNotNull(annoChip);
+
     bot.waitUntil(new NumberOfNodesCondition(23));
+    // Remove chip again by simulating a mouse click
+    bot.getDisplay().syncExec(() -> {
+      Event e = new Event();
+      org.eclipse.swt.graphics.Point p = annoChip.toDisplay(annoChip.getClientArea().width - 20,
+          annoChip.getClientArea().height / 2);
+      e.x = p.x;
+      e.y = p.y;
+      e.type = SWT.MouseMove;
+      annoChip.getDisplay().post(e);
+    });
+    bot.getDisplay().syncExec(() -> {
+      Event e1 = new Event();
+      e1.x = 62;
+      e1.y = 11;
+      e1.type = SWT.MouseUp;
+      e1.widget = annoChip;
+      e1.display = annoChip.getDisplay();
+      annoChip.getDisplay().post(e1);
+    });
+
 
     // Tokens and the matching spans
-    annoFilter.setText("Inf-Struct");
+    annoFilter.setText("");
+    annoFilter.typeText("Inf-Struct");
+    annoFilter.pressShortcut(Keystrokes.LF);
     bot.waitUntil(new NumberOfNodesCondition(13));
-
-    // Only tokens because annotation is non-existing
-    annoFilter.setText("not actually there");
-    bot.waitUntil(new NumberOfNodesCondition(11));
   }
 
 
@@ -723,7 +753,8 @@ class TestGraphEditor {
     assertNotNull(g);
 
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
+    SWTBotCheckBox includeSpans = bot.checkBox(SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
@@ -812,9 +843,11 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Make sure the relevant spans are shown
-    bot.checkBox(INCLUDE_SPANS).select();
-    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
-    annoFilter.setText("Inf");
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
+    bot.checkBox(SPANS).select();
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_NAME);
+    SWTBotText annoFilter = bot.textWithMessage(SEARCH);
+    annoFilter.setText("Inf\n");
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 

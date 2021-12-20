@@ -41,8 +41,6 @@ public class AnnotationFilterWidget extends Composite {
 
   private ScrolledComposite chipScroll;
 
-  private final IEventBroker eventBroker;
-
   /**
    * Create a new filter widget.
    * 
@@ -54,7 +52,6 @@ public class AnnotationFilterWidget extends Composite {
   public AnnotationFilterWidget(Composite parent, SDocumentGraph saltGraph,
       IEventBroker eventBroker) {
     super(parent, SWT.BORDER);
-    this.eventBroker = eventBroker;
     this.setLayout(new GridLayout(1, false));
 
     chipScroll = new ScrolledComposite(this, SWT.V_SCROLL);
@@ -75,6 +72,7 @@ public class AnnotationFilterWidget extends Composite {
     txtAddAnnotatioName =
         text(SWT.BORDER).layoutData(new GridData(SWT.FILL, SWT.TOP, true, false))
             .create(this);
+    txtAddAnnotatioName.setMessage("Search");
 
     proposalProvider = new AnnotationNameProposalProvider(saltGraph);
     ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotatioName,
