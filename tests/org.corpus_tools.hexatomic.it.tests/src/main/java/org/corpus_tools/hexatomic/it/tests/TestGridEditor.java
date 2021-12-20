@@ -774,8 +774,8 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Context menu should only have 2 items, separator and "refresh grid" item
-    assertEquals(2, contextMenu.menuItems().size());
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
   }
 
   @Test
@@ -785,8 +785,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Should always have the "refresh grid" item
-    assertEquals(2, contextMenu.menuItems().size());
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
   }
 
   @Test
@@ -1728,7 +1728,7 @@ public class TestGridEditor {
 
     // Create via click on span cell
     int oldColumnCount = addColumnOnCell(1, 4, TOKEN_VALUE, tableBot);
-    assertColumnAddedAtIndex(4, oldColumnCount + 1, tableBot);
+    assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
 
     // Create via click on token cell
     // oldColumnCount = addColumnOnCell(1, 2, TOKEN_VALUE, tableBot);
@@ -1939,7 +1939,7 @@ public class TestGridEditor {
   private void assertColumnAddedAtIndex(int newColumnIndex, int newColumnCount,
       SWTNatTableBot tableBot) {
     assertEquals(6, newColumnCount);
-    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE,
+    assertEquals(TEST_ANNOTATION_VALUE,
         tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
   }
 
