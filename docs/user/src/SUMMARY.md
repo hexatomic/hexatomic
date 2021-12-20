@@ -11,6 +11,7 @@
     	- [Editing the graph](usage/graph-editor/console.md)
   	- [Grid Editor](usage/grid-editor/README.md)
     	- [Editing the grid](usage/grid-editor/editing.md)
+		    - [Editing annotation columns](usage/grid-editor/editing-columns.md)
         	- [Editing annotation values](usage/grid-editor/editing-values.md)
         	- [Editing annotation names](usage/grid-editor/editing-names.md)
         	- [Deleting annotations](usage/grid-editor/deleting-annotations.md)
