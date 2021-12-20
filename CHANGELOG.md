@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add keyboard shortcut to create spans in Grid Editor (#243)
 - Add overview tables for grid editor keyboard shortcuts to user documentation (#361)
-
+- Add support for adding new annotation columns via context menu and keyboard shortcuts to Grid Editor (#358)
 
 ### Changed
 
