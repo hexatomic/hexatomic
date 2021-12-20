@@ -258,7 +258,8 @@ public class GraphEditor {
     ExpandItem itemType = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemType.setText("Annotation Types");
     itemType.setControl(filterTypeComposite);
-    itemType.setHeight(filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+    int filterTypeCompositeHeight = filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+    itemType.setHeight(filterTypeCompositeHeight > 0 ? filterTypeCompositeHeight : 1);
 
     annoFilterWidget = new AnnotationFilterWidget(optionalFilterBars, getGraph(), events);
     annoFilterWidget.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -266,7 +267,8 @@ public class GraphEditor {
     ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
     itemAnno.setText("Annotation Name");
     itemAnno.setControl(annoFilterWidget);
-    itemAnno.setHeight(annoFilterWidget.computeSize(SWT.DEFAULT, 100).y);
+    int annoFilterWidgetHeight = annoFilterWidget.computeSize(SWT.DEFAULT, 100).y;
+    itemAnno.setHeight(annoFilterWidgetHeight > 0 ? annoFilterWidgetHeight : 1);
 
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
