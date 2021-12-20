@@ -34,6 +34,9 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.widgets.Display;
 
@@ -41,6 +44,7 @@ public class NodeFigure extends Figure {
 
 
   private final String caption;
+  private final Font boldFont;
 
   /**
    * Creates a new node figure for a given salt node.
@@ -50,7 +54,11 @@ public class NodeFigure extends Figure {
    */
   public NodeFigure(SNode item, FontMetrics fontMetrics) {
 
-    setFont(Display.getDefault().getSystemFont());
+    Font font = Display.getCurrent().getSystemFont();
+    FontDescriptor boldDescriptor = FontDescriptor.createFrom(font).setStyle(SWT.BOLD);
+    this.boldFont = boldDescriptor.createFont(Display.getCurrent());
+
+    setFont(font);
     caption = item.getName();
 
 
@@ -85,6 +93,7 @@ public class NodeFigure extends Figure {
           // but the actual text is not updated yet
         }
         Label l = new Label(coveredText);
+        l.setFont(boldFont);
         add(l);
       }
     }
