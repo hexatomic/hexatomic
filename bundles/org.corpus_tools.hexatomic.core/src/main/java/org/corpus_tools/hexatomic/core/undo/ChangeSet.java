@@ -82,7 +82,7 @@ public class ChangeSet {
    */
   public boolean containsDocument(String documentID) {
     if (documentID != null) {
-      for (Object element : getChangedElements()) {
+      for (Object element : getChangedContainers()) {
         Optional<SDocumentGraph> graph =
             SaltHelper.getGraphForObject(element, SDocumentGraph.class);
         if (graph.isPresent() && graph.get().getDocument() != null

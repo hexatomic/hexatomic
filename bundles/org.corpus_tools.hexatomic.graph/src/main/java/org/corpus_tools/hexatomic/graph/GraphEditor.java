@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -45,8 +44,6 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
-import org.corpus_tools.hexatomic.core.undo.ReversibleOperation;
-import org.corpus_tools.hexatomic.graph.internal.AnnotationFilterWidget;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -139,10 +136,10 @@ public class GraphEditor {
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
   @Inject
-  private ProjectManager projectManager;
+  ProjectManager projectManager;
 
   @Inject
-  private MPart thisPart;
+  MPart thisPart;
 
   @Inject
   ErrorService errorService;
@@ -347,8 +344,16 @@ public class GraphEditor {
     }
   }
 
+  /**
+   * Force update of the graph view.
+   * 
+   * @param recalculateSegments Allows to control whether to re-calculate the segments. This is a
+   *        costly operation should be avoided when there is no structural change.
+   * @param scrollToFirstToken If true, reset the view to show the first token after the update is
+   *        complete.
+   */
   @SuppressWarnings("unchecked")
-  private void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
+  protected void updateView(final boolean recalculateSegments, final boolean scrollToFirstToken) {
 
     try {
       SDocumentGraph graph = getGraph();
@@ -726,25 +731,22 @@ public class GraphEditor {
     }
   }
 
+
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  private void onCheckpointCreated(
+  protected void onCheckpointCreated(
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_CREATED) Object element) {
 
     if (element instanceof ChangeSet) {
       ChangeSet changeSet = (ChangeSet) element;
       log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
 
-      // Filter for change set events that belong to the loaded document graph
-      SDocumentGraph loadedGraph = getGraph();
-      Set<Object> changedObjects =
-          changeSet.getChanges().stream().filter(c -> c.getChangedContainer() == loadedGraph)
-              .map(ReversibleOperation::getChangedElement).collect(Collectors.toSet());
-      if (!changedObjects.isEmpty()) {
-        // Only relations with text coverage semantics can change the structure of the
-        // graph and
+      // check graph updates contain changes for this graph
+      if (changeSet.containsDocument(
+          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+        // Only relations with text coverage semantics can change the structure of the graph and
         // modify segments
-        boolean recalculateSegments = changedObjects.stream().anyMatch(
+        boolean recalculateSegments = changeSet.getChangedElements().stream().anyMatch(
             c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
         updateView(recalculateSegments, false);
       }
