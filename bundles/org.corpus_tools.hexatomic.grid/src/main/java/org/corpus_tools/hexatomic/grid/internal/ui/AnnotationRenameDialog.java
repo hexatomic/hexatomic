@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Dialog providing the user with the old values for annotation namepsace and annotation name, and
+ * Dialog providing the user with the old values for annotation namespace and annotation name, and
  * lets them input a new namespace value and a new name value. To remain compatible with the
  * original column header rename logic and the respective dialog, this dialog splits the qualified
  * name into its components only for the front end, while logic happens on the compound qualified
