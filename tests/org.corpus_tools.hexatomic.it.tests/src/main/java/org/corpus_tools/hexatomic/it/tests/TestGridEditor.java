@@ -98,6 +98,7 @@ public class TestGridEditor {
       "Some annotations were not renamed!";
 
   private static final String TOKEN_VALUE = "Token";
+  private static final String SPAN_VALUE = "Span";
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
@@ -1698,6 +1699,92 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests the existence of the menu items for adding annotation columns in the popup menu
+   */
+  @Test
+  void testAddColumnPopup() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Test for column header
+    List<String> menuItems1 = table.contextMenu(0, 3).menuItems();
+    assertTrue(menuItems1.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
+    assertTrue(menuItems1.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+
+    // Test for cell
+    List<String> menuItems2 = table.contextMenu(2, 4).menuItems();
+    assertTrue(menuItems2.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
+    assertTrue(menuItems2.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+  }
+
+  /**
+   * Tests the addition of a new token annotation column via context menu.
+   */
+  @Test
+  void testAddTokenColumnViaMenu() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+
+    // Create via click on span cell
+    int oldColumnCount = addColumnOnCell(1, 4, TOKEN_VALUE, tableBot);
+    assertColumnAddedAtIndex(4, oldColumnCount + 1, tableBot);
+
+    // Create via click on token cell
+    // oldColumnCount = addColumnOnCell(1, 2, TOKEN_VALUE, tableBot);
+    // assertColumnAddedAtIndex(3, oldColumnCount + 1, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new span annotation column via context menu.
+   */
+  @Test
+  void testAddSpanColumnViaMenu() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+
+    // Create via click on span cell
+    int oldColumnCount = addColumnOnCell(1, 4, SPAN_VALUE, tableBot);
+    assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
+
+    // Create via click on token cell
+    // oldColumnCount = addColumnOnCell(1, 2, SPAN_VALUE, tableBot);
+    // assertColumnAddedAtIndex(3, oldColumnCount + 1, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new token annotation column via keyboard shortcut.
+   */
+  @Test
+  void testAddTokenColumnViaShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    int oldColumnCount = table.columnCount();
+
+    table.click(2, 4);
+    // Create via shortcut
+    addColumn(tableBot, TOKEN_VALUE);
+    assertColumnAddedAtIndex(4, oldColumnCount + 1, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new span annotation column via keyboard shortcut.
+   */
+  @Test
+  void testAddSpanColumnViaShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    int oldColumnCount = table.columnCount();
+
+    table.click(2, 4);
+    // Create via shortcut
+    addColumn(tableBot, SPAN_VALUE);
+    assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
@@ -1813,6 +1900,48 @@ public class TestGridEditor {
     assertNotNull(dialog);
     assertDialogTexts(dialog, "five::span_1");
     dialog.close();
+  }
+
+
+  private void addColumn(SWTNatTableBot tableBot, String tokenValue) {
+    switch (tokenValue) {
+      case TOKEN_VALUE:
+        keyboard.pressShortcut(SWT.CTRL | SWT.SHIFT, 't');
+        break;
+        
+      case SPAN_VALUE:
+        keyboard.pressShortcut(SWT.CTRL | SWT.SHIFT, 's');
+        break;
+
+      default:
+        fail();
+        break;
+    }
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+  }
+
+  private int addColumnOnCell(int rowIndex, int columnIndex, String columnType,
+      SWTNatTableBot tableBot) {
+    SWTBotNatTable table = tableBot.nattable();
+    int columnCount = table.columnCount();
+    SWTBotRootMenu menu = table.contextMenu(rowIndex, columnIndex);
+    menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    return columnCount;
+  }
+
+  private void assertColumnAddedAtIndex(int newColumnIndex, int newColumnCount,
+      SWTNatTableBot tableBot) {
+    assertEquals(6, newColumnCount);
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE,
+        tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
+    assertEquals(null, null);
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
