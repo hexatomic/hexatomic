@@ -122,37 +122,30 @@ Additionally, merged cells will be separated.
 
 ### Navigation
 
-|                        Shortcut                        | What the shortcut does                           | Constraints                     |
-| :----------------------------------------------------: | :----------------------------------------------- | :------------------------------ |
-|             <kbd>Shift</kbd> + mouse wheel             | Scrolls through the grid vertically              |                                 |
-| <kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, <kbd>↓</kbd> | Move through the grid selecting individual cells | A cell must already be selected |
-|                    <kbd>Home</kbd>                     | Jump to the first column                         | A cell must already be selected |
-|                     <kbd>End</kbd>                     | Jump to the last column                          | A cell must already be selected |
-|         <kbd>PageUp</kbd>, <kbd>PageDown</kbd>         | Jump a page up or down                           | A cell must already be selected |
-|                                                        |                                                  |                                 |
+|                        Shortcut                        | What the shortcut does                           | Constraints             |
+| :----------------------------------------------------: | :----------------------------------------------- | :---------------------- |
+|             <kbd>Shift</kbd> + mouse wheel             | Scrolls through the grid vertically              |                         |
+| <kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, <kbd>↓</kbd> | Move through the grid selecting individual cells | A cell must be selected |
+|                    <kbd>Home</kbd>                     | Jump to the first column                         | A cell must be selected |
+|                     <kbd>End</kbd>                     | Jump to the last column                          | A cell must be selected |
+|         <kbd>PageUp</kbd>, <kbd>PageDown</kbd>         | Jump a page up or down                           | A cell must be selected |
 
 ### Selection
 
 |                     Shortcut                     | What the shortcut does                                                        | Constraints                             |
 | :----------------------------------------------: | :---------------------------------------------------------------------------- | :-------------------------------------- |
-|             <kbd>Shift</kbd> + click             | Select the range of cells from the currently selected one to the clicked cell | A cell must already be selected         |
-|             <kbd>Ctrl</kbd> + click              | Add/remove the clicked cell to the current selection of cells                 | A cell must already be selected         |
-|          <kbd>Ctrl</kbd> + <kbd>F</kbd>          | Open text search                                                              |                                         |
+|             <kbd>Shift</kbd> + click             | Select the range of cells from the currently selected one to the clicked cell | A cell must be selected                 |
+|             <kbd>Ctrl</kbd> + click              | Add/remove the clicked cell to the current selection of cells                 | A cell must be selected                 |
+|          <kbd>Ctrl</kbd> + <kbd>F</kbd>          | Open text search                                                              | The editor must be the active window    |
 | <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> | Toggle freezing of rows and columns                                           | A cell, column, or row must be selected |
-|                                                  |                                                                               |                                         |
 
 ### Data operations
 
 |            Shortcut            | What the shortcut does         | Constraints                                |
 | :----------------------------: | :----------------------------- | :----------------------------------------- |
 |        <kbd>Space</kbd>        | Activate cell for editing      | Cell(s) must be selected                   |
-|        <kbd>Enter</kbd>        | Commit edited annotation value | Cell must be in editing mode               |
-|         <kbd>Del</kbd>         | Delete selected cells          |                                            |
+|        <kbd>Enter</kbd>        | Commit edited annotation value | A cell must be in editing mode             |
+|         <kbd>Del</kbd>         | Delete selected cells          | Cell(s) must be selected                   |
 | <kbd>Alt</kbd> + <kbd>S</kbd>  | Create a new span              | >1 cells in a span column must be selected |
-|         <kbd>F5</kbd>          | Refresh editor from data model |                                            |
-| <kbd>Ctrl</kbd> + <kbd>E</kbd> | Export to Excel format         |                                            |
-
-
-
-
-<kbd></kbd>
+|         <kbd>F5</kbd>          | Refresh editor from data model | Cell(s) must be selected                   |
+| <kbd>Ctrl</kbd> + <kbd>E</kbd> | Export to Excel format         | The editor must be the active window       |
