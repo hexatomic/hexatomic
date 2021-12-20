@@ -114,7 +114,7 @@ public class TextViewer {
   /**
    * Retrieve the edited document from the global and the internal persisted state.
    * 
-   * @return
+   * @return The edited document or {@link Optional#empty()} if no such document exists.
    */
   private Optional<SDocument> getDocument(MPart part) {
     String documentID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);

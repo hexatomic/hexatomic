@@ -172,7 +172,7 @@ public class UiStatusReport extends NullProgressMonitor {
   /**
    * Returns true when there is at least one job with an indetermined workload.
    * 
-   * @return
+   * @return True if there is such a job.
    */
   public boolean hasIndeterminedJobWorkload() {
     return runningJobs > 0 && totalJobsWorkload == 0;
