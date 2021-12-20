@@ -1727,12 +1727,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
 
     // Create via click on span cell
-    int oldColumnCount = addColumnOnCell(1, 4, TOKEN_VALUE, tableBot);
-    assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
-
-    // Create via click on token cell
-    // oldColumnCount = addColumnOnCell(1, 2, TOKEN_VALUE, tableBot);
-    // assertColumnAddedAtIndex(3, oldColumnCount + 1, tableBot);
+    int oldColumnCount = addColumnOnCell(1, 3, TOKEN_VALUE, tableBot);
+    assertColumnAddedAtIndex(4, oldColumnCount + 1, tableBot);
   }
 
   /**
@@ -1744,12 +1740,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
 
     // Create via click on span cell
-    int oldColumnCount = addColumnOnCell(1, 4, SPAN_VALUE, tableBot);
-    assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
-
-    // Create via click on token cell
-    // oldColumnCount = addColumnOnCell(1, 2, SPAN_VALUE, tableBot);
-    // assertColumnAddedAtIndex(3, oldColumnCount + 1, tableBot);
+    int oldColumnCount = addColumnOnCell(1, 2, SPAN_VALUE, tableBot);
+    assertColumnAddedAtIndex(3, oldColumnCount + 1, tableBot);
   }
 
   /**
@@ -1762,10 +1754,10 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     int oldColumnCount = table.columnCount();
 
-    table.click(2, 4);
-    // Create via shortcut
+    table.click(2, 2);
     addColumn(tableBot, TOKEN_VALUE);
-    assertColumnAddedAtIndex(4, oldColumnCount + 1, tableBot);
+    // New columns created by keyboard are always added at the very end
+    assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
   }
 
   /**
@@ -1778,9 +1770,9 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     int oldColumnCount = table.columnCount();
 
-    table.click(2, 4);
-    // Create via shortcut
+    table.click(2, 1);
     addColumn(tableBot, SPAN_VALUE);
+    // New columns created by keyboard are always added at the very end
     assertColumnAddedAtIndex(5, oldColumnCount + 1, tableBot);
   }
 
