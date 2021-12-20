@@ -2,7 +2,7 @@ target 'Hexatomic Target Platform Definition'
 
 with requirements source configurePhase
 
-location 'https://download.eclipse.org/eclipse/updates/4.19/' {
+location 'https://download.eclipse.org/eclipse/updates/4.22/' {
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.emf.common

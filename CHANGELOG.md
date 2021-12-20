@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Enhanced colors used in the graph editor and make them more accessible
 - Use Eclipse Platform project update site instead of larger generic Eclipse update site
+- Update to Eclipse Platform 4.22 (corresponds to 2021-12 Eclipse release)
 
 ### Fixed
 
