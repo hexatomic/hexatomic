@@ -96,8 +96,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     Column newColumn = new Column(type, annoQName);
     if (insertionIndex == -1) {
       bodyDataProvider.getColumns().add(newColumn);
-    }
-    else {
+    } else {
       bodyDataProvider.getColumns().add(insertionIndex, newColumn);
     }
   }
