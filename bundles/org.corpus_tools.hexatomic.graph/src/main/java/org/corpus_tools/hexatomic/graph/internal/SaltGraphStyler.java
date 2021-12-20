@@ -65,6 +65,11 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
   private final FontMetrics fontMetrics;
 
+  /**
+   * Construct a new instance.
+   * 
+   * @param figure The figure this style is applied to.
+   */
   public SaltGraphStyler(IFigure figure) {
     this.figure = figure;
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
