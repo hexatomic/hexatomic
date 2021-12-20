@@ -2,6 +2,7 @@
 
 - [Introduction](./introduction.md)
 - [Installation](./installation.md)
+	- [Update](./update.md)
 - [Usage](usage/README.md)
     - [Working with projects](usage/projects.md)
        - [Importing and exporting corpora](usage/import-export.md)
