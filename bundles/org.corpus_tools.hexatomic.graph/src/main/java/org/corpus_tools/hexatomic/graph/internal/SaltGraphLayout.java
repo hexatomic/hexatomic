@@ -360,8 +360,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           if (n != null) {
             n.setInternalLocation(x,
                 boundsY + (tokenRank * (this.maxNodeHeight * PERCENT_INTER_NODE_MARGIN)));
-            x += this.averageTokenNodeWidth / 10.0;
-            x += n.getLayoutEntity().getWidthInLayout();
+            x += this.averageTokenNodeWidth / 2.0;
+            x += n.getWidthInLayout();
           }
         }
       }
