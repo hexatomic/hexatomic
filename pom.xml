@@ -215,7 +215,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.1.2</version>
 				<configuration>
 					<!-- This is a default configuration available on the classpath of the 
 						checkstyle plugin -->
@@ -237,7 +237,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>8.29</version>
+						<version>9.2</version>
 					</dependency>
 				</dependencies>
 			</plugin>
