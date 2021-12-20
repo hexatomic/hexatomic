@@ -53,7 +53,7 @@ public class NodeBorder extends CompoundBorder {
     title.setBackgroundColor(ColorConstants.white);
     title.setTextColor(ColorPalette.GRAY);
     // Add padding based on font height
-    title.setPadding(new Insets(0, 0, Math.round(((float) fontHeight) * 0.4f), 0));
+    title.setPadding(new Insets(0, 0, Math.round(fontHeight * 0.4f), 0));
 
     line = new LineBorder(3);
     line.setStyle(Graphics.LINE_SOLID);
