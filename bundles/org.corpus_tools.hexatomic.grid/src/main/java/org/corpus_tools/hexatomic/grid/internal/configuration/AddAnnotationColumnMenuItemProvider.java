@@ -21,9 +21,13 @@
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
 import org.corpus_tools.hexatomic.grid.GridEditor;
+import org.corpus_tools.hexatomic.grid.internal.actions.AddColumnAction;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.ui.NatEventData;
 import org.eclipse.nebula.widgets.nattable.ui.menu.IMenuItemProvider;
+import org.eclipse.nebula.widgets.nattable.ui.menu.MenuItemProviders;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,7 +67,13 @@ public class AddAnnotationColumnMenuItemProvider implements IMenuItemProvider {
     item.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent event) {
-        // new AddColumnSelectionAction().run(natTable);
+        NatEventData natEventData = MenuItemProviders.getNatEventData(event);
+        int columnPosition = natEventData.getColumnPosition();
+        int rowPosition = natEventData.getRowPosition();
+        ILayer layer = natTable.getUnderlyingLayerByPosition(columnPosition, rowPosition);
+        int colIndex = layer.getColumnIndexByPosition(columnPosition);
+        new AddColumnAction(AddAnnotationColumnMenuItemProvider.this.columnType, colIndex)
+            .run(natTable);
       }
     });
   }
