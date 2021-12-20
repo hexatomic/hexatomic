@@ -25,8 +25,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
+import org.corpus_tools.salt.common.SSpanningRelation;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
@@ -34,15 +36,16 @@ import org.corpus_tools.salt.core.SAnnotationContainer;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.Bendpoint;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
 import org.eclipse.zest.core.viewers.IFigureProvider;
 import org.eclipse.zest.core.viewers.ISelfStyleProvider;
@@ -60,9 +63,19 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   private final ShortestPathConnectionRouter pointingConnectionRouter;
   private final IFigure figure;
 
+  private final FontMetrics fontMetrics;
+
+  /**
+   * Construct a new instance.
+   * 
+   * @param figure The figure this style is applied to.
+   */
   public SaltGraphStyler(IFigure figure) {
     this.figure = figure;
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
+    GC gc = new GC(Display.getCurrent());
+    fontMetrics = gc.getFontMetrics();
+    gc.dispose();
   }
 
   @Override
@@ -88,6 +101,9 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
   @Override
   public void selfStyleConnection(Object element, GraphConnection connection) {
+
+    connection.setLineWidth(3);
+
     if (element instanceof SPointingRelation) {
 
       SPointingRelation pointing = (SPointingRelation) element;
@@ -105,27 +121,26 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
             Arrays.asList(bpSource, bpTarget));
       }
 
-      connection.changeLineColor(ColorConstants.blue);
+      connection.setLineColor(ColorPalette.BLUE);
+      connection.setLineStyle(SWT.LINE_DASH);
       connection.getConnectionFigure().setConnectionRouter(pointingConnectionRouter);
 
-      //
       // Find the label of the connection figure and add a new locator constraint, that places
       // the label in the midpoint of the middle edge segment.
-      GC gc = new GC(connection.getDisplay());
-      FontMetrics fontMetrics = gc.getFontMetrics();
-      int fontHeight = fontMetrics.getHeight();
-      gc.dispose();
       Connection connFigure = connection.getConnectionFigure();
       for (Object c : connFigure.getChildren()) {
         if (c instanceof org.eclipse.draw2d.Label) {
           org.eclipse.draw2d.Label connLabel = (org.eclipse.draw2d.Label) c;
           connFigure.getLayoutManager().setConstraint(connLabel,
-              new MidpointOfMiddleSegmentLocator(connFigure, fontHeight));
+              new MidpointOfMiddleSegmentLocator(connFigure, fontMetrics.getHeight()));
         }
       }
 
     } else if (element instanceof SDominanceRelation) {
-      connection.changeLineColor(ColorConstants.red);
+      connection.setLineColor(ColorPalette.VERMILLION);
+    } else if (element instanceof SSpanningRelation) {
+      connection.setLineColor(ColorPalette.BLUISH_GREEN);
+      connection.setLineStyle(SWT.LINE_DOT);
     }
   }
 
@@ -183,7 +198,7 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   @Override
   public IFigure getFigure(Object element) {
     if (element instanceof SNode) {
-      NodeFigure currFigure = new NodeFigure((SNode) element);
+      NodeFigure currFigure = new NodeFigure((SNode) element, fontMetrics);
       currFigure.setSize(currFigure.getPreferredSize());
       return currFigure;
     }
