@@ -110,7 +110,7 @@ public class OpenSaltDocumentHandler {
    * Checks whether the currently selected object is a document.
    * 
    * @param selectionService An instance of the selection service
-   * @return
+   * @return True if the current selection is a document.
    */
   @CanExecute
   public boolean canExecute(ESelectionService selectionService) {

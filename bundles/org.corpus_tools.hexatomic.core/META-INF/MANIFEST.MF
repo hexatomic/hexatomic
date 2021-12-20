@@ -28,4 +28,5 @@ Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.events.salt,
  org.corpus_tools.hexatomic.core.handlers,
  org.corpus_tools.hexatomic.core.ui;x-internal:=true,
- org.corpus_tools.hexatomic.core.undo
+ org.corpus_tools.hexatomic.core.undo,
+ org.corpus_tools.hexatomic.styles
