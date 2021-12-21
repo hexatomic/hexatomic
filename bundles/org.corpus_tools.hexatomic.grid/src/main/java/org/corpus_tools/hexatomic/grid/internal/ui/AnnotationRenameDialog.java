@@ -57,7 +57,8 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
   private final String titleText;
 
   /**
-   * Sets the old and new qualified annotation names to fields.
+   * Sets the old and new qualified annotation names to fields, using the default title
+   * {@link AnnotationRenameDialog#RENAME_ANNOTATION_TITLE} as title for the dialog.
    * 
    * @param activeShell the active SWT shell widget
    * @param oldQName the old qualified annotation name
@@ -68,6 +69,14 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
     this.titleText = RENAME_ANNOTATION_TITLE;
   }
 
+  /**
+   * Sets the old and new qualified annotation names to fields, using the given string as title for
+   * the dialog.
+   * 
+   * @param activeShell the active SWT shell widget
+   * @param oldQName the old qualified annotation name
+   * @param titleText The string to be used as dialog title
+   */
   public AnnotationRenameDialog(Shell activeShell, String oldQName, String titleText) {
     super(activeShell);
     this.oldQName = oldQName;
