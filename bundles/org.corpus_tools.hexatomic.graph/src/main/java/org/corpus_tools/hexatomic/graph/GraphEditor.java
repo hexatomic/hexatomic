@@ -218,7 +218,7 @@ public class GraphEditor {
     sideBar.setLayout(GridLayoutFactory.swtDefaults().create());
 
     // Weights can only be set after all items of the sash have been added
-    graphSash.setWeights(300, 100);
+    graphSash.setWeights(72, 28);
 
     Group filterGroup = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
     filterGroup.setLayoutData(GridDataFactory.defaultsFor(filterGroup).align(SWT.FILL, SWT.TOP)
@@ -269,7 +269,7 @@ public class GraphEditor {
         viewer.getGraphControl().getLightweightSystem().getRootFigure(), annoFilterWidget));
 
     ExpandItem annoFilterExpandBar = new ExpandItem(filterExpandBar, SWT.NONE);
-    annoFilterExpandBar.setText("Annotation Name");
+    annoFilterExpandBar.setText("Node Annotations");
     annoFilterExpandBar.setHeight(ANNO_FILTER_HEIGHT);
     annoFilterExpandBar.setControl(annoFilterWidget);
 
@@ -298,7 +298,7 @@ public class GraphEditor {
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
     consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
-    mainSash.setWeights(new int[] {200, 100});
+    mainSash.setWeights(85, 15);
 
     SDocumentGraph graph = getGraph();
     boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();

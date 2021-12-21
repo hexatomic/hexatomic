@@ -71,7 +71,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestGraphEditor {
 
   private static final String SEARCH = "Search";
-  private static final String ANNOTATION_NAME = "Annotation Name";
+  private static final String ANNOTATION_NAME = "Node Annotations";
   private static final String SPANS = "Spans";
   private static final String FILTER_VIEW = "Filter View";
   private static final String ANNOTATION_TYPES = "Annotation Types";
