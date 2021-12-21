@@ -908,7 +908,7 @@ public class TestGridEditor {
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
-    tableBot.button("Cancel").click();
+    tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
   }
@@ -1088,7 +1088,7 @@ public class TestGridEditor {
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
-    tableBot.button("Cancel").click();
+    tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have not changed
     assertEquals(token, table.widget.getDataValueByPosition(2, 3));
