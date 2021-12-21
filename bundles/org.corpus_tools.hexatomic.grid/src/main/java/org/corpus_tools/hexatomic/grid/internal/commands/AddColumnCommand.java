@@ -33,6 +33,7 @@ import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 public class AddColumnCommand extends AbstractContextFreeCommand {
 
   private final int currentColumnIndex;
+  private final int currentRowIndex;
   private final ColumnType columnType;
   private final NatTable natTable;
 
@@ -43,9 +44,11 @@ public class AddColumnCommand extends AbstractContextFreeCommand {
    * @param currentColumnIndex The index after which to add the new column
    * @param natTable The {@link NatTable} on which the column is added
    */
-  public AddColumnCommand(ColumnType columnType, int currentColumnIndex, NatTable natTable) {
+  public AddColumnCommand(ColumnType columnType, int currentColumnIndex, int currentRowIndex,
+      NatTable natTable) {
     this.columnType = columnType;
     this.currentColumnIndex = currentColumnIndex;
+    this.currentRowIndex = currentRowIndex;
     this.natTable = natTable;
   }
 
@@ -56,6 +59,15 @@ public class AddColumnCommand extends AbstractContextFreeCommand {
    */
   public final int getCurrentColumnIndex() {
     return currentColumnIndex;
+  }
+
+  /**
+   * Gets the row index on which the context menu was brought up.
+   * 
+   * @return the currentRowIndex The index of the row that was clicked to bring up the context menu
+   */
+  public final int getCurrentRowIndex() {
+    return currentRowIndex;
   }
 
   /**

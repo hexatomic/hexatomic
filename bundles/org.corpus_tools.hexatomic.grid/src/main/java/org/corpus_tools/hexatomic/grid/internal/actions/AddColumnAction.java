@@ -36,21 +36,24 @@ public class AddColumnAction implements IContextFreeAction, IKeyAction {
 
   private int colIndex;
   private final ColumnType columnType;
+  private final int rowIndex;
 
   /**
    * Creates an {@link AddColumnAction} with the given parameters.
    * 
    * @param columnType The type of the column to add
    * @param colIndex The index after which the column should be added
+   * @param rowIndex The index of the row which was clicked to bring up the context menu
    */
-  public AddColumnAction(ColumnType columnType, int colIndex) {
+  public AddColumnAction(ColumnType columnType, int colIndex, int rowIndex) {
     this.columnType = columnType;
     this.colIndex = colIndex;
+    this.rowIndex = rowIndex;
   }
 
   @Override
   public void run(NatTable natTable) {
-    natTable.doCommand(new AddColumnCommand(columnType, colIndex, natTable));
+    natTable.doCommand(new AddColumnCommand(columnType, colIndex, rowIndex, natTable));
   }
 
   @Override

@@ -72,7 +72,8 @@ public class AddAnnotationColumnMenuItemProvider implements IMenuItemProvider {
         int rowPosition = natEventData.getRowPosition();
         ILayer layer = natTable.getUnderlyingLayerByPosition(columnPosition, rowPosition);
         int colIndex = layer.getColumnIndexByPosition(columnPosition);
-        new AddColumnAction(AddAnnotationColumnMenuItemProvider.this.columnType, colIndex)
+        int rowIndex = layer.getRowIndexByPosition(rowPosition);
+        new AddColumnAction(AddAnnotationColumnMenuItemProvider.this.columnType, colIndex, rowIndex)
             .run(natTable);
       }
     });
