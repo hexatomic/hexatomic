@@ -124,7 +124,7 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  */
 public class GraphEditor {
 
-  private static final int ANNO_FILTER_HEIGHT = 150;
+  private static final int ANNO_FILTER_HEIGHT = 120;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 

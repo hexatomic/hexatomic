@@ -40,6 +40,9 @@ import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -90,15 +93,22 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
     scroll = new ScrolledComposite(this, SWT.V_SCROLL);
     scroll.setExpandHorizontal(true);
     scroll.setExpandVertical(true);
-    int width = scroll.getClientArea().width;
-    scroll.setMinSize(parent.computeSize(width, SWT.DEFAULT));
     scroll.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+    scroll.setAlwaysShowScrollBars(true);
 
 
     facetFilterComposite = new Composite(scroll, SWT.NONE);
     facetFilterComposite
         .setLayout(RowLayoutFactory.swtDefaults().type(SWT.HORIZONTAL).wrap(true).create());
     scroll.setContent(facetFilterComposite);
+
+    adjustScrollHeight();
+    scroll.addControlListener(new ControlAdapter() {
+      @Override
+      public void controlResized(ControlEvent e) {
+        adjustScrollHeight();
+      }
+    });
 
     proposalProvider = new AnnotationNameProposalProvider(saltGraph);
     ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotatioName,
@@ -123,6 +133,13 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
     }
   }
 
+  private void adjustScrollHeight() {
+    int width = scroll.getClientArea().width;
+
+    Point computedSize = facetFilterComposite.computeSize(width, SWT.DEFAULT);
+    scroll.setMinSize(computedSize);
+
+  }
 
   @Override
   public void proposalAccepted(IContentProposal proposal) {
@@ -142,11 +159,11 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
 
     });
     activeChips.add(chip);
-
-    int width = scroll.getClientArea().width;
-    scroll.setMinSize(getParent().computeSize(width, SWT.DEFAULT));
-
     facetFilterComposite.layout();
+
+    adjustScrollHeight();
+
+
     eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
 
   }
