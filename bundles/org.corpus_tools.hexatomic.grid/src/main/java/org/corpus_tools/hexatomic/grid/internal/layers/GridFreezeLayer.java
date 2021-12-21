@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class GridFreezeLayer extends CompositeFreezeLayer {
 
+  private static final String COLUMN_ALREADY_EXISTS = "Column already exists";
   private final GraphDataProvider bodyDataProvider;
   private final SelectionLayer selectionLayer;
 
@@ -104,7 +105,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     Column newColumn = null;
     if (existingColumnCounter > 1) {
       if (type == ColumnType.TOKEN_ANNOTATION) {
-        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Column already exists",
+        MessageDialog.openError(Display.getCurrent().getActiveShell(), COLUMN_ALREADY_EXISTS,
             "A token annotation column for the token annotation " + annoQName + " already exists!");
         return;
       } else {
