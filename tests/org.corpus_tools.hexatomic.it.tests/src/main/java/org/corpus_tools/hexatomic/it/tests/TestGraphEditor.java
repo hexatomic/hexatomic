@@ -23,7 +23,7 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.GraphEditor;
-import org.corpus_tools.hexatomic.it.tests.utils.SWTBotChips;
+import org.corpus_tools.hexatomic.it.tests.utils.SwtBotChips;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -597,7 +597,7 @@ class TestGraphEditor {
     // Tokens and the matching structure nodes
     annoFilter.typeText("const");
     annoFilter.pressShortcut(Keystrokes.LF);
-    SWTBotChips annoChip = new SWTBotChips(
+    SwtBotChips annoChip = new SwtBotChips(
         bot.widget(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget));
     assertNotNull(annoChip);
 

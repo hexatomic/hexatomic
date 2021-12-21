@@ -11,9 +11,9 @@ import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
 
-public class SWTBotChips extends AbstractSWTBotControl<Chips> {
+public class SwtBotChips extends AbstractSWTBotControl<Chips> {
 
-  public SWTBotChips(Chips w) throws WidgetNotFoundException {
+  public SwtBotChips(Chips w) throws WidgetNotFoundException {
     super(w);
   }
 
