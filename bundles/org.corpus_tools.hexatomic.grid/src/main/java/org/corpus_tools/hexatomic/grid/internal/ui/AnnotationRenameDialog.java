@@ -53,6 +53,8 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
   private AnnotationLabelPanel columnLabelPanel;
 
   private static final Logger log = LoggerFactory.getLogger(AnnotationRenameDialog.class);
+  public static final String RENAME_ANNOTATION_TITLE = "Rename annotation";
+  private final String titleText;
 
   /**
    * Sets the old and new qualified annotation names to fields.
@@ -63,13 +65,20 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
   public AnnotationRenameDialog(Shell activeShell, String oldQName) {
     super(activeShell);
     this.oldQName = oldQName;
+    this.titleText = RENAME_ANNOTATION_TITLE;
+  }
+
+  public AnnotationRenameDialog(Shell activeShell, String oldQName, String titleText) {
+    super(activeShell);
+    this.oldQName = oldQName;
+    this.titleText = titleText;
   }
 
   @Override
   protected void initComponents(Shell shell) {
     GridLayout shellLayout = new GridLayout();
     shell.setLayout(shellLayout);
-    shell.setText("Rename annotation"); //$NON-NLS-1$
+    shell.setText(titleText); // $NON-NLS-1$
 
     // Closing the window is the same as canceling the form
     shell.addShellListener(new ShellAdapter() {

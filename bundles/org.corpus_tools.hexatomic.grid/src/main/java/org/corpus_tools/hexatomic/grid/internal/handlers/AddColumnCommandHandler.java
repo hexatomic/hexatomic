@@ -64,7 +64,8 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
     int currentColumnIndex = command.getCurrentColumnIndex();
     ColumnType columnType = command.getColumnType();
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), null);
+        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), null,
+            "New annotation column");
     dialog.open();
 
     if (dialog.isCancelPressed()) {
