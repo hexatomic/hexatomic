@@ -101,10 +101,13 @@ public class AnnotationFilterWidget extends Composite {
           activeChips.remove(chip);
           chip.setVisible(false);
           chip.dispose();
+
+          facetFilterComposite.layout();
           eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
+
         });
         activeChips.add(chip);
-
+        facetFilterComposite.layout();
         eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
       }
     });
