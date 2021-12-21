@@ -1731,8 +1731,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
 
     // Create via click on span cell
-    int oldColumnCount = addColumnOnCell(1, 3, tableBot);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 4, oldColumnCount + 1, tableBot);
+    addColumnOnCell(1, 3, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 4, tableBot);
   }
 
   /**
@@ -1744,8 +1744,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
 
     // Create via click on span cell
-    int oldColumnCount = addColumnOnCell(1, 2, tableBot);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 3, oldColumnCount + 1, tableBot);
+    addColumnOnCell(1, 2, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 3, tableBot);
   }
 
   /**
@@ -1756,12 +1756,11 @@ public class TestGridEditor {
     openDefaultExample();
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    int oldColumnCount = table.columnCount();
 
     table.click(2, 2);
     addColumn(tableBot, TOKEN_VALUE, OK);
     // New columns created by keyboard are always added at the very end
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, oldColumnCount + 1, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
   }
 
   /**
@@ -1788,11 +1787,10 @@ public class TestGridEditor {
     openDefaultExample();
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    int oldColumnCount = table.columnCount();
 
     table.click(2, 1);
     addColumn(tableBot, SPAN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, oldColumnCount + 1, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
   }
 
   /**
@@ -1807,12 +1805,12 @@ public class TestGridEditor {
 
     table.click(2, 1);
     addColumn(tableBot, TOKEN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, oldColumnCount + 1, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
     addColumn(tableBot, TOKEN_VALUE, OK);
     SWTBotShell dialog = tableBot.shell("Column already exists");
     tableBot.button(OK).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, oldColumnCount + 1, tableBot);
+    assertEquals(oldColumnCount + 1, table.columnCount());
   }
 
   @Test
@@ -1820,13 +1818,12 @@ public class TestGridEditor {
     openDefaultExample();
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    int oldColumnCount = table.columnCount();
 
     table.click(2, 1);
     addColumn(tableBot, SPAN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, oldColumnCount + 1, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
     addColumn(tableBot, SPAN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE + " (2)", 6, oldColumnCount + 2, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE + " (2)", 6, tableBot);
   }
 
   /**
@@ -1980,9 +1977,8 @@ public class TestGridEditor {
     return columnCount;
   }
 
-  private void assertColumnAddedAtIndex(String columnHeader, int newColumnIndex, int newColumnCount,
+  private void assertColumnAddedAtIndex(String columnHeader, int newColumnIndex,
       SWTNatTableBot tableBot) {
-    assertEquals(newColumnIndex + 1, newColumnCount);
     assertEquals(columnHeader,
         tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
   }
