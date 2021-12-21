@@ -35,11 +35,10 @@ import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -60,8 +59,6 @@ public class AnnotationFilterWidget extends Composite {
 
   private final Composite facetFilterComposite;
 
-  private ScrolledComposite facetFiterScrollComposite;
-
   /**
    * Create a new filter widget.
    * 
@@ -73,53 +70,44 @@ public class AnnotationFilterWidget extends Composite {
   public AnnotationFilterWidget(Composite parent, SDocumentGraph saltGraph,
       IEventBroker eventBroker) {
     super(parent, SWT.BORDER);
-    this.setLayout(GridLayoutFactory.fillDefaults().create());
+    this.setLayout(GridLayoutFactory.swtDefaults().create());
 
-    facetFiterScrollComposite = new ScrolledComposite(this, SWT.V_SCROLL);
-    facetFiterScrollComposite.setLayoutData(GridDataFactory.defaultsFor(facetFiterScrollComposite)
-        .align(SWT.FILL, SWT.FILL).grab(true, true).create());
 
-    facetFilterComposite = new Composite(facetFiterScrollComposite, SWT.NONE);
+    facetFilterComposite = new Composite(this, SWT.NONE);
     facetFilterComposite
         .setLayout(RowLayoutFactory.swtDefaults().type(SWT.HORIZONTAL).wrap(true).create());
-    facetFiterScrollComposite.setExpandVertical(true);
-    facetFiterScrollComposite.setContent(facetFilterComposite);
-    updateScrollSize();
+    facetFilterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
     txtAddAnnotatioName =
-        text(SWT.BORDER).layoutData(new GridData(SWT.FILL, SWT.TOP, true, false))
+        text(SWT.BORDER)
+            .layoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BOTTOM).grab(true, false)
+                .create())
             .create(this);
     txtAddAnnotatioName.setMessage("Search");
 
     proposalProvider = new AnnotationNameProposalProvider(saltGraph);
     ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotatioName,
-        new TextContentAdapter(), proposalProvider, null,
-        null);
+        new TextContentAdapter(), proposalProvider, null, null);
     adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
     adapter.addContentProposalListener(new IContentProposalListener() {
 
       @Override
       public void proposalAccepted(IContentProposal proposal) {
+
         Chips chip = new Chips(facetFilterComposite, SWT.CLOSE);
+        chip.setLayoutData(RowDataFactory.swtDefaults().create());
         chip.setText(proposal.getContent());
         chip.addCloseListener(event -> {
           activeChips.remove(chip);
           chip.setVisible(false);
           chip.dispose();
-          updateScrollSize();
           eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
         });
         activeChips.add(chip);
-        updateScrollSize();
-        
+
         eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
       }
     });
-  }
-
-  private void updateScrollSize() {
-    facetFiterScrollComposite
-        .setMinHeight(facetFilterComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
   }
 
   /**
