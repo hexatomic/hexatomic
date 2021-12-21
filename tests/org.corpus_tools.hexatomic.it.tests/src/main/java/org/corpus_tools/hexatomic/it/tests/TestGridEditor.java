@@ -1801,7 +1801,7 @@ public class TestGridEditor {
     openDefaultExample();
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
-    int oldColumnCount = table.columnCount();
+    final int oldColumnCount = table.columnCount();
 
     table.click(2, 1);
     addColumn(tableBot, TOKEN_VALUE, OK);
