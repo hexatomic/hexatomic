@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Enhanced colors used in the graph editor and make them more accessible
+- Use consistent and accessible colour palette across all editors (#173)
 
 ### Fixed
 
