@@ -1915,8 +1915,7 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
   }
 
-  private int addColumnOnCell(int rowIndex, int columnIndex, String columnType,
-      SWTNatTableBot tableBot) {
+  private int addColumnOnCell(int rowIndex, int columnIndex, SWTNatTableBot tableBot) {
     SWTBotNatTable table = tableBot.nattable();
     final int columnCount = table.columnCount();
     SWTBotRootMenu menu = table.contextMenu(rowIndex, columnIndex);
