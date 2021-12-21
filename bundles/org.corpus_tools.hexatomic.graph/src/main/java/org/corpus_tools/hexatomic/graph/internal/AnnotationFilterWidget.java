@@ -39,6 +39,7 @@ import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -47,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Thomas Krause {@literal thomas.krause@hu-berlin.de}
  */
-public class AnnotationFilterWidget extends Composite {
+public class AnnotationFilterWidget extends Composite implements IContentProposalListener {
 
   public static final String ANNO_FILTER_CHANGED_TOPIC = "GRAPH_EDITOR/ANNOTATION_FILTER/CHANGED";
 
@@ -58,6 +59,11 @@ public class AnnotationFilterWidget extends Composite {
   private final List<Chips> activeChips = new LinkedList<>();
 
   private final Composite facetFilterComposite;
+
+
+  private final IEventBroker eventBroker;
+
+  private ScrolledComposite scroll;
 
   /**
    * Create a new filter widget.
@@ -70,14 +76,9 @@ public class AnnotationFilterWidget extends Composite {
   public AnnotationFilterWidget(Composite parent, SDocumentGraph saltGraph,
       IEventBroker eventBroker) {
     super(parent, SWT.BORDER);
+    this.eventBroker = eventBroker;
     this.setLayout(GridLayoutFactory.swtDefaults().create());
-
-
-    facetFilterComposite = new Composite(this, SWT.NONE);
-    facetFilterComposite
-        .setLayout(RowLayoutFactory.swtDefaults().type(SWT.HORIZONTAL).wrap(true).create());
-    facetFilterComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
+    
     txtAddAnnotatioName =
         text(SWT.BORDER)
             .layoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BOTTOM).grab(true, false)
@@ -85,33 +86,27 @@ public class AnnotationFilterWidget extends Composite {
             .create(this);
     txtAddAnnotatioName.setMessage("Search");
 
+    
+    scroll = new ScrolledComposite(this, SWT.V_SCROLL);
+    scroll.setExpandHorizontal(true);
+    scroll.setExpandVertical(true);
+    int width = scroll.getClientArea().width;
+    scroll.setMinSize(parent.computeSize(width, SWT.DEFAULT));
+    scroll.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+
+    facetFilterComposite = new Composite(scroll, SWT.NONE);
+    facetFilterComposite
+        .setLayout(RowLayoutFactory.swtDefaults().type(SWT.HORIZONTAL).wrap(true).create());
+    scroll.setContent(facetFilterComposite);
+
     proposalProvider = new AnnotationNameProposalProvider(saltGraph);
     ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotatioName,
         new TextContentAdapter(), proposalProvider, null, null);
     adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-    adapter.addContentProposalListener(new IContentProposalListener() {
-
-      @Override
-      public void proposalAccepted(IContentProposal proposal) {
-
-        Chips chip = new Chips(facetFilterComposite, SWT.CLOSE);
-        chip.setLayoutData(RowDataFactory.swtDefaults().create());
-        chip.setText(proposal.getContent());
-        chip.addCloseListener(event -> {
-          activeChips.remove(chip);
-          chip.setVisible(false);
-          chip.dispose();
-
-          facetFilterComposite.layout();
-          eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
-
-        });
-        activeChips.add(chip);
-        facetFilterComposite.layout();
-        eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
-      }
-    });
+    adapter.addContentProposalListener(this);
   }
+
 
   /**
    * Get allowed annotation names to include in the view.
@@ -126,6 +121,34 @@ public class AnnotationFilterWidget extends Composite {
           activeChips.stream().map(c -> c.getText()).collect(Collectors.toSet());
       return Optional.of(activeFilter);
     }
+  }
+
+
+  @Override
+  public void proposalAccepted(IContentProposal proposal) {
+    Chips chip = new Chips(facetFilterComposite, SWT.CLOSE);
+    chip.setLayoutData(RowDataFactory.swtDefaults().create());
+    chip.setText(proposal.getContent());
+    chip.addCloseListener(event -> {
+      activeChips.remove(chip);
+      chip.setVisible(false);
+      chip.dispose();
+
+      int width = scroll.getClientArea().width;
+      scroll.setMinSize(getParent().computeSize(width, SWT.DEFAULT));
+
+      facetFilterComposite.layout();
+      eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
+
+    });
+    activeChips.add(chip);
+
+    int width = scroll.getClientArea().width;
+    scroll.setMinSize(getParent().computeSize(width, SWT.DEFAULT));
+
+    facetFilterComposite.layout();
+    eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
+
   }
 
 }
