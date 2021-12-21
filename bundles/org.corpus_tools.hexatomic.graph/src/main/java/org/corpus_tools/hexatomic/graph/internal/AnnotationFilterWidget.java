@@ -77,7 +77,7 @@ public class AnnotationFilterWidget extends Composite {
 
     facetFiterScrollComposite = new ScrolledComposite(this, SWT.V_SCROLL);
     facetFiterScrollComposite.setLayoutData(GridDataFactory.defaultsFor(facetFiterScrollComposite)
-        .align(SWT.FILL, SWT.FILL).grab(true, true));
+        .align(SWT.FILL, SWT.FILL).grab(true, true).create());
 
     facetFilterComposite = new Composite(facetFiterScrollComposite, SWT.NONE);
     facetFilterComposite
