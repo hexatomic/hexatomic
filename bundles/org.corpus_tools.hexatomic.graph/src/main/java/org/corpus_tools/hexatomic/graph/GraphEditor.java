@@ -76,6 +76,10 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.RowDataFactory;
+import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -94,7 +98,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -120,6 +123,8 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  *
  */
 public class GraphEditor {
+
+  private static final int ANNO_FILTER_HEIGHT = 150;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
@@ -198,7 +203,7 @@ public class GraphEditor {
 
     SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
 
-    SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
+    final SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
 
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -212,15 +217,19 @@ public class GraphEditor {
     viewer.setFilters(graphFilter);
 
     Composite sideBar = new Composite(graphSash, SWT.NONE);
-    sideBar.setLayout(new GridLayout(1, false));
+    sideBar.setLayout(GridLayoutFactory.swtDefaults().create());
 
-    Group filterOptions = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
-    filterOptions.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-    filterOptions.setLayout(new FillLayout());
-    filterOptions.setText("Filter View");
+    // Weights can only be set after all items of the sash have been added
+    graphSash.setWeights(300, 100);
 
-    ExpandBar optionalFilterBars = new ExpandBar(filterOptions, SWT.NONE);
-    optionalFilterBars.addExpandListener(new ExpandListener() {
+    Group filterGroup = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
+    filterGroup.setLayoutData(GridDataFactory.defaultsFor(filterGroup).align(SWT.FILL, SWT.TOP)
+        .grab(true, false).create());
+    filterGroup.setLayout(new FillLayout());
+    filterGroup.setText("Filter View");
+
+    ExpandBar filterExpandBar = new ExpandBar(filterGroup, SWT.NONE);
+    filterExpandBar.addExpandListener(new ExpandListener() {
 
       @Override
       public void itemExpanded(ExpandEvent e) {
@@ -243,34 +252,34 @@ public class GraphEditor {
     });
 
 
-    Composite filterTypeComposite = new Composite(optionalFilterBars, SWT.NONE);
-    filterTypeComposite.setLayout(new GridLayout());
+    Composite filterByType = new Composite(filterExpandBar, SWT.NONE);
+    filterByType.setLayout(RowLayoutFactory.swtDefaults().type(SWT.VERTICAL).create());
+    filterByType.setLayoutData(filterByType);
 
-    btnIncludeSpans = new Button(filterTypeComposite, SWT.CHECK);
-    btnIncludeSpans.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
+    btnIncludeSpans = new Button(filterByType, SWT.CHECK);
+    btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
     btnIncludeSpans.setSelection(false);
     btnIncludeSpans.setText("Spans");
 
-    btnIncludePointingRelations = new Button(filterTypeComposite, SWT.CHECK);
-    btnIncludePointingRelations.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
+    btnIncludePointingRelations = new Button(filterByType, SWT.CHECK);
+    btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
     btnIncludePointingRelations.setSelection(true);
     btnIncludePointingRelations.setText("Pointing relations");
-    ExpandItem itemType = new ExpandItem(optionalFilterBars, SWT.NONE);
-    itemType.setText("Annotation Types");
-    int filterTypeCompositeHeight = filterTypeComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
-    itemType.setHeight(filterTypeCompositeHeight);
-    itemType.setControl(filterTypeComposite);
 
-    annoFilterWidget = new AnnotationFilterWidget(optionalFilterBars, getGraph(), events);
-    annoFilterWidget.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    ExpandItem filterByTypeExpandItem = new ExpandItem(filterExpandBar, SWT.NONE);
+    filterByTypeExpandItem.setText("Annotation Types");
+    filterByTypeExpandItem.setControl(filterByType);
+    filterByTypeExpandItem.setHeight(filterByType.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    ExpandItem itemAnno = new ExpandItem(optionalFilterBars, SWT.NONE);
-    itemAnno.setText("Annotation Name");
-    itemAnno.setHeight(150);
-    itemAnno.setControl(annoFilterWidget);
+    annoFilterWidget = new AnnotationFilterWidget(filterExpandBar, getGraph(), events);
+
+    ExpandItem annoFilterExpandBar = new ExpandItem(filterExpandBar, SWT.NONE);
+    annoFilterExpandBar.setText("Annotation Name");
+    annoFilterExpandBar.setHeight(ANNO_FILTER_HEIGHT);
+    annoFilterExpandBar.setControl(annoFilterWidget);
 
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
-    textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+    textRangeTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     textRangeTable.setHeaderVisible(true);
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
@@ -280,8 +289,6 @@ public class GraphEditor {
     tblclmnFilterBySegment.setWidth(100);
     tblclmnFilterBySegment.setText("Filter by segment");
 
-
-    graphSash.setWeights(new int[] {300, 100});
 
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
