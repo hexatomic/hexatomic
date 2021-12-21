@@ -74,12 +74,10 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
 
     // If the index is -1, then we don't know where to insert the new column, so call the layer
     // function respectively with -1
-    if (currentColumnIndex == -1) {
-      this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), currentColumnIndex);
-    } else {
-      this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), currentColumnIndex + 1);
-    }
-    command.getNatTable().refresh();
+    boolean isInsertionUnknown = (currentColumnIndex == -1);
+    int insertionIndex = isInsertionUnknown ? currentColumnIndex : (currentColumnIndex + 1);
+    this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), insertionIndex);
+    command.getNatTable().refresh(true);
     return true;
   }
 
