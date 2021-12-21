@@ -33,12 +33,13 @@ import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -57,9 +58,9 @@ public class AnnotationFilterWidget extends Composite {
 
   private final List<Chips> activeChips = new LinkedList<>();
 
-  private final Composite chipComposite;
+  private final Composite facetFilterComposite;
 
-  private ScrolledComposite chipScroll;
+  private ScrolledComposite facetFiterScrollComposite;
 
   /**
    * Create a new filter widget.
@@ -72,18 +73,17 @@ public class AnnotationFilterWidget extends Composite {
   public AnnotationFilterWidget(Composite parent, SDocumentGraph saltGraph,
       IEventBroker eventBroker) {
     super(parent, SWT.BORDER);
-    this.setLayout(new GridLayout(1, false));
+    this.setLayout(GridLayoutFactory.fillDefaults().create());
 
-    chipScroll = new ScrolledComposite(this, SWT.V_SCROLL);
-    chipScroll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+    facetFiterScrollComposite = new ScrolledComposite(this, SWT.V_SCROLL);
+    facetFiterScrollComposite.setLayoutData(GridDataFactory.defaultsFor(facetFiterScrollComposite)
+        .align(SWT.FILL, SWT.FILL).grab(true, true));
 
-    chipComposite = new Composite(chipScroll, SWT.NONE);
-
-    RowLayout chipLayout = new RowLayout(SWT.VERTICAL);
-    chipLayout.wrap = true;
-    chipComposite.setLayout(chipLayout);
-
-    chipScroll.setContent(chipComposite);
+    facetFilterComposite = new Composite(facetFiterScrollComposite, SWT.NONE);
+    facetFilterComposite
+        .setLayout(RowLayoutFactory.swtDefaults().type(SWT.HORIZONTAL).wrap(true).create());
+    facetFiterScrollComposite.setExpandVertical(true);
+    facetFiterScrollComposite.setContent(facetFilterComposite);
     updateScrollSize();
 
     txtAddAnnotatioName =
@@ -100,7 +100,7 @@ public class AnnotationFilterWidget extends Composite {
 
       @Override
       public void proposalAccepted(IContentProposal proposal) {
-        Chips chip = new Chips(chipComposite, SWT.CLOSE);
+        Chips chip = new Chips(facetFilterComposite, SWT.CLOSE);
         chip.setText(proposal.getContent());
         chip.addCloseListener(event -> {
           activeChips.remove(chip);
@@ -118,9 +118,8 @@ public class AnnotationFilterWidget extends Composite {
   }
 
   private void updateScrollSize() {
-    chipComposite.layout();
-    chipComposite.setSize(chipComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-    chipScroll.layout();
+    facetFiterScrollComposite
+        .setMinHeight(facetFilterComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
   }
 
   /**
