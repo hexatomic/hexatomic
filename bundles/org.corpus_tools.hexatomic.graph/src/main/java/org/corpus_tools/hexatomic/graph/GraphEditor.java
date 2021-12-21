@@ -242,12 +242,7 @@ public class GraphEditor {
       }
 
       private void relayout() {
-        Display.getDefault().timerExec(1, new Runnable() {
-          @Override
-          public void run() {
-            sideBar.layout();
-          }
-        });
+        Display.getDefault().timerExec(1, () -> sideBar.layout());
       }
     });
 

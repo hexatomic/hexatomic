@@ -24,10 +24,13 @@ import static org.eclipse.jface.widgets.WidgetFactory.text;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -44,6 +47,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 /**
@@ -81,15 +85,14 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
     super(parent, SWT.BORDER);
     this.eventBroker = eventBroker;
     this.setLayout(GridLayoutFactory.swtDefaults().create());
-    
-    txtAddAnnotatioName =
-        text(SWT.BORDER)
-            .layoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BOTTOM).grab(true, false)
-                .create())
-            .create(this);
+
+    txtAddAnnotatioName = text(SWT.BORDER)
+        .layoutData(
+            GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BOTTOM).grab(true, false).create())
+        .create(this);
     txtAddAnnotatioName.setMessage("Search");
 
-    
+
     scroll = new ScrolledComposite(this, SWT.V_SCROLL);
     scroll.setExpandHorizontal(true);
     scroll.setExpandVertical(true);
@@ -143,9 +146,35 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
 
   @Override
   public void proposalAccepted(IContentProposal proposal) {
+
+    String newAnnoString = proposal.getContent();
+
+    txtAddAnnotatioName.setText("");
+
+    Optional<Chips> existing =
+        activeChips.stream().filter(c -> Objects.equals(newAnnoString, c.getText())).findAny();
+    // Only add an annotation once and highlight the existing chip otherwise
+    if (existing.isPresent()) {
+      existing.get().setChipsBackground(ColorPalette.REDDISH_PURPLE);
+      existing.get().redraw();
+      Display.getCurrent().timerExec(1000,
+          () -> {
+            existing.get().setChipsBackground(ColorPalette.GRAY);
+            existing.get().redraw();
+          });
+        
+      return;
+    }
+    if (activeChips.stream().anyMatch(c -> Objects.equals(newAnnoString, c.getText()))) {
+
+      return;
+    }
+
     Chips chip = new Chips(facetFilterComposite, SWT.CLOSE);
     chip.setLayoutData(RowDataFactory.swtDefaults().create());
-    chip.setText(proposal.getContent());
+    chip.setText(newAnnoString);
+    chip.setChipsBackground(ColorPalette.GRAY);
+    chip.setForeground(ColorConstants.white);
     chip.addCloseListener(event -> {
       activeChips.remove(chip);
       chip.setVisible(false);
@@ -156,16 +185,13 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
 
       facetFilterComposite.layout();
       eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
-
     });
     activeChips.add(chip);
     facetFilterComposite.layout();
 
     adjustScrollHeight();
 
-
     eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
-
   }
 
 }
