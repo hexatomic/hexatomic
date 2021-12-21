@@ -29,11 +29,13 @@ import org.corpus_tools.hexatomic.grid.internal.handlers.AddColumnCommandHandler
 import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
 import org.eclipse.nebula.widgets.nattable.freeze.FreezeLayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * A {@link CompositeFreezeLayer} that registers commands triggered on body cells, and implements
@@ -93,7 +95,24 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    *        list of columns, or -1 when it should be added at the end of the list
    */
   public void addAnnotationColumn(ColumnType type, String annoQName, int insertionIndex) {
-    Column newColumn = new Column(type, annoQName);
+    int existingColumnCounter = 1;
+    for (Column column : bodyDataProvider.getColumns()) {
+      if (column.getColumnValue().equals(annoQName)) {
+        existingColumnCounter++;
+      }
+    }
+    Column newColumn = null;
+    if (existingColumnCounter > 1) {
+      if (type == ColumnType.TOKEN_ANNOTATION) {
+        MessageDialog.openError(Display.getCurrent().getActiveShell(), "Column already exists",
+            "A token annotation column for the token annotation " + annoQName + " already exists!");
+        return;
+      } else {
+        newColumn = new Column(type, annoQName, existingColumnCounter);
+      }
+    } else {
+      newColumn = new Column(type, annoQName);
+    }
     if (insertionIndex == -1) {
       bodyDataProvider.getColumns().add(newColumn);
     } else {
