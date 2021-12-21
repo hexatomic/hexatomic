@@ -95,7 +95,7 @@ public class AnnotationFilterWidget extends Composite
     txtAddAnnotatioName.setMessage("Search");
 
 
-    scroll = new ScrolledComposite(this, SWT.V_SCROLL);
+    scroll = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
     scroll.setExpandHorizontal(true);
     scroll.setExpandVertical(true);
     scroll.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -107,11 +107,11 @@ public class AnnotationFilterWidget extends Composite
         .setLayout(RowLayoutFactory.swtDefaults().type(SWT.HORIZONTAL).wrap(true).create());
     scroll.setContent(facetFilterComposite);
 
-    adjustScrollHeight();
+    adjustScrollSize();
     scroll.addControlListener(new ControlAdapter() {
       @Override
       public void controlResized(ControlEvent e) {
-        adjustScrollHeight();
+        adjustScrollSize();
       }
     });
 
@@ -132,8 +132,12 @@ public class AnnotationFilterWidget extends Composite
     }
   }
 
-  private void adjustScrollHeight() {
-    int width = scroll.getClientArea().width;
+  private void adjustScrollSize() {
+    // If there is any chip with a larger width, use it to ensure the close button is always
+    // visible. Fallback to the scroll area size otherwise.
+    int maxChipWidth = activeChips.stream().map(c -> c.computeSize(SWT.DEFAULT, SWT.DEFAULT).x)
+        .max(Integer::compare).orElse(1);
+    int width = Math.max(maxChipWidth, scroll.getClientArea().width);
 
     Point computedSize = facetFilterComposite.computeSize(width, SWT.DEFAULT);
     scroll.setMinSize(computedSize);
@@ -174,8 +178,7 @@ public class AnnotationFilterWidget extends Composite
       chip.dispose();
       filteredNames.remove(newAnnoString);
 
-      int width = scroll.getClientArea().width;
-      scroll.setMinSize(getParent().computeSize(width, SWT.DEFAULT));
+      adjustScrollSize();
 
       facetFilterComposite.layout();
       eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
@@ -184,7 +187,7 @@ public class AnnotationFilterWidget extends Composite
     filteredNames.add(newAnnoString);
     facetFilterComposite.layout();
 
-    adjustScrollHeight();
+    adjustScrollSize();
 
     eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
   }
