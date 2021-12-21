@@ -208,8 +208,6 @@ public class GraphEditor {
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
-    viewer.setLabelProvider(
-        new SaltGraphStyler(viewer.getGraphControl().getLightweightSystem().getRootFigure()));
     viewer.setLayoutAlgorithm(createLayout());
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
@@ -267,6 +265,8 @@ public class GraphEditor {
     filterByTypeExpandItem.setHeight(filterByType.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
     annoFilterWidget = new AnnotationFilterWidget(filterExpandBar, getGraph(), events);
+    viewer.setLabelProvider(new SaltGraphStyler(
+        viewer.getGraphControl().getLightweightSystem().getRootFigure(), annoFilterWidget));
 
     ExpandItem annoFilterExpandBar = new ExpandItem(filterExpandBar, SWT.NONE);
     annoFilterExpandBar.setText("Annotation Name");
@@ -376,8 +376,6 @@ public class GraphEditor {
       }
 
 
-      Optional<Set<String>> filter = annoFilterWidget.getFilter();
-
       final boolean includeSpans = btnIncludeSpans.getSelection();
 
       final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
@@ -401,7 +399,7 @@ public class GraphEditor {
         }
       }
 
-      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, filter,
+      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, annoFilterWidget.getFilter(),
           includeSpans, graph, recalculateSegments, scrollToFirstToken);
 
     } catch (RuntimeException ex) {

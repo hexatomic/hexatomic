@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.TreeSet;
 import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.eclipse.draw2d.ColorConstants;
@@ -55,7 +55,8 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Thomas Krause {@literal thomas.krause@hu-berlin.de}
  */
-public class AnnotationFilterWidget extends Composite implements IContentProposalListener {
+public class AnnotationFilterWidget extends Composite
+    implements IContentProposalListener, AnnotationFilter {
 
   public static final String ANNO_FILTER_CHANGED_TOPIC = "GRAPH_EDITOR/ANNOTATION_FILTER/CHANGED";
 
@@ -64,6 +65,7 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
   private final AnnotationNameProposalProvider proposalProvider;
 
   private final List<Chips> activeChips = new LinkedList<>();
+  private final Set<String> filteredNames = new TreeSet<>();
 
   private final Composite facetFilterComposite;
 
@@ -121,18 +123,12 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
   }
 
 
-  /**
-   * Get allowed annotation names to include in the view.
-   * 
-   * @return The the list of names or {@link Optional#empty()} when no filter should be applied.
-   */
+  @Override
   public Optional<Set<String>> getFilter() {
-    if (activeChips.isEmpty()) {
+    if (filteredNames.isEmpty()) {
       return Optional.empty();
     } else {
-      Set<String> activeFilter =
-          activeChips.stream().map(c -> c.getText()).collect(Collectors.toSet());
-      return Optional.of(activeFilter);
+      return Optional.of(filteredNames);
     }
   }
 
@@ -147,7 +143,7 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
   @Override
   public void proposalAccepted(IContentProposal proposal) {
 
-    String newAnnoString = proposal.getContent();
+    final String newAnnoString = proposal.getContent();
 
     txtAddAnnotatioName.setText("");
 
@@ -157,18 +153,15 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
     if (existing.isPresent()) {
       existing.get().setChipsBackground(ColorPalette.REDDISH_PURPLE);
       existing.get().redraw();
-      Display.getCurrent().timerExec(1000,
-          () -> {
-            existing.get().setChipsBackground(ColorPalette.GRAY);
-            existing.get().redraw();
-          });
-        
-      return;
-    }
-    if (activeChips.stream().anyMatch(c -> Objects.equals(newAnnoString, c.getText()))) {
+      Display.getCurrent().timerExec(1000, () -> {
+        existing.get().setChipsBackground(ColorPalette.GRAY);
+        existing.get().redraw();
+      });
 
       return;
     }
+
+
 
     Chips chip = new Chips(facetFilterComposite, SWT.CLOSE);
     chip.setLayoutData(RowDataFactory.swtDefaults().create());
@@ -179,6 +172,7 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
       activeChips.remove(chip);
       chip.setVisible(false);
       chip.dispose();
+      filteredNames.remove(newAnnoString);
 
       int width = scroll.getClientArea().width;
       scroll.setMinSize(getParent().computeSize(width, SWT.DEFAULT));
@@ -187,6 +181,7 @@ public class AnnotationFilterWidget extends Composite implements IContentProposa
       eventBroker.post(ANNO_FILTER_CHANGED_TOPIC, AnnotationFilterWidget.this);
     });
     activeChips.add(chip);
+    filteredNames.add(newAnnoString);
     facetFilterComposite.layout();
 
     adjustScrollHeight();
