@@ -11,10 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add keyboard shortcut to create spans in Grid Editor (#243)
 - Add overview tables for grid editor keyboard shortcuts to user documentation (#361)
 
-
 ### Changed
 
-- Enhanced colors used in the graph editor and make them more accessible
+- Use consistent and accessible colour palette across all editors (#173)
 
 ### Fixed
 

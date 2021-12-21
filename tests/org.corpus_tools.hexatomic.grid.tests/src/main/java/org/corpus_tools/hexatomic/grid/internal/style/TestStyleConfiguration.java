@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.grid.internal.style;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.ConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
@@ -49,7 +50,7 @@ class TestStyleConfiguration {
 
     assertEquals(GUIHelper.getColor(236, 236, 236),
         emptyCellStyle.getAttributeValue(CellStyleAttributes.BACKGROUND_COLOR));
-    assertEquals(GUIHelper.getColor(35, 124, 82),
+    assertEquals(ColorPalette.BLUISH_GREEN,
         spanAnnotationStyle.getAttributeValue(CellStyleAttributes.FOREGROUND_COLOR));
     Font tokenFont = tokenTextStyle.getAttributeValue(CellStyleAttributes.FONT);
     for (FontData fontDate : tokenFont.getFontData()) {
