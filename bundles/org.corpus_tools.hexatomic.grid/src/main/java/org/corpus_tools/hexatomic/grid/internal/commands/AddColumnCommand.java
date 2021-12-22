@@ -54,7 +54,7 @@ public class AddColumnCommand extends AbstractContextFreeCommand {
   }
 
   /**
-   * Gets the column index after which the column should be added.
+   * Gets the column index after which the column should be added or -1 if unknown.
    * 
    * @return the currentColumnIndex The index after which the column should be added
    */
