@@ -96,6 +96,8 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    *        list of columns, or -1 when it should be added at the end of the list
    */
   public void addAnnotationColumn(ColumnType type, String annoQName, int insertionIndex) {
+    // Counter starts at one as the added column represents the first existing column 
+    // for the specified qualified annotation name.
     int existingColumnCounter = 1;
     for (Column column : bodyDataProvider.getColumns()) {
       if (column.getColumnValue().equals(annoQName)) {
