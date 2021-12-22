@@ -70,6 +70,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String INF_STRUCT = "Inf-Struct";
+  private static final String CONST = "const";
   private static final String SEARCH = "Search";
   private static final String ANNOTATION_NAME = "Node Annotations";
   private static final String SPANS = "Spans";
@@ -595,23 +597,33 @@ class TestGraphEditor {
     SWTBotText annoFilter = bot.textWithMessage(SEARCH);
 
     // Tokens and the matching structure nodes
-    annoFilter.typeText("const");
+    annoFilter.typeText(CONST);
     annoFilter.pressShortcut(Keystrokes.LF);
-    SwtBotChips annoChip = new SwtBotChips(
-        bot.widget(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget));
-    assertNotNull(annoChip);
-
+    assertEquals(1, getVisibleShips(bot).size());
+    final SwtBotChips constChip = new SwtBotChips(getVisibleShips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
-    // Remove chip again by simulating a mouse click
-    annoChip.click();
 
     // Tokens and the matching spans
-    annoFilter.setText("");
-    annoFilter.typeText("Inf-Struct");
+    annoFilter.typeText(INF_STRUCT);
     annoFilter.pressShortcut(Keystrokes.LF);
+    assertEquals(2, getVisibleShips(bot).size());
+
+    bot.waitUntil(new NumberOfNodesCondition(25));
+
+    // Check that already added annotation names are not added twice
+    annoFilter.typeText(CONST);
+    annoFilter.pressShortcut(Keystrokes.LF);
+    assertEquals(2, getVisibleShips(bot).size());
+
+    // Remove chip again by simulating a mouse click
+    constChip.click();
+    assertEquals(1, getVisibleShips(bot).size());
     bot.waitUntil(new NumberOfNodesCondition(13));
   }
 
+  private List<? extends Chips> getVisibleShips(SWTBot bot) {
+    return bot.widgets(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget);
+  }
 
   @Test
   void testUndoRedoRendered() {
