@@ -54,7 +54,7 @@ public class FreezeGridBindings extends AbstractUiBindingConfiguration implement
     // that we don't know where exactly to add the new column
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 't'),
         new AddColumnAction(ColumnType.TOKEN_ANNOTATION, -1, 1));
-    // Shift + Alt + T creates a new span annotation column, an insertion index of -1 signifies
+    // Shift + Alt + S creates a new span annotation column, an insertion index of -1 signifies
     // that we don't know where exactly to add the new column
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 's'),
         new AddColumnAction(ColumnType.SPAN_ANNOTATION, -1, 1));
