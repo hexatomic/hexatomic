@@ -25,6 +25,7 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.graph.Label;
 import org.eclipse.jface.fieldassist.ContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -47,13 +48,13 @@ class AnnotationNameProposalProvider implements IContentProposalProvider {
 
     this.proposals
         .addAll(graph.getNodes().parallelStream().flatMap(n -> n.getAnnotations().stream())
-            .map(a -> a.getQName()).collect(Collectors.toList()));
+            .map(Label::getQName).collect(Collectors.toList()));
   }
 
   @Override
   public IContentProposal[] getProposals(String contents, int position) {
     if (position == 0) {
-      return null;
+      return new IContentProposal[0];
     }
     String string2Find = contents.substring(0, position);
     Pattern pattern = Pattern.compile(string2Find, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
