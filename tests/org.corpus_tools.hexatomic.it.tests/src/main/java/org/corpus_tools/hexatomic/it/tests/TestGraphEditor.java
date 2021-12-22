@@ -580,7 +580,7 @@ class TestGraphEditor {
 
     // Deactivate/activate pointing relations in view and check the view has less/more connections
     bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
-    SWTBotCheckBox includePointing = bot.checkBox("Pointing relations");
+    SWTBotCheckBox includePointing = bot.checkBox("Pointing Relations");
     includePointing.deselect();
     bot.waitUntil(new NumberOfConnectionsCondition(22));
     includePointing.select();

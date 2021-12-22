@@ -257,7 +257,7 @@ public class GraphEditor {
     btnIncludePointingRelations = new Button(filterByType, SWT.CHECK);
     btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
     btnIncludePointingRelations.setSelection(true);
-    btnIncludePointingRelations.setText("Pointing relations");
+    btnIncludePointingRelations.setText("Pointing Relations");
 
     ExpandItem filterByTypeExpandItem = new ExpandItem(filterExpandBar, SWT.NONE);
     filterByTypeExpandItem.setText("Annotation Types");
