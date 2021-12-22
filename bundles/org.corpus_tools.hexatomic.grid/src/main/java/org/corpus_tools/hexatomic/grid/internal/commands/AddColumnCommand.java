@@ -41,7 +41,8 @@ public class AddColumnCommand extends AbstractContextFreeCommand {
    * Creates an instance of {@link AddColumnCommand} with the given parameters.
    * 
    * @param columnType The type of the column to add
-   * @param currentColumnIndex The index after which to add the new column
+   * @param currentColumnIndex The index after which to add the new column. If the index is -1, then
+   *        we don't know where to insert the new column.
    * @param natTable The {@link NatTable} on which the column is added
    */
   public AddColumnCommand(ColumnType columnType, int currentColumnIndex, int currentRowIndex,
