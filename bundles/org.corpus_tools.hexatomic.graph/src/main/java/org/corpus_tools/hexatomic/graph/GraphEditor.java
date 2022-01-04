@@ -757,7 +757,7 @@ public class GraphEditor {
         boolean recalculateSegments = changeSet.getChangedElements().stream().anyMatch(
             c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>)
             || changeSet.getChangedContainers().stream()
-                .anyMatch(c -> c instanceof STextualRelation);
+                .anyMatch(STextualRelation.class::isInstance);
 
         updateView(recalculateSegments, false);
       }

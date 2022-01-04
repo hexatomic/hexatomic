@@ -80,6 +80,7 @@ import org.corpus_tools.salt.util.DataSourceSequence;
  */
 public class SyntaxListener extends ConsoleCommandBaseListener {
 
+  private static final String REFERENCED_NODE_NO_TOKEN = "Referenced node is not a token.";
   private final SDocumentGraph graph;
   private final STextualDS selectedText;
   private final Set<SStructuredNode> referencedNodes = new LinkedHashSet<>();
@@ -468,7 +469,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
     }
   }
 
@@ -492,7 +493,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
     }
   }
 
@@ -520,22 +521,26 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
           int oldTokenTextLength =
               oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
           int offset = newTokenText.length() - oldTokenTextLength;
-          for (STextualRelation rel : this.graph.getTextualRelations()) {
-
-            if (rel.getTarget() == textDS) {
-              if (rel.getStart() == oldTokenSequence.getStart().intValue()
-                  && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
-                rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
-              } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
-                rel.setStart(rel.getStart() + offset);
-                rel.setEnd(rel.getEnd() + offset);
-              }
-            }
-          }
+          updateTextRelationsWithOffset(offset, textDS, oldTokenSequence);
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
+    }
+  }
+
+  private void updateTextRelationsWithOffset(int offset, STextualDS ds,
+      DataSourceSequence<? extends Number> oldTokenSequence) {
+    for (STextualRelation rel : this.graph.getTextualRelations()) {
+      if (rel.getTarget() == ds) {
+        if (rel.getStart() == oldTokenSequence.getStart().intValue()
+            && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
+          rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
+        } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
+          rel.setStart(rel.getStart() + offset);
+          rel.setEnd(rel.getEnd() + offset);
+        }
+      }
     }
   }
 
