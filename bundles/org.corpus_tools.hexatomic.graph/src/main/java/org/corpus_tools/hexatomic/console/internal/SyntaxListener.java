@@ -500,7 +500,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
   public void exitTokenChangeText(TokenChangeTextContext ctx) {
     final SStructuredNode n = referencedNodes.iterator().next();
     final String newTokenText = getString(ctx.string());
-    if (n instanceof SToken) {
+    if (n instanceof SToken && newTokenText != null) {
       SToken referencedToken = (SToken) n;
       @SuppressWarnings("rawtypes")
       List<DataSourceSequence> allSequences =
