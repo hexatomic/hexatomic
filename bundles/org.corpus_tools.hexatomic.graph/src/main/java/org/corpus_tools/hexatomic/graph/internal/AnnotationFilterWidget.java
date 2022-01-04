@@ -60,7 +60,7 @@ public class AnnotationFilterWidget extends Composite
 
   public static final String ANNO_FILTER_CHANGED_TOPIC = "GRAPH_EDITOR/ANNOTATION_FILTER/CHANGED";
 
-  private final Text txtAddAnnotatioName;
+  private final Text txtAddAnnotationName;
 
   private final AnnotationNameProposalProvider proposalProvider;
 
@@ -88,11 +88,11 @@ public class AnnotationFilterWidget extends Composite
     this.eventBroker = eventBroker;
     this.setLayout(GridLayoutFactory.swtDefaults().create());
 
-    txtAddAnnotatioName = text(SWT.BORDER)
+    txtAddAnnotationName = text(SWT.BORDER)
         .layoutData(
             GridDataFactory.swtDefaults().align(SWT.FILL, SWT.BOTTOM).grab(true, false).create())
         .create(this);
-    txtAddAnnotatioName.setMessage("Search");
+    txtAddAnnotationName.setMessage("Search");
 
 
     scroll = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
@@ -116,7 +116,7 @@ public class AnnotationFilterWidget extends Composite
     });
 
     proposalProvider = new AnnotationNameProposalProvider(saltGraph);
-    ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotatioName,
+    ContentProposalAdapter adapter = new ContentProposalAdapter(txtAddAnnotationName,
         new TextContentAdapter(), proposalProvider, null, null);
     adapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
     adapter.addContentProposalListener(this);
@@ -149,7 +149,7 @@ public class AnnotationFilterWidget extends Composite
 
     final String newAnnoString = proposal.getContent();
 
-    txtAddAnnotatioName.setText("");
+    txtAddAnnotationName.setText("");
 
     Optional<Chips> existing =
         activeChips.stream().filter(c -> Objects.equals(newAnnoString, c.getText())).findAny();
