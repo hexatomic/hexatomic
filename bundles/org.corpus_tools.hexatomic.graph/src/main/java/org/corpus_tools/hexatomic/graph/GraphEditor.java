@@ -44,6 +44,7 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.graph.internal.AnnotationFilterWidget;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
@@ -61,7 +62,6 @@ import org.corpus_tools.salt.common.STextOverlappingRelation;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
-import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
 import org.corpus_tools.salt.core.SRelation;
 import org.corpus_tools.salt.graph.IdentifiableElement;
@@ -76,12 +76,18 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.RowDataFactory;
+import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ExpandEvent;
+import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
@@ -92,16 +98,16 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
@@ -118,6 +124,7 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  */
 public class GraphEditor {
 
+  private static final int ANNO_FILTER_HEIGHT = 120;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
@@ -135,7 +142,6 @@ public class GraphEditor {
   static final int DEFAULT_DIFF = 25;
   private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
-
   @Inject
   ProjectManager projectManager;
 
@@ -148,14 +154,11 @@ public class GraphEditor {
   @Inject
   Shell shell;
 
-
   private Button btnIncludeSpans;
   private Table textRangeTable;
-  private Text txtSegmentFilter;
   private Button btnIncludePointingRelations;
 
   private GraphViewer viewer;
-
 
   @Inject
   UISynchronize sync;
@@ -166,13 +169,14 @@ public class GraphEditor {
   @Inject
   private IEventBroker events;
 
-
   private ConsoleView consoleView;
 
   private final Filter graphFilter = new Filter();
 
   private final ScrollToFirstTokenListener scrollToFirstTokenListener =
       new ScrollToFirstTokenListener();
+
+  private AnnotationFilterWidget annoFilterWidget;
 
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -199,58 +203,89 @@ public class GraphEditor {
 
     SashForm mainSash = new SashForm(parent, SWT.VERTICAL);
 
-    SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
+    final SashForm graphSash = new SashForm(mainSash, SWT.HORIZONTAL);
 
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
-    viewer.setLabelProvider(
-        new SaltGraphStyler(viewer.getGraphControl().getLightweightSystem().getRootFigure()));
     viewer.setLayoutAlgorithm(createLayout());
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
     viewer.getGraphControl().setDragDetect(true);
     viewer.setFilters(graphFilter);
 
-    Composite filterComposite = new Composite(graphSash, SWT.NONE);
-    GridLayout gridLayoutFilterComposite = new GridLayout(1, false);
-    gridLayoutFilterComposite.marginWidth = 0;
-    filterComposite.setLayout(gridLayoutFilterComposite);
+    Composite sideBar = new Composite(graphSash, SWT.NONE);
+    sideBar.setLayout(GridLayoutFactory.swtDefaults().create());
 
-    Label lblFilterByAnnotation = new Label(filterComposite, SWT.NONE);
-    lblFilterByAnnotation.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-    lblFilterByAnnotation.setText("Filter by annotation type");
+    // Weights can only be set after all items of the sash have been added
+    graphSash.setWeights(72, 28);
 
-    btnIncludeSpans = new Button(filterComposite, SWT.CHECK);
-    btnIncludeSpans.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    Group filterGroup = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
+    filterGroup.setLayoutData(GridDataFactory.defaultsFor(filterGroup).align(SWT.FILL, SWT.TOP)
+        .grab(true, false).create());
+    filterGroup.setLayout(new FillLayout());
+    filterGroup.setText("Filter View");
+
+    ExpandBar filterExpandBar = new ExpandBar(filterGroup, SWT.NONE);
+    filterExpandBar.addExpandListener(new ExpandListener() {
+
+      @Override
+      public void itemExpanded(ExpandEvent e) {
+        relayout();
+      }
+
+      @Override
+      public void itemCollapsed(ExpandEvent e) {
+        relayout();
+      }
+
+      private void relayout() {
+        Display.getDefault().timerExec(1, sideBar::layout);
+      }
+    });
+
+
+    Composite filterByType = new Composite(filterExpandBar, SWT.NONE);
+    filterByType.setLayout(RowLayoutFactory.swtDefaults().type(SWT.VERTICAL).create());
+    filterByType.setLayoutData(filterByType);
+
+    btnIncludeSpans = new Button(filterByType, SWT.CHECK);
+    btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
     btnIncludeSpans.setSelection(false);
-    btnIncludeSpans.setText("Include spans");
+    btnIncludeSpans.setText("Spans");
 
-    btnIncludePointingRelations = new Button(filterComposite, SWT.CHECK);
-    btnIncludePointingRelations.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
+    btnIncludePointingRelations = new Button(filterByType, SWT.CHECK);
+    btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
     btnIncludePointingRelations.setSelection(true);
-    btnIncludePointingRelations.setText("Include pointing relations");
+    btnIncludePointingRelations.setText("Pointing Relations");
 
-    txtSegmentFilter = new Text(filterComposite, SWT.BORDER);
-    txtSegmentFilter.setMessage("Filter by node annotation name");
-    txtSegmentFilter.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+    ExpandItem filterByTypeExpandItem = new ExpandItem(filterExpandBar, SWT.NONE);
+    filterByTypeExpandItem.setText("Annotation Types");
+    filterByTypeExpandItem.setControl(filterByType);
+    filterByTypeExpandItem.setHeight(filterByType.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
-    textRangeTable =
-        new Table(filterComposite, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
-    textRangeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+    annoFilterWidget = new AnnotationFilterWidget(filterExpandBar, getGraph(), events);
+    viewer.setLabelProvider(new SaltGraphStyler(
+        viewer.getGraphControl().getLightweightSystem().getRootFigure(), annoFilterWidget));
+
+    ExpandItem annoFilterExpandBar = new ExpandItem(filterExpandBar, SWT.NONE);
+    annoFilterExpandBar.setText("Node Annotations");
+    annoFilterExpandBar.setHeight(ANNO_FILTER_HEIGHT);
+    annoFilterExpandBar.setControl(annoFilterWidget);
+
+    textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
+    textRangeTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     textRangeTable.setHeaderVisible(true);
     textRangeTable.setLinesVisible(true);
     textRangeTable.getHorizontalBar().setEnabled(true);
     textRangeTable.getVerticalBar().setEnabled(true);
     textRangeTable.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, TEXT_RANGE_ID);
-
     TableColumn tblclmnFilterBySegment = new TableColumn(textRangeTable, SWT.NONE);
     tblclmnFilterBySegment.setWidth(100);
     tblclmnFilterBySegment.setText("Filter by segment");
-    graphSash.setWeights(new int[] {300, 100});
+
 
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
-    txtSegmentFilter.addModifyListener(new UpdateViewListener(true));
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
     btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
 
@@ -263,7 +298,7 @@ public class GraphEditor {
     consoleViewer.setDocument(consoleDocument);
     consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
     consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
-    mainSash.setWeights(new int[] {200, 100});
+    mainSash.setWeights(85, 15);
 
     SDocumentGraph graph = getGraph();
     boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();
@@ -340,7 +375,7 @@ public class GraphEditor {
         return;
       }
 
-      final String segmentFilterText = txtSegmentFilter.getText();
+
       final boolean includeSpans = btnIncludeSpans.getSelection();
 
       final List<SegmentSelectionEntry> oldSelectedSegments = new LinkedList<>();
@@ -364,9 +399,8 @@ public class GraphEditor {
         }
       }
 
-      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+      scheduleUpdateViewJob(newSelectedSegments, oldSelectedSegments, annoFilterWidget.getFilter(),
           includeSpans, graph, recalculateSegments, scrollToFirstToken);
-
 
     } catch (RuntimeException ex) {
       errors.handleException("Unexpected error when updating the graph editor view.", ex,
@@ -375,7 +409,7 @@ public class GraphEditor {
   }
 
   private void scheduleUpdateViewJob(List<SegmentSelectionEntry> newSelectedSegments,
-      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      List<SegmentSelectionEntry> oldSelectedSegments, Optional<Set<String>> annotationFilters,
       boolean includeSpans, SDocumentGraph graph, boolean recalculateSegments,
       boolean scrollToFirstToken) {
 
@@ -384,7 +418,7 @@ public class GraphEditor {
 
       if (recalculateSegments) {
         monitor.subTask("Recalculating available segments");
-        recalculateAvailableSegments(newSelectedSegments, oldSelectedSegments, segmentFilterText,
+        recalculateAvailableSegments(newSelectedSegments, oldSelectedSegments, annotationFilters,
             includeSpans, graph);
       }
 
@@ -416,16 +450,15 @@ public class GraphEditor {
     job.schedule();
   }
 
-
   @SuppressWarnings("unchecked")
   private List<SegmentSelectionEntry> recalculateAvailableSegments(
       List<SegmentSelectionEntry> newSelectedSegments,
-      List<SegmentSelectionEntry> oldSelectedSegments, String segmentFilterText,
+      List<SegmentSelectionEntry> oldSelectedSegments, Optional<Set<String>> annotationFilters,
       boolean includeSpans, SDocumentGraph graph) {
 
     newSelectedSegments.clear();
 
-    ViewerFilter currentFilter = new RootFilter(segmentFilterText, includeSpans);
+    ViewerFilter currentFilter = new RootFilter(annotationFilters, includeSpans);
 
     final Multimap<STextualDS, Range<Long>> segments = calculateSegments(graph, currentFilter);
 
@@ -485,8 +518,8 @@ public class GraphEditor {
 
     if (scrollToFirstToken) {
       viewer.getGraphControl().getRootLayer().setScale(0.0);
-      // We can only scroll to the first token after the layout has been applied, which can be
-      // asynchronous
+      // We can only scroll to the first token after the layout has been applied,
+      // which can be asynchronous
       viewer.getGraphControl().getLayoutAlgorithm()
           .addProgressListener(this.scrollToFirstTokenListener);
     } else {
@@ -496,8 +529,6 @@ public class GraphEditor {
 
     viewer.applyLayout();
   }
-
-
 
   private static Range<Long> getRangeForToken(SToken tok) {
     @SuppressWarnings("rawtypes")
@@ -542,7 +573,6 @@ public class GraphEditor {
 
     TreeSet<Range<Long>> sortedRangesForDS = new TreeSet<>(new RangeStartComparator<>());
 
-
     DataSourceSequence<Integer> textSeq = new DataSourceSequence<>();
     textSeq.setDataSource(ds);
     textSeq.setStart(ds.getStart());
@@ -583,7 +613,6 @@ public class GraphEditor {
     return sortedRangesForDS;
   }
 
-
   private LayoutAlgorithm createLayout() {
 
     SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
@@ -606,22 +635,14 @@ public class GraphEditor {
     return layout;
   }
 
-  private static boolean hasMatchingAnnotation(SNode node, String segmentFilterText) {
-    if (segmentFilterText == null || segmentFilterText.isEmpty() || node instanceof SToken) {
-      // If no filter is set or the type of node should always be included, always return true
+  private static boolean hasMatchingAnnotation(SNode node, Set<String> annotationFilters) {
+    if (annotationFilters == null || annotationFilters.isEmpty() || node instanceof SToken) {
+      // If no filter is set or the type of node should always be included, always
+      // return true
       return true;
     }
-    if (node.getAnnotations() != null) {
-      for (SAnnotation anno : node.getAnnotations()) {
-        if (anno.getName().contains(segmentFilterText)) {
-          // Annotation found
-          return true;
-        }
-      }
-    }
-
-    // No matching annotation found
-    return false;
+    return node.getAnnotations().parallelStream()
+        .anyMatch(a -> annotationFilters.contains(a.getQName()));
   }
 
   void zoomGraphView(double factor, Point originallyClicked) {
@@ -646,7 +667,6 @@ public class GraphEditor {
       centerViewportToPoint(scaledClicked);
     }
   }
-
 
   void scrollGraphView(int xoffset, int yoffset) {
     Viewport viewPort = viewer.getGraphControl().getViewport();
@@ -740,6 +760,14 @@ public class GraphEditor {
     }
   }
 
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onAnnotationFilterChanged(
+      @UIEventTopic(AnnotationFilterWidget.ANNO_FILTER_CHANGED_TOPIC) Object sender) {
+    if (sender == annoFilterWidget) {
+      updateView(true, false);
+    }
+  }
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
@@ -748,14 +776,13 @@ public class GraphEditor {
     updateView(true, false);
   }
 
-
   private class RootFilter extends ViewerFilter {
 
-    private final String segmentFilterText;
+    private final Set<String> annotationFilters;
     private final boolean includeSpans;
 
-    public RootFilter(String segmentFilterText, boolean includeSpans) {
-      this.segmentFilterText = segmentFilterText;
+    public RootFilter(Optional<Set<String>> annotationFilters, boolean includeSpans) {
+      this.annotationFilters = annotationFilters.orElse(null);
       this.includeSpans = includeSpans;
     }
 
@@ -765,7 +792,7 @@ public class GraphEditor {
       if (element instanceof SNode) {
         SNode node = (SNode) element;
 
-        boolean include = hasMatchingAnnotation(node, segmentFilterText);
+        boolean include = hasMatchingAnnotation(node, annotationFilters);
 
         if (node instanceof SSpan) {
           include = include && includeSpans;
@@ -812,7 +839,6 @@ public class GraphEditor {
       }
     }
 
-
     private boolean overlapsSelectedRange(SDocumentGraph graph, SNode node) {
       List<SToken> overlappedTokens = graph.getOverlappedTokens(node);
       for (SToken t : overlappedTokens) {
@@ -842,7 +868,7 @@ public class GraphEditor {
           include = include && btnIncludeSpans.getSelection();
         }
         // additionally check if the node has a matching annotation
-        return include && hasMatchingAnnotation(node, txtSegmentFilter.getText());
+        return include && hasMatchingAnnotation(node, annoFilterWidget.getFilter().orElse(null));
 
       } else if (element instanceof SRelation<?, ?>) {
         SRelation<?, ?> rel = (SRelation<?, ?>) element;
@@ -857,8 +883,6 @@ public class GraphEditor {
     }
   }
 
-
-
   private static class STextualDataSourceComparator implements Comparator<STextualDS> {
 
     @Override
@@ -866,7 +890,6 @@ public class GraphEditor {
       return ComparisonChain.start().compare(o1.getName(), o2.getName()).result();
     }
   }
-
 
   private static class RangeStartComparator<C extends Comparable<?>>
       implements Comparator<Range<C>> {
@@ -908,14 +931,14 @@ public class GraphEditor {
 
     @Override
     public void progressStarted(ProgressEvent e) {
-      // We only start to scroll after the task has ended, but we still have to implement all
-      // methods of the interface.
+      // We only start to scroll after the task has ended, but we still have to
+      // implement all methods of the interface.
     }
 
     @Override
     public void progressUpdated(ProgressEvent e) {
-      // We only start to scroll after the task has ended, but we still have to implement all
-      // methods of the interface.
+      // We only start to scroll after the task has ended, but we still have to
+      // implement all methods of the interface.
     }
 
     @Override
@@ -933,6 +956,4 @@ public class GraphEditor {
       });
     }
   }
-
 }
-

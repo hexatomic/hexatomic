@@ -13,13 +13,19 @@ The checkbox next to the segment indicates if this calculation is finished.
 You can select more than one segment to display, by holding the <kbd>Ctrl</kbd> key while clicking on additional segments.
 You can also show a whole range of segments by holding the <kbd>Shift</kbd> key and clicking on the last segment of the range you want to select.
 
-You can also choose to display spans and their annotations in the graph, by checking the checkbox **Include spans**. 
+To access additional filter options, click and expand a relevant category in the **Filter View** section.
+
+You can choose to display spans and their annotations in the graph, by first expanding **Annotation Types** and the checking the checkbox **Spans**. 
 Spans are special nodes to collect a number of tokens and to annotate them all at once.
 If you want to learn more about spans, please read the [Salt documentation](http://corpus-tools.org/salt/#documentation).
+Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox **Pointing Relations**.
 
-Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox **Include pointing relations**.
-
-And you can filter the segments that include annotations of a specific *name* by using the filter text field above the list of segments.
+**Node Annotations** allows you to filter the segments that include annotations of a specific *name*.
+To add a filter criterion (also called a "facet"), search for an annotation name in the text field and select the matching annotation.
+This creates a box with the annotation name of the applied filter.
+You can add more than one filter and any node, that contains any of the selected annotation names, will be shown.
+Click on the close button to delete the annotation name filter again.
+If you select no annotation names, all annotations will be visible.
 
 ## Graph view
 
