@@ -519,8 +519,7 @@ public class GraphEditor {
     if (scrollToFirstToken) {
       viewer.getGraphControl().getRootLayer().setScale(0.0);
       // We can only scroll to the first token after the layout has been applied,
-      // which can be
-      // asynchronous
+      // which can be asynchronous
       viewer.getGraphControl().getLayoutAlgorithm()
           .addProgressListener(this.scrollToFirstTokenListener);
     } else {
