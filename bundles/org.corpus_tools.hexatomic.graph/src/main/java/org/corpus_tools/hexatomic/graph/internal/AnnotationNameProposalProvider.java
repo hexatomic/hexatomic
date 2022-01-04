@@ -56,8 +56,8 @@ class AnnotationNameProposalProvider implements IContentProposalProvider {
     if (position == 0) {
       return new IContentProposal[0];
     }
-    String string2Find = contents.substring(0, position);
-    Pattern pattern = Pattern.compile(string2Find, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
+    String stringToFind = contents.substring(0, position);
+    Pattern pattern = Pattern.compile(stringToFind, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
     return proposals.stream().filter(qname -> pattern.matcher(qname).find())
         .map(ContentProposal::new).toArray(IContentProposal[]::new);
 
