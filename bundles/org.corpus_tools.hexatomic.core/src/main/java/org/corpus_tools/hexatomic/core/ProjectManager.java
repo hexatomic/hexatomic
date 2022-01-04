@@ -680,7 +680,7 @@ public class ProjectManager {
    * Check if how many editors are currently open for the given document.
    * 
    * @param document The document to check.
-   * @return
+   * @return The number of open editors.
    */
   private int getNumberOfOpenEditors(SDocument document) {
     int counter = 0;

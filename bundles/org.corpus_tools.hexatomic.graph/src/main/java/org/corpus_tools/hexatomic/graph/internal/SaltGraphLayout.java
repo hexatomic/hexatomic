@@ -116,7 +116,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
    * @param sequences The sequences to to check if any of them overlaps an existing region.
    * @param occupiedByText A map of bitsets for each text that represent existing overlapped
    *        regions.
-   * @return
+   * @return True if any overlapped sequence is already occupied by another node in this rank.
    */
   private boolean overlapsExisting(List<DataSourceSequence<? extends Number>> sequences,
       Map<STextualDS, BitSet> occupiedByText) {
@@ -360,8 +360,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           if (n != null) {
             n.setInternalLocation(x,
                 boundsY + (tokenRank * (this.maxNodeHeight * PERCENT_INTER_NODE_MARGIN)));
-            x += this.averageTokenNodeWidth / 10.0;
-            x += n.getLayoutEntity().getWidthInLayout();
+            x += this.averageTokenNodeWidth / 2.0;
+            x += n.getWidthInLayout();
           }
         }
       }

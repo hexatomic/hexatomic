@@ -10,7 +10,8 @@ Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.handlers,
  org.corpus_tools.hexatomic.core.ui;x-internal:=true,
  org.corpus_tools.hexatomic.core.undo,
- org.corpus_tools.hexatomic.core.update
+ org.corpus_tools.hexatomic.core.update,
+ org.corpus_tools.hexatomic.styles
 Require-Bundle: javax.inject;bundle-version="0.0.0",
  org.eclipse.core.runtime;bundle-version="0.0.0",
  org.eclipse.swt;bundle-version="0.0.0",
