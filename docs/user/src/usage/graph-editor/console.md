@@ -12,6 +12,7 @@ Currently, the following commands are supported.
 
 > - [`t`: Tokenize](#tokenize-t)
 > - [`tb`/`ta`: Tokenize before /after a token](#tokenize-before-tb-and-after-ta-a-given-token)
+> - [`tc`: Change the text of a token](#change-the-text-of-a-token-tc)
 > - [`n`: New node](#new-node-n)
 > - [`s`: New span](#new-span-s)
 > - [`e`: New edge](#new-edge-e)
@@ -60,6 +61,22 @@ Given the new tokens, calling the following command will insert the two new toke
 ```text
 ta #t1 is a
 ```
+
+## Change the text of a token: `tc`
+
+Change which text an existing token represents.
+
+### Examples
+
+Starting with an initial text with the two tokens `[This] [text]` (first one is called "t1" and the second one "t2"),
+executing
+
+```text
+tc #t2 example
+```
+
+will change the covered token text from "text" to "example": `[This] [examle]`.
+All token before and after are not affected and only one token can be changed at a time
 
 #### See also
 
