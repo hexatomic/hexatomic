@@ -599,25 +599,25 @@ class TestGraphEditor {
     // Tokens and the matching structure nodes
     annoFilter.typeText(CONST);
     annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(1, getVisibleShips(bot).size());
-    final SwtBotChips constChip = new SwtBotChips(getVisibleShips(bot).get(0));
+    assertEquals(1, getVisibleChips(bot).size());
+    final SwtBotChips constChip = new SwtBotChips(getVisibleChips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
     annoFilter.typeText(INF_STRUCT);
     annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(2, getVisibleShips(bot).size());
+    assertEquals(2, getVisibleChips(bot).size());
 
     bot.waitUntil(new NumberOfNodesCondition(25));
 
     // Check that already added annotation names are not added twice
     annoFilter.typeText(CONST);
     annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(2, getVisibleShips(bot).size());
+    assertEquals(2, getVisibleChips(bot).size());
 
     // Remove chip again by simulating a mouse click
     constChip.click();
-    assertEquals(1, getVisibleShips(bot).size());
+    assertEquals(1, getVisibleChips(bot).size());
     bot.waitUntil(new NumberOfNodesCondition(13));
   }
 
