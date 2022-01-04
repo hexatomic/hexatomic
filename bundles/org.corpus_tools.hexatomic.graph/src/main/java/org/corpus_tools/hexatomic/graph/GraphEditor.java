@@ -932,8 +932,7 @@ public class GraphEditor {
     @Override
     public void progressStarted(ProgressEvent e) {
       // We only start to scroll after the task has ended, but we still have to
-      // implement all
-      // methods of the interface.
+      // implement all methods of the interface.
     }
 
     @Override
