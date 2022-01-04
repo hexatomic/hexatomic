@@ -21,8 +21,6 @@
 
 package org.corpus_tools.hexatomic.console.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +49,7 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PunctuationContex
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenChangeTextContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeAfterContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeBeforeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
@@ -63,6 +62,7 @@ import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SAnnotationContainer;
@@ -493,6 +493,41 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
       }
     } else {
       this.outputLines.add("Referenced node is not a token.");
+    }
+  }
+
+  @Override
+  public void exitTokenChangeText(TokenChangeTextContext ctx) {
+    final SStructuredNode n = referencedNodes.iterator().next();
+    final String newTokenText = getString(ctx.string());
+    if (n instanceof SToken) {
+      SToken referencedToken = (SToken) n;
+      @SuppressWarnings("rawtypes")
+      List<DataSourceSequence> allSequences =
+          this.graph.getOverlappedDataSourceSequence(referencedToken, SALT_TYPE.STEXTUAL_RELATION);
+      if (allSequences != null && !allSequences.isEmpty()) {
+        DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
+        if (oldTokenSequence.getDataSource() instanceof STextualDS) {
+          // To change the token value, we need to change the covered text in the textual relation
+          STextualDS textDS = (STextualDS) oldTokenSequence.getDataSource();
+          String textBefore = textDS.getText().substring(0, textDS.getStart().intValue());
+          String textAfter = textDS.getText().substring(oldTokenSequence.getEnd().intValue());
+          textDS.setData(textBefore + newTokenText + textAfter);
+
+          // In order for all other textual relations to be still valid, we need to update the
+          // references to the text for the affected and all following token.
+          int oldTokenTextLength =
+              oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
+          int offset = newTokenText.length() - oldTokenTextLength;
+          for (STextualRelation rel : this.graph.getTextualRelations()) {
+            if (rel.getTarget() == textDS
+                && rel.getStart() >= oldTokenSequence.getStart().intValue()) {
+              rel.setStart(rel.getStart() + offset);
+              rel.setEnd(rel.getEnd() + offset);
+            }
+          }
+        }
+      }
     }
   }
 
