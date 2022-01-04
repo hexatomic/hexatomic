@@ -20,10 +20,10 @@ Spans are special nodes to collect a number of tokens and to annotate them all a
 If you want to learn more about spans, please read the [Salt documentation](http://corpus-tools.org/salt/#documentation).
 Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox **Pointing Relations**.
 
-**Node Annotations** allow you to filter the segments that include annotations of a specific *name*.
+**Node Annotations** allows you to filter the segments that include annotations of a specific *name*.
 Search for an annotation name in the text field, select the matching annotation, and a facet filter will be added.
 You can add more than one filter and any node, that contains any of the selected annotation names, will be shown.
-Click on the cross marking to delete the annotation name filter again.
+Click on the close button to delete the annotation name filter again.
 If no annotation names are selected, all annotations are shown.
 
 ## Graph view
