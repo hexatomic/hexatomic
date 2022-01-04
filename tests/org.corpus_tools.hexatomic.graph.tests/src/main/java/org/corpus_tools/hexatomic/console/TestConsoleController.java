@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.corpus_tools.hexatomic.console.internal.SyntaxListener;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -375,6 +376,7 @@ class TestConsoleController {
     assertEquals("?", graph.getText(token.get(4)));
   }
 
+
   @Test
   void testExampleDelete() {
     // Add initial tokens
@@ -412,6 +414,29 @@ class TestConsoleController {
     assertEquals(1, output.size());
     // Check the error position marker and message
     assertEquals("     ^\ntoken recognition error at: '''", output.get(0));
+  }
+
+
+  @Test
+  void testWrongNodeTypeWarning() {
+    // Add a simple graph with a non-token node
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
+    List<String> output = console.executeCommand("n #t1 #t2");
+    assertEquals(1, output.size());
+    assertEquals("Created new structure node #n1.", output.get(0));
+
+    // Check that we can't execute the token commands on this non-token node
+    output = console.executeCommand("ta #n1 not possible");
+    assertEquals(1, output.size());
+    assertEquals(SyntaxListener.REFERENCED_NODE_NO_TOKEN, output.get(0));
+
+    output = console.executeCommand("tb #n1 not possible");
+    assertEquals(1, output.size());
+    assertEquals(SyntaxListener.REFERENCED_NODE_NO_TOKEN, output.get(0));
+
+    output = console.executeCommand("tc #n1 no");
+    assertEquals(1, output.size());
+    assertEquals(SyntaxListener.REFERENCED_NODE_NO_TOKEN, output.get(0));
   }
 
   /**

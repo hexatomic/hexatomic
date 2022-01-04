@@ -80,7 +80,7 @@ import org.corpus_tools.salt.util.DataSourceSequence;
  */
 public class SyntaxListener extends ConsoleCommandBaseListener {
 
-  private static final String REFERENCED_NODE_NO_TOKEN = "Referenced node is not a token.";
+  public static final String REFERENCED_NODE_NO_TOKEN = "Referenced node is not a token.";
   private final SDocumentGraph graph;
   private final STextualDS selectedText;
   private final Set<SStructuredNode> referencedNodes = new LinkedHashSet<>();
