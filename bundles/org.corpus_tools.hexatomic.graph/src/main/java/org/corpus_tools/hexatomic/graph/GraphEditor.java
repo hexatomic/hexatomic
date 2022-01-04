@@ -732,9 +732,13 @@ public class GraphEditor {
       if (changeSet.containsDocument(
           thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
         // Only relations with text coverage semantics can change the structure of the graph and
-        // modify segments
+        // modify segments. Also, changes to the labels of textual relations (e.g. start/end) can
+        // change the token structure.
         boolean recalculateSegments = changeSet.getChangedElements().stream().anyMatch(
-            c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>);
+            c -> c instanceof STextualRelation || c instanceof STextOverlappingRelation<?, ?>)
+            || changeSet.getChangedContainers().stream()
+                .anyMatch(c -> c instanceof STextualRelation);
+
         updateView(recalculateSegments, false);
       }
     }
