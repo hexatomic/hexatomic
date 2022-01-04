@@ -453,7 +453,7 @@ public class GraphDataProvider implements IDataProvider {
         tokenAnnoTargetColumn, spanAnnoTargetColumn, tokenAnnoSourceIndices, spanAnnoSourceIndices);
     // Determine the number of indices to add to the highest index of any span annotation source
     // column. If there are no token annotation source columns, this is simply 1, otherwise it's 2
-    // (because any token annoation columns will always be added before any span annotation
+    // (because any token annotation columns will always be added before any span annotation
     // columns).
     int toAddToSpanIndex = tokenAnnoSourceIndices.isEmpty() ? 1 : 2;
 

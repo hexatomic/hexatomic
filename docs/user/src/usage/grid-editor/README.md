@@ -136,16 +136,18 @@ Additionally, merged cells will be separated.
 | :----------------------------------------------: | :---------------------------------------------------------------------------- | :-------------------------------------- |
 |             <kbd>Shift</kbd> + click             | Select the range of cells from the currently selected one to the clicked cell | A cell must be selected                 |
 |             <kbd>Ctrl</kbd> + click              | Add/remove the clicked cell to the current selection of cells                 | A cell must be selected                 |
-|          <kbd>Ctrl</kbd> + <kbd>F</kbd>          | Open text search                                                              | The editor must be the active window    |
+|          <kbd>Ctrl</kbd> + <kbd>F</kbd>          | Open text search                                                              | The editor window must be active    |
 | <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> | Toggle freezing of rows and columns                                           | A cell, column, or row must be selected |
 
 ### Data operations
 
-|            Shortcut            | What the shortcut does         | Constraints                                |
-| :----------------------------: | :----------------------------- | :----------------------------------------- |
-|        <kbd>Space</kbd>        | Activate cell for editing      | Cell(s) must be selected                   |
-|        <kbd>Enter</kbd>        | Commit edited annotation value | A cell must be in editing mode             |
-|         <kbd>Del</kbd>         | Delete selected cells          | Cell(s) must be selected                   |
-| <kbd>Alt</kbd> + <kbd>S</kbd>  | Create a new span              | >1 cells in a span column must be selected |
-|         <kbd>F5</kbd>          | Refresh editor from data model | Cell(s) must be selected                   |
-| <kbd>Ctrl</kbd> + <kbd>E</kbd> | Export to Excel format         | The editor must be the active window       |
+|                     Shortcut                     | What the shortcut does                      | Constraints                                |
+| :----------------------------------------------: | :------------------------------------------ | :----------------------------------------- |
+|                 <kbd>Space</kbd>                 | Activate cell for editing                   | Cell(s) must be selected                   |
+|                 <kbd>Enter</kbd>                 | Commit edited annotation value              | A cell must be in editing mode             |
+| <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> | Create a new column for *span* annotations  | The editor window must be active           |
+| <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> | Create a new column for *token* annotations | The editor window must be active           |
+|          <kbd>Alt</kbd> + <kbd>S</kbd>           | Create a new span                           | >1 cells in a span column must be selected |
+|                  <kbd>Del</kbd>                  | Delete selected cells                       | Cell(s) must be selected                   |
+|                  <kbd>F5</kbd>                   | Refresh editor from data model              | Cell(s) must be selected                   |
+|          <kbd>Ctrl</kbd> + <kbd>E</kbd>          | Export to Excel format                      | The editor window must be active           |
