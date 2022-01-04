@@ -621,7 +621,7 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(13));
   }
 
-  private List<? extends Chips> getVisibleShips(SWTBot bot) {
+  private List<? extends Chips> getVisibleChips(SWTBot bot) {
     return bot.widgets(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget);
   }
 
