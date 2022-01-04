@@ -110,6 +110,10 @@ public class GridEditor {
 
   public static final String REFRESH_POPUP_MENU_LABEL = "Refresh grid";
 
+  public static final String ADD_TOK_ANNO_COL_POPUP_MENU_LABEL = "Add token annotation column";
+
+  public static final String ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL = "Add span annotation column";
+
   @Inject
   ErrorService errors;
 

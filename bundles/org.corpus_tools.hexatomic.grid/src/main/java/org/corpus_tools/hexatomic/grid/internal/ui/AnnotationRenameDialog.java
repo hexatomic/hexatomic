@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Dialog providing the user with the old values for annotation namepsace and annotation name, and
+ * Dialog providing the user with the old values for annotation namespace and annotation name, and
  * lets them input a new namespace value and a new name value. To remain compatible with the
  * original column header rename logic and the respective dialog, this dialog splits the qualified
  * name into its components only for the front end, while logic happens on the compound qualified
@@ -53,9 +53,12 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
   private AnnotationLabelPanel columnLabelPanel;
 
   private static final Logger log = LoggerFactory.getLogger(AnnotationRenameDialog.class);
+  public static final String RENAME_ANNOTATION_TITLE = "Rename annotation";
+  private final String titleText;
 
   /**
-   * Sets the old and new qualified annotation names to fields.
+   * Sets the old and new qualified annotation names to fields, using the default title
+   * {@link AnnotationRenameDialog#RENAME_ANNOTATION_TITLE} as title for the dialog.
    * 
    * @param activeShell the active SWT shell widget
    * @param oldQName the old qualified annotation name
@@ -63,13 +66,28 @@ public class AnnotationRenameDialog extends AbstractStyleEditorDialog {
   public AnnotationRenameDialog(Shell activeShell, String oldQName) {
     super(activeShell);
     this.oldQName = oldQName;
+    this.titleText = RENAME_ANNOTATION_TITLE;
+  }
+
+  /**
+   * Sets the old and new qualified annotation names to fields, using the given string as title for
+   * the dialog.
+   * 
+   * @param activeShell the active SWT shell widget
+   * @param oldQName the old qualified annotation name
+   * @param titleText The string to be used as dialog title
+   */
+  public AnnotationRenameDialog(Shell activeShell, String oldQName, String titleText) {
+    super(activeShell);
+    this.oldQName = oldQName;
+    this.titleText = titleText;
   }
 
   @Override
   protected void initComponents(Shell shell) {
     GridLayout shellLayout = new GridLayout();
     shell.setLayout(shellLayout);
-    shell.setText("Rename annotation"); //$NON-NLS-1$
+    shell.setText(titleText); // $NON-NLS-1$
 
     // Closing the window is the same as canceling the form
     shell.addShellListener(new ShellAdapter() {

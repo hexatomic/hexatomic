@@ -98,6 +98,7 @@ public class TestGridEditor {
       "Some annotations were not renamed!";
 
   private static final String TOKEN_VALUE = "Token";
+  private static final String SPAN_VALUE = "Span";
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
@@ -116,6 +117,7 @@ public class TestGridEditor {
       + "src/main/resources/org/corpus_tools/hexatomic/grid/";
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
+  private static final String NEW_COLUMN_DIALOG_TITLE = "New annotation column";
 
   private static final String SPAN_1 = "span_1";
   private static final String SPAN_2 = "span_2";
@@ -127,6 +129,9 @@ public class TestGridEditor {
   private static final String INF_STRUCT_NAME = "Inf-Struct";
 
   private static final String NAMESPACED_LEMMA_NAME = NAMESPACE + LEMMA_NAME;
+
+  private static final String OK = "OK";
+  private static final String CANCEL = "Cancel";
 
 
 
@@ -773,8 +778,8 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Context menu should only have 2 items, separator and "refresh grid" item
-    assertEquals(2, contextMenu.menuItems().size());
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
   }
 
   @Test
@@ -784,8 +789,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Should always have the "refresh grid" item
-    assertEquals(2, contextMenu.menuItems().size());
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
   }
 
   @Test
@@ -903,7 +908,7 @@ public class TestGridEditor {
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
-    tableBot.button("Cancel").click();
+    tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
   }
@@ -1083,7 +1088,7 @@ public class TestGridEditor {
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
-    tableBot.button("Cancel").click();
+    tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have not changed
     assertEquals(token, table.widget.getDataValueByPosition(2, 3));
@@ -1698,6 +1703,130 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests the existence of the menu items for adding annotation columns in the popup menu.
+   */
+  @Test
+  void testAddColumnPopup() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Test for column header
+    List<String> menuItems1 = table.contextMenu(0, 3).menuItems();
+    assertTrue(menuItems1.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
+    assertTrue(menuItems1.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+
+    // Test for cell
+    List<String> menuItems2 = table.contextMenu(2, 4).menuItems();
+    assertTrue(menuItems2.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
+    assertTrue(menuItems2.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+  }
+
+  /**
+   * Tests the addition of a new token annotation column via context menu.
+   */
+  @Test
+  void testAddTokenColumnViaMenu() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+
+    // Create via click on span cell
+    addColumnOnCell(1, 3, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 4, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new span annotation column via context menu.
+   */
+  @Test
+  void testAddSpanColumnViaMenu() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+
+    // Create via click on span cell
+    addColumnOnCell(1, 2, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 3, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new token annotation column via keyboard shortcut.
+   */
+  @Test
+  void testAddTokenColumnViaShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 2);
+    addColumn(tableBot, TOKEN_VALUE, OK);
+    // New columns created by keyboard are always added at the very end
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+  }
+
+  /**
+   * Tests the abortion of the action to add a new annotation column.
+   */
+  @Test
+  void testAbortNewColumnCommand() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    int oldColumnCount = table.columnCount();
+
+    table.click(2, 2);
+    addColumn(tableBot, TOKEN_VALUE, CANCEL);
+    // New columns created by keyboard are always added at the very end
+    assertEquals(oldColumnCount, table.columnCount());
+  }
+
+  /**
+   * Tests the addition of a new span annotation column via keyboard shortcut.
+   */
+  @Test
+  void testAddSpanColumnViaShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 1);
+    addColumn(tableBot, SPAN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+  }
+
+  /**
+   * Tests that no duplicate token annotation column can be added.
+   */
+  @Test
+  void testNoDuplicateTokenColumnAdded() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    final int oldColumnCount = table.columnCount();
+
+    table.click(2, 1);
+    addColumn(tableBot, TOKEN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+    addColumn(tableBot, TOKEN_VALUE, OK);
+    SWTBotShell dialog = tableBot.shell("Column already exists");
+    tableBot.button(OK).click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals(oldColumnCount + 1, table.columnCount());
+  }
+
+  @Test
+  void testDuplicateSpanColumnAdded() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 1);
+    addColumn(tableBot, SPAN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+    addColumn(tableBot, SPAN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE + " (2)", 6, tableBot);
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
@@ -1813,6 +1942,45 @@ public class TestGridEditor {
     assertNotNull(dialog);
     assertDialogTexts(dialog, "five::span_1");
     dialog.close();
+  }
+
+
+  private void addColumn(SWTNatTableBot tableBot, String tokenValue, String buttonToClick) {
+    switch (tokenValue) {
+      case TOKEN_VALUE:
+        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 't');
+        break;
+        
+      case SPAN_VALUE:
+        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 's');
+        break;
+
+      default:
+        fail();
+        break;
+    }
+    SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button(buttonToClick).click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+  }
+
+  private int addColumnOnCell(int rowIndex, int columnIndex, SWTNatTableBot tableBot) {
+    SWTBotNatTable table = tableBot.nattable();
+    final int columnCount = table.columnCount();
+    SWTBotRootMenu menu = table.contextMenu(rowIndex, columnIndex);
+    menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    return columnCount;
+  }
+
+  private void assertColumnAddedAtIndex(String columnHeader, int newColumnIndex,
+      SWTNatTableBot tableBot) {
+    assertEquals(columnHeader,
+        tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)

@@ -30,6 +30,7 @@ import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -92,6 +93,10 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     ValidSingleSpanColumnEmptySelectionState validSingleSpanColumnEmptySelectionState =
         new ValidSingleSpanColumnEmptySelectionState();
     builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
+    builder.withSeparator()
+        .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.TOKEN_ANNOTATION));
+    builder
+        .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.SPAN_ANNOTATION));
     builder.withSeparator().withMenuItemProvider(new ResolveMenuItemProvider());
     return builder.build();
   }

@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.configuration;
 
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.freeze.command.FreezeColumnCommand;
 import org.eclipse.nebula.widgets.nattable.freeze.command.FreezeRowCommand;
@@ -64,7 +65,10 @@ public class ColumnHeaderMenuConfiguration extends AbstractHeaderMenuConfigurati
         .withFreezeColumnMenuItem("Set column freeze")
         .withMenuItemProvider(withToggleColumnFreezeMenuItemProvider(COLUMN)).withSeparator()
         .withColumnRenameDialog("Change annotation name")
-        .withVisibleState(PopupMenuBuilder.COLUMN_RENAME_MENU_ITEM_ID, new AnnotationHeaderState());
+        .withVisibleState(PopupMenuBuilder.COLUMN_RENAME_MENU_ITEM_ID, new AnnotationHeaderState())
+        .withSeparator()
+        .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.TOKEN_ANNOTATION))
+        .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.SPAN_ANNOTATION));
   }
 
   @Override
