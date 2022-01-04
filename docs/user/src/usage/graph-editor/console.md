@@ -75,7 +75,7 @@ executing
 tc #t2 example
 ```
 
-will change the covered token text from "text" to "example": `[This] [examle]`.
+will change the covered token text from "text" to "example": `[This] [example]`.
 All token before and after are not affected and only one token can be changed at a time
 
 #### See also
