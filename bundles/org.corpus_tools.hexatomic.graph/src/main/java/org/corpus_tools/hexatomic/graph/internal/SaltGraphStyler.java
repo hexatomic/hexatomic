@@ -65,13 +65,17 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
 
   private final FontMetrics fontMetrics;
 
+  private final AnnotationFilter filter;
+
   /**
    * Construct a new instance.
    * 
    * @param figure The figure this style is applied to.
+   * @param filter A filter that can limit the shown annotations
    */
-  public SaltGraphStyler(IFigure figure) {
+  public SaltGraphStyler(IFigure figure, AnnotationFilter filter) {
     this.figure = figure;
+    this.filter = filter;
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
     GC gc = new GC(Display.getCurrent());
     fontMetrics = gc.getFontMetrics();
@@ -198,7 +202,7 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   @Override
   public IFigure getFigure(Object element) {
     if (element instanceof SNode) {
-      NodeFigure currFigure = new NodeFigure((SNode) element, fontMetrics);
+      NodeFigure currFigure = new NodeFigure((SNode) element, fontMetrics, filter);
       currFigure.setSize(currFigure.getPreferredSize());
       return currFigure;
     }
