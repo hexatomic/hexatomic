@@ -21,10 +21,11 @@ If you want to learn more about spans, please read the [Salt documentation](http
 Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox **Pointing Relations**.
 
 **Node Annotations** allows you to filter the segments that include annotations of a specific *name*.
-Search for an annotation name in the text field, select the matching annotation, and a facet filter will be added.
+To add a filter criterion (also called a "facet"), search for an annotation name in the text field and select the matching annotation.
+This creates a box with the annotation name of the applied filter.
 You can add more than one filter and any node, that contains any of the selected annotation names, will be shown.
 Click on the close button to delete the annotation name filter again.
-If no annotation names are selected, all annotations are shown.
+If you select no annotation names, all annotations will be visible.
 
 ## Graph view
 
