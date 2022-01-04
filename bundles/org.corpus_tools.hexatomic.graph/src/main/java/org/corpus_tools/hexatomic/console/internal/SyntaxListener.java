@@ -504,13 +504,14 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
       SToken referencedToken = (SToken) n;
       @SuppressWarnings("rawtypes")
       List<DataSourceSequence> allSequences =
-          this.graph.getOverlappedDataSourceSequence(referencedToken, SALT_TYPE.STEXTUAL_RELATION);
+          this.graph.getOverlappedDataSourceSequence(referencedToken,
+              SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
         if (oldTokenSequence.getDataSource() instanceof STextualDS) {
           // To change the token value, we need to change the covered text in the textual relation
           STextualDS textDS = (STextualDS) oldTokenSequence.getDataSource();
-          String textBefore = textDS.getText().substring(0, textDS.getStart().intValue());
+          String textBefore = textDS.getText().substring(0, oldTokenSequence.getStart().intValue());
           String textAfter = textDS.getText().substring(oldTokenSequence.getEnd().intValue());
           textDS.setData(textBefore + newTokenText + textAfter);
 
@@ -520,14 +521,21 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
               oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
           int offset = newTokenText.length() - oldTokenTextLength;
           for (STextualRelation rel : this.graph.getTextualRelations()) {
-            if (rel.getTarget() == textDS
-                && rel.getStart() >= oldTokenSequence.getStart().intValue()) {
-              rel.setStart(rel.getStart() + offset);
-              rel.setEnd(rel.getEnd() + offset);
+
+            if (rel.getTarget() == textDS) {
+              if (rel.getStart() == oldTokenSequence.getStart().intValue()
+                  && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
+                rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
+              } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
+                rel.setStart(rel.getStart() + offset);
+                rel.setEnd(rel.getEnd() + offset);
+              }
             }
           }
         }
       }
+    } else {
+      this.outputLines.add("Referenced node is not a token.");
     }
   }
 
