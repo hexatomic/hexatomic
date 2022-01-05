@@ -46,7 +46,6 @@ public class PreferencesDialog extends Dialog {
    * 
    * @param parentShell The parent.
    */
-
   public PreferencesDialog(Shell parentShell) {
     super(parentShell);
   }
@@ -55,7 +54,7 @@ public class PreferencesDialog extends Dialog {
   @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
-    newShell.setText("Enable Startup-Checks");
+    newShell.setText("Enable startup checks");
   }
 
   /**
@@ -63,14 +62,13 @@ public class PreferencesDialog extends Dialog {
    * 
    * @param parent The parent
    */
-
   @Override
   protected Control createDialogArea(Composite parent) {
     Composite area = (Composite) super.createDialogArea(parent);
     Label label = new Label(area, SWT.BORDER);
-    label.setText("When checked Hexatomic will search for p2-Updates at each startup");
+    label.setText("When checked, Hexatomic will automatically check for updates at each start.");
     checkbox = new Button(area, SWT.CHECK);
-    checkbox.setText("Enable automatic update search at startup");
+    checkbox.setText("Enable automatic update checks");
     checkbox.setSelection(prefs.getBoolean("autoUpdate", false));
     return area;
   }

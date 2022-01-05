@@ -64,7 +64,7 @@ public class UpdateRunner {
       final IWorkbench workbench,
       IProgressMonitor monitor, final Shell shell, final UISynchronize sync) {
     final UpdateOperation operation = createUpdateOperation(agent);
-    log.info("Updateoperation created");
+    log.info("Update operation created");
     //Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor,
         "Checking for application updates...", 200);

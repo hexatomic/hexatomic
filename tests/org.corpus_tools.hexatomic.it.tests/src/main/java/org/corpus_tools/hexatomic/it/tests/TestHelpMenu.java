@@ -49,9 +49,9 @@ class TestHelpMenu {
   void testOpenPreferenceDialog() {
     SWTBotMenu helpMenu = bot.menu("Help");
     helpMenu.menu("Preferences").click();
-    SWTBotShell preferencesShell = bot.shell("Enable Startup-Checks");
+    SWTBotShell preferencesShell = bot.shell("Enable startup checks");
     preferencesShell.bot().label(
-        "When checked Hexatomic will search for p2-Updates at each startup")
+        "When checked, Hexatomic will automatically check for updates at each start.")
     .isVisible();
     boolean autoUpdatePreSelect = prefs.getBoolean("autoUpdate", false);
     if (preferencesShell.bot().checkBox().isChecked()) {
