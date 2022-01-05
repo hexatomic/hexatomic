@@ -42,7 +42,6 @@ import org.osgi.service.prefs.BackingStoreException;
 
 
 public class UpdateRunner {
-  //initialisierung des Loggers für Nachrichten
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
   private static final IEclipsePreferences prefs =
