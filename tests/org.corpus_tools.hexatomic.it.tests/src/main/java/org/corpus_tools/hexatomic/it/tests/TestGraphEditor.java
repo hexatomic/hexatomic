@@ -827,6 +827,32 @@ class TestGraphEditor {
   }
 
   /**
+   * Tests that the segmentation list is updated when a token text is changed (especially the last
+   * one).
+   */
+  @Test
+  void testUpdateSegmentsOnLastTokenTextChanged() {
+    openDefaultExample();
+
+    SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
+
+    enterCommand("tc #sTok11 ???");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return textRangeTable
+            .containsItem("Is this example more complicated than it appears to be???");
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Segment for updated token was not shown";
+      }
+    }, 5000);
+  }
+
+  /**
    * Tests that the view is updated when another editor changes the annotation value.
    * 
    * <p>

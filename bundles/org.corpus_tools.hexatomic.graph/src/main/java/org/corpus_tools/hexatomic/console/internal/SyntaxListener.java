@@ -49,6 +49,7 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PunctuationContex
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenChangeTextContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeAfterContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeBeforeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
@@ -61,6 +62,7 @@ import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SAnnotationContainer;
@@ -78,6 +80,7 @@ import org.corpus_tools.salt.util.DataSourceSequence;
  */
 public class SyntaxListener extends ConsoleCommandBaseListener {
 
+  public static final String REFERENCED_NODE_NO_TOKEN = "Referenced node is not a token.";
   private final SDocumentGraph graph;
   private final STextualDS selectedText;
   private final Set<SStructuredNode> referencedNodes = new LinkedHashSet<>();
@@ -466,7 +469,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
     }
   }
 
@@ -490,7 +493,54 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
+    }
+  }
+
+  @Override
+  public void exitTokenChangeText(TokenChangeTextContext ctx) {
+    final SStructuredNode n = referencedNodes.iterator().next();
+    final String newTokenText = getString(ctx.string());
+    if (n instanceof SToken && newTokenText != null) {
+      SToken referencedToken = (SToken) n;
+      @SuppressWarnings("rawtypes")
+      List<DataSourceSequence> allSequences =
+          this.graph.getOverlappedDataSourceSequence(referencedToken,
+              SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      if (allSequences != null && !allSequences.isEmpty()) {
+        DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
+        if (oldTokenSequence.getDataSource() instanceof STextualDS) {
+          // To change the token value, we need to change the covered text in the textual relation
+          STextualDS textDS = (STextualDS) oldTokenSequence.getDataSource();
+          String textBefore = textDS.getText().substring(0, oldTokenSequence.getStart().intValue());
+          String textAfter = textDS.getText().substring(oldTokenSequence.getEnd().intValue());
+          textDS.setData(textBefore + newTokenText + textAfter);
+
+          // In order for all other textual relations to be still valid, we need to update the
+          // references to the text for the affected and all following token.
+          int oldTokenTextLength =
+              oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
+          int offset = newTokenText.length() - oldTokenTextLength;
+          updateTextRelationsWithOffset(offset, textDS, oldTokenSequence);
+        }
+      }
+    } else {
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
+    }
+  }
+
+  private void updateTextRelationsWithOffset(int offset, STextualDS ds,
+      DataSourceSequence<? extends Number> oldTokenSequence) {
+    for (STextualRelation rel : this.graph.getTextualRelations()) {
+      if (rel.getTarget() == ds) {
+        if (rel.getStart() == oldTokenSequence.getStart().intValue()
+            && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
+          rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
+        } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
+          rel.setStart(rel.getStart() + offset);
+          rel.setEnd(rel.getEnd() + offset);
+        }
+      }
     }
   }
 

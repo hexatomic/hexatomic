@@ -19,6 +19,7 @@ command
     | TOKENIZE string+ # Tokenize
     | TOKENIZE_AFTER node_reference string+ # TokenizeAfter
     | TOKENIZE_BEFORE node_reference string+ # TokenizeBefore
+    | TOKEN_CHANGE_TEXT node_reference string # TokenChangeText
     | CLEAR # Clear
     ;
 
