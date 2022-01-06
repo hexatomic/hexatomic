@@ -64,19 +64,20 @@ ta #t1 is a
 
 ## Change the text of a token: `tc`
 
-Change which text an existing token represents.
+Change the text that an existing token covers.
 
 ### Examples
 
-Starting with an initial text with the two tokens `[This] [text]` (first one is called "t1" and the second one "t2"),
-executing
+Let's start with an initial text with the two tokens `[This] [text]`. The first token is called "t1" and the second one "t2".
+You can execute the following command:
 
 ```text
 tc #t2 example
 ```
 
-will change the covered token text from "text" to "example": `[This] [example]`.
-All token before and after are not affected and only one token can be changed at a time
+This will change the covered token text from "text" to "example": `[This] [example]`.
+All tokens before and after the changed token are not affected.
+Only one token can be changed at a time.
 
 #### See also
 

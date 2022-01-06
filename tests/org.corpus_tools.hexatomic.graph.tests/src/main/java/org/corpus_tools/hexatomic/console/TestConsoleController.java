@@ -319,7 +319,7 @@ class TestConsoleController {
     assertEquals("test", graph.getText(token.get(3)));
     assertEquals(".", graph.getText(token.get(4)));
 
-    // Token in the begin and leave the token text length the same
+    // Token in the beginning and leave the token text length the same
     SToken firstToken = token.get(0);
     console.executeCommand("tc #" + firstToken.getName() + " this");
     assertEquals("this is XX test .", textualDS.getText());
@@ -329,7 +329,7 @@ class TestConsoleController {
     assertEquals("test", graph.getText(token.get(3)));
     assertEquals(".", graph.getText(token.get(4)));
 
-    // Token in the begin and make token text smaller
+    // Token in the beginning and make token text smaller
     console.executeCommand("tc #" + firstToken.getName() + " A");
     assertEquals("A is XX test .", textualDS.getText());
     assertEquals("A", graph.getText(token.get(0)));
