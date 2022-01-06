@@ -99,7 +99,6 @@ public class GridHelper {
     int singleColumnPosition = -1;
     for (PositionCoordinate coord : selectedCellCoordinates) {
       int columnPosition = coord.getColumnPosition();
-      int rowPosition = coord.getRowPosition();
       // Check for each coordinate pair whether it has the same column position as the first
       // pair (otherwise the cell is in a different column).
       if (singleColumnPosition == -1) {
@@ -107,13 +106,50 @@ public class GridHelper {
       } else if (columnPosition != singleColumnPosition) {
         return false;
       }
-      if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
-        return false;
-      }
     }
     // At this point, singleColumnPosition should be set
     // Return whether the single column is a span column
     return isSpanColumn(singleColumnPosition, selectionLayer);
+  }
+
+  /**
+   * Tests whether all cells for the passed position coordinates are empty.
+   * 
+   * @param selectedCellCoordinates An array of {@link PositionCoordinate}s for the currently
+   *        selected cells.
+   * @param selectionLayer The selection layer
+   * @return if all cells for the passed position coordinates are empty
+   */
+  public static boolean areSelectedCellsEmpty(PositionCoordinate[] selectedCellCoordinates,
+      SelectionLayer selectionLayer) {
+    for (PositionCoordinate coord : selectedCellCoordinates) {
+      if (!isCellEmpty(selectionLayer, coord.columnPosition, coord.rowPosition)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Tests whether all selected cells are in span columns.
+   * 
+   * @param selectedCellCoordinates The {@link PositionCoordinate}s for the selected cells
+   * @param selectionLayer The {@link SelectionLayer}
+   * @return whether all selected cells are in a span column
+   */
+  public static boolean areAllSelectedCellsInSpanColumns(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    for (PositionCoordinate coord : selectedCellCoordinates) {
+      if (!isSpanColumn(coord.columnPosition, selectionLayer)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean isCellEmpty(SelectionLayer selectionLayer, int columnPosition,
+      int rowPosition) {
+    return selectionLayer.getDataValueByPosition(columnPosition, rowPosition) == null;
   }
   
   private static boolean isSpanColumn(int singleColumnPosition, SelectionLayer selectionLayer) {

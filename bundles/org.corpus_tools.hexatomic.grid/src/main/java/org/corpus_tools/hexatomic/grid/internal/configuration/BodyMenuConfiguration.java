@@ -95,9 +95,9 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         new ValidSingleSpanColumnEmptySelectionState();
     builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
     builder.withMenuItemProvider(SPLIT_SPAN_ITEM, new SplitSpanItemProvider());
-    ValidSingleSpanColumnSingleSelectionState validSingleSpanColumnSingleSelectionState =
-        new ValidSingleSpanColumnSingleSelectionState();
-    builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnSingleSelectionState);
+    ValidOnlySpanColumnsNonEmptySelectionState validOnlySpanColumnsNonEmptySelectionState =
+        new ValidOnlySpanColumnsNonEmptySelectionState();
+    builder.withVisibleState(SPLIT_SPAN_ITEM, validOnlySpanColumnsNonEmptySelectionState);
     builder.withSeparator()
         .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.TOKEN_ANNOTATION));
     builder
@@ -297,7 +297,8 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
         return GridHelper.areSelectedCellsInSingleSpanColumn(selectedCellCoordinates,
-            selectionLayer);
+            selectionLayer)
+            && GridHelper.areSelectedCellsEmpty(selectedCellCoordinates, selectionLayer);
       }
     }
   }
@@ -312,19 +313,19 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  public class ValidSingleSpanColumnSingleSelectionState implements IMenuItemState {
+  public class ValidOnlySpanColumnsNonEmptySelectionState implements IMenuItemState {
 
     @Override
     public boolean isActive(NatEventData natEventData) {
       if (selectionLayer.getSelectedCells().isEmpty()) {
+        System.err.println("SELECTION IS EMPTY");
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-        return GridHelper.areSelectedCellsInSingleSpanColumn(selectedCellCoordinates,
-            selectionLayer) && selectedCellCoordinates.length == 1;
+        return GridHelper.areAllSelectedCellsInSpanColumns(selectedCellCoordinates,
+            selectionLayer);
       }
     }
-
   }
 
   private boolean isTokenCell(PositionCoordinate cellPosition) {
