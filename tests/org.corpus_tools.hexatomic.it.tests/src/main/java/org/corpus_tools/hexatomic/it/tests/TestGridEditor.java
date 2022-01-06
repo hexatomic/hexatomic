@@ -1830,6 +1830,35 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests that spans are split on issuing the respective command.
+   */
+  @Test
+  void testSplitSpan() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert state
+    Object span = natTable.getDataValueByPosition(4, 2);
+    assertTrue(span instanceof SSpan);
+    assertEquals(span, natTable.getDataValueByPosition(4, 2));
+    assertEquals(span, natTable.getDataValueByPosition(4, 3));
+    assertEquals(span, natTable.getDataValueByPosition(4, 11));
+
+    table.contextMenu(3, 4).contextMenu("Split span").click();
+    bot.waitUntil(new UnequalDataObjectsCondition(4, 2, natTable, 3, 11));
+  }
+
+  /**
+   * Tests that spans are merged on issuing the respective command.
+   */
+  @Test
+  void testMergeSpan() {
+    fail();
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
@@ -2054,6 +2083,45 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     return (CompositeFreezeLayer) layerUl;
+  }
+
+  /**
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   *
+   */
+  public class UnequalDataObjectsCondition extends DefaultCondition {
+
+    private final int rowIndex;
+    private final NatTable natTable;
+    private final int[] columnIndices;
+    private final int fixtureColumnIndex;
+    private final Object fixture;
+
+    public UnequalDataObjectsCondition(int rowIndex, int fixtureColumnIndex, NatTable natTable,
+        int... columnIndices) {
+      this.rowIndex = rowIndex;
+      this.fixtureColumnIndex = fixtureColumnIndex;
+      this.natTable = natTable;
+      this.columnIndices = columnIndices;
+      this.fixture = natTable.getDataValueByPosition(this.fixtureColumnIndex, this.rowIndex);
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      for (int i = 0; i < columnIndices.length; i++) {
+        int idx = columnIndices[i];
+        if (natTable.getDataValueByPosition(idx, this.rowIndex) == fixture) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Some of the test objects were the same as the fixture.";
+    }
+
   }
 
   /**
