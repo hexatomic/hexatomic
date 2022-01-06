@@ -66,6 +66,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   private static final String CHANGE_CELL_ANNOTATION_NAME_ITEM = "CHNG_ANNO_NAME"; //$NON-NLS-1$
   private static final String CREATE_SPAN_ITEM = "CREATE_SPAN_ITEM";
+  private static final String SPLIT_SPAN_ITEM = "SPLIT_SPAN_ITEM";
 
   /**
    * Constructor setting the table and selection layer fields, and creating the menu via
@@ -93,6 +94,10 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     ValidSingleSpanColumnEmptySelectionState validSingleSpanColumnEmptySelectionState =
         new ValidSingleSpanColumnEmptySelectionState();
     builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
+    builder.withMenuItemProvider(SPLIT_SPAN_ITEM, new SplitSpanItemProvider());
+    ValidSingleSpanColumnSingleSelectionState validSingleSpanColumnSingleSelectionState =
+        new ValidSingleSpanColumnSingleSelectionState();
+    builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnSingleSelectionState);
     builder.withSeparator()
         .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.TOKEN_ANNOTATION));
     builder
@@ -223,6 +228,28 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
   }
 
   /**
+   * Provides a menu item for splitting a selected span.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  public class SplitSpanItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText(GridEditor.SPLIT_SPAN_POPUP_MENU_LABEL);
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          new CreateSpanSelectionAction().run(natTable);
+        }
+      });
+    }
+
+  }
+
+  /**
    * A menu item state based on valid selection of cells.
    * 
    * <p>
@@ -273,6 +300,31 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
             selectionLayer);
       }
     }
+  }
+
+  /**
+   * A menu item state based on valid selection of cells.
+   * 
+   * <p>
+   * {@link #isActive(NatEventData)} returns <code>true</code> only when there is exactly one cell
+   * selected within a single span column.
+   * </p>
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  public class ValidSingleSpanColumnSingleSelectionState implements IMenuItemState {
+
+    @Override
+    public boolean isActive(NatEventData natEventData) {
+      if (selectionLayer.getSelectedCells().isEmpty()) {
+        return false;
+      } else {
+        PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
+        return GridHelper.areSelectedCellsInSingleSpanColumn(selectedCellCoordinates,
+            selectionLayer) && selectedCellCoordinates.length == 1;
+      }
+    }
+
   }
 
   private boolean isTokenCell(PositionCoordinate cellPosition) {

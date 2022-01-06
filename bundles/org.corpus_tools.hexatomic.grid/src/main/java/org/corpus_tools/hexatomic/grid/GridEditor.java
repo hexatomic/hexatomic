@@ -114,6 +114,8 @@ public class GridEditor {
 
   public static final String ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL = "Add span annotation column";
 
+  public static final String SPLIT_SPAN_POPUP_MENU_LABEL = "Split span";
+
   @Inject
   ErrorService errors;
 
