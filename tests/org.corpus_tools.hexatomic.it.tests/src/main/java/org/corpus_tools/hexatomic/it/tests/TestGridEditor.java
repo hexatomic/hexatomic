@@ -1813,6 +1813,9 @@ public class TestGridEditor {
     assertEquals(oldColumnCount + 1, table.columnCount());
   }
 
+  /**
+   * Tests that duplicate span columns can be added.
+   */
   @Test
   void testDuplicateSpanColumnAdded() {
     openDefaultExample();
