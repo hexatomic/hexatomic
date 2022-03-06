@@ -100,31 +100,6 @@ references:
   - name: Tatu Saloranta
   repository-code: https://github.com/FasterXML/woodstox
 - type: software
-  title: '[bundle] Corpus Structure Editor'
-  version: 0.9.0-SNAPSHOT
-  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.corpusstructureeditor
-  authors: []
-- type: software
-  title: '[bundle] Corpus file formats'
-  version: 0.9.0-SNAPSHOT
-  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.formats
-  authors: []
-- type: software
-  title: '[bundle] Hexatomic Core Plugin'
-  version: 0.9.0-SNAPSHOT
-  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.core
-  authors: []
-- type: software
-  title: '[bundle] Hexatomic Grid Editor'
-  version: 0.9.0-SNAPSHOT
-  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.grid
-  authors: []
-- type: software
-  title: '[bundle] org.corpus_tools.hexatomic.textviewer'
-  version: 0.9.0-SNAPSHOT
-  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic.textviewer
-  authors: []
-- type: software
   title: ch.qos.logback.classic
   version: 1.2.3.v20200428-2012
   license: EPL-1.0
