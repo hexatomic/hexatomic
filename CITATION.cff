@@ -1,4 +1,5 @@
 cff-version: 1.1.0
+type: software
 message: If you use this software, please cite it as below.
 title: Hexatomic
 authors:
@@ -12,7 +13,7 @@ authors:
   given-names: Clara
   orcid: https://orcid.org/0000-0002-9207-3420
 version: 0.9.0-SNAPSHOT
-date-released: 2021-12-20
+date-released: 2022-03-06
 references:
 - type: software
   title: SWT Resource Manager
@@ -129,7 +130,8 @@ references:
 - type: software
   title: com.sun.jna
   version: 4.5.1.v20190425-1842
-  authors: []
+  authors:
+  - name: The com.sun.jna 4.5.1.v20190425-1842 Team
 - type: software
   title: com.sun.jna.platform
   version: 4.5.1.v20190425-1842
@@ -238,7 +240,8 @@ references:
 - type: software
   title: org.corpus-tools.pepper-framework
   version: 3.6.0
-  authors: []
+  authors:
+  - name: The org.corpus-tools.pepper-framework 3.6.0 Team
 - type: software
   title: org.eclipse.core.commands
   version: 3.9.800.v20201021-1339
@@ -582,96 +585,6 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.event
     directory.
 - type: software
-  title: org.eclipse.equinox.p2.artifact.repository
-  version: 1.4.0.v20210129-2007
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.artifact.repository
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.core
-  version: 2.6.300.v20200211-1504
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.core
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.director
-  version: 2.4.700.v20200511-1530
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.director
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.engine
-  version: 2.6.700.v20200511-1530
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.engine
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.jarprocessor
-  version: 1.1.700.v20210227-0235
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.jarprocessor
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.metadata
-  version: 2.5.100.v20200908-1020
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.metadata.repository
-  version: 1.3.500.v20210108-0738
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata.repository
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.operations
-  version: 2.5.1000.v20201106-1246
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.operations
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.repository
-  version: 2.5.0.v20201013-0853
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.repository
-    directory.
-- type: software
-  title: org.eclipse.equinox.p2.ui
-  version: 2.7.0.v20210114-1216
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui
-    directory.
-- type: software
   title: org.eclipse.equinox.preferences
   version: 3.8.200.v20210212-1143
   license: EPL-2.0
@@ -688,33 +601,6 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.registry
-    directory.
-- type: software
-  title: org.eclipse.equinox.security
-  version: 1.3.600.v20210126-1005
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security
-    directory.
-- type: software
-  title: org.eclipse.equinox.security.ui
-  version: 1.3.0.v20210121-0947
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.ui
-    directory.
-- type: software
-  title: org.eclipse.equinox.simpleconfigurator
-  version: 1.3.600.v20200721-1308
-  license: EPL-2.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.simpleconfigurator
     directory.
 - type: software
   title: org.eclipse.help
@@ -921,24 +807,11 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.hamcrest.library
     directory.
 - type: software
-  title: org.sat4j.core
-  version: 2.3.5.v201308161310
-  license: LGPL-2.1
-  authors: []
-- type: software
-  title: org.sat4j.pb
-  version: 2.3.5.v201404071733
-  license: LGPL-2.1
-  authors: []
-- type: software
-  title: org.tukaani.xz
-  version: 1.8.0.v20180207-1613
-  authors: []
-- type: software
   title: org.w3c.css.sac
   version: 1.3.1.v200903091627
   license: NOASSERTION
-  authors: []
+  authors:
+  - name: The org.w3c.css.sac 1.3.1.v200903091627 Team
 - type: software
   title: org.w3c.dom.events
   version: 3.0.0.draft20060413_v201105210656
