@@ -813,9 +813,15 @@ references:
 - type: software
   title: org.w3c.css.sac
   version: 1.3.1.v200903091627
-  license: NOASSERTION
+  license: W3C
   authors:
-  - name: The org.w3c.css.sac 1.3.1.v200903091627 Team
+  - name: Copyright (c) 2002 http://www.w3.org/' World Wide Web Consortium, http://www.lcs.mit.edu/'
+      Massachusetts Institute
+  - name: Copyright (c) 1994-2002 http://www.w3.org/' World Wide Web Consortium, http://www.lcs.mit.edu/'
+      Massachusetts Institute
+  - name: Copyright (c) 2002 World Wide Web Consortium, (Massachusetts Institute of
+      Technology, Institut National de Recherche en Informatique et en Automatique,
+      Keio University).
 - type: software
   title: org.w3c.dom.events
   version: 3.0.0.draft20060413_v201105210656
