@@ -23,6 +23,7 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.GraphEditor;
+import org.corpus_tools.hexatomic.it.tests.utils.SwtBotChips;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -38,6 +39,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
@@ -68,10 +70,15 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String INF_STRUCT = "Inf-Struct";
+  private static final String CONST = "const";
+  private static final String SEARCH = "Search";
+  private static final String ANNOTATION_NAME = "Node Annotations";
+  private static final String SPANS = "Spans";
+  private static final String FILTER_VIEW = "Filter View";
+  private static final String ANNOTATION_TYPES = "Annotation Types";
   private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
-  private static final String INCLUDE_SPANS = "Include spans";
-  private static final String FILTER_BY_NODE_ANNOTATION_NAME = "Filter by node annotation name";
   private static final String TEST_TOKEN = "abc";
   private static final String ADD_POINTING_COMMMAND = "e #structure3 -> #structure5";
   private static final String ANOTHER_TEXT = "Another text";
@@ -567,38 +574,56 @@ class TestGraphEditor {
     // Add a pointing relation between the two structures
     enterCommand(ADD_POINTING_COMMMAND);
 
+
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate pointing relations in view and check the view has less/more connections
-    SWTBotCheckBox includePointing = bot.checkBox("Include pointing relations");
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
+    SWTBotCheckBox includePointing = bot.checkBox("Pointing Relations");
     includePointing.deselect();
     bot.waitUntil(new NumberOfConnectionsCondition(22));
     includePointing.select();
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
+    SWTBotCheckBox includeSpans = bot.checkBox(SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
     bot.waitUntil(new NumberOfNodesCondition(26));
     // With spans enabled, filter for annotation names
-    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_NAME);
+    SWTBotText annoFilter = bot.textWithMessage(SEARCH);
 
     // Tokens and the matching structure nodes
-    annoFilter.setText("const");
+    annoFilter.typeText(CONST);
+    annoFilter.pressShortcut(Keystrokes.LF);
+    assertEquals(1, getVisibleChips(bot).size());
+    final SwtBotChips constChip = new SwtBotChips(getVisibleChips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
-    annoFilter.setText("Inf-Struct");
-    bot.waitUntil(new NumberOfNodesCondition(13));
+    annoFilter.typeText(INF_STRUCT);
+    annoFilter.pressShortcut(Keystrokes.LF);
+    assertEquals(2, getVisibleChips(bot).size());
 
-    // Only tokens because annotation is non-existing
-    annoFilter.setText("not actually there");
-    bot.waitUntil(new NumberOfNodesCondition(11));
+    bot.waitUntil(new NumberOfNodesCondition(25));
+
+    // Check that already added annotation names are not added twice
+    annoFilter.typeText(CONST);
+    annoFilter.pressShortcut(Keystrokes.LF);
+    assertEquals(2, getVisibleChips(bot).size());
+
+    // Remove chip again by simulating a mouse click
+    constChip.click();
+    assertEquals(1, getVisibleChips(bot).size());
+    bot.waitUntil(new NumberOfNodesCondition(13));
   }
 
+  private List<? extends Chips> getVisibleChips(SWTBot bot) {
+    return bot.widgets(widgetOfType(Chips.class), bot.expandBarInGroup(FILTER_VIEW).widget);
+  }
 
   @Test
   void testUndoRedoRendered() {
@@ -723,7 +748,8 @@ class TestGraphEditor {
     assertNotNull(g);
 
     // Deactivate/activate spans in view and check the view has less/more nodes
-    SWTBotCheckBox includeSpans = bot.checkBox(INCLUDE_SPANS);
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
+    SWTBotCheckBox includeSpans = bot.checkBox(SPANS);
     includeSpans.deselect();
     bot.waitUntil(new NumberOfNodesCondition(23));
     includeSpans.select();
@@ -801,6 +827,32 @@ class TestGraphEditor {
   }
 
   /**
+   * Tests that the segmentation list is updated when a token text is changed (especially the last
+   * one).
+   */
+  @Test
+  void testUpdateSegmentsOnLastTokenTextChanged() {
+    openDefaultExample();
+
+    SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
+
+    enterCommand("tc #sTok11 ???");
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return textRangeTable
+            .containsItem("Is this example more complicated than it appears to be???");
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Segment for updated token was not shown";
+      }
+    }, 5000);
+  }
+
+  /**
    * Tests that the view is updated when another editor changes the annotation value.
    * 
    * <p>
@@ -812,9 +864,11 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Make sure the relevant spans are shown
-    bot.checkBox(INCLUDE_SPANS).select();
-    SWTBotText annoFilter = bot.textWithMessage(FILTER_BY_NODE_ANNOTATION_NAME);
-    annoFilter.setText("Inf");
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
+    bot.checkBox(SPANS).select();
+    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_NAME);
+    SWTBotText annoFilter = bot.textWithMessage(SEARCH);
+    annoFilter.setText("Inf\n");
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 

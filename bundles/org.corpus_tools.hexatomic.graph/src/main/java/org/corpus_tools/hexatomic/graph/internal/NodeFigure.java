@@ -21,6 +21,8 @@
 
 package org.corpus_tools.hexatomic.graph.internal;
 
+import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.corpus_tools.salt.common.SSpan;
@@ -52,7 +54,7 @@ public class NodeFigure extends Figure {
    * @param item The salt node.
    * @param fontMetrics Metrics describing the font used to render the text.
    */
-  public NodeFigure(SNode item, FontMetrics fontMetrics) {
+  public NodeFigure(SNode item, FontMetrics fontMetrics, AnnotationFilter filter) {
 
     Font font = Display.getCurrent().getSystemFont();
     FontDescriptor boldDescriptor = FontDescriptor.createFrom(font).setStyle(SWT.BOLD);
@@ -98,10 +100,14 @@ public class NodeFigure extends Figure {
       }
     }
 
+    Optional<Set<String>> filteredAnnotations = filter.getFilter();
+
     TreeMap<String, String> labelsByQName = new TreeMap<>();
     for (SAnnotation l : item.getAnnotations()) {
       String qname = SaltUtil.createQName(l.getNamespace(), l.getName());
-      labelsByQName.put(qname, qname + "=" + l.getValue());
+      if (filteredAnnotations.isEmpty() || filteredAnnotations.get().contains(qname)) {
+        labelsByQName.put(qname, qname + "=" + l.getValue());
+      }
     }
 
 
