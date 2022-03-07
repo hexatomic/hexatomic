@@ -13,7 +13,7 @@ authors:
   given-names: Clara
   orcid: https://orcid.org/0000-0002-9207-3420
 version: 0.9.0-SNAPSHOT
-date-released: 2022-03-06
+date-released: 2022-03-07
 references:
 - type: software
   title: SWT Resource Manager

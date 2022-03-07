@@ -8,6 +8,9 @@ authors:
 -  family-names: Krause
    given-names: Thomas
    orcid: https://orcid.org/0000-0003-3731-2422
+-  family-names: Lachenmaier
+   given-names: Clara
+   orcid: https://orcid.org/0000-0002-9207-3420
 references:
 -  type: software 
    title: SWT Resource Manager
