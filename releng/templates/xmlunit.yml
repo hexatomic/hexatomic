@@ -1,0 +1,9 @@
+type: software
+title: XMLUnit for Java
+version: '1.5'
+license: BSD-3-Clause
+authors:
+- name: Stefan Bodewig
+- name: Tim Bacon
+- name: Jeff Martin
+url: http://xmlunit.sourceforge.net/

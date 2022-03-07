@@ -101,6 +101,15 @@ references:
   - name: Tatu Saloranta
   repository-code: https://github.com/FasterXML/woodstox
 - type: software
+  title: XMLUnit for Java
+  version: '1.5'
+  license: BSD-3-Clause
+  authors:
+  - name: Stefan Bodewig
+  - name: Tim Bacon
+  - name: Jeff Martin
+  url: http://xmlunit.sourceforge.net/
+- type: software
   title: ch.qos.logback.classic
   version: 1.2.3.v20200428-2012
   license: EPL-1.0
@@ -237,11 +246,6 @@ references:
   - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.xmlgraphics
     directory.
-- type: software
-  title: org.corpus-tools.pepper-framework
-  version: 3.6.0
-  authors:
-  - name: The org.corpus-tools.pepper-framework 3.6.0 Team
 - type: software
   title: org.eclipse.core.commands
   version: 3.9.800.v20201021-1339
