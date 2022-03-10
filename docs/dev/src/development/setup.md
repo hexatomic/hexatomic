@@ -103,14 +103,14 @@ mdbook v0.3.1
 ## Suggested editor: Eclipse Integrated Development Environment (IDE)
 
 Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
-While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2019-06 or newer**.
+While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2021-12 or newer**.
 
 You can download it from the [Eclipse download website](https://www.eclipse.org/downloads/).
 
 ### Eclipse IDE installation
 
 The download contains an installer which lets you configure the setup of your IDE.
-To develop Hexatomic, you will need to install [Eclipse IDE for RCP and RAP Developers](https://www.eclipse.org/downloads/packages/release/2019-06/r/eclipse-ide-rcp-and-rap-developers):
+To develop Hexatomic, you will need to install [Eclipse IDE for RCP and RAP Developers](https://www.eclipse.org/downloads/packages/release/2021-12/r/eclipse-ide-rcp-and-rap-developers):
 
 - Extract the downloaded file.
 - Start the Eclipse installer (`eclipse-inst`).
