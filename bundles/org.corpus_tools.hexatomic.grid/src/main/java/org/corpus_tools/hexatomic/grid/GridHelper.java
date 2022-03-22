@@ -24,6 +24,8 @@ import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
@@ -155,6 +157,65 @@ public class GridHelper {
   private static boolean isSpanColumn(int singleColumnPosition, SelectionLayer selectionLayer) {
     LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
     return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+  }
+
+  /**
+   * Constructs a valid qualified annotation name based on a given namespace string and a given name
+   * string, where the namespace string may be <code>null</code>.
+   * 
+   * @param annoNamespace The namespace string
+   * @param annoName The name string
+   * @return The valid qualified annotation name
+   */
+  public static String getAnnotationQName(String annoNamespace, String annoName) {
+    if (annoNamespace == null || annoNamespace.isEmpty()) {
+      return annoName;
+    } else {
+      return annoNamespace + SaltUtil.NAMESPACE_SEPERATOR + annoName;
+    }
+  }
+
+  /**
+   * Validates whether all selected cell coordinates cover exactly one span.
+   * 
+   * @param selectedCellCoordinates the coordinates to test
+   * @param selectionLayer the {@link SelectionLayer} of the grid including the coordinates
+   * @return whether all passed coordinates cover the same single span
+   */
+  public static boolean areAllSelectedCoordinatesOneSpan(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    return getSingleSpanForPositions(selectedCellCoordinates, selectionLayer) != null;
+  }
+
+  /**
+   * Retrieves the single {@link SSpan} that is the data object in the cells of all given
+   * {@link PositionCoordinate}s, or <code>null</code> if the coordinates do not contain a single
+   * non-null span.
+   * 
+   * @param selectedCellCoordinates The selected {@link PositionCoordinate}s
+   * @param selectionLayer The {@link SelectionLayer} of the grid that the coordinates are in
+   * @return The single span that is contained in all coordinates, or <code>null</code>
+   */
+  public static SSpan getSingleSpanForPositions(PositionCoordinate[] selectedCellCoordinates,
+      SelectionLayer selectionLayer) {
+    SSpan span = null;
+    for (int i = 0; i < selectedCellCoordinates.length; i++) {
+      PositionCoordinate positionCoordinate = selectedCellCoordinates[i];
+      int col = positionCoordinate.getColumnPosition();
+      int row = positionCoordinate.getRowPosition();
+      if (span == null) {
+        Object data = selectionLayer.getDataValueByPosition(col, row);
+        if (data instanceof SSpan) {
+          span = (SSpan) data;
+        }
+      }
+      else {
+        if (selectionLayer.getDataValueByPosition(col, row) != span) {
+          return null;
+        }
+      }
+    }
+    return span;
   }
 
 }
