@@ -20,9 +20,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.actions;
 
-import java.util.Set;
+import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.SplitSpanCommand;
+import org.corpus_tools.salt.common.SSpan;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
@@ -33,6 +34,11 @@ import org.eclipse.swt.events.KeyEvent;
  * An {@link IContextFreeAction} that triggers a {@link SplitSpanCommand} for the currently selected
  * span in an existing span column.
  * 
+ * <p>
+ * As the action is only being made available when there is exactly one non-null {@link SSpan}
+ * selected, this assumption can safely be operated upon.
+ * </p>
+ * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */
 public class SplitSpanSelectionAction implements IContextFreeAction, IKeyAction {
@@ -41,8 +47,13 @@ public class SplitSpanSelectionAction implements IContextFreeAction, IKeyAction 
   public void run(NatTable natTable) {
     SelectionLayer selectionLayer = GridHelper.getBodyLayer(natTable).getSelectionLayer();
     PositionCoordinate[] cellPositions = selectionLayer.getSelectedCellPositions();
-    if (GridHelper.areSelectedCellsInSingleSpanColumn(cellPositions, selectionLayer)) {
-      natTable.doCommand(new SplitSpanCommand(Set.of(cellPositions)));
+    SSpan span = GridHelper.getSingleSpanForPositions(cellPositions, selectionLayer);
+    if (span == null) {
+      throw new HexatomicRuntimeException(
+          "Expected single non-null span to be selected, but this was not the case.");
+    }
+    else {
+      natTable.doCommand(new SplitSpanCommand(span, cellPositions));
     }
   }
 

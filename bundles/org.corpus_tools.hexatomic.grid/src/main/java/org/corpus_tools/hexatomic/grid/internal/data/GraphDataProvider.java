@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
+import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.internal.ui.UnrenamedAnnotationsDialog;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -471,11 +472,6 @@ public class GraphDataProvider implements IDataProvider {
     projectManager.addCheckpoint();
   }
 
-  public void splitAnnotationsSpans(Set<PositionCoordinate> selectedCoordinates) {
-    // TODO Auto-generated method stub
-
-  }
-
   /**
    * Renames annotations on a per-column basis.
    * 
@@ -674,18 +670,7 @@ public class GraphDataProvider implements IDataProvider {
     // Get tokens
     List<Integer> selectedRows = selectedCoordinates.parallelStream()
         .map(PositionCoordinate::getRowPosition).collect(Collectors.toList());
-    List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
-        .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
-    // Check that all potentialTokens are in fact tokens
-    List<SToken> tokens = potentialTokens.parallelStream().map(n -> {
-      if (n instanceof SToken) {
-        return (SToken) n;
-      } else {
-        throw new HexatomicRuntimeException(
-            "Expected an object of type " + SToken.class.getSimpleName()
-                + " in the first column of the grid, but found a " + n.getClass().getSimpleName());
-      }
-    }).collect(Collectors.toList());
+    List<SToken> tokens = getTokensFromSelectedRows(selectedRows);
     SSpan span = graph.createSpan(tokens);
     log.debug("Created new span {}.", span);
     int columnIndex = selectedCoordinates.iterator().next().getColumnPosition();
@@ -698,6 +683,53 @@ public class GraphDataProvider implements IDataProvider {
     log.debug("Annotated new span with empty value.");
   }
 
+
+  private List<SToken> getTokensFromSelectedRows(List<Integer> selectedRows) {
+    List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
+        .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
+    // Check that all potentialTokens are in fact tokens
+    List<SToken> tokens = potentialTokens.parallelStream().map(n -> {
+      if (n instanceof SToken) {
+        return (SToken) n;
+      } else {
+        throw new HexatomicRuntimeException(
+            "Expected an object of type " + SToken.class.getSimpleName()
+                + " in the first column of the grid, but found a " + n.getClass().getSimpleName());
+      }
+    }).collect(Collectors.toList());
+    return tokens;
+  }
+
+
+  /**
+   * Splits an {@link SSpan} into spans spanning a single token, retaining annotations.
+   * 
+   * @param span
+   * @param coordinates
+   */
+  public void splitAnnotationSpan(SSpan span, PositionCoordinate[] coordinates) {
+    PositionCoordinate firstCoord = coordinates[0];
+    int firstCol = firstCoord.getColumnPosition();
+    String annoNamespace = getAnnotationNamespace(firstCol);
+    String annoName = getAnnotationName(firstCol);
+    String annoQName = GridHelper.getAnnotationQName(annoNamespace, annoName);
+    SAnnotation annotation = span.getAnnotation(annoQName);
+    if (annotation == null) {
+      throw new HexatomicRuntimeException("Expected annotation but was null.",
+          new NullPointerException());
+    }
+    else {
+      for (int i = 0; i < coordinates.length; i++) {
+        PositionCoordinate coord = coordinates[i];
+        int col = coord.getColumnPosition();
+        int row = coord.getRowPosition();
+        Object value = annotation.getValue();
+        // First remove the current value, then set it anew
+        setDataValue(col, row, null);
+        setDataValue(col, row, value);
+      }
+    }
+  }
 
   /**
    * Set the {@link SDocumentGraph} that the data provider operates on.

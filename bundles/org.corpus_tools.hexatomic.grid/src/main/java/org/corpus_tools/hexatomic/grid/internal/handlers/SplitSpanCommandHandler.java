@@ -20,9 +20,10 @@
 
 package org.corpus_tools.hexatomic.grid.internal.handlers;
 
-import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.commands.SplitSpanCommand;
+import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
+import org.corpus_tools.salt.common.SSpan;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.slf4j.Logger;
@@ -56,9 +57,11 @@ public class SplitSpanCommandHandler extends AbstractLayerCommandHandler<SplitSp
   @Override
   protected boolean doCommand(SplitSpanCommand command) {
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
-    Set<PositionCoordinate> selectedCoordinates = command.getSelectedNonTokenCells();
+    PositionCoordinate[] coordinates = command.getSelectedCoordinates();
+    SSpan span = command.getSpan();
     // Delegate the actual span splitting to the layer.
-    layer.splitAnnotationSpans(selectedCoordinates);
+    layer.splitAnnotationSpan(span, coordinates);
+    layer.fireLayerEvent(new ColumnsChangedEvent());
     return true;
   }
 

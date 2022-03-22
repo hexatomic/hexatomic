@@ -20,8 +20,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.commands;
 
-import java.util.Set;
-import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.corpus_tools.salt.common.SSpan;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 
@@ -34,26 +33,36 @@ import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
  */
 public class SplitSpanCommand extends AbstractContextFreeCommand {
 
-  private final Set<PositionCoordinate> selectedNonTokenCells;
+  private final SSpan span;
+  private final PositionCoordinate[] cellPositions;
 
   /**
    * Creates a new {@link SplitSpanCommand}.
    * 
-   * @param natTable the {@link NatTable} for which this command is valid
-   * @param selectedNonTokenCells a set of the {@link PositionCoordinate}s of the currently selected
-   *        cells
+   * @param span The {@link SSpan} to split
+   * @param cellPositions The selected coordinates of the {@link SSpan} to split
    */
-  public SplitSpanCommand(Set<PositionCoordinate> selectedNonTokenCells) {
-    this.selectedNonTokenCells = selectedNonTokenCells;
+  public SplitSpanCommand(SSpan span, PositionCoordinate[] cellPositions) {
+    this.span = span;
+    this.cellPositions = cellPositions;
   }
 
   /**
-   * Returns the set of {@link PositionCoordinate}s of the currently selected cells.
+   * Returns the selected coordinates to the {@link SSpan} to split.
    * 
-   * @return the selectedNonTokenCells
+   * @return the selectedSpans
    */
-  public final Set<PositionCoordinate> getSelectedNonTokenCells() {
-    return selectedNonTokenCells;
+  public final PositionCoordinate[] getSelectedCoordinates() {
+    return cellPositions;
+  }
+
+  /**
+   * Returns the {@link SSpan} to split.
+   * 
+   * @return the span
+   */
+  public final SSpan getSpan() {
+    return span;
   }
 
 }
