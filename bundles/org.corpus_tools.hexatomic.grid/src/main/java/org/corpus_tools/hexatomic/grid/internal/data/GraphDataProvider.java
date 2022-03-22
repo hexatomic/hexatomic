@@ -704,8 +704,8 @@ public class GraphDataProvider implements IDataProvider {
   /**
    * Splits an {@link SSpan} into spans spanning a single token, retaining annotations.
    * 
-   * @param span
-   * @param coordinates
+   * @param span The {@link SSpan} to split
+   * @param coordinates The coordinates for the {@link SSpan} to split
    */
   public void splitAnnotationSpan(SSpan span, PositionCoordinate[] coordinates) {
     PositionCoordinate firstCoord = coordinates[0];
@@ -717,8 +717,7 @@ public class GraphDataProvider implements IDataProvider {
     if (annotation == null) {
       throw new HexatomicRuntimeException("Expected annotation but was null.",
           new NullPointerException());
-    }
-    else {
+    } else {
       for (int i = 0; i < coordinates.length; i++) {
         PositionCoordinate coord = coordinates[i];
         int col = coord.getColumnPosition();

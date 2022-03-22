@@ -51,8 +51,7 @@ public class SplitSpanSelectionAction implements IContextFreeAction, IKeyAction 
     if (span == null) {
       throw new HexatomicRuntimeException(
           "Expected single non-null span to be selected, but this was not the case.");
-    }
-    else {
+    } else {
       natTable.doCommand(new SplitSpanCommand(span, cellPositions));
     }
   }

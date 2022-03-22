@@ -91,8 +91,8 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   /**
    * Triggers the splitting of spans into single cell spans in the underlying data model.
    * 
-   * @param coordinateMap a map of the {@link PositionCoordinate}s of the currently selected cells
-   *        to the {@link SSpan}s they contain
+   * @param span The {@link SSpan} to split
+   * @param coordinates The coordinates for the {@link SSpan} to split
    */
   public void splitAnnotationSpan(SSpan span, PositionCoordinate[] coordinates) {
     bodyDataProvider.splitAnnotationSpan(span, coordinates);

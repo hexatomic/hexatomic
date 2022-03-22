@@ -208,8 +208,7 @@ public class GridHelper {
         if (data instanceof SSpan) {
           span = (SSpan) data;
         }
-      }
-      else {
+      } else {
         if (selectionLayer.getDataValueByPosition(col, row) != span) {
           return null;
         }

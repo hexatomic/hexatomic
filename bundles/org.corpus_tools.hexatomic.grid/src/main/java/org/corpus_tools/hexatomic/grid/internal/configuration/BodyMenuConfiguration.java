@@ -323,9 +323,10 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-        boolean allInSpanColumn = GridHelper.areAllSelectedCellsInSpanColumns(selectedCellCoordinates,
-            selectionLayer); 
-        boolean allSameSpan = GridHelper.areAllSelectedCoordinatesOneSpan(selectedCellCoordinates, selectionLayer);
+        boolean allInSpanColumn =
+            GridHelper.areAllSelectedCellsInSpanColumns(selectedCellCoordinates, selectionLayer);
+        boolean allSameSpan =
+            GridHelper.areAllSelectedCoordinatesOneSpan(selectedCellCoordinates, selectionLayer);
         return allInSpanColumn && allSameSpan;
       }
     }
