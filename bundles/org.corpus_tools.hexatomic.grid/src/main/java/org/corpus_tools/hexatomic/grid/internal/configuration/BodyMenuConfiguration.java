@@ -96,9 +96,9 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         new ValidSingleSpanColumnEmptySelectionState();
     builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
     builder.withMenuItemProvider(SPLIT_SPAN_ITEM, new SplitSpanItemProvider());
-    ValidOnlySpanColumnsNonEmptySelectionState validOnlySpanColumnsNonEmptySelectionState =
-        new ValidOnlySpanColumnsNonEmptySelectionState();
-    builder.withVisibleState(SPLIT_SPAN_ITEM, validOnlySpanColumnsNonEmptySelectionState);
+    ValidOnlySpanColumnsSingleSpanSelectionState validOnlySpanColumnsSingleSpanSelectionState =
+        new ValidOnlySpanColumnsSingleSpanSelectionState();
+    builder.withVisibleState(SPLIT_SPAN_ITEM, validOnlySpanColumnsSingleSpanSelectionState);
     builder.withSeparator()
         .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.TOKEN_ANNOTATION));
     builder
@@ -233,7 +233,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  public class SplitSpanItemProvider implements IMenuItemProvider {
+  private final class SplitSpanItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
@@ -308,13 +308,13 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * A menu item state based on valid selection of cells.
    * 
    * <p>
-   * {@link #isActive(NatEventData)} returns <code>true</code> only when there is exactly one cell
+   * {@link #isActive(NatEventData)} returns <code>true</code> only when there is exactly one span
    * selected within a single span column.
    * </p>
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  public class ValidOnlySpanColumnsNonEmptySelectionState implements IMenuItemState {
+  public class ValidOnlySpanColumnsSingleSpanSelectionState implements IMenuItemState {
 
     @Override
     public boolean isActive(NatEventData natEventData) {
@@ -323,8 +323,10 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-        return GridHelper.areAllSelectedCellsInSpanColumns(selectedCellCoordinates,
-            selectionLayer);
+        boolean allInSpanColumn = GridHelper.areAllSelectedCellsInSpanColumns(selectedCellCoordinates,
+            selectionLayer); 
+        boolean allSameSpan = GridHelper.areAllSelectedCoordinatesOneSpan(selectedCellCoordinates, selectionLayer);
+        return allInSpanColumn && allSameSpan;
       }
     }
   }
