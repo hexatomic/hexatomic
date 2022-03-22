@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1639664364">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1646659011">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.eclipse.platform.sdk" version="4.19.0.I20210303-1800"/>
-      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.22.0.v20210227-0235"/>
-      <unit id="org.eclipse.emf.common" version="2.22.0.v20210114-1734"/>
-      <unit id="org.eclipse.e4.core.services" version="2.2.600.v20210110-1654"/>
+      <unit id="org.eclipse.platform.sdk" version="4.22.0.I20211124-1800"/>
+      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.200.v20211117-0650"/>
+      <unit id="org.eclipse.emf.common" version="2.23.0.v20210924-1718"/>
+      <unit id="org.eclipse.e4.core.services" version="2.3.100.v20210910-0640"/>
       <unit id="org.eclipse.zest.core" version="1.5.300.201606061308"/>
       <unit id="org.eclipse.zest.layouts" version="1.1.300.201606061308"/>
-      <unit id="org.eclipse.jdt.junit5.runtime" version="1.0.1200.v20210112-0706"/>
-      <unit id="org.junit.jupiter.api" version="5.7.1.v20210222-1948"/>
-      <unit id="org.junit.jupiter.engine" version="5.7.1.v20210222-1948"/>
-      <unit id="org.junit.platform.engine" version="1.7.1.v20210222-1948"/>
-      <unit id="org.eclipse.swtbot.e4.finder" version="3.0.0.202006031738"/>
-      <unit id="org.eclipse.swtbot.generator" version="3.0.0.202006031738"/>
-      <unit id="org.eclipse.swtbot.go" version="3.0.0.202006031738"/>
-      <unit id="org.eclipse.swtbot.swt.finder" version="3.0.0.202006031738"/>
-      <unit id="org.eclipse.jface" version="3.22.100.v20210126-0831"/>
-      <unit id="org.eclipse.pde.junit.runtime" version="3.5.1000.v20210110-1048"/>
-      <repository location="http://download.eclipse.org/releases/2021-03/"/>
+      <unit id="org.eclipse.jdt.junit5.runtime" version="1.0.1400.v20211108-0640"/>
+      <unit id="org.junit.jupiter.api" version="5.8.1.v20211018-1956"/>
+      <unit id="org.junit.jupiter.engine" version="5.8.1.v20211018-1956"/>
+      <unit id="org.junit.platform.engine" version="1.8.1.v20211018-1956"/>
+      <unit id="org.eclipse.swtbot.e4.finder" version="3.1.0.202106041005"/>
+      <unit id="org.eclipse.swtbot.generator" version="3.1.0.202106041005"/>
+      <unit id="org.eclipse.swtbot.go" version="3.1.0.202106041005"/>
+      <unit id="org.eclipse.swtbot.swt.finder" version="3.1.0.202106041005"/>
+      <unit id="org.eclipse.jface" version="3.24.0.v20211110-1517"/>
+      <unit id="org.eclipse.pde.junit.runtime" version="3.6.100.v20211112-1151"/>
+      <repository location="http://download.eclipse.org/releases/2021-12/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
