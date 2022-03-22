@@ -29,6 +29,7 @@ import org.corpus_tools.hexatomic.grid.GridEditor;
 import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.SplitSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
@@ -242,7 +243,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new CreateSpanSelectionAction().run(natTable);
+          new SplitSpanSelectionAction().run(natTable);
         }
       });
     }

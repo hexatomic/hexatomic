@@ -471,6 +471,11 @@ public class GraphDataProvider implements IDataProvider {
     projectManager.addCheckpoint();
   }
 
+  public void splitAnnotationsSpans(Set<PositionCoordinate> selectedCoordinates) {
+    // TODO Auto-generated method stub
+
+  }
+
   /**
    * Renames annotations on a per-column basis.
    * 

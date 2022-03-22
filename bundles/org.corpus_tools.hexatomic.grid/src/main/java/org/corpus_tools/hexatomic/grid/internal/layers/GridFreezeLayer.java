@@ -29,6 +29,7 @@ import org.corpus_tools.hexatomic.grid.internal.handlers.AddColumnCommandHandler
 import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
+import org.corpus_tools.hexatomic.grid.internal.handlers.SplitSpanCommandHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
@@ -87,6 +88,16 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   }
 
   /**
+   * Triggers the splitting of spans into single cell spans in the underlying data model.
+   * 
+   * @param selectedCoordinates a set of the {@link PositionCoordinate}s of the currently selected
+   *        cells
+   */
+  public void splitAnnotationSpans(Set<PositionCoordinate> selectedCoordinates) {
+    bodyDataProvider.splitAnnotationsSpans(selectedCoordinates);
+  }
+
+  /**
    * Creates a new column of the given type, with the given qualified annotation name, and adds it
    * to the list of columns at the given insertion index.
    * 
@@ -132,6 +143,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
     registerCommandHandler(new CreateSpanCommandHandler(this));
+    registerCommandHandler(new SplitSpanCommandHandler(this));
     registerCommandHandler(new AddColumnCommandHandler(this));
   }
 
