@@ -2088,31 +2088,34 @@ public class TestGridEditor {
   }
 
   /**
+   * The condition where all objects in the cells at the passed column index and the passed row
+   * indices are not the same object as the one in the cell at the passed fixture row index.
+   * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    *
    */
   public class UnequalDataObjectsCondition extends DefaultCondition {
 
-    private final int rowIndex;
+    private final int fixtureRowIndex;
     private final NatTable natTable;
-    private final int[] columnIndices;
-    private final int fixtureColumnIndex;
+    private final int[] rowIndices;
+    private final int columnIndex;
     private final Object fixture;
 
-    public UnequalDataObjectsCondition(int rowIndex, int fixtureColumnIndex, NatTable natTable,
-        int... columnIndices) {
-      this.rowIndex = rowIndex;
-      this.fixtureColumnIndex = fixtureColumnIndex;
+    public UnequalDataObjectsCondition(int columnIndex, int fixtureRowIndex, NatTable natTable,
+        int... rowIndices) {
+      this.fixtureRowIndex = fixtureRowIndex;
+      this.columnIndex = columnIndex;
       this.natTable = natTable;
-      this.columnIndices = columnIndices;
-      this.fixture = natTable.getDataValueByPosition(this.fixtureColumnIndex, this.rowIndex);
+      this.rowIndices = rowIndices;
+      this.fixture = natTable.getDataValueByPosition(this.columnIndex, this.fixtureRowIndex);
     }
 
     @Override
     public boolean test() throws Exception {
-      for (int i = 0; i < columnIndices.length; i++) {
-        int idx = columnIndices[i];
-        if (natTable.getDataValueByPosition(idx, this.rowIndex) == fixture) {
+      for (int i = 0; i < rowIndices.length; i++) {
+        int idx = rowIndices[i];
+        if (natTable.getDataValueByPosition(columnIndex, idx) == fixture) {
           return false;
         }
       }
