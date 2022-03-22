@@ -1846,6 +1846,8 @@ public class TestGridEditor {
     assertEquals(span, natTable.getDataValueByPosition(4, 3));
     assertEquals(span, natTable.getDataValueByPosition(4, 11));
 
+    // Select span and click context menu
+    table.click(3, 4);
     table.contextMenu(3, 4).contextMenu("Split span").click();
     bot.waitUntil(new UnequalDataObjectsCondition(4, 2, natTable, 3, 11));
   }
