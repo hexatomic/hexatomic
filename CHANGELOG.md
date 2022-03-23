@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use consistent and accessible colour palette across all editors (#173)
 - Allow to select multiple annotations in graph editor as filter (#4)
+- Updated Eclipse platform to release 2021-12
+- Updated Tycho to 2.7.0
 
 ### Fixed
 
