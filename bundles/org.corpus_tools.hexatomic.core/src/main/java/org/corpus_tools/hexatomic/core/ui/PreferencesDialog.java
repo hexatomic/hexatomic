@@ -69,7 +69,7 @@ public class PreferencesDialog extends Dialog {
     label.setText("When checked, Hexatomic will automatically check for updates at each start.");
     checkbox = new Button(area, SWT.CHECK);
     checkbox.setText("Enable automatic update checks");
-    checkbox.setSelection(prefs.getBoolean("autoUpdate", false));
+    checkbox.setSelection(prefs.getBoolean("autoUpdate", true));
     return area;
   }
   

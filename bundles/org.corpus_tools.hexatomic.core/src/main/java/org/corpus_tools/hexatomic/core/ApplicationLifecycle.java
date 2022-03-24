@@ -106,7 +106,7 @@ public class ApplicationLifecycle {
       IEclipseContext context) {
     //check if preferences are set to autoupdate and if app was recently updated
     boolean justUpdated = prefs.getBoolean("justUpdated", false);
-    boolean autoUpdateEnabled = prefs.getBoolean("autoUpdate", false);
+    boolean autoUpdateEnabled = prefs.getBoolean("autoUpdate", true);
     if (!justUpdated && autoUpdateEnabled) {
       //add listener to perform updates as soon as workbench is created
       eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, 
