@@ -115,7 +115,7 @@ public class ApplicationLifecycle {
             agent,
             sync,
             monitor,
-            null));
+              null, eventBroker));
     } else if (justUpdated) {
       prefs.putBoolean("justUpdated", false);
       try {

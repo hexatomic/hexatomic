@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.core.update;
 
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -30,6 +31,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
@@ -42,40 +44,38 @@ import org.osgi.service.prefs.BackingStoreException;
 
 
 public class UpdateRunner {
-  private static final org.slf4j.Logger log =
-      org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   @Inject
   ErrorService errorService;
-  
+
   /**
-  * Search for updates and perform them if wanted.
-  * 
-  * @param agent OSGi service to create an update operation.
-  * @param workbench current workbench to restart the application.
-  * @param monitor interface to show progress of update operation.
-  * @param shell The user interface shell.
-  * @param sync Helper class to execute code in the UI thread.
-  * 
-  */
-  public IStatus checkForUpdates(final IProvisioningAgent agent, 
-      final IWorkbench workbench,
-      IProgressMonitor monitor, final Shell shell, final UISynchronize sync) {
+   * Search for updates and perform them if wanted.
+   * 
+   * @param agent OSGi service to create an update operation.
+   * @param workbench current workbench to restart the application.
+   * @param monitor interface to show progress of update operation.
+   * @param shell The user interface shell.
+   * @param sync Helper class to execute code in the UI thread.
+   * @param events Allows to send events.
+   * 
+   */
+  public IStatus checkForUpdates(final IProvisioningAgent agent, final IWorkbench workbench,
+      IProgressMonitor monitor, final Shell shell, final UISynchronize sync, IEventBroker events) {
     final UpdateOperation operation = createUpdateOperation(agent);
     log.info("Update operation created");
-    //Check if there are Updates available
-    SubMonitor sub = SubMonitor.convert(monitor,
-        "Checking for application updates...", 200);
+    // Check if there are Updates available
+    SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
     final IStatus status = operation.resolveModal(sub.newChild(100));
     if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-      showMessage(shell, sync);
+      events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Hexatomic is up to date");
       return Status.CANCEL_STATUS;
     }
-    //create update job
+    // create update job
     ProvisioningJob provisioningJob = operation.getProvisioningJob(monitor);
-    
-    //run update job
+
+    // run update job
     if (provisioningJob != null) {
       configureProvisioningJob(provisioningJob, shell, sync, workbench);
       provisioningJob.schedule();
@@ -85,13 +85,12 @@ public class UpdateRunner {
       log.info("Couldn't find ProvisioningJob.");
       return Status.CANCEL_STATUS;
     }
-    
+
   }
 
-  
-  private void configureProvisioningJob(ProvisioningJob provisioningJob, 
-      final Shell shell, final UISynchronize sync,
-      final IWorkbench workbench) {
+
+  private void configureProvisioningJob(ProvisioningJob provisioningJob, final Shell shell,
+      final UISynchronize sync, final IWorkbench workbench) {
 
     // register a job change listener to track
     // installation progress and notify user upon success
@@ -100,8 +99,7 @@ public class UpdateRunner {
       public void done(IJobChangeEvent event) {
         if (event.getResult().isOK()) {
           sync.syncExec(() -> {
-            boolean restart = MessageDialog.openQuestion(shell, 
-                "Updates installed, restart?",
+            boolean restart = MessageDialog.openQuestion(shell, "Updates installed, restart?",
                 "Updates have been installed. Do you want to restart?");
             if (restart) {
               prefs.putBoolean("justUpdated", true);
@@ -113,35 +111,26 @@ public class UpdateRunner {
               workbench.restart();
             }
           });
-        } 
+        }
         super.done(event);
       }
     });
   }
-  
-  
-  
+
+
+
   private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(() ->
-        MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob", 
-          "Did you start Update from within the Eclipse IDE?"));
+    sync.syncExec(() -> MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob",
+        "Did you start Update from within the Eclipse IDE?"));
   }
-  
+
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
     ProvisioningSession session = new ProvisioningSession(agent);
     log.info("Provisioning session created");
     // update all user-visible installable units
-    return new UpdateOperation(session);    
+    return new UpdateOperation(session);
   }
 
-
-  
-  private void showMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(() -> 
-        MessageDialog.openWarning(parent, "No update",
-          "No updates for the current installation have been found."));
-  }
-  
 }
 
 

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
@@ -34,19 +35,21 @@ public class UpdateHandler {
   
   /**
    * Execute Update search.
+   * 
    * @param agent OSGi service to create an update operation.
    * @param shell The user interface shell.
    * @param sync Helper class to execute code in the UI thread.
    * @param workbench current workbench to restart the application.
+   * @param events Allows to send events.
    */
   @Execute
   public void execute(final IProvisioningAgent agent, final Shell shell, final UISynchronize sync,
-      final IWorkbench workbench) {
+      final IWorkbench workbench, IEventBroker events) {
     Job updateJob = new Job("Update Job") {
       @Override
       protected IStatus run(final IProgressMonitor monitor) {
         UpdateRunner ur = new UpdateRunner();
-        return ur.checkForUpdates(agent,workbench, monitor, shell, sync);
+        return ur.checkForUpdates(agent, workbench, monitor, shell, sync, events);
       }
     };
     updateJob.schedule();

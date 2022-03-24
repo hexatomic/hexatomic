@@ -38,11 +38,13 @@ public class AppStartupCompleteEventHandler implements EventHandler {
   IProvisioningAgent agent;
   UISynchronize sync;
   IProgressMonitor monitor;
-  IWorkbench workbench; 
+  IWorkbench workbench;
   Shell shell;
+  IEventBroker events;
 
   /**
    * Create instance of AppStartupCompleteEventHandler.
+   * 
    * @param eventBroker Event broker service to unsubscribe from subscribed event
    * @param context Context of application to recieve workbench
    * @param agent OSGi service to create an update operation
@@ -50,23 +52,20 @@ public class AppStartupCompleteEventHandler implements EventHandler {
    * @param monitor interface to show progress of update operation
    * @param shell The user interface shell.
    */
-  public AppStartupCompleteEventHandler(
-      IEventBroker eventBroker, 
-      IEclipseContext context,
-      IProvisioningAgent agent,
-      UISynchronize sync,
-      IProgressMonitor monitor,
-      Shell shell) {
+  public AppStartupCompleteEventHandler(IEventBroker eventBroker, IEclipseContext context,
+      IProvisioningAgent agent, UISynchronize sync, IProgressMonitor monitor, Shell shell,
+      IEventBroker events) {
     this.eventBroker = eventBroker;
     this.context = context;
     this.agent = agent;
     this.sync = sync;
-    this.monitor = monitor; 
+    this.monitor = monitor;
     this.shell = shell;
+    this.events = events;
   }
- 
-  
-  @Override 
+
+
+  @Override
   public void handleEvent(Event event) {
     eventBroker.unsubscribe(this);
     this.workbench = context.get(IWorkbench.class);
@@ -74,9 +73,9 @@ public class AppStartupCompleteEventHandler implements EventHandler {
       @Override
       protected IStatus run(final IProgressMonitor monitor) {
         UpdateRunner ur = new UpdateRunner();
-        return ur.checkForUpdates(agent,workbench, monitor, shell, sync);
+        return ur.checkForUpdates(agent, workbench, monitor, shell, sync, events);
       }
     };
     updateJob.schedule();
-  }  
+  }
 }
