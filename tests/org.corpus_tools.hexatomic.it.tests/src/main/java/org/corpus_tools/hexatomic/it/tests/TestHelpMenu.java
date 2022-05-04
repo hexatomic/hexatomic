@@ -1,7 +1,8 @@
 package org.corpus_tools.hexatomic.it.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -38,22 +39,22 @@ class TestHelpMenu {
     aboutShell.bot().label("Hexatomic").isVisible();
     aboutShell.bot().button("OK").click();
   }
-  
+
   @Test
   void testOpenUpdateConfiguration() {
     SWTBotMenu helpMenu = bot.menu("Help");
     assertNotNull(helpMenu.menu("Update"));
   }
-  
+
   @Test
   void testOpenPreferenceDialog() {
     SWTBotMenu helpMenu = bot.menu("Help");
     helpMenu.menu("Preferences").click();
     SWTBotShell preferencesShell = bot.shell("Enable startup checks");
-    preferencesShell.bot().label(
-        "When checked, Hexatomic will automatically check for updates at each start.")
-    .isVisible();
-    boolean autoUpdatePreSelect = prefs.getBoolean("autoUpdate", false);
+    assertTrue(preferencesShell.bot()
+        .label("When checked, Hexatomic will automatically check for updates at each start.")
+        .isVisible());
+    boolean autoUpdatePreSelect = prefs.getBoolean("autoUpdate", true);
     if (preferencesShell.bot().checkBox().isChecked()) {
       preferencesShell.bot().checkBox().deselect();
     } else {
@@ -61,8 +62,8 @@ class TestHelpMenu {
     }
     preferencesShell.bot().button("OK").click();
     boolean autoUpdatePostSelect = prefs.getBoolean("autoUpdate", false);
-    assertTrue("Preference not set", (autoUpdatePreSelect != autoUpdatePostSelect));
-    
-  }  
-  
+    assertNotEquals(autoUpdatePreSelect, autoUpdatePostSelect);
+
+  }
+
 }
