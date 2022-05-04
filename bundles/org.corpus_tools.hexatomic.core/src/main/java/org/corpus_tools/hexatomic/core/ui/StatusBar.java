@@ -122,9 +122,7 @@ public class StatusBar {
 
       @Override
       public void run() {
-        sync.syncExec(() -> {
-          lblPermanentMessage.setForeground(oldColor);
-        });
+        sync.syncExec(() -> lblPermanentMessage.setForeground(oldColor));
       }
     }, 500);
 
