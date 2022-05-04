@@ -9,6 +9,9 @@ There are two ways to update Hexatomic. You can either update it manually or ena
 2. Select *Update*
 ![Search for updates manually](./selectUpdate.png)
 
+This will check if a new update is available.
+If not, a message in the status bar will be displayed, that there is no update available.
+
 ### Auto-updates at startup
 1. Click on *Help* in the main menu.
 2. Select *Preferences*.
@@ -19,6 +22,6 @@ There are two ways to update Hexatomic. You can either update it manually or ena
    
 ## Perform updates
 
-1. If there are updates available, they will be performed automatically. Otherwise you will be informed that there are no updates available.
+1. If there are updates available, you are asked if you want to install it. Otherwise you will be informed that there are no updates available.
 2. After successful installation, Hexatomic has to be restarted to apply the update. You will be asked if you want to restart. If you have unsaved changes, save them first and perform the restart manually.
 
