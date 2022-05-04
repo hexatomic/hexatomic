@@ -77,9 +77,16 @@ public class UpdateRunner {
 
     // run update job
     if (provisioningJob != null) {
-      configureProvisioningJob(provisioningJob, shell, sync, workbench);
-      provisioningJob.schedule();
-      return Status.OK_STATUS;
+      boolean performUpdate =
+          MessageDialog.openQuestion(shell, "Update available. Do you want to install this update?",
+              "Updates have been installed. Do you want to restart?");
+      if (performUpdate) {
+        configureProvisioningJob(provisioningJob, shell, sync, workbench);
+        provisioningJob.schedule();
+        return Status.OK_STATUS;
+      } else {
+        return Status.CANCEL_STATUS;
+      }
     } else {
       showProvisioningMessage(shell, sync);
       log.info("Couldn't find ProvisioningJob.");
