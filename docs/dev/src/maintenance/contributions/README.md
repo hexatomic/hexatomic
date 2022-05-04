@@ -58,22 +58,23 @@ The reason for this is that *external* pull requests should never be afforded th
 2. **Test a local checkout of the pull request:** Check out the pull request locally by cloning its source repository into a new local directory, and pulling and switching to its source branch. You may then use the IDE to review the changes and their interrelations and context more comfortably together with the view on the changes that GitHub provides.
 3. **Build and run the pull request version of Hexatomic locally:** Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.
 
-##### Manual regression tests
-
-The update functionality of Hexatomic can't be tested automatically.
-In addition to manually checking the changes of the pull request, you should also check that 
-
-1. that there is a status in the lower toolbar ("Hexatomic is up to date") on start up which shows that the update check has been executed, and
-2. clicking on the *Help* menu item and then *Update* triggers another update check (the status message in the toolbar should be highlighted by changing its color for a moment).
-
-In case that the pull request is related to the update functionality itself, you should also check the scenario that a new update is available.
-
 ##### Manually testing *internal*, trusted pull requests
 
 To avoid potential duplication of code review, you may change the manual testing steps for internal pull requests as follows.
 
 1. **Review a local checkout of the pull request:** Check out the pull request locally by pulling and switching to its source branch. Use the IDE to review the changes and their interrelations and context comfortably, based on the list of changes on GitHub. 
 3. **Build and run the pull request version of Hexatomic locally:** Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.
+
+
+##### Manual regression tests
+
+The update functionality of Hexatomic can't be tested automatically.
+In addition to manually checking the changes of the pull request, you should also check that 
+
+1. that there is a **status in the lower toolbar** ("Hexatomic is up to date") on start up which shows that the update check has been executed, and
+2. clicking on the *Help* menu item and then *Update* triggers another **manual update check** (the status message in the toolbar should be highlighted by changing its color for a moment).
+
+In case that the pull request is related to the update functionality itself, you should also check the scenario that a new update is available.
 
 ### Moving pull requests forward
 
