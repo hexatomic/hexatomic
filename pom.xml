@@ -272,6 +272,7 @@
 						<configuration>
 							<excludes>>
 								<exclude>**/org/corpus_tools/hexatomic/core/update/UpdateRunner.class</exclude>
+								<exclude>>**/org/corpus_tools/hexatomic/core/handlers/UpdateHandler.class</exclude>	
 							</excludes>
 						</configuration>
 					</plugin>
