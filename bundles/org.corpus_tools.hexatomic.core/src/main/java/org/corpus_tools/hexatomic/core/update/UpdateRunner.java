@@ -77,9 +77,8 @@ public class UpdateRunner {
 
     // run update job
     if (provisioningJob != null) {
-      boolean performUpdate =
-          MessageDialog.openQuestion(shell, "Update available. Do you want to install this update?",
-              "Updates have been installed. Do you want to restart?");
+      boolean performUpdate = MessageDialog.openQuestion(shell, "Update available.",
+          "Do you want to install the available update?");
       if (performUpdate) {
         configureProvisioningJob(provisioningJob, shell, sync, workbench);
         provisioningJob.schedule();
