@@ -78,8 +78,8 @@ In case that the pull request is related to the update functionality itself, you
 
 1. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines (but replace `<SRC>` with the location of your Hexatomic source code directory)
 ```
-  addRepository(type:0,location:file{#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
-  addRepository(type:1,location:file{#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
+  addRepository(type:0,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
+  addRepository(type:1,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
 ```
 2. Build the product by executing `mvn -DskipTests package`
 3. Unzip the product file (e.g. `target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory
