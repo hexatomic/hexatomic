@@ -86,7 +86,7 @@ In case that the pull request is related to the update functionality itself, you
 4. Change the version number of Hexatomic to a large version number `mvn tycho-versions:set-version -DnewVersion=1999.0.0`
 5. Build the update site by executing `mvn -DskipTests package`
 6. Run Hexatomic from the temporary directory and **check that there is a message in the toolbar about an available update**
-7. **Execute the update**
+7. **Apply the update**
 8. Revert all local changes in the source code repository using Git
 
 ### Moving pull requests forward
