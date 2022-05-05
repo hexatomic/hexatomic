@@ -77,13 +77,13 @@ In addition to manually checking the changes of the pull request, you should als
 In case that the pull request is related to the update functionality itself, you should also check the scenario that a new update is available.
 
 1. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines (but replace `<SRC>` with the location of your Hexatomic source code directory)
-```
+```plain
   addRepository(type:0,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
   addRepository(type:1,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
 ```
 2. Build the product by executing `mvn -DskipTests package`
 3. Unzip the product file (e.g. `target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory
-4. Change the version number of Hexatomic to a large version number `mvn tycho-versions-plugin:set-version -DnewVersion=1999.0.0`
+4. Change the version number of Hexatomic to a large version number `mvn tycho-versions:set-version -DnewVersion=1999.0.0`
 5. Build the update site by executing `mvn -DskipTests package`
 6. Run Hexatomic from the temporary directory and **check that there is a message in the toolbar about an available update**
 7. **Execute the update**
