@@ -2,7 +2,6 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.IOException;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -27,7 +26,7 @@ class TesttStatusBar {
   void setup() {
     TestHelper.setKeyboardLayout();
     IEclipseContext ctx = TestHelper.getEclipseContext();
-    events = ctx.get(IEventBroker.class);;
+    events = ctx.get(IEventBroker.class);
     assertNotNull(events);
   }
 
@@ -35,7 +34,7 @@ class TesttStatusBar {
    * Test that sending status events to the broker will update the label.
    */
   @Test
-  void testCustomStatusMessage() throws IOException {
+  void testCustomStatusMessage() {
     events.send(Topics.TOOLBAR_STATUS_MESSAGE, "This is an example");
     bot.waitUntil(new DefaultCondition() {
       
