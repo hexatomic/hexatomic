@@ -86,17 +86,14 @@ In case that the pull request is related to the update functionality itself, you
 mvn -DskipTests package
 ```
 3. Unzip the product file (e.g. `releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory
-4. Change the version number of Hexatomic to a large version number
+4. Change the version number of Hexatomic to a large version number and build the update site by executing
 ```bash
-mvn tycho-versions:set-version -DnewVersion=1999.0.0
-```
-5. Build the update site by executing
-```bash
+mvn tycho-versions:set-version -DnewVersion=1999.0.0 
 mvn -DskipTests package
 ```
-6. Run Hexatomic from the temporary directory and **check that there is a message in the toolbar about an available update**
-7. **Apply the update**
-8. Revert all local changes in the source code repository using Git
+5. Run Hexatomic from the temporary directory and **check that there is a message in the toolbar about an available update**
+6. **Apply the update**
+7. Revert all local changes in the source code repository using Git
 
 ### Moving pull requests forward
 
