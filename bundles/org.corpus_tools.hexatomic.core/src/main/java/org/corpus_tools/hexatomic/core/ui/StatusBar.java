@@ -55,6 +55,8 @@ public class StatusBar {
 
   private StackLayout progressLayout;
 
+  private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
+
   private final Timer timer = new Timer();
 
   @PostConstruct
@@ -65,6 +67,7 @@ public class StatusBar {
     parent.setLayout(glParent);
 
     lblPermanentMessage = new Label(parent, SWT.NONE);
+    lblPermanentMessage.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, "permanent-status-message");
     lblPermanentMessage.setText("");
     lblPermanentMessage.setAlignment(SWT.LEFT);
     lblPermanentMessage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
