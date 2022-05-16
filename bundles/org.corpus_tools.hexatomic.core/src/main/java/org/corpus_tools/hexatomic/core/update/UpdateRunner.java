@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
@@ -64,7 +65,7 @@ public class UpdateRunner {
   public IStatus checkForUpdates(final IProvisioningAgent agent, final IWorkbench workbench,
       IProgressMonitor monitor, final Shell shell, final UISynchronize sync, IEventBroker events) {
     final UpdateOperation operation = createUpdateOperation(agent);
-    log.info("Update operation created");
+    log.debug("Update operation created");
     // Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
     final IStatus status = operation.resolveModal(sub.newChild(100));
@@ -72,14 +73,21 @@ public class UpdateRunner {
       events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Hexatomic is up to date");
       return Status.CANCEL_STATUS;
     }
+    log.debug("Update status: {} ({})", status.getMessage(), status.getCode());
+
     // create update job
     ProvisioningJob provisioningJob = operation.getProvisioningJob(monitor);
+    log.debug("provisioningJob={}", provisioningJob);
 
     // run update job
     if (provisioningJob != null) {
-      boolean performUpdate = MessageDialog.openQuestion(shell, "Update available.",
-          "Do you want to install the available update?");
-      if (performUpdate) {
+      log.info("Update available!");
+      final AtomicBoolean performUpdate = new AtomicBoolean(false);
+      sync.syncExec(() -> {
+        performUpdate.set(MessageDialog.openQuestion(shell, "Update available.",
+            "Do you want to install the available update?"));
+      });
+      if (performUpdate.get()) {
         configureProvisioningJob(provisioningJob, shell, sync, workbench);
         provisioningJob.schedule();
         return Status.OK_STATUS;
@@ -88,7 +96,7 @@ public class UpdateRunner {
       }
     } else {
       showProvisioningMessage(shell, sync);
-      log.info("Couldn't find ProvisioningJob.");
+      log.warn("Couldn't find ProvisioningJob.");
       return Status.CANCEL_STATUS;
     }
 
