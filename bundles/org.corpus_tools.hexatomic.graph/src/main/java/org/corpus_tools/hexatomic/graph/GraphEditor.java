@@ -269,7 +269,6 @@ public class GraphEditor {
 
     Composite filterByType = new Composite(filterExpandBar, SWT.NONE);
     filterByType.setLayout(RowLayoutFactory.swtDefaults().type(SWT.VERTICAL).create());
-    filterByType.setLayoutData(filterByType);
 
     btnIncludeSpans = new Button(filterByType, SWT.CHECK);
     btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
