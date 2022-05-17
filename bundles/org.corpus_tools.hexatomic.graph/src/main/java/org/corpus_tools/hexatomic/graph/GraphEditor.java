@@ -105,6 +105,7 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -220,6 +221,27 @@ public class GraphEditor {
     // Weights can only be set after all items of the sash have been added
     graphSash.setWeights(72, 28);
 
+    constructFilterView(sideBar);
+    constructSegmentFilter(sideBar);
+    constructGraphParams(sideBar);
+
+    registerGraphControlListeners();
+
+    viewer.getControl().forceFocus();
+
+    Document consoleDocument = new Document();
+    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
+    consoleViewer.setDocument(consoleDocument);
+    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
+    consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
+    mainSash.setWeights(85, 15);
+
+    SDocumentGraph graph = getGraph();
+    boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();
+    updateView(true, scrollToFirstToken);
+  }
+
+  private void constructFilterView(Composite sideBar) {
     Group filterGroup = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
     filterGroup.setLayoutData(GridDataFactory.defaultsFor(filterGroup).align(SWT.FILL, SWT.TOP)
         .grab(true, false).create());
@@ -272,7 +294,44 @@ public class GraphEditor {
     annoFilterExpandBar.setText("Node Annotations");
     annoFilterExpandBar.setHeight(ANNO_FILTER_HEIGHT);
     annoFilterExpandBar.setControl(annoFilterWidget);
+  }
 
+  private void constructGraphParams(Composite sideBar) {
+    ExpandBar paramExpandBar = new ExpandBar(sideBar, SWT.NONE);
+    paramExpandBar.addExpandListener(new ExpandListener() {
+
+      @Override
+      public void itemExpanded(ExpandEvent e) {
+        relayout();
+      }
+
+      @Override
+      public void itemCollapsed(ExpandEvent e) {
+        relayout();
+      }
+
+      private void relayout() {
+        Display.getDefault().timerExec(1, sideBar::layout);
+      }
+    });
+
+    Composite layoutParamComposite = new Composite(paramExpandBar, SWT.NONE);
+    layoutParamComposite.setLayout(RowLayoutFactory.swtDefaults().type(SWT.VERTICAL).create());
+    Slider percentMarginSlider = new Slider(layoutParamComposite, SWT.HORIZONTAL);
+    percentMarginSlider.setMinimum(0);
+    percentMarginSlider.setMaximum(100);
+    percentMarginSlider.setSelection(18);
+    percentMarginSlider.setIncrement(1);
+
+    ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
+    paramExpandItem.setText("Layout Parameter");
+    paramExpandItem.setHeight(200);
+    paramExpandItem.setControl(layoutParamComposite);
+
+
+  }
+
+  private void constructSegmentFilter(Composite sideBar) {
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     textRangeTable.setHeaderVisible(true);
@@ -288,21 +347,6 @@ public class GraphEditor {
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
     btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
-
-    registerGraphControlListeners();
-
-    viewer.getControl().forceFocus();
-
-    Document consoleDocument = new Document();
-    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
-    consoleViewer.setDocument(consoleDocument);
-    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
-    consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
-    mainSash.setWeights(85, 15);
-
-    SDocumentGraph graph = getGraph();
-    boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();
-    updateView(true, scrollToFirstToken);
   }
 
   private void registerGraphControlListeners() {
