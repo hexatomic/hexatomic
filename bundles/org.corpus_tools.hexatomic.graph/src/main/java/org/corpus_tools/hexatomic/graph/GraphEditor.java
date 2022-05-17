@@ -46,6 +46,7 @@ import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.graph.internal.AnnotationFilterWidget;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
+import org.corpus_tools.hexatomic.graph.internal.GraphLayoutParameterWidget;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphLayout;
@@ -105,7 +106,6 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -297,6 +297,7 @@ public class GraphEditor {
 
   private void constructGraphParams(Composite sideBar) {
     ExpandBar paramExpandBar = new ExpandBar(sideBar, SWT.NONE);
+    paramExpandBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     paramExpandBar.addExpandListener(new ExpandListener() {
 
       @Override
@@ -314,20 +315,12 @@ public class GraphEditor {
       }
     });
 
-    Composite layoutParamComposite = new Composite(paramExpandBar, SWT.NONE);
-    layoutParamComposite.setLayout(RowLayoutFactory.swtDefaults().type(SWT.VERTICAL).create());
-    Slider percentMarginSlider = new Slider(layoutParamComposite, SWT.HORIZONTAL);
-    percentMarginSlider.setMinimum(0);
-    percentMarginSlider.setMaximum(100);
-    percentMarginSlider.setSelection(18);
-    percentMarginSlider.setIncrement(1);
+    GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar);
 
     ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
     paramExpandItem.setText("Layout Parameter");
     paramExpandItem.setHeight(200);
-    paramExpandItem.setControl(layoutParamComposite);
-
-
+    paramExpandItem.setControl(widget);
   }
 
   private void constructSegmentFilter(Composite sideBar) {
