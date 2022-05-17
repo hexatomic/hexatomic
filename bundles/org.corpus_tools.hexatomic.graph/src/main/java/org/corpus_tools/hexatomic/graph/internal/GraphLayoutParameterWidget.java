@@ -20,9 +20,14 @@
 
 package org.corpus_tools.hexatomic.graph.internal;
 
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 
 /**
@@ -32,17 +37,42 @@ import org.eclipse.swt.widgets.Scale;
  */
 public class GraphLayoutParameterWidget extends Composite {
 
+  public static final String PARAM_CHANGED_TOPIC = "GRAPH_EDITOR/GRAPH_LAYOUT_PARAMETER/CHANGED";
 
   /**
    * Create a graph layout manipulation widget.
    * 
-   * @param parent The SWT parent composite
+   * @param parentComposite The SWT parent composite
+   * @param eventBroker Is used to post events whenever there is an update on the parameters.
    */
-  public GraphLayoutParameterWidget(Composite parent) {
-    super(parent, SWT.BORDER);
-    setLayout(new GridLayout(1, false));
+  public GraphLayoutParameterWidget(Composite parentComposite, final IEventBroker eventBroker) {
+    super(parentComposite, SWT.NONE);
+    setLayout(new GridLayout(3, false));
 
-    Scale scale = new Scale(this, SWT.NONE);
+    Label lblNewLabel = new Label(this, SWT.NONE);
+    lblNewLabel.setToolTipText(
+        "Vertical margin between nodes.\nThis is measure in \"times of the node height\".  So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, and for \"2\"  the margin is twice as high as the node height.");
+    lblNewLabel.setText("Vertical Margin");
+
+    Scale scalePercentMargin = new Scale(this, SWT.NONE);
+    scalePercentMargin.setMaximum(20);
+    scalePercentMargin.setSelection(8);
+    scalePercentMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+    Label lblPercentMargin = new Label(this, SWT.NONE);
+    lblPercentMargin.setText("0.00");
+
+    scalePercentMargin.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        double marginMultiplier = (((double) scalePercentMargin.getSelection()) / 10.0);
+        lblPercentMargin.setText("" + marginMultiplier);
+
+        if (eventBroker != null) {
+          eventBroker.post(PARAM_CHANGED_TOPIC, marginMultiplier + 1.0);
+        }
+      }
+    });
 
   }
 }

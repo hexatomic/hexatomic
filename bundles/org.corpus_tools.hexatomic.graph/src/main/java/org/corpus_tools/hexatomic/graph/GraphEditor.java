@@ -111,7 +111,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.ZestStyles;
-import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
@@ -179,6 +178,8 @@ public class GraphEditor {
 
   private AnnotationFilterWidget annoFilterWidget;
 
+  private SaltGraphLayout graphLayout;
+
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
   }
@@ -209,7 +210,8 @@ public class GraphEditor {
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
-    viewer.setLayoutAlgorithm(createLayout());
+    graphLayout = createLayout();
+    viewer.setLayoutAlgorithm(graphLayout);
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
     viewer.getGraphControl().setDragDetect(true);
@@ -315,7 +317,7 @@ public class GraphEditor {
       }
     });
 
-    GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar);
+    GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar, this.events);
 
     ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
     paramExpandItem.setText("Layout Parameter");
@@ -649,7 +651,7 @@ public class GraphEditor {
     return sortedRangesForDS;
   }
 
-  private LayoutAlgorithm createLayout() {
+  private SaltGraphLayout createLayout() {
 
     SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
 
@@ -814,6 +816,16 @@ public class GraphEditor {
   private void onCheckpointRestored(
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
     updateView(true, false);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onGraphLayoutParamChanged(
+      @UIEventTopic(GraphLayoutParameterWidget.PARAM_CHANGED_TOPIC) Object element) {
+    if (element instanceof Double) {
+      this.graphLayout.setPercentInnerNodeMargin((double) element);
+    }
+    updateView(false, false);
   }
 
   private class RootFilter extends ViewerFilter {
