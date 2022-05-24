@@ -81,7 +81,7 @@ jobs:
     - name: Pushes P2 repository to "updates" Git repository
       uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
       env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        API_TOKEN_GITHUB: ${{ secrets.HEXATOMIC_UPLOAD_TOKEN }}
       with:
         source_file: 'releng/org.corpus_tools.hexatomic.update/target/repository/'
         destination_repo: 'hexatomic/updates'
