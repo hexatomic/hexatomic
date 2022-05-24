@@ -71,7 +71,7 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy_p2:
-    name: Deploy P2 update secrets.GITHUB_TOKEN
+    name: Deploy P2 update site
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
