@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Deploy p2 repo for updates automatically for releases (#288) 
+
 ## [0.9.0] - 2022-05-24
 
 ### Added

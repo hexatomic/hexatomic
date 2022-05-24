@@ -70,6 +70,26 @@ jobs:
             draft: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy_p2:
+    name: Deploy P2 update secrets.GITHUB_TOKEN
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Create P2 repository with Maven
+      run: mvn -DskipTests clean install
+    - name: Pushes P2 repository to "updates" Git repository
+      uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+      with:
+        source_file: 'releng/org.corpus_tools.hexatomic.update/target/repository/'
+        destination_repo: 'hexatomic/updates'
+        # Change when we have a new major version
+        destination_folder: 'v0'
+        user_email: 'gh-actions@corpus-tools.org'
+        user_name: 'GitHub Action CI'
+        commit_message: 'Update documentation'
   deploy_documentation:
     name: Deploy documentation
     runs-on: ubuntu-20.04
