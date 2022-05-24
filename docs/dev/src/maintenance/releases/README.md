@@ -70,6 +70,7 @@ You can now make a release from this tag:
 5. Click the **Preview** tab and check if everything looks good.
 6. Click on the green **Publish release** button. You can always delete and re-create releases from tags if something goes wrong.
 7. Check if the release contains all "binaries", i.e., the product .zip files for all three major operating systems.
+8. An GitHub action should also automatically update the P2 repository. Run the old version of Hexatomic and check an update is found.
 
 ![Animation showing how to create a release on GitHub](release.gif)
 
