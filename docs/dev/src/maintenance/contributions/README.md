@@ -69,31 +69,32 @@ To avoid potential duplication of code review, you may change the manual testing
 ##### Manual regression tests
 
 The update functionality of Hexatomic can't be tested automatically.
-In addition to manually checking the changes of the pull request, you should also check that 
+In addition to manually checking the changes of the pull request, you should therefore also check that 
 
 1. that there is a **status in the lower toolbar** ("Hexatomic is up to date") on start up which shows that the update check has been executed, and
-2. clicking on the *Help* menu item and then *Update* triggers another **manual update check** (the status message in the toolbar should be highlighted by changing its color for a moment).
+2. that clicking on the *Help* menu item, and then *Update*, triggers another **manual update check** (the status message in the toolbar should be highlighted by changing its color for a moment).
 
 In case that the pull request is related to the update functionality itself, you should also check the scenario that a new update is available.
 
-1. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines (but replace `<SRC>` with the location of your Hexatomic source code directory)
+1. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines (but replace `<SRC>` with the location of your Hexatomic source code directory).
 ```plain
   addRepository(type:0,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
   addRepository(type:1,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
 ```
-2. Build the product by executing 
+2. Build the product by executing (from the root of your local source code repository)
 ```bash
 mvn -DskipTests package
 ```
-3. Unzip the product file (e.g. `releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory
-4. Change the version number of Hexatomic to a large version number and build the update site by executing
+3. Unzip the product file (e.g. `releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the *test instance*.
+4. In the *original* local Hexatomic source code repository, change the version number of Hexatomic to a large version number and build the update site by executing. This instance of Hexatomic now functions as the *update instance*.
 ```bash
 mvn tycho-versions:set-version -DnewVersion=1999.0.0 
 mvn -DskipTests package
 ```
-5. Run Hexatomic from the temporary directory and **check that there is a message in the toolbar about an available update**
+5. Run Hexatomic from the temporary directory (the *test instance*) and **check that there is a message in the toolbar about an available update**.
 6. **Apply the update**
-7. Revert all local changes in the source code repository using Git
+7. Manually check for an update via the *Help* > *Update* menu, and check that the status bar again reports that "Hexatomic is up to date".
+8. Revert all local changes in the source code repository using Git
 
 ### Moving pull requests forward
 
