@@ -64,6 +64,16 @@ public final class Topics {
   
   public static final String DOCUMENT_LOADED = "DOCUMENT_LOADED";
   
+  /**
+   * Send when the {@link UiStatusReport} has an update that should be shown.
+   */
   public static final String STATUS_UPDATE = "STATUS_UPDATE";
+  
+  /**
+   * Use this to send subliminal but permanent status messages that should be shown in the status
+   * toolbar at the bottom. Only the last message will be displayed and newer messages will
+   * overwrite it. The argument is the message as string.
+   */
+  public static final String TOOLBAR_STATUS_MESSAGE = "TOOLBAR_STATUS_MESSAGE";
   
 }

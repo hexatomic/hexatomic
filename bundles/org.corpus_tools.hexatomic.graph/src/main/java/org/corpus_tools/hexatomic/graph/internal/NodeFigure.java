@@ -21,7 +21,12 @@
 
 package org.corpus_tools.hexatomic.graph.internal;
 
+import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SNode;
@@ -29,38 +34,54 @@ import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
-import org.eclipse.draw2d.GroupBoxBorder;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
+import org.eclipse.jface.resource.FontDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.widgets.Display;
 
 public class NodeFigure extends Figure {
 
 
   private final String caption;
+  private final Font boldFont;
 
   /**
    * Creates a new node figure for a given salt node.
    * 
    * @param item The salt node.
+   * @param fontMetrics Metrics describing the font used to render the text.
    */
-  public NodeFigure(SNode item) {
+  public NodeFigure(SNode item, FontMetrics fontMetrics, AnnotationFilter filter) {
 
-    setFont(Display.getDefault().getSystemFont());
+    Font font = Display.getCurrent().getSystemFont();
+    FontDescriptor boldDescriptor = FontDescriptor.createFrom(font).setStyle(SWT.BOLD);
+    this.boldFont = boldDescriptor.createFont(Display.getCurrent());
+
+    setFont(font);
     caption = item.getName();
 
 
     FlowLayout layout = new FlowLayout(false);
     setLayoutManager(layout);
-    GroupBoxBorder border = new GroupBoxBorder(caption);
-    border.setTextColor(ColorConstants.gray);
+    NodeBorder border = new NodeBorder(caption, fontMetrics.getHeight());
+
     setBorder(border);
     setOpaque(true);
+    setBackgroundColor(ColorConstants.white);
+    setForegroundColor(ColorConstants.black);
 
-    if (item instanceof SToken) {
-      setBackgroundColor(ColorConstants.lightGreen);
-    } else {
-      setBackgroundColor(ColorConstants.white);
-
+    if (item instanceof SSpan) {
+      setForegroundColor(ColorPalette.BLUISH_GREEN);
+      border.setLineStyle(Graphics.LINE_DOT);
+    } else if (item instanceof SStructure) {
+      setForegroundColor(ColorPalette.VERMILLION);
+      border.setLineStyle(Graphics.LINE_SOLID);
+    } else if (item instanceof SToken) {
+      setForegroundColor(ColorConstants.black);
+      border.setLineColor(ColorPalette.GRAY);
     }
 
     if (item instanceof SToken) {
@@ -74,14 +95,19 @@ public class NodeFigure extends Figure {
           // but the actual text is not updated yet
         }
         Label l = new Label(coveredText);
+        l.setFont(boldFont);
         add(l);
       }
     }
 
+    Optional<Set<String>> filteredAnnotations = filter.getFilter();
+
     TreeMap<String, String> labelsByQName = new TreeMap<>();
     for (SAnnotation l : item.getAnnotations()) {
       String qname = SaltUtil.createQName(l.getNamespace(), l.getName());
-      labelsByQName.put(qname, qname + "=" + l.getValue());
+      if (filteredAnnotations.isEmpty() || filteredAnnotations.get().contains(qname)) {
+        labelsByQName.put(qname, qname + "=" + l.getValue());
+      }
     }
 
 

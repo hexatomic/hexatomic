@@ -6,6 +6,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2022-05-24
+
+### Added
+
+- Add keyboard shortcut to create spans in Grid Editor (#243)
+- Add "update functionality" in the "Help Menu"
+- Add "Preferences" dialog to allow auto-updates at startup in the "Help Menu"
+- Add overview tables for grid editor keyboard shortcuts to user documentation (#361)
+- Add support for adding new annotation columns via context menu and keyboard shortcuts to Grid Editor (#358)
+- Add command to change the covered text of a token in the Graph Editor (#373)
+
+### Changed
+
+- Use consistent and accessible colour palette across all editors (#173)
+- Allow to select multiple annotations in graph editor as filter (#4)
+- Updated Eclipse platform to release 2021-12
+- Updated Tycho to 2.7.0
+
+### Fixed
+
+- Optimize column lifecycle in the Grid Editor, so that emptied columns don't disappear (#258, #346)
+- Let annotation rename dialog display the actual annotation name, not the display name of the column (#259)
+- Graph Editor did not update view when an annotation value was changed (#362)
+- Checkstyle Eclipse plugin update site was wrong (#323)
+
+
 ## [0.8.0] - 2021-11-16
 
 ### Added
@@ -204,7 +230,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/hexatomic/hexatomic/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/hexatomic/hexatomic/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/hexatomic/hexatomic/compare/v0.6.1...v0.7.0

@@ -58,7 +58,7 @@ public class TestHelper {
     }
     fixtureProvider.setGraph(graph);
     STextualDS text = graph.getTextualDSs().get(0);
-    fixtureProvider.setDsAndResolveGraph(text);
+    fixtureProvider.resolveDataSource(text);
     return fixtureProvider;
   }
 

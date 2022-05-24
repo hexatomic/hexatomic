@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.corpus_tools</groupId>
 	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
-	<version>0.8.0</version>
+	<version>0.9.0</version>
 	<packaging>pom</packaging>
 	<!-- SCM -->
 	<scm>
@@ -16,8 +16,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
-		<tycho.version>2.1.0</tycho.version>
-		<jacoco.version>0.8.5</jacoco.version>
+		<tycho.version>2.7.0</tycho.version>
+		<jacoco.version>0.8.8</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
 	<!-- MODULES -->
@@ -149,7 +149,7 @@
 						<artifact>
 							<groupId>org.corpus_tools</groupId>
 							<artifactId>org.corpus_tools.hexatomic.target</artifactId>
-							<version>0.8.0</version>
+							<version>0.9.0</version>
 						</artifact>
 					</target>
 		            <resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
@@ -215,7 +215,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.1.2</version>
 				<configuration>
 					<!-- This is a default configuration available on the classpath of the 
 						checkstyle plugin -->
@@ -237,7 +237,7 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>8.29</version>
+						<version>9.2</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -269,6 +269,12 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<excludes>>
+								<exclude>**/org/corpus_tools/hexatomic/core/update/UpdateRunner.class</exclude>
+								<exclude>>**/org/corpus_tools/hexatomic/core/handlers/UpdateHandler.class</exclude>	
+							</excludes>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

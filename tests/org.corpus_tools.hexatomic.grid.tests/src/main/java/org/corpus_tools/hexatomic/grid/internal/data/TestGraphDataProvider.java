@@ -100,7 +100,7 @@ class TestGraphDataProvider {
     STextualDS ds = mock(STextualDS.class);
     SDocumentGraph graph = mock(SDocumentGraph.class);
     fixture.setGraph(graph);
-    fixture.setDsAndResolveGraph(ds);
+    fixture.resolveDataSource(ds);
     assertEquals(null, fixture.getDataValue(0, 0));
     assertEquals(null, fixture.getDataValue(0, 1));
     fixture.getDataValue(1, 1);
@@ -116,7 +116,7 @@ class TestGraphDataProvider {
   @Test
   final void testGetDataValueDefaultExample() {
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
 
     List<SToken> sortedTokens = exampleGraph.getSortedTokenByText();
     assertEquals(sortedTokens.get(0), fixture.getDataValue(0, 0));
@@ -173,7 +173,7 @@ class TestGraphDataProvider {
   @Test
   final void testGetDataValueOverlappingExample() {
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
 
     List<SToken> tokens = overlappingExampleGraph.getSortedTokenByText();
 
@@ -240,11 +240,11 @@ class TestGraphDataProvider {
     fixture.setGraph(exampleGraph);
     assertEquals(0, fixture.getColumnCount());
 
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
     assertEquals(4, fixture.getColumnCount());
 
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
     assertEquals(5, fixture.getColumnCount());
   }
 
@@ -258,11 +258,11 @@ class TestGraphDataProvider {
     fixture.setGraph(exampleGraph);
     assertEquals(0, fixture.getRowCount());
 
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
     assertEquals(11, fixture.getRowCount());
 
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
     assertEquals(5, fixture.getRowCount());
   }
 
@@ -276,7 +276,7 @@ class TestGraphDataProvider {
   @Test
   final void testSetDataValue() {
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
 
     fixture.setDataValue(2, 2, "test");
     SToken token = exampleGraph.getSortedTokenByText().get(2);
@@ -296,7 +296,7 @@ class TestGraphDataProvider {
   @Test
   final void testSetDataValueThrowsException() {
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
     fixture.setDataValue(20, 1, "test");
     verify(errorService).handleException(
         matches("Index: 20, Size: 4|Index 20 out of bounds for length 4"),
@@ -309,7 +309,7 @@ class TestGraphDataProvider {
   @Test
   final void testColumnTypes() {
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
 
     assertTrue(fixture.getDataValue(3, 0) instanceof SSpan);
     assertEquals(ColumnType.SPAN_ANNOTATION, fixture.getColumns().get(3).getColumnType());
@@ -322,7 +322,7 @@ class TestGraphDataProvider {
   @Test
   final void testCreateAnnotationOnEmptySpanCell() {
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
 
     assertNull(fixture.getDataValue(4, 0));
     assertNull(fixture.getDataValue(4, 0));
@@ -340,7 +340,7 @@ class TestGraphDataProvider {
   @Test
   final void testCreateAnnotationOnEmptyTokenCell() {
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
 
     assertNull(fixture.getDataValue(1, 1));
     assertNull(fixture.getDataValue(1, 1));
@@ -354,7 +354,7 @@ class TestGraphDataProvider {
   @Test
   final void testRemoveAnnotationOnSetToEmpty() {
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
 
     // Remove single cell span annotation and delete span
     final SStructuredNode originalNodeToRemove1 = fixture.getDataValue(2, 0);
@@ -381,7 +381,7 @@ class TestGraphDataProvider {
   @Test
   final void testAddNewSpanAnnotationOnEmptyCellWithNamespace() {
     fixture.setGraph(overlappingExampleGraph);
-    fixture.setDsAndResolveGraph(overlappingExampleText);
+    fixture.resolveDataSource(overlappingExampleText);
 
     assertNull(fixture.getDataValue(4, 0));
     fixture.setDataValue(4, 0, "ABC");
@@ -404,7 +404,7 @@ class TestGraphDataProvider {
     exampleGraph.createToken(exampleText, 56, 59);
     final SToken token = exampleGraph.createToken(exampleText, 60, 62);
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
 
     assertNull(fixture.getDataValue(3, 12));
     fixture.setDataValue(3, 12, "ABC");
@@ -423,7 +423,7 @@ class TestGraphDataProvider {
   @Test
   final void testBulkRenameAnnotations() {
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
 
     SStructuredNode token1 = fixture.getDataValue(1, 2);
     SStructuredNode token2 = fixture.getDataValue(1, 4);
@@ -459,7 +459,7 @@ class TestGraphDataProvider {
   @Test
   final void testBulkRenameAnnotationsForMultiCellSpan() {
     fixture.setGraph(exampleGraph);
-    fixture.setDsAndResolveGraph(exampleText);
+    fixture.resolveDataSource(exampleText);
 
     SStructuredNode multiCellSpan = fixture.getDataValue(3, 1);
     assertEquals(TOPIC, multiCellSpan.getAnnotation(INF_STRUCT).getValue());

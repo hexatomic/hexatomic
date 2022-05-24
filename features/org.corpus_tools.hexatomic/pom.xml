@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.features</artifactId>
-        <version>0.8.0</version>
+        <version>0.9.0</version>
     </parent>
 
     <build>
@@ -17,13 +17,13 @@
             <plugin>
                 <groupId>org.corpus-tools</groupId>
                 <artifactId>cff-maven-plugin</artifactId>
-                <version>0.4.0</version>
+                <version>0.5.0</version>
                 <configuration>
                     <includeEmail>false</includeEmail>
                     <input>${maven.multiModuleProjectDirectory}/releng/templates/CITATION.cff</input>
                     <output>${maven.multiModuleProjectDirectory}/CITATION.cff</output>
                     <thirdPartyFolder>${maven.multiModuleProjectDirectory}/THIRD-PARTY</thirdPartyFolder>
-                    <p2ReconstructGroupId>false</p2ReconstructGroupId>
+                    <p2ReconstructGroupId>true</p2ReconstructGroupId>
                     <referenceTemplates>
                         <referenceTemplate>
                             <pattern>.*:org\.hamcrest\..*</pattern>
@@ -95,6 +95,11 @@
                         <referenceTemplate>
                             <pattern>.*:com\.sun\.jna\..*</pattern>
                             <template>${maven.multiModuleProjectDirectory}/releng/templates/jna.yml</template>
+                        </referenceTemplate>
+                        <!-- XMLUnit is bundled inside pepper-framework -->
+                        <referenceTemplate>
+                        	<pattern>p2\.eclipse-plugin:org\.corpus-tools\.pepper-framework:jar:lib/xmlunit-1\.5.*</pattern>
+                        	<template>${maven.multiModuleProjectDirectory}/releng/templates/xmlunit.yml</template>
                         </referenceTemplate>
                     </referenceTemplates>
                     <ignoredArtifacts>

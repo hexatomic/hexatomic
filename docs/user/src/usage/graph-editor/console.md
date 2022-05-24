@@ -11,7 +11,8 @@ Hexatomics command line syntax is similar to the one of [GraphAnno](https://gith
 Currently, the following commands are supported.
 
 > - [`t`: Tokenize](#tokenize-t)
-> - [`tb`/`ta`: Tokenize before /after a token](`#tokenize-before-tb-and-after-ta-a-given-token`)
+> - [`tb`/`ta`: Tokenize before /after a token](#tokenize-before-tb-and-after-ta-a-given-token)
+> - [`tc`: Change the text of a token](#change-the-text-of-a-token-tc)
 > - [`n`: New node](#new-node-n)
 > - [`s`: New span](#new-span-s)
 > - [`e`: New edge](#new-edge-e)
@@ -60,6 +61,23 @@ Given the new tokens, calling the following command will insert the two new toke
 ```text
 ta #t1 is a
 ```
+
+## Change the text of a token: `tc`
+
+Change the text that an existing token covers.
+
+### Examples
+
+Let's start with an initial text with the two tokens `[This] [text]`. The first token is called "t1" and the second one "t2".
+You can execute the following command:
+
+```text
+tc #t2 example
+```
+
+This will change the covered token text from "text" to "example": `[This] [example]`.
+All tokens before and after the changed token are not affected.
+Only one token can be changed at a time.
 
 #### See also
 
@@ -172,7 +190,7 @@ This adds a pointing relation between `#t2` and `#t1` with an annotation named "
 ![Added pointing relation](addedge-pointing.png)
 
 ```text
-e #n4 > #t5
+e #n1 > #t3
 ```
 This example adds a dominance relation between the existing nodes.
 
@@ -226,16 +244,16 @@ Give the elements to delete as an argument.
 ### Examples
 
 ```text
-d #t1 #t2
+d #t4 #t5
 ```
 
-Deletes nodes "t1" and "t2".
+Deletes nodes "t4" and "t5".
 
 ```text
-d #t4 -> #t3
+d #t2 -> #t1
 ```
 
-Deletes the pointing relation between "t4" and "t3".
+Deletes the pointing relation between "t2" and "t1".
 
 #### See also
 
@@ -245,9 +263,9 @@ Deletes the pointing relation between "t4" and "t3".
 ## Identifying elements
 
 Elements in the graph are identified by the identifier on the node/edge in the graph. In the example below, the tokens have
-the identifiers `sTok1`, `sTok2`, `sTok3`, and `t28`. 
+the identifiers `sTok1`, `sTok2`, `sTok3`, and `t4`. 
 
-Note that identifiers for the same type of element may look different within one and the same document (as in `sTok1` and `t28`).
+Note that identifiers for the same type of element may look different within one and the same document (as in `sTok1` and `t4`).
 
 ![Labelled token nodes](node-labels.png)
 
