@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Taking over as maintainer - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="../../development/architecture/index.html"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="../../development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="../../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="../../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="../../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="../../development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/taking-over/index.html" class="active"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="../../maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="../../maintenance/contributions/index.html"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="../../maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="../../maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="../../maintenance/prepare-end/index.html"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="../../common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="../../governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#taking-over-as-new-maintainer" id="taking-over-as-new-maintainer">Taking over as new maintainer</a></h1>
+<p>This section describes what you will have to do to assume the maintainer role for the Hexatomic software project.</p>
+<p>The <a href="https://hexatomic.github.io">Hexatomic research project</a> aims to create a <em>sustainable</em> software project around Hexatomic.
+This means that new maintainers should be able to come to the project, even when it has been dormant or abandoned for some time.
+This section therefore assumes that there is currently <em>no active maintainer</em> for the project who will hand it over proactively in an ordered fashion.</p>
+<p>If you want to take over as maintainer at this stage, you should go through the following steps.</p>
+<h2><a class="header" href="#announce-that-you-want-to-take-over-as-new-maintainer" id="announce-that-you-want-to-take-over-as-new-maintainer">Announce that you want to take over as new maintainer</a></h2>
+<p>The old maintainers may still be around, and may be able to help you gain access to the repository.
+Therefore it is a matter of due diligence to first announce your willingness to act as the new maintainer of the project.</p>
+<p>The best way to do this is to <a href="https://github.com/hexatomic/hexatomic/issues/new">create a new issue</a> in the original repository.
+Also make sure that you <a href="https://web.archive.org/web/20210505163556/https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax#mentioning-people-and-teams"><em>@mention</em></a> the last known maintainer of the project.
+This information should be available in the <code>README.md</code> file at the root of the repository.
+They may be notified of the mention, and react by commenting on your issue.
+This way you can discuss the best way for you to take over as new maintainer.</p>
+<p>Alternatively, look for any other contact information for the project, such as an email address or a mailing list address, and announce your plan there.</p>
+<p>If you get no reaction to your announcement, you can assume that the project has been abandoned, and proceed with the next step.</p>
+<h2><a class="header" href="#get-administrative-rights-to-the-source-code-repository-or-fork-it" id="get-administrative-rights-to-the-source-code-repository-or-fork-it">Get administrative rights to the source code repository, or fork it</a></h2>
+<p>The source code and documentation sources for Hexatomic are provided in a repository on GitHub at <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.
+In order to gain the necessary control over the repository to maintain it, you have two options.</p>
+<h3><a class="header" href="#1-get-administrative-rights-for-the-original-repository" id="1-get-administrative-rights-for-the-original-repository">1. Get administrative rights for the original repository.</a></h3>
+<p>If you can find a person with administrative rights to the project (see the <a href="#announce-that-you-want-to-take-over-as-new-maintainer">previous section</a>),
+ask them to give you administrative rights (e.g. make you the owner) for the original GitHub repository.</p>
+<p>This is the preferred option, as all repository configurations as well as the history of issues and pull requests remain intact.</p>
+<h3><a class="header" href="#2-fork-the-repository" id="2-fork-the-repository">2. Fork the repository</a></h3>
+<p>If you cannot find someone to give you administrative rights to the repository, you can fork it, i.e., make a copy of the original repository and host it on a coding platform under your own or your organization's account.
+A fork will give you complete control over the repository, but you will lose the issue and pull request history.</p>
+<p>We encourage you to rename your fork repository to something other than - but perhaps similar to - <em>hexatomic</em>, and also change any documentation and in-application branding accordingly.
+This will help users separate your fork project from the original project.
+Make sure that you act within the bounds of the respective <a href="../licensing/">licenses</a>, e.g., with regard to copyright notices.
+Also note that while you may add yourself to the list of authors in the <a href="../licensing/">`CITATION.cff</a> file once you have fulfilled authorship requirements,<!-- TODO Link once they're there -->
+you must not remove any authors from this list, until you can establish that their contributions are not part of the work anymore.
+This may be the case when you have deleted all lines of code or documentation that a single author has contributed.</p>
+<h2><a class="header" href="#update-maintainer-information" id="update-maintainer-information">Update maintainer information</a></h2>
+<p>Update the maintainer information in the relevant places:</p>
+<ul>
+<li>The <em>Maintainer</em> section in <code>README.md</code> (part of the <em>Team</em> section). You may also choose to update the <em>Core contributors</em> section.</li>
+<li>The list of contributors in <code>README.md</code>. List yourself for maintenance.</li>
+<li>When you have fulfilled the authorship requirements for Hexatomic, also add yourself as an author to the citation metadata in <code>CITATION.cff</code>. This is a software citation metadata file. You can read about its format in the <a href="https://citation-file-format.github.io/">Citation File Format documentation</a>.</li>
+</ul>
+<h2><a class="header" href="#update-public-information-about-code-reviews" id="update-public-information-about-code-reviews">Update public information about code reviews</a></h2>
+<p>The contribution guidelines in <code>CONTRIBUTING.md</code> contain information on when code reviews are likely to be performed. Change the information there as appropriate, e.g., update the time zone.</p>
+<h2><a class="header" href="#get-ready-for-maintenance" id="get-ready-for-maintenance">Get ready for maintenance</a></h2>
+<ul>
+<li>Read through the maintenance documentation.</li>
+<li>Check, update or newly set up the necessary services in the repository that you will need for maintenance: a <a href="../continuous-integration/">continuous integration service</a>, <a href="../continuous-integration/#static-code-analysis">static code analysis</a>, <a href="../repository/templates.html">issue and pull request templates</a>, etc.</li>
+<li>Enable notifications for the repository (e.g. by changing the notification settings with the &quot;Watch&quot; button in the upper right corner of the GitHub interface)</li>
+</ul>
+<h2><a class="header" href="#set-up-your-local-system-to-prepare-for-maintenance" id="set-up-your-local-system-to-prepare-for-maintenance">Set up your local system to prepare for maintenance</a></h2>
+<p>Follow the <a href="../../development/setup.html">development setup documentation</a> to set up your local system and get ready for maintenance work on the codebase.</p>
+<h2><a class="header" href="#test-the-state-of-hexatomic" id="test-the-state-of-hexatomic">Test the state of Hexatomic</a></h2>
+<p>Check if the <a href="../../development/getting-the-source-code.html#build-hexatomic-locally">build</a> runs, and fix any issues that you encounter.</p>
+<h2><a class="header" href="#maintain-open-contributions" id="maintain-open-contributions">Maintain open contributions</a></h2>
+<p>Check if there are any open pull requests for Hexatomic in the original repository.
+If you are working in a fork, consider getting in touch with the authors of the open pull requests and ask them to put them up again against your fork.
+<a href="../contributions/">Maintain the open pull requests</a> so that they can be closed or merged.</p>
+<h2><a class="header" href="#maintain-open-issues" id="maintain-open-issues">Maintain open issues</a></h2>
+<p>If you work in the original repository, check for any open issues, and maintain them until they can be closed.
+If you work in a fork, go through open issues in the original repository and discuss with the authors whether to copy them to your fork.
+If the issue authors are not available, decide which of the open issues should be copied to the fork.
+If you create copies of issues in your fork, make sure to link to the issues in the original repository.</p>
+<h2><a class="header" href="#make-a-new-release" id="make-a-new-release">Make a new release</a></h2>
+<p><a href="../releases/">Make a release</a> if any changes to Hexatomic were made during any of the previous steps.
+This is also a good way to celebrate that you are now the maintainer of Hexatomic!</p>
+<h2><a class="header" href="#announce-the-new-release-to-the-community" id="announce-the-new-release-to-the-community">Announce the new release to the community</a></h2>
+<p>Announce the new release as described in the <a href="../releases/#promoting-releases-to-the-community">Releases</a> section.
+If you can find a person with administrative rights to the project (see the <a href="#announce-that-you-want-to-take-over-as-new-maintainer">previous section</a>),
+ask them to give you administrative rights for the mailing list <code>hexatomic-users@lists.hu-berlin.de</code> as well.
+If they are not available, you can always just subscribe to the mailing list and send a message as a subscriber.
+Consider to move the mailing list to a list provider you have administrative access to, and if you do this, also announce it via the <code>hexatomic-users@lists.hu-berlin.de</code> list.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../maintenance/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../maintenance/versioning/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../maintenance/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../maintenance/versioning/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
