@@ -21,14 +21,18 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.UiStatusReport;
+import org.corpus_tools.hexatomic.styles.ColorPalette;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -45,22 +49,33 @@ public class StatusBar {
 
   private ProgressBar progressBarIndeterminate;
 
-  private Label lblMessage;
+  private Label lblPermanentMessage;
+  private Label lblProgressMessage;
   private ProgressBar progressBar;
 
   private StackLayout progressLayout;
 
+  private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
+
+  private final Timer timer = new Timer();
+
   @PostConstruct
   protected void createControls(Composite parent) {
-    GridLayout glParent = new GridLayout(2, false);
+    GridLayout glParent = new GridLayout(3, false);
     glParent.marginWidth = 0;
     glParent.marginHeight = 0;
     parent.setLayout(glParent);
 
-    lblMessage = new Label(parent, SWT.NONE);
-    lblMessage.setText("");
-    lblMessage.setAlignment(SWT.RIGHT);
-    lblMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, true, 1, 1));
+    lblPermanentMessage = new Label(parent, SWT.NONE);
+    lblPermanentMessage.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, "permanent-status-message");
+    lblPermanentMessage.setText("");
+    lblPermanentMessage.setAlignment(SWT.LEFT);
+    lblPermanentMessage.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+
+    lblProgressMessage = new Label(parent, SWT.NONE);
+    lblProgressMessage.setText("");
+    lblProgressMessage.setAlignment(SWT.RIGHT);
+    lblProgressMessage.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, true, 1, 1));
 
     Composite composite = new Composite(parent, SWT.NONE);
     progressLayout = new StackLayout();
@@ -76,9 +91,9 @@ public class StatusBar {
 
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  protected void unloadDocumentGraphWhenClosed(@UIEventTopic(Topics.STATUS_UPDATE) String ignore) {
+  protected void onStatusUpdate(@UIEventTopic(Topics.STATUS_UPDATE) String ignore) {
 
-    lblMessage.setText(uiStatus.getExecutedJobStatusMessage());
+    lblProgressMessage.setText(uiStatus.getExecutedJobStatusMessage());
 
     if (uiStatus.getNumberOfExecutedJobs() == 0) {
       // Hide progress bar completely
@@ -97,5 +112,22 @@ public class StatusBar {
       progressBar.setSelection(uiStatus.getExecutedJobsProgress());
       progressBar.requestLayout();
     }
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  protected void onStatusMessage(@UIEventTopic(Topics.TOOLBAR_STATUS_MESSAGE) String message) {
+    lblPermanentMessage.setText(message);
+    Color oldColor = lblPermanentMessage.getForeground();
+    // Highlight the message by changing the color and changing it back later
+    lblPermanentMessage.setForeground(ColorPalette.VERMILLION);
+    timer.schedule(new TimerTask() {
+
+      @Override
+      public void run() {
+        sync.syncExec(() -> lblPermanentMessage.setForeground(oldColor));
+      }
+    }, 500);
+
   }
 }

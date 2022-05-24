@@ -17,7 +17,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<tycho.version>2.7.0</tycho.version>
-		<jacoco.version>0.8.5</jacoco.version>
+		<jacoco.version>0.8.8</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
 	<!-- MODULES -->
@@ -269,6 +269,12 @@
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<excludes>>
+								<exclude>**/org/corpus_tools/hexatomic/core/update/UpdateRunner.class</exclude>
+								<exclude>>**/org/corpus_tools/hexatomic/core/handlers/UpdateHandler.class</exclude>	
+							</excludes>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
