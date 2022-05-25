@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add auto-archival on Software Heritage whenever git tags are pushed to the repository (#21)
+
 ## [0.9.0] - 2022-05-24
 
 ### Added
