@@ -83,7 +83,7 @@ public class UpdateRunner {
     if (provisioningJob != null) {
       log.info("Update available!");
       final AtomicBoolean performUpdate = new AtomicBoolean(false);
-      sync.syncExec(() -> performUpdate.set(MessageDialog.openQuestion(shell, "Update available.",
+      sync.syncExec(() -> performUpdate.set(MessageDialog.openQuestion(shell, "Update available",
           "Do you want to install the available update?")));
       if (performUpdate.get()) {
         configureProvisioningJob(provisioningJob, shell, sync, workbench);
