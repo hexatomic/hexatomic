@@ -58,6 +58,8 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
  */
 public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
+  private final int MINIMAL_NODE_HEIGHT = 50;
+
   private GraphDisplayConfiguration config = new GraphDisplayConfiguration();
 
   private double averageTokenNodeWidth;
@@ -366,7 +368,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
             n.setInternalLocation(x,
                 boundsY
                     + (tokenRank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
-            x += this.averageTokenNodeWidth / 2.0;
+            x += this.averageTokenNodeWidth * (config.getHorizontalTokenMargin());
             x += n.getWidthInLayout();
           }
         }
@@ -395,7 +397,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    this.maxNodeHeight = config.getMinimalNodeHeight();
+    this.maxNodeHeight = MINIMAL_NODE_HEIGHT;
     // Calculate the average width and height to get a good distance between the tokens
     double sumWidth = 0.0;
     int tokenCount = 0;

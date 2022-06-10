@@ -9,7 +9,7 @@ package org.corpus_tools.hexatomic.graph;
 public class GraphDisplayConfiguration {
 
   private double verticalNodeMargin = 0.8;
-  private int minimalNodeHeight = 50;
+  private double horizontalTokenMargin = 0.5;
 
   /**
    * Get the vertical node margin.
@@ -30,23 +30,14 @@ public class GraphDisplayConfiguration {
     this.verticalNodeMargin = verticalNodeMargin;
   }
 
-  /**
-   * Sets the minimum node height.
-   * 
-   * @return Node height in pixels.
-   */
-  public int getMinimalNodeHeight() {
-    return minimalNodeHeight;
+  public double getHorizontalTokenMargin() {
+    return horizontalTokenMargin;
   }
 
-  /**
-   * Sets the minimum node height in pixels.
-   * 
-   * @param minimalNodeHeight Minimal node height in pixels.
-   */
-  public void setMinimalNodeHeight(int minimalNodeHeight) {
-    this.minimalNodeHeight = minimalNodeHeight;
+  public void setHorizontalTokenMargin(double horizontalTokenMargin) {
+    this.horizontalTokenMargin = horizontalTokenMargin;
   }
+
 
 
 }
