@@ -321,7 +321,7 @@ public class GraphEditor {
 
     ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
     paramExpandItem.setText("Layout Parameter");
-    paramExpandItem.setHeight(200);
+    paramExpandItem.setHeight(widget.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
     paramExpandItem.setControl(widget);
   }
 

@@ -59,7 +59,7 @@ public class GraphLayoutParameterWidget extends Composite {
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
         + "and for \"2\"  the margin is twice as high as the node height.");
-    lblNewLabel.setText("Vertipcal Margin");
+    lblNewLabel.setText("Vertical Margin");
 
     scalePercentMargin = new Scale(this, SWT.NONE);
     scalePercentMargin.setMaximum(20);
