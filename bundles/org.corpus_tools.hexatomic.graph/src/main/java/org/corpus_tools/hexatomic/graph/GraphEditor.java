@@ -323,6 +323,11 @@ public class GraphEditor {
     paramExpandItem.setText("Layout Parameter");
     paramExpandItem.setHeight(widget.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
     paramExpandItem.setControl(widget);
+    // There seems to be a SWT bug under Linux (GTK) where changing the value on the scale does not
+    // redraw the position of the slider. When the expand item is expanded once, the bug seems to be
+    // avoided. So the workaround is to expand and directly unexpand the parameter panel.
+    paramExpandItem.setExpanded(true);
+    Display.getDefault().timerExec(1, () -> paramExpandItem.setExpanded(false));
   }
 
   private void constructSegmentFilter(Composite sideBar) {
