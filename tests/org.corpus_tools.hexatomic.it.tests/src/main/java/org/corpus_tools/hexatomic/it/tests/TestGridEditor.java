@@ -139,6 +139,7 @@ public class TestGridEditor {
 
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
+  private URI separateSpanExampleProjectUri;
   private URI twoDsExampleProjectUri;
   private URI scrollingExampleProjectUri;
   private ECommandService commandService;
@@ -172,6 +173,8 @@ public class TestGridEditor {
 
     File overlappingExampleProjectDirectory = new File(TESTPATH_GRID + "overlapping-spans/");
     assertTrue(overlappingExampleProjectDirectory.isDirectory());
+    File separateSpanExampleProjectDirectory = new File(TESTPATH_GRID + "separate-spans/");
+    assertTrue(separateSpanExampleProjectDirectory.isDirectory());
 
     File twoDsExampleProjectDirectory = new File(TESTPATH_GRID + "two-ds/");
     assertTrue(twoDsExampleProjectDirectory.isDirectory());
@@ -182,6 +185,8 @@ public class TestGridEditor {
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     overlappingExampleProjectUri =
         URI.createFileURI(overlappingExampleProjectDirectory.getAbsolutePath());
+    separateSpanExampleProjectUri =
+        URI.createFileURI(separateSpanExampleProjectDirectory.getAbsolutePath());
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
     scrollingExampleProjectUri =
         URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
@@ -260,6 +265,30 @@ public class TestGridEditor {
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
     final SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
+    assertNotNull(view);
+
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+  }
+
+  SWTBotView openSeparateSpanExample() {
+    // Programmatically open the example corpus
+    openExample(separateSpanExampleProjectUri);
+    // Select the first example document
+    SWTBotTreeItem docMenu =
+        bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus").expandNode("subCorpus1")
+            .expandNode("doc1");
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
+
+    final SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
     assertNotNull(view);
 
     // Use all available windows space (the tableToTest needs to be fully visible for some of the
@@ -1856,8 +1885,31 @@ public class TestGridEditor {
    * Tests that spans are merged on issuing the respective command.
    */
   @Test
-  void testMergeSpan() {
-    fail();
+  void testMergeEqualAnnotationSpans() {
+    openSeparateSpanExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert state
+    Object one1 = natTable.getDataValueByPosition(2, 2);
+    assertTrue(one1 instanceof SSpan);
+    Object two = natTable.getDataValueByPosition(2, 3);
+    assertTrue(two instanceof SSpan);
+    Object one2 = natTable.getDataValueByPosition(2, 5);
+    assertTrue(one2 instanceof SSpan);
+    Object one3 = natTable.getDataValueByPosition(2, 6);
+    assertTrue(one3 instanceof SSpan);
+    assertFalse(one1 == one2);
+    assertFalse(one1 == one3);
+    assertFalse(one2 == one3);
+
+    // Select spans with equal annotations and click context menu
+    table.click(2, 2);
+    ctrlClick(table, 5, 2);
+    ctrlClick(table, 6, 2);
+    table.contextMenu(5, 2).contextMenu("Merge spans").click();
+    bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6));
   }
 
   /**
@@ -2125,6 +2177,55 @@ public class TestGridEditor {
     @Override
     public String getFailureMessage() {
       return "Some of the test objects were the same as the fixture.";
+    }
+
+  }
+
+  /**
+   * The condition where all objects in the cells at the passed column index and the passed row
+   * indices are the same {@link SSpan} as the one in the cell at the passed fixture row index.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   *
+   */
+  public class SameSpansCondition extends DefaultCondition {
+
+    private final int fixtureRowIndex;
+    private final NatTable natTable;
+    private final int[] rowIndices;
+    private final int columnIndex;
+    private final Object fixture;
+
+    public SameSpansCondition(int columnIndex, int fixtureRowIndex, NatTable natTable,
+        int... rowIndices) {
+      this.fixtureRowIndex = fixtureRowIndex;
+      this.columnIndex = columnIndex;
+      this.natTable = natTable;
+      this.rowIndices = rowIndices;
+      this.fixture = natTable.getDataValueByPosition(this.columnIndex, this.fixtureRowIndex);
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      if (!(fixture instanceof SSpan)) {
+        return false;
+      }
+      for (int i = 0; i < rowIndices.length; i++) {
+        int idx = rowIndices[i];
+        Object potentialSpan = natTable.getDataValueByPosition(columnIndex, idx);
+        if (!(potentialSpan instanceof SSpan)) {
+          return false;
+        }
+        if (potentialSpan != fixture) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Some of the test objects were not a span or not the same span as the fixture.";
     }
 
   }
