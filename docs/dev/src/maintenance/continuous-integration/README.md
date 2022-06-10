@@ -50,6 +50,17 @@ The release workflow consists of two separate jobs:
 2. A job that builds the documentation and deploys the built website to the
    `github-pages` branch of the repository, from where GitHub Pages renders it
 
+### Archive workflow
+
+The archive
+workflow (`.github/workflows/archive.yml`)
+is run whenever Git tags are pushed to the repository.
+The release workflow consists of only one job:
+
+1. A job that runs the [Software Heritage Save action](https://github.com/marketplace/actions/save-to-software-heritage)
+that triggers the Software Heritage API to save the repository to the archive.
+
+
 ## Static code analysis
 
 We use the static code analysis service SonarCloud to 
