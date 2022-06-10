@@ -221,7 +221,7 @@ public class GraphEditor {
     sideBar.setLayout(GridLayoutFactory.swtDefaults().create());
 
     // Weights can only be set after all items of the sash have been added
-    graphSash.setWeights(72, 28);
+    graphSash.setWeights(65, 35);
 
     constructFilterView(sideBar);
     constructSegmentFilter(sideBar);

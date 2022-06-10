@@ -56,7 +56,10 @@ public class GraphLayoutParameterWidget extends Composite {
 
     config = new GraphDisplayConfiguration();
 
-    Label lblNewLabel = new Label(this, SWT.NONE);
+    Label lblNewLabel = new Label(this, SWT.WRAP);
+    GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+    gd_lblNewLabel.widthHint = 70;
+    lblNewLabel.setLayoutData(gd_lblNewLabel);
     lblNewLabel.setToolTipText("Vertical margin between nodes.\n"
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
