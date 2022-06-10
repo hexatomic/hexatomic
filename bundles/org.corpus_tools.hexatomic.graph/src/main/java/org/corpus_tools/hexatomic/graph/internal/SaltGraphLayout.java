@@ -276,8 +276,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     fireProgressEvent(1, 3);
 
     // 3. layout tokens and put them one rank below the number of ranks
-    // TODO: check if any pointing relations are present and use +1 if not
-    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + 2);
+    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + config.getTokenRankOffset() + 1);
     fireProgressEvent(2, 3);
 
     // 4. assign position based on (sub-) rank and the covered tokens

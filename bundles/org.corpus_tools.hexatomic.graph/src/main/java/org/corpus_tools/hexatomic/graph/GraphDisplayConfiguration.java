@@ -10,6 +10,7 @@ public class GraphDisplayConfiguration {
 
   private double verticalNodeMargin = 0.8;
   private double horizontalTokenMargin = 0.5;
+  private int tokenRankOffset = 1;
 
   /**
    * Get the vertical node margin.
@@ -38,6 +39,11 @@ public class GraphDisplayConfiguration {
     this.horizontalTokenMargin = horizontalTokenMargin;
   }
 
+  public int getTokenRankOffset() {
+    return tokenRankOffset;
+  }
 
-
+  public void setTokenRankOffset(int tokenRankOffset) {
+    this.tokenRankOffset = tokenRankOffset;
+  }
 }

@@ -50,6 +50,7 @@ public class GraphLayoutParameterWidget extends Composite {
     private void updateConfigFromInterface() {
       config.setVerticalNodeMargin(((double) scalePercentMargin.getSelection()) / 10.0);
       config.setHorizontalTokenMargin(((double) scaleTokenMargin.getSelection()) / 10.0);
+      config.setTokenRankOffset(scaleTokenRank.getSelection());
     }
 
 
@@ -59,6 +60,7 @@ public class GraphLayoutParameterWidget extends Composite {
       // Update all the labels
       lblPercentMargin.setText("" + config.getVerticalNodeMargin());
       lblTokenMargin.setText("" + config.getHorizontalTokenMargin());
+      lblTokenRank.setText("" + config.getTokenRankOffset());
 
       // Send the event that the config has changed
       if (eventBroker != null) {
@@ -75,6 +77,9 @@ public class GraphLayoutParameterWidget extends Composite {
   private Label lblTokenMarginCaption;
   private Scale scaleTokenMargin;
   private Label lblTokenMargin;
+  private Label lblTokenRankCaption;
+  private Scale scaleTokenRank;
+  private Label lblTokenRank;
 
   /**
    * Create a graph layout manipulation widget.
@@ -90,7 +95,7 @@ public class GraphLayoutParameterWidget extends Composite {
 
     Label lblPercentMarginCaption = new Label(this, SWT.WRAP);
     GridData gd_lblPercentMarginCaption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    gd_lblPercentMarginCaption.widthHint = 70;
+    gd_lblPercentMarginCaption.widthHint = 80;
     lblPercentMarginCaption.setLayoutData(gd_lblPercentMarginCaption);
     lblPercentMarginCaption.setToolTipText("Vertical margin between nodes.\n"
         + "This is measure in \"times of the node height\".  "
@@ -99,6 +104,7 @@ public class GraphLayoutParameterWidget extends Composite {
     lblPercentMarginCaption.setText("Vertical Margin");
 
     scalePercentMargin = new Scale(this, SWT.NONE);
+    scalePercentMargin.setPageIncrement(1);
     scalePercentMargin.setMaximum(20);
     scalePercentMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scalePercentMargin.setSelection((int) Math.round(config.getVerticalNodeMargin() * 10.0));
@@ -107,26 +113,53 @@ public class GraphLayoutParameterWidget extends Composite {
     lblPercentMargin.setText("" + config.getVerticalNodeMargin());
 
     lblTokenMarginCaption = new Label(this, SWT.WRAP);
+    lblTokenMarginCaption.setToolTipText(
+        "Horizontal margin between token.\n"
+            + "This is measured in \"times of the average token width\".  "
+            + "So for \"0\" there is no margin, for \"1\" the margin has "
+            + "the same width as the average token node, and for \"2\"  "
+            + "the margin is twice as high as the average token node width.");
     GridData gd_lblTokenMarginCaption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    gd_lblTokenMarginCaption.widthHint = 70;
+    gd_lblTokenMarginCaption.widthHint = 80;
     lblTokenMarginCaption.setLayoutData(gd_lblTokenMarginCaption);
     lblTokenMarginCaption.setText("Token Margin");
 
     scaleTokenMargin = new Scale(this, SWT.NONE);
+    scaleTokenMargin.setPageIncrement(1);
     scaleTokenMargin.setMaximum(20);
     scaleTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scaleTokenMargin.setSelection((int) Math.round(config.getHorizontalTokenMargin() * 10.0));
 
     lblTokenMargin = new Label(this, SWT.NONE);
-    lblTokenMargin.setToolTipText(
-        "Horizontal margin between token.\nThis is measured in \"times of the average token width\".  So for \"0\" there is no margin, for \"1\" the margin has the same width as the average token node, and for \"2\"  the margin is twice as high as the average token node width.");
+    lblTokenMargin.setToolTipText("");
     lblTokenMargin.setText("" + config.getHorizontalTokenMargin());
 
+    lblTokenRankCaption = new Label(this, SWT.WRAP);
+    lblTokenRankCaption.setToolTipText(
+        "Offset between token and non-token.\n"
+            + "Token are grouped in the lowest rank (at the bottom). "
+            + "To allow space for pointing relations, you can add an offset "
+            + "between the token row and the lowest annotation nodes. "
+            + "An offset of \"1\" means there is one level left empty, an offset of \"0\" "
+            + "means there is no additional empty space except for the regular vertical margin.");
+    GridData gd_lblTokenRankCaption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+    gd_lblTokenRankCaption.widthHint = 80;
+    lblTokenRankCaption.setLayoutData(gd_lblTokenRankCaption);
+    lblTokenRankCaption.setText("Token Rank Offset");
+
+    scaleTokenRank = new Scale(this, SWT.NONE);
+    scaleTokenRank.setPageIncrement(1);
+    scaleTokenRank.setMaximum(5);
+    scaleTokenRank.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+    scaleTokenRank.setSelection(config.getTokenRankOffset());
+
+    lblTokenRank = new Label(this, SWT.NONE);
+    lblTokenRank.setText("" + config.getTokenRankOffset());
 
     ConfigChangedListener selectionListener = new ConfigChangedListener(eventBroker);
     scalePercentMargin.addSelectionListener(selectionListener);
     scaleTokenMargin.addSelectionListener(selectionListener);
-
+    scaleTokenRank.addSelectionListener(selectionListener);
   }
 
 }
