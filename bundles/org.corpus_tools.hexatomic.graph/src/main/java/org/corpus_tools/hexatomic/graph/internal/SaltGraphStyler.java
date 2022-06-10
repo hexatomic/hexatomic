@@ -41,8 +41,10 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
@@ -64,6 +66,8 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   private final IFigure figure;
 
   private final FontMetrics fontMetrics;
+  private final Font defaultFont;
+  private final Font boldFont;
 
   private final AnnotationFilter filter;
 
@@ -79,6 +83,10 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
     this.pointingConnectionRouter = new ShortestPathConnectionRouter(figure);
     GC gc = new GC(Display.getCurrent());
     fontMetrics = gc.getFontMetrics();
+    defaultFont = Display.getCurrent().getSystemFont();
+    FontDescriptor boldDescriptor = FontDescriptor.createFrom(defaultFont).setStyle(SWT.BOLD);
+    boldFont = boldDescriptor.createFont(Display.getCurrent());
+
     gc.dispose();
   }
 
@@ -202,7 +210,8 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   @Override
   public IFigure getFigure(Object element) {
     if (element instanceof SNode) {
-      NodeFigure currFigure = new NodeFigure((SNode) element, fontMetrics, filter);
+      NodeFigure currFigure =
+          new NodeFigure((SNode) element, defaultFont, boldFont, fontMetrics, filter);
       currFigure.setSize(currFigure.getPreferredSize());
       return currFigure;
     }
