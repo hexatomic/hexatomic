@@ -320,12 +320,12 @@ public class GraphEditor {
     GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar, this.events);
 
     ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
-    paramExpandItem.setText("Layout Parameter");
+    paramExpandItem.setText("Display Configuration");
     paramExpandItem.setHeight(widget.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
     paramExpandItem.setControl(widget);
     // There seems to be a SWT bug under Linux (GTK) where changing the value on the scale does not
     // redraw the position of the slider. When the expand item is expanded once, the bug seems to be
-    // avoided. So the workaround is to expand and directly unexpand the parameter panel.
+    // avoided. So the workaround is to expand and unexpand the parameter panel.
     paramExpandItem.setExpanded(true);
     Display.getDefault().timerExec(1, () -> paramExpandItem.setExpanded(false));
   }
@@ -827,8 +827,8 @@ public class GraphEditor {
   @org.eclipse.e4.core.di.annotations.Optional
   private void onGraphLayoutParamChanged(
       @UIEventTopic(GraphLayoutParameterWidget.PARAM_CHANGED_TOPIC) Object element) {
-    if (element instanceof Double) {
-      this.graphLayout.setPercentInnerNodeMargin((double) element);
+    if (element instanceof GraphDisplayConfiguration) {
+      this.graphLayout.setConfig((GraphDisplayConfiguration) element);
     }
     updateView(false, false);
   }

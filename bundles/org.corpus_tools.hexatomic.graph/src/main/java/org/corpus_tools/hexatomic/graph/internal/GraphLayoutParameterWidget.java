@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.graph.internal;
 
+import org.corpus_tools.hexatomic.graph.GraphDisplayConfiguration;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -41,6 +42,8 @@ public class GraphLayoutParameterWidget extends Composite {
   private Label lblPercentMargin;
   private Scale scalePercentMargin;
 
+  private GraphDisplayConfiguration config;
+
   /**
    * Create a graph layout manipulation widget.
    * 
@@ -49,8 +52,9 @@ public class GraphLayoutParameterWidget extends Composite {
    */
   public GraphLayoutParameterWidget(Composite parentComposite, final IEventBroker eventBroker) {
     super(parentComposite, SWT.NONE);
-
     setLayout(new GridLayout(3, false));
+
+    config = new GraphDisplayConfiguration();
 
     Label lblNewLabel = new Label(this, SWT.NONE);
     lblNewLabel.setToolTipText("Vertical margin between nodes.\n"
@@ -61,28 +65,29 @@ public class GraphLayoutParameterWidget extends Composite {
 
     scalePercentMargin = new Scale(this, SWT.NONE);
     scalePercentMargin.setMaximum(20);
-    scalePercentMargin.setSelection(8);
+    scalePercentMargin.setSelection((int) Math.round(config.getVerticalNodeMargin() * 10.0));
     scalePercentMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
     lblPercentMargin = new Label(this, SWT.NONE);
-    lblPercentMargin.setText("" + getMarginMultiplier());
+    lblPercentMargin.setText("" + config.getVerticalNodeMargin());
 
     scalePercentMargin.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        double marginMultiplier = getMarginMultiplier();
-        lblPercentMargin.setText("" + marginMultiplier);
+        updateConfig();
+        lblPercentMargin.setText("" + config.getVerticalNodeMargin());
 
         if (eventBroker != null) {
-          eventBroker.post(PARAM_CHANGED_TOPIC, marginMultiplier + 1.0);
+          eventBroker.post(PARAM_CHANGED_TOPIC, config);
         }
       }
     });
   }
 
-  private double getMarginMultiplier() {
-    return (((double) scalePercentMargin.getSelection()) / 10.0);
+  private void updateConfig() {
+    config.setVerticalNodeMargin(((double) scalePercentMargin.getSelection()) / 10.0);
   }
+
 
 
 }

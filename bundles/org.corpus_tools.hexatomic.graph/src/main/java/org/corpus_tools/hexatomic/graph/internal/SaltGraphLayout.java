@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.graph.GraphDisplayConfiguration;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -57,10 +58,11 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
  */
 public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
+  private GraphDisplayConfiguration config = new GraphDisplayConfiguration();
+
   private double averageTokenNodeWidth;
   private double maxNodeHeight;
 
-  private double percentInnerNodeMargin = 1.8;
 
   private BiMap<InternalNode, SNode> nodes;
   private BiMap<InternalRelationship, SRelation<?, ?>> relations;
@@ -70,8 +72,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     super(styles);
   }
 
-  public void setPercentInnerNodeMargin(double percentInnerNodeMargin) {
-    this.percentInnerNodeMargin = percentInnerNodeMargin;
+  public void setConfig(GraphDisplayConfiguration config) {
+    this.config = config;
   }
 
 
@@ -244,7 +246,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           }
         }
         node.setInternalLocation(boundsX + x,
-            boundsY + (rank * (this.maxNodeHeight * this.percentInnerNodeMargin)));
+            boundsY + (rank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
 
       }
     }
@@ -362,7 +364,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           InternalNode n = this.nodes.inverse().get(t);
           if (n != null) {
             n.setInternalLocation(x,
-                boundsY + (tokenRank * (this.maxNodeHeight * this.percentInnerNodeMargin)));
+                boundsY
+                    + (tokenRank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
             x += this.averageTokenNodeWidth / 2.0;
             x += n.getWidthInLayout();
           }
@@ -392,7 +395,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    this.maxNodeHeight = 50;
+    this.maxNodeHeight = config.getMinimalNodeHeight();
     // Calculate the average width and height to get a good distance between the tokens
     double sumWidth = 0.0;
     int tokenCount = 0;
