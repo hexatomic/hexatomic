@@ -38,6 +38,9 @@ import org.eclipse.swt.widgets.Scale;
 public class GraphLayoutParameterWidget extends Composite {
 
   public static final String PARAM_CHANGED_TOPIC = "GRAPH_EDITOR/GRAPH_LAYOUT_PARAMETER/CHANGED";
+  private Label lblPercentMargin;
+  private Scale scalePercentMargin;
+  private IEventBroker eventBroker;
 
   /**
    * Create a graph layout manipulation widget.
@@ -47,25 +50,29 @@ public class GraphLayoutParameterWidget extends Composite {
    */
   public GraphLayoutParameterWidget(Composite parentComposite, final IEventBroker eventBroker) {
     super(parentComposite, SWT.NONE);
+    this.eventBroker = eventBroker;
+
     setLayout(new GridLayout(3, false));
 
     Label lblNewLabel = new Label(this, SWT.NONE);
-    lblNewLabel.setToolTipText(
-        "Vertical margin between nodes.\nThis is measure in \"times of the node height\".  So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, and for \"2\"  the margin is twice as high as the node height.");
-    lblNewLabel.setText("Vertical Margin");
+    lblNewLabel.setToolTipText("Vertical margin between nodes.\n"
+        + "This is measure in \"times of the node height\".  "
+        + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
+        + "and for \"2\"  the margin is twice as high as the node height.");
+    lblNewLabel.setText("Vertipcal Margin");
 
-    Scale scalePercentMargin = new Scale(this, SWT.NONE);
+    scalePercentMargin = new Scale(this, SWT.NONE);
     scalePercentMargin.setMaximum(20);
     scalePercentMargin.setSelection(8);
     scalePercentMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-    Label lblPercentMargin = new Label(this, SWT.NONE);
-    lblPercentMargin.setText("0.00");
+    lblPercentMargin = new Label(this, SWT.NONE);
+    lblPercentMargin.setText("" + getMarginMultiplier());
 
     scalePercentMargin.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        double marginMultiplier = (((double) scalePercentMargin.getSelection()) / 10.0);
+        double marginMultiplier = getMarginMultiplier();
         lblPercentMargin.setText("" + marginMultiplier);
 
         if (eventBroker != null) {
@@ -73,6 +80,11 @@ public class GraphLayoutParameterWidget extends Composite {
         }
       }
     });
-
   }
+
+  private double getMarginMultiplier() {
+    return (((double) scalePercentMargin.getSelection()) / 10.0);
+  }
+
+
 }
