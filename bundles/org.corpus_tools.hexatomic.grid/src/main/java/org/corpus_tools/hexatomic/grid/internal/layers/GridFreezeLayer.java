@@ -107,7 +107,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    * @param coordinates The coordinates for the {@link SSpan}s to merge
    */
   public void mergeAnnotationSpan(List<SSpan> spans, PositionCoordinate[] coordinates) {
-    bodyDataProvider.mergeAnnotationSpan(spans, coordinates);
+    bodyDataProvider.mergeAnnotationSpans(spans, coordinates);
   }
 
   /**
