@@ -116,6 +116,8 @@ public class GridEditor {
 
   public static final String SPLIT_SPAN_POPUP_MENU_LABEL = "Split span";
 
+  public static final String MERGE_SPAN_POPUP_MENU_LABEL = "Merge spans";
+
   @Inject
   ErrorService errors;
 

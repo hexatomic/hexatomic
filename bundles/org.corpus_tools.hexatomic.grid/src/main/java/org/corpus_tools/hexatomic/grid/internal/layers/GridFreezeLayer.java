@@ -28,6 +28,7 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.AddColumnCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
+import org.corpus_tools.hexatomic.grid.internal.handlers.MergeSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.SplitSpanCommandHandler;
 import org.corpus_tools.salt.common.SSpan;
@@ -145,6 +146,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
     registerCommandHandler(new CreateSpanCommandHandler(this));
     registerCommandHandler(new SplitSpanCommandHandler(this));
+    registerCommandHandler(new MergeSpanCommandHandler(this));
     registerCommandHandler(new AddColumnCommandHandler(this));
   }
 

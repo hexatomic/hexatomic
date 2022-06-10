@@ -188,6 +188,27 @@ public class GridHelper {
   }
 
   /**
+   * Checks whether all data at the given position coordinates are non-null {@link SSpan}s.
+   * 
+   * @param selectedCellCoordinates The selected {@link PositionCoordinate}s
+   * @param selectionLayer The {@link SelectionLayer} of the grid that the coordinates are in
+   * @return whether only non-null spans are selected
+   */
+  public static boolean areAllSelectedCellsNonNullSpans(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    for (int i = 0; i < selectedCellCoordinates.length; i++) {
+      PositionCoordinate positionCoordinate = selectedCellCoordinates[i];
+      int col = positionCoordinate.getColumnPosition();
+      int row = positionCoordinate.getRowPosition();
+      Object data = selectionLayer.getDataValueByPosition(col, row);
+      if (!(data instanceof SSpan)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
    * Retrieves the single {@link SSpan} that is the data object in the cells of all given
    * {@link PositionCoordinate}s, or <code>null</code> if the coordinates do not contain a single
    * non-null span.
