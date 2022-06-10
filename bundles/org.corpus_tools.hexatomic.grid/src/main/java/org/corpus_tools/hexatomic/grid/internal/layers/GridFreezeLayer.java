@@ -103,6 +103,16 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   /**
    * Triggers the merging of spans into a single span in the underlying data model.
    * 
+   * @param spans The {@link SSpan}s to merge
+   * @param coordinates The coordinates for the {@link SSpan}s to merge
+   */
+  public void mergeAnnotationSpan(List<SSpan> spans, PositionCoordinate[] coordinates) {
+    bodyDataProvider.mergeAnnotationSpan(spans, coordinates);
+  }
+
+  /**
+   * Triggers the merging of spans into a single span in the underlying data model.
+   * 
    * @param span The {@link SSpan}s to merge
    * @param coordinates The coordinates for the {@link SSpan}s to merge
    */
