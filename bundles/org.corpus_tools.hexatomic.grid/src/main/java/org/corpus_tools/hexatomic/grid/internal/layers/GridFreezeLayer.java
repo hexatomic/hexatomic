@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.data.Column;
@@ -97,6 +98,16 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    */
   public void splitAnnotationSpan(SSpan span, PositionCoordinate[] coordinates) {
     bodyDataProvider.splitAnnotationSpan(span, coordinates);
+  }
+
+  /**
+   * Triggers the merging of spans into a single span in the underlying data model.
+   * 
+   * @param span The {@link SSpan}s to merge
+   * @param coordinates The coordinates for the {@link SSpan}s to merge
+   */
+  public void mergeAnnotationSpans(List<SSpan> spans, PositionCoordinate[] coordinates) {
+    bodyDataProvider.mergeAnnotationSpans(spans, coordinates);
   }
 
   /**

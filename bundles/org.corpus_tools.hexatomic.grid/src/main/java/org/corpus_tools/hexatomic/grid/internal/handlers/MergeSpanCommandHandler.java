@@ -60,8 +60,8 @@ public class MergeSpanCommandHandler extends AbstractLayerCommandHandler<MergeSp
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
     PositionCoordinate[] coordinates = command.getSelectedCoordinates();
     List<SSpan> spans = command.getSpans();
-    // Delegate the actual span splitting to the layer.
-    // layer.splitAnnotationSpan(spans, coordinates);
+    // Delegate the actual span merging to the layer.
+    layer.mergeAnnotationSpans(spans, coordinates);
     layer.fireLayerEvent(new ColumnsChangedEvent());
     return true;
   }
