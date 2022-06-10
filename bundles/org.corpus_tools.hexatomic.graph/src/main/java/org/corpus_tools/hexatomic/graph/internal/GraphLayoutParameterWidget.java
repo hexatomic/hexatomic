@@ -40,7 +40,6 @@ public class GraphLayoutParameterWidget extends Composite {
   public static final String PARAM_CHANGED_TOPIC = "GRAPH_EDITOR/GRAPH_LAYOUT_PARAMETER/CHANGED";
   private Label lblPercentMargin;
   private Scale scalePercentMargin;
-  private IEventBroker eventBroker;
 
   /**
    * Create a graph layout manipulation widget.
@@ -50,7 +49,6 @@ public class GraphLayoutParameterWidget extends Composite {
    */
   public GraphLayoutParameterWidget(Composite parentComposite, final IEventBroker eventBroker) {
     super(parentComposite, SWT.NONE);
-    this.eventBroker = eventBroker;
 
     setLayout(new GridLayout(3, false));
 
