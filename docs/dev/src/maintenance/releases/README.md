@@ -34,8 +34,8 @@ To release a new *feature* (i.e., minor) version of Hexatomic, run the following
 
 ## Hotfix releases
 
-Hotfixes come into the project via pull requests of a *hotfix branch* against `master`.
-**Important**: Do **not** merge pull requests from hotfix branches into master!
+Hotfixes come into the project via pull requests of a *hotfix branch* against `main`.
+**Important**: Do **not** merge pull requests from hotfix branches into `main`!
 
 Instead, checkout the hotfix branch locally, and start the merge and release process with the Maven GitFlow plugin:
 

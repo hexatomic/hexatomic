@@ -25,7 +25,7 @@ Lars Vogel and Simon Scholz, Version 13.03.2019, and [Eclipse RCP (Rich Client P
 This means that
 
 1. It is **built using [Eclipse Tycho](http://web.archive.org/web/20190807185333/https://www.eclipse.org/tycho/)**, a plugin for the [Maven build system](http://web.archive.org/web/20190806000707/https://maven.apache.org/).
-2. **Plug-ins**, i.e., units that encapsulate well-defined functionality, are located in the [`bundles`](https://github.com/hexatomic/hexatomic/tree/master/bundles/) directory.
+2. **Plug-ins**, i.e., units that encapsulate well-defined functionality, are located in the [`bundles`](https://github.com/hexatomic/hexatomic/tree/main/bundles/) directory.
 3. **Features**, i.e., units that integrate one or more plug-ins, are located in the [`features`](https://github.com/hexatomic/hexatomic/tree/feature/0.1.0/features/) directory.
 4. **Configuration and release engineering**-related files are located in the [`releng`](https://github.com/hexatomic/hexatomic/tree/feature/0.1.0/releng/) directory. This includes:
 	- Project configuration (for packaging, target platform configuration, etc.)
@@ -39,7 +39,7 @@ This means that
 
 ### Project parent / root POM
 
-Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/master/pom.xml), i.e., to build the entire project, a single Maven command, e.g., `mvn clean install`, in the root folder is enough.
+Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/main/pom.xml), i.e., to build the entire project, a single Maven command, e.g., `mvn clean install`, in the root folder is enough.
 
 ### Target platform
 

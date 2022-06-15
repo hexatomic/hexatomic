@@ -11,7 +11,7 @@ The time of the last triage and any findings are logged in the file `UNREVIEWED_
 Open the list of all pull requests (PRs) in GitHub, filter them by the `unreviewed` label, and sort them to show the oldest ones first.
 If there are no pull requests with such a label, the triage is finished and you can proceed to the "Documenting the results" section.
 
-Next, open the file `UNREVIEWED_CODE_TRIAGE.md` and check which commit of the master branch was last triaged.
+Next, open the file `UNREVIEWED_CODE_TRIAGE.md` and check which commit of the `main` branch was last triaged.
 Create a new branch from this commit.
 
 > **This branch must never be merged into another branch.**
@@ -19,7 +19,7 @@ Create a new branch from this commit.
 For each of the pull requests with the `unreviewed` label, merge the tip commit of the pull request into your branch.
 At this stage, conflicts may appear, which may, for example, be due to the addition of reviewed PRs with larger features in between non-reviewed hotfix PRs.
 If there is any conflict, abort the merge, review the current changes up to this point, and start a new triage with the last commit before the merge commit of the problematic PR as a starting point.
-For example, in the following history of pull requests, there would be two triages: one triage for PRs 1 and 2, starting from the last triaged master commit, and one triage from the PR X commit (which was reviewed) that includes PRs 4 and 5.
+For example, in the following history of pull requests, there would be two triages: one triage for PRs 1 and 2, starting from the last triaged `main` commit, and one triage from the PR X commit (which was reviewed) that includes PRs 4 and 5.
 
 ```plain
 last triaged commit
@@ -56,7 +56,7 @@ If a conflict occurred during the merge of the PRs, and you have had to split th
 Below the heading, record 
 
 - a link to the GitHub user page of the person who did the triage, 
-- the revision hash range **on the master branch** of the first and last commit you have triaged in the triaged set (or the whole triage if you didn't have to split it),
+- the revision hash range **on the `main` branch** of the first and last commit you have triaged in the triaged set (or the whole triage if you didn't have to split it),
 - a list of PRs that where included in the triage.
 Then, add a list entry for each issue you found,  with the issue title and number URL, for example:
 

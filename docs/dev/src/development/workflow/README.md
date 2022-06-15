@@ -5,7 +5,7 @@
 > - We use [Gitflow](http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/) for developing Hexatomic,
 > with the [Maven plugin for Gitflow](https://github.com/aleksandr-m/gitflow-maven-plugin).
 > - To contribute **new functionality**, create a feature branch by running `mvn gitflow:feature-start` in the repository root, and create a [*draft pull request*](http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/) against **`develop`** on <https://github.com/hexatomic/hexatomic>.
-> - To contribute a **critical bug fix, or urgent fixes to documentation, or release engineering**, create a hotfix branch by running `mvn gitflow:hotfix-start` in the repository root, and create a [*draft pull request*](http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/) against **`master`** on <https://github.com/hexatomic/hexatomic>.
+> - To contribute a **critical bug fix, or urgent fixes to documentation, or release engineering**, create a hotfix branch by running `mvn gitflow:hotfix-start` in the repository root, and create a [*draft pull request*](http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/) against **`main`** on <https://github.com/hexatomic/hexatomic>.
 > - Describe your changes in the pull request title and complete the pull request form.
 > - When you think that your contribution is good to be merged into the main repository, change the pull request status to **Ready for review**.
 > - Collaborate with the maintainer to fulfill any missing requirements and to merge your changes into the main repository.
@@ -41,12 +41,12 @@ In our case, this is the main repository at <https://github.com/hexatomic/hexato
 
 In the repository, there are two **main branches** that *always* exist and have an *infinite lifetime*:
 
-- **`master`**
+- **`main`**
 - **`develop`**
 
-The `master` branch always reflects the **production-ready** state.
-In other words, `master` will always contain the *releases* of Hexatomic,
-and any changes that are merged into `master` are releases.
+The `main` branch always reflects the **production-ready** state.
+In other words, `main` will always contain the *releases* of Hexatomic,
+and any changes that are merged into `main` are releases.
 
 The `develop` branch always contains the latest **finished development changes**.
 That means, whenever a feature is ready to be released, it is merged into `develop`
@@ -91,14 +91,14 @@ mvn gitflow:feature-start
 
 #### Contribute critical bug fixes, or urgent documentation, or release engineering fixes for a released version (*hotfix*)
 
-To contribute a new critical bug fix, documentation, or release engineering fix to Hexatomic, create a hotfix branch which is based on the `master` branch.
+To contribute a new critical bug fix, documentation, or release engineering fix to Hexatomic, create a hotfix branch which is based on the `main` branch.
 
 1. Create the new hotfix branch:  
 ```bash
 mvn gitflow:hotfix-start
 ```
 2. Give the hotfix branch a name as prompted by the Maven Gitflow plugin.
-3. [Create a draft pull request](#create-a-pull-request-for-your-contribution-before-you-start-working) against the `master` branch of <https://github.com/hexatomic/hexatomic> and start working.
+3. [Create a draft pull request](#create-a-pull-request-for-your-contribution-before-you-start-working) against the `main` branch of <https://github.com/hexatomic/hexatomic> and start working.
 4. Make, commit, and push your changes to this branch.
 5. Once you've finished your work, run `mvn clean install` to make sure that the project builds correctly.
 6. If any files were changed during `mvn clean install` - e.g., license headers have been added automatically - make sure to commit and push these changes.
@@ -124,7 +124,7 @@ This is how you start a [draft pull request](http://web.archive.org/web/20190822
 3. Click the button **New pull request**. It's next to the *Branch* dropdown menu.
 4. **Set the correct target of the pull request**:
     - For *features*, the base repository is `hexatomic/hexatomic` and the **base branch is `develop`**, the *compare* branch is your feature branch.
-    - For *hotfixes*, the base repository is `hexatomic/hexatomic` and the **base branch is `master`**, the *compare* branch is your hotfix branch.
+    - For *hotfixes*, the base repository is `hexatomic/hexatomic` and the **base branch is `main`**, the *compare* branch is your hotfix branch.
 5. Click the **Create pull request** button.
 6. Give your pull request a **meaningful title** describing your changes.
 7. **Complete the pull request form** in the editor window.
