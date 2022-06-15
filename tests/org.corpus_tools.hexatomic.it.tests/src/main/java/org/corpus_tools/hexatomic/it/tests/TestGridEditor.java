@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -280,9 +281,8 @@ public class TestGridEditor {
     // Programmatically open the example corpus
     openExample(separateSpanExampleProjectUri);
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus").expandNode("subCorpus1")
-            .expandNode("doc1");
+    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+        .expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
@@ -1913,6 +1913,39 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests that spans with different annotation values are not merged on issuing the respective
+   * command.
+   */
+  @Test
+  void testMergeUnequalAnnotationSpansFails() {
+    openSeparateSpanExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert state
+    Object one1 = natTable.getDataValueByPosition(2, 2);
+    assertTrue(one1 instanceof SSpan);
+    Object two = natTable.getDataValueByPosition(2, 3);
+    assertTrue(two instanceof SSpan);
+    Object one2 = natTable.getDataValueByPosition(2, 5);
+    assertTrue(one2 instanceof SSpan);
+    Object one3 = natTable.getDataValueByPosition(2, 6);
+    assertTrue(one3 instanceof SSpan);
+    assertFalse(one1 == one2);
+    assertFalse(one1 == one3);
+    assertFalse(one2 == one3);
+
+    // Select spans with equal annotations and click context menu
+    table.click(2, 2);
+    ctrlClick(table, 3, 2);
+    table.contextMenu(5, 2).contextMenu("Merge spans").click();
+    // Assert that waiting for merged spans times out (after 1 sec.)
+    assertThrows(TimeoutException.class,
+        () -> bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6), 1000l));
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
@@ -2036,7 +2069,7 @@ public class TestGridEditor {
       case TOKEN_VALUE:
         keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 't');
         break;
-        
+
       case SPAN_VALUE:
         keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 's');
         break;
@@ -2065,8 +2098,7 @@ public class TestGridEditor {
 
   private void assertColumnAddedAtIndex(String columnHeader, int newColumnIndex,
       SWTNatTableBot tableBot) {
-    assertEquals(columnHeader,
-        tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
+    assertEquals(columnHeader, tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
