@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 type: software
-message: If you use this software, please cite it as below.
+message: If you use this software, please cite it using the metadata below.
 title: Hexatomic
 abstract: |-
   Hexatomic is an extensible, OS-independent platform for deep multi-layer linguistic annotation of corpora.
