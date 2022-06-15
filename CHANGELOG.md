@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deploy p2 repo for updates automatically for releases (#288) 
 - Add auto-archival on Software Heritage whenever git tags are pushed to the repository (#21)
 
+### Changed
+
+- Changed name of the production branch from `master` to `main` (#333)
+
 ## [0.9.0] - 2022-05-24
 
 ### Added
