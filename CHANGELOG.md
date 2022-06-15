@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed name of the production branch from `master` to `main` (#333)
+- The About page doesn't show any information about the current snapshot build anymore, as only released versions are supported (#383)
 
 ## [0.9.0] - 2022-05-24
 
