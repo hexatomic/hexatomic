@@ -159,21 +159,6 @@ public class GridHelper {
     return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
   }
 
-  /**
-   * Constructs a valid qualified annotation name based on a given namespace string and a given name
-   * string, where the namespace string may be <code>null</code>.
-   * 
-   * @param annoNamespace The namespace string
-   * @param annoName The name string
-   * @return The valid qualified annotation name
-   */
-  public static String getAnnotationQName(String annoNamespace, String annoName) {
-    if (annoNamespace == null || annoNamespace.isEmpty()) {
-      return annoName;
-    } else {
-      return annoNamespace + SaltUtil.NAMESPACE_SEPERATOR + annoName;
-    }
-  }
 
   /**
    * Validates whether all selected cell coordinates cover exactly one span.
