@@ -38,6 +38,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.GridHelper;
+import org.corpus_tools.hexatomic.grid.internal.commands.MergeSpanCommand;
 import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.internal.ui.UnrenamedAnnotationsDialog;
@@ -439,8 +440,7 @@ public class GraphDataProvider implements IDataProvider {
    * @param cellMapByColumn a map of cells from column positions to sets of row positions.
    * @param newQName the new qualified annotation name for the annotations to be renamed
    */
-  public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn,
-      String newQName) {
+  public void bulkRenameAnnotations(Map<Integer, Set<Integer>> cellMapByColumn, String newQName) {
     // Retrieve the (maximally two, one for each node type) target columns first, to avoid race
     // conditions, in which new columns may be added to the list of columns before the next column
     // index is worked on (and therefore the wrong cell is moved).
@@ -487,10 +487,8 @@ public class GraphDataProvider implements IDataProvider {
    * @return a set of nodes that have been left unchanged because they couldn't be renamed
    */
   private Set<SStructuredNode> renameAnnotationsByColumn(Map<Integer, Set<Integer>> cellMapByColumn,
-      String newQName,
-      Column tokenAnnoTargetColumn,
-      Column spanAnnoTargetColumn, TreeSet<Integer> tokenAnnoSourceIndices,
-      TreeSet<Integer> spanAnnoSourceIndices) {
+      String newQName, Column tokenAnnoTargetColumn, Column spanAnnoTargetColumn,
+      TreeSet<Integer> tokenAnnoSourceIndices, TreeSet<Integer> spanAnnoSourceIndices) {
     Set<SStructuredNode> touchedNodes = new HashSet<>();
     Set<SStructuredNode> unchangedNodes = new HashSet<>();
     // Run the rename for all cells by column
@@ -514,8 +512,8 @@ public class GraphDataProvider implements IDataProvider {
         log.warn("Source column is not of any permitted type: {}.", sourceColumnType);
       }
       if (targetColumn != null) {
-        moveCells(newQName, touchedNodes, unchangedNodes, columnCoordinates,
-            sourceColumn, currentQName, targetColumn);
+        moveCells(newQName, touchedNodes, unchangedNodes, columnCoordinates, sourceColumn,
+            currentQName, targetColumn);
       }
     }
     return unchangedNodes;
@@ -534,11 +532,9 @@ public class GraphDataProvider implements IDataProvider {
    * @param currentQName The current qualified name
    * @param targetColumn The target column for the to-be-renamed annotations
    */
-  private void moveCells(String newQName, 
-      Set<SStructuredNode> touchedNodes,
-      Set<SStructuredNode> unchangedNodes,
-      Entry<Integer, Set<Integer>> columnCoordinates, Column sourceColumn, String currentQName,
-      Column targetColumn) {
+  private void moveCells(String newQName, Set<SStructuredNode> touchedNodes,
+      Set<SStructuredNode> unchangedNodes, Entry<Integer, Set<Integer>> columnCoordinates,
+      Column sourceColumn, String currentQName, Column targetColumn) {
     if (targetColumn.getBits().isEmpty()) {
       // Add new cells, as no further check is needed
       moveAnnotationsToEmptyCells(touchedNodes, columnCoordinates, sourceColumn, currentQName,
@@ -570,7 +566,7 @@ public class GraphDataProvider implements IDataProvider {
         }
         renameAnnotation(splitNamespace(newQName), splitName(newQName), currentQName, node,
             currentValue);
- 
+
         targetColumn.setRow(rowPosition, node);
         sourceColumn.setRow(rowPosition, null);
         // Remember that the node has already been touched.
@@ -579,8 +575,7 @@ public class GraphDataProvider implements IDataProvider {
     }
   }
 
-  private void moveAnnotationsToEmptyCells(
-      Set<SStructuredNode> touchedNodes,
+  private void moveAnnotationsToEmptyCells(Set<SStructuredNode> touchedNodes,
       Entry<Integer, Set<Integer>> columnCoordinates, Column sourceColumn, String currentQName,
       Column targetColumn, String newQName) {
     for (Integer rowPosition : columnCoordinates.getValue()) {
@@ -593,7 +588,7 @@ public class GraphDataProvider implements IDataProvider {
       // Move the cell
       targetColumn.setRow(rowPosition, node);
       sourceColumn.setRow(rowPosition, null);
- 
+
       // Remember that the node has already been touched.
       touchedNodes.add(node);
     }
@@ -615,8 +610,7 @@ public class GraphDataProvider implements IDataProvider {
    * @param cellMapByColumn The original map of cells over columns
    * @return a set of indices for rows that had been included more than once in the cell map
    */
-  private Set<Integer> deduplicateChangeSet(
-      Map<Integer, Set<Integer>> cellMapByColumn) {
+  private Set<Integer> deduplicateChangeSet(Map<Integer, Set<Integer>> cellMapByColumn) {
     // Determine if there are any neighbouring cells in the changeset
     Set<Integer> duplicateRows = new HashSet<>();
     Set<Integer> testSet = new HashSet<>();
@@ -653,8 +647,7 @@ public class GraphDataProvider implements IDataProvider {
    * @param currentValue The value of the annotation that is renamed
    */
   private void renameAnnotation(final String namespace, final String name, String currentQName,
-      SStructuredNode node,
-      Object currentValue) {
+      SStructuredNode node, Object currentValue) {
     node.removeLabel(currentQName);
     node.createAnnotation(namespace, name, currentValue);
   }
@@ -732,70 +725,60 @@ public class GraphDataProvider implements IDataProvider {
   }
 
   /**
-   * Merges {@link SSpan}s from the same column (this can be safely assumed, as the respective
-   * command wouldn't be shown otherwise, see {@link BodyMenuConfiguration}) into a single span
-   * spanning the same tokens, retaining the annotation, or provides feedback to the user that there
-   * was an annotation conflict, if annotation values weren't the same across selected spans.
+   * Merges {@link SSpan}s from the same column into a single span spanning the same tokens,
+   * retaining the annotation, or provides feedback to the user that there was an annotation
+   * conflict, if annotation values weren't the same across selected spans.
+   * 
+   * <p>
+   * When entering this method, it is safe to assume that: (1) all spans are in the same column and
+   * thus all have an annotation of the qualified annotation name for this column , and (2) all span
+   * annotations of the qualified annotation name have a nun-<code>null</code> value. If it was
+   * otherwise, the {@link MergeSpanCommand} would not be available to the user via the UI, see
+   * {@link BodyMenuConfiguration}.
+   * </p>
    * 
    * @param spans The {@link SSpan}s to merge
    * @param coordinates The coordinates for the {@link SSpan}s to merge
    */
   public void mergeAnnotationSpans(List<SSpan> spans, PositionCoordinate[] coordinates) {
-    String annoQName = columns.get(coordinates[0].getColumnPosition()).getColumnValue();
+    int firstColumnPosition = coordinates[0].getColumnPosition();
+    String annoQName = columns.get(firstColumnPosition).getColumnValue();
     Set<String> annotationValues = new HashSet<>();
-    // Add annotation of first span with annoQName to set, break on error (no annotation of this
-    // name)
-    HIER WEITER!
+    boolean singularValue = true;
     for (SSpan span : spans) {
+      // Set.add returns true if the value is new
       if (annotationValues.isEmpty()) {
-        if (spans.get(0).getAnnotation(annoQName).getValue_STEXT())
-      } else {
+        // Add the first encountered value
+        annotationValues.add(span.getAnnotation(annoQName).getValue_STEXT());
+      } else if (annotationValues.add(span.getAnnotation(annoQName).getValue_STEXT())) {
+        singularValue = false;
         break;
       }
     }
-    annotationValues.add(spans.get(0).getAnnotation(annoQName).getValue_STEXT());
-    Set<SToken> coveredTokens = new HashSet<>();
-    boolean allSameAnnotation = true;
-    for (SSpan span : spans) {
-      System.err.println(span.getAnnotation(annoQName).getValue_STEXT());
-      if (annotationValues.add(span.getAnnotation(annoQName).getValue_STEXT())) {
-       allSameAnnotation = false;
-       break;
-      }
-      else {
+    if (!singularValue) {
+      errors.handleException(
+          "Cannot merge spans with different annotation values: " + annotationValues,
+          new HexatomicRuntimeException("Trying to merge spans with different annotation values."),
+          GraphDataProvider.class);
+    } else {
+      // Perform merge
+      Set<SToken> coveredTokens = new HashSet<>();
+      for (SSpan span : spans) {
         coveredTokens.addAll(graph.getOverlappedTokens(span));
       }
+      SSpan newSpan = graph.createSpan(new ArrayList<>(coveredTokens));
+      newSpan.createAnnotation(getAnnotationNamespace(firstColumnPosition),
+          getAnnotationName(firstColumnPosition), getSingleValueFromSet(annotationValues));
+      for (PositionCoordinate coord : coordinates) {
+        columns.get(firstColumnPosition).setRow(coord.getRowPosition(), null);
+        columns.get(firstColumnPosition).setRow(coord.getRowPosition(), newSpan);
+      }
     }
-    if (allSameAnnotation) {
-      assert annotationValues.size() == 1;
-      System.err.println("MERGING");
-      // TODO Merge spans
-    } else {
-      System.err.println("ERROR");
-      // TODO Feedback error messag to user
-    }
-    // List<SToken> tokens = new ArrayList<>();
-    // // Collect all tokens that are covered
-    // PositionCoordinate firstCoord = coordinates[0];
-    // int firstCol = firstCoord.getColumnPosition();
-    // String annoNamespace = getAnnotationNamespace(firstCol);
-    // String annoName = getAnnotationName(firstCol);
-    // String annoQName = GridHelper.getAnnotationQName(annoNamespace, annoName);
-    // SAnnotation annotation = span.getAnnotation(annoQName);
-    // if (annotation == null) {
-    // throw new HexatomicRuntimeException("Expected annotation but was null.",
-    // new NullPointerException());
-    // } else {
-    // for (int i = 0; i < coordinates.length; i++) {
-    // PositionCoordinate coord = coordinates[i];
-    // int col = coord.getColumnPosition();
-    // int row = coord.getRowPosition();
-    // Object value = annotation.getValue();
-    // // First remove the current value, then set it anew
-    // setDataValue(col, row, null);
-    // setDataValue(col, row, value);
-    // }
-    // }
+  }
+
+  private String getSingleValueFromSet(Set<String> set) {
+    assert set.size() == 1;
+    return set.iterator().next();
   }
 
   /**
