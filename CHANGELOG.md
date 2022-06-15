@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deploy p2 repo for updates automatically for releases (#288) 
 - Add auto-archival on Software Heritage whenever git tags are pushed to the repository (#21)
 
+### Changed
+
+- The About page doesn't show any information about the current snapshot build anymore, as only released versions are supported (#383)
+
 ## [0.9.0] - 2022-05-24
 
 ### Added
