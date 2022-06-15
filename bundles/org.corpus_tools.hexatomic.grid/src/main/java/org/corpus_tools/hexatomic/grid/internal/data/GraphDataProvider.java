@@ -38,6 +38,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.GridHelper;
+import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.internal.ui.UnrenamedAnnotationsDialog;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -728,6 +729,73 @@ public class GraphDataProvider implements IDataProvider {
         setDataValue(col, row, value);
       }
     }
+  }
+
+  /**
+   * Merges {@link SSpan}s from the same column (this can be safely assumed, as the respective
+   * command wouldn't be shown otherwise, see {@link BodyMenuConfiguration}) into a single span
+   * spanning the same tokens, retaining the annotation, or provides feedback to the user that there
+   * was an annotation conflict, if annotation values weren't the same across selected spans.
+   * 
+   * @param spans The {@link SSpan}s to merge
+   * @param coordinates The coordinates for the {@link SSpan}s to merge
+   */
+  public void mergeAnnotationSpans(List<SSpan> spans, PositionCoordinate[] coordinates) {
+    String annoQName = columns.get(coordinates[0].getColumnPosition()).getColumnValue();
+    Set<String> annotationValues = new HashSet<>();
+    // Add annotation of first span with annoQName to set, break on error (no annotation of this
+    // name)
+    HIER WEITER!
+    for (SSpan span : spans) {
+      if (annotationValues.isEmpty()) {
+        if (spans.get(0).getAnnotation(annoQName).getValue_STEXT())
+      } else {
+        break;
+      }
+    }
+    annotationValues.add(spans.get(0).getAnnotation(annoQName).getValue_STEXT());
+    Set<SToken> coveredTokens = new HashSet<>();
+    boolean allSameAnnotation = true;
+    for (SSpan span : spans) {
+      System.err.println(span.getAnnotation(annoQName).getValue_STEXT());
+      if (annotationValues.add(span.getAnnotation(annoQName).getValue_STEXT())) {
+       allSameAnnotation = false;
+       break;
+      }
+      else {
+        coveredTokens.addAll(graph.getOverlappedTokens(span));
+      }
+    }
+    if (allSameAnnotation) {
+      assert annotationValues.size() == 1;
+      System.err.println("MERGING");
+      // TODO Merge spans
+    } else {
+      System.err.println("ERROR");
+      // TODO Feedback error messag to user
+    }
+    // List<SToken> tokens = new ArrayList<>();
+    // // Collect all tokens that are covered
+    // PositionCoordinate firstCoord = coordinates[0];
+    // int firstCol = firstCoord.getColumnPosition();
+    // String annoNamespace = getAnnotationNamespace(firstCol);
+    // String annoName = getAnnotationName(firstCol);
+    // String annoQName = GridHelper.getAnnotationQName(annoNamespace, annoName);
+    // SAnnotation annotation = span.getAnnotation(annoQName);
+    // if (annotation == null) {
+    // throw new HexatomicRuntimeException("Expected annotation but was null.",
+    // new NullPointerException());
+    // } else {
+    // for (int i = 0; i < coordinates.length; i++) {
+    // PositionCoordinate coord = coordinates[i];
+    // int col = coord.getColumnPosition();
+    // int row = coord.getRowPosition();
+    // Object value = annotation.getValue();
+    // // First remove the current value, then set it anew
+    // setDataValue(col, row, null);
+    // setDataValue(col, row, value);
+    // }
+    // }
   }
 
   /**
