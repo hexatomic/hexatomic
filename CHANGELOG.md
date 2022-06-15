@@ -182,7 +182,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the Eclipse platform to the 2020-03 release.
 - Updated PR template so that every checkbox is an actual task and should be checked to pass quality control.
 
-## Removed
+### Removed
 
 - The Salt graphs are not using the insufficient Salt notification extension anymore
 - `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
@@ -259,8 +259,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.4.3]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/hexatomic/hexatomic/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hexatomic/hexatomic/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/hexatomic/hexatomic/compare/vRemoved...v0.4.0
-[Removed]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...vRemoved
+[0.4.0]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/hexatomic/hexatomic/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hexatomic/hexatomic/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hexatomic/hexatomic/compare/v0.1.3...v0.2.0
