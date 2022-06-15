@@ -59,3 +59,31 @@ Although the span does *not* cover the token between `3` and `5`, `token 4`, and
 An example of the different span types is shown in the figure below.
 
 ![Screenshot of the Hexatomic Grid Editor showing examples of a discontinuous and a continuous span. Note that these examples aren't linguistically useful.](spans.png)
+
+## Splitting and merging spans
+
+You can split spans, and merge spans that are in the same annotation column.
+
+### Splitting spans
+
+You can split spans that span over more than one token, and therefore cover multiple grid cells within one annotation column:
+
+1. Select the span cell that you want to split into single-cell spans.
+2. Right-click on the span cell, and select **Split span** from the contect menu.
+
+The span will be split into single-cell spans with the same annotation value as the original multi-cell span.
+Each of these new spans covers exactly one token.
+
+![Edited screenshots showing a selected multi-cell span with activated **Split span** menu, and the result of the span operation at the tip of the arrow.](split-spans.png)
+
+### Merging spans
+
+You can merge spans that are in the same annotation column and have the same annotation value:
+
+1. Select all spans that you want to merge. These may be discontinuous.
+2. Right-click on one of the selected spans, and select **Merge spans** from the context menu.
+
+The spans will be merged into a single span, that may now cover multiple grid cells.
+The span will all have the same annotation value as the original single-cell spans.
+
+![Edited screenshots showing two selected span cells with the same annotation value with activated **Merge spans** menu, and the result of the span operation at the tip of the arrow.](merge-spans.png)
