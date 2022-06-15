@@ -7,10 +7,10 @@ please refer to the [**user documentation**](https://hexatomic.github.io/hexatom
 
 ## Contributing to Hexatomic development
 
-Hexatomic is an [open source project](https://github.com/hexatomic/hexatomic/tree/master/LICENSE). 
+Hexatomic is an [open source project](https://github.com/hexatomic/hexatomic/tree/main/LICENSE). 
 We welcome contributions from the community.
 
-If you want to **contribute code** to Hexatomic, please make yourself familiar with the general [***contributing guidelines***](https://github.com/hexatomic/hexatomic/tree/master/CONTRIBUTING.md) first, then continue to read this documentation.
+If you want to **contribute code** to Hexatomic, please make yourself familiar with the general [***contributing guidelines***](https://github.com/hexatomic/hexatomic/tree/main/CONTRIBUTING.md) first, then continue to read this documentation.
 
 The contributing guidelines also include information on how to **report a bug**, **request a feature**, etc.
 

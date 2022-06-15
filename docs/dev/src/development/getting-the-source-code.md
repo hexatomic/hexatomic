@@ -18,7 +18,7 @@ To download the source code onto your computer and put it under local version co
 git clone https://github.com/<your-GitHub-user-name>/hexatomic.git
 ```
 
-It will download the latest version of the source code in the `master` branch to a sub-directory `hexatomic`,
+It will download the latest version of the source code in the `main` branch to a sub-directory `hexatomic`,
 along with the complete Git version history.
 
 For your actual contribution, you will need to create a new Git branch, but this is explained in detail in section [Workflow](./workflow/).

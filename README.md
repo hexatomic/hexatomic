@@ -9,7 +9,7 @@
 
 [![Apache License, Version 2.0][license-shield]][license-url]
 [![Issues][issues-shield]][issues-url]
-[![Build Status][gh-actions-master-shield]][gh-actions-master-url]
+[![Build Status][gh-actions-main-shield]][gh-actions-main-url]
 
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hexatomic_hexatomic&metric=alert_status)](https://sonarcloud.io/dashboard?id=hexatomic_hexatomic)
@@ -221,10 +221,10 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [issues-shield]: https://img.shields.io/github/issues/hexatomic/hexatomic.svg?style=flat-square
 [issues-url]: https://github.com/hexatomic/hexatomic/issues
 [license-shield]: https://img.shields.io/github/license/hexatomic/hexatomic.svg?style=flat-square
-[license-url]: https://github.com/hexatomic/hexatomic/blob/master/LICENSE
+[license-url]: https://github.com/hexatomic/hexatomic/blob/main/LICENSE
 [product-screenshot]: images/screenshot.png
-[gh-actions-master-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
-[gh-actions-master-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests
+[gh-actions-main-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
+[gh-actions-main-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests
 [sonarcloud-dashboard]: https://sonarcloud.io/dashboard?id=hexatomic_hexatomic
 
 [eclipse-download]: https://www.eclipse.org/downloads/

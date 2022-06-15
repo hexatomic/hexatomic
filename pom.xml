@@ -190,6 +190,7 @@
 					<versionsForceUpdate>true</versionsForceUpdate>
 					<gitFlowConfig>
 						<versionTagPrefix>v</versionTagPrefix>
+						<productionBranch>main</productionBranch>
 					</gitFlowConfig>
 				</configuration>
 			</plugin>
