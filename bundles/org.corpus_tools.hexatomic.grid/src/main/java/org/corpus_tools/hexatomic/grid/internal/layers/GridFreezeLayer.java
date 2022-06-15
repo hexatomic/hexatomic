@@ -103,7 +103,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   /**
    * Triggers the merging of spans into a single span in the underlying data model.
    * 
-   * @param span The {@link SSpan}s to merge
+   * @param spans The {@link SSpan}s to merge
    * @param coordinates The coordinates for the {@link SSpan}s to merge
    */
   public void mergeAnnotationSpans(List<SSpan> spans, PositionCoordinate[] coordinates) {
@@ -120,7 +120,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    *        list of columns, or -1 when it should be added at the end of the list
    */
   public void addAnnotationColumn(ColumnType type, String annoQName, int insertionIndex) {
-    // Counter starts at one as the added column represents the first existing column 
+    // Counter starts at one as the added column represents the first existing column
     // for the specified qualified annotation name.
     int existingColumnCounter = 1;
     for (Column column : bodyDataProvider.getColumns()) {

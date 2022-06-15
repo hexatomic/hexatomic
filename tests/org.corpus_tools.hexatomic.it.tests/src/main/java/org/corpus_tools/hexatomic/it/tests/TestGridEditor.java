@@ -1942,7 +1942,7 @@ public class TestGridEditor {
     table.contextMenu(5, 2).contextMenu("Merge spans").click();
     // Assert that waiting for merged spans times out (after 1 sec.)
     assertThrows(TimeoutException.class,
-        () -> bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6), 1000l));
+        () -> bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6), 1000L));
   }
 
   /**
@@ -2186,6 +2186,14 @@ public class TestGridEditor {
     private final int columnIndex;
     private final Object fixture;
 
+    /**
+     * Constructs a new {@link UnequalDataObjectsCondition} object.
+     * 
+     * @param columnIndex The columnIndex
+     * @param fixtureRowIndex The row index of the fixture
+     * @param natTable The underlying {@link NatTable}
+     * @param rowIndices The rowIndices to check for inequality against
+     */
     public UnequalDataObjectsCondition(int columnIndex, int fixtureRowIndex, NatTable natTable,
         int... rowIndices) {
       this.fixtureRowIndex = fixtureRowIndex;
@@ -2228,6 +2236,14 @@ public class TestGridEditor {
     private final int columnIndex;
     private final Object fixture;
 
+    /**
+     * Constructs a {@link SameSpansCondition} object.
+     * 
+     * @param columnIndex The column index
+     * @param fixtureRowIndex The row index of the fixture
+     * @param natTable The underlying {@link NatTable}
+     * @param rowIndices The row indices to check for same span condition against the fixture for
+     */
     public SameSpansCondition(int columnIndex, int fixtureRowIndex, NatTable natTable,
         int... rowIndices) {
       this.fixtureRowIndex = fixtureRowIndex;
