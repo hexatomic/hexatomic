@@ -706,7 +706,7 @@ public class GraphDataProvider implements IDataProvider {
     int firstCol = firstCoord.getColumnPosition();
     String annoNamespace = getAnnotationNamespace(firstCol);
     String annoName = getAnnotationName(firstCol);
-    String annoQName = GridHelper.getAnnotationQName(annoNamespace, annoName);
+    String annoQName = SaltUtil.createQName(annoNamespace, annoName);
     SAnnotation annotation = span.getAnnotation(annoQName);
     if (annotation == null) {
       throw new HexatomicRuntimeException("Expected annotation but was null.",
