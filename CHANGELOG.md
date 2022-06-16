@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed name of the production branch from `master` to `main` (#333)
 - The About page doesn't show any information about the current snapshot build anymore, as only released versions are supported (#383)
 
+### Fixed
+
+- Fixed changelog rendering issue where links aren't rendered on GitHub (#388)
+
 ## [0.9.0] - 2022-05-24
 
 ### Added
@@ -180,7 +184,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the Eclipse platform to the 2020-03 release.
 - Updated PR template so that every checkbox is an actual task and should be checked to pass quality control.
 
-## Removed
+### Removed
 
 - The Salt graphs are not using the insufficient Salt notification extension anymore
 - `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
@@ -242,6 +246,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
+
+
 [Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...HEAD
 [0.9.0]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/hexatomic/hexatomic/compare/v0.7.1...v0.8.0
@@ -255,11 +261,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.4.3]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/hexatomic/hexatomic/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hexatomic/hexatomic/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/hexatomic/hexatomic/compare/vRemoved...v0.4.0
-[Removed]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...vRemoved
+[0.4.0]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/hexatomic/hexatomic/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hexatomic/hexatomic/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hexatomic/hexatomic/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/hexatomic/hexatomic/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hexatomic/hexatomic/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hexatomic/hexatomic/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/hexatomic/hexatomic/releases/tag/v0.1.0
