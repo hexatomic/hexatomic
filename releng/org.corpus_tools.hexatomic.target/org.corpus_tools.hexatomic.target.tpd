@@ -27,7 +27,7 @@ location 'http://download.eclipse.org/releases/2021-12/' {
 
 location 'https://download.eclipse.org/tools/orbit/downloads/drops/R20201130205003/repository/' {
 	
-	org.slf4j.api [1.7.10,2.0.0)
+	org.slf4j.api [1.7.30,2.0.0)
 	ch.qos.logback.slf4j [1.1.2,2.0.0)
 	ch.qos.logback.classic [1.1.2,2.0.0)
 	org.mockito
