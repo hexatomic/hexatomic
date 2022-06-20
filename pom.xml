@@ -205,7 +205,7 @@
                         </referenceTemplate>
                     </referenceTemplates>
                     <ignoredArtifacts>
-                        <ignoredArtifact>p2\.eclipse-plugin:org\.corpus_tools\.hexatomic\..*</ignoredArtifact>
+                        <ignoredArtifact>(p2\.eclipse\.plugin)|(org\.corpus_tools):org\.corpus_tools\.hexatomic\..*</ignoredArtifact>
                     </ignoredArtifacts>
                 </configuration>
             </plugin>
