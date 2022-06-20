@@ -20,7 +20,7 @@ jobs:
           env:
             LANG: en_US.UTF-8
         - name: Update CFF file
-          run: mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create
+          run: mvn cff:create
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file
@@ -49,7 +49,7 @@ jobs:
           env:
             LANG: en_US.UTF-8
         - name: Update CFF file
-          run: mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create
+          run: mvn cff:create
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file

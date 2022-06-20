@@ -30,9 +30,8 @@ We use the Citation File Format Maven plugin to
 document Hexatomic's dependencies, their licenses, and their citation information.
 The plugin is run during the [continuous integration release workflow](../continuous-integration/#release-workflow).
 This plug-in provides two goals, which can be executed to update the third-party dependency information.
-Since our external dependencies are currently collected by the `org.corpus_tools.hexatomic` feature,
-you have to execute the following Maven commands in the `features/org.corpus_tools.hexatomic` folder.
-The created files and folders will be located in the root folder of this project.
+You have to execute the following Maven commands in the root folder, where the 
+created files and folders will be located, too.
 
 `mvn cff:create` creates a new `CITATION.cff` file in the [Citation File Format (CFF)](https://citation-file-format.github.io/).
 This file does not only include basic information about the authorship of the Hexatomic project but also lists dependencies, for citation purposes.
