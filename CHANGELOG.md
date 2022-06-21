@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Manually update THIRD-PARTY folder and CITATION.cff during release process
+
+## [0.10.0] - 2022-06-21
+
 ### Added
 
 - Add CI workflow to automatically update dependency and citation metadata on pushes to `develop` (#394)
@@ -250,7 +256,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/hexatomic/hexatomic/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/hexatomic/hexatomic/compare/v0.7.0...v0.7.1
@@ -270,4 +277,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.3]: https://github.com/hexatomic/hexatomic/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/hexatomic/hexatomic/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/hexatomic/hexatomic/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/hexatomic/hexatomic/releases/tag/v0.1.0

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Graph Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.graph.tests
-Bundle-Version: 0.10.0.qualifier
+Bundle-Version: 0.12.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.graph;bundle-version="0.4.0"
 Automatic-Module-Name: org.corpus_tools.hexatomic.graph.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
