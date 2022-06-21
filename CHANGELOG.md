@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add CI workflow to automatically update dependency and citation metadata on pushes to `develop` (#394)
+
 ## [0.12.0] - 2022-06-21
 
 ### Fixed
@@ -17,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add CI workflow to automatically update dependency and citation metadata on pushes to `develop` (#394)
 - Add functionality for splitting spans into single spans to Grid Editor (#101)
 - Add functionality for merging spans into a single span to Grid Editor (#102)
 - Deploy p2 repo for updates automatically for releases (#288) 
