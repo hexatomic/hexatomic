@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed changelog rendering issue where links aren't rendered on GitHub (#388)
+- Fixed creation of the dependency list in CFF file (#392)
 
 ## [0.9.0] - 2022-05-24
 
