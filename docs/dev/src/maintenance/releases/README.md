@@ -13,6 +13,9 @@ There are, however, two ground rules for when a release is created:
 
 Before you make a release, make sure that you have configured [commit signature verification with GPG](https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification/about-commit-signature-verification), or else the release workflow will fail.
 
+Also make sure that you have the Eclipse IDE closed during the release process.
+The IDE sometimes updates files that may interfere with the release.
+
 ## Feature releases
 
 To release a new *feature* (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.
