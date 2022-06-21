@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.releng</artifactId>
-        <version>0.12.0-SNAPSHOT</version>
+        <version>0.13.0-SNAPSHOT</version>
     </parent>
     <artifactId>org.corpus_tools.hexatomic.target</artifactId>
     <packaging>eclipse-target-definition</packaging>
