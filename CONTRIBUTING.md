@@ -35,7 +35,7 @@ or a `hotfix` branch (for hot fixes to releases) with `mvn gitflow:hotfix-start`
     - Test your changes locally!
 3. Push your branch and create a pull request.  
     - If your contribution is new functionality, create it against `hexatomic:develop`.
-    - If your contribution is a bug fix, create it against `hexatomic:master`.
+    - If your contribution is a bug fix, create it against `hexatomic:main`.
 
 ### Code reviews
 

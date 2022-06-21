@@ -24,6 +24,8 @@ import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
+import org.corpus_tools.salt.common.SSpan;
+import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
@@ -99,7 +101,6 @@ public class GridHelper {
     int singleColumnPosition = -1;
     for (PositionCoordinate coord : selectedCellCoordinates) {
       int columnPosition = coord.getColumnPosition();
-      int rowPosition = coord.getRowPosition();
       // Check for each coordinate pair whether it has the same column position as the first
       // pair (otherwise the cell is in a different column).
       if (singleColumnPosition == -1) {
@@ -107,18 +108,119 @@ public class GridHelper {
       } else if (columnPosition != singleColumnPosition) {
         return false;
       }
-      if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
-        return false;
-      }
     }
     // At this point, singleColumnPosition should be set
     // Return whether the single column is a span column
     return isSpanColumn(singleColumnPosition, selectionLayer);
   }
+
+  /**
+   * Tests whether all cells for the passed position coordinates are empty.
+   * 
+   * @param selectedCellCoordinates An array of {@link PositionCoordinate}s for the currently
+   *        selected cells.
+   * @param selectionLayer The selection layer
+   * @return if all cells for the passed position coordinates are empty
+   */
+  public static boolean areSelectedCellsEmpty(PositionCoordinate[] selectedCellCoordinates,
+      SelectionLayer selectionLayer) {
+    for (PositionCoordinate coord : selectedCellCoordinates) {
+      if (!isCellEmpty(selectionLayer, coord.columnPosition, coord.rowPosition)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Tests whether all selected cells are in span columns.
+   * 
+   * @param selectedCellCoordinates The {@link PositionCoordinate}s for the selected cells
+   * @param selectionLayer The {@link SelectionLayer}
+   * @return whether all selected cells are in a span column
+   */
+  public static boolean areAllSelectedCellsInSpanColumns(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    for (PositionCoordinate coord : selectedCellCoordinates) {
+      if (!isSpanColumn(coord.columnPosition, selectionLayer)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean isCellEmpty(SelectionLayer selectionLayer, int columnPosition,
+      int rowPosition) {
+    return selectionLayer.getDataValueByPosition(columnPosition, rowPosition) == null;
+  }
   
   private static boolean isSpanColumn(int singleColumnPosition, SelectionLayer selectionLayer) {
     LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
     return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+  }
+
+
+  /**
+   * Validates whether all selected cell coordinates cover exactly one span.
+   * 
+   * @param selectedCellCoordinates the coordinates to test
+   * @param selectionLayer the {@link SelectionLayer} of the grid including the coordinates
+   * @return whether all passed coordinates cover the same single span
+   */
+  public static boolean areAllSelectedCoordinatesOneSpan(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    return getSingleSpanForPositions(selectedCellCoordinates, selectionLayer) != null;
+  }
+
+  /**
+   * Checks whether all data at the given position coordinates are non-null {@link SSpan}s.
+   * 
+   * @param selectedCellCoordinates The selected {@link PositionCoordinate}s
+   * @param selectionLayer The {@link SelectionLayer} of the grid that the coordinates are in
+   * @return whether only non-null spans are selected
+   */
+  public static boolean areAllSelectedCellsNonNullSpans(
+      PositionCoordinate[] selectedCellCoordinates, SelectionLayer selectionLayer) {
+    for (int i = 0; i < selectedCellCoordinates.length; i++) {
+      PositionCoordinate positionCoordinate = selectedCellCoordinates[i];
+      int col = positionCoordinate.getColumnPosition();
+      int row = positionCoordinate.getRowPosition();
+      Object data = selectionLayer.getDataValueByPosition(col, row);
+      if (!(data instanceof SSpan)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Retrieves the single {@link SSpan} that is the data object in the cells of all given
+   * {@link PositionCoordinate}s, or <code>null</code> if the coordinates do not contain a single
+   * non-null span.
+   * 
+   * @param selectedCellCoordinates The selected {@link PositionCoordinate}s
+   * @param selectionLayer The {@link SelectionLayer} of the grid that the coordinates are in
+   * @return The single span that is contained in all coordinates, or <code>null</code>
+   */
+  public static SSpan getSingleSpanForPositions(PositionCoordinate[] selectedCellCoordinates,
+      SelectionLayer selectionLayer) {
+    SSpan span = null;
+    for (int i = 0; i < selectedCellCoordinates.length; i++) {
+      PositionCoordinate positionCoordinate = selectedCellCoordinates[i];
+      int col = positionCoordinate.getColumnPosition();
+      int row = positionCoordinate.getRowPosition();
+      if (span == null) {
+        Object data = selectionLayer.getDataValueByPosition(col, row);
+        if (data instanceof SSpan) {
+          span = (SSpan) data;
+        }
+      } else {
+        if (selectionLayer.getDataValueByPosition(col, row) != span) {
+          return null;
+        }
+      }
+    }
+    return span;
   }
 
 }

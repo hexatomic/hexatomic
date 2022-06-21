@@ -8,7 +8,7 @@ All tasks should be completed in a *timely fashion*, and based on the Hexatomic 
 
 ## <i class="fa fa-cogs"></i> Maintenance work
 
-- Ensure that Hexatomic always builds without errors in the `master` and `develop` branches
+- Ensure that Hexatomic always builds without errors in the `main` and `develop` branches
 - Fix security issues and bugs
 - Maintain templates, configuration files, community files (`README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, etc.), licenses, etc.
 

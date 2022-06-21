@@ -110,8 +110,8 @@ The way that pull requests are merged into their target branch depends on their 
 
 1. Pull requests that provide **hotfixes**, i.e., repair functionality that is broken rather than provide 
 new or change existing functionality, **must not be merged** from the GitHub UI directly. This is
-because they target the `master` branch, which only contains released code. Therefore, code that
-goes into the `master` branch must be formally released, which cannot be done from the GitHub UI.
+because they target the `main` branch, which only contains released code. Therefore, code that
+goes into the `main` branch must be formally released, which cannot be done from the GitHub UI.
 Instead, refer to the section about [releasing hotfixes](../releases/README.md#hotfix-releases) to learn how to do this.
 2. Pull requests that target the `develop` branch must not necessarily be released on merge. Instead,
 code changes from different pull requests can be bundled into a release. Therefore, it is safe to
