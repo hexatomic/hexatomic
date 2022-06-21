@@ -32,7 +32,7 @@ To release a new *feature* (i.e., minor) version of Hexatomic, run the following
 10. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 11. `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
 12. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
-13. `mvn mvn cff:third-party-folder cff:create` - Updates the third-party folder and citation file.
+13. `mvn cff:third-party-folder cff:create` - Updates the third-party folder and citation file.
 14. `git add CITATION.cff THIRD-PARTY/` - Adds the updated folder and citation file to the Git index.
 15. `git commit -m "Update third party folder and citation file"` - Commits the changed folder and file to version control.
 16. `git push` - Updates the remote release branch.
@@ -55,7 +55,7 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 8. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 9.  `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
 10. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
-11. `mvn mvn cff:third-party-folder cff:create` - Updates the third-party folder and citation file.
+11. `mvn cff:third-party-folder cff:create` - Updates the third-party folder and citation file.
 12. `git add CITATION.cff THIRD-PARTY/` - Adds the updated folder and citation file to the Git index.
 13. `git commit -m "Update third party folder and citation file"` - Commits the changed folder and file to version control.
 14. `git push` - Updates the remote release branch.
