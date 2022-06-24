@@ -255,12 +255,6 @@ references:
   authors:
   - name: The org.corpus-tools.salt-api 3.4.2 Team
 - type: software
-  title: org.corpus_tools.hexatomic
-  version: 0.13.0-SNAPSHOT
-  abbreviation: org.corpus_tools:org.corpus_tools.hexatomic
-  authors:
-  - name: The org.corpus_tools.hexatomic 0.13.0-SNAPSHOT Team
-- type: software
   title: org.eclipse.core.commands
   version: 3.10.100.v20210722-1426
   license: EPL-2.0
