@@ -28,7 +28,7 @@ repository-code: https://github.com/hexatomic/hexatomic
 url: https://hexatomic.github.io
 license: Apache-2.0
 version: 0.13.0-SNAPSHOT
-date-released: 2022-06-24
+date-released: 2022-07-25
 references:
 - type: software
   title: SWT Resource Manager
