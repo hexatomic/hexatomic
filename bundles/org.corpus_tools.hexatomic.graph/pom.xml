@@ -7,7 +7,7 @@
     <parent>
         <artifactId>org.corpus_tools.hexatomic.bundles</artifactId>
         <groupId>org.corpus_tools</groupId>
-        <version>0.12.0</version>
+        <version>0.13.0</version>
     </parent>
 
 

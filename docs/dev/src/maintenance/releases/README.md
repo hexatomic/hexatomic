@@ -13,6 +13,9 @@ There are, however, two ground rules for when a release is created:
 
 Before you make a release, make sure that you have configured [commit signature verification with GPG](https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification/about-commit-signature-verification), or else the release workflow will fail.
 
+Also make sure that you have the Eclipse IDE closed during the release process.
+The IDE sometimes updates files that may interfere with the release.
+
 ## Feature releases
 
 To release a new *feature* (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.
@@ -29,8 +32,11 @@ To release a new *feature* (i.e., minor) version of Hexatomic, run the following
 10. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 11. `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
 12. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
-13. `git push` - Updates the remote release branch.
-14. `mvn gitflow:release-finish` - Finalizes the release process.
+13. `mvn -P cff` - Updates the third-party folder and citation file.
+14. `git add CITATION.cff THIRD-PARTY/` - Adds the updated folder and citation file to the Git index.
+15. `git commit -m "Update third party folder and citation file"` - Commits the changed folder and file to version control.
+16. `git push` - Updates the remote release branch.
+17. `mvn gitflow:release-finish` - Finalizes the release process.
 
 ## Hotfix releases
 
@@ -49,8 +55,11 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 8. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 9.  `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
 10. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
-11. `git push` - Updates the remote release branch.
-12. `mvn gitflow:hotfix-finish` - Finalizes the hotfix and finishes the merge and release procedure.
+11. `mvn -Pcff package` - Updates the third-party folder and citation file.
+12. `git add CITATION.cff THIRD-PARTY/` - Adds the updated folder and citation file to the Git index.
+13. `git commit -m "Update third party folder and citation file"` - Commits the changed folder and file to version control.
+14. `git push` - Updates the remote release branch.
+15. `mvn gitflow:hotfix-finish` - Finalizes the hotfix and finishes the merge and release procedure.
 
 ## Promoting releases on GitHub
 

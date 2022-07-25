@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2022-07-25
+
+### Added
+
+- Add CI workflow to automatically update dependency and citation metadata on
+  pushes to `develop` (#394)
+- Document to close IDEs during release process (#395)
+- Hexatomic is automatically published to Zenodo for each release (#387)
+- Use the product definition to create the CITATION.CFF file and THIRD-PARTY
+  folder. Excuting `mvn -Pcff package` in the root folder will re-create these
+  files.
+
 ## [0.12.0] - 2022-06-21
 
 ### Fixed
@@ -258,7 +270,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/hexatomic/hexatomic/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/hexatomic/hexatomic/compare/v0.10.0...v0.12.0
 [0.10.0]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...v0.9.0

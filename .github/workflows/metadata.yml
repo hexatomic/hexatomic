@@ -1,0 +1,38 @@
+name: Update dependency and citation metadata when PRs are merged (i.e., on pushes to `develop`)
+on: 
+  push:
+    branches:    
+      - 'develop'
+
+jobs:
+  update_deps:
+    name: Update dependency and citation information
+    runs-on: ubuntu-20.04
+    steps:
+        - name: Update packages
+          run: sudo apt-get update
+        - name: Install metacity window manager for background tests
+          run: sudo apt-get install metacity
+        - name: Checkout
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+        - name: Set JAVA_HOME to OpenJDK 11
+          run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+        - name: Run Maven install (without tests) and re-create CFF file
+          run: ./releng/sh/metacity-run.sh mvn -DskipTests -Pcff clean install
+          env:
+            LANG: en_US.UTF-8
+        - name: Commit files
+          run: |
+            git config --local user.email "gh-actions@corpus-tools.org"
+            git config --local user.name "GitHub Actions CI [bot]"
+            git add CITATION.cff
+            git add THIRD-PARTY
+            # Only execute the commit if the staging area has changes
+            git diff --cached --exit-code || git commit -m "Update THIRD-PARTY folder and CITATION.cff"
+        - name: Push changes
+          uses: ad-m/github-push-action@v0.6.0
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            branch: ${{ github.ref }}
