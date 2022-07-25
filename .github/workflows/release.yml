@@ -15,12 +15,8 @@ jobs:
           uses: actions/checkout@v2
         - name: Set JAVA_HOME to OpenJDK 11
           run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
-        - name: Run Maven install (includes tests)
-          run: ./releng/sh/metacity-run.sh mvn clean install
-          env:
-            LANG: en_US.UTF-8
-        - name: Update CFF file
-          run: mvn cff:create
+        - name: Run Maven install (includes tests) and re-create CFF file
+          run: ./releng/sh/metacity-run.sh mvn -Pcff clean install
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file
@@ -44,12 +40,8 @@ jobs:
           uses: actions/checkout@v2
         - name: Set JAVA_HOME to OpenJDK 11
           run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
-        - name: Run Maven install (excludes tests since they currently fail on macOS)
-          run: mvn -DskipTests clean install
-          env:
-            LANG: en_US.UTF-8
-        - name: Update CFF file
-          run: mvn cff:create
+        - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
+          run: mvn -Pcff -DskipTests clean install
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file

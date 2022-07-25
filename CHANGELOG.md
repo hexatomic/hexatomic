@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add CI workflow to automatically update dependency and citation metadata on
+  pushes to `develop` (#394)
+- Document to close IDEs during release process (#395)
+- Hexatomic is automatically published to Zenodo for each release (#387)
+- Use the product definition to create the CITATION.CFF file and THIRD-PARTY
+  folder. Excuting `mvn -Pcff package` in the root folder will re-create these
+  files.
+
 ## [0.12.0] - 2022-06-21
 
 ### Fixed
