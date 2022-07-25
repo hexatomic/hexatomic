@@ -9,6 +9,8 @@ jobs:
     name: Update dependency and citation information
     runs-on: ubuntu-20.04
     steps:
+        - name: Update packages
+          run: sudo apt-get update
         - name: Install metacity window manager for background tests
           run: sudo apt-get install metacity
         - name: Checkout
