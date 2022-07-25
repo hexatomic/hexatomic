@@ -1,0 +1,1999 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+        <meta name="robots" content="noindex" />
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="development/architecture/index.html"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="development/add-new-editor.html"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="maintenance/taking-over/index.html"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="maintenance/contributions/index.html"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><a href="maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="maintenance/prepare-end/index.html"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#introduction" id="introduction">Introduction</a></h1>
+<p>This is documentation for developers and maintainers of Hexatomic.</p>
+<p>If you are looking for documentation of how to <em>use</em> Hexatomic, 
+please refer to the <a href="https://hexatomic.github.io/hexatomic/user/"><strong>user documentation</strong></a>.</p>
+<h2><a class="header" href="#contributing-to-hexatomic-development" id="contributing-to-hexatomic-development">Contributing to Hexatomic development</a></h2>
+<p>Hexatomic is an <a href="https://github.com/hexatomic/hexatomic/tree/main/LICENSE">open source project</a>. 
+We welcome contributions from the community.</p>
+<p>If you want to <strong>contribute code</strong> to Hexatomic, please make yourself familiar with the general <a href="https://github.com/hexatomic/hexatomic/tree/main/CONTRIBUTING.md"><em><strong>contributing guidelines</strong></em></a> first, then continue to read this documentation.</p>
+<p>The contributing guidelines also include information on how to <strong>report a bug</strong>, <strong>request a feature</strong>, etc.</p>
+<h2><a class="header" href="#requirements" id="requirements">Requirements</a></h2>
+<p>Hexatomic is an Eclipse e4 application, built on the <strong>Eclipse Platform</strong> for rich client applications, and implemented in <strong>Java</strong>.
+It is built with <strong>Apache Maven</strong> and the <strong>Eclipse Tycho</strong> extension, and versioned with <strong>Git</strong>.</p>
+<p>It will be easier for you to contribute to Hexatomic if you already have some experience with these technologies.</p>
+<p>Here are links to some resources that can help you get started:</p>
+<ul>
+<li><a href="http://web.archive.org/web/20190815125800/https://docs.oracle.com/javase/tutorial/">Java tutorials</a> by Oracle</li>
+<li><a href="http://web.archive.org/web/20190815125723/https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">Maven in 5 minutes - Tutorial</a> by the Apache Software Foundation</li>
+<li><a href="http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html">Eclipse RCP (Rich Client Platform) - Tutorial</a> by Lars Vogel</li>
+<li><a href="http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html">Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial</a> by 
+Lars Vogel and Simon Scholz</li>
+<li><a href="https://www.eclipse.org/swt/">Standard Widget Toolkit (SWT)</a> for developing user interfaces in Eclipse-based applications</li>
+<li><a href="https://swcarpentry.github.io/git-novice/">Version Control with Git - Software Carpentry lesson</a> by Daisie Huang and Ivan Gonzalez<sup class="footnote-reference"><a href="#git-cite">1</a></sup></li>
+</ul>
+<h2><a class="header" href="#license" id="license">License</a></h2>
+<p><img src="https://img.shields.io/badge/CC0-1.0%20Universal-yellowgreen?logo=creative-commons" alt="" /><br />
+Unless otherwise noted, this documentation is licensed under a <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode">CC0 1.0 Universal (CC0 1.0)</a> license. Please see the section <a href="./LICENSE.html">License</a> for details.</p>
+<hr />
+<div class="footnote-definition" id="git-cite"><sup class="footnote-definition-label">1</sup>
+<p>Daisie Huang and Ivan Gonzalez (eds): &quot;Software Carpentry: Version Control with Git.&quot; Version 2016.06, June 2016, <a href="https://github.com/swcarpentry/git-novice">https://github.com/swcarpentry/git-novice</a>, doi:<a href="https://doi.org/10.5281/zenodo.57467">https://doi.org/10.5281/zenodo.57467</a></p>
+</div>
+<h1><a class="header" href="#development" id="development">Development</a></h1>
+<p>This section contains the documentation for Hexatomic development work.</p>
+<h1><a class="header" href="#development-setup" id="development-setup">Development setup</a></h1>
+<h2><a class="header" href="#operating-system-for-development" id="operating-system-for-development">Operating system for development</a></h2>
+<p>You can develop and build Hexatomic on Linux, Mac OS and Windows.
+We suggest that you use <strong>Linux</strong> for development, to avoid non-straightforward install procedures for required technologies as well as potential issues with file encodings, paths, and file permissions.</p>
+<h2><a class="header" href="#required-software" id="required-software">Required software</a></h2>
+<p>Hexatomic is implemented in <strong>Java</strong>, built with <strong>Apache Maven</strong>, and versioned with <strong>Git</strong>.
+You need all three on your computer to contribute code to Hexatomic.</p>
+<p>The documentation is written in Markdown and generated with <strong>mdbook</strong>.</p>
+<h3><a class="header" href="#java-11" id="java-11">Java 11</a></h3>
+<p>You need to have a copy of the <strong>Java Development Kit (JDK), Version 11</strong> installed on your computer.
+It shouldn't make any difference whether you use the open <em>OpenJDK</em> implementation of Java, or an <em>Oracle JDK</em>.
+We suggest that you use <strong>OpenJDK</strong> since more recent versions of the <em>Oracle JDK</em> have a more restricted license.
+OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
+For stand-alone packages, you can use the installers distributed by the <a href="https://adoptopenjdk.net">AdoptOpenJDK project</a>.
+AdoptOpenJDK packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
+When installing the AdoptOpenJDK on Windows, make sure that the option to set the <code>JAVA_HOME</code> environment variable is activated.
+Otherwise you will have to set the environment variable manually.</p>
+<p>You can check which version of Java you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">java -version
+</code></pre>
+<p>On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.</p>
+<pre><code class="language-bash">openjdk version &quot;11.0.10&quot; 2021-01-19
+OpenJDK Runtime Environment (build 11.0.10+9-Ubuntu-0ubuntu1.20.04)
+OpenJDK 64-Bit Server VM (build 11.0.10+9-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
+</code></pre>
+<h3><a class="header" href="#apache-maven" id="apache-maven">Apache Maven</a></h3>
+<p>You need to have a copy of <strong>Apache Maven</strong> in <strong>version 3.6.3 or newer</strong> installed on your computer.
+To find out how to install Maven on your system, please see the <a href="https://maven.apache.org/">Apache Maven website</a>.</p>
+<p>You can check which version of Maven you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">mvn -version
+</code></pre>
+<p>On Linux, this should produce the following output, or something similar. The first line is the important one, the other ones may look different, depending on the Linux distribution you use.</p>
+<pre><code class="language-bash">Apache Maven 3.6.3
+Maven home: /usr/share/maven
+Java version: 11.0.10, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd64
+Default locale: de_DE, platform encoding: UTF-8
+OS name: &quot;linux&quot;, version: &quot;5.10.0-1016-oem&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;
+</code></pre>
+<blockquote>
+<p><i class="fa fa-bug"></i> <strong>Known bug in Maven version 3.6.2</strong></p>
+<p>If <code>mvn -version</code> returns Maven version <em>3.6.2</em>, you will have to install version 3.6.3 or newer instead,
+as version 3.6.2 contains a bug that will break the Hexatomic build. 
+You can learn more about this in the respective <a href="https://issues.apache.org/jira/browse/MNG-6765">bug report</a>.</p>
+</blockquote>
+<h3><a class="header" href="#git" id="git">Git</a></h3>
+<p>You need to have a copy of <strong>Git</strong> in <strong>version 2.17.1 or newer</strong> installed on your computer.
+To find out how to install Git on your system, please see the <a href="https://git-scm.com/">Git website</a>.</p>
+<p>You can check which version of Git you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">git --version
+</code></pre>
+<p>On Linux, this should produce the following output.</p>
+<pre><code class="language-bash">git version 2.17.1
+</code></pre>
+<h3><a class="header" href="#mdbook" id="mdbook">mdbook</a></h3>
+<p><strong>If you want to build the documentation online book locally</strong> to, e.g., see your changes as they will look like online, 
+you need to have a copy of <strong>mdbook, version 0.3.1 or newer</strong> installed on your computer.
+To find out how to install mdbook on your system, please see the <a href="https://github.com/rust-lang-nursery/mdBook">mdbook website</a>.</p>
+<p>You can check which version of mdbook you have installed by typing the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">mdbook --version
+</code></pre>
+<p>On Linux, this should produce the following output.</p>
+<pre><code class="language-bash">mdbook v0.3.1
+</code></pre>
+<h2><a class="header" href="#suggested-editor-eclipse-integrated-development-environment-ide" id="suggested-editor-eclipse-integrated-development-environment-ide">Suggested editor: Eclipse Integrated Development Environment (IDE)</a></h2>
+<p>Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
+While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source <strong>Eclipse IDE, version 2021-12 or newer</strong>.</p>
+<p>You can download it from the <a href="https://www.eclipse.org/downloads/">Eclipse download website</a>.</p>
+<h3><a class="header" href="#eclipse-ide-installation" id="eclipse-ide-installation">Eclipse IDE installation</a></h3>
+<p>The download contains an installer which lets you configure the setup of your IDE.
+To develop Hexatomic, you will need to install <a href="https://www.eclipse.org/downloads/packages/release/2021-12/r/eclipse-ide-rcp-and-rap-developers">Eclipse IDE for RCP and RAP Developers</a>:</p>
+<ul>
+<li>Extract the downloaded file.</li>
+<li>Start the Eclipse installer (<code>eclipse-inst</code>).</li>
+<li>From the list of available Eclipse packages, choose <strong>Eclipse IDE for RCP and RAP Developers</strong>.</li>
+</ul>
+<p>During the installation, accept licenses, set directories, etc., as you see fit.</p>
+<p>After you have installed the IDE itself, install the required tool plugins.</p>
+<h3><a class="header" href="#ide-plugin-installation" id="ide-plugin-installation">IDE Plugin installation</a></h3>
+<p>If not noted otherwise, Eclipse plugins are installed as follows:</p>
+<ul>
+<li>Open the <em>Install Wizard</em> via the menu <strong>Help &gt; Install New Software...</strong></li>
+<li>In the <strong>Work with:</strong> field, enter the URL of the Update Site for the plugin, given in brackets below.</li>
+<li>Select the plugins you want to install, and install them with the help of the wizard.</li>
+<li>Installing IDE plugins sometimes triggers security warnings, because the code in the plugins has not been <a href="https://en.wikipedia.org/wiki/Code_signing">signed</a>. Often, code authors will simply have avoided the cost of purchasing a certificate to do the signing with, and in these cases the warnings are false alarms. However, we encourage you to carefully check the plugins you install, just as you would when you install other software.</li>
+</ul>
+<h3><a class="header" href="#list-of-eclipse-ide-plugins-required-for-hexatomic-development" id="list-of-eclipse-ide-plugins-required-for-hexatomic-development">List of Eclipse IDE plugins required for Hexatomic development</a></h3>
+<ul>
+<li><a href="https://github.com/eclipse-cbi/targetplatform-dsl"><strong>Target Platform Definition DSL and Generator</strong></a>, <strong>version 3.0.0-SNAPSHOT or newer</strong><br />
+(Update Site: <a href="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/">http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/</a>)</li>
+<li><a href="https://checkstyle.org/eclipse-cs/"><strong>Eclipse Checkstyle Plugin</strong></a> (Update Site: <a href="https://checkstyle.org/eclipse-cs-update-site/">https://checkstyle.org/eclipse-cs-update-site/</a>)</li>
+<li></li>
+</ul>
+<h1><a class="header" href="#getting-the-source-code" id="getting-the-source-code">Getting the source code</a></h1>
+<p>The Hexatomic source code is hosted on GitHub at <i class="fa fa-github"></i> <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</p>
+<p>You don't have direct write permissions to this main source code repository, unless you are a <a href="https://github.com/hexatomic/hexatomic#core-contributors">core contributor</a>.
+This means that you will make your changes in your own copy (<em>fork</em>) of the repository, and request that we merge your changes into the main code base when you are finished (<em>pull request</em>).<sup class="footnote-reference"><a href="#workflow">1</a></sup></p>
+<h2><a class="header" href="#downloading-the-source-code-to-your-computer" id="downloading-the-source-code-to-your-computer">Downloading the source code to your computer</a></h2>
+<p>First, you need to create a fork of the Hexatomic main repository on GitHub:</p>
+<ol>
+<li>Log in to your GitHub account (<a href="https://github.com/login">github.com/login</a>).</li>
+<li>Go to <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>, and click the <strong><i class="fa fa-code-fork"></i> Fork</strong> button in the upper right-hand corner of the repository page. This will create a copy of the repository under your own account.</li>
+</ol>
+<p>To download the source code onto your computer and put it under local version control with Git, type the following command into the terminal of your computer:</p>
+<pre><code class="language-bash">git clone https://github.com/&lt;your-GitHub-user-name&gt;/hexatomic.git
+</code></pre>
+<p>It will download the latest version of the source code in the <code>main</code> branch to a sub-directory <code>hexatomic</code>,
+along with the complete Git version history.</p>
+<p>For your actual contribution, you will need to create a new Git branch, but this is explained in detail in section <a href="development/./workflow/">Workflow</a>.
+For now, all that is left to do is build Hexatomic locally, and get its source code into your IDE.</p>
+<h2><a class="header" href="#build-hexatomic-locally" id="build-hexatomic-locally">Build Hexatomic locally</a></h2>
+<p>Before you import the Hexatomic source code into the Eclipse IDE, you should now build it locally to check that everything works, and to avoid error messages in the Eclipse IDE.</p>
+<p>To build Hexatomic locally, go to the root directory of your local copy of the Hexatomic source code, and run <code>mvn clean install</code>.</p>
+<p>Maven then builds Hexatomic and installs artifacts in the local Maven repository.</p>
+<p>During the build, some tests are being run that start Hexatomic and automatedly interact with the graphical user interface.
+You must not use the keyboard or mouse during these GUI tests, as this may
+interfere with the automated interactions. For more information, see the section
+<a href="development/./automated-tests/ui-integration-tests.html#running-ui-integration-tests"><em>Running UI integration tests</em></a>.</p>
+<h2><a class="header" href="#getting-the-source-code-into-the-eclipse-ide" id="getting-the-source-code-into-the-eclipse-ide">Getting the source code into the Eclipse IDE</a></h2>
+<p>If you have set up the Eclipse IDE for development of Hexatomic, as described in the section <a href="development/./setup.html#suggested-editor-eclipse-integrated-development-environment-ide">Development setup</a>, you will have to import the source code from your local
+Git repository.</p>
+<p>To import the Hexatomic into your Eclipse IDE, do the following:</p>
+<ol>
+<li>Start Eclipse</li>
+<li>Open the <strong>Import</strong> window via the menu <strong>File</strong> &gt; <strong>Import</strong></li>
+<li>Select the import wizard <strong>General</strong> &gt; <strong>Existing Projects into Workspace</strong> and click <strong>Next &gt;</strong></li>
+<li>In <strong>Select root directory</strong>, select the directory where you have downloaded the Hexatomic source code to (the Git <em>root</em>)</li>
+<li>In the <strong>Options</strong> section of the window, activate <strong>Search for nested projects</strong></li>
+<li>Click <strong>Finish</strong></li>
+</ol>
+<p>Congratulations, you are now set up to start contributing to Hexatomic!</p>
+<p>Before starting to work on your contribution, please read the section <a href="development/./workflow/">Workflow</a> carefully.</p>
+<hr />
+<div class="footnote-definition" id="workflow"><sup class="footnote-definition-label">1</sup>
+<p>For more info on <em>forks</em> and <em>pull requests</em>, read the section <a href="development/./workflow/">Workflow</a>.</p>
+</div>
+<h1><a class="header" href="#coding-style-and-formatting" id="coding-style-and-formatting">Coding style and formatting</a></h1>
+<p>We are using a derivative of the <a href="https://google.github.io/styleguide/javaguide.html">Google Java Style Guide</a>, which regulates formatting, naming conventions, Javadoc and other stylistic rules for the Hexatomic source code.
+In addition to the original style guide, the following rules apply:</p>
+<ul>
+<li>Package names are allowed to have underscores, e.g. <code>org.corpus_tools.hexatomic</code> .</li>
+<li>An HTML rendered JavaDoc API page must include all the context necessary to understand all the contents of the page.</li>
+<li>Some Eclipse RCP-specific knowledge should be assumed, e.g., what the <code>@PreConstruct</code>/<code>@PostConstruct</code> annotations mean.</li>
+</ul>
+<p>Some aspects of the coding style will be automatically enforced and checked during continuous integration using the
+<a href="https://maven.apache.org/plugins/maven-checkstyle-plugin/">Maven Checkstyle plugin</a>.
+Validation of the coding style is also performed whenever you build the project using Maven (e.g., <code>mvn install</code>).</p>
+<h2><a class="header" href="#configuring-the-eclipse-code-formatting" id="configuring-the-eclipse-code-formatting">Configuring the Eclipse code formatting</a></h2>
+<p>You can configure Eclipse to format your source code according to the Hexatomic Java style.</p>
+<ol>
+<li>Choose <strong>Window</strong> &gt; <strong>Preferences</strong> from the main Eclipse menu.</li>
+<li>Open the settings page <strong>Java</strong> &gt; <strong>Code Style</strong> &gt; <strong>Formatter</strong></li>
+<li>Select &quot;Import...&quot; and choose the file <code>releng/ide/eclipse-java-hexatomic-style.xml</code> in the Hexatomic repository</li>
+<li>Switch to &quot;Hexatomic Style&quot; as the active profile.<br />
+<br />
+<img src="development/./import-code-formatter.png" alt="Importing the Hexatomic Style formatting configuration file" /><br />
+<br />
+</li>
+<li>Open the settings page <strong>Java</strong> &gt; <strong>Code Style</strong> &gt; <strong>Organize Imports</strong></li>
+<li>Select all packages in the list and remove them. 
+This configures Eclipse to order all imported packages in alphabetical order.<br />
+<br />
+<img src="development/./configure-import-order.png" alt="Configure the package import order" /></li>
+</ol>
+<p>You can use the keyboard shortcut <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>F</kbd> to format a single source code file.
+<kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>O</kbd> will organize the imports.</p>
+<h2><a class="header" href="#checking-for-issues-in-eclipse" id="checking-for-issues-in-eclipse">Checking for issues in Eclipse</a></h2>
+<p>To check for issues with the coding style in Eclipse, select the source code package in the Project Explorer, click right with the mouse and select <strong>Checkstyle</strong> &gt; <strong>Check Code with Checkstyle</strong>. 
+This will add warnings to the <code>Problems</code> view of Eclipse and add yellow annotations to the source code files.
+To remove these annotations again, select the source code package, click right with the mouse and select <strong>Checkstyle</strong> &gt; <strong>Clear Checkstyle violations</strong>.</p>
+<h1><a class="header" href="#creating-and-activating-the-target-platform" id="creating-and-activating-the-target-platform">Creating and activating the target platform</a></h1>
+<p>The set of bundles that are available in Eclipse to run Hexatomic is defined by the bundles in your workspace (i.e., the Hexatomic bundles), and additionally the bundles in the active <em>target platform</em>.
+When you first start Eclipse, this target platform only includes the bundles that are installed in your Eclipse IDE installation.
+Hexatomic needs another set of bundles to run.
+As these bundles are not available when you first start Eclipse, it will show numerous errors for Hexatomic projects.
+This is because Eclipse cannot find the bundles that Hexatomic needs in the currently active target platform.</p>
+<p>The bundles that Hexatomic needs are defined in a custom target platform definition project, which is located in the <code>releng/org.corpus_tools.hexatomic.target/</code> directory.</p>
+<p>You can see this project in the Project Explorer in Eclipse.
+It contains two important files:</p>
+<ul>
+<li><code>org.corpus_tools.hexatomic.target.tpd</code>: A reasonably well-readable plain text files which describes which bundles from which bundle repository should go in the target platform</li>
+<li><code>org.corpus_tools.hexatomic.target.target</code>: An XML file describing the target platform so that the Eclipse IDE can read it and activate it</li>
+</ul>
+<p>The first time you run Eclipse - and every consecutive time that the target platform definition changes - you will need to activate the target platform.
+To do so, use the plain text target platform description file ending on <code>.tpd</code> to create a new XML target platform definition:</p>
+<ul>
+<li>Right-click on <code>org.corpus_tools.hexatomic.target.tpd</code>, and click on <strong>Create Target Definition File</strong>, <em>or</em></li>
+<li>Select <code>org.corpus_tools.hexatomic.target.tpd</code> and press <kbd>Alt</kbd> + <kbd>R</kbd>.</li>
+</ul>
+<p>This will refresh the XML definition file with the contents of the description file, or create the XML file if it doesn't exist.</p>
+<p><img src="development/create-target-definition.png" alt="" /></p>
+<p>Next, open <code>org.corpus_tools.hexatomic.target.target</code>  (you may have to right-click and choose <strong>Open With</strong> &gt; <strong>Target Editor</strong>).
+On opening the Target Editor, Eclipse will resolve the plugins in the target platform definition.
+Wait until this has finished, then click the <strong>Set as Active Target Platform</strong> link on the top-right of the Target Editor.</p>
+<p><img src="development/set-target-platform.png" alt="" /></p>
+<p>Any errors related to unresolvable imports should now be gone after Eclipse has automatically built the projects in the workspace.</p>
+<p>To learn more about target platforms in Eclipse, read the <a href="http://web.archive.org/web/20191128121621/https://www.vogella.com/tutorials/EclipseTargetPlatform/article.html">Eclipse Target Platform Tutorial</a> by Lars Vogel.</p>
+<h1><a class="header" href="#running-and-debugging-hexatomic-in-eclipse" id="running-and-debugging-hexatomic-in-eclipse">Running and debugging Hexatomic in Eclipse</a></h1>
+<p>Hexatomic is a modular project, and while it is possible to debug a user-defined subset of its bundles,
+it may be more useful to debug the complete application.</p>
+<p>To run or debug Hexatomic from within the Eclipse IDE, with all the features and bundles, you have to launch the
+<strong>org.corpus_tools.hexatomic.product</strong> launch configuration, which is included in the project. 
+Choose the debug icon in the toolbar and select <strong>Debug Configurations...</strong></p>
+<p><img src="development/./debug-configurations.png" alt="Open debug configurations" /></p>
+<p>The launch configuration is shown in the <strong>Eclipse Application</strong> category and you can use it to run Hexatomic in debug mode by clicking on the
+<strong>Debug</strong> button.</p>
+<p><img src="development/./product-debug.png" alt="Product launch configuration" /></p>
+<p>This launch configuration is based on features.
+To add new features, select the <strong>Plug-ins</strong> tab, and activate the features you need.
+Changing the product configuration will change the file <code>releng/ide/org.corpus_tools.hexatomic.product.launch</code>, which is part of the Git repository.</p>
+<h1><a class="header" href="#development-workflow" id="development-workflow">Development workflow</a></h1>
+<blockquote>
+<p><strong>Summary</strong></p>
+<ul>
+<li>We use <a href="http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/">Gitflow</a> for developing Hexatomic,
+with the <a href="https://github.com/aleksandr-m/gitflow-maven-plugin">Maven plugin for Gitflow</a>.</li>
+<li>To contribute <strong>new functionality</strong>, create a feature branch by running <code>mvn gitflow:feature-start</code> in the repository root, and create a <a href="http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/"><em>draft pull request</em></a> against <strong><code>develop</code></strong> on <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</li>
+<li>To contribute a <strong>critical bug fix, or urgent fixes to documentation, or release engineering</strong>, create a hotfix branch by running <code>mvn gitflow:hotfix-start</code> in the repository root, and create a <a href="http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/"><em>draft pull request</em></a> against <strong><code>main</code></strong> on <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</li>
+<li>Describe your changes in the pull request title and complete the pull request form.</li>
+<li>When you think that your contribution is good to be merged into the main repository, change the pull request status to <strong>Ready for review</strong>.</li>
+<li>Collaborate with the maintainer to fulfill any missing requirements and to merge your changes into the main repository.</li>
+</ul>
+</blockquote>
+<h2><a class="header" href="#work-in-a-fork" id="work-in-a-fork">Work in a fork</a></h2>
+<p>Unless you are part of the <a href="https://github.com/hexatomic/hexatomic#team">core contributors team</a> for Hexatomic, 
+you cannot add changes in the main Hexatomic GitHub repository itself.</p>
+<p>Instead, use a &quot;fork&quot; of this repository to do your work. 
+A fork is a copy of the original repository which you own, i.e., which you
+can make <em>any</em> changes to. To learn how to create a fork, read the section 
+<a href="development/workflow/../getting-the-source-code.html#downloading-the-source-code-to-your-computer"><em>Downloading the source code to your computer</em></a>.</p>
+<h2><a class="header" href="#the-gitflow-branching-model" id="the-gitflow-branching-model">The Gitflow branching model</a></h2>
+<p>Hexatomic follows a common development workflow: Gitflow. It is a development workflow that works with a specific Git branch structure, and is actually quite simple to understand and follow, and based on just a few rules.
+Also, Hexatomic actually uses a <a href="development/workflow/index.html#maven-plugin-for-gitflow">Maven plugin for Gitflow</a>, which makes it really easy to work with Gitflow.</p>
+<p>If you are interested in learning more about Gitflow, read the <a href="http://web.archive.org/web/20190821195236/https://nvie.com/posts/a-successful-git-branching-model/">original blog post describing it</a>. The figure below gives an overview of the complete Gitflow workflow.</p>
+<hr />
+<p><a href="http://web.archive.org/web/20190821195236/https://nvie.com/files/Git-branching-model.pdf"><img src="development/workflow/gitflow.png" alt="" /></a><br />
+<em><strong>Figure:</strong></em> <strong>Git branching model overview.</strong> Graphic by Vincent Driessen from the original blog post <a href="http://nvie.com/archives/323">&quot;A successful Git branching model&quot;</a>. Licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA license</a>. <img src="https://img.shields.io/badge/CC-BY%20SA-yellowgreen?logo=creative-commons" alt="" /></p>
+<hr />
+<p>Gitflow assumes that there is a single, central &quot;repository of truth&quot;.
+In our case, this is the main repository at <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</p>
+<h3><a class="header" href="#main-branches" id="main-branches">Main branches</a></h3>
+<p>In the repository, there are two <strong>main branches</strong> that <em>always</em> exist and have an <em>infinite lifetime</em>:</p>
+<ul>
+<li><strong><code>main</code></strong></li>
+<li><strong><code>develop</code></strong></li>
+</ul>
+<p>The <code>main</code> branch always reflects the <strong>production-ready</strong> state.
+In other words, <code>main</code> will always contain the <em>releases</em> of Hexatomic,
+and any changes that are merged into <code>main</code> are releases.</p>
+<p>The <code>develop</code> branch always contains the latest <strong>finished development changes</strong>.
+That means, whenever a feature is ready to be released, it is merged into <code>develop</code>
+to wait for the next release (which will then contain the new feature).</p>
+<h3><a class="header" href="#branches-you-do-your-work-in" id="branches-you-do-your-work-in">Branches you do your work in</a></h3>
+<p>In Gitflow, there are two types of branches where the actual work is happening:</p>
+<ul>
+<li><strong><code>feature</code> branches</strong> are used for developing new functionality, and to fix issues that change functionality.</li>
+<li><strong><code>hotfix</code> branches</strong> are used to fix <em>critical</em> bugs in releases (which break functionality), and to fix urgent issues in documentation and release engineering for releases. Hotfixes don't change functionality, they repair functionality.</li>
+</ul>
+<p><strong>These distinctions are important</strong>, because depending on what type of contribution you want to make, it means that you have to start your work by running different commands.</p>
+<h4><a class="header" href="#contribute-new-or-changed-functionality-feature" id="contribute-new-or-changed-functionality-feature">Contribute new or changed functionality (<em>feature</em>)</a></h4>
+<p>To contribute new functionality to Hexatomic, or change functionality (including fixes for functional issues), documentation, or release engineering processes, create a feature branch which is based on the <code>develop</code> branch.</p>
+<ol>
+<li>Download the <code>develop</code> branch from your fork repository:</li>
+</ol>
+<pre><code class="language-bash"># Download the contents of the remote `develop` branch (and others) to your local repository
+git fetch
+# Switch to the local branch `develop`
+git checkout develop 
+</code></pre>
+<ol start="2">
+<li>Install the project as-is to prepare your development work:</li>
+</ol>
+<pre><code class="language-bash">mvn clean install
+</code></pre>
+<ol start="3">
+<li>Create the new feature branch:</li>
+</ol>
+<pre><code class="language-bash">mvn gitflow:feature-start
+</code></pre>
+<ol start="4">
+<li>Give the feature branch a name as prompted by the Maven Gitflow plugin.</li>
+<li><a href="development/workflow/index.html#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>develop</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
+<li>Make, commit, and push your changes to this branch.</li>
+<li>Once you've finished your work, run <code>mvn clean install</code> to make sure that the project builds correctly.</li>
+<li>If any files were changed during <code>mvn clean install</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
+<li>Make sure that you have documented your changes in the changelog (<code>CHANGELOG.md</code>) in the <code>[Unreleased]</code> section, and that the updated changelog is pushed to your feature branch.</li>
+<li>Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer (via the <em>Reviewers</em> settings for the pull request) and clicking <code>Ready to review</code> in the pull request page on GitHub.</li>
+</ol>
+<h4><a class="header" href="#contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix" id="contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix">Contribute critical bug fixes, or urgent documentation, or release engineering fixes for a released version (<em>hotfix</em>)</a></h4>
+<p>To contribute a new critical bug fix, documentation, or release engineering fix to Hexatomic, create a hotfix branch which is based on the <code>main</code> branch.</p>
+<ol>
+<li>Create the new hotfix branch:</li>
+</ol>
+<pre><code class="language-bash">mvn gitflow:hotfix-start
+</code></pre>
+<ol start="2">
+<li>Give the hotfix branch a name as prompted by the Maven Gitflow plugin.</li>
+<li><a href="development/workflow/index.html#create-a-pull-request-for-your-contribution-before-you-start-working">Create a draft pull request</a> against the <code>main</code> branch of <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> and start working.</li>
+<li>Make, commit, and push your changes to this branch.</li>
+<li>Once you've finished your work, run <code>mvn clean install</code> to make sure that the project builds correctly.</li>
+<li>If any files were changed during <code>mvn clean install</code> - e.g., license headers have been added automatically - make sure to commit and push these changes.</li>
+<li>Make sure that you have documented your changes in the changelog (<code>CHANGELOG.md</code>) in the <code>[Unreleased]</code> section, and that the updated changelog is pushed to your hotfix branch.</li>
+<li>Once you are ready to have your changes merged into the project, request a review of your pull request from the maintainer (via the <em>Reviewers</em> settings for the pull request) and clicking <code>Ready to review</code> in the pull request page on GitHub.</li>
+</ol>
+<p>If the maintainer themself is authoring the pull requests and there are no other maintainers available to review it, the maintainer can:</p>
+<ol>
+<li>Add the <code>unreviewed</code> label to the PR.</li>
+<li>Check that all automatic checks have been successful. If static code analysis is enabled, check that no new issues (like the &quot;Code Smell&quot; or &quot;Bug&quot; categories in SonarCloud) have been introduced and that all quality metrics (like minimal test coverage or maximum duplication of lines) are within the accepted range.</li>
+<li>Proceed with releasing the hotfix, see section <a href="development/workflow/../../maintenance/releases/#hotfix-releases">Releases</a>.</li>
+</ol>
+<p>Unreviewed PRs are subject to <a href="development/workflow/../../maintenance/unreviewed-code-triage.html">periodic code triages</a>.</p>
+<h2><a class="header" href="#create-a-pull-request-for-your-contribution-before-you-start-working" id="create-a-pull-request-for-your-contribution-before-you-start-working">Create a pull request for your contribution before you start working</a></h2>
+<p>Once you are ready to start working on your contribution, it's time to let the Hexatomic maintainer know about it, so that they can discuss the new changes and provide comments and support while you work.
+The way to do this is via a <a href="https://help.github.com/en/articles/about-pull-requests">pull request on GitHub</a>.
+Pull requests (<em>PR</em>s) aren't part of Git as such, but a feature of the GitHub platform.</p>
+<p>This is how you start a <a href="http://web.archive.org/web/20190822091222/https://github.blog/2019-02-14-introducing-draft-pull-requests/">draft pull request</a>:</p>
+<ol>
+<li>Go to <a href="https://github.com">https://github.com</a> and log in.</li>
+<li>In your fork of the Hexatomic main repository (<code>github.com/&lt;your-user-name&gt;/hexatomic</code>), select the branch you have been working on via the <strong>Branches</strong> tab or the <strong>Branch</strong> dropdown menu.</li>
+<li>Click the button <strong>New pull request</strong>. It's next to the <em>Branch</em> dropdown menu.</li>
+<li><strong>Set the correct target of the pull request</strong>:
+<ul>
+<li>For <em>features</em>, the base repository is <code>hexatomic/hexatomic</code> and the <strong>base branch is <code>develop</code></strong>, the <em>compare</em> branch is your feature branch.</li>
+<li>For <em>hotfixes</em>, the base repository is <code>hexatomic/hexatomic</code> and the <strong>base branch is <code>main</code></strong>, the <em>compare</em> branch is your hotfix branch.</li>
+</ul>
+</li>
+<li>Click the <strong>Create pull request</strong> button.</li>
+<li>Give your pull request a <strong>meaningful title</strong> describing your changes.</li>
+<li><strong>Complete the pull request form</strong> in the editor window.</li>
+<li>From the green dropdown menu below the editor, select <strong>Draft pull request</strong>.</li>
+<li>Make sure that <strong>Allow edits from maintainers</strong> is activated.</li>
+<li>Click the <strong>Draft pull request</strong> button to create your pull request.</li>
+</ol>
+<p>Now, anytime you push a new commit to your feature branch, it will also show up in the pull request located in the Hexatomic main repository.
+This way, the Hexatomic maintainer can track progress, review changes as soon as they come in, and discuss changes with you.</p>
+<h2><a class="header" href="#what-is-a-feature-contribution-what-is-a-hotfix" id="what-is-a-feature-contribution-what-is-a-hotfix">What is a feature contribution, what is a hotfix?</a></h2>
+<p>Within the Hexatomic project, <em>hotfixes</em> are changes that are made to a deployed major or minor release.
+Hotfixes <em>repair broken functionality</em>, i.e., functionality that does not work at all.
+In contrast, changes to working functionality are made in <em>features</em>.
+Hotfixes can also include <em>urgent</em> non-functional changes to Hexatomic, such as correcting documentation which does not reflect actual functionality, urgent changes to the release workflow, etc.</p>
+<p><em>Features</em> are changes that introduce new functionality to the software, or changes to functionality, while the existing functionality keeps working.
+This also includes changes to functionality which are regarded as <em>issue fixes</em>. These fixes address issues with functionality that actually works, but is intended to work differently.</p>
+<p>The following table gives some examples.</p>
+<table><thead><tr><th>Feature</th><th>Hotfix</th></tr></thead><tbody>
+<tr><td>Add a new editor</td><td>Fix a bug in an existing editor, which breaks functionality</td></tr>
+<tr><td>Add new functionality to an editor</td><td>Fix behaviour in the release workflow which breaks the build</td></tr>
+<tr><td>Add other functionality</td><td>Correct documentation which wrongly describes functionality</td></tr>
+<tr><td>Change functionality</td><td></td></tr>
+<tr><td>Update documentation</td><td></td></tr>
+<tr><td>Update release engineering</td><td></td></tr>
+</tbody></table>
+<p>It is important to note that <strong>the <code>develop</code> branch always contains the truth</strong>, i.e., always holds the stage of development against which all features must be developed.
+Implementation of new functionality must <strong>always</strong> start with a branch from <code>develop</code> via <code>mvn gitflow:feature-start</code>!
+Do not base your work on any other <code>feature/...</code> or other branches.
+Finished features are collected in <code>develop</code> before release.</p>
+<h1><a class="header" href="#repositories" id="repositories">Repositories</a></h1>
+<p>Currently, Hexatomic is developed within a single repository at <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</p>
+<p>Push access to this repository is granted to the <a href="https://github.com/hexatomic/hexatomic#core-contributors">Hexatomic core contributors</a>.
+Other contributors must work in their own fork. </p>
+<p>Section <a href="development/workflow/../getting-the-source-code.html#downloading-the-source-code-to-your-computer"><em>Downloading the source code to your computer</em></a> describes how to create a fork. If you have not worked in your own fork for a longer period of time, then you can use the GitHub's &quot;Fetch Upstream&quot; function (directly below the greed <strong>Code</strong> button in the fork overview) to synchronize your fork with the current main repository.</p>
+<h2><a class="header" href="#project-setup" id="project-setup">Project setup</a></h2>
+<p><strong>Repository structure of <a href="https://github.com/hexatomic/hexatomic"><code>hexatomic/hexatomic</code></a>:</strong></p>
+<ul>
+<li><strong>Root directory</strong>
+<ul>
+<li>main <a href="http://web.archive.org/web/20191212124853/https://maven.apache.org/guides/introduction/introduction-to-the-pom.html">POM</a> (<code>pom.xml</code>)</li>
+<li>Meta files (<code>.gitignore</code>, <code>README.md</code>, <code>LICENSE</code>, <code>CONTRIBUTING.md</code>, <code>CODE_OF_CONDUCT.md</code>, etc.)</li>
+</ul>
+</li>
+<li><strong><code>bundles</code></strong>
+<ul>
+<li>bundle sub-projects</li>
+</ul>
+</li>
+<li><strong><code>features</code></strong>
+<ul>
+<li>feature sub-projects</li>
+</ul>
+</li>
+<li><strong><code>docs</code></strong>
+<ul>
+<li>source files for user and developer/maintainer documentation</li>
+</ul>
+</li>
+<li><strong><code>releng</code></strong>
+<ul>
+<li>configuration and release engineering files</li>
+</ul>
+</li>
+<li><strong><code>.github</code></strong> 
+<ul>
+<li>GitHub specific configuration, such as issue templates and workflows of the GitHub Actions CI</li>
+</ul>
+</li>
+</ul>
+<h3><a class="header" href="#setup-details" id="setup-details">Setup details</a></h3>
+<p>The Hexatomic project in the <code>hexatomic/hexatomic</code> repository is set up generally
+along the lines of <a href="http://web.archive.org/web/20190801113418/https://www.vogella.com/tutorials/EclipseTycho/article.html">Eclipse Tycho for building plug-ins, OSGi bundles and Eclipse applications - Tutorial</a> by 
+Lars Vogel and Simon Scholz, Version 13.03.2019, and <a href="http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html">Eclipse RCP (Rich Client Platform) - Tutorial</a> by Lars Vogel, Version 10.12.2018.</p>
+<p>This means that</p>
+<ol>
+<li>It is <strong>built using <a href="http://web.archive.org/web/20190807185333/https://www.eclipse.org/tycho/">Eclipse Tycho</a></strong>, a plugin for the <a href="http://web.archive.org/web/20190806000707/https://maven.apache.org/">Maven build system</a>.</li>
+<li><strong>Bundles</strong> (a.k.a. &quot;plug-ins&quot;), i.e., units that encapsulate well-defined functionality, are located in the <a href="https://github.com/hexatomic/hexatomic/tree/main/bundles/"><code>bundles</code></a> directory.</li>
+<li><strong>Features</strong>, i.e., units that integrate one or more bundles, are located in the <a href="https://github.com/hexatomic/hexatomic/tree/feature/0.1.0/features/"><code>features</code></a> directory.</li>
+<li><strong>Configuration and release engineering</strong>-related files are located in the <a href="https://github.com/hexatomic/hexatomic/tree/feature/0.1.0/releng/"><code>releng</code></a> directory. This includes:
+<ul>
+<li>Project configuration (for packaging, target platform configuration, etc.)</li>
+<li><em>Product</em> definition; in the Eclipse world, products are units that in turn integrate one or more features to define a deliverable software.</li>
+<li><em>Target platform</em> definition; the target platform defines the features and bundles that Hexatomic is built on top of (<em>against</em>).</li>
+<li><em>Update site</em> definition; Hexatomic's features and bundles are provided 
+<ol>
+<li>through a repository in the <a href="http://web.archive.org/web/20190807191916/https://www.eclipse.org/equinox/p2/">p2 repository format</a>, from which Hexatomic can be updated automatically and manually from within the application in the future; and</li>
+<li>As deployable units, i.e., the actual zip files that users will download in order to get Hexatomic.</li>
+</ol>
+</li>
+<li>Miscellanea, e.g., shell scripts for deploying artifacts, templates for third-party licensing and citation, etc. </li>
+</ul>
+</li>
+<li>It uses <strong>pomless builds</strong>, i.e., not every single bundle or feature needs its own build definition XML file (<code>pom.xml</code>), which saves a lot of manual labour.</li>
+</ol>
+<h4><a class="header" href="#project-parent--root-pom" id="project-parent--root-pom">Project parent / root POM</a></h4>
+<p>Hexatomic has a <a href="https://github.com/hexatomic/hexatomic/tree/main/pom.xml">root POM</a> to build the entire project with a single Maven command, e.g., <code>mvn clean install</code>, issued in the root folder.</p>
+<h4><a class="header" href="#target-platform" id="target-platform">Target platform</a></h4>
+<p>The target platform for Hexatomic is defined using the <a href="development/workflow/"></a> plug-in for Eclipse.
+This allows to define the platform in a human-readable format, in the file <a href="https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.tpd"><code>org.corpus_tools.hexatomic.target.tpd</code></a>.
+The actual <a href="https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target">target platform definition file</a> that both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic) use is generated
+from this file.
+More details about target platforms can be found in the section <a href="development/workflow/../activating-target-platform.html"><em>Creating and activating the target platform</em></a>.</p>
+<h4><a class="header" href="#documentation" id="documentation">Documentation</a></h4>
+<p>Both the user documentation and the documentation for developers and maintainers are kept in the <a href="https://github.com/hexatomic/hexatomic/tree/develop/docs"><code>/docs/</code> folder</a>, in a subfolder for each documentation type.
+Documentation is written in Markdown from which websites are generated for the end user with <em>mdbook</em> (see section <a href="development/workflow/../setup.html#mdbook"><em>Development setup</em></a>).
+The actual sources for the documentation can be found in the respective <code>/src/</code> subfolders.</p>
+<h4><a class="header" href="#readme-files" id="readme-files">README files</a></h4>
+<p>All folders that are parent folders in the repository contain a <code>README.md</code> file that explains the contents of the folder.</p>
+<h1><a class="header" href="#architecture" id="architecture">Architecture</a></h1>
+<p>Considerations regarding the architecture of Hexatomic are driven by
+the requirement that Hexatomic is <strong>extensible</strong>, and can be used
+for different kinds of corpus linguistic research.</p>
+<p>The most essential architectural feature of Hexatomic is therefore a high degree of <strong>modularization</strong>. 
+This means that whatever feature should be added to Hexatomic, it should be added as a new module,
+while at the same time the existing code base needs as few changes as possible.</p>
+<p>For different stakeholders in Hexatomic, the architecture should cater for their respective needs:</p>
+<ul>
+<li><em>Linguistic researchers</em> expect a seamless experience in using the software,
+and should be able to achieve their research goals without having to use other tools
+during their research workflow.</li>
+<li><em>Maintainers</em> expect a clean overview of the architecture, and to
+be able to locate different parts easily.</li>
+<li><em>Developers</em> expect to be able to add new features with minimum effort,
+in cleanly encapsulated modules, against well-defined and documented interfaces.</li>
+</ul>
+<h2><a class="header" href="#modularization" id="modularization">Modularization</a></h2>
+<p>Hexatomic is implemented as a desktop application based on an application framework,
+the <em>Eclipse Rich Client Platform</em> (RCP). 
+This framework has its own terminology with regard to its architectural components. 
+The following sections introduce some of the relevant terms and relate them to Hexatomic.</p>
+<h3><a class="header" href="#the-building-blocks-of-hexatomic" id="the-building-blocks-of-hexatomic">The building blocks of Hexatomic</a></h3>
+<h4><a class="header" href="#product" id="product">Product</a></h4>
+<p>Hexatomic is a <strong>product</strong>: a standalone software program built with the Eclipse RCP.
+It is defined and configured in the <code>releng/org.corpus_tools.hexatomic.product/org.corpus_tools.hexatomic.product</code> file.
+The contents of a product are its <a href="development/architecture/index.html#features">features</a>.</p>
+<h4><a class="header" href="#features" id="features">Features</a></h4>
+<p>Features are sets of <a href="development/architecture/index.html#plugins">plugins</a>. They can also contain other features.
+Features represent larger, but logically separate units, for example tooling for a specific annotation task.
+This may include a specific editor UI, its annotation logic, and other related functionality.</p>
+<p>Hexatomic contains several features.
+Most of them come from the Eclipse RCP platform,
+but one of them also contains a Java Runtime Environment (JRE) that is shipped together with Hexatomic,
+so that users don't have to download and install a JRE to be able to run Hexatomic (<em>JustJ OpenJDK Feature</em> in the figure below).</p>
+<p>Finally, the Hexatomic product also contains the <strong>Hexatomic core feature</strong>, 
+which contains all the parts that make Hexatomic software for linguistic research.
+The core feature is <a href="development/architecture/index.html#the-hexatomic-core-feature">described further below</a>.</p>
+<p>The following figure shows a product-level view of Hexatomic's architecture.</p>
+<p><img src="development/architecture/product.svg" alt="A product-level view of Hexatomic's architecture." /></p>
+<h5><a class="header" href="#features-as-main-unit-of-modularization" id="features-as-main-unit-of-modularization">Features as main unit of modularization</a></h5>
+<p>Features are also the main &quot;unit of modularization&quot;.
+This means that Hexatomic is extended through the inclusion of additional features.
+This inclusion can happen in two ways:</p>
+<ol>
+<li>Additional features are added to the Hexatomic product via its product definition file, see the <a href="development/architecture/index.html#product">section on Hexatomic as a product</a>.
+This way, the additional features are shipped as part of the Hexatomic standalone software (e.g., <em>Hexatomic Feature A</em> and <em>Hexatomic Feature B</em> in the figure above).</li>
+<li>Additional features are added to Hexatomic <em>at runtime</em>, i.e., when it is being run.
+This way, users can extend Hexatomic &quot;on-the-fly&quot; while they use it, by downloading and installing additional features (e.g., <em>New Feature A</em> and <em>New Feature B</em> in the figure above).
+To enable the installation of new features at runtime, they must be available in a <em>p2 repository</em>.
+A p2 repository is an accessible folder structure that contains features and their plugins, 
+but also metadata files that can be read by Eclipse RCP products through their update and installation mechanism.</li>
+</ol>
+<h4><a class="header" href="#plugins" id="plugins">Plugins</a></h4>
+<p>Finally, <strong>plugins</strong> are the smallest deployable and installable software component in the Eclipse RCP world.
+They encapsulate cleanly separated functionality.
+For example, there is a Hexatomic plugin which only deals with different linguistic formats, i.e.,
+their conversion into and from Hexatomic's data model.</p>
+<p>On a technical level, Hexatomic plugins (and Eclipse RCP plugins in general) are also <em>OSGi bundles</em>.
+<a href="https://www.osgi.org/resources/what-is-osgi/">OSGi</a> is a modularization framework for Java, and Eclipse Equinox - which is contained in the Eclipse RCP platform - is the OSGi reference implementation.</p>
+<h2><a class="header" href="#the-hexatomic-core-feature" id="the-hexatomic-core-feature">The Hexatomic core feature</a></h2>
+<p>The Hexatomic core feature contains the fundamental parts of the software application:</p>
+<ul>
+<li>The configuration of the Eclipse RCP application platform (<code>bundles/org.corpus_tools.hexatomic.core/Application.e4xmi</code>), and basic application functionality such as logging</li>
+<li>The Salt data model API (see <code>features/org.corpus_tools.hexatomic/feature.xml</code>)</li>
+<li>The Pepper conversion framework configuration logic, GUI and format-specific plugins (see <code>bundles/org.corpus_tools.hexatomic.formats</code>)</li>
+<li>The corpus project management API and GUI (<code>bundles/org.corpus_tools.hexatomic.corpusedit</code>)</li>
+<li>Two powerful basic editors for the manipulation of the data model via annotation tasks: the Graph Editor(<code>bundles/org.corpus_tools.hexatomic.graph</code>) and the Grid Editor (<code>bundles/org.corpus_tools.hexatomic.grid</code>)</li>
+<li>A simple viewer for document texts (<code>bundles/org.corpus_tools.hexatomic.textviewer</code>)</li>
+</ul>
+<p>Other features can build on the core feature and its plugins to extend Hexatomic's functionality.</p>
+<h2><a class="header" href="#extending-hexatomic" id="extending-hexatomic">Extending Hexatomic</a></h2>
+<p>The <a href="development/architecture/index.html#the-hexatomic-core-feature">core feature</a> has a defined scope, and should not be extended by adding further plugins.
+Generally, its scope is to enable basic manipulation of Salt models: provision of the application, creation or import of corpora, basic manipulation of these corpora (covered by the Graph Editor and the Grid Editor), and export to corpus formats.
+For all new functionality that goes beyond this, you should create a new feature, and add new plugins to it that implement the functionality.</p>
+<h1><a class="header" href="#data-model" id="data-model">Data model</a></h1>
+<p>Hexatomic works on instances of a graph-based meta model for linguistic data called <strong>Salt</strong>.</p>
+<p>In Salt, linguistic data is organized in projects: </p>
+<ul>
+<li>A <strong>Salt project</strong> contains at least one - and often only one - <strong>corpus graph</strong>.</li>
+<li>A corpus graph contains <strong>corpora</strong> as nodes. </li>
+<li>The child nodes of a corpus can again be corpora (so-called <em>sub-corpora</em>) and <strong>documents</strong>.</li>
+<li>Each document has a <strong>document graph</strong>, which is the model element containing the actual linguistic data: 
+<ul>
+<li>primary data sources (text, audio, or video material), and</li>
+<li>annotations.</li>
+</ul>
+</li>
+</ul>
+<p>Salt is very powerful in that it is theory-neutral and tagset-independent, and can model a vast variety of linguistic data and annotations.</p>
+<p>To find out more about the Salt meta model for linguistic data and its Java API, please refer to the <a href="https://corpus-tools.org/salt">Salt homepage</a>, and the <a href="https://korpling.github.io/salt/doc/">Salt documentation</a>.</p>
+<h2><a class="header" href="#accessing-the-data-model" id="accessing-the-data-model">Accessing the data model</a></h2>
+<p>During runtime, Hexatomic operates on a single Salt project at any one time.
+The currently opened Salt project is part of the global state of the application, and can be accessed by injecting an instance of the <code>ProjectManager</code> singleton into your code.
+For an overview of how dependency injection works in Eclipse-based applications such as Hexatomic, see Lars Vogel's tutorial <a href="http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse">&quot;Dependency injection and Eclipse&quot;</a>.</p>
+<pre><code class="language-java">import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.salt.common.SaltProject;
+
+public class MyClass {
+	
+	@Inject
+	private ProjectManager projectManager;
+	
+	public void execute() {
+		SaltProject theProject = projectManager.getProject();
+	}
+}
+</code></pre>
+<h2><a class="header" href="#reacting-to-changes" id="reacting-to-changes">Reacting to changes</a></h2>
+<p>You can register for any changes on the Salt project (e.g., added annotations to a document), by subscribing to the <code>Topics.ANNOTATION_CHANGED</code> topic, which will be sent by the <a href="http://web.archive.org/web/20200427021644/https://www.vogella.com/tutorials/Eclipse4EventSystem/article.html">Eclipse RCP <code>IEventBroker</code> service</a>.
+After registering your listener, you will receive <em>all</em> updates for <em>all</em> documents and <em>all</em> changes to the project structure.
+You have to decide in your own code if you need to handle an update, e.g., because it is related to a document you are editing for which the event should trigger redrawing the editor you are implementing.
+The argument for the <code>Topics.ANNOTATION_CHANGED</code> event is of the type <code>org.corpus_tools.hexatomic.core.undo.ChangeSet</code> and contains a list of all changes.
+It also has a helper function to test if a given document is affected by its changes.</p>
+<pre><code class="language-java">@Inject
+@org.eclipse.e4.core.di.annotations.Optional
+private void onDataChanged(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+  if (element instanceof ChangeSet) {
+    ChangeSet changeSet = (ChangeSet) element;
+    if (changeSet.containsDocument(
+        part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+      // TODO: check graph update is relevant for this editor and update UI
+    }
+  }
+}
+</code></pre>
+<h1><a class="header" href="#logging-and-error-handling" id="logging-and-error-handling">Logging and error handling</a></h1>
+<h2><a class="header" href="#logging" id="logging">Logging</a></h2>
+<p>Hexatomic uses the SLF4J logging API to log messages.
+To enable a logger for a specific class, create a static final variable which holds the class-specific logging object.</p>
+<pre><code class="language-java">private static final org.slf4j.Logger log = 
+	org.slf4j.LoggerFactory.getLogger(MyClass.class);
+</code></pre>
+<p>You can use this <code>log</code> object everwhere in the code to output debug, info, warning or error messages to the console or to the log files. </p>
+<pre><code class="language-java">int counter = 101;
+log.debug(&quot;Selecting created document {}.&quot;, 101);
+</code></pre>
+<p>See the <a href="https://www.slf4j.org/manual.html">SLF4J manual</a> for more information on the API.</p>
+<p>To implement the API, we use the <a href="https://logback.qos.ch/">Logback library</a> in the <code>org.corpus_tools.hexatomic.core</code> bundle.
+For testing and debugging purposes, there is a <code>logback-test.xml</code> file in the root of the logging bundle. 
+This configuration file is loaded whenever Hexatomic is started from Eclipse using the Debug/Run configuration and will output messages on the <code>debug</code> level.
+When compiling the Hexatomic product, the file <code>logback.xml</code> is copied to the product root directory and loaded from there.
+This allows a user/developer to customize the logging on their own, even when using a published binary artifact instead of debugging directly from the Eclipse IDE.
+Per default, only messages from the <code>info</code> level and above are printed to the command line.
+See the <a href="https://logback.qos.ch/manual/configuration.html">Logback documentation</a> how to write or adapt this file.</p>
+<h2><a class="header" href="#handling-exceptions" id="handling-exceptions">Handling exceptions</a></h2>
+<p>The core bundle exports the special <code>org.corpus_tools.hexatomic.core.errors.ErrorService</code> service which should be used to display error messages to the user.</p>
+<p>To use the <code>ErrorService</code> in a class, you can either simply pass an instance of it to a constructor of the class, or you can inject the service via the Eclipse context. To learn more about the Eclipse context and dependency injection, read Lars Vogel's tutorial <a href="http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse">&quot;Dependency injection and Eclipse&quot;</a>.</p>
+<p>To report an exception, simply call the <code>handleException(...)</code> function of the service with an error message, the exception object, and the class of the caller, i.e., the class in which you catch the exception.</p>
+<pre><code class="language-java">project = SaltFactory.createSaltProject();
+try {
+	project.loadCorpusStructure(path);
+} catch (SaltException ex) {
+	// In this example the calling function is part of the ProjectManager class.
+	errorService.handleException(&quot;Cannot load project from &quot; + path.toString(), ex, 
+		ProjectManager.class);
+}
+</code></pre>
+<p>This will produce the exception dialog shown below.
+It includes the error message, and a stack trace which the user can inspect by expanding &quot;Details&quot; (which is initially hidden).</p>
+<p><img src="development/./exception-dialog.png" alt="An example for an exception dialog" /></p>
+<p>In addition to the dialog, a log entry is added.
+This log entry uses the logger for the caller class which has been passed to the <code>handleException(...)</code> method.</p>
+<pre><code class="language-plain">18:52:54.324 [main] ERROR o.c.h.c.ProjectManager - Exception occured: Could not load salt project from file:/tmp
+org.corpus_tools.salt.exceptions.SaltResourceException: Can not load SaltProject, because path '/tmp/saltProject.salt' does not exist. 
+	at org.corpus_tools.salt.util.SaltUtil.loadSaltProject(SaltUtil.java:835) ~[org.corpus-tools.salt-api_3.3.8.20190808115214.jar:na]
+	at org.corpus_tools.salt.common.impl.SaltProjectImpl.loadCorpusStructure(SaltProjectImpl.java:148) ~[org.corpus-tools.salt-api_3.3.8.20190808115214.jar:na]
+	at org.corpus_tools.hexatomic.core.ProjectManager.open(ProjectManager.java:108) ~[org.corpus_tools.hexatomic.core/:na]
+	at org.corpus_tools.hexatomic.core.handlers.OpenSaltProjectHandler.execute(OpenSaltProjectHandler.java:26) [org.corpus_tools.hexatomic.core/:na]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_232-ea]
+</code></pre>
+<h2><a class="header" href="#showing-error-messages" id="showing-error-messages">Showing error messages</a></h2>
+<p>If an error does not originate from an exception, you can use the <code>showError(...)</code> function of the error service to display a dialog.
+This function takes an optional dialog title, the error message, and the class of the caller as arguments, as shown in the following example.</p>
+<pre><code class="language-java">if (hasChildren) {
+	errorService.showError(&quot;Error when deleting (sub-) corpus&quot;,
+			&quot;Before deleting a (sub-) corpus, first delete all its child elements.&quot;, this.getClass());
+	return;
+}
+</code></pre>
+<p>This produces both an error dialog and a logging output (without stack trace).</p>
+<p><img src="development/./error-dialog.png" alt="An example for an error dialog" /></p>
+<pre><code class="language-plain">19:03:26.013 [main] ERROR o.c.h.c.CorpusStructureView$8 - Error when deleting (sub-) corpus: Before deleting a (sub-) corpus, first delete all its child elements.
+</code></pre>
+<h1><a class="header" href="#adding-a-new-editor" id="adding-a-new-editor">Adding a new editor</a></h1>
+<p>Following the principle of &quot;<a href="https://en.wikipedia.org/wiki/Separation_of_concerns">separation of concerns</a>&quot;, editors should generally be developed in separate, dedicated bundles in the <code>bundles</code> directory of the project.
+Exceptions to this rule should be based on compelling reasons for including an editor in an existing bundle project.
+Reasons may include, for example, that the architectural overhead for creating a very simple editor may be too high.
+In cases of uncertainty, follow the rule that changes to software should keep the maintenance effort in proportion to the benefit of the change, and generally as small as possible.</p>
+<p>In Eclipse 4, additions to the user interface are organized in so-called <a href="http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#parts">Parts</a>.
+A part consists of two components:</p>
+<ul>
+<li>a <code>PartDescriptor</code> entry in the <code>fragment.e4xmi</code> file of the bundle containing the new editor, and </li>
+<li>the actual Java class implementing the behavior.</li>
+</ul>
+<h2><a class="header" href="#adding-a-minimal-java-class" id="adding-a-minimal-java-class">Adding a minimal Java class</a></h2>
+<p>Add a Java class to your bundle project.
+This class does not need to inherit any interface, but should have a method with the <code>@PostConstruct</code> annotation.</p>
+<pre><code class="language-java">import javax.annotation.PostConstruct;
+
+/* ... */
+
+public class TextViewer {
+	@PostConstruct
+	public void postConstruct(Composite parent, MPart part, ProjectManager projectManager) { 
+		// TODO: add actual editor implementation
+	}
+}
+</code></pre>
+<p>This example injects the SWT <code>parent</code> composite which can be used to construct user interface elements and the <code>part</code> parameter, which describes the application model for this part.</p>
+<p>SWT (&quot;Standard Widget Toolkit&quot;) is the default user interface widgets toolkit for Eclipse-based applications, such as Hexatomic, and is used in this example.
+For more information, see the <a href="http://web.archive.org/web/20191025084609/https://www.eclipse.org/swt/">Eclipse SWT project website</a>.
+For information on the application model of Eclipse-based applications, see the <a href="https://web.archive.org/web/20180128210911/https://wiki.eclipse.org/Eclipse4/RCP/Modeled_UI">Eclipse Wiki page on the UI model</a>.</p>
+<p>The <code>projectManager</code> is an Hexatomic specific service that provides access to the global Salt project which is currently loaded.</p>
+<p>Note that you can directly add the SWT instructions to define your user interface in the code, or use the <a href="https://www.eclipse.org/windowbuilder/">Eclipse Window Builder</a>, which is a graphical editor for user interfaces based on SWT (and other technologies).</p>
+<h2><a class="header" href="#adding-a-part-to-the-application-model" id="adding-a-part-to-the-application-model">Adding a part to the application model</a></h2>
+<p>To add the newly created class to the Eclipse RCP 4 application model, open the <code>fragment.e4xmi</code> file of the existing bundle, or create a new one via the <strong>File</strong> &gt; <strong>New</strong> &gt; <strong>Other</strong> menu and choose <strong>New Model Fragment</strong>.</p>
+<p><img src="development/./new-model-fragment-file.png" alt="Adding a new fragment model file" /></p>
+<p>In the fragment editor, add a new model fragment by selecting &quot;Model fragments&quot; and clicking on the &quot;Add&quot; button.</p>
+<p><img src="development/./new-model-fragment.png" alt="Adding a new model fragment in the editor" /></p>
+<p>Edit the model fragment properties by selecting the newly created entry.
+Make sure to set the extended element ID to <code>xpath:/</code>and the feature name to <code>descriptors</code> (1).
+This means that the model fragment extends the part descriptors of the application.
+Then, add a new part descriptor with the <strong>Add</strong> button (2). </p>
+<p><img src="development/./add-model-fragment-descriptor.png" alt="Edit model fragment properties" /></p>
+<p>Select the new part descriptor in the model fragment editor and you can edit several properties, such as the caption of the part, or an icon.
+Make sure to set the <code>Class URI</code> field to the newly created editor class.
+You can use the <strong>Find</strong> button to navigate the workspace and insert the proper value.
+Also, the <code>Category</code> must be set to <code>org.corpus_tools.hexatomic.tag.editor</code> to mark that this part is an Hexatomic editor. 
+The <code>Label</code> field will be used as a name for the editor, for example in a menu from which the user will choose one of the editors available to open a document with.</p>
+<p><img src="development/./part-descriptor-class.png" alt="Part descriptor general properties" /></p>
+<h2><a class="header" href="#getting-the-associated-salt-document-to-display" id="getting-the-associated-salt-document-to-display">Getting the associated Salt document to display</a></h2>
+<p>When an editor part is created, it is initialized with a state. 
+This state can hold internal configurations, but also contains the ID of the associated Salt document that this editor should edit.
+The actual ID is set to the editor part's state in the class handling user actions to open a Salt document, <code>org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler</code>.</p>
+<!-- TODO Add link to API docs for this class on GitHub Pages once they exist. -->
+<p>It is stored in the part state in a setting with the name <code>org.corpus_tools.hexatomic.document-id</code>.
+The injected <code>ProjectManager</code> can then be used to get the actual document.</p>
+<pre><code class="language-java">String documentID = part.getPersistedState()
+	.get(&quot;org.corpus_tools.hexatomic.document-id&quot;);
+Optional&lt;SDocument&gt; doc = projectManager.getDocument(documentID);
+</code></pre>
+<p>See the <a href="development/./data-model/#reacting-to-changes">Data model</a> section on how to listen to changes on the document.</p>
+<h2><a class="header" href="#changing-the-document" id="changing-the-document">Changing the document</a></h2>
+<p>You can manipulate the document graph returned by the <code>ProjectManager</code> directly using the Salt API.
+Every change via the Salt API will automatically be recorded to enable undoing and redoing the changes.
+A user interaction that manipulates the document graph can consist of multiple Salt API calls, each one of which may potentially lead to inconsistent states. You must therefore mark the end of a user interaction by calling the <code>addCheckpoint()</code> function of an injected <code>ProjectManager</code> instance.
+Undo and redo will use these checkpoints to restore to a consistent state.
+In addition, calling <code>addCheckpoint()</code> will notify all other registered editors that a consistent set of changes has been added.</p>
+<pre><code class="language-java">// Get the document graph for the document
+SDocumentGraph graph = doc.getDocumentGraph();
+// First change: create and add a primary text
+STextualDS anotherText = graph.createTextualDS(&quot;Another text&quot;);
+// Second change: create and add a token
+graph.createToken(anotherText, 0, 7);
+// Third change: create and add another token
+graph.createToken(anotherText, 8, 12);
+// Add a checkpoint for the three previous changes
+projectManager.addCheckpoint();
+</code></pre>
+<h2><a class="header" href="#cleaning-up-resources-when-closed" id="cleaning-up-resources-when-closed">Cleaning up resources when closed</a></h2>
+<p>When the user closes an editor, it should clean up local and global resources.
+E.g., a Salt document might not need to hold the reference to the actual annotation graph when it is not edited anymore.
+You can annotate a method of your editor with the <code>@PreDestroy</code> annotation to execute its code whenever the part is closed.</p>
+<p>Since several editors can open the same document at the same time, releasing it should not be performed directly, but by signaling an event over the <code>IEventBroker</code> of Eclipse RCP.
+When posting an event, you have to use the topic <code>DOCUMENT_CLOSED</code> and give the document ID as an argument.</p>
+<pre><code class="language-java">
+import javax.annotation.PreDestroy;
+import org.corpus_tools.hexatomic.core.Topics;
+
+/* ... */
+
+@PreDestroy
+public void cleanup(MPart part) {
+events.post(Topics.DOCUMENT_CLOSED,
+	part.getPersistedState().get(&quot;org.corpus_tools.hexatomic.document-id&quot;));
+}
+</code></pre>
+<h1><a class="header" href="#automated-tests" id="automated-tests">Automated tests</a></h1>
+<p>We use the <a href="https://junit.org/junit5/">JUnit5</a> testing framework to automate tests.
+As per convention in Eclipse RCP applications, tests are located in separate test bundles and not part of the original
+bundle which is tested.
+In Hexatomic, all test bundles should be located in the <code>tests/</code> folder.</p>
+<p>Unit tests test the behavior of a specific class of a bundle.
+They should be part of a test bundle with the same name as the original one, but with the string <code>.tests</code> appended.
+E.g. tests for classes of the <code>org.corpus_tools.hexatomic.core</code> bundle should be part of the 
+<code>org.corpus_tools.hexatomic.core.tests</code> bundle.
+If you add a new bundle, always also create a corresponding test bundle.</p>
+<p>The special bundle <code>org.corpus_tools.hexatomic.it.tests</code> is used for <a href="http://web.archive.org/web/20190928235028/https://en.wikipedia.org/wiki/Integration_testing">integration tests</a> on the whole application.
+There can be failures executing the integration tests if the keyboard layout of the system is unsupported or wrongly detected.
+See the <a href="development/automated-tests/./ui-integration-tests.html#issues-with-keyboard-layout-and-integration-tests">UI integration tests</a> section for hints on how to fix these failures.</p>
+<h2><a class="header" href="#execute-tests-with-maven" id="execute-tests-with-maven">Execute tests with Maven</a></h2>
+<p>We are using the <a href="https://www.eclipse.org/tycho/sitedocs/tycho-surefire/tycho-surefire-plugin/">Tycho Surefire Plugin</a> 
+to execute the tests.
+Tests are executed when building the project with <code>mvn install</code>.
+To specifically run the tests and not install the artifacts, use <code>mvn integration-test</code> instead.
+Unlike unit tests, <code>mvn test</code> will not work for integration tests, as the Tycho Surefire Plugin requires
+the bundles to be packaged, which happens in Maven's <code>package</code> phase, which
+comes after <code>test</code> and before <code>integration-test</code>. See the section <a href="development/automated-tests/./ui-integration-tests.html#running-ui-integration-tests"><em>Running UI
+integration tests</em></a> below for more information on running these tests.</p>
+<p>You can also generate a test code coverage report by executing <code>mvn verify site -Pcoverage</code>. 
+The generated report will be located under <code>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/index.html</code>.</p>
+<p>To learn more about the Maven build lifecycle, read the <a href="http://web.archive.org/web/20191128092924/https://maven.apache.org/ref/3.6.2/maven-core/lifecycles.html">Maven Lifecycles Reference</a>.</p>
+<h2><a class="header" href="#execute-tests-in-eclipse" id="execute-tests-in-eclipse">Execute tests in Eclipse</a></h2>
+<p>Open the corresponding test bundle project for the bundle you want to test.
+Select the project in the &quot;Project Explorer&quot;, right-click on it and choose <strong>Run As</strong> &gt; <strong>JUnit  Plug-in Test</strong>.</p>
+<p><img src="development/automated-tests/run-test-eclipse.png" alt="Run JUnit test in Eclipse" /></p>
+<p>This will open a new panel with the results of the tests once finished.
+You can select to re-execute a single test by clicking on it and choosing <strong>Run</strong> or <strong>Debug</strong>.</p>
+<p><img src="development/automated-tests/junit-eclipse-dialog.png" alt="Eclipse JUnit test results" /></p>
+<p>To run the user interface integration test in the <code>org.corpus_tools.hexatomic.it.tests</code> bundle, select the project and
+choose <strong>Run</strong> &gt; <strong>Run Configurations...</strong> in the main menu.
+A &quot;UI Integration Test&quot; configuration should be available under the category &quot;JUnit Plug-in Test&quot;.
+Click on <strong>Run</strong> to execute the user interface integration tests.</p>
+<p><img src="development/automated-tests/launch-ui-tests.png" alt="Run UI tests configuration" /></p>
+<p>This will open an actual Hexatomic window where the user interactions are
+executed automatically. See the section <a href="development/automated-tests/./ui-integration-tests.html#running-ui-integration-tests"><em>Running UI
+integration tests</em></a> below for more information on running these tests.</p>
+<h1><a class="header" href="#adding-a-test-bundle" id="adding-a-test-bundle">Adding a test bundle</a></h1>
+<p>To create a new test bundle, select <strong>File</strong> &gt; <strong>New</strong> &gt; <strong>Other</strong> in the Eclipse menu.
+In the list of wizards, select <strong>Plug-in Development</strong> &gt; <strong>Fragment Project</strong> and click <strong>Next</strong>.
+Fragment bundles are similar to normal ones, but they extend an existing bundle (the one that is tested) and have access
+to all the internal classes and functions of the existing host bundle.</p>
+<p><img src="development/automated-tests/new-fragment-project-wizard.png" alt="New fragment project wizard selection" /></p>
+<p>The wizard will now ask for some basic properties of the new project.
+Use the bundle name with <code>.tests</code> appended as project name and make sure not to use the default location, but a folder
+with the project name under the <code>tests</code> folder in your Hexatomic source code folder.
+Also, set the &quot;Source folder&quot; to <code>src/main/java</code> and the &quot;Output folder&quot; to <code>target/classes</code>.
+When you configured the basic project properties, click on <strong>Next</strong>.</p>
+<p><img src="development/automated-tests/new-fragment-project-desc.png" alt="Basic fragment project properties" /></p>
+<p>Since this is a fragment project, select the &quot;Plug-in ID&quot; of the &quot;Host Plug-in&quot; that is tested in the next step of the wizard.
+You should make sure the &quot;ID&quot; and &quot;Version&quot; of the test are set to the correct values. 
+The version should always be the same as the tested bundle.
+Click <strong>Finish</strong> to create the new project.</p>
+<p><img src="development/automated-tests/new-fragment-project-host.png" alt="Basic fragment project properties" /></p>
+<h1><a class="header" href="#adding-a-test-case" id="adding-a-test-case">Adding a test case</a></h1>
+<p>If you have an existing test bundle project, you can add a new JUnit Test Case by clicking right on the <code>src/main/java</code> folder
+in the project explorer and selecting <strong>New</strong> &gt; <strong>Other</strong> in the context menu.
+In the wizard, select <strong>Java</strong> &gt; <strong>JUnit</strong> &gt; <strong>JUnit Test Case</strong> and click on <strong>Next</strong>.</p>
+<p><img src="development/automated-tests/new-junit-testcase-wizard.png" alt="New Wizard for creating a new JUnit Test Case" /></p>
+<p>In the properties of the test case, make sure to select &quot;New JUnit Jupiter test&quot; to create a JUnit5 test.
+Also, select the class you want to test in the &quot;Class under test&quot; field.
+The &quot;Name&quot; of the test should start with <code>Test</code> so that the test executor of the build system (the Tycho Surefire Plugin) can identify it as a test.
+Click <strong>Finish</strong> to create the empty class or <strong>Next</strong> if you want to add tests for specific functions of the tested class.</p>
+<p><img src="development/automated-tests/new-junit-testcase-properties.png" alt="New JUnit Test Case properties" /></p>
+<p>See the <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests">JUnit5 User Guide</a> for a general description
+of how to write tests.</p>
+<h1><a class="header" href="#mocking-injected-dependencies" id="mocking-injected-dependencies">Mocking injected dependencies</a></h1>
+<p>In Eclipse RCP 4 applications such as Hexatomic, dependency injection is used extensively.
+To restrict the scope of unit tests to the actual code that is being tested, rather than extending it to include any classes or interfaces from injected dependencies that the code under test may use, you can mock these classes or interfaces.
+To mock dependencies, we use the <a href="https://site.mockito.org/">Mockito framework</a>.
+In the following example, the <code>IEventBroker</code> is not implemented but mocked with Mockito's <code>mock()</code> method.
+The mock can then be used by the class under test in the same way the real implementation would be used; in this case, the class <code>ProjectManager</code> has a field <code>events</code> of the 
+type <code>IEventBroker</code>, which is mocked for the test.
+Therefore, the behavior of the actual <code>IEventBroker</code> implementation isn't tested, only the <code>ProjectManager</code> code is.</p>
+<pre><code class="language-java">package org.corpus_tools.hexatomic.core;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.emf.common.util.URI;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class TestProjectManager {
+
+  // this test case tests the ProjectManager
+  private ProjectManager projectManager;    
+  private IEventBroker events;
+
+  @BeforeEach
+  public void setUp() throws Exception {
+    // create a mocked version of the interface
+    events = mock(IEventBroker.class);
+    projectManager = new ProjectManager();
+    // use the mocked object in the tested class
+    projectManager.events = events;
+    projectManager.postConstruct();
+  }
+
+  @Test
+  public void testEventOnOpen() {
+    projectManager.open(URI.createFileURI(&quot;/tmp/exampleSaltProject&quot;));
+    // check that a certain method of the mocked object was called with the specified arguments
+    verify(events).send(eq(ProjectManager.TOPIC_CORPUS_STRUCTURE_CHANGED), anyString());
+  }
+}
+
+</code></pre>
+<h1><a class="header" href="#using-interface-integration-tests" id="using-interface-integration-tests">Using interface integration tests</a></h1>
+<h2><a class="header" href="#adding-new-integration-tests" id="adding-new-integration-tests">Adding new integration tests</a></h2>
+<p>To add user interface integration tests add new test cases to the special bundle <code>org.corpus_tools.hexatomic.it.tests</code>.
+The tests are executed with SWTBot, a testing tool for user interfaces.
+To learn how to use SWTBot, you can read the documentation on the <a href="http://web.archive.org/web/20191129101118/https://www.eclipse.org/swtbot/">SWTBot homepage</a>, or Lars Vogel's <a href="http://web.archive.org/web/20191129101301/https://www.vogella.com/tutorials/SWTBot/article.html">SWTBot tutorial</a>.</p>
+<p>SWTBot needs an instance of the class <code>org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot</code> to execute user interactions
+automatically from the test case.
+Make sure you use the version from the <code>org.eclipse.swtbot.e4.finder.widgets</code> package, which is the only one working
+with Eclipse RCP 4.
+Creating an instance of a <code>SWTWorkbenchBot</code> needs an Eclipse context, which can be acquired with the helper class 
+<code>org.corpus_tools.hexatomic.it.tests.ContextHelper</code>.</p>
+<pre><code class="language-java">SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+</code></pre>
+<p>Otherwise, these tests are normal JUnit5 test cases and have the same annotations and structure.
+Below is a complete example, which tests if renaming a document in the corpus structure editor works.</p>
+<pre><code class="language-java">package org.corpus_tools.hexatomic.it.tests;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.junit.jupiter.api.Test;
+
+class TestCorpusStructure {
+  
+  private SWTWorkbenchBot bot = new SWTWorkbenchBot(ContextHelper.getEclipseContext());
+
+  @Test
+  void testRenameDocument() {
+    // Make sure to activate the part to test before selecting SWT components
+    bot.partById(&quot;org.corpus_tools.hexatomic.corpusedit.part.corpusstructure&quot;).show();
+    
+    // Add corpus graph 1 by clicking on the first toolbar button (&quot;Add&quot;) in the corpus structure editor part
+    bot.toolbarDropDownButton(0).click();
+    // Add corpus 1
+    bot.toolbarDropDownButton(0).click();
+    // Add document_1
+    bot.toolbarDropDownButton(0).click();
+    // Select and edit the first document
+    bot.tree().getTreeItem(&quot;corpus_graph_1&quot;).getNode(&quot;corpus_1&quot;).getNode(&quot;document_1&quot;).select();
+    bot.tree().getTreeItem(&quot;corpus_graph_1&quot;).getNode(&quot;corpus_1&quot;).getNode(&quot;document_1&quot;).doubleClick();
+    bot.text(&quot;document_1&quot;).setText(&quot;abc&quot;).pressShortcut(Keystrokes.LF);
+   
+    // Make sure that the document has been renamed
+    bot.tree().expandNode(&quot;corpus_graph_1&quot;).expandNode(&quot;corpus_1&quot;).expandNode(&quot;abc&quot;);
+    assertNotNull(bot.tree().getTreeItem(&quot;corpus_graph_1&quot;).getNode(&quot;corpus_1&quot;).getNode(&quot;abc&quot;));
+  }
+}
+
+</code></pre>
+<p>To test whether an action was successful, integration tests do not access the internal data model of the application.
+Instead, they check the effects on the user interface (for example, the result of a renaming action is a new tree item with the 
+new name).
+To test internal states, use unit tests for the controllers of the bundle instead.</p>
+<p>When your test case has more than one test, all tests are executed in the same environment.
+Thus, previously executed tests will influence subsequent ones.
+You can set the execution order within a test class explicitly with the <code>@Order(int)</code> annotation: <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order">https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-execution-order</a>.</p>
+<p>If you integrate a new bundle that has not been tested before, you have to add the bundle manually to the 
+dependencies of <code>org.corpus_tools.hexatomic.it.tests</code>.
+Adding it to the feature or product is not enough.</p>
+<h2><a class="header" href="#issues-with-keyboard-layout-and-integration-tests" id="issues-with-keyboard-layout-and-integration-tests">Issues with keyboard layout and integration tests</a></h2>
+<p>Note that the SWTBot-based integration tests try to detect the keyboard layout automatically using the system locale.
+For example, if the computer running the tests has the locale <code>de_DE.UTF</code>, SWTBot would detect the keyboard layout <code>DE_DE</code>.
+This can lead to test errors when the locale is not consistent with the keyboard layout (e.g. some programmers prefer English keyboard layouts, which would be <code>EN_US</code> or <code>MAC_EN_US</code>, while still using their native locale).
+To enforce a specific keyboard layout for the tests, set the <code>SWTBOT_KEYBOARD_LAYOUT</code> environment variable to the layout you want to use.
+This can also be helpful if SWTBot does not provide a keyboard layout for the current locale, e.g., if there is no <code>EN_GB</code> layout you can still enforce the very similar <code>EN_US</code> layout.
+For more information on SWTBot's keyboard layouts, see <a href="https://wiki.eclipse.org/SWTBot/Keyboard_Layouts">Keyboard Layouts in SWTBot on the Eclipse wiki</a>.</p>
+<h2><a class="header" href="#running-ui-integration-tests" id="running-ui-integration-tests">Running UI integration tests</a></h2>
+<p>UI integration tests start Hexatomic and automatedly interact with the graphical user interface.
+You must not use the keyboard or mouse during these GUI tests, as this may
+interfere with the automated interactions.</p>
+<p>If you want to keep working during the local build, you can run the build
+&quot;headlessly&quot;, i.e., with the help of a virtual display server.
+To do this on Linux, for example, you can run the script <code>releng/sh/metacity-run.sh</code> from the root of the local repository:</p>
+<p><code>./releng/sh/metacity-run.sh mvn clean install</code></p>
+<p>See the <a href="https://wiki.eclipse.org/SWTBot/Automate_test_execution#use_another_DISPLAY_to_save_time">SWTBot documentation on this topic</a> for further details.</p>
+<h1><a class="header" href="#documentation-1" id="documentation-1">Documentation</a></h1>
+<p>Documentation is an integral part of the development of Hexatomic!
+Without documentation, users will not be able to use Hexatomic successfully and effectively.
+Also, other developers - and even your future self - will not be able to understand the code, or why things are done how they are done without documentation.
+We therefore require that you document the changes you make to Hexatomic.
+Without providing complete documentation for the changes you make, your changes will not be accepted into the codebase.</p>
+<p>We generally have the following types of documentation in Hexatomic:</p>
+<ol>
+<li><strong>Semantic code:</strong> Semantic code is code that explains itself. A method and its arguments, for example, should be named so that people who read the code can understand easily what the method does.</li>
+<li><strong>Code comments:</strong> Comments within the code explain small parts of the code that may otherwise be hard to understand.</li>
+<li><strong>API documentation:</strong> Hexatomic uses <a href="https://www.oracle.com/java/technologies/javase/javadoc-tool.html">Javadoc</a> strings to formally document the different parts of the Java code: types, methods, variables, etc. Javadoc strings are also part of the code.</li>
+<li><strong>Developer and maintainer documentation:</strong> Text documentation that describes how development and maintenance work in the Hexatomic project. You can find the sources in the <code>./docs/dev/</code> directory.</li>
+<li><strong>User documentation:</strong> Text documentation that describes how to use Hexatomic. You can find the sources in the <code>./docs/user/</code> directory.</li>
+<li><strong>Repository documentation:</strong> The following files are in the root directory of the GitHub repository: The README file in the root of the GitHub repository is a landing page to get an overview of the Hexatomic software project; the contribution guidelines provide details on how to contribute to Hexatomic; the code of conduct provides ground rules for collaboration; the license file details under which license requirements Hexatomic can be used and changed; the changelog documents how Hexatomic has changed across released versions.</li>
+<li><strong>Metadata:</strong> The CITATION.cff file provides information on how to cite Hexatomic. You can find it in the root directory of the repository.</li>
+<li><strong>Templates:</strong> Issue and pull request templates provide information on what is necessary to create an issue or pull request. You can find them in the <code>./.github/</code> directory.</li>
+</ol>
+<p>It is actually quite easy to provide documentation if you follow some basic rules.</p>
+<h2><a class="header" href="#ground-rules-for-documentation" id="ground-rules-for-documentation">Ground rules for documentation</a></h2>
+<ol>
+<li><a href="development/documentation/index.html#document-as-you-make-changes">Document as you make changes</a>.</li>
+<li><a href="development/documentation/index.html#only-document-what-needs-to-be-documented">Only document what needs to be documented</a>.</li>
+<li><a href="development/documentation/index.html#document-where-it-makes-the-most-sense">Document where it makes the most sense</a>.</li>
+<li><a href="development/documentation/index.html#document-for-everyone-who-is-affected-by-the-changes-you-make">Document for everyone who is affected by the changes you make</a>.</li>
+<li><a href="development/documentation/index.html#keep-it-as-simple-as-possible">Keep it as simple as possible</a>.</li>
+<li><a href="development/documentation/index.html#be-consistent">Be consistent</a>.</li>
+</ol>
+<p>Here are some more detailed explanations of these rules.</p>
+<h3><a class="header" href="#document-as-you-make-changes" id="document-as-you-make-changes">Document as you make changes</a></h3>
+<p>Don't push documentation to the end of the task, you will forget important details and it will become a chore.
+Always document at the same time as you make your changes.</p>
+<p>It is helpful to keep changes as small as possible, and not to mix different changes.
+This way you will always only have little documentation to write.</p>
+<p>A general tip is to encapsulate small defined change sets in separate pull requests, and to make sure that all the necessary documentation is there before you ask for a review of the pull request.</p>
+<h3><a class="header" href="#only-document-what-needs-to-be-documented" id="only-document-what-needs-to-be-documented">Only document what needs to be documented</a></h3>
+<p>Don't overdo it!
+You don't need to write code comments for every single line of the code.
+You also probably don't need to explain how to use a mouse.</p>
+<p>Try not to unnecessarily duplicate information from other sources, provide a link to them instead.</p>
+<h3><a class="header" href="#document-where-it-makes-the-most-sense" id="document-where-it-makes-the-most-sense">Document where it makes the most sense</a></h3>
+<p>Documentation should be put as closely as possible to the thing it describes.
+If an implementation detail within a method needs explanation, put it in a code comment or the Javadoc string for the method, not in the developer documentation.</p>
+<h3><a class="header" href="#document-for-everyone-who-is-affected-by-the-changes-you-make" id="document-for-everyone-who-is-affected-by-the-changes-you-make">Document for everyone who is affected by the changes you make</a></h3>
+<p>For example:</p>
+<ul>
+<li>If you change functionality, add a section in the user documentation.</li>
+<li>If you change configuration details for the continuous integration pipeline, document it in the developer documentation.</li>
+<li>If you accept a PR from a new contributor, make sure that the citation metadata is updated, and that they are added to the list of contributors in the README.</li>
+</ul>
+<h3><a class="header" href="#keep-it-as-simple-as-possible" id="keep-it-as-simple-as-possible">Keep it as simple as possible</a></h3>
+<p>Try to write your documentation so that the largest possible audience will understand it.
+This means, for example, that you should avoid jargon and abbreviations, even if they are very familiar to you.
+Also keep in mind that not everyone understands English equally well, therefore try to keep sentences short and simple.</p>
+<h3><a class="header" href="#be-consistent" id="be-consistent">Be consistent</a></h3>
+<p>Try to be consistent in how you document.
+Make yourself familiar with a documentation style, and follow it.
+A good example for a documentation style is the <a href="https://developers.google.com/style/highlights">Google developer documentation style guide</a>.</p>
+<p>Some consistency in documentation style for Javadoc strings and code comments is also enforced by <a href="development/documentation/../setup.html##list-of-eclipse-ide-plugins-required-for-hexatomic-development">Checkstyle</a>, which is run during builds.</p>
+<h1><a class="header" href="#maintenance" id="maintenance">Maintenance</a></h1>
+<p>This section contains the documentation for Hexatomic maintenance work.</p>
+<p>The maintainer is <em>the</em> central position in the Hexatomic software project.
+They are responsible for completing the following tasks.
+All tasks should be completed in a <em>timely fashion</em>, and based on the Hexatomic code of conduct.</p>
+<h2><a class="header" href="#i-classfa-fa-cogsi-maintenance-work" id="i-classfa-fa-cogsi-maintenance-work"><i class="fa fa-cogs"></i> Maintenance work</a></h2>
+<ul>
+<li>Ensure that Hexatomic always builds without errors in the <code>main</code> and <code>develop</code> branches</li>
+<li>Fix security issues and bugs</li>
+<li>Maintain templates, configuration files, community files (<code>README.md</code>, <code>CONTRIBUTING.md</code>, <code>CODE_OF_CONDUCT.md</code>, etc.), licenses, etc.</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-plus-squarei-contributions" id="i-classfa-fa-plus-squarei-contributions"><i class="fa fa-plus-square"></i> Contributions</a></h2>
+<ul>
+<li>Ensure that citation information is always up-to-date (in <code>CITATION.cff</code>)</li>
+<li>Ensure that the contributors list is always up-to-date (in <code>README.md</code>, maintained via the <em>All Contributors</em> bot)</li>
+<li>Maintain pull requests</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-search-plusi-code-review" id="i-classfa-fa-search-plusi-code-review"><i class="fa fa-search-plus"></i> Code review</a></h2>
+<ul>
+<li>Perform code reviews</li>
+<li>Document &amp; triage unreviewed code</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-question-circlei-issues" id="i-classfa-fa-question-circlei-issues"><i class="fa fa-question-circle"></i> Issues</a></h2>
+<ul>
+<li>Communicate with issue authors: answer questions, and suggest fixes, or make fixes themself if possible or necessary</li>
+<li>Do issue housekeeping: check open issues regularly, and fix and/or close where possible</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-rocketi-releases" id="i-classfa-fa-rocketi-releases"><i class="fa fa-rocket"></i> Releases</a></h2>
+<ul>
+<li>Release Hexatomic</li>
+<li>Publish new releases</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-booki-documentation" id="i-classfa-fa-booki-documentation"><i class="fa fa-book"></i> Documentation</a></h2>
+<ul>
+<li>Maintain user documentation and ensure that it is up-to-date with each contribution</li>
+<li>Maintain developer and maintainer documentation and ensure that it is up-to-date with each contribution</li>
+<li>Document the current state of practice for developing and maintaining Hexatomic</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-commentsi-communication--community-work" id="i-classfa-fa-commentsi-communication--community-work"><i class="fa fa-comments"></i> Communication &amp; community work</a></h2>
+<ul>
+<li>Publicize releases to the relevant stakeholders
+<ul>
+<li>Includes emails to the user mailing list <code>hexatomic-users@lists.hu-berlin.de</code></li>
+</ul>
+</li>
+<li>Redirect questions to the issue tracker</li>
+<li>Update external resources</li>
+<li>Work with and build the community of users and developers</li>
+</ul>
+<h2><a class="header" href="#i-classfa-fa-hand-o-righti-prepare-maintainer-changes" id="i-classfa-fa-hand-o-righti-prepare-maintainer-changes"><i class="fa fa-hand-o-right"></i> Prepare maintainer changes</a></h2>
+<ul>
+<li>Prepare the repositories for takeover by a new maintainer</li>
+<li>Document takeover by a new maintainer</li>
+</ul>
+<h1><a class="header" href="#taking-over-as-new-maintainer" id="taking-over-as-new-maintainer">Taking over as new maintainer</a></h1>
+<p>This section describes what you will have to do to assume the maintainer role for the Hexatomic software project.</p>
+<p>The <a href="https://hexatomic.github.io">Hexatomic research project</a> aims to create a <em>sustainable</em> software project around Hexatomic.
+This means that new maintainers should be able to come to the project, even when it has been dormant or abandoned for some time.
+This section therefore assumes that there is currently <em>no active maintainer</em> for the project who will hand it over proactively in an ordered fashion.</p>
+<p>If you want to take over as maintainer at this stage, you should go through the following steps.</p>
+<h2><a class="header" href="#announce-that-you-want-to-take-over-as-new-maintainer" id="announce-that-you-want-to-take-over-as-new-maintainer">Announce that you want to take over as new maintainer</a></h2>
+<p>The old maintainers may still be around, and may be able to help you gain access to the repository.
+Therefore it is a matter of due diligence to first announce your willingness to act as the new maintainer of the project.</p>
+<p>The best way to do this is to <a href="https://github.com/hexatomic/hexatomic/issues/new">create a new issue</a> in the original repository.
+Also make sure that you <a href="https://web.archive.org/web/20210505163556/https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax#mentioning-people-and-teams"><em>@mention</em></a> the last known maintainer of the project.
+This information should be available in the <code>README.md</code> file at the root of the repository.
+They may be notified of the mention, and react by commenting on your issue.
+This way you can discuss the best way for you to take over as new maintainer.</p>
+<p>Alternatively, look for any other contact information for the project, such as an email address or a mailing list address, and announce your plan there.</p>
+<p>If you get no reaction to your announcement, you can assume that the project has been abandoned, and proceed with the next step.</p>
+<h2><a class="header" href="#get-administrative-rights-to-the-source-code-repository-or-fork-it" id="get-administrative-rights-to-the-source-code-repository-or-fork-it">Get administrative rights to the source code repository, or fork it</a></h2>
+<p>The source code and documentation sources for Hexatomic are provided in a repository on GitHub at <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.
+In order to gain the necessary control over the repository to maintain it, you have two options.</p>
+<h3><a class="header" href="#1-get-administrative-rights-for-the-original-repository" id="1-get-administrative-rights-for-the-original-repository">1. Get administrative rights for the original repository.</a></h3>
+<p>If you can find a person with administrative rights to the project (see the <a href="maintenance/taking-over/index.html#announce-that-you-want-to-take-over-as-new-maintainer">previous section</a>),
+ask them to give you administrative rights (e.g. make you the owner) for the original GitHub repository.</p>
+<p>This is the preferred option, as all repository configurations as well as the history of issues and pull requests remain intact.</p>
+<h3><a class="header" href="#2-fork-the-repository" id="2-fork-the-repository">2. Fork the repository</a></h3>
+<p>If you cannot find someone to give you administrative rights to the repository, you can fork it, i.e., make a copy of the original repository and host it on a coding platform under your own or your organization's account.
+A fork will give you complete control over the repository, but you will lose the issue and pull request history.</p>
+<p>We encourage you to rename your fork repository to something other than - but perhaps similar to - <em>hexatomic</em>, and also change any documentation and in-application branding accordingly.
+This will help users separate your fork project from the original project.
+Make sure that you act within the bounds of the respective <a href="maintenance/taking-over/../licensing/">licenses</a>, e.g., with regard to copyright notices.
+Also note that while you may add yourself to the list of authors in the <a href="maintenance/taking-over/../licensing/">`CITATION.cff</a> file once you have fulfilled authorship requirements,<!-- TODO Link once they're there -->
+you must not remove any authors from this list, until you can establish that their contributions are not part of the work anymore.
+This may be the case when you have deleted all lines of code or documentation that a single author has contributed.</p>
+<h2><a class="header" href="#update-maintainer-information" id="update-maintainer-information">Update maintainer information</a></h2>
+<p>Update the maintainer information in the relevant places:</p>
+<ul>
+<li>The <em>Maintainer</em> section in <code>README.md</code> (part of the <em>Team</em> section). You may also choose to update the <em>Core contributors</em> section.</li>
+<li>The list of contributors in <code>README.md</code>. List yourself for maintenance.</li>
+<li>When you have fulfilled the authorship requirements for Hexatomic, also add yourself as an author to the citation metadata in <code>CITATION.cff</code>. This is a software citation metadata file. You can read about its format in the <a href="https://citation-file-format.github.io/">Citation File Format documentation</a>.</li>
+</ul>
+<h2><a class="header" href="#update-public-information-about-code-reviews" id="update-public-information-about-code-reviews">Update public information about code reviews</a></h2>
+<p>The contribution guidelines in <code>CONTRIBUTING.md</code> contain information on when code reviews are likely to be performed. Change the information there as appropriate, e.g., update the time zone.</p>
+<h2><a class="header" href="#get-ready-for-maintenance" id="get-ready-for-maintenance">Get ready for maintenance</a></h2>
+<ul>
+<li>Read through the maintenance documentation.</li>
+<li>Check, update or newly set up the necessary services in the repository that you will need for maintenance: a <a href="maintenance/taking-over/../continuous-integration/">continuous integration service</a>, <a href="maintenance/taking-over/../continuous-integration/#static-code-analysis">static code analysis</a>, <a href="maintenance/taking-over/../repository/templates.html">issue and pull request templates</a>, etc.</li>
+<li>Enable notifications for the repository (e.g. by changing the notification settings with the &quot;Watch&quot; button in the upper right corner of the GitHub interface)</li>
+</ul>
+<h2><a class="header" href="#set-up-your-local-system-to-prepare-for-maintenance" id="set-up-your-local-system-to-prepare-for-maintenance">Set up your local system to prepare for maintenance</a></h2>
+<p>Follow the <a href="maintenance/taking-over/../../development/setup.html">development setup documentation</a> to set up your local system and get ready for maintenance work on the codebase.</p>
+<h2><a class="header" href="#test-the-state-of-hexatomic" id="test-the-state-of-hexatomic">Test the state of Hexatomic</a></h2>
+<p>Check if the <a href="maintenance/taking-over/../../development/getting-the-source-code.html#build-hexatomic-locally">build</a> runs, and fix any issues that you encounter.</p>
+<h2><a class="header" href="#maintain-open-contributions" id="maintain-open-contributions">Maintain open contributions</a></h2>
+<p>Check if there are any open pull requests for Hexatomic in the original repository.
+If you are working in a fork, consider getting in touch with the authors of the open pull requests and ask them to put them up again against your fork.
+<a href="maintenance/taking-over/../contributions/">Maintain the open pull requests</a> so that they can be closed or merged.</p>
+<h2><a class="header" href="#maintain-open-issues" id="maintain-open-issues">Maintain open issues</a></h2>
+<p>If you work in the original repository, check for any open issues, and maintain them until they can be closed.
+If you work in a fork, go through open issues in the original repository and discuss with the authors whether to copy them to your fork.
+If the issue authors are not available, decide which of the open issues should be copied to the fork.
+If you create copies of issues in your fork, make sure to link to the issues in the original repository.</p>
+<h2><a class="header" href="#make-a-new-release" id="make-a-new-release">Make a new release</a></h2>
+<p><a href="maintenance/taking-over/../releases/">Make a release</a> if any changes to Hexatomic were made during any of the previous steps.
+This is also a good way to celebrate that you are now the maintainer of Hexatomic!</p>
+<h2><a class="header" href="#announce-the-new-release-to-the-community" id="announce-the-new-release-to-the-community">Announce the new release to the community</a></h2>
+<p>Announce the new release as described in the <a href="maintenance/taking-over/../releases/#promoting-releases-to-the-community">Releases</a> section.
+If you can find a person with administrative rights to the project (see the <a href="maintenance/taking-over/index.html#announce-that-you-want-to-take-over-as-new-maintainer">previous section</a>),
+ask them to give you administrative rights for the mailing list <code>hexatomic-users@lists.hu-berlin.de</code> as well.
+If they are not available, you can always just subscribe to the mailing list and send a message as a subscriber.
+Consider to move the mailing list to a list provider you have administrative access to, and if you do this, also announce it via the <code>hexatomic-users@lists.hu-berlin.de</code> list.</p>
+<h1><a class="header" href="#versioning" id="versioning">Versioning</a></h1>
+<p>Hexatomic adheres to <a href="https://semver.org/">Semantic Versioning 2.0.0</a>.</p>
+<p>Versions take the form of <code>MAJOR.MINOR.PATCH</code>.</p>
+<ul>
+<li><code>MAJOR</code> versions are incompatible with each other. <code>MAJOR</code> is incremented, when an incompatible API change is introduced.</li>
+<li><code>MINOR</code> versions add &quot;features&quot;, i.e., backwards-compatible functionality.</li>
+<li><code>PATCH</code> versions add backwards-compatible bug fixes.</li>
+</ul>
+<h2><a class="header" href="#versioning-of-product-features-and-modules" id="versioning-of-product-features-and-modules">Versioning of product, features, and modules</a></h2>
+<p>Hexatomic is complex software: It consists of modules which are bundled in features.
+The actual software product deliverable is again made up of several features.</p>
+<!-- TODO See sections Architecture & terminology for details. -->
+<p>Despite this, we apply a unified versioning scheme for Hexatomic.
+This means that changes on any level of modularity (module, feature, product) triggers
+a change in the unified version number.</p>
+<h3><a class="header" href="#examples" id="examples">Examples:</a></h3>
+<ul>
+<li>A bug in a module is fixed. <em>All</em> version numbers in the Hexatomic product, <em>all</em> of its features
+and <em>all</em> of its bundles increment the <code>PATCH</code> identifier.</li>
+<li>A new module - developed by Hexatomic contributors or a third-party module - is added to a feature.
+The module adds new functionality to Hexatomic. <em>All</em> version numbers in the Hexatomic product, <em>all</em> of its features
+and <em>all</em> of its bundles increment the <code>MINOR</code> identifier.</li>
+</ul>
+<h2><a class="header" href="#scope" id="scope">Scope</a></h2>
+<p>The versioning scheme described above applies to Hexatomic as present in the <a href="https://github.com/hexatomic/hexatomic">hexatomic/hexatomic repository on GitHub</a>.
+It does not automatically apply to contributions which live in other repositories.</p>
+<h1><a class="header" href="#continuous-integration" id="continuous-integration">Continuous integration</a></h1>
+<p>When you work on the Hexatomic source code, or the documentation, you naturally diverge
+from the state of the default branch of the repository, <code>develop</code>.</p>
+<p>In order to ensure that your changes don't break anything, and to safeguard the
+quality of your changes</p>
+<ul>
+<li>you are required to write tests for your changes, and additionally</li>
+<li>your changes are automatically tested and analysed whenever you push to the
+Git branch you do your work in.</li>
+</ul>
+<p>These automated test and analysis runs are done with the help of a <em>continuous integration (CI)
+service</em>. They are also run during the release process. Hexatomic uses <a href="https://docs.github.com/en/actions"><em>GitHub
+Actions</em></a> as CI service.</p>
+<h2><a class="header" href="#ci-workflows" id="ci-workflows">CI workflows</a></h2>
+<p>CI workflows define what the CI service should run, and what triggers these runs.</p>
+<p>GitHub Actions are configured in the files in <code>.github/workflows</code>.
+There are different definitions for the <a href="maintenance/continuous-integration/index.html#test-workflow">test workflow</a> and for
+the <a href="maintenance/continuous-integration/index.html#release-workflow">release workflow</a>.</p>
+<p>Workflows run in a specified environment and consist of one or more <em>jobs</em>, which each consist of one or more
+<em>steps</em>. Steps can run shell commands, or predefined <em>actions</em> that are
+available from GitHub. For Hexatomic, the environment that is used to run workflows is a
+virtual machine on GitHub's servers running a recent Linux version. </p>
+<h3><a class="header" href="#test-workflow" id="test-workflow">Test workflow</a></h3>
+<p>The test workflow (<code>.github/workflows/test.yml</code>) is run whenever Git commits are pushed to the repository, or when a pull request is opened or updated.
+It consists of two separate jobs:</p>
+<ol>
+<li>A job that builds and tests Hexatomic with the defined Java version and runs
+static code analysis</li>
+<li>A job that builds and tests the documentation</li>
+</ol>
+<h3><a class="header" href="#release-workflow" id="release-workflow">Release workflow</a></h3>
+<p>The release
+workflow (<code>.github/workflows/release.yml</code>)
+is run whenever Git tags are pushed to the repository that start with a <code>v</code>
+(e.g., <code>v0.6.0</code>). Following the <a href="maintenance/continuous-integration/../../development/workflow/">development workflow for Hexatomic</a>, this should only be
+the case during a <a href="maintenance/continuous-integration/../releases/">release</a>.
+The release workflow consists of two separate jobs:</p>
+<ol>
+<li>A job that installs and tests Hexatomic with the defined Java version,
+updates the citation metadata, and deploys the release binaries to GitHub</li>
+<li>A job that builds the documentation and deploys the built website to the
+<code>github-pages</code> branch of the repository, from where GitHub Pages renders it</li>
+</ol>
+<h3><a class="header" href="#archive-workflow" id="archive-workflow">Archive workflow</a></h3>
+<p>The archive
+workflow (<code>.github/workflows/archive.yml</code>)
+is run whenever Git tags are pushed to the repository.
+The release workflow consists of only one job:</p>
+<ol>
+<li>A job that runs the <a href="https://github.com/marketplace/actions/save-to-software-heritage">Software Heritage Save action</a>
+that triggers the Software Heritage API to save the repository to the archive.</li>
+</ol>
+<h3><a class="header" href="#metadata-workflow" id="metadata-workflow">Metadata workflow</a></h3>
+<p>The metadata
+workflow (<code>.github/workflows/metadata.yml</code>)
+is run whenever changes are pushed to the <code>develop</code> branch.
+The metadata workflow consists of only one job:</p>
+<ol>
+<li>A job that checks out and builds Hexatomic, updates the <code>THIRD-PARTY</code> folder and the <code>CITATION.cff</code> file using the 
+<a href="https://github.com/hexatomic/cff-maven-plugin">Citation File Format Maven plugin</a>, 
+and pushes changes in the file and the folder back to the <code>develop</code> branch.</li>
+</ol>
+<h2><a class="header" href="#static-code-analysis" id="static-code-analysis">Static code analysis</a></h2>
+<p>We use the static code analysis service SonarCloud to </p>
+<ul>
+<li>automatically detect potential issues and security threats in our code, and </li>
+<li>provide information about the portion of code that is covered by tests, and</li>
+<li>provide information of duplication in the code.</li>
+</ul>
+<p>Each time, the <a href="maintenance/continuous-integration/index.html#test-workflow">test workflow</a> is run, it triggers the analysis SonarCloud's servers.
+During the analysis, it is checked whether the changes made to the codebase pass a so-called quality gate, i.e., whether threshholds for code quality are met.
+The results are being reported, for example on a pull request page.
+A failed quality gate also blocks code from getting merged.</p>
+<p><img src="maintenance/continuous-integration/./sonarcloud-report.png" alt="Screenshot of a SonarCloud report to a pull request page." /></p>
+<p>You can learn more about the service on the <a href="https://sonarcloud.io/documentation">SonarCloud documentation website</a>.</p>
+<p>To access and configure the Hexatomic project in SonarCloud, you must have maintenance access to the Hexatomic repository on GitHub, and log in to SonarCloud at <a href="https://sonarcloud.io">https://sonarcloud.io</a>.</p>
+<h1><a class="header" href="#working-with-contributions" id="working-with-contributions">Working with contributions</a></h1>
+<p>As documented in the <a href="maintenance/contributions/../../development/workflow/"><em>Workflow</em></a> section, all code and documentation contributions to Hexatomic are made via <a href="maintenance/contributions/index.html#maintaining-pull-requests">pull requests</a> from branches or forks, while <a href="maintenance/contributions/index.html#maintaining-contributions-that-are-not-code-contributions">other types of contributions</a> may not.</p>
+<p>Pull requests can come from within the Hexatomic core development team that works on branches in the Hexatomic repository (<em>internal pull requests</em>), or from others that have forked the Hexatomic repository and work on branches in their repository copy (<em>external pull requests</em>).</p>
+<h2><a class="header" href="#maintaining-pull-requests" id="maintaining-pull-requests">Maintaining pull requests</a></h2>
+<p>The maintainer is in charge of supervising pull requests from their creation to the point when they are merged into the target branched, or dismissed and closed.</p>
+<p>It is recommended to turn on notifications for pull requests, e.g. by changing the notification settings with the &quot;Watch&quot; button in the upper right corner of the GitHub interface.</p>
+<h3><a class="header" href="#communication-with-the-creator-of-the-pull-request" id="communication-with-the-creator-of-the-pull-request">Communication with the creator of the pull request</a></h3>
+<p>Communication with the creator of the pull request is by far the most important task in pull request maintenance.
+Communication should be timely, and in line with the <a href="https://github.com/hexatomic/hexatomic/blob/develop/CODE_OF_CONDUCT.md">Hexatomic Code of Conduct</a>.</p>
+<p>The primary aim of communication in pull requests is to ensure that the contribution 
+is <strong>suitable for merging</strong> into Hexatomic, and of <strong>sufficient quality</strong>.</p>
+<p>The secondary aim of communication is to provide a <strong>welcoming, helpful, appreciative experience</strong> for the contributor,
+that helps to build a community around the software.</p>
+<h3><a class="header" href="#evaluating-contributions" id="evaluating-contributions">Evaluating contributions</a></h3>
+<p>The contribution must be evaluated in terms of </p>
+<ul>
+<li><strong>suitability, e.g.:</strong>
+<ul>
+<li>Is the contribution going into the right place?</li>
+<li>Does it have the right scope?</li>
+<li>Is it of the right size, or should it be split into different pull requests?</li>
+<li>Does it do what it is meant to do?</li>
+<li>Will it improve Hexatomic?</li>
+</ul>
+</li>
+<li><strong>quality, e.g.:</strong>
+<ul>
+<li>Is the contribution free of security issues, bugs, code smells and style issues?</li>
+<li>Is the contribution well-tested?</li>
+<li>Will the contribution introduce regressions?</li>
+<li>Is the contribution documented?</li>
+</ul>
+</li>
+</ul>
+<p>Evaluation is done through different tools:</p>
+<ul>
+<li><a href="maintenance/contributions/index.html#communication-with-the-creator-of-the-pull-request">communication</a> to clarify suitability and help fulfill non-functional requirements</li>
+<li>automated testing by the <a href="maintenance/contributions/../continuous-integration/">continuous integration workflows</a> that run automated tests on all pull requests</li>
+<li><a href="maintenance/contributions/index.html#manual-testing-of-pull-requests">manual testing</a> and code review to evaluate functional requirements</li>
+<li><a href="maintenance/contributions/../continuous-integration/#static-code-analysis">static code analysis</a> to evaluate quality</li>
+</ul>
+<h4><a class="header" href="#manual-testing-of-pull-requests" id="manual-testing-of-pull-requests">Manual testing of pull requests</a></h4>
+<p>In addition to the automated tests run by the continuous integration pipeline, <strong>all pull requests must be manually tested</strong>.
+The steps for manual testing depend on whether the pull request is internal or external.
+The reason for this is that <em>external</em> pull requests should never be afforded the same level of <strong>trust</strong> as <em>internal</em> pull requests, i.e., pull requests from the core contributors.</p>
+<!--TODO To read more about how to review the changes as part of this process, read the section on [code review](TODO).-->
+<h5><a class="header" href="#manually-testing-external-untrusted-pull-requests" id="manually-testing-external-untrusted-pull-requests">Manually testing <em>external</em>, untrusted pull requests</a></h5>
+<ol>
+<li><strong>Code review on GitHub:</strong> Perform a code review of every single change on GitHub before doing anything else with the pull request.<br />
+<i class="fa fa-warning"></i> This is because <em>external pull requests may contain malign changes</em>, e.g., the continuous integration workflow, or any portion of code, could have been changed to expose secrets such as API or access tokens.</li>
+<li><strong>Test a local checkout of the pull request:</strong> Check out the pull request locally by cloning its source repository into a new local directory, and pulling and switching to its source branch. You may then use the IDE to review the changes and their interrelations and context more comfortably together with the view on the changes that GitHub provides.</li>
+<li><strong>Build and run the pull request version of Hexatomic locally:</strong> Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.</li>
+</ol>
+<h5><a class="header" href="#manually-testing-internal-trusted-pull-requests" id="manually-testing-internal-trusted-pull-requests">Manually testing <em>internal</em>, trusted pull requests</a></h5>
+<p>To avoid potential duplication of code review, you may change the manual testing steps for internal pull requests as follows.</p>
+<ol>
+<li><strong>Review a local checkout of the pull request:</strong> Check out the pull request locally by pulling and switching to its source branch. Use the IDE to review the changes and their interrelations and context comfortably, based on the list of changes on GitHub. </li>
+<li><strong>Build and run the pull request version of Hexatomic locally:</strong> Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.</li>
+</ol>
+<h5><a class="header" href="#manual-regression-tests" id="manual-regression-tests">Manual regression tests</a></h5>
+<p>The update functionality of Hexatomic can't be tested automatically.
+In addition to manually checking the changes of the pull request, you should therefore also check that </p>
+<ol>
+<li>that there is a <strong>status in the lower toolbar</strong> (&quot;Hexatomic is up to date&quot;) on start up which shows that the update check has been executed, and</li>
+<li>that clicking on the <em>Help</em> menu item, and then <em>Update</em>, triggers another <strong>manual update check</strong> (the status message in the toolbar should be highlighted by changing its color for a moment).</li>
+</ol>
+<p>In case that the pull request is related to the update functionality itself, you should also check the scenario that a new update is available.</p>
+<ol>
+<li>Adjust the file <code>releng/org.corpus_tools.hexatomic.product/p2.inf</code> and the local update site as repository by adding the following lines (but replace <code>&lt;SRC&gt;</code> with the location of your Hexatomic source code directory).</li>
+</ol>
+<pre><code class="language-plain">  addRepository(type:0,location:file${#58}&lt;SRC&gt;/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
+  addRepository(type:1,location:file${#58}&lt;SRC&gt;/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
+</code></pre>
+<ol start="2">
+<li>Build the product by executing (from the root of your local source code repository)</li>
+</ol>
+<pre><code class="language-bash">mvn -DskipTests package
+</code></pre>
+<ol start="3">
+<li>Unzip the product file (e.g. <code>releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip</code>) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the <em>test instance</em>.</li>
+<li>In the <em>original</em> local Hexatomic source code repository, change the version number of Hexatomic to a large version number and build the update site by executing. This instance of Hexatomic now functions as the <em>update instance</em>.</li>
+</ol>
+<pre><code class="language-bash">mvn tycho-versions:set-version -DnewVersion=1999.0.0 
+mvn -DskipTests package
+</code></pre>
+<ol start="5">
+<li>Run Hexatomic from the temporary directory (the <em>test instance</em>) and <strong>check that there is a message in the toolbar about an available update</strong>.</li>
+<li><strong>Apply the update</strong></li>
+<li>Manually check for an update via the <em>Help</em> &gt; <em>Update</em> menu, and check that the status bar again reports that &quot;Hexatomic is up to date&quot;.</li>
+<li>Revert all local changes in the source code repository using Git</li>
+</ol>
+<h3><a class="header" href="#moving-pull-requests-forward" id="moving-pull-requests-forward">Moving pull requests forward</a></h3>
+<p>Pull requests should have a maximally short life-span.
+The maintainer should help moving pull requests forward by completing their tasks in a timely fashion.
+If a pull request stalls, they should inquire what they can do to help, to move it forward towards merging.
+If a pull request is orphaned, the maintainer can decide to adopt and complete it themself, or find other contributors to complete it.
+Alternatively, it should be closed with a comment that explains the reasons for closing.</p>
+<h3><a class="header" href="#merging-pull-requests" id="merging-pull-requests">Merging pull requests</a></h3>
+<p>The way that pull requests are merged into their target branch depends on their type.</p>
+<ol>
+<li>Pull requests that provide <strong>hotfixes</strong>, i.e., repair functionality that is broken rather than provide 
+new or change existing functionality, <strong>must not be merged</strong> from the GitHub UI directly. This is
+because they target the <code>main</code> branch, which only contains released code. Therefore, code that
+goes into the <code>main</code> branch must be formally released, which cannot be done from the GitHub UI.
+Instead, refer to the section about <a href="maintenance/contributions/../releases/README.html#hotfix-releases">releasing hotfixes</a> to learn how to do this.</li>
+<li>Pull requests that target the <code>develop</code> branch must not necessarily be released on merge. Instead,
+code changes from different pull requests can be bundled into a release. Therefore, it is safe to
+merge the pull request from the GitHub UI by clicking the green <strong>Merge pull request</strong> button (see figure below).</li>
+</ol>
+<h4><a class="header" href="#requirements-for-merging" id="requirements-for-merging">Requirements for merging</a></h4>
+<p>You must only merge pull requests</p>
+<ol>
+<li>that have undergone code review, have been approved by the reviewer, and have no unresolved questions or change suggestions;</li>
+<li>that have passed static code analysis;</li>
+<li>that have passed all CI workflows;</li>
+<li>for which all tasks on the pull request checklist have been completed;</li>
+<li>for which copyright, license and citation information are complete.</li>
+</ol>
+<p><img src="maintenance/contributions/merge-pull-request.png" alt="When all requirements are fulfilled, pull requests to develop can be merged by clicking the green button &quot;Merge pull request&quot;." /></p>
+<h2><a class="header" href="#maintaining-contributions-that-are-not-code-contributions" id="maintaining-contributions-that-are-not-code-contributions">Maintaining contributions that are not code contributions</a></h2>
+<p>People can contribute to Hexatomic without creating a pull request.
+Such contributions can be feature requests, bug reports, code reviews, user testing, organizing events, writing or talking about Hexatomic, asking questions, etc.
+These contributions should be treated on par with <a href="maintenance/contributions/index.html#maintaining-pull-requests">pull requests</a> and maintained just as timely and conscientiously.
+Also, non-code contributions should be attributed and credited. <!-- TODO Add link to crediting section --></p>
+<h1><a class="header" href="#licensing-and-citation" id="licensing-and-citation">Licensing and citation</a></h1>
+<p>This section describes how licensing and citation information is handled in Hexatomic.</p>
+<h2><a class="header" href="#what-licenses-is-hexatomic-licensed-under" id="what-licenses-is-hexatomic-licensed-under">What licenses is Hexatomic licensed under?</a></h2>
+<p>The Hexatomic software is licensed under the Apache License, Version 2.0.
+Read <a href="http://web.archive.org/web/20191017082353/http://www.apache.org/licenses/LICENSE-2.0">the whole license text</a> to learn more about the license.</p>
+<p>The Hexatomic documentation is licensed under a <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode">CC0 1.0 Universal (CC0 1.0)</a> license. 
+See the <a href="maintenance/licensing/../../LICENSE.html">License page</a> for more information.</p>
+<h2><a class="header" href="#automating-the-fulfillment-of-license-requirements-and-citation" id="automating-the-fulfillment-of-license-requirements-and-citation">Automating the fulfillment of license requirements and citation</a></h2>
+<p>In order to make it easier to maintain the licenses for Hexatomic and its dependencies, 
+we automate the fulfillment of license requirements.</p>
+<p>We also automatically generate the citation metadata for Hexatomic in the Citation File Format (CFF) file <a href="https://github.com/hexatomic/hexatomic/blob/develop/CITATION.cff"><code>CITATION.cff</code></a>.
+You can learn more about CFF one the <a href="https://citation-file-format.github.io/">Citation File Format website</a>.</p>
+<h3><a class="header" href="#source-files" id="source-files">Source files</a></h3>
+<p>Hexatomic includes the Maven License Plugin from MojoHaus in the build.
+This plug-in handles the license information of the source files included in this repository.
+You can read about the plug-in on the <a href="http://www.mojohaus.org/license-maven-plugin/index.html">Maven License Plugin website</a>.</p>
+<h3><a class="header" href="#dependencies" id="dependencies">Dependencies</a></h3>
+<p>We use the Citation File Format Maven plugin to
+document Hexatomic's dependencies, their licenses, and their citation information.
+The plugin is run during the <a href="maintenance/licensing/../continuous-integration/#release-workflow">continuous integration release workflow</a>.
+This plug-in provides two goals, which can be executed to update the third-party dependency information.
+You have to execute the following Maven commands in the root folder, where the 
+created files and folders will be located, too.</p>
+<p><code>mvn -Pcff package</code> creates a new <code>CITATION.cff</code> file in the <a href="https://citation-file-format.github.io/">Citation File Format (CFF)</a>.
+This file does not only include basic information about the authorship of the Hexatomic project but also lists dependencies, for citation purposes.
+The <code>mvn -Pcff package</code> command also re-creates the <code>THIRD-PARTY</code> folder.
+It includes the license itself and additional license files like <code>NOTICE</code> (used by projects under the Apache License Version 2.0) or <code>about.html</code> (used by Eclipse P2 repositories). </p>
+<p>You can configure the behavior of the CFF plug-in by editing the <code>pom.xml</code> file in the root folder.
+Several templates for curated license information are located in the <code>releng/templates</code> folder.
+This includes the <code>releng/templates/CITATION.cff</code> file, which is a template for citation information - e.g., the curated list of authors - for the software itself (here: Hexatomic),
+but it can also be used to provide citation metadata for references, which shouldn't be overwritten during auto-generation.</p>
+<p>To learn more about configuring the CFF plugin and working with templates, refer to the <a href="https://github.com/hexatomic/cff-maven-plugin">Citation File Format Maven plugin project</a>.</p>
+<h1><a class="header" href="#releases" id="releases">Releases</a></h1>
+<p>Releases are versions of Hexatomic that are marked as encapsulating a specific set of tested and documented functionality features or repairs. Releases have a <a href="maintenance/releases/../versioning/">version identifier</a> and are listed on the <a href="maintenance/releases/index.html#promoting-releases-on-github">releases page</a> in the Hexatomic repository.</p>
+<h2><a class="header" href="#when-to-create-a-release" id="when-to-create-a-release">When to create a release</a></h2>
+<p>Hexatomic is a dynamic software project, and therefore there is no release plan with fixed dates for releases.
+Instead, the maintainers of Hexatomic decide when to create a new release.
+There are, however, two ground rules for when a release is created:</p>
+<ol>
+<li>Whenever a bug in a previous release of Hexatomic is <a href="maintenance/releases/../../development/workflow/#contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix">hotfixed</a>, a <a href="maintenance/releases/index.html#hotfix-releases">new hotfix release</a> <em>must</em> be created.</li>
+<li>Whenever new functionality has been implemented and merged into the <code>develop</code> branch, a <a href="maintenance/releases/index.html#feature-releases">new feature release</a> <em>should</em> be created.</li>
+</ol>
+<p>Before you make a release, make sure that you have configured <a href="https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification/about-commit-signature-verification">commit signature verification with GPG</a>, or else the release workflow will fail.</p>
+<p>Also make sure that you have the Eclipse IDE closed during the release process.
+The IDE sometimes updates files that may interfere with the release.</p>
+<h2><a class="header" href="#feature-releases" id="feature-releases">Feature releases</a></h2>
+<p>To release a new <em>feature</em> (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.</p>
+<ol>
+<li><code>git checkout develop</code> - Checks out the <em>develop</em> branch (feature releases are always based on <code>develop</code>).</li>
+<li><code>git pull origin develop</code> - Updates the local <em>develop</em> branch.</li>
+<li><code>mvn clean install</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
+<li><code>git add .</code> - Adds the updated files - if any - to the Git index. Make sure you only add intended changes.</li>
+<li><code>git commit -m &quot;Update file headers&quot;</code> - Commits the updates to version control.</li>
+<li><code>git push</code> - Updates the remote <em>develop</em> branch.</li>
+<li><code>mvn gitflow:release-start</code> - Starts the release process.</li>
+<li>The Maven GitFlow plugin will then prompt you to enter a version number for the release. Make sure you enter a version identifier according to semantic versioning, in the format <code>MAJOR.MINOR.PATCH</code>. Do <em>not</em> use a <code>-SNAPSHOT</code> suffix!</li>
+<li>Check if the <code>[Unreleased]</code> changelog section in <code>CHANGELOG.md</code> is complete and up-to-date. Make changes, commit and push if necessary.</li>
+<li><code>mvn keepachangelog:release -N</code> - Updates the changelog in the release branch.</li>
+<li><code>git add CHANGELOG.md</code> - Adds the updated changelog to the Git index.</li>
+<li><code>git commit -m &quot;Update changelog&quot;</code> - Commits the updated changelog to version control.</li>
+<li><code>mvn -P cff</code> - Updates the third-party folder and citation file.</li>
+<li><code>git add CITATION.cff THIRD-PARTY/</code> - Adds the updated folder and citation file to the Git index.</li>
+<li><code>git commit -m &quot;Update third party folder and citation file&quot;</code> - Commits the changed folder and file to version control.</li>
+<li><code>git push</code> - Updates the remote release branch.</li>
+<li><code>mvn gitflow:release-finish</code> - Finalizes the release process.</li>
+</ol>
+<h2><a class="header" href="#hotfix-releases" id="hotfix-releases">Hotfix releases</a></h2>
+<p>Hotfixes come into the project via pull requests of a <em>hotfix branch</em> against <code>main</code>.
+<strong>Important</strong>: Do <strong>not</strong> merge pull requests from hotfix branches into <code>main</code>!</p>
+<p>Instead, checkout the hotfix branch locally, and start the merge and release process with the Maven GitFlow plugin:</p>
+<ol>
+<li><code>git checkout hotfix/{hotfix version}</code> - Checks out the respective hotfix branch.</li>
+<li><code>git pull origin hotfix/{hotfix version}</code> - Checks for any remote changes to the branch.</li>
+<li><code>mvn clean install</code> - Builds the project, runs tests, and may update the file headers in Java files.</li>
+<li><code>git add .</code> - Adds the updated files - if any - to the Git index. Make sure you only add intended changes.</li>
+<li><code>git commit -m &quot;Update file headers&quot;</code> - Commits the updates to version control.</li>
+<li><code>git push</code> - Updates the remote <em>hotfix</em> branch.</li>
+<li>Check if the <code>[Unreleased]</code> changelog section in <code>CHANGELOG.md</code> is complete and up-to-date. Make changes, commit and push if necessary.</li>
+<li><code>mvn keepachangelog:release -N</code> - Updates the changelog in the release branch.</li>
+<li><code>git add CHANGELOG.md</code> - Adds the updated changelog to the Git index.</li>
+<li><code>git commit -m &quot;Update changelog&quot;</code> - Commits the updated changelog to version control.</li>
+<li><code>mvn -Pcff package</code> - Updates the third-party folder and citation file.</li>
+<li><code>git add CITATION.cff THIRD-PARTY/</code> - Adds the updated folder and citation file to the Git index.</li>
+<li><code>git commit -m &quot;Update third party folder and citation file&quot;</code> - Commits the changed folder and file to version control.</li>
+<li><code>git push</code> - Updates the remote release branch.</li>
+<li><code>mvn gitflow:hotfix-finish</code> - Finalizes the hotfix and finishes the merge and release procedure.</li>
+</ol>
+<h2><a class="header" href="#promoting-releases-on-github" id="promoting-releases-on-github">Promoting releases on GitHub</a></h2>
+<p>When you have made a <a href="maintenance/releases/index.html#feature-releases">feature</a> or <a href="maintenance/releases/index.html#hotfix-releases">hotfix</a> as described above, you will find a new tag for the released version on the <a href="https://github.com/hexatomic/hexatomic/releases">Hexatomic releases page on GitHub</a>.</p>
+<p><img src="maintenance/releases/tag.png" alt="Screenshot of a mocked tag on GitHub that has not been promoted to release yet" /></p>
+<p>You can now make a release from this tag:</p>
+<ol>
+<li>Click on <strong>Draft a new release</strong> on the Releases page.</li>
+<li>Complete the <em>Tag version</em> field with the tag you want to release (e.g. <code>v0.4.1</code>).</li>
+<li>Give the release a title. It should start with <code>Hexatomic</code>, include any necessary qualifiers (e.g., <code>Beta</code> if it's a <code>0.</code> MAJOR version) and the version number itself without any prefixes (e.g., use <code>0.4.1</code> instead of <code>v0.4.1</code>).</li>
+<li>Describe the release in three parts:
+<ol>
+<li>A high-level description of the form <code>This is a Hexatomic &lt;hotfix/feature&gt; release &lt;:bug:/:tada:&gt;!</code> followed by a blank line.</li>
+<li>A short description of the fix (including issue numbers with hash prefixes, e.g. <code>#123</code>) or the added functionality. You can use bullet lists if more than one fix or feature has been added.</li>
+<li>A link to the user documentation with, e.g., the following text: <code>:green_book: Read the [user documentation](https://hexatomic.github.io/hexatomic/user/v0.5/index.html) for Hexatomic to learn how to install and use it.</code> Make sure you get the <code>vMAJOR.MINOR</code> part in the documentation URL right.</li>
+</ol>
+</li>
+<li>Click the <strong>Preview</strong> tab and check if everything looks good.</li>
+<li>Click on the green <strong>Publish release</strong> button. You can always delete and re-create releases from tags if something goes wrong.</li>
+<li>Check if the release contains all &quot;binaries&quot;, i.e., the product .zip files for all three major operating systems.</li>
+<li>An GitHub action should also automatically update the P2 repository. Run the old version of Hexatomic and check an update is found.</li>
+</ol>
+<p><img src="maintenance/releases/release.gif" alt="Animation showing how to create a release on GitHub" /></p>
+<h2><a class="header" href="#promoting-releases-to-the-community" id="promoting-releases-to-the-community">Promoting releases to the community</a></h2>
+<p>Hexatomic has a mailing list for users: <code>hexatomic-users@lists.hu-berlin.de</code>.
+The maintainers of the Hexatomic software project are also <a href="https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users">maintainers of this mailing list</a>.
+Whenever a new version of Hexatomic is released, the mailing list should be notified of this.
+To do so, write an email to <code>hexatomic-users@lists.hu-berlin.de</code> using the following template.
+Replace the &lt;PLACEHOLDERS&gt; with the actual values.</p>
+<blockquote>
+<p><strong>Subject:</strong> Hexatomic &lt;VERSION NUMBER OF THE NEW VERSION&gt; is released!</p>
+<p><strong>Body:</strong><br />
+Dear list,</p>
+<p>We have released a new version of Hexatomic (&lt;FULL VERSION NAME OF THE NEW VERSION, e.g., 0.6.0 Beta&gt;). You can download it here: https://github.com/hexatomic/hexatomic/releases/tag/&lt;TAG FOR THE NEW VERSION&gt;.</p>
+<p>&lt;BRIEF SUMMARY OF THE CHANGELOG, MENTION THE MOST IMPORTANT CHANGES&gt;</p>
+<p>If you have questions or feature requests, please open an issue on the Hexatomic GitHub repository: https://github.com/hexatomic/hexatomic/issues/new/choose.</p>
+<p>Many thanks!<br />
+&lt;NAME OF THE MAINTAINER&gt;</p>
+</blockquote>
+<h2><a class="header" href="#what-to-do-when-releases-go-wrong" id="what-to-do-when-releases-go-wrong">What to do when releases go wrong?</a></h2>
+<p>When a feature release doesn't work as expected, simply</p>
+<ol>
+<li>Checkout the <code>develop</code> branch (<code>git checkout develop</code>).</li>
+<li>Delete the release branch for the version you wanted to release (<code>git branch -d release/{version}</code>).</li>
+<li>Delete the same branch on GitHub (via the web interface).</li>
+<li>Restart the release process from the top.</li>
+</ol>
+<p>When a hotfix release doesn't work as expected, simply</p>
+<ol>
+<li>Make the necessary changes in the hotfix branch, then continue with the merge and release process.</li>
+</ol>
+<h1><a class="header" href="#periodic-unreviewed-code-triage" id="periodic-unreviewed-code-triage">Periodic unreviewed code triage</a></h1>
+<p>Hotfixes can be merged without code review if there is only one maintainer available.
+To still be able to perform some kind of review, periodic triages of yet unreviewed code are performed by one of the maintainers.</p>
+<p>These triages must be done <em>at the beginning of each quarter of the calendar year</em>.
+The time of the last triage and any findings are logged in the file <code>UNREVIEWED_CODE_TRIAGE.md</code> in the main repository.</p>
+<h2><a class="header" href="#determining-changes-since-the-last-triage" id="determining-changes-since-the-last-triage">Determining changes since the last triage</a></h2>
+<p>Open the list of all pull requests (PRs) in GitHub, filter them by the <code>unreviewed</code> label, and sort them to show the oldest ones first.
+If there are no pull requests with such a label, the triage is finished and you can proceed to the &quot;Documenting the results&quot; section.</p>
+<p>Next, open the file <code>UNREVIEWED_CODE_TRIAGE.md</code> and check which commit of the <code>main</code> branch was last triaged.
+Create a new branch from this commit.</p>
+<blockquote>
+<p><strong>This branch must never be merged into another branch.</strong></p>
+</blockquote>
+<p>For each of the pull requests with the <code>unreviewed</code> label, merge the tip commit of the pull request into your branch.
+At this stage, conflicts may appear, which may, for example, be due to the addition of reviewed PRs with larger features in between non-reviewed hotfix PRs.
+If there is any conflict, abort the merge, review the current changes up to this point, and start a new triage with the last commit before the merge commit of the problematic PR as a starting point.
+For example, in the following history of pull requests, there would be two triages: one triage for PRs 1 and 2, starting from the last triaged <code>main</code> commit, and one triage from the PR X commit (which was reviewed) that includes PRs 4 and 5.</p>
+<pre><code class="language-plain">last triaged commit
+        |
+        v
+        + &lt;-- PR 1 (not reviewed)
+        |
+        v
+        + &lt;-- PR 2 (not reviewed)
+        |
+        v
+        + &lt;-- PR X (reviewed)
+        |
+        v
+    conflict! &lt;-- PR 4 (not reviewed)
+        |
+        v     &lt;-- PR 5 (not reviewed)
+
+</code></pre>
+<p>When you have merged all the pull requests included in this triage, compare the changes of the branch with the previously triaged commit and review the code changes.
+To compare the changes, you can use the git command line (<code>git diff &lt;last-triaged-commit&gt; HEAD</code>), a graphical git diff tool, or the GitHub &quot;compare branches&quot; feature.
+For each problem you find, create a new issue in the GitHub issue tracker and add it to the <code>UNREVIEWED_CODE_TRIAGE.md</code> file.</p>
+<p>At the end of the triage and after all issues have been documented, remove the <code>unreviewed</code> label from the triaged pull requests.</p>
+<h2><a class="header" href="#documenting-the-results" id="documenting-the-results">Documenting the results</a></h2>
+<p>Each triage should have its own section in the <code>UNREVIEWED_CODE_TRIAGE.md</code> file.
+New triage results are added to the top of the file.</p>
+<p>Use the date on which the triage has been completed as the header of the triage section.
+If a conflict occurred during the merge of the PRs, and you have had to split the set of PRs that you need to triage as explained above, also add &quot;Set&quot; and the consecutive number of the set in the order of processing, e.g., <code># 2020-08-27 (Set 1)</code>, <code># 2020-08-27 (Set 2)</code>, etc.
+Below the heading, record </p>
+<ul>
+<li>a link to the GitHub user page of the person who did the triage, </li>
+<li>the revision hash range <strong>on the <code>main</code> branch</strong> of the first and last commit you have triaged in the triaged set (or the whole triage if you didn't have to split it),</li>
+<li>a list of PRs that where included in the triage.
+Then, add a list entry for each issue you found,  with the issue title and number URL, for example:</li>
+</ul>
+<pre><code class="language-markdown">- Resolve settings for running from within Eclipse in docs #197
+- TestGraphEditor.testShowSaltExample times out #202
+</code></pre>
+<h3><a class="header" href="#examples-for-triage-results" id="examples-for-triage-results">Examples for triage results</a></h3>
+<p>First part of a triage which was split due to conflicts.</p>
+<pre><code class="language-markdown">## 2020-08-07 (Set 1)
+
+Triage done by [thomaskrause](github.com/thomaskrause). 
+Revison range: 758884326b3e3a6b29f54418158e4cc0204be525..874720de8fd6d5b415edad9a66412719abf49279
+PRs: #199, #127, #138
+
+### Issues
+
+- Resolve settings for running from within Eclipse in docs #197
+- TestGraphEditor.testShowSaltExample times out #202
+
+</code></pre>
+<p>Example file section for a triage where no unreviewed pull requests have been found. You can omit the start revision hash in this case.</p>
+<pre><code class="language-markdown">## 2020-04-01 
+
+Triage done by [thomaskrause](github.com/thomaskrause).
+PRs: none
+Revision range: ..fbc424bc0918e16fc78d07307c4cca47bc1620f1
+</code></pre>
+<h1><a class="header" href="#repository-maintenance" id="repository-maintenance">Repository maintenance</a></h1>
+<p>The Hexatomic source code is hosted on GitHub at <i class="fa fa-github"></i> <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a> (the <em>repository</em>).
+This section documents the maintenance of the repository.</p>
+<p>You can configure the way people can interact with the GitHub repository in a number of ways, including template files, metadata documents, community documentation, and others.</p>
+<h1><a class="header" href="#template-files" id="template-files">Template files</a></h1>
+<p>Template files can be used to customize the GitHub repository to some extent.
+The Hexatomic repository uses two different template types:</p>
+<ol>
+<li>Issue templates</li>
+<li>A pull request template</li>
+</ol>
+<p>These templates are text files in the <code>.github/</code> directory that are formatted with Markdown, and may have a <a href="https://yaml.org/">YAML</a> front matter.
+You can learn more about issue templates and pull request templates from the <a href="https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates">GitHub documentation</a>.</p>
+<p>The templates contain the predefined contents of the initial issue comment, or the initial pull request comment.
+They may contain checklists, text sections, bullet lists, etc., that work as &quot;form elements&quot; the user is asked to complete.</p>
+<p>Further instructions for users are included as <code>&lt;!-- HTML comments --&gt;</code>.</p>
+<h2><a class="header" href="#issue-templates" id="issue-templates">Issue templates</a></h2>
+<p>You can find the issue templates in <code>.github/ISSUE_TEMPLATE/</code>.
+GitHub will use the contents of this directory to determine the way that new issues are created.</p>
+<p>The Hexatomic repository has two issue templates, one for bug reports (<a href="maintenance/repository/"><code>.github/ISSUE_TEMPLATE/bug_report.md</code></a>), and one for feature requests (<a href="maintenance/repository/"><code>.github/ISSUE_TEMPLATE/feature_request.md</code></a>).
+Therefore, when you create a new issue, you are being asked which type of issue you want to create: a bug report, or a feature request.
+The names and descriptions of the options come from the YAML front matter of the different issue template files.</p>
+<p><img src="maintenance/repository/template-choice.png" alt="The user is presented with a choice of issue templates when creating a new issue." /></p>
+<p>On a side note, if there is only one template per template type (issue/pull request), no name and description is needed, and the single file will automatically be used.</p>
+<p>Once you choose between issue types, a new issue will be created for you to edit.
+The editor will be pre-populated with the contents of the respective Markdown file.
+Additionally, the front matter of the respective Markdown file determines some other values for the newly created issue, for example</p>
+<ul>
+<li>the name of the template (shown in the issue choice dialogue);</li>
+<li>the description of the template (shown in the issue choice dialogue)</li>
+<li>the title of the newly created issue</li>
+<li>A list of labels that will be assigned to the newly created issue</li>
+<li>A list of assignees that the newly created issue will be assigned to.</li>
+</ul>
+<p>Below is an example for the front matter of the bug report template. 
+The triple hyphens define a section of front matter in YAML.</p>
+<pre><code class="language-yaml">---
+name: Bug report
+about: Create a report to help us improve Hexatomic.
+title: ''
+labels: 'bug'
+assignees: ''
+---
+</code></pre>
+<p>This front matter, together with the Markdown body text of the template creates a pre-populated new issue as in the following figure.</p>
+<p><img src="maintenance/repository/new-bug-report.png" alt="This front matter, together with the Markdown body text of the template creates a pre-populated new issue." /></p>
+<h2><a class="header" href="#pull-request-template" id="pull-request-template">Pull request template</a></h2>
+<p>The pull request template works similarly to the <a href="maintenance/repository/templates.html#issue-templates">issue templates</a>.
+Its main feature is a checklist for the user to complete before the pull request can be reviewed.
+The completion progress of the checklist is also reported on the repository page listing all pull requests.</p>
+<p><img src="maintenance/repository/pr-checklist.png" alt="The completion progress of the checklist for a pull request is also reported on the repository page listing all pull requests." /></p>
+<h1><a class="header" href="#prepare-for-the-end-of-maintenance-period" id="prepare-for-the-end-of-maintenance-period">Prepare for the end of maintenance period</a></h1>
+<p>Due to the prevalence of fixed-term contracts, research software projects are under constant threat to lose funding and thus be brought to a premature end-of-life.
+To react to this eventuality, it is necessary to prepare Hexatomic for its end-of-maintenance.
+This is part of a setup of the software project, that makes it possible to revive the project even after longer periods of dormancy or abandonment.</p>
+<p>If you know that your maintenance term is coming to an end, please take the following precautions to prepare Hexatomic for a later revival.
+For each step, an approximate <i class="fa fa-hourglass-start"></i> start time is suggested.</p>
+<h2><a class="header" href="#1-freeze-development" id="1-freeze-development">1. Freeze development</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>Start of the last quarter of your maintenance term</em></p>
+<p>Do not start to draft, plan, or develop new functionality features.
+Instead, use available resources to prepare for end-of-maintenance.</p>
+<p>Communicate the upcoming end-of-maintenance to current contributors during as soon as possible.
+If you are lucky, one of them may want to integrate a feature so badly that they take on maintenance themself, or are able to round up more funding.</p>
+<h2><a class="header" href="#2-prioritize-and-clear-open-issues-and-pull-requests" id="2-prioritize-and-clear-open-issues-and-pull-requests">2. Prioritize and clear open issues and pull requests</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>Start of the last quarter of your maintenance term</em></p>
+<p>Prioritize open issues and pull requests by necessity to be merged before end-of-maintenance.
+If you use a code platform such as GitHub or GitLab, use its project management features (boards, milestones, etc.) to track progress, and react to delays by communicating with the stakeholders in issues and pull requests.
+De-prioritize as necessary.</p>
+<p>For any new incoming issue or pull request, communicate to their authors that development is frozen due to the upcoming end of your maintenance term.
+Perhaps there is a new maintainer among them, or a new funding idea to be had.</p>
+<p>Focus on clearing those issues and PRs with the highest priority.
+Make sure that you maintain the high standards for accepting contributions to Hexatomic.</p>
+<p>You can work on clearing issues and PRs up until one month before the end of your maintenance term.</p>
+<h2><a class="header" href="#3-issue-an-end-of-maintenance-announcement-to-the-whole-community" id="3-issue-an-end-of-maintenance-announcement-to-the-whole-community">3. Issue an end-of-maintenance announcement to the whole community</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>Start of the last quarter of your maintenance term</em></p>
+<p>Publicize the end-of-maintenance date loud and clear wherever it makes sense, e.g., the project homepage and the <code>README.md</code> file.
+Make sure to use any communication channels to the community you have: issues, mailing lists, conferences, etc.
+Don't forget to provide a way to contact you, as someone from the community may want to volunteer as maintainer, or may have funding available.</p>
+<h2><a class="header" href="#4-batten-down-the-hatches" id="4-batten-down-the-hatches">4. Batten down the hatches</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>1 month before the end of your maintenance term</em></p>
+<p>Take a round trip across the project.
+Read the documentation carefully again to make sure that it contains everything that may be needed for a revival later on.
+Fix last <em>small</em> things that catch your attention.</p>
+<h2><a class="header" href="#5-release-and-archive" id="5-release-and-archive">5. Release and archive</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>1 week before the end of your maintenance term</em></p>
+<p>Make sure that everything that is release-ready has been released.
+Make one last release if necessary, and publish it.
+Archive the whole repository on Software Heritage;
+read the <a href="https://www.softwareheritage.org/save-and-reference-research-software/">Software Heritage documentation</a> to learn how.</p>
+<h2><a class="header" href="#6-say-goodbye" id="6-say-goodbye">6. Say goodbye</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>1 day before the end of your maintenance term</em></p>
+<p>Add a note at the top of the <code>README.md</code>, notifying future repository visitors that Hexatomic has reached a temporary end-of-maintenance.
+Include contact details for yourself in that note that don't rely on GitHub functionality (e.g., an email address), so that potential new maintainers can get in touch with you if they want to revive the repository.
+Let them know that it can, however, be revived, and link to the relevant developer and maintainer documentation on Software Heritage (e.g., <a href="https://archive.softwareheritage.org/browse/origin/content/?origin_url=https://github.com/hexatomic/hexatomic&amp;path=docs/dev/src/SUMMARY.md"><code>https://archive.softwareheritage.org/browse/origin/content/?origin_url=https://github.com/hexatomic/hexatomic&amp;path=docs/dev/src/SUMMARY.md</code></a>). 
+Archive the repository on GitHub.
+This will preserve everything that's in the repository, including issues and pull requests, but everything will be read-only.
+Take your leave, and don't forget to switch off the lights.
+Thank you for maintaining Hexatomic! <i class="fa fa-heart"></i></p>
+<h1><a class="header" href="#common-issues" id="common-issues">Common issues</a></h1>
+<p>This is a collection of common issues you may encounter during Hexatomic development.
+If you encounter errors during the build or in the Eclipse IDE that aren't straightforward to solve, it may be worth having a look at this section.</p>
+<h2><a class="header" href="#target-platform-1" id="target-platform-1">Target platform</a></h2>
+<p>Hexatomic uses a so-called <em>target platform</em> to define product and development dependencies.
+You can read about it in <a href="common-issues/../development/activating-target-platform.html"><em>Creating and activating the target platform</em></a>.</p>
+<hr />
+<h3><a class="header" href="#-target-may-be-out-of-sync-with-tpd" id="-target-may-be-out-of-sync-with-tpd">🚧 <code>.target</code> may be out of sync with <code>.tpd</code></a></h3>
+<p>Sometimes, contributors may update the <code>.tpd</code> source file, but forget to push a newly generated <code>.target</code> file to the repository.
+This may lead to Eclipse being unable to resolve types, or other errors.</p>
+<p><strong>💡 Generate the <code>target</code> file from the <code>.tpd</code> file as described in <a href="common-issues/../development/activating-target-platform.html"><em>Creating and activating the target platform</em></a>, and <a href="https://github.com/hexatomic/hexatomic/tree/develop/CONTRIBUTING.md">contribute</a> the newly generated <code>.target</code> file back to the project.</strong></p>
+<hr />
+<h3><a class="header" href="#-target-platform-may-not-be-resolved" id="-target-platform-may-not-be-resolved">🚧 Target Platform may not be resolved</a></h3>
+<p>Whenever a Target Platform definition file has been changed, you have to activate it in Eclipse, so that dependencies can be resolved.
+If you don't do this, Eclipse may show error messages which seemingly relate to something else, e.g.,
+<code>The method method() of type SomeType must override or implement a supertype method</code>, or errors on imports.</p>
+<p><strong>💡 Set the new definition as active target platform as described in <a href="common-issues/../development/activating-target-platform.html"><em>Creating and activating the target platform</em></a>.</strong></p>
+<h1><a class="header" href="#governance" id="governance">Governance</a></h1>
+<p>The decision-making processes for the Hexatomic project are described in the <a href="https://github.com/hexatomic/hexatomic/tree/develop/CONTRIBUTING.md">contributing guidelines in the main Hexatomic repository</a>.</p>
+<h1><a class="header" href="#license-1" id="license-1">License</a></h1>
+<p><img src="https://img.shields.io/badge/CC0-1.0%20Universal-yellowgreen?logo=creative-commons" alt="" /><br />
+With the exception of the content listed below, this documentation is licensed under a <a href="https://creativecommons.org/publicdomain/zero/1.0/legalcode">CC0 1.0 Universal (CC0 1.0)</a> license.</p>
+<h2><a class="header" href="#content-excepted-from-the-cc0-10-universal-license" id="content-excepted-from-the-cc0-10-universal-license">Content excepted from the CC0 1.0 Universal license</a></h2>
+<ul>
+<li><strong>Git branching model</strong> graphic in section <a href="./development/workflow/#the-gitflow-branching-model">Workflow</a> by Vincent Driessen from the original blog post <a href="http://nvie.com/archives/323">&quot;A successful Git branching model&quot;</a> is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA license</a>.<br />
+<img src="https://img.shields.io/badge/CC-BY%20SA-yellowgreen?logo=creative-commons" alt="" /></li>
+</ul>
+<h2><a class="header" href="#cc0-10-universal-legal-code" id="cc0-10-universal-legal-code">CC0 1.0 Universal legal code</a></h2>
+<pre><code class="language-txt">Creative Commons Legal Code
+
+CC0 1.0 Universal
+
+    CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE
+    LEGAL SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN
+    ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS
+    INFORMATION ON AN &quot;AS-IS&quot; BASIS. CREATIVE COMMONS MAKES NO WARRANTIES
+    REGARDING THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS
+    PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM
+    THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED
+    HEREUNDER.
+
+Statement of Purpose
+
+The laws of most jurisdictions throughout the world automatically confer
+exclusive Copyright and Related Rights (defined below) upon the creator
+and subsequent owner(s) (each and all, an &quot;owner&quot;) of an original work of
+authorship and/or a database (each, a &quot;Work&quot;).
+
+Certain owners wish to permanently relinquish those rights to a Work for
+the purpose of contributing to a commons of creative, cultural and
+scientific works (&quot;Commons&quot;) that the public can reliably and without fear
+of later claims of infringement build upon, modify, incorporate in other
+works, reuse and redistribute as freely as possible in any form whatsoever
+and for any purposes, including without limitation commercial purposes.
+These owners may contribute to the Commons to promote the ideal of a free
+culture and the further production of creative, cultural and scientific
+works, or to gain reputation or greater distribution for their Work in
+part through the use and efforts of others.
+
+For these and/or other purposes and motivations, and without any
+expectation of additional consideration or compensation, the person
+associating CC0 with a Work (the &quot;Affirmer&quot;), to the extent that he or she
+is an owner of Copyright and Related Rights in the Work, voluntarily
+elects to apply CC0 to the Work and publicly distribute the Work under its
+terms, with knowledge of his or her Copyright and Related Rights in the
+Work and the meaning and intended legal effect of CC0 on those rights.
+
+1. Copyright and Related Rights. A Work made available under CC0 may be
+protected by copyright and related or neighboring rights (&quot;Copyright and
+Related Rights&quot;). Copyright and Related Rights include, but are not
+limited to, the following:
+
+  i. the right to reproduce, adapt, distribute, perform, display,
+     communicate, and translate a Work;
+ ii. moral rights retained by the original author(s) and/or performer(s);
+iii. publicity and privacy rights pertaining to a person's image or
+     likeness depicted in a Work;
+ iv. rights protecting against unfair competition in regards to a Work,
+     subject to the limitations in paragraph 4(a), below;
+  v. rights protecting the extraction, dissemination, use and reuse of data
+     in a Work;
+ vi. database rights (such as those arising under Directive 96/9/EC of the
+     European Parliament and of the Council of 11 March 1996 on the legal
+     protection of databases, and under any national implementation
+     thereof, including any amended or successor version of such
+     directive); and
+vii. other similar, equivalent or corresponding rights throughout the
+     world based on applicable law or treaty, and any national
+     implementations thereof.
+
+2. Waiver. To the greatest extent permitted by, but not in contravention
+of, applicable law, Affirmer hereby overtly, fully, permanently,
+irrevocably and unconditionally waives, abandons, and surrenders all of
+Affirmer's Copyright and Related Rights and associated claims and causes
+of action, whether now known or unknown (including existing as well as
+future claims and causes of action), in the Work (i) in all territories
+worldwide, (ii) for the maximum duration provided by applicable law or
+treaty (including future time extensions), (iii) in any current or future
+medium and for any number of copies, and (iv) for any purpose whatsoever,
+including without limitation commercial, advertising or promotional
+purposes (the &quot;Waiver&quot;). Affirmer makes the Waiver for the benefit of each
+member of the public at large and to the detriment of Affirmer's heirs and
+successors, fully intending that such Waiver shall not be subject to
+revocation, rescission, cancellation, termination, or any other legal or
+equitable action to disrupt the quiet enjoyment of the Work by the public
+as contemplated by Affirmer's express Statement of Purpose.
+
+3. Public License Fallback. Should any part of the Waiver for any reason
+be judged legally invalid or ineffective under applicable law, then the
+Waiver shall be preserved to the maximum extent permitted taking into
+account Affirmer's express Statement of Purpose. In addition, to the
+extent the Waiver is so judged Affirmer hereby grants to each affected
+person a royalty-free, non transferable, non sublicensable, non exclusive,
+irrevocable and unconditional license to exercise Affirmer's Copyright and
+Related Rights in the Work (i) in all territories worldwide, (ii) for the
+maximum duration provided by applicable law or treaty (including future
+time extensions), (iii) in any current or future medium and for any number
+of copies, and (iv) for any purpose whatsoever, including without
+limitation commercial, advertising or promotional purposes (the
+&quot;License&quot;). The License shall be deemed effective as of the date CC0 was
+applied by Affirmer to the Work. Should any part of the License for any
+reason be judged legally invalid or ineffective under applicable law, such
+partial invalidity or ineffectiveness shall not invalidate the remainder
+of the License, and in such case Affirmer hereby affirms that he or she
+will not (i) exercise any of his or her remaining Copyright and Related
+Rights in the Work or (ii) assert any associated claims and causes of
+action with respect to the Work, in either case contrary to Affirmer's
+express Statement of Purpose.
+
+4. Limitations and Disclaimers.
+
+ a. No trademark or patent rights held by Affirmer are waived, abandoned,
+    surrendered, licensed or otherwise affected by this document.
+ b. Affirmer offers the Work as-is and makes no representations or
+    warranties of any kind concerning the Work, express, implied,
+    statutory or otherwise, including without limitation warranties of
+    title, merchantability, fitness for a particular purpose, non
+    infringement, or the absence of latent or other defects, accuracy, or
+    the present or absence of errors, whether or not discoverable, all to
+    the greatest extent permissible under applicable law.
+ c. Affirmer disclaims responsibility for clearing rights of other persons
+    that may apply to the Work or any use thereof, including without
+    limitation any person's Copyright and Related Rights in the Work.
+    Further, Affirmer disclaims responsibility for obtaining any necessary
+    consents, permissions or other rights required for any use of the
+    Work.
+ d. Affirmer understands and acknowledges that Creative Commons is not a
+    party to this document and has no duty or obligation with respect to
+    this CC0 or use of the Work.
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
+        
+
+    </body>
+</html>
