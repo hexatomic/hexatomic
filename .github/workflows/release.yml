@@ -9,8 +9,10 @@ jobs:
     name: Deploy release Windows and Linux binaries
     runs-on: ubuntu-20.04
     steps:
+        - name: Update packages
+          run: sudo apt-get update
         - name: Install metacity window manager for background tests
-          run: sudo apt-get update && sudo apt-get install metacity
+          run: sudo apt-get install metacity
         - name: Checkout
           uses: actions/checkout@v2
         - name: Set JAVA_HOME to OpenJDK 11
