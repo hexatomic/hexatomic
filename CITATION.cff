@@ -27,12 +27,15 @@ authors:
 repository-code: https://github.com/hexatomic/hexatomic
 url: https://hexatomic.github.io
 license: Apache-2.0
+identifiers:
+- description: This is the collection of archived snapshots of all versions of Hexatomic.
+    Make sure that you cite the specific version you have used in your work with its
+    version DOI!
+  type: doi
+  value: 10.5281/zenodo.6900689
+doi: 10.5281/zenodo.6900689
 version: 0.14.0-SNAPSHOT
 date-released: 2022-08-23
-identifiers:
-  - description: "This is the collection of archived snapshots of all versions of Hexatomic. Make sure that you cite the specific version you have used in your work with its version DOI!"
-    type: doi
-    value: "10.5281/zenodo.6900689"
 references:
 - type: software
   title: SWT Resource Manager
