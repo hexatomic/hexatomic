@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add DOI to citation file (#387)
+- Add collection DOI to citation file template (#387)
 
 ### Fixed
 
