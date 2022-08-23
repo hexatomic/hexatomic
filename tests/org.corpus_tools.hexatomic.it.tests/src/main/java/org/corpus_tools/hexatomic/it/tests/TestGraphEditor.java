@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.UiStatusReport;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.graph.GraphEditor;
 import org.corpus_tools.hexatomic.it.tests.utils.SwtBotChips;
@@ -93,6 +94,7 @@ class TestGraphEditor {
 
   private ErrorService errorService;
   private ProjectManager projectManager;
+  private UiStatusReport uiStatus;
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
@@ -278,6 +280,7 @@ class TestGraphEditor {
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
+    uiStatus = ContextInjectionFactory.make(UiStatusReport.class, ctx);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -513,7 +516,6 @@ class TestGraphEditor {
 
     openDefaultExample();
 
-
     // Get a reference to the opened document graph
     Optional<SDocument> optionalDoc =
         projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
@@ -532,6 +534,8 @@ class TestGraphEditor {
 
       // Add a checkpoint so the changes are propagated to the view
       projectManager.addCheckpoint();
+
+      bot.waitUntil(new NoBackgroundJobsCondition(uiStatus));
 
       // Select the new text
       SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
