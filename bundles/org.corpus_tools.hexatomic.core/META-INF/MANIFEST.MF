@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Core Plugin
 Bundle-SymbolicName: org.corpus_tools.hexatomic.core;singleton:=true
-Bundle-Version: 0.15.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Vendor: Hexatomic Research Project
 Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.errors,
