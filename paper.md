@@ -90,6 +90,6 @@ Figure sizes can be customized by adding an optional second parameter:
 
 # Acknowledgements
 
-Hexatomic has been developed in the research project "A minimal infrastructure for the sustainable provision of extensible multi-layer annotation software for linguistic corpora". The project was funded under the call "Research Software Sustainability" issued by Deutsche Forschungsgemeinschaft under grant number 391160252 and ran from October 2018 until December 2021. 
+Hexatomic has been developed in the research project "A minimal infrastructure for the sustainable provision of extensible multi-layer annotation software for linguistic corpora". The project was funded under Deutsche Forschungsgemeinschaft's call "Research Software Sustainability" under grant number 391160252 and ran from October 2018 until December 2021. 
 
 # References
