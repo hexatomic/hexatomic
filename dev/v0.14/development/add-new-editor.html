@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Adding a new editor - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="../development/architecture/index.html"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="../development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="../development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="../development/add-new-editor.html" class="active"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="../development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="../development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../maintenance/taking-over/index.html"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="../maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="../maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="../maintenance/contributions/index.html"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><a href="../maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="../maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="../maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="../maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="../maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="../maintenance/prepare-end/index.html"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="../common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="../governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="../LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#adding-a-new-editor" id="adding-a-new-editor">Adding a new editor</a></h1>
+<p>Following the principle of &quot;<a href="https://en.wikipedia.org/wiki/Separation_of_concerns">separation of concerns</a>&quot;, editors should generally be developed in separate, dedicated bundles in the <code>bundles</code> directory of the project.
+Exceptions to this rule should be based on compelling reasons for including an editor in an existing bundle project.
+Reasons may include, for example, that the architectural overhead for creating a very simple editor may be too high.
+In cases of uncertainty, follow the rule that changes to software should keep the maintenance effort in proportion to the benefit of the change, and generally as small as possible.</p>
+<p>In Eclipse 4, additions to the user interface are organized in so-called <a href="http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#parts">Parts</a>.
+A part consists of two components:</p>
+<ul>
+<li>a <code>PartDescriptor</code> entry in the <code>fragment.e4xmi</code> file of the bundle containing the new editor, and </li>
+<li>the actual Java class implementing the behavior.</li>
+</ul>
+<h2><a class="header" href="#adding-a-minimal-java-class" id="adding-a-minimal-java-class">Adding a minimal Java class</a></h2>
+<p>Add a Java class to your bundle project.
+This class does not need to inherit any interface, but should have a method with the <code>@PostConstruct</code> annotation.</p>
+<pre><code class="language-java">import javax.annotation.PostConstruct;
+
+/* ... */
+
+public class TextViewer {
+	@PostConstruct
+	public void postConstruct(Composite parent, MPart part, ProjectManager projectManager) { 
+		// TODO: add actual editor implementation
+	}
+}
+</code></pre>
+<p>This example injects the SWT <code>parent</code> composite which can be used to construct user interface elements and the <code>part</code> parameter, which describes the application model for this part.</p>
+<p>SWT (&quot;Standard Widget Toolkit&quot;) is the default user interface widgets toolkit for Eclipse-based applications, such as Hexatomic, and is used in this example.
+For more information, see the <a href="http://web.archive.org/web/20191025084609/https://www.eclipse.org/swt/">Eclipse SWT project website</a>.
+For information on the application model of Eclipse-based applications, see the <a href="https://web.archive.org/web/20180128210911/https://wiki.eclipse.org/Eclipse4/RCP/Modeled_UI">Eclipse Wiki page on the UI model</a>.</p>
+<p>The <code>projectManager</code> is an Hexatomic specific service that provides access to the global Salt project which is currently loaded.</p>
+<p>Note that you can directly add the SWT instructions to define your user interface in the code, or use the <a href="https://www.eclipse.org/windowbuilder/">Eclipse Window Builder</a>, which is a graphical editor for user interfaces based on SWT (and other technologies).</p>
+<h2><a class="header" href="#adding-a-part-to-the-application-model" id="adding-a-part-to-the-application-model">Adding a part to the application model</a></h2>
+<p>To add the newly created class to the Eclipse RCP 4 application model, open the <code>fragment.e4xmi</code> file of the existing bundle, or create a new one via the <strong>File</strong> &gt; <strong>New</strong> &gt; <strong>Other</strong> menu and choose <strong>New Model Fragment</strong>.</p>
+<p><img src="./new-model-fragment-file.png" alt="Adding a new fragment model file" /></p>
+<p>In the fragment editor, add a new model fragment by selecting &quot;Model fragments&quot; and clicking on the &quot;Add&quot; button.</p>
+<p><img src="./new-model-fragment.png" alt="Adding a new model fragment in the editor" /></p>
+<p>Edit the model fragment properties by selecting the newly created entry.
+Make sure to set the extended element ID to <code>xpath:/</code>and the feature name to <code>descriptors</code> (1).
+This means that the model fragment extends the part descriptors of the application.
+Then, add a new part descriptor with the <strong>Add</strong> button (2). </p>
+<p><img src="./add-model-fragment-descriptor.png" alt="Edit model fragment properties" /></p>
+<p>Select the new part descriptor in the model fragment editor and you can edit several properties, such as the caption of the part, or an icon.
+Make sure to set the <code>Class URI</code> field to the newly created editor class.
+You can use the <strong>Find</strong> button to navigate the workspace and insert the proper value.
+Also, the <code>Category</code> must be set to <code>org.corpus_tools.hexatomic.tag.editor</code> to mark that this part is an Hexatomic editor. 
+The <code>Label</code> field will be used as a name for the editor, for example in a menu from which the user will choose one of the editors available to open a document with.</p>
+<p><img src="./part-descriptor-class.png" alt="Part descriptor general properties" /></p>
+<h2><a class="header" href="#getting-the-associated-salt-document-to-display" id="getting-the-associated-salt-document-to-display">Getting the associated Salt document to display</a></h2>
+<p>When an editor part is created, it is initialized with a state. 
+This state can hold internal configurations, but also contains the ID of the associated Salt document that this editor should edit.
+The actual ID is set to the editor part's state in the class handling user actions to open a Salt document, <code>org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler</code>.</p>
+<!-- TODO Add link to API docs for this class on GitHub Pages once they exist. -->
+<p>It is stored in the part state in a setting with the name <code>org.corpus_tools.hexatomic.document-id</code>.
+The injected <code>ProjectManager</code> can then be used to get the actual document.</p>
+<pre><code class="language-java">String documentID = part.getPersistedState()
+	.get(&quot;org.corpus_tools.hexatomic.document-id&quot;);
+Optional&lt;SDocument&gt; doc = projectManager.getDocument(documentID);
+</code></pre>
+<p>See the <a href="./data-model/#reacting-to-changes">Data model</a> section on how to listen to changes on the document.</p>
+<h2><a class="header" href="#changing-the-document" id="changing-the-document">Changing the document</a></h2>
+<p>You can manipulate the document graph returned by the <code>ProjectManager</code> directly using the Salt API.
+Every change via the Salt API will automatically be recorded to enable undoing and redoing the changes.
+A user interaction that manipulates the document graph can consist of multiple Salt API calls, each one of which may potentially lead to inconsistent states. You must therefore mark the end of a user interaction by calling the <code>addCheckpoint()</code> function of an injected <code>ProjectManager</code> instance.
+Undo and redo will use these checkpoints to restore to a consistent state.
+In addition, calling <code>addCheckpoint()</code> will notify all other registered editors that a consistent set of changes has been added.</p>
+<pre><code class="language-java">// Get the document graph for the document
+SDocumentGraph graph = doc.getDocumentGraph();
+// First change: create and add a primary text
+STextualDS anotherText = graph.createTextualDS(&quot;Another text&quot;);
+// Second change: create and add a token
+graph.createToken(anotherText, 0, 7);
+// Third change: create and add another token
+graph.createToken(anotherText, 8, 12);
+// Add a checkpoint for the three previous changes
+projectManager.addCheckpoint();
+</code></pre>
+<h2><a class="header" href="#cleaning-up-resources-when-closed" id="cleaning-up-resources-when-closed">Cleaning up resources when closed</a></h2>
+<p>When the user closes an editor, it should clean up local and global resources.
+E.g., a Salt document might not need to hold the reference to the actual annotation graph when it is not edited anymore.
+You can annotate a method of your editor with the <code>@PreDestroy</code> annotation to execute its code whenever the part is closed.</p>
+<p>Since several editors can open the same document at the same time, releasing it should not be performed directly, but by signaling an event over the <code>IEventBroker</code> of Eclipse RCP.
+When posting an event, you have to use the topic <code>DOCUMENT_CLOSED</code> and give the document ID as an argument.</p>
+<pre><code class="language-java">
+import javax.annotation.PreDestroy;
+import org.corpus_tools.hexatomic.core.Topics;
+
+/* ... */
+
+@PreDestroy
+public void cleanup(MPart part) {
+events.post(Topics.DOCUMENT_CLOSED,
+	part.getPersistedState().get(&quot;org.corpus_tools.hexatomic.document-id&quot;));
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../development/logging-error-handling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../development/automated-tests/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../development/logging-error-handling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../development/automated-tests/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
