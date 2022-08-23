@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2022-08-23
+
+### Changed
+
+- Improve developer docs on GitHub releases to wait for binaries attachments and mention Zenodo publications
+
 ## [0.14.0] - 2022-08-23
 
 ### Added
@@ -284,7 +290,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/hexatomic/hexatomic/compare/v0.14.0...v1.0.0
 [0.14.0]: https://github.com/hexatomic/hexatomic/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/hexatomic/hexatomic/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/hexatomic/hexatomic/compare/v0.10.0...v0.12.0
