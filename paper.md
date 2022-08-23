@@ -30,6 +30,16 @@ date: 23 August 2022
 bibliography: paper.bib
 ---
 
+> **THOMAS** FYI 👉 
+> Paper should include:
+> - A list of the authors of the software and their affiliations, using the correct format (see the example below).
+> - A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience.
+> - A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work.
+> - A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
+> - Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
+> - Acknowledgement of any financial support.
+
+
 # Summary
 
 Linguistic research aims to understand how languages work.
@@ -42,7 +52,7 @@ These latter methods enable a deep analysis and understanding of language data.
 *Hexatomic* is an extensible platform for multi-layer linguistic annotation of corpora. 
 It is available for Linux, MacOS and Windows systems.
 *Hexatomic* merges previous architectural [@atomic] and functional [@graphanno] prototypes for such a platform.
-It uses a versatile graph-based model for linguistic data [@salt] and includes converters [@pepper] between this model and different linguistic input and output formats, 
+It uses a versatile graph-based model for linguistic data and includes converters between this model and different linguistic input and output formats [@pepper], 
 to enable reuse and enrichment of existing corpora.
 The data model and the conversion framework, as well as the widely used corpus query and analysis platform ANNIS [@annis], 
 are part of the corpus-tools.org family of linguistic software [@corpustools], that *Hexatomic* completes.
@@ -60,7 +70,7 @@ Multiple editors can be used to simultaneously annotate the same data \autoref{f
 Annotation layers can be dynamically or manually filtered for better usability.
 *Hexatomic* comes with extensive user and developer/maintainer documentation, 
 and can automatically be updated at runtime.
-The platform is built on the extensible Eclipse RCP platform [@eclipse] for Java.
+The platform is built on the extensible Eclipse RCP platform for Java.
 
 ![A screenshot of *Hexatomic* showing simultaneous annotation in graph and grid editors.\label{fig:hexatomic}](hexatomic.png)
 
@@ -95,10 +105,10 @@ changes in maintenance,
 and revival after periods without maintenance.
 *Hexatomic* will also be supported in the future through the long-term software maintenance and research software engineering position that TK holds at Humboldt-Unviersität zu Berlin.
 
-Developed as a platform, *Hexatomic* will be used ...
+Developed as a platform, *Hexatomic* will be used ... 👉 **Thomas** can you name some example projects that will use Hexatomic?
 
 # Acknowledgements
 
-Hexatomic has been developed in the research project "A minimal infrastructure for the sustainable provision of extensible multi-layer annotation software for linguistic corpora". The project was funded under Deutsche Forschungsgemeinschaft's call "Research Software Sustainability" under grant number 391160252 and ran from October 2018 until December 2021. 
+Hexatomic has been developed in the research project "A minimal infrastructure for the sustainable provision of extensible multi-layer annotation software for linguistic corpora". The project was funded under Deutsche Forschungsgemeinschaft's call "Research Software Sustainability", grant number 391160252, and ran from October 2018 until December 2021. 
 
 # References
