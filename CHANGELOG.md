@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Disable automatic workflow that to update CITATION.CFF file since it always
+  fails to push without a PR and code review.
+- Fix documentation for releases on how to update the CITATION.CFF file.
+
+
 ## [0.13.0] - 2022-07-25
 
 ### Added
