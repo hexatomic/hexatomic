@@ -203,6 +203,10 @@
                         	<pattern>p2\.eclipse-plugin:org\.corpus-tools\.pepper-framework:jar:lib/xmlunit-1\.5.*</pattern>
                         	<template>${maven.multiModuleProjectDirectory}/releng/templates/xmlunit.yml</template>
                         </referenceTemplate>
+						<referenceTemplate>
+                            <pattern>.*:org\.tukaani\.xz.*</pattern>
+                            <template>${maven.multiModuleProjectDirectory}/releng/templates/tukaani.xz.yml</template>
+                        </referenceTemplate>
                     </referenceTemplates>
                     <ignoredArtifacts>
                         <ignoredArtifact>(p2\.eclipse\.plugin)|(org\.corpus_tools):org\.corpus_tools\.hexatomic.*</ignoredArtifact>

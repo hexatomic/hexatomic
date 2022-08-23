@@ -1,0 +1,13 @@
+type: software
+title: '{{artifactId}}'
+version: '{{version}}'
+license: CC0-1.0
+url: https://tukaani.org/xz/java.html
+authors:
+  - given-names: Lasse
+    family-names: Collin
+  - given-names: Igor
+    family-names: Pavlov
+  - given-names: Brett
+    family-names: Okken
+notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'
