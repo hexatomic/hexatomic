@@ -30,14 +30,14 @@ date: 23 August 2022
 bibliography: paper.bib
 ---
 
-> **THOMAS** FYI 👉 
-> Paper should include:
-> - A list of the authors of the software and their affiliations, using the correct format (see the example below).
-> - A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience.
-> - A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work.
-> - A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
-> - Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
-> - Acknowledgement of any financial support.
+**THOMAS** FYI
+Paper should include:
+- A list of the authors of the software and their affiliations, using the correct format (see the example below).
+- A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience.
+- A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work.
+- A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
+- Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
+- Acknowledgement of any financial support.
 
 
 # Summary
@@ -57,7 +57,7 @@ to enable reuse and enrichment of existing corpora.
 The data model and the conversion framework, as well as the widely used corpus query and analysis platform ANNIS [@annis], 
 are part of the corpus-tools.org family of linguistic software [@corpustools], that *Hexatomic* completes.
 
-*Hexatomic** enables users to build new corpora from scratch, 
+*Hexatomic* enables users to build new corpora from scratch, 
 or import existing corpora.
 Corpora are nodes in corpus graphs that are managed as part of corpus projects.
 This way, many documents across many corpora can be maintained within a single project.
@@ -73,11 +73,6 @@ and can automatically be updated at runtime.
 The platform is built on the extensible Eclipse RCP platform for Java.
 
 ![A screenshot of *Hexatomic* showing simultaneous annotation in graph and grid editors.\label{fig:hexatomic}](hexatomic.png)
-
-- A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work.
-- A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
-- Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
-- Acknowledgement of any financial support.
 
 # Statement of need
 
@@ -95,7 +90,7 @@ Web-based annotation tools such as WebAnno [@webanno] or GATE [@gate] run on cen
 This not only creates operating costs, but also constitutes a single point of failure, increasing the risk of data loss.
 Additionally, web-based annotation is impractical in regions without easily accessible internet connectivity, e.g., during linguistic fieldwork.
 *Hexatomic* is used on the researcher's local machine and offers full control over data, including the possibility to version data with existing version control systems.
-Version controlled local corpus data can additionally be shared and collaborated on via existing collaboration platforms, e.g., those based on git [@git].
+Version controlled local corpus data can additionally be shared and collaborated on via existing collaboration platforms, e.g., those based on `git`.
 
 *Hexatomic* has been designed and developed to gain a maximal potential for software sustainability.
 It is built on widely-used, mature technology with a strong community in research and industry,
