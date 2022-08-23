@@ -32,13 +32,38 @@ bibliography: paper.bib
 
 # Summary
 
-TODO
+Linguistic research aims to understand how languages work.
+The data for this research are language artifacts, e.g., recordings or transcriptions of spoken language and records of written language, that are often collected in *corpora*.
+In order to analyze languages through these corpora, linguists apply different methods.
+Some of these methods are computational and include automated *annotation* of corpora through natural language processing, or gathering statistical insights into corpora through machine learning.
+Other methods are computer-aided, and include manual or semi-automated annotation of corpora across multiple annotation *layers*: e.g., morphology, part-of-speech, lemmatization, constituent and dependency syntax, entities, coreference, discourse and information structure.
+These latter methods enable a deep analysis and understanding of language data.
 
-This paper contains
+*Hexatomic* is an extensible platform for multi-layer linguistic annotation of corpora. 
+It is available for Linux, MacOS and Windows systems.
+*Hexatomic* merges previous architectural [@atomic] and functional [@graphanno] prototypes for such a platform.
+It uses a versatile graph-based model for linguistic data [@salt] and includes converters [@pepper] between this model and different linguistic input and output formats, 
+to enable reuse and enrichment of existing corpora.
+The data model and the conversion framework, as well as the widely used corpus query and analysis platform ANNIS [@annis], 
+are part of the corpus-tools.org family of linguistic software [@corpustools], that *Hexatomic* completes.
 
+*Hexatomic** enables users to build new corpora from scratch, 
+or import existing corpora.
+Corpora are nodes in corpus graphs that are managed as part of corpus projects.
+This way, many documents across many corpora can be maintained within a single project.
+These corpora can then be annotated on arbitrary layers using different editor plugins.
+Hexatomic 1.0.0 includes a spreadsheet-like editor for token and span-based annotations,
+and a graph editor for arbitrary annotation layers.
+Additional annotation editors can be added to the platform as plugins,
+e.g., to perform bespoke, project-specific annotation tasks.
+Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}.
+Annotation layers can be dynamically or manually filtered for better usability.
+*Hexatomic* comes with extensive user and developer/maintainer documentation, 
+and can automatically be updated at runtime.
+The platform is built on the extensible Eclipse RCP platform [@eclipse] for Java.
 
-- A list of the authors of the software and their affiliations, using the correct format (see the example below).
-- A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience.
+![A screenshot of *Hexatomic* showing simultaneous annotation in graph and grid editors.\label{fig:hexatomic}](hexatomic.png)
+
 - A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work.
 - A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
 - Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
@@ -46,47 +71,31 @@ This paper contains
 
 # Statement of need
 
-TODO
+While there is a wide variety of corpus annotation tools available,
+most are "specialized single-user tools" [@biemann].
+*Hexatomic* meets a demand across different linguistic fields for an interdisciplinarily usable, 
+highly compatible platform for multi-layer annotation of linguistic corpora.
+This is achieved through $n:m$ conversion capabilities, 
+and the generic nature of the data model.
+Corpora from different sources, e.g., from corpus linguistic and language documentation research, can be merged into a single project.
+Subsequently, they can be annotated in *Hexatomic* to help answer research questions from different linguistic disciplines,
+and finally exported to ANNIS for multi-layer search and analysis.
 
-# Mathematics
+Web-based annotation tools such as WebAnno [@webanno] or GATE [@gate] run on centralized servers.
+This not only creates operating costs, but also constitutes a single point of failure, increasing the risk of data loss.
+Additionally, web-based annotation is impractical in regions without easily accessible internet connectivity, e.g., during linguistic fieldwork.
+*Hexatomic* is used on the researcher's local machine and offers full control over data, including the possibility to version data with existing version control systems.
+Version controlled local corpus data can additionally be shared and collaborated on via existing collaboration platforms, e.g., those based on git [@git].
 
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
+*Hexatomic* has been designed and developed to gain a maximal potential for software sustainability.
+It is built on widely-used, mature technology with a strong community in research and industry,
+and explicitly designed for extensibility, adaption, and reuse.
+There is extensive documentation, including documentation for maintenance processes, 
+changes in maintenance, 
+and revival after periods without maintenance.
+*Hexatomic* will also be supported in the future through the long-term software maintenance and research software engineering position that TK holds at Humboldt-Unviersität zu Berlin.
 
-Double dollars make self-standing equations:
-
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
-
-You can also use plain \LaTeX for equations
-\begin{equation}\label{eq:fourier}
-\hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
-\end{equation}
-and refer to \autoref{eq:fourier} from text.
-
-# Citations
-
-Citations to entries in paper.bib should be in
-[rMarkdown](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html)
-format.
-
-If you want to cite a software repository URL (e.g. something on GitHub without a preferred
-citation) then you can do it with the example BibTeX entry below for @fidgit.
-
-For a quick reference, the following citation commands can be used:
-- `@author:2001`  ->  "Author et al. (2001)"
-- `[@author:2001]` -> "(Author et al., 2001)"
-- `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)"
-
-# Figures
-
-Figures can be included like this:
-![Caption for example figure.\label{fig:example}](figure.png)
-and referenced from text using \autoref{fig:example}.
-
-Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% }
+Developed as a platform, *Hexatomic* will be used ...
 
 # Acknowledgements
 
