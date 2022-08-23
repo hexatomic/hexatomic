@@ -6,11 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add DOI to citation file (#387)
+
 ### Fixed
 
 - Disable automatic workflow that to update CITATION.CFF file since it always
   fails to push without a PR and code review.
 - Fix documentation for releases on how to update the CITATION.CFF file.
+- Fix license metadata for referencing for bundle org.tukaani.xz
 
 
 ## [0.13.0] - 2022-07-25
