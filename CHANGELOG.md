@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2022-08-23
+
+### Added
+
+- Add collection DOI to citation file template (#387)
+
+### Fixed
+
+- Disable automatic workflow that to update CITATION.CFF file since it always
+  fails to push without a PR and code review.
+- Fix documentation for releases on how to update the CITATION.CFF file.
+- Fix license metadata for referencing for bundle org.tukaani.xz
+
+
 ## [0.13.0] - 2022-07-25
 
 ### Added
@@ -270,7 +284,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/hexatomic/hexatomic/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/hexatomic/hexatomic/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/hexatomic/hexatomic/compare/v0.10.0...v0.12.0
 [0.10.0]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...v0.10.0
