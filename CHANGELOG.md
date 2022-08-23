@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Improve developer docs on GitHub releases to wait for binaries attachments and mention Zenodo publications
+
 ## [0.14.0] - 2022-08-23
 
 ### Added
