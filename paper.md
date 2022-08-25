@@ -60,14 +60,14 @@ are part of the corpus-tools.org family of linguistic software [@corpustools], t
 
 *Hexatomic* enables users to build new corpora from scratch, 
 or import existing corpora.
-Corpora are nodes in corpus graphs that are managed as part of corpus projects.
+Corpus projects allow flexible organization of corpora, sub-corpora and documents by storing them as nodes in a corpus graph.
 This way, many documents across many corpora can be maintained within a single project.
-These corpora can then be annotated on arbitrary layers using different editor plugins.
+These documents can then be annotated on arbitrary layers using different editor plugins.
 Hexatomic 1.0.0 includes a spreadsheet-like editor for token and span-based annotations,
 and a graph editor for arbitrary annotation layers.
 Additional annotation editors can be added to the platform as plugins,
 e.g., to perform bespoke, project-specific annotation tasks.
-Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}.
+Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}, and editors that show the same elements (e.g. tokens) also update their view automatically when any editor changes the annotation.
 Annotation layers can be dynamically or manually filtered for better usability.
 *Hexatomic* comes with extensive user and developer/maintainer documentation, 
 and can automatically be updated at runtime.
