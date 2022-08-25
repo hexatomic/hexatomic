@@ -42,12 +42,13 @@ Paper should include:
 
 # Summary
 
-Linguistic research aims to understand how languages work.
+Linguistic research aims to understand how languages work including finding regularities, understanding language use and/or production in a specific context and other linguistic research topics.
 The data for this research are language artifacts, e.g., recordings or transcriptions of spoken language and records of written language, that are often collected in *corpora*.
 In order to analyze languages through these corpora, linguists apply different methods.
 Some of these methods are computational and include automated *annotation* of corpora through natural language processing, or gathering statistical insights into corpora through machine learning.
-Other methods are computer-aided, and include manual or semi-automated annotation of corpora across multiple annotation *layers*: e.g., morphology, part-of-speech, lemmatization, constituent and dependency syntax, entities, coreference, discourse and information structure.
-These latter methods enable a deep analysis and understanding of language data.
+Other methods are computer-aided, and include *manual or semi-automated annotation* of corpora across multiple annotation *layers*.
+Linguistic phenomena often occur on different aspects of language, e.g. morphology, part-of-speech, lemmatization, constituent and dependency syntax, entities, coreference, discourse and information structure.
+For a deep analysis and understanding of language data it is necessary to include annotation layers for these different aspects in a single multi-layer corpus.
 
 *Hexatomic* is an extensible platform for multi-layer linguistic annotation of corpora. 
 It is available for Linux, MacOS and Windows systems.
@@ -105,5 +106,6 @@ Developed as a platform, *Hexatomic* will be used ... 👉 **Thomas** can you na
 # Acknowledgements
 
 Hexatomic has been developed in the research project "A minimal infrastructure for the sustainable provision of extensible multi-layer annotation software for linguistic corpora". The project was funded under Deutsche Forschungsgemeinschaft's call "Research Software Sustainability", grant number 391160252, and ran from October 2018 until December 2021. 
+Thomas Krause was also funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – SFB 1412, 416591334.
 
 # References
