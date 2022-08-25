@@ -2,6 +2,18 @@
 
 See the "Periodic unreviewed code triage" section in the [Developer and Maintainer Documentation](https://hexatomic.github.io/hexatomic/dev/) for how to edit this file.
 
+## 2022-08-25
+
+Triage done by [thomaskrause](https://github.com/thomaskrause/).
+
+Revision range: 9d7c8774c8d7b8a6cb2593bd1a4c81b544b3926a..9111de91ab6620b1f366ee6c8311bba1b993b0d7
+
+PRs: #396, #397, #398, #400, #401
+
+### Issues
+
+None found
+
 ## 2021-03-04
 
 Triage done by [thomaskrause](https://github.com/thomaskrause/).
