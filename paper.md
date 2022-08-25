@@ -69,6 +69,7 @@ Additional annotation editors can be added to the platform as plugins,
 e.g., to perform bespoke, project-specific annotation tasks.
 Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}, and editors that show the same elements (e.g. tokens) also update their view automatically when any editor changes the annotation.
 Annotation layers can be dynamically or manually filtered for better usability.
+
 *Hexatomic* comes with extensive user and developer/maintainer documentation, 
 and can automatically be updated at runtime.
 The platform is built on the extensible Eclipse RCP platform for Java.
@@ -99,7 +100,7 @@ and explicitly designed for extensibility, adaption, and reuse.
 There is extensive documentation, including documentation for maintenance processes, 
 changes in maintenance, 
 and revival after periods without maintenance.
-*Hexatomic* will also be supported in the future through the long-term software maintenance and research software engineering position that TK holds at Humboldt-Unviersität zu Berlin.
+*Hexatomic* will also be supported in the future through the long-term software maintenance and research software engineering position at the corpus linguistic working group at Humboldt-Unviersität zu Berlin.
 
 Developed as a platform, *Hexatomic* will be used ... 👉 **Thomas** can you name some example projects that will use Hexatomic?
 
