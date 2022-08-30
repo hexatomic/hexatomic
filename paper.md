@@ -1,5 +1,5 @@
 ---
-title: 'Hexatomic: An extensible, OS-independent platform for deep multi-layer linguistic annotation of corpora.'
+title: 'Hexatomic: An extensible, OS-independent platform for deep multi-layer linguistic annotation of corpora'
 tags:
   - linguistics
   - linguistic corpora
