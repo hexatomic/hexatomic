@@ -42,16 +42,19 @@ Paper should include:
 
 # Summary
 
-Linguistic research aims to understand how languages work including finding regularities, understanding language use and/or production in a specific context and other linguistic research topics.
+Linguistic research aims to understand how languages work.
+This includes finding regularities, understanding language use and/or production in a specific context, and other linguistic research topics.
 The data for this research are language artifacts, e.g., recordings or transcriptions of spoken language and records of written language, that are often collected in *corpora*.
 In order to analyze languages through these corpora, linguists apply different methods.
-Some of these methods are computational and include automated *annotation* of corpora through natural language processing, or gathering statistical insights into corpora through machine learning.
-Other methods are computer-aided, and include *manual or semi-automated annotation* of corpora across multiple annotation *layers*.
+Some of these methods are computational and include *automated annotation* of corpora through natural language processing, or gathering statistical insights into corpora through machine learning.
+Other methods are computer-aided, and include *manual annotation* of corpora across multiple annotation *layers*.
 Linguistic phenomena often occur on different aspects of language, e.g. morphology, part-of-speech, lemmatization, constituent and dependency syntax, entities, coreference, discourse and information structure.
 For a deep analysis and understanding of language data it is necessary to include annotation layers for these different aspects in a single multi-layer corpus.
+These annotations often have to be made manually, as linguists' insights into specific language features often surpass the generalized models used in machine learning. Additionally, for languages with fewer speakers such as those investigated in linguistic typology and language documentation projects, machine learning models may not exist or there may just not be enough language data for training model.
 
 *Hexatomic* is an extensible platform for multi-layer linguistic annotation of corpora. 
 It is available for Linux, MacOS and Windows systems.
+While it mainly targets manual annotation methods, it can be extended for automated annotation. 
 *Hexatomic* merges previous architectural [@atomic] and functional [@graphanno] prototypes for such a platform.
 It uses a versatile graph-based model for linguistic data and includes converters between this model and different linguistic input and output formats [@pepper], 
 to enable reuse and enrichment of existing corpora.
@@ -63,15 +66,15 @@ or import existing corpora.
 Corpus projects allow flexible organization of corpora, sub-corpora and documents by storing them as nodes in a corpus graph.
 This way, many documents across many corpora can be maintained within a single project.
 These documents can then be annotated on arbitrary layers using different editor plugins.
-Hexatomic 1.0.0 includes a spreadsheet-like editor for token and span-based annotations,
+Hexatomic 1.0.1 includes a spreadsheet-like editor for token and span-based annotations,
 and a graph editor for arbitrary annotation layers.
 Additional annotation editors can be added to the platform as plugins,
 e.g., to perform bespoke, project-specific annotation tasks.
-Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}, and editors that show the same elements (e.g. tokens) also update their view automatically when any editor changes the annotation.
-Annotation layers can be dynamically or manually filtered for better usability.
+Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}, and any changes that are made update any editors currently showing the same elements, e.g., tokens.
+Annotation layers can also be filtered dynamically or manually for better usability.
 
 *Hexatomic* comes with extensive user and developer/maintainer documentation, 
-and can automatically be updated at runtime.
+and can be automatically updated at runtime.
 The platform is built on the extensible Eclipse RCP platform for Java.
 
 ![A screenshot of *Hexatomic* showing simultaneous annotation in graph and grid editors.\label{fig:hexatomic}](hexatomic.png)
@@ -83,13 +86,14 @@ most are "specialized single-user tools" [@biemann].
 *Hexatomic* meets a demand across different linguistic fields for an interdisciplinarily usable, 
 highly compatible platform for multi-layer annotation of linguistic corpora.
 This is achieved through $n:m$ conversion capabilities, 
-and the generic nature of the data model.
+the generic nature of the data model,
+and the wide applicability of the core editors.
 Corpora from different sources, e.g., from corpus linguistic and language documentation research, can be merged into a single project.
 Subsequently, they can be annotated in *Hexatomic* to help answer research questions from different linguistic disciplines,
 and finally exported to ANNIS for multi-layer search and analysis.
 
-Web-based annotation tools such as WebAnno [@webanno] or GATE [@gate] run on centralized servers.
-This not only creates operating costs, but also constitutes a single point of failure, increasing the risk of data loss.
+Web-based annotation tools such as WebAnno [@webanno], INCEpTION [@inception] or GATE [@gate] often run on centralized servers.
+This not only creates operating costs, but also complicates data transfer and constitutes a single point of failure, increasing the risk of data loss.
 Additionally, web-based annotation is impractical in regions without easily accessible internet connectivity, e.g., during linguistic fieldwork.
 *Hexatomic* is used on the researcher's local machine and offers full control over data, including the possibility to version data with existing version control systems.
 Version controlled local corpus data can additionally be shared and collaborated on via existing collaboration platforms, e.g., those based on `git`.
@@ -100,12 +104,17 @@ and explicitly designed for extensibility, adaption, and reuse.
 There is extensive documentation, including documentation for maintenance processes, 
 changes in maintenance, 
 and revival after periods without maintenance.
-*Hexatomic* will also be supported in the future through the long-term software maintenance and research software engineering position at the corpus linguistic working group at Humboldt-Unviersität zu Berlin.
+*Hexatomic* will also be supported in the future through a long-term software maintenance and research software engineering position at the corpus linguistics working group at Humboldt-Unviersität zu Berlin.
 
-Developed as a platform, *Hexatomic* will be used for annotating the RIDGES Herbology corpus [@ridges], a diachronic corpus of historic herbal texts,  and is also planned to be used for the various corpora of the Deutsch Diachron Digital projects[^ddd], which create a reference corpus for historical German texts for different time periods.
-To support these annotation projects and also other use cases, we plan to develop a specialized editor for different aligned tokenization layers of the same texts [@multipletokenization].
-Also, adding support for playing aligned audio and video files (which can already be linked and aligned in the data model) would make Hexatomic applicable to multi-modal and multi-layer corpora like RUEG [@rueg].
-Hexatomic would simplify their currently complex workflow, where different annotations are created in different tools and need to be merged, which is an error-prone process.
+Developed as a platform, *Hexatomic* will be used for annotating the RIDGES Herbology corpus [@ridges], a diachronic corpus of historic herbal texts.
+It is also planned for use for the various corpora of the Deutsch Diachron Digital projects[^ddd] that create a reference corpus for historical German texts for different time periods.
+To support these annotation projects along with other use cases, next development steps include:
+
+- A specialized editor for different aligned tokenization layers of the same texts [@multipletokenization].
+- Adding support for playing aligned audio and video files, which can already be linked and aligned in the data model. This will make Hexatomic applicable to multi-modal and multi-layer corpora such as RUEG [@rueg].
+
+Through its current and new features, Hexatomic can greatly simplify complex linguistic annotation workflows, 
+through avoiding the arduous and error-prone process of using different tools for different annotations and merging subsequently.
 
 [^ddd]: <http://www.deutschdiachrondigital.de/>
 
