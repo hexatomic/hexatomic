@@ -104,7 +104,7 @@ and revival after periods without maintenance.
 
 Developed as a platform, *Hexatomic* will be used for annotating the RIDGES Herbology corpus [@ridges], a diachronic corpus of historic herbal texts,  and is also planned to be used for the various corpora of the Deutsch Diachron Digital projects[^ddd], which create a reference corpus for historical German texts for different time periods.
 To support these annotation projects and also other use cases, we plan to develop a specialized editor for different aligned tokenization layers of the same texts [@multipletokenization].
-Also, adding support for playing aligned audio and video files (which can already be linked and aligned in the data model) would make Hexatomic applicable to corpora like [@rueg].
+Also, adding support for playing aligned audio and video files (which can already be linked and aligned in the data model) would make Hexatomic applicable to multi-modal and multi-layer corpora like RUEG [@rueg].
 Hexatomic would simplify their currently complex workflow, where different annotations are created in different tools and need to be merged, which is an error-prone process.
 
 [^ddd]: <http://www.deutschdiachrondigital.de/>
