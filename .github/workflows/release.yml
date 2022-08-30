@@ -80,7 +80,7 @@ jobs:
         source_file: 'releng/org.corpus_tools.hexatomic.update/target/repository'
         destination_repo: 'hexatomic/updates'
         # Change when we have a new major version
-        destination_folder: 'v0'
+        destination_folder: 'v1'
         user_email: 'gh-actions@corpus-tools.org'
         user_name: 'GitHub Action CI'
         commit_message: 'Update documentation'
