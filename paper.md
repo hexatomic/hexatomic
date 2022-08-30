@@ -30,16 +30,6 @@ date: 23 August 2022
 bibliography: paper.bib
 ---
 
-**THOMAS** FYI
-Paper should include:
-- A list of the authors of the software and their affiliations, using the correct format (see the example below).
-- A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience.
-- A Statement of need section that clearly illustrates the research purpose of the software and places it in the context of related work.
-- A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
-- Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
-- Acknowledgement of any financial support.
-
-
 # Summary
 
 Linguistic research aims to understand how languages work.
@@ -70,7 +60,7 @@ Hexatomic 1.0.1 includes a spreadsheet-like editor for token and span-based anno
 and a graph editor for arbitrary annotation layers.
 Additional annotation editors can be added to the platform as plugins,
 e.g., to perform bespoke, project-specific annotation tasks.
-Multiple editors can be used to simultaneously annotate the same data \autoref{fig:hexatomic}, and any changes that are made update any editors currently showing the same elements, e.g., tokens.
+Multiple editors can be used to simultaneously annotate the same data (\autoref{fig:hexatomic}), and any changes that are made update any editors currently showing the same elements, e.g., tokens.
 Annotation layers can also be filtered dynamically or manually for better usability.
 
 *Hexatomic* comes with extensive user and developer/maintainer documentation, 
