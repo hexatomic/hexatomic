@@ -52,8 +52,8 @@
         <setEntry value="com.fasterxml.woodstox.woodstox-core@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.ibm.icu@default:default"/>
-        <setEntry value="com.sun.jna*5.11.0@default:default"/>
-        <setEntry value="com.sun.jna.platform*5.11.0@default:default"/>
+        <setEntry value="com.sun.jna.platform@default:default"/>
+        <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.inject@default:default"/>
@@ -81,6 +81,7 @@
         <setEntry value="org.apiguardian@default:default"/>
         <setEntry value="org.bouncycastle.bcpg@default:default"/>
         <setEntry value="org.bouncycastle.bcprov@default:default"/>
+        <setEntry value="org.corpus-tools.pepper-framework"/>
         <setEntry value="org.corpus-tools.salt-api@default:default"/>
         <setEntry value="org.corpus-tools.salt-extensions@default:default"/>
         <setEntry value="org.eclipse.ant.core@default:default"/>
@@ -220,6 +221,7 @@
         <setEntry value="org.corpus_tools.hexatomic.core.tests@default:false"/>
         <setEntry value="org.corpus_tools.hexatomic.core@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.corpusstructureeditor@default:default"/>
+        <setEntry value="org.corpus_tools.hexatomic.formats@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.graph.tests@default:false"/>
         <setEntry value="org.corpus_tools.hexatomic.graph@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.grid.tests@default:false"/>
