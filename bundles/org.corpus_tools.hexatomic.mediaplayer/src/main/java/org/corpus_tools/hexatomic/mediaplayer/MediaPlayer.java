@@ -9,12 +9,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SMedialDS;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
@@ -26,11 +32,20 @@ import org.osgi.framework.FrameworkUtil;
 
 public class MediaPlayer {
 
+  @Inject
+  private ESelectionService selectionService;
+
+  @Inject
+  private ProjectManager projectManager;
+
+  @Inject
+  private ErrorService errorService;
+
   private Combo cbMediaDataSources;
   private Browser mediaBrowser;
 
   @PostConstruct
-  public void postConstruct(Composite parent, MPart part, ProjectManager projectManager) {
+  public void postConstruct(Composite parent, MPart part) {
     parent.setLayout(new GridLayout(1, false));
 
     String documentID = part.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
@@ -46,9 +61,8 @@ public class MediaPlayer {
       SDocumentGraph docGraph = doc.get().getDocumentGraph();
       List<SMedialDS> medialDSs = docGraph.getMedialDSs();
       if (medialDSs != null) {
-        String[] items =
-            medialDSs.stream().map(ds -> ds.getMediaReference().toString())
-                .collect(Collectors.toList()).toArray(new String[0]);
+        String[] items = medialDSs.stream().map(ds -> ds.getMediaReference().toString())
+            .collect(Collectors.toList()).toArray(new String[0]);
 
         cbMediaDataSources.setItems(items);
         if (items.length > 0) {
@@ -83,9 +97,15 @@ public class MediaPlayer {
           mediaBrowser.setText(templateAsHtml);
         }
 
-      } catch (IOException | URISyntaxException e) {
-        e.printStackTrace();
+      } catch (IOException | URISyntaxException ex) {
+        errorService.handleException("Could not open file in media player", ex, MediaPlayer.class);
       }
     }
+  }
+
+  @Inject
+  void setSelection(
+      @org.eclipse.e4.core.di.annotations.Optional @Named(IServiceConstants.ACTIVE_SELECTION) SNode node) {
+    // TODO: allow to automatically play the current selection
   }
 }
