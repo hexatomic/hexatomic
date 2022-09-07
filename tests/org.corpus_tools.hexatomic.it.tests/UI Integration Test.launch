@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
     <setAttribute key="additional_plugins">
-        <setEntry value="org.corpus_tools.hexatomic.it.tests:0.9.0.qualifier:default:true:default:default"/>
+        <setEntry value="org.corpus_tools.hexatomic.it.tests:1.1.0.qualifier:default:true:default:default"/>
         <setEntry value="org.eclipse.jdt.junit5.runtime:1.0.1400.v20211108-0640:default:true:default:default"/>
     </setAttribute>
     <booleanAttribute key="append.args" value="true"/>

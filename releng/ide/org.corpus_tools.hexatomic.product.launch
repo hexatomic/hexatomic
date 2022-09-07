@@ -52,8 +52,8 @@
         <setEntry value="com.fasterxml.woodstox.woodstox-core@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.ibm.icu@default:default"/>
-        <setEntry value="com.sun.jna.platform@default:default"/>
-        <setEntry value="com.sun.jna@default:default"/>
+        <setEntry value="com.sun.jna*5.11.0@default:default"/>
+        <setEntry value="com.sun.jna.platform*5.11.0@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.inject@default:default"/>
@@ -224,6 +224,7 @@
         <setEntry value="org.corpus_tools.hexatomic.graph@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.grid.tests@default:false"/>
         <setEntry value="org.corpus_tools.hexatomic.grid@default:default"/>
+        <setEntry value="org.corpus_tools.hexatomic.mediaplayer@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.textviewer@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>

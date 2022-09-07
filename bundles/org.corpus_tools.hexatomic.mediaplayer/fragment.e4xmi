@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_a6OIYC6uEe2jpsnSzXdP1A">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_b5wSwC6uEe2jpsnSzXdP1A" featurename="children" parentElementId="org.corpus_tools.hexatomic.core.main">
+    <elements xsi:type="basic:Part" xmi:id="_pEHbQC6uEe2jpsnSzXdP1A" elementId="org.corpus_tools.hexatomic.mediaplayer.part.mediaplayer" contributionURI="bundleclass://org.corpus_tools.hexatomic.mediaplayer/org.corpus_tools.hexatomic.mediaplayer.MediaPlayer" label="Media Player"/>
+  </fragments>
+</fragment:ModelFragments>
