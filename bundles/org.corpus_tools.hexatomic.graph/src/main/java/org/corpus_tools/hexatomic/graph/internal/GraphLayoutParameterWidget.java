@@ -138,10 +138,10 @@ public class GraphLayoutParameterWidget extends Composite {
         .getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/text-height.png"));
     captionVerticalTokenMargin.setToolTipText("Vertical margin between token and non-token.\n"
         + "Token are grouped in the lowest rank (at the bottom). "
-        + "To allow space for pointing relations, you can add an additional margin "
+        + "To allow space for pointing relations, you can add a margin "
         + "between the token row and the lowest annotation nodes. "
         + "A margin of \"1\" means there is one level left empty, an offset of \"0\" "
-        + "means there is no additional empty space except for the regular vertical margin.");
+        + "means there is no additional space except for the regular vertical margin.");
 
     scaleVerticalTokenMargin = new Scale(this, SWT.NONE);
     scaleVerticalTokenMargin.setPageIncrement(1);

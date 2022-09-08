@@ -37,5 +37,5 @@ You can navigate the graph view as follows:
 
 - You can **center the view** around a specific point in the graph by double-clicking that point.
 
-If you don't like the layout of the graph, you can change it by simply dragging nodes with your mouse.
+If you don't like the layout of the graph, you can change it by simply dragging nodes with your mouse or [adjust the layout parameters](./layout-params.md).
 
