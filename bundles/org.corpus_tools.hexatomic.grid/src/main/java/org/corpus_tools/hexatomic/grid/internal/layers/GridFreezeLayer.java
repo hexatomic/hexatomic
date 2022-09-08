@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.internal.data.Column;
@@ -28,7 +29,10 @@ import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.AddColumnCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnCellsCommandHandler;
+import org.corpus_tools.hexatomic.grid.internal.handlers.MergeSpanCommandHandler;
 import org.corpus_tools.hexatomic.grid.internal.handlers.RenameAnnotationOnCellsCommandHandler;
+import org.corpus_tools.hexatomic.grid.internal.handlers.SplitSpanCommandHandler;
+import org.corpus_tools.salt.common.SSpan;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.freeze.CompositeFreezeLayer;
@@ -87,6 +91,26 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
   }
 
   /**
+   * Triggers the splitting of spans into single cell spans in the underlying data model.
+   * 
+   * @param span The {@link SSpan} to split
+   * @param coordinates The coordinates for the {@link SSpan} to split
+   */
+  public void splitAnnotationSpan(SSpan span, PositionCoordinate[] coordinates) {
+    bodyDataProvider.splitAnnotationSpan(span, coordinates);
+  }
+
+  /**
+   * Triggers the merging of spans into a single span in the underlying data model.
+   * 
+   * @param spans The {@link SSpan}s to merge
+   * @param coordinates The coordinates for the {@link SSpan}s to merge
+   */
+  public void mergeAnnotationSpans(List<SSpan> spans, PositionCoordinate[] coordinates) {
+    bodyDataProvider.mergeAnnotationSpans(spans, coordinates);
+  }
+
+  /**
    * Creates a new column of the given type, with the given qualified annotation name, and adds it
    * to the list of columns at the given insertion index.
    * 
@@ -96,7 +120,7 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
    *        list of columns, or -1 when it should be added at the end of the list
    */
   public void addAnnotationColumn(ColumnType type, String annoQName, int insertionIndex) {
-    // Counter starts at one as the added column represents the first existing column 
+    // Counter starts at one as the added column represents the first existing column
     // for the specified qualified annotation name.
     int existingColumnCounter = 1;
     for (Column column : bodyDataProvider.getColumns()) {
@@ -132,6 +156,8 @@ public class GridFreezeLayer extends CompositeFreezeLayer {
     registerCommandHandler(new RenameAnnotationOnCellsCommandHandler());
     registerCommandHandler(new DisplayAnnotationRenameDialogOnCellsCommandHandler(this));
     registerCommandHandler(new CreateSpanCommandHandler(this));
+    registerCommandHandler(new SplitSpanCommandHandler(this));
+    registerCommandHandler(new MergeSpanCommandHandler(this));
     registerCommandHandler(new AddColumnCommandHandler(this));
   }
 

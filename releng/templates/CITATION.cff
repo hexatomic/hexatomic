@@ -1,19 +1,40 @@
 cff-version: 1.2.0
+type: software
 message: If you use this software, please cite it as below.
 title: Hexatomic
+abstract: |-
+  Hexatomic is an extensible, OS-independent platform for deep multi-layer linguistic annotation of corpora.
+
+  It is being developed for sustainability, in order to support research software re-use rather than new development of software with each new research project.
+  Using Hexatomic, linguistic research projects can implement what they need on top of an existing platform.
+
+  To safeguard compatibility, Hexatomic works on instances of Salt projects. Salt is a generic metamodel for linguistic data.
 authors:
--  family-names: Druskat
-   given-names: Stephan
-   orcid: https://orcid.org/0000-0003-4925-7248
--  family-names: Krause
-   given-names: Thomas
-   orcid: https://orcid.org/0000-0003-3731-2422
--  family-names: Lachenmaier
-   given-names: Clara
-   orcid: https://orcid.org/0000-0002-9207-3420
+  - family-names: Druskat
+    given-names: Stephan
+    orcid: https://orcid.org/0000-0003-4925-7248
+    affiliation: "German Aerospace Center (DLR), Friedrich Schiller University Jena"
+    email: stephan.druskat@dlr.de
+  - family-names: Krause
+    given-names: Thomas
+    orcid: https://orcid.org/0000-0003-3731-2422
+    affiliation: "Humboldt-Universität zu Berlin"
+  - family-names: Lachenmaier
+    given-names: Clara
+    orcid: https://orcid.org/0000-0002-9207-3420
+  - family-names: Bunzeck
+    given-names: Bastian
+repository-code: https://github.com/hexatomic/hexatomic
+url: https://hexatomic.github.io
+license: Apache-2.0
+identifiers:
+  - description: "This is the collection of archived snapshots of all versions of Hexatomic. Make sure that you cite the specific version you have used in your work with its version DOI!"
+    type: doi
+    value: "10.5281/zenodo.6900689"
+doi: "10.5281/zenodo.6900689"
 references:
--  type: software 
-   title: SWT Resource Manager
-   license: EPL-1.0
-   authors:
-   -  name: Google, Inc.
+  - type: software
+    title: SWT Resource Manager
+    license: EPL-1.0
+    authors:
+        - name: Google, Inc.

@@ -9,18 +9,16 @@ jobs:
     name: Deploy release Windows and Linux binaries
     runs-on: ubuntu-20.04
     steps:
+        - name: Update packages
+          run: sudo apt-get update
         - name: Install metacity window manager for background tests
           run: sudo apt-get install metacity
         - name: Checkout
           uses: actions/checkout@v2
         - name: Set JAVA_HOME to OpenJDK 11
           run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
-        - name: Run Maven install (includes tests)
-          run: ./releng/sh/metacity-run.sh mvn clean install
-          env:
-            LANG: en_US.UTF-8
-        - name: Update CFF file
-          run: mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create
+        - name: Run Maven install (includes tests) and re-create CFF file
+          run: ./releng/sh/metacity-run.sh mvn -Pcff clean install
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file
@@ -44,12 +42,8 @@ jobs:
           uses: actions/checkout@v2
         - name: Set JAVA_HOME to OpenJDK 11
           run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
-        - name: Run Maven install (excludes tests since they currently fail on macOS)
-          run: mvn -DskipTests clean install
-          env:
-            LANG: en_US.UTF-8
-        - name: Update CFF file
-          run: mvn -f ./features/org.corpus_tools.hexatomic/pom.xml cff:create
+        - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
+          run: mvn -Pcff -DskipTests clean install
           env:
             LANG: en_US.UTF-8
         - name: Build again with updated CFF file
@@ -70,6 +64,26 @@ jobs:
             draft: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy_p2:
+    name: Deploy P2 update site
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Create P2 repository with Maven
+      run: mvn -DskipTests clean install
+    - name: Pushes P2 repository to "updates" Git repository
+      uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.HEXATOMIC_UPLOAD_TOKEN }}
+      with:
+        source_file: 'releng/org.corpus_tools.hexatomic.update/target/repository'
+        destination_repo: 'hexatomic/updates'
+        # Change when we have a new major version
+        destination_folder: 'v1'
+        user_email: 'gh-actions@corpus-tools.org'
+        user_name: 'GitHub Action CI'
+        commit_message: 'Update documentation'
   deploy_documentation:
     name: Deploy documentation
     runs-on: ubuntu-20.04
