@@ -88,15 +88,10 @@ public class GraphLayoutParameterWidget extends Composite {
 
     config = new GraphDisplayConfiguration();
 
-    GridData captionGridData =
-        new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    captionGridData.widthHint = 80;
-    
-    GridData scaleGridData = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
     
     
     Label captionVerticalMargin = new Label(this, SWT.WRAP);
-    captionVerticalMargin.setLayoutData(captionGridData);
+    captionVerticalMargin.setLayoutData(createLabelGridData());
     captionVerticalMargin.setToolTipText("Vertical margin between nodes.\n"
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
@@ -106,11 +101,13 @@ public class GraphLayoutParameterWidget extends Composite {
     scaleVerticalMargin = new Scale(this, SWT.NONE);
     scaleVerticalMargin.setPageIncrement(1);
     scaleVerticalMargin.setMaximum(20);
-    scaleVerticalMargin.setLayoutData(scaleGridData);
+    scaleVerticalMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scaleVerticalMargin.setSelection((int) Math.round(config.getVerticalNodeMargin() * 10.0));
 
     lblVerticalMargin = new Label(this, SWT.NONE);
     lblVerticalMargin.setText("" + config.getVerticalNodeMargin());
+    
+
     
     Label captionVerticalTokenMargin = new Label(this, SWT.WRAP);
     captionVerticalTokenMargin.setToolTipText("Vertical margin between token and non-token.\n"
@@ -119,17 +116,18 @@ public class GraphLayoutParameterWidget extends Composite {
         + "between the token row and the lowest annotation nodes. "
         + "A margin of \"1\" means there is one level left empty, an offset of \"0\" "
         + "means there is no additional empty space except for the regular vertical margin.");
-    captionVerticalTokenMargin.setLayoutData(captionGridData);
+    captionVerticalTokenMargin.setLayoutData(createLabelGridData());
     captionVerticalTokenMargin.setText("Vertical token margin");
 
     scaleVerticalTokenMargin = new Scale(this, SWT.NONE);
     scaleVerticalTokenMargin.setPageIncrement(1);
     scaleVerticalTokenMargin.setMaximum(5);
-    scaleVerticalTokenMargin.setLayoutData(scaleGridData);
+    scaleVerticalTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scaleVerticalTokenMargin.setSelection(config.getTokenRankOffset());
 
     lblVerticalTokenMargin = new Label(this, SWT.NONE);
     lblVerticalTokenMargin.setText("" + config.getTokenRankOffset());
+    
 
     Label captionHorizontalTokenMargin = new Label(this, SWT.WRAP);
     captionHorizontalTokenMargin.setToolTipText("Horizontal margin between token.\n"
@@ -137,13 +135,13 @@ public class GraphLayoutParameterWidget extends Composite {
         + "So for \"0\" there is no margin, for \"1\" the margin has "
         + "the same width as the average token node, and for \"2\"  "
         + "the margin is twice as high as the average token node width.");
-    captionHorizontalTokenMargin.setLayoutData(captionGridData);
+    captionHorizontalTokenMargin.setLayoutData(createLabelGridData());
     captionHorizontalTokenMargin.setText("Horizontal token margin");
 
     scaleHorizontalTokenMargin = new Scale(this, SWT.NONE);
     scaleHorizontalTokenMargin.setPageIncrement(1);
     scaleHorizontalTokenMargin.setMaximum(20);
-    scaleHorizontalTokenMargin.setLayoutData(scaleGridData);
+    scaleHorizontalTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scaleHorizontalTokenMargin.setSelection((int) Math.round(config.getHorizontalTokenMargin() * 10.0));
 
     lblHorizontalTokenMargin = new Label(this, SWT.NONE);
@@ -155,6 +153,13 @@ public class GraphLayoutParameterWidget extends Composite {
     scaleVerticalMargin.addSelectionListener(selectionListener);
     scaleHorizontalTokenMargin.addSelectionListener(selectionListener);
     scaleVerticalTokenMargin.addSelectionListener(selectionListener);
+  }
+  
+  private static GridData createLabelGridData() {
+    GridData result =
+        new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+    result.widthHint = 80;
+    return result;
   }
 
 }
