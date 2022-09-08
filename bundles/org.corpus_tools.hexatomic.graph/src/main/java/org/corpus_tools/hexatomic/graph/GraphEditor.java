@@ -87,6 +87,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -317,6 +320,7 @@ public class GraphEditor {
       }
     });
 
+
     GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar, this.events);
 
     ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
@@ -325,9 +329,17 @@ public class GraphEditor {
     paramExpandItem.setControl(widget);
     // There seems to be a SWT bug under Linux (GTK) where changing the value on the scale does not
     // redraw the position of the slider. When the expand item is expanded once, the bug seems to be
-    // avoided. So the workaround is to expand and unexpand the parameter panel.
-    paramExpandItem.setExpanded(true);
-    Display.getDefault().timerExec(1, () -> paramExpandItem.setExpanded(false));
+    // avoided. So the workaround is to expand and unexpand the parameter panel when the expand bar
+    // is resized.
+    paramExpandBar.addControlListener(new ControlAdapter() {
+      @Override
+      public void controlResized(ControlEvent e) {
+        if (paramExpandItem.getExpanded()) {
+          paramExpandItem.setExpanded(false);
+          Display.getDefault().timerExec(1, () -> paramExpandItem.setExpanded(true));
+        }
+      }
+    });
   }
 
   private void constructSegmentFilter(Composite sideBar) {
