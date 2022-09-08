@@ -30,6 +30,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.wb.swt.ResourceManager;
+
 
 /**
  * A composite that allows to define filter critera.
@@ -37,6 +39,9 @@ import org.eclipse.swt.widgets.Scale;
  * @author Thomas Krause {@literal thomas.krause@hu-berlin.de}
  */
 public class GraphLayoutParameterWidget extends Composite {
+  
+  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
+
 
   private final class ConfigChangedListener extends SelectionAdapter {
     private final IEventBroker eventBroker;
@@ -91,12 +96,12 @@ public class GraphLayoutParameterWidget extends Composite {
     
     
     Label captionVerticalMargin = new Label(this, SWT.WRAP);
-    captionVerticalMargin.setLayoutData(createLabelGridData());
     captionVerticalMargin.setToolTipText("Vertical margin between nodes.\n"
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
         + "and for \"2\"  the margin is twice as high as the node height.");
-    captionVerticalMargin.setText("Vertical node margin");
+    captionVerticalMargin
+        .setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/arrows-alt-v.png"));
 
     scaleVerticalMargin = new Scale(this, SWT.NONE);
     scaleVerticalMargin.setPageIncrement(1);
@@ -110,14 +115,13 @@ public class GraphLayoutParameterWidget extends Composite {
 
     
     Label captionVerticalTokenMargin = new Label(this, SWT.WRAP);
+    captionVerticalTokenMargin.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/text-height.png"));
     captionVerticalTokenMargin.setToolTipText("Vertical margin between token and non-token.\n"
         + "Token are grouped in the lowest rank (at the bottom). "
         + "To allow space for pointing relations, you can add an addition margin "
         + "between the token row and the lowest annotation nodes. "
         + "A margin of \"1\" means there is one level left empty, an offset of \"0\" "
         + "means there is no additional empty space except for the regular vertical margin.");
-    captionVerticalTokenMargin.setLayoutData(createLabelGridData());
-    captionVerticalTokenMargin.setText("Vertical token margin");
 
     scaleVerticalTokenMargin = new Scale(this, SWT.NONE);
     scaleVerticalTokenMargin.setPageIncrement(1);
@@ -135,8 +139,8 @@ public class GraphLayoutParameterWidget extends Composite {
         + "So for \"0\" there is no margin, for \"1\" the margin has "
         + "the same width as the average token node, and for \"2\"  "
         + "the margin is twice as high as the average token node width.");
-    captionHorizontalTokenMargin.setLayoutData(createLabelGridData());
-    captionHorizontalTokenMargin.setText("Horizontal token margin");
+    captionHorizontalTokenMargin
+    .setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/arrows-alt-h.png"));
 
     scaleHorizontalTokenMargin = new Scale(this, SWT.NONE);
     scaleHorizontalTokenMargin.setPageIncrement(1);
@@ -155,11 +159,5 @@ public class GraphLayoutParameterWidget extends Composite {
     scaleVerticalTokenMargin.addSelectionListener(selectionListener);
   }
   
-  private static GridData createLabelGridData() {
-    GridData result =
-        new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    result.widthHint = 80;
-    return result;
-  }
 
 }
