@@ -324,7 +324,7 @@ public class GraphEditor {
     GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar, this.events);
 
     ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
-    paramExpandItem.setText("Display Configuration");
+    paramExpandItem.setText("Graph Layout");
     paramExpandItem.setHeight(widget.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
     paramExpandItem.setControl(widget);
     // There seems to be a SWT bug under Linux (GTK) where changing the value on the scale does not

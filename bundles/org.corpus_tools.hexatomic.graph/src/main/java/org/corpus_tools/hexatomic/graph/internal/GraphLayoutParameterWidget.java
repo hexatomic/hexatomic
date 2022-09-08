@@ -39,7 +39,7 @@ import org.eclipse.wb.swt.ResourceManager;
  * @author Thomas Krause {@literal thomas.krause@hu-berlin.de}
  */
 public class GraphLayoutParameterWidget extends Composite {
-  
+
   private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
 
 
@@ -93,15 +93,34 @@ public class GraphLayoutParameterWidget extends Composite {
 
     config = new GraphDisplayConfiguration();
 
-    
-    
+    Label captionHorizontalTokenMargin = new Label(this, SWT.WRAP);
+    captionHorizontalTokenMargin.setToolTipText("Horizontal margin between token.\n"
+        + "This is measured in \"times of the average token width\".  "
+        + "So for \"0\" there is no margin, for \"1\" the margin has "
+        + "the same width as the average token node, and for \"2\"  "
+        + "the margin is twice as high as the average token node width.");
+    captionHorizontalTokenMargin.setImage(ResourceManager
+        .getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/arrows-alt-h.png"));
+
+    scaleHorizontalTokenMargin = new Scale(this, SWT.NONE);
+    scaleHorizontalTokenMargin.setPageIncrement(1);
+    scaleHorizontalTokenMargin.setMaximum(20);
+    scaleHorizontalTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+    scaleHorizontalTokenMargin
+        .setSelection((int) Math.round(config.getHorizontalTokenMargin() * 10.0));
+
+    lblHorizontalTokenMargin = new Label(this, SWT.NONE);
+    lblHorizontalTokenMargin.setToolTipText("");
+    lblHorizontalTokenMargin.setText("" + config.getHorizontalTokenMargin());
+
+
     Label captionVerticalMargin = new Label(this, SWT.WRAP);
     captionVerticalMargin.setToolTipText("Vertical margin between nodes.\n"
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
-        + "and for \"2\"  the margin is twice as high as the node height.");
-    captionVerticalMargin
-        .setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/arrows-alt-v.png"));
+        + "and for \"2\"  the margain is twice as high as the node height.");
+    captionVerticalMargin.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+        "icons/fontawesome/arrows-alt-v.png"));
 
     scaleVerticalMargin = new Scale(this, SWT.NONE);
     scaleVerticalMargin.setPageIncrement(1);
@@ -111,14 +130,15 @@ public class GraphLayoutParameterWidget extends Composite {
 
     lblVerticalMargin = new Label(this, SWT.NONE);
     lblVerticalMargin.setText("" + config.getVerticalNodeMargin());
-    
 
-    
+
+
     Label captionVerticalTokenMargin = new Label(this, SWT.WRAP);
-    captionVerticalTokenMargin.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/text-height.png"));
+    captionVerticalTokenMargin.setImage(ResourceManager
+        .getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/text-height.png"));
     captionVerticalTokenMargin.setToolTipText("Vertical margin between token and non-token.\n"
         + "Token are grouped in the lowest rank (at the bottom). "
-        + "To allow space for pointing relations, you can add an addition margin "
+        + "To allow space for pointing relations, you can add an additional margin "
         + "between the token row and the lowest annotation nodes. "
         + "A margin of \"1\" means there is one level left empty, an offset of \"0\" "
         + "means there is no additional empty space except for the regular vertical margin.");
@@ -131,26 +151,8 @@ public class GraphLayoutParameterWidget extends Composite {
 
     lblVerticalTokenMargin = new Label(this, SWT.NONE);
     lblVerticalTokenMargin.setText("" + config.getTokenRankOffset());
-    
 
-    Label captionHorizontalTokenMargin = new Label(this, SWT.WRAP);
-    captionHorizontalTokenMargin.setToolTipText("Horizontal margin between token.\n"
-        + "This is measured in \"times of the average token width\".  "
-        + "So for \"0\" there is no margin, for \"1\" the margin has "
-        + "the same width as the average token node, and for \"2\"  "
-        + "the margin is twice as high as the average token node width.");
-    captionHorizontalTokenMargin
-    .setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/arrows-alt-h.png"));
 
-    scaleHorizontalTokenMargin = new Scale(this, SWT.NONE);
-    scaleHorizontalTokenMargin.setPageIncrement(1);
-    scaleHorizontalTokenMargin.setMaximum(20);
-    scaleHorizontalTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-    scaleHorizontalTokenMargin.setSelection((int) Math.round(config.getHorizontalTokenMargin() * 10.0));
-
-    lblHorizontalTokenMargin = new Label(this, SWT.NONE);
-    lblHorizontalTokenMargin.setToolTipText("");
-    lblHorizontalTokenMargin.setText("" + config.getHorizontalTokenMargin());
 
 
     ConfigChangedListener selectionListener = new ConfigChangedListener(eventBroker);
@@ -158,6 +160,6 @@ public class GraphLayoutParameterWidget extends Composite {
     scaleHorizontalTokenMargin.addSelectionListener(selectionListener);
     scaleVerticalTokenMargin.addSelectionListener(selectionListener);
   }
-  
+
 
 }
