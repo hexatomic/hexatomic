@@ -45,14 +45,11 @@ public class GraphLayoutParameterWidget extends Composite {
       this.eventBroker = eventBroker;
     }
 
-
-
     private void updateConfigFromInterface() {
       config.setVerticalNodeMargin(((double) scalePercentMargin.getSelection()) / 10.0);
       config.setHorizontalTokenMargin(((double) scaleTokenMargin.getSelection()) / 10.0);
       config.setTokenRankOffset(scaleTokenRank.getSelection());
     }
-
 
     @Override
     public void widgetSelected(SelectionEvent e) {
@@ -94,9 +91,10 @@ public class GraphLayoutParameterWidget extends Composite {
     config = new GraphDisplayConfiguration();
 
     Label lblPercentMarginCaption = new Label(this, SWT.WRAP);
-    GridData gd_lblPercentMarginCaption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    gd_lblPercentMarginCaption.widthHint = 80;
-    lblPercentMarginCaption.setLayoutData(gd_lblPercentMarginCaption);
+    GridData lblPercentMarginCaptionGridData =
+        new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+    lblPercentMarginCaptionGridData.widthHint = 80;
+    lblPercentMarginCaption.setLayoutData(lblPercentMarginCaptionGridData);
     lblPercentMarginCaption.setToolTipText("Vertical margin between nodes.\n"
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
@@ -113,15 +111,14 @@ public class GraphLayoutParameterWidget extends Composite {
     lblPercentMargin.setText("" + config.getVerticalNodeMargin());
 
     lblTokenMarginCaption = new Label(this, SWT.WRAP);
-    lblTokenMarginCaption.setToolTipText(
-        "Horizontal margin between token.\n"
-            + "This is measured in \"times of the average token width\".  "
-            + "So for \"0\" there is no margin, for \"1\" the margin has "
-            + "the same width as the average token node, and for \"2\"  "
-            + "the margin is twice as high as the average token node width.");
-    GridData gd_lblTokenMarginCaption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    gd_lblTokenMarginCaption.widthHint = 80;
-    lblTokenMarginCaption.setLayoutData(gd_lblTokenMarginCaption);
+    lblTokenMarginCaption.setToolTipText("Horizontal margin between token.\n"
+        + "This is measured in \"times of the average token width\".  "
+        + "So for \"0\" there is no margin, for \"1\" the margin has "
+        + "the same width as the average token node, and for \"2\"  "
+        + "the margin is twice as high as the average token node width.");
+    GridData lblTokenMarginCaptionGridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+    lblTokenMarginCaptionGridData.widthHint = 80;
+    lblTokenMarginCaption.setLayoutData(lblTokenMarginCaptionGridData);
     lblTokenMarginCaption.setText("Token Margin");
 
     scaleTokenMargin = new Scale(this, SWT.NONE);
@@ -135,16 +132,15 @@ public class GraphLayoutParameterWidget extends Composite {
     lblTokenMargin.setText("" + config.getHorizontalTokenMargin());
 
     lblTokenRankCaption = new Label(this, SWT.WRAP);
-    lblTokenRankCaption.setToolTipText(
-        "Offset between token and non-token.\n"
-            + "Token are grouped in the lowest rank (at the bottom). "
-            + "To allow space for pointing relations, you can add an offset "
-            + "between the token row and the lowest annotation nodes. "
-            + "An offset of \"1\" means there is one level left empty, an offset of \"0\" "
-            + "means there is no additional empty space except for the regular vertical margin.");
-    GridData gd_lblTokenRankCaption = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-    gd_lblTokenRankCaption.widthHint = 80;
-    lblTokenRankCaption.setLayoutData(gd_lblTokenRankCaption);
+    lblTokenRankCaption.setToolTipText("Offset between token and non-token.\n"
+        + "Token are grouped in the lowest rank (at the bottom). "
+        + "To allow space for pointing relations, you can add an offset "
+        + "between the token row and the lowest annotation nodes. "
+        + "An offset of \"1\" means there is one level left empty, an offset of \"0\" "
+        + "means there is no additional empty space except for the regular vertical margin.");
+    GridData lblTokenRankCaptionGridData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+    lblTokenRankCaptionGridData.widthHint = 80;
+    lblTokenRankCaption.setLayoutData(lblTokenRankCaptionGridData);
     lblTokenRankCaption.setText("Token Rank Offset");
 
     scaleTokenRank = new Scale(this, SWT.NONE);

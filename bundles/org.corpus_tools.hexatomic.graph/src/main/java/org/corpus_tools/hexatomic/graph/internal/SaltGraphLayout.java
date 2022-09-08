@@ -58,7 +58,7 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
  */
 public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
-  private final int MINIMAL_NODE_HEIGHT = 50;
+  private static final int MINIMAL_NODE_HEIGHT = 50;
 
   private GraphDisplayConfiguration config = new GraphDisplayConfiguration();
 
