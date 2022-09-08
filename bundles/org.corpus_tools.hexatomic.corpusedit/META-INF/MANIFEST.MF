@@ -21,5 +21,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: org.corpus_tools.hexatomic.corpusedit
 Bundle-ClassPath: .
 Export-Package: org.corpus_tools.hexatomic.corpusedit,
- org.corpus_tools.hexatomic.corpusedit.dnd,
- org.eclipse.wb.swt
+ org.corpus_tools.hexatomic.corpusedit.dnd
