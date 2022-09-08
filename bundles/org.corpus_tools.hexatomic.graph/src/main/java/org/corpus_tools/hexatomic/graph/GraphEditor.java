@@ -227,9 +227,9 @@ public class GraphEditor {
     graphSash.setWeights(65, 35);
 
     constructFilterView(sideBar);
-    constructSegmentFilter(sideBar);
     constructGraphParams(sideBar);
-
+    constructSegmentFilter(sideBar);
+    
     registerGraphControlListeners();
 
     viewer.getControl().forceFocus();
@@ -302,7 +302,7 @@ public class GraphEditor {
 
   private void constructGraphParams(Composite sideBar) {
     ExpandBar paramExpandBar = new ExpandBar(sideBar, SWT.NONE);
-    paramExpandBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+    paramExpandBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     paramExpandBar.addExpandListener(new ExpandListener() {
 
       @Override
