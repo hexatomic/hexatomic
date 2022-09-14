@@ -75,6 +75,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final long GRAPH_LAYOUT_TIMEOUT = 5000;
   private static final String INF_STRUCT = "Inf-Struct";
   private static final String CONST = "const";
   private static final String SEARCH = "Search";
@@ -131,9 +132,8 @@ class TestGraphEditor {
     @Override
     public String getFailureMessage() {
       return "Horizontal distance between node " + leftNode.getName() + " and "
-          + rightNode.getName()
-          + " should have been " + expected + " but was "
-          + getDistance() + ".";
+          + rightNode.getName() + " should have been " + expected + " but was " + getDistance()
+          + ".";
     }
   }
 
@@ -447,7 +447,7 @@ class TestGraphEditor {
         public String getFailureMessage() {
           return "Second text segment was not checked";
         }
-      }, 5000);
+      }, GRAPH_LAYOUT_TIMEOUT);
     }
   }
 
@@ -721,27 +721,29 @@ class TestGraphEditor {
       // is updated
       horizontalScale.setValue(0);
       assertEquals("0.0", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       horizontalScale.setValue(5);
       assertEquals("0.5", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
-          65.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 65.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       horizontalScale.setValue(10);
       assertEquals("1.0", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 130.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 130.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       horizontalScale.setValue(14);
       assertEquals("1.4", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
-          182.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 182.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
       horizontalScale.setValue(15);
 
       horizontalScale.setValue(20);
       assertEquals("2.0", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
-          260.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 260.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       // Change the vertical margin and compare the distance between the root node and a node below
       // it
@@ -751,21 +753,53 @@ class TestGraphEditor {
 
       verticalScale.setValue(0);
       assertEquals("0.0", botLayout.label(3).getText());
-      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 0.0, g));
+      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 0.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       verticalScale.setValue(3);
       assertEquals("0.3", botLayout.label(3).getText());
-      bot.waitUntil(
-          new VerticalNodeDistanceCondition(rootNode, struct2, 15.0, g));
+      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 15.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       verticalScale.setValue(10);
       assertEquals("1.0", botLayout.label(3).getText());
-      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 53.0, g));
+      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 53.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
 
       verticalScale.setValue(20);
       assertEquals("2.0", botLayout.label(3).getText());
-      bot.waitUntil(
-          new VerticalNodeDistanceCondition(rootNode, struct2, 106.0, g));
+      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 106.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
+
+
+      // Change the vertical token margin and compare the distance between a token node and node and
+      // a node on the lowest level
+      verticalScale.setValue(0);
+
+      SWTBotScale tokenScale = botLayout.scale(2);
+      tokenScale.setValue(0);
+      assertEquals("0", botLayout.label(5).getText());
+      SNode tok10 = graph.getNodesByName("sTok10").get(0);
+      SNode struct12 = graph.getNodesByName("structure12").get(0);
+      bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 0.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
+
+      tokenScale.setValue(1);
+      assertEquals("1", botLayout.label(5).getText());
+      bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 53.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
+
+      tokenScale.setValue(2);
+      assertEquals("2", botLayout.label(5).getText());
+      bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 106.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
+
+      tokenScale.setValue(5);
+      assertEquals("5", botLayout.label(5).getText());
+      bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 265.0, g),
+          GRAPH_LAYOUT_TIMEOUT);
+
+
     }
   }
 
