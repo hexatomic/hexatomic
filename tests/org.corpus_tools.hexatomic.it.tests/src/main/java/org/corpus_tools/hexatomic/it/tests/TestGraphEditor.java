@@ -76,6 +76,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
+  private static final String DOC1_TITLE = "doc1 (Graph Editor)";
   private static final long GRAPH_LAYOUT_TIMEOUT = 5000;
   private static final String INF_STRUCT = "Inf-Struct";
   private static final String CONST = "const";
@@ -380,7 +382,7 @@ class TestGraphEditor {
 
   @AfterEach
   void closeEditor() {
-    SWTBotView editor = bot.partByTitle("doc1 (Graph Editor)");
+    SWTBotView editor = bot.partByTitle(DOC1_TITLE);
     if (editor != null) {
       editor.close();
     }
@@ -471,7 +473,7 @@ class TestGraphEditor {
     // Open example and maximize part
     openDefaultExample();
 
-    SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
+    SWTBotView view = bot.partByTitle(DOC1_TITLE);
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
@@ -561,7 +563,7 @@ class TestGraphEditor {
 
     // Get a reference to the open graph
     Optional<SDocument> optionalDocument =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+        projectManager.getDocument(DOC1_SALT_ID);
     assertTrue(optionalDocument.isPresent());
     if (optionalDocument.isPresent()) {
       SDocument doc = optionalDocument.get();
@@ -602,7 +604,7 @@ class TestGraphEditor {
 
     // Get a reference to the opened document graph
     Optional<SDocument> optionalDoc =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+        projectManager.getDocument(DOC1_SALT_ID);
     assertTrue(optionalDoc.isPresent());
     if (optionalDoc.isPresent()) {
       SDocument doc = optionalDoc.get();
@@ -711,7 +713,7 @@ class TestGraphEditor {
   void testLayoutParameters() {
     openDefaultExample();
 
-    SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
+    SWTBotView view = bot.partByTitle(DOC1_TITLE);
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
@@ -719,7 +721,7 @@ class TestGraphEditor {
     assertNotNull(g);
 
     Optional<SDocument> optionalDoc =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+        projectManager.getDocument(DOC1_SALT_ID);
     assertTrue(optionalDoc.isPresent());
     if (optionalDoc.isPresent()) {
       SDocument doc = optionalDoc.get();
