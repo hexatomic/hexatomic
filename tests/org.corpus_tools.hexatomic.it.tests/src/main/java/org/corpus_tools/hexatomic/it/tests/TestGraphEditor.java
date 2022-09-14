@@ -67,6 +67,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphNode;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
@@ -375,6 +376,14 @@ class TestGraphEditor {
     errorService.clearLastException();
 
     TestHelper.executeNewProjectCommand(commandService, handlerService);
+  }
+
+  @AfterEach
+  void closeEditor() {
+    SWTBotView editor = bot.partByTitle("doc1 (Graph Editor)");
+    if (editor != null) {
+      editor.close();
+    }
   }
 
   void openDefaultExample() {
@@ -701,6 +710,10 @@ class TestGraphEditor {
   @Test
   void testLayoutParameters() {
     openDefaultExample();
+    
+    SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
@@ -805,9 +818,6 @@ class TestGraphEditor {
 
 
     }
-
-    bot.partByTitle("doc1 (Graph Editor)").close();
-
   }
 
 
