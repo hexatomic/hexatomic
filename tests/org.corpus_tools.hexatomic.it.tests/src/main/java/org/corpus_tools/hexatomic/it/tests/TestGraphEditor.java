@@ -109,19 +109,19 @@ class TestGraphEditor {
     private final SNode leftNode;
     private final SNode rightNode;
     private final double expected;
-    private final Graph g;
+    private final Graph graphWidget;
 
     private HorizontalNodeDistanceCondition(SNode leftNode, SNode rightNode, double expected,
-        Graph g) {
+        Graph graphWidget) {
       this.leftNode = leftNode;
       this.rightNode = rightNode;
       this.expected = expected;
-      this.g = g;
+      this.graphWidget = graphWidget;
     }
 
     private double getDistance() {
-      Rectangle l = getGraphNodeForSalt(bot, g, leftNode).getNodeFigure().getBounds();
-      Rectangle r = getGraphNodeForSalt(bot, g, rightNode).getNodeFigure().getBounds();
+      Rectangle l = getGraphNodeForSalt(bot, graphWidget, leftNode).getNodeFigure().getBounds();
+      Rectangle r = getGraphNodeForSalt(bot, graphWidget, rightNode).getNodeFigure().getBounds();
       return Math.abs(l.getRight().x - r.getLeft().x);
     }
 
@@ -710,7 +710,7 @@ class TestGraphEditor {
   @Test
   void testLayoutParameters() {
     openDefaultExample();
-    
+
     SWTBotView view = bot.partByTitle("doc1 (Graph Editor)");
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -725,7 +725,6 @@ class TestGraphEditor {
       SDocument doc = optionalDoc.get();
       SDocumentGraph graph = doc.getDocumentGraph();
       graph.sortTokenByText();
-      List<SToken> token = graph.getTokens();
 
       SWTBotExpandBar layoutPanel = bot.expandBarWithId(GraphEditor.ID_PREFIX + "layout-expandbar");
       layoutPanel.expandItem(GRAPH_LAYOUT);
@@ -738,6 +737,7 @@ class TestGraphEditor {
       // is updated
       horizontalScale.setValue(0);
       assertEquals("0.0", botLayout.label(1).getText());
+      List<SToken> token = graph.getTokens();
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g),
           GRAPH_LAYOUT_TIMEOUT);
 
