@@ -144,19 +144,19 @@ class TestGraphEditor {
     private final SNode topNode;
     private final SNode bottomNode;
     private final double expected;
-    private final Graph g;
+    private final Graph graphWidget;
 
     private VerticalNodeDistanceCondition(SNode topNode, SNode bottomNode, double expected,
-        Graph g) {
+        Graph graphWidget) {
       this.topNode = topNode;
       this.bottomNode = bottomNode;
       this.expected = expected;
-      this.g = g;
+      this.graphWidget = graphWidget;
     }
 
     private double getDistance() {
-      GraphNode t = getGraphNodeForSalt(bot, g, topNode);
-      GraphNode b = getGraphNodeForSalt(bot, g, bottomNode);
+      GraphNode t = getGraphNodeForSalt(bot, graphWidget, topNode);
+      GraphNode b = getGraphNodeForSalt(bot, graphWidget, bottomNode);
       return Math
           .abs(t.getNodeFigure().getBounds().bottom() - b.getNodeFigure().getBounds().getTop().y);
     }
@@ -1100,7 +1100,7 @@ class TestGraphEditor {
     keyboard.typeText("anothertest");
     keyboard.pressShortcut(Keystrokes.CR);
 
-    // Close the g editor, which selects the Graph Editor again and
+    // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change
     TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
 
