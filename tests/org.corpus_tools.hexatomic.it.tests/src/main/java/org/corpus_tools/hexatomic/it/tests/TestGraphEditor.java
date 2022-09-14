@@ -127,8 +127,8 @@ class TestGraphEditor {
     @Override
     public boolean test() throws Exception {
       double diff = Math.abs(getDistance() - expected);
-      // Allow for 10% tolerance
-      return diff <= (expected * 0.1);
+      // Allow for 20% tolerance, but at least 1 point
+      return diff <= Math.max(1.0, expected * 0.2);
     }
 
     @Override
@@ -163,8 +163,8 @@ class TestGraphEditor {
     @Override
     public boolean test() throws Exception {
       double diff = Math.abs(getDistance() - expected);
-      // Allow for 10% tolerance
-      return diff <= (expected * 0.1);
+      // Allow for 20% tolerance, but at least 1 point
+      return diff <= Math.max(1.0, expected * 0.2);
     }
 
     @Override
