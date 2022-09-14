@@ -100,7 +100,7 @@ public class ResourceManager extends SwtResourceManager {
     if (descriptor == null) {
       return null;
     }
-    return descriptorImageMap.computeIfAbsent(descriptor, d -> d.createImage());
+    return descriptorImageMap.computeIfAbsent(descriptor, ImageDescriptor::createImage);
   }
 
   /**
@@ -140,25 +140,24 @@ public class ResourceManager extends SwtResourceManager {
     }
     Map<Image, Image> decoratedMap =
         cornerDecoratedImageMap.computeIfAbsent(baseImage, i -> new HashMap<>());
-    Image result = decoratedMap.get(decorator);
-    if (result == null) {
+    Image result = decoratedMap.computeIfAbsent(decorator, d -> {
       final Rectangle bib = baseImage.getBounds();
-      final Rectangle dib = decorator.getBounds();
+      final Rectangle dib = d.getBounds();
       final Point baseImageSize = new Point(bib.width, bib.height);
       CompositeImageDescriptor compositImageDesc = new CompositeImageDescriptor() {
         @Override
         protected void drawCompositeImage(int width, int height) {
           drawImage(createCachedImageDataProvider(baseImage), 0, 0);
           if (corner == TOP_LEFT) {
-            drawImage(getUnzoomedImageDataProvider(decorator.getImageData()), 0, 0);
+            drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0, 0);
           } else if (corner == TOP_RIGHT) {
-            drawImage(getUnzoomedImageDataProvider(decorator.getImageData()), bib.width - dib.width,
+            drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width,
                 0);
           } else if (corner == BOTTOM_LEFT) {
-            drawImage(getUnzoomedImageDataProvider(decorator.getImageData()), 0,
+            drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0,
                 bib.height - dib.height);
           } else if (corner == BOTTOM_RIGHT) {
-            drawImage(getUnzoomedImageDataProvider(decorator.getImageData()), bib.width - dib.width,
+            drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width,
                 bib.height - dib.height);
           }
         }
@@ -169,9 +168,8 @@ public class ResourceManager extends SwtResourceManager {
         }
       };
       //
-      result = compositImageDesc.createImage();
-      decoratedMap.put(decorator, result);
-    }
+      return compositImageDesc.createImage();
+    });
     return result;
   }
 
@@ -253,7 +251,7 @@ public class ResourceManager extends SwtResourceManager {
       if (url != null) {
         return getPluginImageFromUrl(url);
       }
-    } catch (Throwable e) {
+    } catch (Exception e) {
       // Ignore any exceptions
     }
     return null;
@@ -307,12 +305,11 @@ public class ResourceManager extends SwtResourceManager {
    */
   private static URL getPluginImageUrl(String symbolicName, String path) {
     // try runtime plugins
-    {
-      Bundle bundle = Platform.getBundle(symbolicName);
-      if (bundle != null) {
-        return bundle.getEntry(path);
-      }
+    Bundle bundle = Platform.getBundle(symbolicName);
+    if (bundle != null) {
+      return bundle.getEntry(path);
     }
+
     // try design time provider
     if (designTimePluginResourceProvider != null) {
       return designTimePluginResourceProvider.getEntry(symbolicName, path);

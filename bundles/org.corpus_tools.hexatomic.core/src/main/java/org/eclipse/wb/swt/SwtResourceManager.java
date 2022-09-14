@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -44,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
  * @author scheglov_ke
  * @author Dan Rubel
  */
-public class SwtResourceManager {
+public abstract class SwtResourceManager {
   ////////////////////////////////////////////////////////////////////////////
   //
   // Color
@@ -82,12 +81,10 @@ public class SwtResourceManager {
    * @return the {@link Color} matching the RGB value
    */
   public static Color getColor(RGB rgb) {
-    Color color = colorMap.get(rgb);
-    if (color == null) {
+    Color color = colorMap.computeIfAbsent(rgb, key -> {
       Display display = Display.getCurrent();
-      color = new Color(display, rgb);
-      colorMap.put(rgb, color);
-    }
+      return new Color(display, key);
+    });
     return color;
   }
 
@@ -211,96 +208,20 @@ public class SwtResourceManager {
    * Internal value.
    */
   protected static final int LAST_CORNER_KEY = 5;
-  /**
-   * Maps images to decorated images.
-   */
-  @SuppressWarnings("unchecked")
-  private static Map<Image, Map<Image, Image>>[] decoratedImageMap = new Map[LAST_CORNER_KEY];
 
-  /**
-   * Returns an {@link Image} composed of a base image decorated by another image.
-   * 
-   * @param baseImage the base {@link Image} that should be decorated
-   * @param decorator the {@link Image} to decorate the base image
-   * @return {@link Image} The resulting decorated image
-   */
-  public static Image decorateImage(Image baseImage, Image decorator) {
-    return decorateImage(baseImage, decorator, BOTTOM_RIGHT);
-  }
 
-  /**
-   * Returns an {@link Image} composed of a base image decorated by another image.
-   * 
-   * @param baseImage the base {@link Image} that should be decorated
-   * @param decorator the {@link Image} to decorate the base image
-   * @param corner the corner to place decorator image
-   * @return the resulting decorated {@link Image}
-   */
-  public static Image decorateImage(final Image baseImage, final Image decorator,
-      final int corner) {
-    if (corner <= 0 || corner >= LAST_CORNER_KEY) {
-      throw new IllegalArgumentException("Wrong decorate corner");
+  private static void disposeLoadedImages() {
+    for (Image image : imageMap.values()) {
+      image.dispose();
     }
-    Map<Image, Map<Image, Image>> cornerDecoratedImageMap = decoratedImageMap[corner];
-    if (cornerDecoratedImageMap == null) {
-      cornerDecoratedImageMap = new HashMap<>();
-      decoratedImageMap[corner] = cornerDecoratedImageMap;
-    }
-    Map<Image, Image> decoratedMap = cornerDecoratedImageMap.get(baseImage);
-    if (decoratedMap == null) {
-      decoratedMap = new HashMap<>();
-      cornerDecoratedImageMap.put(baseImage, decoratedMap);
-    }
-    //
-    Image result = decoratedMap.get(decorator);
-    if (result == null) {
-      Rectangle bib = baseImage.getBounds();
-      Rectangle dib = decorator.getBounds();
-      //
-      result = new Image(Display.getCurrent(), bib.width, bib.height);
-      //
-      GC gc = new GC(result);
-      gc.drawImage(baseImage, 0, 0);
-      if (corner == TOP_LEFT) {
-        gc.drawImage(decorator, 0, 0);
-      } else if (corner == TOP_RIGHT) {
-        gc.drawImage(decorator, bib.width - dib.width, 0);
-      } else if (corner == BOTTOM_LEFT) {
-        gc.drawImage(decorator, 0, bib.height - dib.height);
-      } else if (corner == BOTTOM_RIGHT) {
-        gc.drawImage(decorator, bib.width - dib.width, bib.height - dib.height);
-      }
-      gc.dispose();
-      //
-      decoratedMap.put(decorator, result);
-    }
-    return result;
+    imageMap.clear();
   }
 
   /**
    * Dispose all of the cached {@link Image}'s.
    */
   public static void disposeImages() {
-    // dispose loaded images
-    {
-      for (Image image : imageMap.values()) {
-        image.dispose();
-      }
-      imageMap.clear();
-    }
-    // dispose decorated images
-    for (int i = 0; i < decoratedImageMap.length; i++) {
-      Map<Image, Map<Image, Image>> cornerDecoratedImageMap = decoratedImageMap[i];
-      if (cornerDecoratedImageMap != null) {
-        for (Map<Image, Image> decoratedMap : cornerDecoratedImageMap.values()) {
-          for (Image image : decoratedMap.values()) {
-            image.dispose();
-          }
-          decoratedMap.clear();
-        }
-        cornerDecoratedImageMap.clear();
-      }
-    }
+    disposeLoadedImages();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -326,48 +247,14 @@ public class SwtResourceManager {
    * @return {@link Font} The font matching the name, height and style
    */
   public static Font getFont(String name, int height, int style) {
-    return getFont(name, height, style, false, false);
-  }
-
-  /**
-   * Returns a {@link Font} based on its name, height and style. Windows-specific strikeout and
-   * underline flags are also supported.
-   * 
-   * @param name the name of the font
-   * @param size the size of the font
-   * @param style the style of the font
-   * @param strikeout the strikeout flag (warning: Windows only)
-   * @param underline the underline flag (warning: Windows only)
-   * @return {@link Font} The font matching the name, height, style, strikeout and underline
-   */
-  public static Font getFont(String name, int size, int style, boolean strikeout,
-      boolean underline) {
-    String fontName = name + '|' + size + '|' + style + '|' + strikeout + '|' + underline;
-    Font font = fontMap.get(fontName);
-    if (font == null) {
-      FontData fontData = new FontData(name, size, style);
-      if (strikeout || underline) {
-        try {
-          Class<?> logFontClass = Class.forName("org.eclipse.swt.internal.win32.LOGFONT");
-          Object logFont = FontData.class.getField("data").get(fontData);
-          if (logFont != null && logFontClass != null) {
-            if (strikeout) {
-              logFontClass.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1));
-            }
-            if (underline) {
-              logFontClass.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1));
-            }
-          }
-        } catch (Throwable e) {
-          System.err.println("Unable to set underline or strikeout"
-              + " (probably on a non-Windows platform). " + e);
-        }
-      }
-      font = new Font(Display.getCurrent(), fontData);
-      fontMap.put(fontName, font);
-    }
+    String fontName = name + '|' + height + '|' + style;
+    Font font = fontMap.computeIfAbsent(fontName, fn -> {
+      FontData fontData = new FontData(name, height, style);
+      return new Font(Display.getCurrent(), fontData);
+    });
     return font;
   }
+
 
   /**
    * Returns a bold version of the given {@link Font}.
@@ -376,13 +263,12 @@ public class SwtResourceManager {
    * @return the bold version of the given {@link Font}
    */
   public static Font getBoldFont(Font baseFont) {
-    Font font = fontToBoldFontMap.get(baseFont);
-    if (font == null) {
-      FontData[] fontDatas = baseFont.getFontData();
+    Font font = fontToBoldFontMap.computeIfAbsent(baseFont, b -> {
+      FontData[] fontDatas = b.getFontData();
       FontData data = fontDatas[0];
-      font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
-      fontToBoldFontMap.put(baseFont, font);
-    }
+      return new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
+    });
+
     return font;
   }
 
@@ -419,13 +305,8 @@ public class SwtResourceManager {
    * @return Cursor The system cursor matching the specific ID
    */
   public static Cursor getCursor(int id) {
-    Integer key = Integer.valueOf(id);
-    Cursor cursor = idToCursorMap.get(key);
-    if (cursor == null) {
-      cursor = new Cursor(Display.getDefault(), id);
-      idToCursorMap.put(key, cursor);
-    }
-    return cursor;
+    return idToCursorMap.computeIfAbsent(Integer.valueOf(id),
+        key -> new Cursor(Display.getDefault(), key));
   }
 
   /**

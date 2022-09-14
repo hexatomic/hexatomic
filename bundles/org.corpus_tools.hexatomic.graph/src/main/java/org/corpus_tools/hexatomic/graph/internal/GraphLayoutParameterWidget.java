@@ -40,8 +40,8 @@ import org.eclipse.wb.swt.ResourceManager;
  */
 public class GraphLayoutParameterWidget extends Composite {
 
-  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
 
+  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
 
   private final class ConfigChangedListener extends SelectionAdapter {
     private final IEventBroker eventBroker;
@@ -51,8 +51,8 @@ public class GraphLayoutParameterWidget extends Composite {
     }
 
     private void updateConfigFromInterface() {
-      config.setVerticalNodeMargin(((double) scaleVerticalMargin.getSelection()) / 10.0);
-      config.setHorizontalTokenMargin(((double) scaleHorizontalTokenMargin.getSelection()) / 10.0);
+      config.setVerticalNodeMargin((scaleVerticalMargin.getSelection()) / 10.0);
+      config.setHorizontalTokenMargin((scaleHorizontalTokenMargin.getSelection()) / 10.0);
       config.setTokenRankOffset(scaleVerticalTokenMargin.getSelection());
     }
 
@@ -100,7 +100,7 @@ public class GraphLayoutParameterWidget extends Composite {
         + "the same width as the average token node, and for \"2\"  "
         + "the margin is twice as high as the average token node width.");
     captionHorizontalTokenMargin.setImage(ResourceManager
-        .getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/arrows-alt-h.png"));
+        .getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE, "icons/fontawesome/arrows-alt-h.png"));
 
     scaleHorizontalTokenMargin = new Scale(this, SWT.NONE);
     scaleHorizontalTokenMargin.setPageIncrement(1);
@@ -119,7 +119,7 @@ public class GraphLayoutParameterWidget extends Composite {
         + "This is measure in \"times of the node height\".  "
         + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
         + "and for \"2\"  the margain is twice as high as the node height.");
-    captionVerticalMargin.setImage(ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    captionVerticalMargin.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/arrows-alt-v.png"));
 
     scaleVerticalMargin = new Scale(this, SWT.NONE);
@@ -135,7 +135,7 @@ public class GraphLayoutParameterWidget extends Composite {
 
     Label captionVerticalTokenMargin = new Label(this, SWT.WRAP);
     captionVerticalTokenMargin.setImage(ResourceManager
-        .getPluginImage("org.corpus_tools.hexatomic.core", "icons/fontawesome/text-height.png"));
+        .getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE, "icons/fontawesome/text-height.png"));
     captionVerticalTokenMargin.setToolTipText("Vertical margin between token and non-token.\n"
         + "Token are grouped in the lowest rank (at the bottom). "
         + "To allow space for pointing relations, you can add a margin "
@@ -151,7 +151,6 @@ public class GraphLayoutParameterWidget extends Composite {
 
     lblVerticalTokenMargin = new Label(this, SWT.NONE);
     lblVerticalTokenMargin.setText("" + config.getTokenRankOffset());
-
 
 
 
