@@ -131,7 +131,8 @@ class TestGraphEditor {
 
     @Override
     public String getFailureMessage() {
-      return "Horizontal distance between node " + leftNode.getId() + " and " + rightNode.getId()
+      return "Horizontal distance between node " + leftNode.getName() + " and "
+          + rightNode.getName()
           + " should have been " + expected + " but was "
           + getDistance() + ".";
     }
@@ -154,18 +155,18 @@ class TestGraphEditor {
     private double getDistance() {
       GraphNode t = getGraphNodeForSalt(bot, g, topNode);
       GraphNode b = getGraphNodeForSalt(bot, g, bottomNode);
-      return t.getNodeFigure().getBounds().getBottom()
-          .getDistance(b.getNodeFigure().getBounds().getTop());
+      return Math
+          .abs(t.getNodeFigure().getBounds().bottom() - b.getNodeFigure().getBounds().getTop().y);
     }
 
     @Override
     public boolean test() throws Exception {
-      return getDistance() == expected;
+      return Math.abs(getDistance() - expected) < 1.0;
     }
 
     @Override
     public String getFailureMessage() {
-      return "Vertical distance between node " + topNode.getId() + " and " + bottomNode.getId()
+      return "Vertical distance between node " + topNode.getName() + " and " + bottomNode.getName()
           + " should have been " + expected + " but was " + getDistance() + ".";
     }
   }
@@ -748,7 +749,29 @@ class TestGraphEditor {
       assertEquals("0.0", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g));
 
+      // Change the vertical margin and compare the distance between the root node and a node below
+      // it
+      SNode rootNode = graph.getNodesByName("structure1").get(0);
+      SNode struct2 = graph.getNodesByName("structure2").get(0);
+      SWTBotScale verticalScale = botLayout.scale(1);
 
+      verticalScale.setValue(0);
+      assertEquals("0.0", botLayout.label(3).getText());
+      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 0.0, g));
+
+      verticalScale.setValue(3);
+      assertEquals("0.3", botLayout.label(3).getText());
+      bot.waitUntil(
+          new VerticalNodeDistanceCondition(rootNode, struct2, 15.0, g));
+
+      verticalScale.setValue(10);
+      assertEquals("1.0", botLayout.label(3).getText());
+      bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 53.0, g));
+
+      verticalScale.setValue(20);
+      assertEquals("2.0", botLayout.label(3).getText());
+      bot.waitUntil(
+          new VerticalNodeDistanceCondition(rootNode, struct2, 106.0, g));
     }
   }
 
