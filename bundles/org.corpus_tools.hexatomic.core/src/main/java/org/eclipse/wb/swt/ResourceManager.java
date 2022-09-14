@@ -117,8 +117,7 @@ public class ResourceManager {
    * Maps images to decorated images.
    */
   @SuppressWarnings("unchecked")
-  private static Map<Image, Map<Image, Image>>[] decoratedImageMap =
-      new Map[LAST_CORNER_KEY];
+  private static Map<Image, Map<Image, Image>>[] decoratedImageMap = new Map[LAST_CORNER_KEY];
 
   /**
    * Returns an {@link Image} composed of a base image decorated by another image.
@@ -162,11 +161,9 @@ public class ResourceManager {
           if (corner == TOP_LEFT) {
             drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0, 0);
           } else if (corner == TOP_RIGHT) {
-            drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width,
-                0);
+            drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width, 0);
           } else if (corner == BOTTOM_LEFT) {
-            drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0,
-                bib.height - dib.height);
+            drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0, bib.height - dib.height);
           } else if (corner == BOTTOM_RIGHT) {
             drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width,
                 bib.height - dib.height);
