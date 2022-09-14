@@ -1,11 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2011 Google, Inc. 
- * All rights reserved. This program and the accompanying materials
+ * Copyright (c) 2011 Google, Inc. All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0 which accompanies this
  * distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  * 
- * <p>Contributors: 
- * Google, Inc. - initial API and implementation
+ * <p>
+ * Contributors: Google, Inc. - initial API and implementation
  * </p>
  *******************************************************************************/
 
@@ -51,7 +50,7 @@ public class SwtResourceManager {
   // Color
   //
   ////////////////////////////////////////////////////////////////////////////
-  private static Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
+  private static Map<RGB, Color> colorMap = new HashMap<>();
 
   /**
    * Returns the system {@link Color} matching the specific ID.
@@ -83,11 +82,11 @@ public class SwtResourceManager {
    * @return the {@link Color} matching the RGB value
    */
   public static Color getColor(RGB rgb) {
-    Color color = m_colorMap.get(rgb);
+    Color color = colorMap.get(rgb);
     if (color == null) {
       Display display = Display.getCurrent();
       color = new Color(display, rgb);
-      m_colorMap.put(rgb, color);
+      colorMap.put(rgb, color);
     }
     return color;
   }
@@ -96,10 +95,10 @@ public class SwtResourceManager {
    * Dispose of all the cached {@link Color}'s.
    */
   public static void disposeColors() {
-    for (Color color : m_colorMap.values()) {
+    for (Color color : colorMap.values()) {
       color.dispose();
     }
-    m_colorMap.clear();
+    colorMap.clear();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -110,7 +109,7 @@ public class SwtResourceManager {
   /**
    * Maps image paths to images.
    */
-  private static Map<String, Image> m_imageMap = new HashMap<String, Image>();
+  private static Map<String, Image> imageMap = new HashMap<>();
 
   /**
    * Returns an {@link Image} encoded by the specified {@link InputStream}.
@@ -138,14 +137,14 @@ public class SwtResourceManager {
    * @return the {@link Image} stored in the file at the specified path
    */
   public static Image getImage(String path) {
-    Image image = m_imageMap.get(path);
+    Image image = imageMap.get(path);
     if (image == null) {
       try {
         image = getImage(new FileInputStream(path));
-        m_imageMap.put(path, image);
+        imageMap.put(path, image);
       } catch (Exception e) {
         image = getMissingImage();
-        m_imageMap.put(path, image);
+        imageMap.put(path, image);
       }
     }
     return image;
@@ -161,14 +160,14 @@ public class SwtResourceManager {
    */
   public static Image getImage(Class<?> clazz, String path) {
     String key = clazz.getName() + '|' + path;
-    Image image = m_imageMap.get(key);
+    Image image = imageMap.get(key);
     if (image == null) {
       try {
         image = getImage(clazz.getResourceAsStream(path));
-        m_imageMap.put(key, image);
+        imageMap.put(key, image);
       } catch (Exception e) {
         image = getMissingImage();
-        m_imageMap.put(key, image);
+        imageMap.put(key, image);
       }
     }
     return image;
@@ -176,7 +175,9 @@ public class SwtResourceManager {
 
   private static final int MISSING_IMAGE_SIZE = 10;
 
-  /** Returns default placeholde missing image.
+  /**
+   * Returns default placeholde missing image.
+   * 
    * @return the small {@link Image} that can be used as placeholder for missing image.
    */
   private static Image getMissingImage() {
@@ -214,7 +215,7 @@ public class SwtResourceManager {
    * Maps images to decorated images.
    */
   @SuppressWarnings("unchecked")
-  private static Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[LAST_CORNER_KEY];
+  private static Map<Image, Map<Image, Image>>[] decoratedImageMap = new Map[LAST_CORNER_KEY];
 
   /**
    * Returns an {@link Image} composed of a base image decorated by another image.
@@ -240,14 +241,14 @@ public class SwtResourceManager {
     if (corner <= 0 || corner >= LAST_CORNER_KEY) {
       throw new IllegalArgumentException("Wrong decorate corner");
     }
-    Map<Image, Map<Image, Image>> cornerDecoratedImageMap = m_decoratedImageMap[corner];
+    Map<Image, Map<Image, Image>> cornerDecoratedImageMap = decoratedImageMap[corner];
     if (cornerDecoratedImageMap == null) {
-      cornerDecoratedImageMap = new HashMap<Image, Map<Image, Image>>();
-      m_decoratedImageMap[corner] = cornerDecoratedImageMap;
+      cornerDecoratedImageMap = new HashMap<>();
+      decoratedImageMap[corner] = cornerDecoratedImageMap;
     }
     Map<Image, Image> decoratedMap = cornerDecoratedImageMap.get(baseImage);
     if (decoratedMap == null) {
-      decoratedMap = new HashMap<Image, Image>();
+      decoratedMap = new HashMap<>();
       cornerDecoratedImageMap.put(baseImage, decoratedMap);
     }
     //
@@ -282,14 +283,14 @@ public class SwtResourceManager {
   public static void disposeImages() {
     // dispose loaded images
     {
-      for (Image image : m_imageMap.values()) {
+      for (Image image : imageMap.values()) {
         image.dispose();
       }
-      m_imageMap.clear();
+      imageMap.clear();
     }
     // dispose decorated images
-    for (int i = 0; i < m_decoratedImageMap.length; i++) {
-      Map<Image, Map<Image, Image>> cornerDecoratedImageMap = m_decoratedImageMap[i];
+    for (int i = 0; i < decoratedImageMap.length; i++) {
+      Map<Image, Map<Image, Image>> cornerDecoratedImageMap = decoratedImageMap[i];
       if (cornerDecoratedImageMap != null) {
         for (Map<Image, Image> decoratedMap : cornerDecoratedImageMap.values()) {
           for (Image image : decoratedMap.values()) {
@@ -310,11 +311,11 @@ public class SwtResourceManager {
   /**
    * Maps font names to fonts.
    */
-  private static Map<String, Font> m_fontMap = new HashMap<String, Font>();
+  private static Map<String, Font> fontMap = new HashMap<>();
   /**
    * Maps fonts to their bold versions.
    */
-  private static Map<Font, Font> m_fontToBoldFontMap = new HashMap<Font, Font>();
+  private static Map<Font, Font> fontToBoldFontMap = new HashMap<>();
 
   /**
    * Returns a {@link Font} based on its name, height and style.
@@ -342,22 +343,19 @@ public class SwtResourceManager {
   public static Font getFont(String name, int size, int style, boolean strikeout,
       boolean underline) {
     String fontName = name + '|' + size + '|' + style + '|' + strikeout + '|' + underline;
-    Font font = m_fontMap.get(fontName);
+    Font font = fontMap.get(fontName);
     if (font == null) {
       FontData fontData = new FontData(name, size, style);
       if (strikeout || underline) {
         try {
-          Class<?> logFontClass = 
-              Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
+          Class<?> logFontClass = Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
           Object logFont = FontData.class.getField("data").get(fontData); //$NON-NLS-1$
           if (logFont != null && logFontClass != null) {
             if (strikeout) {
-              logFontClass.getField("lfStrikeOut").set(logFont, 
-                  Byte.valueOf((byte) 1)); //$NON-NLS-1$
+              logFontClass.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1)); // $NON-NLS-1$
             }
             if (underline) {
-              logFontClass.getField("lfUnderline").set(logFont, 
-                  Byte.valueOf((byte) 1)); //$NON-NLS-1$
+              logFontClass.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1)); // $NON-NLS-1$
             }
           }
         } catch (Throwable e) {
@@ -366,7 +364,7 @@ public class SwtResourceManager {
         }
       }
       font = new Font(Display.getCurrent(), fontData);
-      m_fontMap.put(fontName, font);
+      fontMap.put(fontName, font);
     }
     return font;
   }
@@ -378,12 +376,12 @@ public class SwtResourceManager {
    * @return the bold version of the given {@link Font}
    */
   public static Font getBoldFont(Font baseFont) {
-    Font font = m_fontToBoldFontMap.get(baseFont);
+    Font font = fontToBoldFontMap.get(baseFont);
     if (font == null) {
       FontData[] fontDatas = baseFont.getFontData();
       FontData data = fontDatas[0];
       font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
-      m_fontToBoldFontMap.put(baseFont, font);
+      fontToBoldFontMap.put(baseFont, font);
     }
     return font;
   }
@@ -393,15 +391,15 @@ public class SwtResourceManager {
    */
   public static void disposeFonts() {
     // clear fonts
-    for (Font font : m_fontMap.values()) {
+    for (Font font : fontMap.values()) {
       font.dispose();
     }
-    m_fontMap.clear();
+    fontMap.clear();
     // clear bold fonts
-    for (Font font : m_fontToBoldFontMap.values()) {
+    for (Font font : fontToBoldFontMap.values()) {
       font.dispose();
     }
-    m_fontToBoldFontMap.clear();
+    fontToBoldFontMap.clear();
   }
 
   ////////////////////////////////////////////////////////////////////////////
@@ -412,7 +410,7 @@ public class SwtResourceManager {
   /**
    * Maps IDs to cursors.
    */
-  private static Map<Integer, Cursor> m_idToCursorMap = new HashMap<Integer, Cursor>();
+  private static Map<Integer, Cursor> idToCursorMap = new HashMap<>();
 
   /**
    * Returns the system cursor matching the specific ID.
@@ -422,10 +420,10 @@ public class SwtResourceManager {
    */
   public static Cursor getCursor(int id) {
     Integer key = Integer.valueOf(id);
-    Cursor cursor = m_idToCursorMap.get(key);
+    Cursor cursor = idToCursorMap.get(key);
     if (cursor == null) {
       cursor = new Cursor(Display.getDefault(), id);
-      m_idToCursorMap.put(key, cursor);
+      idToCursorMap.put(key, cursor);
     }
     return cursor;
   }
@@ -434,10 +432,10 @@ public class SwtResourceManager {
    * Dispose all of the cached cursors.
    */
   public static void disposeCursors() {
-    for (Cursor cursor : m_idToCursorMap.values()) {
+    for (Cursor cursor : idToCursorMap.values()) {
       cursor.dispose();
     }
-    m_idToCursorMap.clear();
+    idToCursorMap.clear();
   }
 
   ////////////////////////////////////////////////////////////////////////////
