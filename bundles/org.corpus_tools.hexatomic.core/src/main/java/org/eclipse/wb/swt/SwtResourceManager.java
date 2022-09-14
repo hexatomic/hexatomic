@@ -87,8 +87,7 @@ public class SwtResourceManager {
    */
   public static Color getColor(RGB rgb) {
     return colorMap.computeIfAbsent(rgb, key -> {
-      Display display = Display.getCurrent();
-      return new Color(display, key);
+      return new Color(Display.getCurrent(), key);
     });
   }
 
@@ -253,8 +252,7 @@ public class SwtResourceManager {
   public static Font getFont(String name, int height, int style) {
     String fontName = name + '|' + height + '|' + style;
     return fontMap.computeIfAbsent(fontName, fn -> {
-      FontData fontData = new FontData(name, height, style);
-      return new Font(Display.getCurrent(), fontData);
+      return new Font(Display.getCurrent(), new FontData(name, height, style));
     });
   }
 
@@ -266,13 +264,11 @@ public class SwtResourceManager {
    * @return the bold version of the given {@link Font}
    */
   public static Font getBoldFont(Font baseFont) {
-    Font font = fontToBoldFontMap.computeIfAbsent(baseFont, b -> {
+    return fontToBoldFontMap.computeIfAbsent(baseFont, b -> {
       FontData[] fontDatas = b.getFontData();
       FontData data = fontDatas[0];
       return new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
     });
-
-    return font;
   }
 
   /**

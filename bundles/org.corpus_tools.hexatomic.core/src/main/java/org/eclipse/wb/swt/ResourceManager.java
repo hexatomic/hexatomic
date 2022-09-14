@@ -268,23 +268,15 @@ public class ResourceManager {
    * Returns an {@link Image} based on given {@link URL}.
    */
   private static Image getPluginImageFromUrl(URL url) {
-    try {
-      String key = url.toExternalForm();
-      Image image = urlImageMap.get(key);
-      if (image == null) {
-        InputStream stream = url.openStream();
-        try {
-          image = SwtResourceManager.getImage(stream);
-          urlImageMap.put(key, image);
-        } finally {
-          stream.close();
-        }
+    return urlImageMap.computeIfAbsent(url.toExternalForm(), key -> {
+      try (InputStream stream = url.openStream()) {
+        return SwtResourceManager.getImage(stream);
+      } catch (Exception ex) {
+        // Ignore any exceptions
+        return null;
       }
-      return image;
-    } catch (Exception e) {
-      // Ignore any exceptions
-      return null;
-    }
+    });
+
   }
 
 

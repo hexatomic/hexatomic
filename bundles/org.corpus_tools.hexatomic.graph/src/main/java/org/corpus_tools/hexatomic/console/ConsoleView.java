@@ -218,13 +218,11 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
       e.doit = false;
       FontData[] fd = styledText.getFont().getFontData();
 
-      if (fd.length > 0) {
-        // Minimum font size is 6
-        if (fd[0].getHeight() > 6) {
-          Font newFont =
-              SwtResourceManager.getFont(fd[0].getName(), fd[0].getHeight() - 1, fd[0].getStyle());
-          styledText.setFont(newFont);
-        }
+      // Minimum font size is 6
+      if (fd.length > 0 && fd[0].getHeight() > 6) {
+        Font newFont =
+            SwtResourceManager.getFont(fd[0].getName(), fd[0].getHeight() - 1, fd[0].getStyle());
+        styledText.setFont(newFont);
       }
     }
 
