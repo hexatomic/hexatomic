@@ -4,8 +4,8 @@
  * this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  * <p>
- * Contributors: Google, Inc. - initial API and implementation Wim Jongman - 1.8 and higher
- * compliance
+ * Contributors: Google, Inc. - initial API and implementation <br />
+ * Wim Jongman - 1.8 and higher compliance
  * </p>
  *******************************************************************************/
 
