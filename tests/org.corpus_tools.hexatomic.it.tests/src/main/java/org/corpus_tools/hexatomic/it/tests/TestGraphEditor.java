@@ -805,6 +805,9 @@ class TestGraphEditor {
 
 
     }
+
+    bot.partByTitle("doc1 (Graph Editor)").close();
+
   }
 
 
@@ -1087,7 +1090,7 @@ class TestGraphEditor {
     keyboard.typeText("anothertest");
     keyboard.pressShortcut(Keystrokes.CR);
 
-    // Close the Grid editor, which selects the Graph Editor again and
+    // Close the g editor, which selects the Graph Editor again and
     // wait for the annotation value to change
     TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
 
