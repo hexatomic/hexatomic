@@ -103,22 +103,59 @@ class TestGraphEditor {
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
 
-  private final class HorizontalTokenDistanceCondition extends DefaultCondition {
-    private final List<SToken> token;
+  private final class HorizontalNodeDistanceCondition extends DefaultCondition {
+    private final SNode leftNode;
+    private final SNode rightNode;
     private final double expected;
     private final Graph g;
 
-    private HorizontalTokenDistanceCondition(List<SToken> token, double expected, Graph g) {
-      this.token = token;
+    private HorizontalNodeDistanceCondition(SNode leftNode, SNode rightNode, double expected,
+        Graph g) {
+      this.leftNode = leftNode;
+      this.rightNode = rightNode;
       this.expected = expected;
       this.g = g;
     }
 
     private double getDistance() {
-      GraphNode t1 = getGraphNodeForSalt(bot, g, token.get(0));
-      GraphNode t2 = getGraphNodeForSalt(bot, g, token.get(1));
-      return t2.getNodeFigure().getBounds().getLeft()
-          .getDistance(t1.getNodeFigure().getBounds().getRight());
+      GraphNode l = getGraphNodeForSalt(bot, g, leftNode);
+      GraphNode r = getGraphNodeForSalt(bot, g, rightNode);
+      return r.getNodeFigure().getBounds().getLeft()
+          .getDistance(l.getNodeFigure().getBounds().getRight());
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return Math.abs(getDistance() - expected) < 1.0;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Horizontal distance between node " + leftNode.getId() + " and " + rightNode.getId()
+          + " should have been " + expected + " but was "
+          + getDistance() + ".";
+    }
+  }
+
+  private final class VerticalNodeDistanceCondition extends DefaultCondition {
+    private final SNode topNode;
+    private final SNode bottomNode;
+    private final double expected;
+    private final Graph g;
+
+    private VerticalNodeDistanceCondition(SNode topNode, SNode bottomNode, double expected,
+        Graph g) {
+      this.topNode = topNode;
+      this.bottomNode = bottomNode;
+      this.expected = expected;
+      this.g = g;
+    }
+
+    private double getDistance() {
+      GraphNode t = getGraphNodeForSalt(bot, g, topNode);
+      GraphNode b = getGraphNodeForSalt(bot, g, bottomNode);
+      return t.getNodeFigure().getBounds().getBottom()
+          .getDistance(b.getNodeFigure().getBounds().getTop());
     }
 
     @Override
@@ -128,8 +165,8 @@ class TestGraphEditor {
 
     @Override
     public String getFailureMessage() {
-      return "Horizontal distance between first token should have been " + expected + " but was "
-          + getDistance() + ".";
+      return "Vertical distance between node " + topNode.getId() + " and " + bottomNode.getId()
+          + " should have been " + expected + " but was " + getDistance() + ".";
     }
   }
 
@@ -673,8 +710,6 @@ class TestGraphEditor {
       graph.sortTokenByText();
       List<SToken> token = graph.getTokens();
 
-
-
       SWTBotExpandBar layoutPanel = bot.expandBarWithId(GraphEditor.ID_PREFIX + "layout-expandbar");
       layoutPanel.expandItem(GRAPH_LAYOUT);
 
@@ -695,20 +730,23 @@ class TestGraphEditor {
       // is updated
       horizontalScale.setValue(5);
       assertEquals("0.5", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalTokenDistanceCondition(token, horizontalMarginDefault * 0.5, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
+          horizontalMarginDefault * 0.5, g));
 
       horizontalScale.setValue(14);
       assertEquals("1.4", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalTokenDistanceCondition(token, horizontalMarginDefault * 1.4, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
+          horizontalMarginDefault * 1.4, g));
       horizontalScale.setValue(15);
 
       horizontalScale.setValue(20);
       assertEquals("2.0", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalTokenDistanceCondition(token, horizontalMarginDefault * 2.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
+          horizontalMarginDefault * 2.0, g));
       
       horizontalScale.setValue(0);
       assertEquals("0.0", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalTokenDistanceCondition(token, 0.0, g));
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g));
 
 
     }
