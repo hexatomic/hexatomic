@@ -3,7 +3,6 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -36,6 +35,7 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -118,10 +118,9 @@ class TestGraphEditor {
     }
 
     private double getDistance() {
-      GraphNode l = getGraphNodeForSalt(bot, g, leftNode);
-      GraphNode r = getGraphNodeForSalt(bot, g, rightNode);
-      return r.getNodeFigure().getBounds().getLeft()
-          .getDistance(l.getNodeFigure().getBounds().getRight());
+      Rectangle l = getGraphNodeForSalt(bot, g, leftNode).getNodeFigure().getBounds();
+      Rectangle r = getGraphNodeForSalt(bot, g, rightNode).getNodeFigure().getBounds();
+      return Math.abs(l.getRight().x - r.getLeft().x);
     }
 
     @Override
@@ -717,37 +716,32 @@ class TestGraphEditor {
       // Use initial values from which we will multiply the margins
       SWTBot botLayout = new SWTBot(layoutPanel.widget);
       SWTBotScale horizontalScale = botLayout.scale(0);
-      horizontalScale.setValue(10);
-      assertEquals("1.0", botLayout.label(1).getText());
-
-      GraphNode t1 = getGraphNodeForSalt(bot, g, token.get(0));
-      assertNotNull(t1);
-      GraphNode t2 = getGraphNodeForSalt(bot, g, token.get(1));
-      double horizontalMarginDefault = t2.getNodeFigure().getBounds().getLeft()
-          .getDistance(t1.getNodeFigure().getBounds().getRight());
-      assertNotEquals(0, horizontalMarginDefault);
 
       // Change the horizontal margin parameter and check that distance between the first two token
       // is updated
+      horizontalScale.setValue(0);
+      assertEquals("0.0", botLayout.label(1).getText());
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g));
+
       horizontalScale.setValue(5);
       assertEquals("0.5", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
-          horizontalMarginDefault * 0.5, g));
+          65.0, g));
+
+      horizontalScale.setValue(10);
+      assertEquals("1.0", botLayout.label(1).getText());
+      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 130.0, g));
 
       horizontalScale.setValue(14);
       assertEquals("1.4", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
-          horizontalMarginDefault * 1.4, g));
+          182.0, g));
       horizontalScale.setValue(15);
 
       horizontalScale.setValue(20);
       assertEquals("2.0", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1),
-          horizontalMarginDefault * 2.0, g));
-      
-      horizontalScale.setValue(0);
-      assertEquals("0.0", botLayout.label(1).getText());
-      bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g));
+          260.0, g));
 
       // Change the vertical margin and compare the distance between the root node and a node below
       // it
