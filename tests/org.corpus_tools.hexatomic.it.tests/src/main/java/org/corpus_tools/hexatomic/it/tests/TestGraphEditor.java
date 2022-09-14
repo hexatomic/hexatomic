@@ -126,7 +126,7 @@ class TestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
-      return Math.abs(getDistance() - expected) < 1.0;
+      return Math.abs(getDistance() - expected) < 2.0;
     }
 
     @Override
@@ -160,7 +160,7 @@ class TestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
-      return Math.abs(getDistance() - expected) < 1.0;
+      return Math.abs(getDistance() - expected) < 2.0;
     }
 
     @Override
