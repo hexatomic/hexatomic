@@ -83,7 +83,6 @@ import org.junit.jupiter.api.Test;
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-@SuppressWarnings("restriction")
 public class TestGridEditor {
 
 

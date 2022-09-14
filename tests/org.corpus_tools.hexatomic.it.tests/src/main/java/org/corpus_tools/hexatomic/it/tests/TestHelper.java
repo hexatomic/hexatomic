@@ -26,7 +26,6 @@ import org.osgi.framework.FrameworkUtil;
  * @author Stephan Druskat
  *
  */
-@SuppressWarnings("restriction")
 public class TestHelper {
 
   private static final String SWTBOT_KEYBOARD_LAYOUT = "SWTBOT_KEYBOARD_LAYOUT";

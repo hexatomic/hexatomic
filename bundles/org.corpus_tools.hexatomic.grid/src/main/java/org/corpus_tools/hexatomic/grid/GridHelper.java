@@ -25,7 +25,6 @@ import org.corpus_tools.hexatomic.grid.internal.layers.GridColumnHeaderLayer;
 import org.corpus_tools.hexatomic.grid.internal.layers.GridFreezeLayer;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.salt.common.SSpan;
-import org.corpus_tools.salt.util.SaltUtil;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;

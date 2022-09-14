@@ -42,7 +42,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.wb.swt.SwtResourceManager;
 
 public class ConsoleView implements Runnable, IDocumentListener, VerifyListener {
 
@@ -209,7 +209,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
       FontData[] fd = styledText.getFont().getFontData();
       if (fd.length > 0) {
         Font newFont =
-            ResourceManager.getFont(fd[0].getName(), fd[0].getHeight() + 1, fd[0].getStyle());
+            SwtResourceManager.getFont(fd[0].getName(), fd[0].getHeight() + 1, fd[0].getStyle());
         styledText.setFont(newFont);
       }
     }
@@ -222,7 +222,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
         // Minimum font size is 6
         if (fd[0].getHeight() > 6) {
           Font newFont =
-              ResourceManager.getFont(fd[0].getName(), fd[0].getHeight() - 1, fd[0].getStyle());
+              SwtResourceManager.getFont(fd[0].getName(), fd[0].getHeight() - 1, fd[0].getStyle());
           styledText.setFont(newFont);
         }
       }

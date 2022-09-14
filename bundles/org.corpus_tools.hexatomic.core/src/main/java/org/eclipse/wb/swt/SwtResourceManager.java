@@ -43,7 +43,12 @@ import org.eclipse.swt.widgets.Display;
  * @author scheglov_ke
  * @author Dan Rubel
  */
-public abstract class SwtResourceManager {
+public class SwtResourceManager {
+
+  private SwtResourceManager() {
+    throw new IllegalStateException("Utility class that should not be instantiated");
+  }
+
   ////////////////////////////////////////////////////////////////////////////
   //
   // Color

@@ -11,6 +11,12 @@
 
 package org.eclipse.wb.swt;
 
+import static org.eclipse.wb.swt.SwtResourceManager.BOTTOM_LEFT;
+import static org.eclipse.wb.swt.SwtResourceManager.BOTTOM_RIGHT;
+import static org.eclipse.wb.swt.SwtResourceManager.LAST_CORNER_KEY;
+import static org.eclipse.wb.swt.SwtResourceManager.TOP_LEFT;
+import static org.eclipse.wb.swt.SwtResourceManager.TOP_RIGHT;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -57,7 +63,11 @@ import org.osgi.framework.Bundle;
  * @author Dan Rubel
  * @author Wim Jongman
  */
-public class ResourceManager extends SwtResourceManager {
+public class ResourceManager {
+
+  private ResourceManager() {
+    throw new IllegalStateException("Utility class that should not be instantiated");
+  }
 
   /**
    * The map where we store our images.
@@ -107,7 +117,8 @@ public class ResourceManager extends SwtResourceManager {
    * Maps images to decorated images.
    */
   @SuppressWarnings("unchecked")
-  private static Map<Image, Map<Image, Image>>[] decoratedImageMap = new Map[LAST_CORNER_KEY];
+  private static Map<Image, Map<Image, Image>>[] decoratedImageMap =
+      new Map[LAST_CORNER_KEY];
 
   /**
    * Returns an {@link Image} composed of a base image decorated by another image.
@@ -140,7 +151,7 @@ public class ResourceManager extends SwtResourceManager {
     }
     Map<Image, Image> decoratedMap =
         cornerDecoratedImageMap.computeIfAbsent(baseImage, i -> new HashMap<>());
-    Image result = decoratedMap.computeIfAbsent(decorator, d -> {
+    return decoratedMap.computeIfAbsent(decorator, d -> {
       final Rectangle bib = baseImage.getBounds();
       final Rectangle dib = d.getBounds();
       final Point baseImageSize = new Point(bib.width, bib.height);
@@ -170,7 +181,6 @@ public class ResourceManager extends SwtResourceManager {
       //
       return compositImageDesc.createImage();
     });
-    return result;
   }
 
   private static ImageDataProvider getUnzoomedImageDataProvider(ImageData imageData) {
@@ -267,7 +277,7 @@ public class ResourceManager extends SwtResourceManager {
       if (image == null) {
         InputStream stream = url.openStream();
         try {
-          image = getImage(stream);
+          image = SwtResourceManager.getImage(stream);
           urlImageMap.put(key, image);
         } finally {
           stream.close();
@@ -328,8 +338,7 @@ public class ResourceManager extends SwtResourceManager {
    * the cached objects are no longer needed (e.g. on application shutdown).
    */
   public static void dispose() {
-    disposeColors();
-    disposeFonts();
+    SwtResourceManager.dispose();
     disposeImages();
   }
 }
