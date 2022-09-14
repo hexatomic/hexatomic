@@ -3,6 +3,7 @@ package org.corpus_tools.hexatomic.it.tests;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,6 +30,8 @@ import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
@@ -56,6 +59,8 @@ import org.eclipse.swtbot.swt.finder.utils.WidgetTextDescription;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotExpandBar;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotScale;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
@@ -76,6 +81,7 @@ class TestGraphEditor {
   private static final String ANNOTATION_NAME = "Node Annotations";
   private static final String SPANS = "Spans";
   private static final String FILTER_VIEW = "Filter View";
+  private static final String GRAPH_LAYOUT = "Graph Layout";
   private static final String ANNOTATION_TYPES = "Annotation Types";
   private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
@@ -96,6 +102,36 @@ class TestGraphEditor {
   private UiStatusReport uiStatus;
 
   private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+
+  private final class HorizontalTokenDistanceCondition extends DefaultCondition {
+    private final List<SToken> token;
+    private final double expected;
+    private final Graph g;
+
+    private HorizontalTokenDistanceCondition(List<SToken> token, double expected, Graph g) {
+      this.token = token;
+      this.expected = expected;
+      this.g = g;
+    }
+
+    private double getDistance() {
+      GraphNode t1 = getGraphNodeForSalt(bot, g, token.get(0));
+      GraphNode t2 = getGraphNodeForSalt(bot, g, token.get(1));
+      return t2.getNodeFigure().getBounds().getLeft()
+          .getDistance(t1.getNodeFigure().getBounds().getRight());
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return getDistance() == expected;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Horizontal distance between first token should have been " + expected + " but was "
+          + getDistance() + ".";
+    }
+  }
 
   private final class ConsoleFontSizeCondition implements ICondition {
     private final SWTBotStyledText console;
@@ -168,8 +204,7 @@ class TestGraphEditor {
 
     @Override
     public boolean test() throws Exception {
-      SWTBotView view =
-          TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
+      SWTBotView view = TestGraphEditor.this.bot.partByTitle(this.documentName + " (Graph Editor)");
       if (view != null) {
         SWTBotTable textRangeTable = bot.tableWithId(GraphEditor.TEXT_RANGE_ID);
         // Wait until the graph has been loaded
@@ -570,13 +605,11 @@ class TestGraphEditor {
   void testFilterOptions() {
     openDefaultExample();
 
-
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
 
     // Add a pointing relation between the two structures
     enterCommand(ADD_POINTING_COMMMAND);
-
 
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
@@ -622,6 +655,78 @@ class TestGraphEditor {
     constChip.click();
     assertEquals(1, getVisibleChips(bot).size());
     bot.waitUntil(new NumberOfNodesCondition(13));
+  }
+
+  @Test
+  void testLayoutParameters() {
+    openDefaultExample();
+
+    Graph g = bot.widget(widgetOfType(Graph.class));
+    assertNotNull(g);
+
+    Optional<SDocument> optionalDoc =
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    assertTrue(optionalDoc.isPresent());
+    if (optionalDoc.isPresent()) {
+      SDocument doc = optionalDoc.get();
+      SDocumentGraph graph = doc.getDocumentGraph();
+      graph.sortTokenByText();
+      List<SToken> token = graph.getTokens();
+
+
+
+      SWTBotExpandBar layoutPanel = bot.expandBarWithId(GraphEditor.ID_PREFIX + "layout-expandbar");
+      layoutPanel.expandItem(GRAPH_LAYOUT);
+
+      // Use initial values from which we will multiply the margins
+      SWTBot botLayout = new SWTBot(layoutPanel.widget);
+      SWTBotScale horizontalScale = botLayout.scale(0);
+      horizontalScale.setValue(10);
+      assertEquals("1.0", botLayout.label(1).getText());
+
+      GraphNode t1 = getGraphNodeForSalt(bot, g, token.get(0));
+      assertNotNull(t1);
+      GraphNode t2 = getGraphNodeForSalt(bot, g, token.get(1));
+      double horizontalMarginDefault = t2.getNodeFigure().getBounds().getLeft()
+          .getDistance(t1.getNodeFigure().getBounds().getRight());
+      assertNotEquals(0, horizontalMarginDefault);
+
+      // Change the horizontal margin parameter and check that distance between the first two token
+      // is updated
+      horizontalScale.setValue(5);
+      assertEquals("0.5", botLayout.label(1).getText());
+      bot.waitUntil(new HorizontalTokenDistanceCondition(token, horizontalMarginDefault * 0.5, g));
+
+      horizontalScale.setValue(14);
+      assertEquals("1.4", botLayout.label(1).getText());
+      bot.waitUntil(new HorizontalTokenDistanceCondition(token, horizontalMarginDefault * 1.4, g));
+      horizontalScale.setValue(15);
+
+      horizontalScale.setValue(20);
+      assertEquals("2.0", botLayout.label(1).getText());
+      bot.waitUntil(new HorizontalTokenDistanceCondition(token, horizontalMarginDefault * 2.0, g));
+      
+      horizontalScale.setValue(0);
+      assertEquals("0.0", botLayout.label(1).getText());
+      bot.waitUntil(new HorizontalTokenDistanceCondition(token, 0.0, g));
+
+
+    }
+  }
+
+
+  private GraphNode getGraphNodeForSalt(SWTBot bot, Graph g, SNode saltNode) {
+    return bot.getDisplay().syncCall(() -> {
+      for (Object n : g.getNodes()) {
+        if (n instanceof GraphNode) {
+          GraphNode gn = (GraphNode) n;
+          if (gn.getData() == saltNode) {
+            return gn;
+          }
+        }
+      }
+      return null;
+    });
   }
 
   private List<? extends Chips> getVisibleChips(SWTBot bot) {

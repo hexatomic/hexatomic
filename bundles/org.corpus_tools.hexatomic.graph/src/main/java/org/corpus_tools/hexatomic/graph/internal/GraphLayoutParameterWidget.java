@@ -41,7 +41,25 @@ import org.eclipse.wb.swt.ResourceManager;
 public class GraphLayoutParameterWidget extends Composite {
 
 
+  private static final String HORIZONTAL_MARGIN_TOOLTIP = "Horizontal margin between token.\n"
+      + "This is measured in \"times of the average token width\".  "
+      + "So for \"0\" there is no margin, for \"1\" the margin has "
+      + "the same width as the average token node, and for \"2\"  "
+      + "the margin is twice as high as the average token node width.";
+  private static final String VERTICAL_MARGIN_TOOLTIP = "Vertical margin between nodes.\n"
+      + "This is measure in \"times of the node height\".  "
+      + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
+      + "and for \"2\"  the margain is twice as high as the node height.";
+  private static final String VERTICAL_TOKEN_MARGIN_TOOLTIP =
+      "Vertical margin between token and non-token.\n"
+          + "Token are grouped in the lowest rank (at the bottom). "
+          + "To allow space for pointing relations, you can add a margin "
+          + "between the token row and the lowest annotation nodes. "
+          + "A margin of \"1\" means there is one level left empty, an offset of \"0\" "
+          + "means there is no additional space except for the regular vertical margin.";
+
   private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
+
 
   private final class ConfigChangedListener extends SelectionAdapter {
     private final IEventBroker eventBroker;
@@ -72,12 +90,13 @@ public class GraphLayoutParameterWidget extends Composite {
   }
 
   public static final String PARAM_CHANGED_TOPIC = "GRAPH_EDITOR/GRAPH_LAYOUT_PARAMETER/CHANGED";
-  private Label lblVerticalMargin;
-  private Scale scaleVerticalMargin;
 
   private GraphDisplayConfiguration config;
+
   private Scale scaleHorizontalTokenMargin;
   private Label lblHorizontalTokenMargin;
+  private Label lblVerticalMargin;
+  private Scale scaleVerticalMargin;
   private Scale scaleVerticalTokenMargin;
   private Label lblVerticalTokenMargin;
 
@@ -94,15 +113,11 @@ public class GraphLayoutParameterWidget extends Composite {
     config = new GraphDisplayConfiguration();
 
     Label captionHorizontalTokenMargin = new Label(this, SWT.WRAP);
-    captionHorizontalTokenMargin.setToolTipText("Horizontal margin between token.\n"
-        + "This is measured in \"times of the average token width\".  "
-        + "So for \"0\" there is no margin, for \"1\" the margin has "
-        + "the same width as the average token node, and for \"2\"  "
-        + "the margin is twice as high as the average token node width.");
     captionHorizontalTokenMargin.setImage(ResourceManager
         .getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE, "icons/fontawesome/arrows-alt-h.png"));
 
     scaleHorizontalTokenMargin = new Scale(this, SWT.NONE);
+    scaleHorizontalTokenMargin.setToolTipText(HORIZONTAL_MARGIN_TOOLTIP);
     scaleHorizontalTokenMargin.setPageIncrement(1);
     scaleHorizontalTokenMargin.setMaximum(20);
     scaleHorizontalTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -110,49 +125,39 @@ public class GraphLayoutParameterWidget extends Composite {
         .setSelection((int) Math.round(config.getHorizontalTokenMargin() * 10.0));
 
     lblHorizontalTokenMargin = new Label(this, SWT.NONE);
-    lblHorizontalTokenMargin.setToolTipText("");
+    lblHorizontalTokenMargin.setToolTipText(HORIZONTAL_MARGIN_TOOLTIP);
     lblHorizontalTokenMargin.setText("" + config.getHorizontalTokenMargin());
 
 
     Label captionVerticalMargin = new Label(this, SWT.WRAP);
-    captionVerticalMargin.setToolTipText("Vertical margin between nodes.\n"
-        + "This is measure in \"times of the node height\".  "
-        + "So for \"0\" there is no margin, for \"1\" the margin has the same height as the node, "
-        + "and for \"2\"  the margain is twice as high as the node height.");
     captionVerticalMargin.setImage(ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/arrows-alt-v.png"));
 
     scaleVerticalMargin = new Scale(this, SWT.NONE);
+    scaleVerticalMargin.setToolTipText(VERTICAL_MARGIN_TOOLTIP);
     scaleVerticalMargin.setPageIncrement(1);
     scaleVerticalMargin.setMaximum(20);
     scaleVerticalMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scaleVerticalMargin.setSelection((int) Math.round(config.getVerticalNodeMargin() * 10.0));
 
     lblVerticalMargin = new Label(this, SWT.NONE);
+    lblVerticalMargin.setToolTipText(VERTICAL_MARGIN_TOOLTIP);
     lblVerticalMargin.setText("" + config.getVerticalNodeMargin());
-
-
 
     Label captionVerticalTokenMargin = new Label(this, SWT.WRAP);
     captionVerticalTokenMargin.setImage(ResourceManager
         .getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE, "icons/fontawesome/text-height.png"));
-    captionVerticalTokenMargin.setToolTipText("Vertical margin between token and non-token.\n"
-        + "Token are grouped in the lowest rank (at the bottom). "
-        + "To allow space for pointing relations, you can add a margin "
-        + "between the token row and the lowest annotation nodes. "
-        + "A margin of \"1\" means there is one level left empty, an offset of \"0\" "
-        + "means there is no additional space except for the regular vertical margin.");
 
     scaleVerticalTokenMargin = new Scale(this, SWT.NONE);
+    scaleVerticalTokenMargin.setToolTipText(VERTICAL_TOKEN_MARGIN_TOOLTIP);
     scaleVerticalTokenMargin.setPageIncrement(1);
     scaleVerticalTokenMargin.setMaximum(5);
     scaleVerticalTokenMargin.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
     scaleVerticalTokenMargin.setSelection(config.getTokenRankOffset());
 
     lblVerticalTokenMargin = new Label(this, SWT.NONE);
+    lblVerticalTokenMargin.setToolTipText(VERTICAL_TOKEN_MARGIN_TOOLTIP);
     lblVerticalTokenMargin.setText("" + config.getTokenRankOffset());
-
-
 
     ConfigChangedListener selectionListener = new ConfigChangedListener(eventBroker);
     scaleVerticalMargin.addSelectionListener(selectionListener);

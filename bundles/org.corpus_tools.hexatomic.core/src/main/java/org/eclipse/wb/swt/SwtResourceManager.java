@@ -86,9 +86,7 @@ public class SwtResourceManager {
    * @return the {@link Color} matching the RGB value
    */
   public static Color getColor(RGB rgb) {
-    return colorMap.computeIfAbsent(rgb, key -> {
-      return new Color(Display.getCurrent(), key);
-    });
+    return colorMap.computeIfAbsent(rgb, key -> new Color(Display.getCurrent(), key));
   }
 
   /**
@@ -251,9 +249,8 @@ public class SwtResourceManager {
    */
   public static Font getFont(String name, int height, int style) {
     String fontName = name + '|' + height + '|' + style;
-    return fontMap.computeIfAbsent(fontName, fn -> {
-      return new Font(Display.getCurrent(), new FontData(name, height, style));
-    });
+    return fontMap.computeIfAbsent(fontName,
+        fn -> new Font(Display.getCurrent(), new FontData(name, height, style)));
   }
 
 

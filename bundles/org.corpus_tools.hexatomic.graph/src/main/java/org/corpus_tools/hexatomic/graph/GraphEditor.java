@@ -131,18 +131,23 @@ public class GraphEditor {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   /**
+   * The prefix for the SWTBot widget key IDs.
+   */
+  public static final String ID_PREFIX = "graph-editor/";
+
+  /**
    * The ID used as SWTBot widget key for the table of text ranges.
    */
-  public static final String TEXT_RANGE_ID = "graph-editor/text-range";
+  public static final String TEXT_RANGE_ID = ID_PREFIX + "text-range";
   /**
    * The ID used as SWTBot widget key for the console.
    */
-  public static final String CONSOLE_ID = "graph-editor/text-console";
+  public static final String CONSOLE_ID = ID_PREFIX + "text-console";
 
   private static final String TEXT = "text";
   private static final String RANGE = "range";
   static final int DEFAULT_DIFF = 25;
-  private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
+  public static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
   @Inject
   ProjectManager projectManager;
@@ -228,7 +233,7 @@ public class GraphEditor {
     constructFilterView(sideBar);
     constructGraphParams(sideBar);
     constructSegmentFilter(sideBar);
-    
+
     registerGraphControlListeners();
 
     viewer.getControl().forceFocus();
@@ -301,6 +306,7 @@ public class GraphEditor {
 
   private void constructGraphParams(Composite sideBar) {
     ExpandBar paramExpandBar = new ExpandBar(sideBar, SWT.NONE);
+    paramExpandBar.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, ID_PREFIX + "layout-expandbar");
     paramExpandBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
     paramExpandBar.addExpandListener(new ExpandListener() {
 
