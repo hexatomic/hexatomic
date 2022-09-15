@@ -46,7 +46,7 @@ public class SwtResourceManager {
   // Color
   //
   ////////////////////////////////////////////////////////////////////////////
-  private static Map<RGB, Color> colorMap = new HashMap<>();
+  protected static Map<RGB, Color> colorMap = new HashMap<>();
 
   /**
    * Returns a {@link Color} given its red, green and blue component values.
@@ -88,11 +88,11 @@ public class SwtResourceManager {
   /**
    * Maps font names to fonts.
    */
-  private static Map<String, Font> fontMap = new HashMap<>();
+  protected static Map<String, Font> fontMap = new HashMap<>();
   /**
    * Maps fonts to their bold versions.
    */
-  private static Map<Font, Font> fontToBoldFontMap = new HashMap<>();
+  protected static Map<Font, Font> fontToBoldFontMap = new HashMap<>();
 
   /**
    * Returns a {@link Font} based on its name, height and style.

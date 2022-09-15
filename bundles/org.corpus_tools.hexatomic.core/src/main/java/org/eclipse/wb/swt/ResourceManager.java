@@ -82,7 +82,7 @@ public class ResourceManager {
   /**
    * Maps URL to images.
    */
-  private static Map<String, Image> urlImageMap = new HashMap<>();
+  protected static Map<String, Image> urlImageMap = new HashMap<>();
 
   /**
    * Provider for plugin resources, used by WindowBuilder at design time.

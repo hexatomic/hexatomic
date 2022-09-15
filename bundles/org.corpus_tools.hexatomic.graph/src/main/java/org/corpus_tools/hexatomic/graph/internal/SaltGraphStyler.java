@@ -41,13 +41,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.wb.swt.SwtResourceManager;
 import org.eclipse.zest.core.viewers.EntityConnectionData;
 import org.eclipse.zest.core.viewers.IFigureProvider;
 import org.eclipse.zest.core.viewers.ISelfStyleProvider;
@@ -84,8 +84,7 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
     GC gc = new GC(Display.getCurrent());
     fontMetrics = gc.getFontMetrics();
     defaultFont = Display.getCurrent().getSystemFont();
-    FontDescriptor boldDescriptor = FontDescriptor.createFrom(defaultFont).setStyle(SWT.BOLD);
-    boldFont = boldDescriptor.createFont(Display.getCurrent());
+    boldFont = SwtResourceManager.getBoldFont(defaultFont);
 
     gc.dispose();
   }
@@ -221,7 +220,6 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
   @Override
   public void dispose() {
     super.dispose();
-    this.boldFont.dispose();
   }
 
 }
