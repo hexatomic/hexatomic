@@ -217,9 +217,4 @@ public class SaltGraphStyler extends LabelProvider implements ISelfStyleProvider
     return null;
   }
 
-  @Override
-  public void dispose() {
-    super.dispose();
-  }
-
 }

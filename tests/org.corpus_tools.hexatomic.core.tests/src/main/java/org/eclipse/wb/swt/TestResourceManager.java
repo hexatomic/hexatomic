@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 class TestResourceManager {
 
+  private static final String ORG_CORPUS_TOOLS_HEXATOMIC_CORE = "org.corpus_tools.hexatomic.core";
+
   /**
    * Tests correct caching and disposal of images.
    */
@@ -16,19 +18,19 @@ class TestResourceManager {
     assertEquals(0, ResourceManager.urlImageMap.size());
 
     // Add first image
-    Image img1 = ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    Image img1 = ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/plus-solid.png");
     assertNotNull(img1);
     assertEquals(1, ResourceManager.urlImageMap.size());
 
     // Add second image
-    Image img2 = ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    Image img2 = ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/folder-regular.png");
     assertNotNull(img2);
     assertEquals(2, ResourceManager.urlImageMap.size());
 
     // Add image again, this should not change the cache size
-    Image cachedImg = ResourceManager.getPluginImage("org.corpus_tools.hexatomic.core",
+    Image cachedImg = ResourceManager.getPluginImage(ORG_CORPUS_TOOLS_HEXATOMIC_CORE,
         "icons/fontawesome/plus-solid.png");
     assertEquals(img1, cachedImg);
     assertEquals(2, ResourceManager.urlImageMap.size());
