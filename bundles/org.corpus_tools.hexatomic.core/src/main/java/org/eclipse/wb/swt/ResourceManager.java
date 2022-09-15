@@ -11,32 +11,20 @@
 
 package org.eclipse.wb.swt;
 
-import static org.eclipse.wb.swt.SwtResourceManager.BOTTOM_LEFT;
-import static org.eclipse.wb.swt.SwtResourceManager.BOTTOM_RIGHT;
-import static org.eclipse.wb.swt.SwtResourceManager.LAST_CORNER_KEY;
-import static org.eclipse.wb.swt.SwtResourceManager.TOP_LEFT;
-import static org.eclipse.wb.swt.SwtResourceManager.TOP_RIGHT;
-
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.CompositeImageDescriptor;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageDataProvider;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
 /**
- * Utility class for managing OS resources associated with SWT/JFace controls such as colors, fonts,
- * images, etc.
+ * Utility class for managing OS resources associated with SWT/JFace controls such as images.
  * 
  * <p>
  * This class is created automatically when you fiddle around with images and colors in WB. You
@@ -69,128 +57,7 @@ public class ResourceManager {
     throw new IllegalStateException("Utility class that should not be instantiated");
   }
 
-  /**
-   * The map where we store our images.
-   */
-  private static Map<ImageDescriptor, Image> descriptorImageMap = new HashMap<>();
 
-  /**
-   * Returns an {@link ImageDescriptor} stored in the file at the specified path relative to the
-   * specified class.
-   * 
-   * @param clazz the {@link Class} relative to which to find the image descriptor.
-   * @param path the path to the image file.
-   * @return the {@link ImageDescriptor} stored in the file at the specified path.
-   */
-  public static ImageDescriptor getImageDescriptor(Class<?> clazz, String path) {
-    return ImageDescriptor.createFromFile(clazz, path);
-  }
-
-  /**
-   * Returns an {@link ImageDescriptor} stored in the file at the specified path.
-   * 
-   * @param path the path to the image file.
-   * @return the {@link ImageDescriptor} stored in the file at the specified path.
-   */
-  public static ImageDescriptor getImageDescriptor(String path) {
-    try {
-      return ImageDescriptor.createFromURL(new File(path).toURI().toURL());
-    } catch (MalformedURLException e) {
-      return null;
-    }
-  }
-
-  /**
-   * Returns an {@link Image} based on the specified {@link ImageDescriptor}.
-   * 
-   * @param descriptor the {@link ImageDescriptor} for the {@link Image}.
-   * @return the {@link Image} based on the specified {@link ImageDescriptor}.
-   */
-  public static Image getImage(ImageDescriptor descriptor) {
-    if (descriptor == null) {
-      return null;
-    }
-    return descriptorImageMap.computeIfAbsent(descriptor, ImageDescriptor::createImage);
-  }
-
-  /**
-   * Maps images to decorated images.
-   */
-  @SuppressWarnings("unchecked")
-  private static Map<Image, Map<Image, Image>>[] decoratedImageMap = new Map[LAST_CORNER_KEY];
-
-  /**
-   * Returns an {@link Image} composed of a base image decorated by another image.
-   * 
-   * @param baseImage the base {@link Image} that should be decorated.
-   * @param decorator the {@link Image} to decorate the base image.
-   * @return {@link Image} The resulting decorated image.
-   */
-  public static Image decorateImage(Image baseImage, Image decorator) {
-    return decorateImage(baseImage, decorator, BOTTOM_RIGHT);
-  }
-
-  /**
-   * Returns an {@link Image} composed of a base image decorated by another image.
-   * 
-   * @param baseImage the base {@link Image} that should be decorated.
-   * @param decorator the {@link Image} to decorate the base image.
-   * @param corner the corner to place decorator image.
-   * @return the resulting decorated {@link Image}.
-   */
-  public static Image decorateImage(final Image baseImage, final Image decorator,
-      final int corner) {
-    if (corner <= 0 || corner >= LAST_CORNER_KEY) {
-      throw new IllegalArgumentException("Wrong decorate corner");
-    }
-    Map<Image, Map<Image, Image>> cornerDecoratedImageMap = decoratedImageMap[corner];
-    if (cornerDecoratedImageMap == null) {
-      cornerDecoratedImageMap = new HashMap<>();
-      decoratedImageMap[corner] = cornerDecoratedImageMap;
-    }
-    Map<Image, Image> decoratedMap =
-        cornerDecoratedImageMap.computeIfAbsent(baseImage, i -> new HashMap<>());
-    return decoratedMap.computeIfAbsent(decorator, d -> {
-      final Rectangle bib = baseImage.getBounds();
-      final Rectangle dib = d.getBounds();
-      final Point baseImageSize = new Point(bib.width, bib.height);
-      CompositeImageDescriptor compositImageDesc = new CompositeImageDescriptor() {
-        @Override
-        protected void drawCompositeImage(int width, int height) {
-          drawImage(createCachedImageDataProvider(baseImage), 0, 0);
-          if (corner == TOP_LEFT) {
-            drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0, 0);
-          } else if (corner == TOP_RIGHT) {
-            drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width, 0);
-          } else if (corner == BOTTOM_LEFT) {
-            drawImage(getUnzoomedImageDataProvider(d.getImageData()), 0, bib.height - dib.height);
-          } else if (corner == BOTTOM_RIGHT) {
-            drawImage(getUnzoomedImageDataProvider(d.getImageData()), bib.width - dib.width,
-                bib.height - dib.height);
-          }
-        }
-
-        @Override
-        protected Point getSize() {
-          return baseImageSize;
-        }
-      };
-      //
-      return compositImageDesc.createImage();
-    });
-  }
-
-  private static ImageDataProvider getUnzoomedImageDataProvider(ImageData imageData) {
-    return zoom -> zoom == 100 ? imageData : null;
-  }
-
-  private static void disposeImageDescriptors() {
-    for (Iterator<Image> imageIterator = descriptorImageMap.values().iterator(); imageIterator
-        .hasNext();) {
-      imageIterator.next().dispose();
-    }
-    descriptorImageMap.clear();
-  }
 
   private static void disposePluginImages() {
     for (Iterator<Image> imageIterator = urlImageMap.values().iterator(); imageIterator
@@ -204,21 +71,6 @@ public class ResourceManager {
    * Dispose all of the cached images.
    */
   public static void disposeImages() {
-    SwtResourceManager.disposeImages();
-    disposeImageDescriptors();
-    // dispose decorated images
-    for (int i = 0; i < decoratedImageMap.length; i++) {
-      Map<Image, Map<Image, Image>> cornerDecoratedImageMap = decoratedImageMap[i];
-      if (cornerDecoratedImageMap != null) {
-        for (Map<Image, Image> decoratedMap : cornerDecoratedImageMap.values()) {
-          for (Image image : decoratedMap.values()) {
-            image.dispose();
-          }
-          decoratedMap.clear();
-        }
-        cornerDecoratedImageMap.clear();
-      }
-    }
     disposePluginImages();
   }
 
@@ -265,12 +117,32 @@ public class ResourceManager {
   }
 
   /**
+   * Returns an {@link Image} encoded by the specified {@link InputStream}.
+   * 
+   * @param stream the {@link InputStream} encoding the image data
+   * @return the {@link Image} encoded by the specified input stream
+   */
+  protected static Image getImage(InputStream stream) throws IOException {
+    try {
+      Display display = Display.getCurrent();
+      ImageData data = new ImageData(stream);
+      if (data.transparentPixel > 0) {
+        return new Image(display, data, data.getTransparencyMask());
+      }
+      return new Image(display, data);
+    } finally {
+      stream.close();
+    }
+  }
+
+
+  /**
    * Returns an {@link Image} based on given {@link URL}.
    */
   private static Image getPluginImageFromUrl(URL url) {
     return urlImageMap.computeIfAbsent(url.toExternalForm(), key -> {
       try (InputStream stream = url.openStream()) {
-        return SwtResourceManager.getImage(stream);
+        return getImage(stream);
       } catch (Exception ex) {
         // Ignore any exceptions
         return null;
@@ -279,25 +151,6 @@ public class ResourceManager {
 
   }
 
-
-  /**
-   * Returns an {@link ImageDescriptor} based on a {@link Bundle} and resource entry path.
-   * 
-   * @param symbolicName the symbolic name of the {@link Bundle}.
-   * @param path the path of the resource entry.
-   * @return the {@link ImageDescriptor} based on a {@link Bundle} and resource entry path.
-   */
-  public static ImageDescriptor getPluginImageDescriptor(String symbolicName, String path) {
-    try {
-      URL url = getPluginImageUrl(symbolicName, path);
-      if (url != null) {
-        return ImageDescriptor.createFromURL(url);
-      }
-    } catch (Exception e) {
-      // Ignore any exceptions
-    }
-    return null;
-  }
 
   /**
    * Returns an {@link URL} based on a {@link Bundle} and resource entry path.
