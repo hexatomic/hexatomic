@@ -54,6 +54,7 @@ import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.utils.WidgetTextDescription;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
@@ -78,7 +79,6 @@ class TestGraphEditor {
 
   private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String DOC1_TITLE = "doc1 (Graph Editor)";
-  private static final long GRAPH_LAYOUT_TIMEOUT = 5000;
   private static final String INF_STRUCT = "Inf-Struct";
   private static final String CONST = "const";
   private static final String SEARCH = "Search";
@@ -411,7 +411,7 @@ class TestGraphEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
-    bot.waitUntil(new GraphLoadedCondition(0));
+    bot.waitUntil(new GraphLoadedCondition(0), SWTBotPreferences.TIMEOUT, 100);
   }
 
   void openMinimalProjectStructure() {
@@ -425,7 +425,7 @@ class TestGraphEditor {
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
 
-    bot.waitUntil(new GraphLoadedCondition("document_1"));
+    bot.waitUntil(new GraphLoadedCondition("document_1"), SWTBotPreferences.TIMEOUT, 100);
   }
 
   void enterCommand(String command) {
@@ -462,7 +462,7 @@ class TestGraphEditor {
         public String getFailureMessage() {
           return "Second text segment was not checked";
         }
-      }, GRAPH_LAYOUT_TIMEOUT);
+      });
     }
   }
 
@@ -492,10 +492,12 @@ class TestGraphEditor {
     // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
 
     // Zoom in so we can move the view with the arrow keys
     // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad keys yet.
@@ -508,41 +510,53 @@ class TestGraphEditor {
     // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.LEFT);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.PAGE_DOWN);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.PAGE_UP);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
 
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x + 250, origLocation.y)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 250, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x, origLocation.y + 250)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 250)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_DOWN);
-    bot.waitUntil(new ViewLocationReachedCondition(viewPort,
-        new Point(origLocation.x, origLocation.y + 250)));
+    bot.waitUntil(
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 250)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_UP);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
 
     // Zoom out again: moving up should not have any effect again
     KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
@@ -550,10 +564,12 @@ class TestGraphEditor {
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
     keyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
-        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)));
+        new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
+        SWTBotPreferences.TIMEOUT, 100);
   }
 
   @Test
@@ -562,8 +578,7 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Get a reference to the open graph
-    Optional<SDocument> optionalDocument =
-        projectManager.getDocument(DOC1_SALT_ID);
+    Optional<SDocument> optionalDocument = projectManager.getDocument(DOC1_SALT_ID);
     assertTrue(optionalDocument.isPresent());
     if (optionalDocument.isPresent()) {
       SDocument doc = optionalDocument.get();
@@ -603,8 +618,7 @@ class TestGraphEditor {
     openDefaultExample();
 
     // Get a reference to the opened document graph
-    Optional<SDocument> optionalDoc =
-        projectManager.getDocument(DOC1_SALT_ID);
+    Optional<SDocument> optionalDoc = projectManager.getDocument(DOC1_SALT_ID);
     assertTrue(optionalDoc.isPresent());
     if (optionalDoc.isPresent()) {
       SDocument doc = optionalDoc.get();
@@ -720,8 +734,7 @@ class TestGraphEditor {
     Graph g = bot.widget(widgetOfType(Graph.class));
     assertNotNull(g);
 
-    Optional<SDocument> optionalDoc =
-        projectManager.getDocument(DOC1_SALT_ID);
+    Optional<SDocument> optionalDoc = projectManager.getDocument(DOC1_SALT_ID);
     assertTrue(optionalDoc.isPresent());
     if (optionalDoc.isPresent()) {
       SDocument doc = optionalDoc.get();
@@ -741,28 +754,28 @@ class TestGraphEditor {
       assertEquals("0.0", botLayout.label(1).getText());
       List<SToken> token = graph.getTokens();
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 0.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       horizontalScale.setValue(5);
       assertEquals("0.5", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 65.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       horizontalScale.setValue(10);
       assertEquals("1.0", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 130.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       horizontalScale.setValue(14);
       assertEquals("1.4", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 182.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
       horizontalScale.setValue(15);
 
       horizontalScale.setValue(20);
       assertEquals("2.0", botLayout.label(1).getText());
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 260.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       // Change the vertical margin and compare the distance between the root node and a node below
       // it
@@ -773,22 +786,22 @@ class TestGraphEditor {
       verticalScale.setValue(0);
       assertEquals("0.0", botLayout.label(3).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 0.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       verticalScale.setValue(3);
       assertEquals("0.3", botLayout.label(3).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 15.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       verticalScale.setValue(10);
       assertEquals("1.0", botLayout.label(3).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 53.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       verticalScale.setValue(20);
       assertEquals("2.0", botLayout.label(3).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 106.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
 
       // Change the vertical token margin and compare the distance between a token node and node and
@@ -801,22 +814,22 @@ class TestGraphEditor {
       SNode tok10 = graph.getNodesByName("sTok10").get(0);
       SNode struct12 = graph.getNodesByName("structure12").get(0);
       bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 0.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       tokenScale.setValue(1);
       assertEquals("1", botLayout.label(5).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 53.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       tokenScale.setValue(2);
       assertEquals("2", botLayout.label(5).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 106.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
       tokenScale.setValue(5);
       assertEquals("5", botLayout.label(5).getText());
       bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 265.0, g),
-          GRAPH_LAYOUT_TIMEOUT);
+          SWTBotPreferences.TIMEOUT, 100);
 
 
     }
