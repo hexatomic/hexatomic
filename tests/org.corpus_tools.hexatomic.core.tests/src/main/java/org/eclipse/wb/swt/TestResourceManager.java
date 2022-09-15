@@ -4,13 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.swt.graphics.Image;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TestResourceManager {
-
-  @BeforeEach
-  void setUp() {}
 
   /**
    * Tests correct caching and disposal of images.
