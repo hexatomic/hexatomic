@@ -23,7 +23,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_lQqf4J6CEeqcNd4BgS8ZlA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.undo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/undo.png" command="_uhiOUJ6CEeqcNd4BgS8ZlA"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_uhOaADi7Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.menuseparator.0"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign Node Names" command="_sisGMDi6Ee2qLN4J-P5SHw"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign node names" command="_sisGMDi6Ee2qLN4J-P5SHw"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_trgNYDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.menu.help" label="&amp;Help">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_oEtxwDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.online_documentation" label="Online Documentation" command="_V7e7gDpHEeu92f5JR1mQ3w"/>

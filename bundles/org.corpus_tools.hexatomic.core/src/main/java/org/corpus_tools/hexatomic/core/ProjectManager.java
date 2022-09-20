@@ -615,6 +615,35 @@ public class ProjectManager {
   }
 
   /**
+   * Undoes all changes made since the last checkpoint.
+   */
+  public void revertToLastCheckpoint() {
+
+
+    if (!uncommittedChanges.isEmpty()) {
+      // Group uncommitted changes in a changeset
+      ChangeSet uncommitedChangeSet = new ChangeSet(uncommittedChanges);
+      // Iterate over the elements in reversed order
+      ListIterator<ReversibleOperation> itUncommitedChangeSet =
+          uncommitedChangeSet.getChanges().listIterator(uncommitedChangeSet.getChanges().size());
+      while (itUncommitedChangeSet.hasPrevious()) {
+        ReversibleOperation op = itUncommitedChangeSet.previous();
+        op.restore();
+      }
+
+      // Clear all reverted changes
+      uncommittedChanges.clear();
+
+      // Performing an undo might unload documents, close the editors to avoid errors
+      // and give the user a visually clue (s)he unloaded/removed a document.
+      closeEditorsForRemovedDocuments();
+
+      events.send(Topics.ANNOTATION_CHECKPOINT_RESTORED, uncommitedChangeSet);
+      updateCanExecute();
+    }
+  }
+
+  /**
    * Checks whether it is possible to perform an redo.
    * 
    * @return True if redo is possible.
