@@ -619,7 +619,6 @@ public class ProjectManager {
    */
   public void revertToLastCheckpoint() {
 
-
     if (!uncommittedChanges.isEmpty()) {
       // Group uncommitted changes in a changeset
       ChangeSet uncommitedChangeSet = new ChangeSet(uncommittedChanges);
