@@ -8,7 +8,7 @@
       <menus xsi:type="menu:PopupMenu" xmi:id="_X1zH8OwiEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.corpusedit.popupmenu.documents" label="Document Actions">
         <children xsi:type="menu:MenuSeparator" xmi:id="_lcdN4DssEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.menuseparator.0"/>
         <children xsi:type="menu:Menu" xmi:id="__7oYMDsoEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.menu.refactor" label="Refac&amp;tor">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_CkLu0DspEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.handledmenuitem.re-assignnodenames" label="Re-assign node names for selection" command="_I970QDsrEe25Ed8fdIAS9Q"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_CkLu0DspEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.handledmenuitem.re-assignnodenames" label="Re-assign node names for selection" tooltip="Token will get the prefix &quot;t&quot; and a number (e.g. &quot;t1&quot;) and other nodes the prefix &quot;n&quot; and a number (e.g. &quot;n2&quot;)." command="_I970QDsrEe25Ed8fdIAS9Q"/>
         </children>
       </menus>
     </elements>

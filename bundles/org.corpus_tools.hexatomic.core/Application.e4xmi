@@ -24,7 +24,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_uhOaADi7Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.menuseparator.0"/>
         <children xsi:type="menu:Menu" xmi:id="_JeZWoDsjEe2UKoaiT_70Sw" elementId="org.corpus_tools.hexatomic.core.menu.refactor" label="Refac&amp;tor" mnemonics="">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign &amp;node names for all documents" command="_sisGMDi6Ee2qLN4J-P5SHw">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign &amp;node names for all documents" tooltip="Token will get the prefix &quot;t&quot; and a number (e.g. &quot;t1&quot;) and other nodes the prefix &quot;n&quot; and a number (e.g. &quot;n2&quot;)." command="_sisGMDi6Ee2qLN4J-P5SHw">
             <parameters xmi:id="_2JWzkDstEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.parameter.0" name="org.corpus_tools.hexatomic.core.commandparameter.force_all" value="true"/>
           </children>
         </children>
