@@ -42,6 +42,8 @@ import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.wb.swt.ResourceManager;
+import org.eclipse.wb.swt.SwtResourceManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.prefs.BackingStoreException;
@@ -104,6 +106,16 @@ public class ApplicationLifecycle {
       IProgressMonitor monitor,
       IEventBroker eventBroker,
       IEclipseContext context) {
+    
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        // Clean-up all managed resources
+        ResourceManager.dispose();
+        SwtResourceManager.dispose();
+      }
+    });
+    
     //check if preferences are set to autoupdate and if app was recently updated
     boolean justUpdated = prefs.getBoolean("justUpdated", false);
     boolean autoUpdateEnabled = prefs.getBoolean("autoUpdate", true);
@@ -123,7 +135,8 @@ public class ApplicationLifecycle {
       } catch (BackingStoreException ex) {
         errorService.handleException("Couldn't update preferences", ex, ApplicationLifecycle.class);
       }
-    }   
+    }
+    
     
   }
   

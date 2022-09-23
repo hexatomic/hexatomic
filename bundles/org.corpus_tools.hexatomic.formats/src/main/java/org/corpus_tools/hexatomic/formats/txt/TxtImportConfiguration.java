@@ -22,6 +22,7 @@ package org.corpus_tools.hexatomic.formats.txt;
 
 import java.util.Properties;
 import org.corpus_tools.hexatomic.formats.ConfigurationPage;
+import org.corpus_tools.hexatomic.formats.importer.ImportFormat;
 import org.corpus_tools.pepper.modules.coreModules.TextImporter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
