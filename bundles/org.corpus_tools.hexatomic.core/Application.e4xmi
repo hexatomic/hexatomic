@@ -106,7 +106,7 @@
   <commands xmi:id="_k9bsQEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.update" commandName="Update"/>
   <commands xmi:id="_o1QSYEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.preferences" commandName="Preferences"/>
   <commands xmi:id="_sisGMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.command.reassign-nodenames" commandName="Re-assign node names">
-    <parameters xmi:id="_fqMqcDsjEe2UKoaiT_70Sw" elementId="org.corpus_tools.hexatomic.core.commandparameter.0" name="selection"/>
+    <parameters xmi:id="_fqMqcDsjEe2UKoaiT_70Sw" elementId="org.corpus_tools.hexatomic.core.commandparameter.selection" name="selection"/>
   </commands>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>

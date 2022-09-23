@@ -1,20 +1,33 @@
 package org.corpus_tools.hexatomic.core.handlers;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import javax.inject.Named;
+import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.salt.common.SCorpus;
+import org.corpus_tools.salt.common.SCorpusDocumentRelation;
+import org.corpus_tools.salt.common.SCorpusRelation;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.core.GraphTraverseHandler;
+import org.corpus_tools.salt.core.SGraph.GRAPH_TRAVERSE_TYPE;
+import org.corpus_tools.salt.core.SNode;
+import org.corpus_tools.salt.core.SRelation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -28,11 +41,40 @@ public class ReassignNodeNamesHandler {
   @Inject
   ProjectManager projectManager;
 
+  private final class DocumentForCorpusTraverser implements GraphTraverseHandler {
+
+    private final Set<String> childDocumentIds = new TreeSet<String>();
+
+    @Override
+    public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+        SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+      // If the target node is a document, add it to our set
+      if (currNode instanceof SDocument) {
+        childDocumentIds.add(currNode.getId());
+      }
+    }
+
+    @Override
+    public void nodeLeft(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
+        SRelation<SNode, SNode> relation, SNode fromNode, long order) {
+      // We already add the documents when we reach the nodes.
+    }
+
+    @Override
+    public boolean checkConstraint(GRAPH_TRAVERSE_TYPE traversalType, String traversalId,
+        @SuppressWarnings("rawtypes") SRelation relation, SNode currNode, long order) {
+      // Traverse to sub-corpora and documents
+      return relation == null || relation instanceof SCorpusDocumentRelation
+          || relation instanceof SCorpusRelation;
+    }
+  }
+
+
   protected class NameAssigner implements IRunnableWithProgress {
 
-    List<String> documentIds;
+    private Set<String> documentIds;
 
-    public NameAssigner(List<String> documentIds) {
+    public NameAssigner(Set<String> documentIds) {
       this.documentIds = documentIds;
     }
 
@@ -49,7 +91,7 @@ public class ReassignNodeNamesHandler {
         }
         monitor.subTask(docId);
 
-        Optional<SDocument> document = projectManager.getDocument(docId, true);
+        java.util.Optional<SDocument> document = projectManager.getDocument(docId, true);
         if (document.isPresent()) {
           SDocumentGraph graph = document.get().getDocumentGraph();
           int tokenCounter = 1;
@@ -79,17 +121,48 @@ public class ReassignNodeNamesHandler {
   }
 
   @Execute
-  protected void execute(Shell shell) {
-    boolean performReassign = MessageDialog.openQuestion(shell, "Re-assign Node Names",
-        "Do you want to assign automatically generated names to all nodes and token? "
-            + "This will be applied to all documents in all opened corpora. "
-            + "Token will get the prefix \"t\" and a number (e.g. \"t1\") and "
-            + "other nodes the prefix \"n\" and a number (e.g. \"n2\").");
-    if (performReassign) {
-      List<String> allDocuments = projectManager.getProject().getCorpusGraphs().stream()
+  protected void execute(Shell shell, @Optional @Named(CommandParams.SELECTION) String selection) {
+
+    // Get all documents to apply this handler to
+    Set<String> selectedDocuments;
+    if (selection == null) {
+      // No selection, use all documents of all corpus graphs
+      selectedDocuments = projectManager.getProject().getCorpusGraphs().stream()
           .flatMap(cg -> cg.getDocuments().stream()).map(d -> d.getId())
-          .collect(Collectors.toList());
-      NameAssigner operation = new NameAssigner(allDocuments);
+          .collect(Collectors.toSet());
+    } else {
+      // Get the selected object(s) by searching for all objects with this ID
+      List<SNode> selectedObjects = projectManager.getProject().getCorpusGraphs().stream()
+          .map(cg -> cg.getNode(selection)).filter(o -> o != null).collect(Collectors.toList());
+      // The objects could be (sub-) corpora or documents. For the (sub-) corpora get all the
+      // documents and merge all documents into one set
+      selectedDocuments = new HashSet<>();
+      for (SNode o : selectedObjects) {
+        if (o instanceof SDocument) {
+          selectedDocuments.add(o.getId());
+        } else if (o instanceof SCorpus) {
+          SCorpus selectedCorpus = (SCorpus) o;
+          DocumentForCorpusTraverser traverser = new DocumentForCorpusTraverser();
+          selectedCorpus.getGraph().traverse(Arrays.asList(selectedCorpus),
+              GRAPH_TRAVERSE_TYPE.TOP_DOWN_DEPTH_FIRST, "GetDocumentsForGraph", traverser);
+          selectedDocuments.addAll(traverser.childDocumentIds);
+        }
+      }
+    }
+
+    String appliedToMessage =
+        selection == null ? "This will be applied to all documents in all opened corpora."
+            : "This will be applied to the " + selectedDocuments.size() + " documents.";
+    String messageTitle = selection == null ? "Re-assign node names for all documents"
+        : "Re-assign node names for selected documents";
+
+    boolean performReassign = MessageDialog.openQuestion(shell, messageTitle,
+        "Do you want to assign automatically generated names to all nodes and token? "
+            + "Token will get the prefix \"t\" and a number (e.g. \"t1\") and "
+            + "other nodes the prefix \"n\" and a number (e.g. \"n2\").\n\n" + appliedToMessage);
+
+    if (performReassign) {
+      NameAssigner operation = new NameAssigner(selectedDocuments);
 
       ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 
