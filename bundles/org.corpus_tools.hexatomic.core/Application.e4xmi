@@ -24,7 +24,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_uhOaADi7Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.menuseparator.0"/>
         <children xsi:type="menu:Menu" xmi:id="_JeZWoDsjEe2UKoaiT_70Sw" elementId="org.corpus_tools.hexatomic.core.menu.refactor" label="Refac&amp;tor" mnemonics="">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign &amp;node names for all documents" tooltip="Tokens will get the prefix &quot;t&quot; and a number (e.g. &quot;t1&quot;) and other nodes the prefix &quot;n&quot; and a number (e.g. &quot;n2&quot;)." command="_sisGMDi6Ee2qLN4J-P5SHw">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.autogen-nodenames" label="Automatically generate &amp;node names for all documents" tooltip="Tokens will get the prefix &quot;t&quot; and a number (e.g. &quot;t1&quot;) and other nodes the prefix &quot;n&quot; and a number (e.g. &quot;n2&quot;)." command="_sisGMDi6Ee2qLN4J-P5SHw">
             <parameters xmi:id="_2JWzkDstEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.parameter.0" name="org.corpus_tools.hexatomic.core.commandparameter.force_all" value="true"/>
           </children>
         </children>
@@ -64,7 +64,7 @@
   <handlers xmi:id="_iL-cwDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handler.online_documentation" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.OpenOnlineDocumentationHandler" command="_V7e7gDpHEeu92f5JR1mQ3w"/>
   <handlers xmi:id="_rttGMEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.handler.update" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.UpdateHandler" command="_k9bsQEE5Eey6GdYWLPWbkQ"/>
   <handlers xmi:id="_vx3fMEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.handler.preferences" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.PreferencesHandler" command="_o1QSYEE5Eey6GdYWLPWbkQ"/>
-  <handlers xmi:id="_6thNMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handler.reassign-nodenames" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.ReassignNodeNamesHandler" command="_sisGMDi6Ee2qLN4J-P5SHw"/>
+  <handlers xmi:id="_6thNMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handler.autogen-nodenames" contributionURI="bundleclass://org.corpus_tools.hexatomic.core/org.corpus_tools.hexatomic.core.handlers.AutoGenerateNodeNamesHandler" command="_sisGMDi6Ee2qLN4J-P5SHw"/>
   <bindingTables xmi:id="_oI0WcEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.bindingtable.windows" bindingContext="_c3AF2cjYEeSyMNYR5xypkQ">
     <bindings xmi:id="_qIQeoEz5EeqppqV5eQIggg" elementId="org.corpus_tools.hexatomic.core.keybinding.0" keySequence="M1+M2+S" command="_mqJxIEzaEeqppqV5eQIggg">
       <tags>type:user</tags>
@@ -107,7 +107,7 @@
   <commands xmi:id="_V7e7gDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.command.online_documentation" commandName="Online Documentation"/>
   <commands xmi:id="_k9bsQEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.update" commandName="Update"/>
   <commands xmi:id="_o1QSYEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.preferences" commandName="Preferences"/>
-  <commands xmi:id="_sisGMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.command.reassign-nodenames" commandName="Re-assign node names">
+  <commands xmi:id="_sisGMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.command.autogen-nodenames" commandName="Automatically generate node names">
     <parameters xmi:id="_yUxusDstEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_all" name="Force all documents"/>
   </commands>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>

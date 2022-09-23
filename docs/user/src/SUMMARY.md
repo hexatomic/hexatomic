@@ -18,6 +18,7 @@
         	- [Editing annotation values](usage/grid-editor/editing-values.md)
         	- [Editing annotation names](usage/grid-editor/editing-names.md)
         	- [Deleting annotations](usage/grid-editor/deleting-annotations.md)
+  	- [Refactoring](usage/refactoring/README.md)
 - [Troubleshooting & getting help](./troubleshooting.md)
 - [HOW-TOs](./howtos/README.md)
     - [Creating a corpus from scratch](howtos/corpus-creation.md)

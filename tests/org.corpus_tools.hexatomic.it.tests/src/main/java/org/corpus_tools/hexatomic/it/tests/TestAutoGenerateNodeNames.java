@@ -32,13 +32,9 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
-@TestMethodOrder(OrderAnnotation.class)
-class TestReassignNodeInNames {
-
+class TestAutoGenerateNodeNames {
 
   private final class RefactoringFinishedCondition extends DefaultCondition {
     @Override
@@ -55,14 +51,16 @@ class TestReassignNodeInNames {
     }
   }
 
-  private static final String SELECTED_MENU_LABEL = "Re-assign node names for selection";
+  private static final String SELECTED_MENU_LABEL =
+      "Automatically generate node names for selection";
   private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String DOC2_ID = "salt:/rootCorpus/subCorpus1/doc2";
   private static final String SELECTED_DIALOG_CAPTION =
-      "Re-assign node names for selected documents";
+      "Automatically generate node names for selected documents";
   private static final String REFACTOR = "Refactor";
   private static final String EDIT = "Edit";
-  private static final String ALL_DOCUMENTS_LABEL = "Re-assign node names for all documents";
+  private static final String ALL_DOCUMENTS_LABEL =
+      "Automatically generate node names for all documents";
   private static final String CORPUS_EDITOR_PART_ID =
       "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
 
@@ -156,7 +154,7 @@ class TestReassignNodeInNames {
 
       @Override
       public String getFailureMessage() {
-        return "Re-assign node name menu item was not enabled";
+        return "Automatically generate node name menu item was not enabled";
       }
 
     });
@@ -203,7 +201,7 @@ class TestReassignNodeInNames {
     SWTBotTreeItem doc1Item = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
         .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
 
-    // Click on the refactoring and re-assign menu items
+    // Click on the refactoring and auto gen menu items
     doc1Item.click();
     doc1Item.contextMenu("Refactor").menu(SELECTED_MENU_LABEL).click();
 
@@ -243,7 +241,7 @@ class TestReassignNodeInNames {
     SWTBotTreeItem corpusItem = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
         .expandNode("rootCorpus").expandNode("subCorpus1");
 
-    // Click on the refactoring and re-assign menu items
+    // Click on the refactoring and auto gen menu items
     corpusItem.click();
     corpusItem.contextMenu("Refactor").menu(SELECTED_MENU_LABEL).click();
 
@@ -289,7 +287,7 @@ class TestReassignNodeInNames {
     // Select the corpus graph
     SWTBotTreeItem cgItem = corpusStructurePart.bot().tree().expandNode("corpusGraph1");
 
-    // Click on the refactoring and re-assign menu items
+    // Click on the refactoring and auto gen menu items
     cgItem.click();
     cgItem.contextMenu("Refactor").menu(SELECTED_MENU_LABEL).click();
 

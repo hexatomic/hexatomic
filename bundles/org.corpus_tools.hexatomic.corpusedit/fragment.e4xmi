@@ -2,13 +2,13 @@
 <fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_BxaXACerEeWxCPrV0pAZQQ">
   <imports xsi:type="commands:Command" xmi:id="_I8qUAOwjEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.core.command.open_salt_document"/>
   <imports xsi:type="commands:CommandParameter" xmi:id="_m1zKIOwnEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.core.commandparameter.editor-id"/>
-  <imports xsi:type="commands:Command" xmi:id="_I970QDsrEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.command.reassign-nodenames"/>
+  <imports xsi:type="commands:Command" xmi:id="_I970QDsrEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.command.autogen-nodenames"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_zxiZoMpuEemUdItNeSusZw" featurename="children" parentElementId="org.corpus_tools.hexatomic.core.left">
     <elements xsi:type="basic:Part" xmi:id="_0_aiAMpuEemUdItNeSusZw" elementId="org.corpus_tools.hexatomic.corpusedit.part.corpusstructure" contributionURI="bundleclass://org.corpus_tools.hexatomic.corpusstructureeditor/org.corpus_tools.hexatomic.corpusedit.CorpusStructureView" label="Corpus Structure">
       <menus xsi:type="menu:PopupMenu" xmi:id="_X1zH8OwiEemCosF9W_Kdxg" elementId="org.corpus_tools.hexatomic.corpusedit.popupmenu.documents" label="Document Actions">
         <children xsi:type="menu:MenuSeparator" xmi:id="_lcdN4DssEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.menuseparator.0"/>
         <children xsi:type="menu:Menu" xmi:id="__7oYMDsoEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.menu.refactor" label="Refac&amp;tor">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_CkLu0DspEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.handledmenuitem.re-assignnodenames" label="Re-assign node names for selection" tooltip="Tokens will get the prefix &quot;t&quot; and a number (e.g. &quot;t1&quot;) and other nodes the prefix &quot;n&quot; and a number (e.g. &quot;n2&quot;)." command="_I970QDsrEe25Ed8fdIAS9Q"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_CkLu0DspEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.corpusedit.handledmenuitem.autogenAutoGenerateNodeNamesHandlerdler-nodenames" label="Automatically generate node names for selection" tooltip="Tokens will get the prefix &quot;t&quot; and a number (e.g. &quot;t1&quot;) and other nodes the prefix &quot;n&quot; and a number (e.g. &quot;n2&quot;)." command="_I970QDsrEe25Ed8fdIAS9Q"/>
         </children>
       </menus>
     </elements>

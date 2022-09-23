@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.core.handlers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 
-public class ReassignNodeNamesHandler {
+public class AutoGenerateNodeNamesHandler {
 
   @Inject
   ErrorService errorService;
@@ -104,7 +105,7 @@ public class ReassignNodeNamesHandler {
     @Override
     public void run(IProgressMonitor monitor)
         throws InvocationTargetException, InterruptedException {
-      monitor.beginTask("Re-assign node names", this.documentIds.size());
+      monitor.beginTask("Automatically generating node names", this.documentIds.size());
 
       for (String docId : documentIds) {
         if (monitor.isCanceled()) {
@@ -118,8 +119,11 @@ public class ReassignNodeNamesHandler {
         if (document.isPresent()) {
           SDocumentGraph graph = document.get().getDocumentGraph();
           int tokenCounter = 1;
-          for (SToken tok : graph.getSortedTokenByText()) {
-            tok.setName("t" + tokenCounter++);
+          List<SToken> sortedToken = graph.getSortedTokenByText();
+          if (sortedToken != null) {
+            for (SToken tok : graph.getSortedTokenByText()) {
+              tok.setName("t" + tokenCounter++);
+            }
           }
           int nodeCounter = 1;
           for (SStructure struct : graph.getStructures()) {
@@ -184,10 +188,10 @@ public class ReassignNodeNamesHandler {
     String messageTitle;
     String appliedToMessage;
     if (forceAll || selection == null) {
-      messageTitle = "Re-assign node names for all documents";
+      messageTitle = "Automatically generate node names for all documents";
       appliedToMessage = "This will be applied to all documents in all opened corpora.";
     } else {
-      messageTitle = "Re-assign node names for selected documents";
+      messageTitle = "Automatically generate node names for selected documents";
       if (selectedDocuments.size() == 1) {
         appliedToMessage =
             "This will be applied to the document \"" + selectedDocuments.iterator().next() + "\".";
@@ -210,12 +214,12 @@ public class ReassignNodeNamesHandler {
       try {
         dialog.run(true, true, operation);
       } catch (InvocationTargetException ex) {
-        errorService.handleException("Could not re-assign node names", ex,
-            ReassignNodeNamesHandler.class);
+        errorService.handleException("Could not automatically generate node names", ex,
+            AutoGenerateNodeNamesHandler.class);
       } catch (InterruptedException ex) {
         errorService.handleException(
-            "Could not re-assign node names because thread was interrupted", ex,
-            ReassignNodeNamesHandler.class);
+            "Could not automatically node names because thread was interrupted", ex,
+            AutoGenerateNodeNamesHandler.class);
         // Re-interrupt thread to restore the interrupted state
         Thread.currentThread().interrupt();
       }
