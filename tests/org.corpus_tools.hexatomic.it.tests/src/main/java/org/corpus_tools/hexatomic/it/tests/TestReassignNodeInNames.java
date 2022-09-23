@@ -100,11 +100,7 @@ class TestReassignNodeInNames {
   @AfterEach
   void close() {
     // Programmatically close the example corpus by opening a new fresh one
-    Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.FORCE_CLOSE, "true");
-    ParameterizedCommand cmd = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
-    handlerService.executeHandler(cmd);
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
   SWTBotView openDefaultExample() {
