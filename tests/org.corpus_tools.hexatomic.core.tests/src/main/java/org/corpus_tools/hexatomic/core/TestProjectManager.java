@@ -310,17 +310,17 @@ class TestProjectManager {
       // Change a token annotation without creating a checkpoint
       List<SToken> token = docGraph.getSortedTokenByText();
       token.get(0).createAnnotation("test", "anno", "0");
-      assertTrue(token.get(0).containsLabel("test::anno"));
+      assertTrue(token.get(0).containsLabel(TEST_ANNO_QNAME));
       token.get(1).createAnnotation("test", "anno", "1");
-      assertTrue(token.get(1).containsLabel("test::anno"));
+      assertTrue(token.get(1).containsLabel(TEST_ANNO_QNAME));
 
       assertFalse(projectManager.canRedo());
       assertFalse(projectManager.canRedo());
 
       // Revert changes and check that the created annotations are gone
       projectManager.revertToLastCheckpoint();
-      assertFalse(token.get(0).containsLabel("test::anno"));
-      assertFalse(token.get(1).containsLabel("test::anno"));
+      assertFalse(token.get(0).containsLabel(TEST_ANNO_QNAME));
+      assertFalse(token.get(1).containsLabel(TEST_ANNO_QNAME));
 
       assertFalse(projectManager.canRedo());
       assertFalse(projectManager.canRedo());
