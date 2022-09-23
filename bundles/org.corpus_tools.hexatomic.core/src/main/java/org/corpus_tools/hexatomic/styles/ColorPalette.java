@@ -22,6 +22,7 @@
 package org.corpus_tools.hexatomic.styles;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.wb.swt.SwtResourceManager;
 
 /**
  * Contains constants for an accessible palette.
@@ -45,14 +46,14 @@ public final class ColorPalette {
    * A <strong style="color:#999999">gray</strong> tone matching to the other colors in this
    * palette.
    */
-  public static final Color GRAY = new Color(153, 153, 153);
+  public static final Color GRAY = SwtResourceManager.getColor(153, 153, 153);
 
   /**
    * A matt <strong style="color:#E69F00">orange</strong> tone.
    * 
    * @see ColorPalette#VERMILLION
    */
-  public static final Color ORANGE = new Color(230, 159, 0);
+  public static final Color ORANGE = SwtResourceManager.getColor(230, 159, 0);
 
   /**
    * A lighter <strong style="color:#56B4E9">sky blue</strong> tone and one of the blue colors in
@@ -60,18 +61,18 @@ public final class ColorPalette {
    * 
    * @see ColorPalette#BLUE
    */
-  public static final Color SKY_BLUE = new Color(86, 180, 233);
+  public static final Color SKY_BLUE = SwtResourceManager.getColor(86, 180, 233);
 
   /**
    * A <strong style="color:#009E73">bluish green</strong> tone and the only "green" color in this
    * palette.
    */
-  public static final Color BLUISH_GREEN = new Color(0, 158, 115);
+  public static final Color BLUISH_GREEN = SwtResourceManager.getColor(0, 158, 115);
 
   /**
    * A bright <strong style="color:#F0E442">yellow</strong> tone.
    */
-  public static final Color YELLOW = new Color(240, 228, 66);
+  public static final Color YELLOW = SwtResourceManager.getColor(240, 228, 66);
 
 
   /**
@@ -79,7 +80,7 @@ public final class ColorPalette {
    * 
    * @see ColorPalette#SKY_BLUE
    */
-  public static final Color BLUE = new Color(0, 114, 178);
+  public static final Color BLUE = SwtResourceManager.getColor(0, 114, 178);
 
 
   /**
@@ -87,11 +88,11 @@ public final class ColorPalette {
    * 
    * @see ColorPalette#ORANGE
    */
-  public static final Color VERMILLION = new Color(213, 94, 0);
+  public static final Color VERMILLION = SwtResourceManager.getColor(213, 94, 0);
 
   /**
    * A <strong style="color:#CC79A7">purple</strong> tone with a red component.
    */
-  public static final Color REDDISH_PURPLE = new Color(204, 121, 167);
+  public static final Color REDDISH_PURPLE = SwtResourceManager.getColor(204, 121, 167);
 
 }

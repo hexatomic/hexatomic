@@ -46,9 +46,11 @@ class AnnotationNameProposalProvider implements IContentProposalProvider {
   private void calculateProposals() {
     this.proposals.clear();
 
-    this.proposals
-        .addAll(graph.getNodes().parallelStream().flatMap(n -> n.getAnnotations().stream())
-            .map(Label::getQName).collect(Collectors.toList()));
+    if (graph != null) {
+      this.proposals
+          .addAll(graph.getNodes().parallelStream().flatMap(n -> n.getAnnotations().stream())
+          .map(Label::getQName).collect(Collectors.toList()));
+    }
   }
 
   @Override

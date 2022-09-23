@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stabilize graph editor test to wait until background jobs are finished before
   selecting the text fragment.
 
+### Added
+
+- Add user interface for graph editor graph layout parameters  (#133)
+
 ## [1.0.1] - 2022-08-30
 
 ### Fixed
