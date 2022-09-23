@@ -152,7 +152,7 @@ public class AutoGenerateNodeNamesHandler {
 
   private Set<String> getSelectedDocumentIds(Object selection, boolean forceAll) {
     Set<String> selectedDocuments;
-    if (selection == null || forceAll) {
+    if (forceAll) {
       // Use all documents of the project
       selectedDocuments = projectManager.getProject().getCorpusGraphs().stream()
           .flatMap(cg -> cg.getDocuments().stream()).map(SDocument::getId)
@@ -190,7 +190,7 @@ public class AutoGenerateNodeNamesHandler {
 
     String messageTitle;
     String appliedToMessage;
-    if (forceAll || selection == null) {
+    if (forceAll) {
       messageTitle = "Automatically generate node names for all documents";
       appliedToMessage = "This will be applied to all documents in all opened corpora.";
     } else {
