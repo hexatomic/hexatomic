@@ -102,6 +102,23 @@ public class AutoGenerateNodeNamesHandler {
       this.documentIds = documentIds;
     }
 
+    private void assignNamesToDocument(SDocumentGraph graph) {
+      int tokenCounter = 1;
+      List<SToken> sortedToken = graph.getSortedTokenByText();
+      if (sortedToken != null) {
+        for (SToken tok : graph.getSortedTokenByText()) {
+          tok.setName("t" + tokenCounter++);
+        }
+      }
+      int nodeCounter = 1;
+      for (SStructure struct : graph.getStructures()) {
+        struct.setName("n" + nodeCounter++);
+      }
+      for (SSpan span : graph.getSpans()) {
+        span.setName("n" + nodeCounter++);
+      }
+    }
+
     @Override
     public void run(IProgressMonitor monitor)
         throws InvocationTargetException, InterruptedException {
@@ -118,20 +135,7 @@ public class AutoGenerateNodeNamesHandler {
         java.util.Optional<SDocument> document = projectManager.getDocument(docId, true);
         if (document.isPresent()) {
           SDocumentGraph graph = document.get().getDocumentGraph();
-          int tokenCounter = 1;
-          List<SToken> sortedToken = graph.getSortedTokenByText();
-          if (sortedToken != null) {
-            for (SToken tok : graph.getSortedTokenByText()) {
-              tok.setName("t" + tokenCounter++);
-            }
-          }
-          int nodeCounter = 1;
-          for (SStructure struct : graph.getStructures()) {
-            struct.setName("n" + nodeCounter++);
-          }
-          for (SSpan span : graph.getSpans()) {
-            span.setName("n" + nodeCounter++);
-          }
+          assignNamesToDocument(graph);
         }
 
         monitor.worked(1);
@@ -141,7 +145,6 @@ public class AutoGenerateNodeNamesHandler {
       projectManager.addCheckpoint();
 
       monitor.done();
-
     }
 
 
