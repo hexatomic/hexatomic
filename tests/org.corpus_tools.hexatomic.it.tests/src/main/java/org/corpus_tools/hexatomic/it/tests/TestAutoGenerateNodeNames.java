@@ -23,7 +23,6 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
@@ -72,7 +71,6 @@ class TestAutoGenerateNodeNames {
   private ECommandService commandService;
   private EHandlerService handlerService;
 
-  private IEventBroker events;
   private ProjectManager projectManager;
 
   @BeforeEach
@@ -81,9 +79,6 @@ class TestAutoGenerateNodeNames {
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
-
-    events = ctx.get(IEventBroker.class);
-    assertNotNull(events);
 
     commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
@@ -122,11 +117,11 @@ class TestAutoGenerateNodeNames {
   private void assertNewNodeName(SDocumentGraph g, String documentId) {
     for (SNode n : g.getNodes()) {
       if (n instanceof SToken) {
-        assertTrue(n.getName().matches("t[0-9]+"), "Token " + n.getName() + " in document "
+        assertTrue(n.getName().matches("t\\d+"), "Token " + n.getName() + " in document "
             + documentId + " did not match pattern t<number>");
       } else if (n instanceof SStructuredNode) {
-        assertTrue(n.getName().matches("n[0-9]+"), "Node " + n.getName() + "in document "
-            + documentId + " did not match pattern n<number>");
+        assertTrue(n.getName().matches("n\\d+"), "Node " + n.getName() + "in document " + documentId
+            + " did not match pattern n<number>");
       }
     }
   }
@@ -134,17 +129,17 @@ class TestAutoGenerateNodeNames {
   private void assertOldNodeName(SDocumentGraph g, String documentId) {
     for (SNode n : g.getNodes()) {
       if (n instanceof SToken) {
-        assertTrue(n.getName().matches("sTok[0-9]+"), "Token " + n.getName() + " in document "
+        assertTrue(n.getName().matches("sTok\\d+"), "Token " + n.getName() + " in document "
             + documentId + " did not match pattern t<number>");
       } else if (n instanceof SStructuredNode) {
-        assertEquals(false, n.getName().matches("n[0-9]+"),
+        assertEquals(false, n.getName().matches("n\\d+"),
             "Node " + n.getName() + "in document " + documentId + " did match pattern n<number>");
       }
     }
   }
 
   @Test
-  void testReassignNamesForProject() throws InterruptedException {
+  void testReassignNamesForProject() {
     openDefaultExample();
 
     bot.waitUntil(new DefaultCondition() {
@@ -196,7 +191,7 @@ class TestAutoGenerateNodeNames {
   }
 
   @Test
-  void testReassignNamesForDocument() throws InterruptedException {
+  void testReassignNamesForDocument() {
     SWTBotView corpusStructurePart = openDefaultExample();
 
     // Select the first example document
@@ -235,7 +230,7 @@ class TestAutoGenerateNodeNames {
   }
 
   @Test
-  void testReassignNamesForSubcorpus() throws InterruptedException {
+  void testReassignNamesForSubcorpus() {
 
     SWTBotView corpusStructurePart = openDefaultExample();
 
@@ -282,7 +277,7 @@ class TestAutoGenerateNodeNames {
   }
 
   @Test
-  void testReassignNamesForCorpusGraph() throws InterruptedException {
+  void testReassignNamesForCorpusGraph() {
 
     SWTBotView corpusStructurePart = openDefaultExample();
 

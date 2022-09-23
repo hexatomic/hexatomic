@@ -67,7 +67,7 @@ public class AutoGenerateNodeNamesHandler {
 
   private final class DocumentForCorpusTraverser implements GraphTraverseHandler {
 
-    private final Set<String> childDocumentIds = new TreeSet<String>();
+    private final Set<String> childDocumentIds = new TreeSet<>();
 
     @Override
     public void nodeReached(GRAPH_TRAVERSE_TYPE traversalType, String traversalId, SNode currNode,
