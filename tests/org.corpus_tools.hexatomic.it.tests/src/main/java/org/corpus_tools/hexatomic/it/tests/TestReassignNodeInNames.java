@@ -1,5 +1,6 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,7 +44,8 @@ class TestReassignNodeInNames {
     @Override
     public boolean test() throws Exception {
       boolean hasMatchingShell = Arrays.asList(bot.shells()).stream()
-          .anyMatch(s -> s.isOpen() && SELECTED_DIALOG_CAPTION.equals(s.getText()));
+          .anyMatch(s -> s.isOpen() && (SELECTED_DIALOG_CAPTION.equals(s.getText())
+              || ALL_DOCUMENTS_LABEL.equals(s.getText())));
       return !hasMatchingShell && projectManager.canUndo();
     }
 
@@ -180,6 +182,21 @@ class TestReassignNodeInNames {
         }
       }
     }
+
+    // Undo the changes and check that the nodes names are correct
+    assertTrue(projectManager.canUndo());
+    projectManager.undo();
+    for (SCorpusGraph cg : projectManager.getProject().getCorpusGraphs()) {
+      for (SDocument documentReference : cg.getDocuments()) {
+        Optional<SDocument> loadedDoc = projectManager.getDocument(documentReference.getId(), true);
+        assertTrue(loadedDoc.isPresent());
+        if (loadedDoc.isPresent()) {
+          assertOldNodeName(loadedDoc.get().getDocumentGraph(), documentReference.getId());
+        }
+      }
+    }
+    assertFalse(projectManager.canUndo());
+    assertTrue(projectManager.canRedo());
   }
 
   @Test
