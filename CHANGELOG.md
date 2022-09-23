@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add user interface for graph editor graph layout parameters  (#133)
+- Add refactoring operation to automatically generate node names like (#370)
 
 ## [1.0.1] - 2022-08-30
 
