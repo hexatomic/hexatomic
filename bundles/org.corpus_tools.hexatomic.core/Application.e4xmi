@@ -24,7 +24,9 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_w0tfIOCfEeqWdLUQSqXLVA" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.redo" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/redo.png" command="_tXJzIOCfEeqWdLUQSqXLVA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_uhOaADi7Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.menuseparator.0"/>
         <children xsi:type="menu:Menu" xmi:id="_JeZWoDsjEe2UKoaiT_70Sw" elementId="org.corpus_tools.hexatomic.core.menu.refactor" label="Refac&amp;tor" mnemonics="">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign &amp;node names for all documents" command="_sisGMDi6Ee2qLN4J-P5SHw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_-sCRMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.reassign-nodenames" label="Re-assign &amp;node names for all documents" command="_sisGMDi6Ee2qLN4J-P5SHw">
+            <parameters xmi:id="_2JWzkDstEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.parameter.0" name="org.corpus_tools.hexatomic.core.commandparameter.force_all" value="true"/>
+          </children>
         </children>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_trgNYDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.menu.help" label="&amp;Help">
@@ -106,7 +108,7 @@
   <commands xmi:id="_k9bsQEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.update" commandName="Update"/>
   <commands xmi:id="_o1QSYEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.preferences" commandName="Preferences"/>
   <commands xmi:id="_sisGMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.command.reassign-nodenames" commandName="Re-assign node names">
-    <parameters xmi:id="_fqMqcDsjEe2UKoaiT_70Sw" elementId="org.corpus_tools.hexatomic.core.commandparameter.selection" name="selection"/>
+    <parameters xmi:id="_yUxusDstEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_all" name="Force all documents"/>
   </commands>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>

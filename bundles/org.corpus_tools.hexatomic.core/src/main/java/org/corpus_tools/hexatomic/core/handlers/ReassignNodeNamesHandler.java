@@ -3,7 +3,6 @@ package org.corpus_tools.hexatomic.core.handlers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -14,6 +13,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.salt.common.SCorpus;
 import org.corpus_tools.salt.common.SCorpusDocumentRelation;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SCorpusRelation;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -40,6 +41,8 @@ public class ReassignNodeNamesHandler {
 
   @Inject
   ProjectManager projectManager;
+
+
 
   private final class DocumentForCorpusTraverser implements GraphTraverseHandler {
 
@@ -120,41 +123,58 @@ public class ReassignNodeNamesHandler {
 
   }
 
-  @Execute
-  protected void execute(Shell shell, @Optional @Named(CommandParams.SELECTION) String selection) {
-
-    // Get all documents to apply this handler to
+  private Set<String> getSelectedDocumentIds(Object selection, boolean forceAll) {
     Set<String> selectedDocuments;
-    if (selection == null) {
-      // No selection, use all documents of all corpus graphs
+    if (selection == null || forceAll) {
+      // Use all documents of the project
       selectedDocuments = projectManager.getProject().getCorpusGraphs().stream()
-          .flatMap(cg -> cg.getDocuments().stream()).map(d -> d.getId())
+          .flatMap(cg -> cg.getDocuments().stream()).map(SDocument::getId)
           .collect(Collectors.toSet());
     } else {
-      // Get the selected object(s) by searching for all objects with this ID
-      List<SNode> selectedObjects = projectManager.getProject().getCorpusGraphs().stream()
-          .map(cg -> cg.getNode(selection)).filter(o -> o != null).collect(Collectors.toList());
       // The objects could be (sub-) corpora or documents. For the (sub-) corpora get all the
       // documents and merge all documents into one set
       selectedDocuments = new HashSet<>();
-      for (SNode o : selectedObjects) {
-        if (o instanceof SDocument) {
-          selectedDocuments.add(o.getId());
-        } else if (o instanceof SCorpus) {
-          SCorpus selectedCorpus = (SCorpus) o;
-          DocumentForCorpusTraverser traverser = new DocumentForCorpusTraverser();
-          selectedCorpus.getGraph().traverse(Arrays.asList(selectedCorpus),
-              GRAPH_TRAVERSE_TYPE.TOP_DOWN_DEPTH_FIRST, "GetDocumentsForGraph", traverser);
-          selectedDocuments.addAll(traverser.childDocumentIds);
-        }
+      if (selection instanceof SDocument) {
+        selectedDocuments.add(((SDocument) selection).getId());
+      } else if (selection instanceof SCorpus) {
+        SCorpus selectedCorpus = (SCorpus) selection;
+        DocumentForCorpusTraverser traverser = new DocumentForCorpusTraverser();
+        selectedCorpus.getGraph().traverse(Arrays.asList(selectedCorpus),
+            GRAPH_TRAVERSE_TYPE.TOP_DOWN_DEPTH_FIRST, "GetDocumentsForGraph", traverser);
+        selectedDocuments.addAll(traverser.childDocumentIds);
+      } else if (selection instanceof SCorpusGraph) {
+        SCorpusGraph cg = (SCorpusGraph) selection;
+        selectedDocuments
+            .addAll(cg.getDocuments().stream().map(SDocument::getId).collect(Collectors.toList()));
       }
     }
+    return selectedDocuments;
+  }
 
-    String appliedToMessage =
-        selection == null ? "This will be applied to all documents in all opened corpora."
-            : "This will be applied to the " + selectedDocuments.size() + " documents.";
-    String messageTitle = selection == null ? "Re-assign node names for all documents"
-        : "Re-assign node names for selected documents";
+  @Execute
+  protected void execute(Shell shell, ESelectionService selectionService,
+      @Optional @Named(CommandParams.FORCE_ALL) String forceAllRaw) {
+
+    final Object selection = selectionService.getSelection();
+    final boolean forceAll = forceAllRaw != null && forceAllRaw.equalsIgnoreCase("true");
+
+    // Get all documents to apply this handler to
+    Set<String> selectedDocuments = getSelectedDocumentIds(selection, forceAll);
+
+    String messageTitle;
+    String appliedToMessage;
+    if (forceAll || selection == null) {
+      messageTitle = "Re-assign node names for all documents";
+      appliedToMessage = "This will be applied to all documents in all opened corpora.";
+    } else {
+      messageTitle = "Re-assign node names for selected documents";
+      if (selectedDocuments.size() == 1) {
+        appliedToMessage =
+            "This will be applied to the document \"" + selectedDocuments.iterator().next() + "\".";
+      } else {
+        appliedToMessage = "This will be applied to " + selectedDocuments.size() + " documents.";
+      }
+    }
 
     boolean performReassign = MessageDialog.openQuestion(shell, messageTitle,
         "Do you want to assign automatically generated names to all nodes and token? "

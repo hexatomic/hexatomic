@@ -37,7 +37,7 @@ public final class CommandParams {
   public static final String LOCATION = "org.corpus_tools.hexatomic.core.commandparameter.location";
   public static final String FORCE_CLOSE =
       "org.corpus_tools.hexatomic.core.commandparameter.force_close";
-  public static final String SELECTION =
-      "org.corpus_tools.hexatomic.core.commandparameter.selection";
+  public static final String FORCE_ALL =
+      "org.corpus_tools.hexatomic.core.commandparameter.force_all";
 
 }
