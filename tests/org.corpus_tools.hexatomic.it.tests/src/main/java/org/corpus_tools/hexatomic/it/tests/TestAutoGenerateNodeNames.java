@@ -36,6 +36,8 @@ import org.junit.jupiter.api.Test;
 
 class TestAutoGenerateNodeNames {
 
+  private static final String CORPUS_GRAPH1 = "corpusGraph1";
+
   private final class RefactoringFinishedCondition extends DefaultCondition {
     @Override
     public boolean test() throws Exception {
@@ -198,12 +200,12 @@ class TestAutoGenerateNodeNames {
     SWTBotView corpusStructurePart = openDefaultExample();
 
     // Select the first example document
-    SWTBotTreeItem doc1Item = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+    SWTBotTreeItem doc1Item = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
         .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
 
     // Click on the refactoring and auto gen menu items
     doc1Item.click();
-    doc1Item.contextMenu("Refactor").menu(SELECTED_MENU_LABEL).click();
+    doc1Item.contextMenu(REFACTOR).menu(SELECTED_MENU_LABEL).click();
 
     SWTBotShell dialog = bot.shell(SELECTED_DIALOG_CAPTION);
     dialog.bot().button("Yes").click();
@@ -238,12 +240,12 @@ class TestAutoGenerateNodeNames {
     SWTBotView corpusStructurePart = openDefaultExample();
 
     // Select the first example subcorpus
-    SWTBotTreeItem corpusItem = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+    SWTBotTreeItem corpusItem = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
         .expandNode("rootCorpus").expandNode("subCorpus1");
 
     // Click on the refactoring and auto gen menu items
     corpusItem.click();
-    corpusItem.contextMenu("Refactor").menu(SELECTED_MENU_LABEL).click();
+    corpusItem.contextMenu(REFACTOR).menu(SELECTED_MENU_LABEL).click();
 
     SWTBotShell dialog = bot.shell(SELECTED_DIALOG_CAPTION);
     dialog.bot().button("Yes").click();
@@ -285,11 +287,11 @@ class TestAutoGenerateNodeNames {
     SWTBotView corpusStructurePart = openDefaultExample();
 
     // Select the corpus graph
-    SWTBotTreeItem cgItem = corpusStructurePart.bot().tree().expandNode("corpusGraph1");
+    SWTBotTreeItem cgItem = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1);
 
     // Click on the refactoring and auto gen menu items
     cgItem.click();
-    cgItem.contextMenu("Refactor").menu(SELECTED_MENU_LABEL).click();
+    cgItem.contextMenu(REFACTOR).menu(SELECTED_MENU_LABEL).click();
 
     SWTBotShell dialog = bot.shell(SELECTED_DIALOG_CAPTION);
     dialog.bot().button("Yes").click();
