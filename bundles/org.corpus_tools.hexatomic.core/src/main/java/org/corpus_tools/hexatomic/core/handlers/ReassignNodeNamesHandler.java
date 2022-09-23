@@ -177,8 +177,8 @@ public class ReassignNodeNamesHandler {
     }
 
     boolean performReassign = MessageDialog.openQuestion(shell, messageTitle,
-        "Do you want to assign automatically generated names to all nodes and token? "
-            + "Token will get the prefix \"t\" and a number (e.g. \"t1\") and "
+        "Do you want to assign automatically generated names to all nodes and tokens? "
+            + "Tokens will get the prefix \"t\" and a number (e.g. \"t1\") and "
             + "other nodes the prefix \"n\" and a number (e.g. \"n2\").\n\n" + appliedToMessage);
 
     if (performReassign) {
