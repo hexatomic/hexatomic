@@ -5,7 +5,7 @@ It provides a general visualization that displays all possible types of annotati
 
 ![Screenshot of the graph editor](graph-viewer.png)
 
-On the bottom of the graph editor, there is the console which you can use to actually edit the graph.
+On the bottom of the graph editor is the console that you can use to edit the graph.
 How to do this is explained in detail in the [Editing the graph](./console.md) section.
 
 ## Select visible segment
@@ -37,5 +37,5 @@ You can navigate the graph view as follows:
 
 - You can **center the view** around a specific point in the graph by double-clicking that point.
 
-If you don't like the layout of the graph, you can change it by simply dragging nodes with your mouse or [adjust the layout parameters](./layout-params.md).
+If you don't like the layout of the graph, you can change it by dragging nodes with your mouse or [adjusting the layout parameters](./layout-params.md).
 
