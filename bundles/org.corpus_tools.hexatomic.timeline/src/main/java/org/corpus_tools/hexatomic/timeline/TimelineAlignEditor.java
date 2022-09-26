@@ -3,7 +3,7 @@ package org.corpus_tools.hexatomic.timeline;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
-import org.corpus_tools.hexatomic.timeline.internal.data.GraphDataProvider;
+import org.corpus_tools.hexatomic.timeline.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -23,7 +23,7 @@ public class TimelineAlignEditor {
   private MPart thisPart;
 
   @Inject
-  private GraphDataProvider bodyDataProvider;
+  private TimelineTokenDataProvider bodyDataProvider;
 
   private SDocumentGraph graph;
 
