@@ -3,8 +3,6 @@ package org.corpus_tools.hexatomic.timeline.internal.data;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
@@ -14,9 +12,6 @@ import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 @Creatable
 public class TimelineTokenDataProvider implements IDataProvider {
-
-  @Inject
-  private ProjectManager projectManager;
 
   private SDocumentGraph graph;
 
@@ -31,8 +26,8 @@ public class TimelineTokenDataProvider implements IDataProvider {
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
     if (columnIndex == 0) {
-      // TLI
-      return "" + rowIndex;
+      // TODO: get optional time when connected to a medial data source
+      return "";
     } else {
       // Find the tokens that is connected to this TLI
       List<SToken> token = graph.getTimelineRelations().stream()
