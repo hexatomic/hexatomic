@@ -224,6 +224,7 @@
         <setEntry value="org.corpus_tools.hexatomic.graph@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.grid@default:default"/>
         <setEntry value="org.corpus_tools.hexatomic.textviewer@default:default"/>
+        <setEntry value="org.corpus_tools.hexatomic.timeline@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
