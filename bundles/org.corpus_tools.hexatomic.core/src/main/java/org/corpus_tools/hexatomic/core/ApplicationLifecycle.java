@@ -28,6 +28,7 @@ import java.net.URL;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.update.AppStartupCompleteEventHandler;
+import org.corpus_tools.hexatomic.core.update.UpdateRunner;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -42,6 +43,7 @@ import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SwtResourceManager;
 import org.osgi.framework.Bundle;
@@ -105,7 +107,7 @@ public class ApplicationLifecycle {
       UISynchronize sync,
       IProgressMonitor monitor,
       IEventBroker eventBroker,
-      IEclipseContext context) {
+      IEclipseContext context, UpdateRunner updateRunner, Shell shell) {
     
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -122,12 +124,7 @@ public class ApplicationLifecycle {
     if (!justUpdated && autoUpdateEnabled) {
       //add listener to perform updates as soon as workbench is created
       eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, 
-          new AppStartupCompleteEventHandler(eventBroker, 
-            context,
-            agent,
-            sync,
-            monitor,
-              null, eventBroker));
+          new AppStartupCompleteEventHandler(updateRunner, eventBroker, shell));
     } else if (justUpdated) {
       prefs.putBoolean("justUpdated", false);
       try {
@@ -136,13 +133,6 @@ public class ApplicationLifecycle {
         errorService.handleException("Couldn't update preferences", ex, ApplicationLifecycle.class);
       }
     }
-    
-    
   }
-  
-
-  
-  
-
 }
 

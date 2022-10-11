@@ -29,9 +29,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
@@ -44,32 +47,63 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 
 
+@Creatable
 public class UpdateRunner {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
+
   @Inject
-  ErrorService errorService;
+  private IProvisioningAgent agent;
+
+  @Inject
+  private IEclipseContext context;;
+
+  @Inject
+  private IProgressMonitor monitor;
+
+  @Inject
+  private UISynchronize sync;
+
+  @Inject
+  private IEventBroker events;
+
+  @Inject
+  private ErrorService errorService;
+
+  /**
+   * Schedules a {@link Job} that searches for updates and perform them if wanted.
+   * 
+   * @param triggeredManually Indicates whether the update processes was started by a manual action
+   *        of the user.
+   * @param shell The user interface shell.
+   */
+  public void scheduleUpdateJob(boolean triggeredManually, Shell shell) {
+    Job updateJob = new Job("Update Job") {
+      @Override
+      protected IStatus run(final IProgressMonitor monitor) {
+        return checkForUpdates(true, shell);
+      }
+    };
+    updateJob.schedule();
+  }
+
 
   /**
    * Search for updates and perform them if wanted.
    * 
-   * @param agent OSGi service to create an update operation.
-   * @param workbench current workbench to restart the application.
-   * @param monitor interface to show progress of update operation.
+   * @param triggeredManually Indicates whether the update processes was started by a manual action
+   *        of the user.
    * @param shell The user interface shell.
-   * @param sync Helper class to execute code in the UI thread.
-   * @param events Allows to send events.
-   * 
    */
-  public IStatus checkForUpdates(final IProvisioningAgent agent, final IWorkbench workbench,
-      IProgressMonitor monitor, final Shell shell, final UISynchronize sync, IEventBroker events) {
+  private IStatus checkForUpdates(boolean triggeredManually, Shell shell) {
+
     final UpdateOperation operation = createUpdateOperation(agent);
     log.debug("Update operation created");
     // Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
     final IStatus status = operation.resolveModal(sub.newChild(100));
-    if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
+    if (false && status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
       events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Hexatomic is up to date");
       return Status.CANCEL_STATUS;
     }
@@ -86,6 +120,7 @@ public class UpdateRunner {
       sync.syncExec(() -> performUpdate.set(MessageDialog.openQuestion(shell, "Update available",
           "Do you want to install the available update?")));
       if (performUpdate.get()) {
+        IWorkbench workbench = context.get(IWorkbench.class);
         configureProvisioningJob(provisioningJob, shell, sync, workbench);
         provisioningJob.schedule();
         return Status.OK_STATUS;
@@ -93,7 +128,7 @@ public class UpdateRunner {
         return Status.CANCEL_STATUS;
       }
     } else {
-      showProvisioningMessage(shell, sync);
+      showProvisioningMessage(triggeredManually);
       log.warn("Couldn't find ProvisioningJob.");
       return Status.CANCEL_STATUS;
     }
@@ -131,9 +166,35 @@ public class UpdateRunner {
 
 
 
-  private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(() -> MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob",
-        "Did you start Update from within the Eclipse IDE?"));
+  private void showProvisioningMessage(boolean triggeredManually) {
+
+
+    if (triggeredManually) {
+      // Give more feedback that needs to be acknowledged
+      final StringBuffer message = new StringBuffer();
+      message.append("Update check failed for unknown reasons. "
+          + "This can happen e.g. if the network is unreachable "
+          + "or if some firewalls block the connection to the update server.\n\n"
+          + "Please retry later or check the debug logs if the problem persists.");
+
+      // Check if a special environment variable set in the Eclipse run configuration is set
+      if ("true".equalsIgnoreCase(System.getenv("runInEclipse"))) {
+        // Hexatomic is started/debugged from inside Eclipse and the developer might need some
+        // additional hints that
+        // starting the update from Eclipse itself won't work.
+        message.append("\n\n");
+        message.append(
+            "In case of a developer build, this error can also occur when you start Hexatomic from inside the Eclipse development environment.");
+      }
+      
+      errorService.showError("Update check failed", message.toString(), UpdateRunner.class);
+
+    } else {
+      // Since this was a background task, also inform about this less prominent
+      events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Update check failed.");
+    }
+
+
   }
 
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
