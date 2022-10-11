@@ -57,7 +57,7 @@ public class UpdateRunner {
   private IProvisioningAgent agent;
 
   @Inject
-  private IEclipseContext context;;
+  private IEclipseContext context;
 
   @Inject
   private IProgressMonitor monitor;
@@ -103,7 +103,7 @@ public class UpdateRunner {
     // Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
     final IStatus status = operation.resolveModal(sub.newChild(100));
-    if (false && status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
+    if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
       events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Hexatomic is up to date");
       return Status.CANCEL_STATUS;
     }
@@ -184,7 +184,9 @@ public class UpdateRunner {
         // starting the update from Eclipse itself won't work.
         message.append("\n\n");
         message.append(
-            "In case of a developer build, this error can also occur when you start Hexatomic from inside the Eclipse development environment.");
+            "In case of a developer build, "
+                + "this error can also occur when you start Hexatomic "
+                + "from inside the Eclipse development environment.");
       }
       
       errorService.showError("Update check failed", message.toString(), UpdateRunner.class);
