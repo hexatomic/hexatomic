@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Stabilize graph editor test to wait until background jobs are finished before
   selecting the text fragment.
+- Clarify Mac OS installation instructions in user documentation.
 
 ### Added
 
