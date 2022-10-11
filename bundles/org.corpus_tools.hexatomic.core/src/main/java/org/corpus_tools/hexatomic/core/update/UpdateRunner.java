@@ -82,7 +82,7 @@ public class UpdateRunner {
     Job updateJob = new Job("Update Job") {
       @Override
       protected IStatus run(final IProgressMonitor monitor) {
-        return checkForUpdates(true, shell);
+        return checkForUpdates(triggeredManually, shell);
       }
     };
     updateJob.schedule();
@@ -107,11 +107,11 @@ public class UpdateRunner {
       events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Hexatomic is up to date");
       return Status.CANCEL_STATUS;
     }
+    log.debug("triggeredManually=" + triggeredManually);
     log.debug("Update status: {} ({})", status.getMessage(), status.getCode());
 
     // create update job
     ProvisioningJob provisioningJob = operation.getProvisioningJob(monitor);
-    log.debug("provisioningJob={}", provisioningJob);
 
     // run update job
     if (provisioningJob != null) {
@@ -128,8 +128,8 @@ public class UpdateRunner {
         return Status.CANCEL_STATUS;
       }
     } else {
-      showProvisioningMessage(triggeredManually);
       log.warn("Couldn't find ProvisioningJob.");
+      showProvisioningErrorMessage(triggeredManually);
       return Status.CANCEL_STATUS;
     }
 
@@ -166,8 +166,7 @@ public class UpdateRunner {
 
 
 
-  private void showProvisioningMessage(boolean triggeredManually) {
-
+  private void showProvisioningErrorMessage(boolean triggeredManually) {
 
     if (triggeredManually) {
       // Give more feedback that needs to be acknowledged

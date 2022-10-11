@@ -25,7 +25,6 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import java.io.File;
 import java.net.URL;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.update.AppStartupCompleteEventHandler;
 import org.corpus_tools.hexatomic.core.update.UpdateRunner;
@@ -35,7 +34,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.UIEvents;
@@ -43,7 +41,6 @@ import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SwtResourceManager;
 import org.osgi.framework.Bundle;
@@ -68,9 +65,7 @@ public class ApplicationLifecycle {
       org.slf4j.LoggerFactory.getLogger(ApplicationLifecycle.class);
   private static final IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
-  @Inject
-  ErrorService errorService;
-  
+
   /**
    * Called when the model is loaded and initializes the logging.
    */
@@ -107,7 +102,7 @@ public class ApplicationLifecycle {
       UISynchronize sync,
       IProgressMonitor monitor,
       IEventBroker eventBroker,
-      IEclipseContext context, UpdateRunner updateRunner, Shell shell) {
+      ErrorService errorService, UpdateRunner updateRunner) {
     
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -123,8 +118,8 @@ public class ApplicationLifecycle {
     boolean autoUpdateEnabled = prefs.getBoolean("autoUpdate", true);
     if (!justUpdated && autoUpdateEnabled) {
       //add listener to perform updates as soon as workbench is created
-      eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE, 
-          new AppStartupCompleteEventHandler(updateRunner, eventBroker, shell));
+      eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE,
+          new AppStartupCompleteEventHandler(updateRunner, eventBroker, null));
     } else if (justUpdated) {
       prefs.putBoolean("justUpdated", false);
       try {
