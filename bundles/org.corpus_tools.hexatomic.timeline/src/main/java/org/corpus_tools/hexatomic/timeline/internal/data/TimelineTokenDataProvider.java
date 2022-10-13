@@ -25,32 +25,29 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
-    if (columnIndex == 0) {
-      // TODO: get optional time when connected to a medial data source
-      return "";
-    } else {
-      // Find the tokens that is connected to this TLI
-      List<SToken> token = graph.getTimelineRelations().stream()
-          .filter(rel -> rel.getStart() <= rowIndex && rel.getEnd() > rowIndex)
-          .map(rel -> rel.getSource()).collect(Collectors.toList());
-      // Reduce tokens to the ones belonging to the selected data source
-      STextualDS ds = graph.getTextualDSs().get(columnIndex - 1);
-      Optional<SToken> tokenForDs =
-          token.stream().flatMap(t -> t.getOutRelations().stream()).map(rel -> {
-            if (rel instanceof STextualRelation) {
-              STextualRelation textRel = (STextualRelation) rel;
-              if (textRel.getTarget() == ds) {
-                return textRel.getSource();
-              }
+
+    // Find the tokens that is connected to this TLI
+    List<SToken> token = graph.getTimelineRelations().stream()
+        .filter(rel -> rel.getStart() <= rowIndex && rel.getEnd() > rowIndex)
+        .map(rel -> rel.getSource()).collect(Collectors.toList());
+    // Reduce tokens to the ones belonging to the selected data source
+    STextualDS ds = graph.getTextualDSs().get(columnIndex);
+    Optional<SToken> tokenForDs =
+        token.stream().flatMap(t -> t.getOutRelations().stream()).map(rel -> {
+          if (rel instanceof STextualRelation) {
+            STextualRelation textRel = (STextualRelation) rel;
+            if (textRel.getTarget() == ds) {
+              return textRel.getSource();
             }
-            return null;
-          }).filter(t -> t != null).findFirst();
-      if (tokenForDs.isPresent()) {
-        return graph.getText(tokenForDs.get());
-      } else {
-        return null;
-      }
+          }
+          return null;
+        }).filter(t -> t != null).findFirst();
+    if (tokenForDs.isPresent()) {
+      return graph.getText(tokenForDs.get());
+    } else {
+      return null;
     }
+
   }
 
   @Override
@@ -61,8 +58,8 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
-    // The timeline items are a column + every textual data source is a column
-    return 1 + graph.getTextualDSs().size();
+    // Every textual data source is a column
+    return graph.getTextualDSs().size();
   }
 
   @Override

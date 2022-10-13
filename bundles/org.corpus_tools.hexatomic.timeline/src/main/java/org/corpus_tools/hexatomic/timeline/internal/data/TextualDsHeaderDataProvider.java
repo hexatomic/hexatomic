@@ -15,11 +15,7 @@ public class TextualDsHeaderDataProvider implements IDataProvider {
 
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
-    if (columnIndex == 0) {
-      return "Time";
-    } else {
-      return graph.getTextualDSs().get(columnIndex - 1).getName();
-    }
+    return graph.getTextualDSs().get(columnIndex).getName();
   }
 
   @Override
@@ -30,8 +26,8 @@ public class TextualDsHeaderDataProvider implements IDataProvider {
 
   @Override
   public int getColumnCount() {
-    // The timeline items are a column + every textual data source is a column
-    return 1 + graph.getTextualDSs().size();
+    // Every textual data source is a column
+    return graph.getTextualDSs().size();
   }
 
   @Override
