@@ -3,12 +3,16 @@ package org.corpus_tools.hexatomic.timeline;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.Topics;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
+import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.timeline.internal.data.TextualDsHeaderDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TliCornerDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TliRowHeaderDataProvider;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
@@ -29,6 +33,10 @@ import org.eclipse.swt.widgets.Composite;
 
 public class TimelineTokenAligner {
 
+  private static final org.slf4j.Logger log =
+      org.slf4j.LoggerFactory.getLogger(TimelineTokenAligner.class);
+
+
   @Inject
   private ProjectManager projectManager;
 
@@ -45,6 +53,9 @@ public class TimelineTokenAligner {
   private TliRowHeaderDataProvider tliRowDataProvider;
 
   private SDocumentGraph graph;
+
+
+  private NatTable natTable;
 
 
   @PostConstruct
@@ -85,12 +96,30 @@ public class TimelineTokenAligner {
         new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
     gridLayer.addConfiguration(new DefaultGridLayerConfiguration(gridLayer));
 
-    NatTable natTable = new NatTable(parent,
+    natTable = new NatTable(parent,
         SWT.NO_REDRAW_RESIZE | SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
         gridLayer);
     GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
   }
 
+  
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  protected void onCheckpointCreated(
+      @UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+
+    if (element instanceof ChangeSet) {
+      ChangeSet changeSet = (ChangeSet) element;
+      log.debug("Received ANNOTATION_CHANGED event for changeset {}", changeSet);
+
+      // check graph updates contain changes for this graph
+      if (changeSet.containsDocument(
+          thisPart.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID))) {
+
+        natTable.refresh();
+      }
+    }
+  }
 
 
   private SDocumentGraph getGraph() {

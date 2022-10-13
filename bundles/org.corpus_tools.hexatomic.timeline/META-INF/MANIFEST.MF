@@ -11,6 +11,8 @@ Require-Bundle: org.eclipse.swt;bundle-version="3.118.0",
  org.eclipse.e4.core.di.annotations,
  javax.inject,
  org.corpus-tools.salt-api,
- org.eclipse.jface
+ org.eclipse.jface,
+ org.eclipse.e4.ui.di,
+ org.slf4j.api
 Automatic-Module-Name: org.corpus.tools.hexatomic.timeline
 Bundle-RequiredExecutionEnvironment: JavaSE-11
