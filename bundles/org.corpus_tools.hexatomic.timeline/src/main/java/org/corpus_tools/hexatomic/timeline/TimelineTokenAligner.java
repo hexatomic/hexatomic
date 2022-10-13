@@ -16,6 +16,11 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
+import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
+import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
+import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
@@ -112,8 +117,20 @@ public class TimelineTokenAligner {
 
     natTable = new NatTable(parent,
         SWT.NO_REDRAW_RESIZE | SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
-        gridLayer);
+        gridLayer, false);
+    natTable.addConfiguration(new DefaultNatTableStyleConfiguration());
+    natTable.addConfiguration(new AbstractRegistryConfiguration() {
+      @Override
+      public void configureRegistry(IConfigRegistry configRegistry) {
+        configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
+            IEditableRule.ALWAYS_EDITABLE);
+
+      }
+    });
+
+    natTable.configure();
     GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
+
   }
 
   
