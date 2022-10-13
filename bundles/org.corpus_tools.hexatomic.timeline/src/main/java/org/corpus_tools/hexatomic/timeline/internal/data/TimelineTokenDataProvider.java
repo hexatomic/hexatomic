@@ -67,8 +67,13 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
   @Override
   public int getRowCount() {
-    // The number of columns is the number of timeline items
-    return graph.getTimeline().getEnd() - graph.getTimeline().getStart();
+    if (graph != null && graph.getTimeline() != null && graph.getTimeline().getStart() != null
+        && graph.getTimeline().getEnd() != null) {
+      // The number of columns is the number of timeline items
+      return graph.getTimeline().getEnd() - graph.getTimeline().getStart();
+    } else {
+      return 0;
+    }
   }
 
 
