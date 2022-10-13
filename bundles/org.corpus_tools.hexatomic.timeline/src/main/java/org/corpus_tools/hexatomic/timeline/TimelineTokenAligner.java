@@ -28,7 +28,10 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.config.DefaultRowSelectionLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 public class TimelineTokenAligner {
@@ -51,6 +54,7 @@ public class TimelineTokenAligner {
 
   @Inject
   private TliRowHeaderDataProvider tliRowDataProvider;
+
 
   private SDocumentGraph graph;
 
@@ -95,6 +99,16 @@ public class TimelineTokenAligner {
     final GridLayer gridLayer =
         new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
     gridLayer.addConfiguration(new DefaultGridLayerConfiguration(gridLayer));
+
+    Button btnAddText = new Button(parent, SWT.NONE);
+    btnAddText.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        graph.createTextualDS("");
+        projectManager.addCheckpoint();
+      }
+    });
+    btnAddText.setText("Add textual data source");
 
     natTable = new NatTable(parent,
         SWT.NO_REDRAW_RESIZE | SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
