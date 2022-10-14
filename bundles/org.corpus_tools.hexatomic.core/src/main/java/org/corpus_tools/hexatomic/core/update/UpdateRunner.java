@@ -107,7 +107,6 @@ public class UpdateRunner {
       events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Hexatomic is up to date");
       return Status.CANCEL_STATUS;
     }
-    log.debug("triggeredManually=" + triggeredManually);
     log.debug("Update status: {} ({})", status.getMessage(), status.getCode());
 
     // create update job
@@ -170,7 +169,7 @@ public class UpdateRunner {
 
     if (triggeredManually) {
       // Give more feedback that needs to be acknowledged
-      final StringBuffer message = new StringBuffer();
+      final StringBuilder message = new StringBuilder();
       message.append("Update check failed for unknown reasons. "
           + "This can happen e.g. if the network is unreachable "
           + "or if some firewalls block the connection to the update server.\n\n"
