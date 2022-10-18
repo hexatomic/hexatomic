@@ -34,7 +34,7 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
     Optional<SToken> tokenForDs = getTokenForTli(columnIndex, rowIndex).stream().findFirst();
     if (tokenForDs.isPresent()) {
-      return graph.getText(tokenForDs.get());
+      return tokenForDs.get();
     } else {
       return null;
     }

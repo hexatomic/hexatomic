@@ -6,6 +6,7 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.timeline.internal.data.GridDisplayConverter;
 import org.corpus_tools.hexatomic.timeline.internal.data.TextualDsHeaderDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TliCornerDataProvider;
@@ -17,6 +18,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
@@ -31,6 +33,7 @@ import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.config.DefaultRowSelectionLayerConfiguration;
+import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -44,6 +47,7 @@ public class TimelineTokenAligner {
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(TimelineTokenAligner.class);
 
+  private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
 
   @Inject
   private ProjectManager projectManager;
@@ -60,11 +64,10 @@ public class TimelineTokenAligner {
   @Inject
   private TliRowHeaderDataProvider tliRowDataProvider;
 
-
   private SDocumentGraph graph;
 
-
   private NatTable natTable;
+
 
 
   @PostConstruct
@@ -124,6 +127,11 @@ public class TimelineTokenAligner {
       public void configureRegistry(IConfigRegistry configRegistry) {
         configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
             IEditableRule.ALWAYS_EDITABLE);
+
+        // Tag all columns with a label to mark them for value conversion
+        // labelAccumulator.registerOverrides(CONVERTED_COLUMN_LABEL);
+        configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
+            new GridDisplayConverter(), DisplayMode.NORMAL);
 
       }
     });
