@@ -7,6 +7,7 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.timeline.internal.data.GridDisplayConverter;
+import org.corpus_tools.hexatomic.timeline.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TextualDsHeaderDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.timeline.internal.data.TliCornerDataProvider;
@@ -31,6 +32,7 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.config.DefaultGridLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
+import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.config.DefaultRowSelectionLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
@@ -46,8 +48,6 @@ public class TimelineTokenAligner {
 
   private static final org.slf4j.Logger log =
       org.slf4j.LoggerFactory.getLogger(TimelineTokenAligner.class);
-
-  private static final String CONVERTED_COLUMN_LABEL = "CONVERTED_COLUMN_LABEL";
 
   @Inject
   private ProjectManager projectManager;
@@ -79,8 +79,11 @@ public class TimelineTokenAligner {
     columnHeaderDataProvider.setGraph(graph);
     tliRowDataProvider.setGraph(graph);
 
+    // Create data provider & layer, data layer needs to be most bottom layer in the stack!
+    NodeSpanningDataProvider spanningDataProvider = new NodeSpanningDataProvider(bodyDataProvider);
+    final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
+
     // Define scrollable body layer
-    DataLayer bodyDataLayer = new DataLayer(bodyDataProvider);
     SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
     selectionLayer.addConfiguration(new DefaultRowSelectionLayerConfiguration());
     ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
