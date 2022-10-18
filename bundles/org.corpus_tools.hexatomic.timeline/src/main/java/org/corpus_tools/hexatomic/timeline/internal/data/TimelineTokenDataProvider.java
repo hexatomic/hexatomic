@@ -36,6 +36,7 @@ import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.STimelineRelation;
 import org.corpus_tools.salt.common.SToken;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
@@ -108,28 +109,42 @@ public class TimelineTokenDataProvider implements IDataProvider {
   }
 
   private void updateTokenPosition() {
-    synchronized (tokenByPosition) {
-      tokenByPosition.clear();
 
-      for (STextualDS ds : graph.getTextualDSs()) {
-        TreeMap<Integer, SToken> positionInText = new TreeMap<>();
-        // Find all tokens that are connected to this data source
-        Stream<SToken> tokens =
-            ds.getInRelations().stream().filter(STextualRelation.class::isInstance)
-                .map(rel -> ((STextualRelation) rel).getSource());
-        // Get all timeline relations for all token
-        Stream<STimelineRelation> timeRels = tokens.flatMap(t -> t.getOutRelations().stream()
-            .filter(STimelineRelation.class::isInstance).map(rel -> (STimelineRelation) rel));
-        // Insert all TLI positions each token covers
-        timeRels.forEach(rel -> {
-          for (int i = rel.getStart(); i < rel.getEnd(); i++) {
-            positionInText.putIfAbsent(i, rel.getSource());
-          }
-        });
+    // Create a new map as background job
+    String id = graph.getDocument().getName();
 
-        tokenByPosition.put(ds, positionInText);
+    Job job = Job.create("Calculating timeline index for " + id, monitor -> {
+      monitor.beginTask("Calculating timeline index for " + id, 0);
+
+      synchronized (tokenByPosition) {
+        tokenByPosition.clear();
+
+        for (STextualDS ds : graph.getTextualDSs()) {
+          TreeMap<Integer, SToken> positionInText = new TreeMap<>();
+          // Find all tokens that are connected to this data source
+          Stream<SToken> tokens =
+              ds.getInRelations().stream().filter(STextualRelation.class::isInstance)
+                  .map(rel -> ((STextualRelation) rel).getSource());
+          // Get all timeline relations for all token
+          Stream<STimelineRelation> timeRels = tokens.flatMap(t -> t.getOutRelations().stream()
+              .filter(STimelineRelation.class::isInstance).map(rel -> (STimelineRelation) rel));
+          // Insert all TLI positions each token covers
+          timeRels.forEach(rel -> {
+            for (int i = rel.getStart(); i < rel.getEnd(); i++) {
+              positionInText.putIfAbsent(i, rel.getSource());
+            }
+          });
+
+          tokenByPosition.put(ds, positionInText);
+        }
       }
-    }
+
+      monitor.done();
+    });
+
+    job.schedule();
+
+
   }
 
   @Override
