@@ -8,6 +8,8 @@ Pull requests can come from within the Hexatomic core development team that work
 
 The maintainer is in charge of supervising pull requests from their creation to the point when they are merged into the target branched, or dismissed and closed.
 
+It is recommended to turn on notifications for pull requests, e.g. by changing the notification settings with the "Watch" button in the upper right corner of the GitHub interface.
+
 ### Communication with the creator of the pull request  
 
 Communication with the creator of the pull request is by far the most important task in pull request maintenance.
@@ -63,6 +65,37 @@ To avoid potential duplication of code review, you may change the manual testing
 1. **Review a local checkout of the pull request:** Check out the pull request locally by pulling and switching to its source branch. Use the IDE to review the changes and their interrelations and context comfortably, based on the list of changes on GitHub. 
 3. **Build and run the pull request version of Hexatomic locally:** Build Hexatomic locally, run it, and test the new functionality manually. Report any issues to the pull request on GitHub as comment in the pull request discussion.
 
+
+##### Manual regression tests
+
+The update functionality of Hexatomic can't be tested automatically.
+In addition to manually checking the changes of the pull request, you should therefore also check that 
+
+1. that there is a **status in the lower toolbar** ("Hexatomic is up to date") on start up which shows that the update check has been executed, and
+2. that clicking on the *Help* menu item, and then *Update*, triggers another **manual update check** (the status message in the toolbar should be highlighted by changing its color for a moment).
+
+In case that the pull request is related to the update functionality itself, you should also check the scenario that a new update is available.
+
+1. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines (but replace `<SRC>` with the location of your Hexatomic source code directory).
+```plain
+  addRepository(type:0,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
+  addRepository(type:1,location:file${#58}<SRC>/releng/org.corpus_tools.hexatomic.update/target/repository,name:Local test,enabled:true);\
+```
+2. Build the product by executing (from the root of your local source code repository)
+```bash
+mvn -DskipTests package
+```
+3. Unzip the product file (e.g. `releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the *test instance*.
+4. In the *original* local Hexatomic source code repository, change the version number of Hexatomic to a large version number and build the update site by executing. This instance of Hexatomic now functions as the *update instance*.
+```bash
+mvn tycho-versions:set-version -DnewVersion=1999.0.0 
+mvn -DskipTests package
+```
+5. Run Hexatomic from the temporary directory (the *test instance*) and **check that there is a message in the toolbar about an available update**.
+6. **Apply the update**
+7. Manually check for an update via the *Help* > *Update* menu, and check that the status bar again reports that "Hexatomic is up to date".
+8. Revert all local changes in the source code repository using Git
+
 ### Moving pull requests forward
 
 Pull requests should have a maximally short life-span.
@@ -77,8 +110,8 @@ The way that pull requests are merged into their target branch depends on their 
 
 1. Pull requests that provide **hotfixes**, i.e., repair functionality that is broken rather than provide 
 new or change existing functionality, **must not be merged** from the GitHub UI directly. This is
-because they target the `master` branch, which only contains released code. Therefore, code that
-goes into the `master` branch must be formally released, which cannot be done from the GitHub UI.
+because they target the `main` branch, which only contains released code. Therefore, code that
+goes into the `main` branch must be formally released, which cannot be done from the GitHub UI.
 Instead, refer to the section about [releasing hotfixes](../releases/README.md#hotfix-releases) to learn how to do this.
 2. Pull requests that target the `develop` branch must not necessarily be released on merge. Instead,
 code changes from different pull requests can be bundled into a release. Therefore, it is safe to

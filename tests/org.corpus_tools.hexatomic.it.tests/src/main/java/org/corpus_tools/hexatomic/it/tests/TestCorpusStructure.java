@@ -29,9 +29,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
-class TestCorpusStructure {
+public class TestCorpusStructure {
 
 
   private static final String SALT_PREFIX = "salt:/";
@@ -78,7 +77,7 @@ class TestCorpusStructure {
    * 
    * @param bot The SWT bot used to perform the UI interactions.
    */
-  protected static void createMinimalCorpusStructure(SWTWorkbenchBot bot) {
+  public static void createMinimalCorpusStructure(SWTWorkbenchBot bot) {
     // Activate corpus structure editor
     SWTBotView corpusStructurePart =
         bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");

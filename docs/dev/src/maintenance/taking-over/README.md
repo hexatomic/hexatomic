@@ -31,7 +31,7 @@ In order to gain the necessary control over the repository to maintain it, you h
 ### 1. Get administrative rights for the original repository.
 
 If you can find a person with administrative rights to the project (see the [previous section](#announce-that-you-want-to-take-over-as-new-maintainer)),
-ask them to give you administrative rights for the original GitHub repository.
+ask them to give you administrative rights (e.g. make you the owner) for the original GitHub repository.
 
 This is the preferred option, as all repository configurations as well as the history of issues and pull requests remain intact.
 
@@ -63,6 +63,7 @@ The contribution guidelines in `CONTRIBUTING.md` contain information on when cod
 
 - Read through the maintenance documentation.
 - Check, update or newly set up the necessary services in the repository that you will need for maintenance: a [continuous integration service](../continuous-integration/), [static code analysis](../continuous-integration/#static-code-analysis), [issue and pull request templates](../repository/templates.md), etc.
+- Enable notifications for the repository (e.g. by changing the notification settings with the "Watch" button in the upper right corner of the GitHub interface)
 
 ## Set up your local system to prepare for maintenance
 
@@ -89,3 +90,11 @@ If you create copies of issues in your fork, make sure to link to the issues in 
 
 [Make a release](../releases/) if any changes to Hexatomic were made during any of the previous steps.
 This is also a good way to celebrate that you are now the maintainer of Hexatomic!
+
+## Announce the new release to the community
+
+Announce the new release as described in the [Releases](../releases/#promoting-releases-to-the-community) section.
+If you can find a person with administrative rights to the project (see the [previous section](#announce-that-you-want-to-take-over-as-new-maintainer)),
+ask them to give you administrative rights for the mailing list `hexatomic-users@lists.hu-berlin.de` as well.
+If they are not available, you can always just subscribe to the mailing list and send a message as a subscriber.
+Consider to move the mailing list to a list provider you have administrative access to, and if you do this, also announce it via the `hexatomic-users@lists.hu-berlin.de` list.

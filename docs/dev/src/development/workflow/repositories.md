@@ -3,9 +3,9 @@
 Currently, Hexatomic is developed within a single repository at <https://github.com/hexatomic/hexatomic>.
 
 Push access to this repository is granted to the [Hexatomic core contributors](https://github.com/hexatomic/hexatomic#core-contributors).
-Other contributors must work in their own fork.
+Other contributors must work in their own fork. 
 
-Section [*Downloading the source code to your computer*](../getting-the-source-code.html#downloading-the-source-code-to-your-computer) describes how to create a fork.
+Section [*Downloading the source code to your computer*](../getting-the-source-code.html#downloading-the-source-code-to-your-computer) describes how to create a fork. If you have not worked in your own fork for a longer period of time, then you can use the GitHub's "Fetch Upstream" function (directly below the greed **Code** button in the fork overview) to synchronize your fork with the current main repository.
 
 ## Project setup
 
@@ -34,7 +34,7 @@ Lars Vogel and Simon Scholz, Version 13.03.2019, and [Eclipse RCP (Rich Client P
 This means that
 
 1. It is **built using [Eclipse Tycho](http://web.archive.org/web/20190807185333/https://www.eclipse.org/tycho/)**, a plugin for the [Maven build system](http://web.archive.org/web/20190806000707/https://maven.apache.org/).
-2. **Bundles** (a.k.a. "plug-ins"), i.e., units that encapsulate well-defined functionality, are located in the [`bundles`](https://github.com/hexatomic/hexatomic/tree/master/bundles/) directory.
+2. **Bundles** (a.k.a. "plug-ins"), i.e., units that encapsulate well-defined functionality, are located in the [`bundles`](https://github.com/hexatomic/hexatomic/tree/main/bundles/) directory.
 3. **Features**, i.e., units that integrate one or more bundles, are located in the [`features`](https://github.com/hexatomic/hexatomic/tree/feature/0.1.0/features/) directory.
 4. **Configuration and release engineering**-related files are located in the [`releng`](https://github.com/hexatomic/hexatomic/tree/feature/0.1.0/releng/) directory. This includes:
     - Project configuration (for packaging, target platform configuration, etc.)
@@ -48,7 +48,7 @@ This means that
 
 #### Project parent / root POM
 
-Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/master/pom.xml) to build the entire project with a single Maven command, e.g., `mvn clean install`, issued in the root folder.
+Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/main/pom.xml) to build the entire project with a single Maven command, e.g., `mvn clean install`, issued in the root folder.
 
 #### Target platform
 

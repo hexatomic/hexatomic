@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An {@link AbstractLayerCommandHandler} that handles {@link CreateSpanCommand}s, i.e., the
- * creation of new spans over empty cells in an existing span column..
+ * creation of new spans over empty cells in an existing span column.
  * 
  * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  */

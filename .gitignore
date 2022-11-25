@@ -5,3 +5,4 @@ workspace/
 tests/**/Rerun*
 **/.vscode/
 **/.DS_Store
+**/.settings/

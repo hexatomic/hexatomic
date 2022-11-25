@@ -1,12 +1,14 @@
 lexer grammar ConsoleLexer;
 
 NEW_NODE: 'n' -> pushMode(ARGUMENTS);
+NEW_SPAN: 's' -> pushMode(ARGUMENTS);
 NEW_EDGE: 'e' -> pushMode(ARGUMENTS);
 SET_ATTRIBUTE: 'a' -> pushMode(ARGUMENTS);
 DELETE: 'd' -> pushMode(ARGUMENTS);
 TOKENIZE: 't' -> pushMode(ARGUMENTS);
 TOKENIZE_AFTER: 'ta' -> pushMode(ARGUMENTS);
 TOKENIZE_BEFORE: 'tb' -> pushMode(ARGUMENTS);
+TOKEN_CHANGE_TEXT: 'tc' -> pushMode(ARGUMENTS);
 CLEAR: 'clear' -> pushMode(ARGUMENTS);
 
 WS : [ \t\r\n]+ -> skip;

@@ -4,7 +4,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.IPresentationEngine;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 
-class PartMaximizedCondition extends DefaultCondition {
+public class PartMaximizedCondition extends DefaultCondition {
 
   private final MPart part;
 

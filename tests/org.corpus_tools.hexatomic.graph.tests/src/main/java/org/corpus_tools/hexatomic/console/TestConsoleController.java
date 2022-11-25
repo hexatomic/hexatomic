@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.corpus_tools.hexatomic.console.internal.SyntaxListener;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -72,6 +73,24 @@ class TestConsoleController {
     assertEquals(n2, n4.getOutRelations().get(0).getTarget());
     assertEquals(n3, n4.getOutRelations().get(1).getTarget());
   }
+  
+  @Test
+  void testExampleNewSpans() {
+    // Add initial tokens
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
+    graph.sortTokenByText();
+    
+    // Make sure there are no spans yet
+    assertEquals(0, graph.getSpans().size());
+
+    // Add some annnotated spans
+    console.executeCommand("s sanno:1 #t1");
+    console.executeCommand("s sanno:2 #t2 #t3");
+    console.executeCommand("s #t4 #t5");
+    
+    assertEquals(3, graph.getSpans().size());
+  }
+
 
   @Test
   void testExampleAddEdge() {
@@ -248,6 +267,116 @@ class TestConsoleController {
     assertEquals(".", graph.getText(firstTextTokens.get(6)));
   }
 
+  /**
+   * Tests that the "tc" command work for standard and edges cases.
+   * 
+   * <p>
+   * Especially, test all combinations of
+   * <ul>
+   * <li>Token text length getting larger, smaller or staying the same</li>
+   * <li>Affected token at the beginning, end or in the middle of the text</li>
+   * </ul>
+   * </p>
+   */
+  @Test
+  void testTokenChangeText() {
+
+    // Add initial tokens
+    console.executeCommand("t This is a test.");
+    assertEquals(1, graph.getTextualDSs().size());
+    STextualDS textualDS = graph.getTextualDSs().get(0);
+    final String originalText = textualDS.getText();
+    
+    assertEquals("This is a test .", originalText);
+    List<SToken> token = graph.getSortedTokenByText();
+    assertEquals(5, token.size());
+
+    // Token in the middle and make token text larger
+    SToken middleToken = token.get(2);
+    console.executeCommand("tc #" + middleToken.getName() + " another");
+    assertEquals("This is another test .", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("another", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals(".", graph.getText(token.get(4)));
+
+    // Token in the middle and make token text smaller
+    console.executeCommand("tc #" + middleToken.getName() + " an");
+    assertEquals("This is an test .", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("an", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals(".", graph.getText(token.get(4)));
+
+    // Token in the middle and leave the token text length the same
+    console.executeCommand("tc #" + middleToken.getName() + " XX");
+    assertEquals("This is XX test .", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals(".", graph.getText(token.get(4)));
+
+    // Token in the beginning and leave the token text length the same
+    SToken firstToken = token.get(0);
+    console.executeCommand("tc #" + firstToken.getName() + " this");
+    assertEquals("this is XX test .", textualDS.getText());
+    assertEquals("this", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals(".", graph.getText(token.get(4)));
+
+    // Token in the beginning and make token text smaller
+    console.executeCommand("tc #" + firstToken.getName() + " A");
+    assertEquals("A is XX test .", textualDS.getText());
+    assertEquals("A", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals(".", graph.getText(token.get(4)));
+
+    // Token in the middle and make the token text larger
+    console.executeCommand("tc #" + firstToken.getName() + " This");
+    assertEquals("This is XX test .", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals(".", graph.getText(token.get(4)));
+
+    // Token at the end and leave the token text length the same
+    SToken lastToken = token.get(4);
+    console.executeCommand("tc #" + lastToken.getName() + " ?");
+    assertEquals("This is XX test ?", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals("?", graph.getText(token.get(4)));
+
+    // Token at the end and make token text larger
+    console.executeCommand("tc #" + lastToken.getName() + " ???");
+    assertEquals("This is XX test ???", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals("???", graph.getText(token.get(4)));
+
+    // Token at the end and make the token text smaller
+    console.executeCommand("tc #" + lastToken.getName() + " ?");
+    assertEquals("This is XX test ?", textualDS.getText());
+    assertEquals("This", graph.getText(token.get(0)));
+    assertEquals("is", graph.getText(token.get(1)));
+    assertEquals("XX", graph.getText(token.get(2)));
+    assertEquals("test", graph.getText(token.get(3)));
+    assertEquals("?", graph.getText(token.get(4)));
+  }
+
+
   @Test
   void testExampleDelete() {
     // Add initial tokens
@@ -285,6 +414,29 @@ class TestConsoleController {
     assertEquals(1, output.size());
     // Check the error position marker and message
     assertEquals("     ^\ntoken recognition error at: '''", output.get(0));
+  }
+
+
+  @Test
+  void testWrongNodeTypeWarning() {
+    // Add a simple graph with a non-token node
+    console.executeCommand(EXAMPLE_SENTENCE_COMMAND);
+    List<String> output = console.executeCommand("n #t1 #t2");
+    assertEquals(1, output.size());
+    assertEquals("Created new structure node #n1.", output.get(0));
+
+    // Check that we can't execute the token commands on this non-token node
+    output = console.executeCommand("ta #n1 not possible");
+    assertEquals(1, output.size());
+    assertEquals(SyntaxListener.REFERENCED_NODE_NO_TOKEN, output.get(0));
+
+    output = console.executeCommand("tb #n1 not possible");
+    assertEquals(1, output.size());
+    assertEquals(SyntaxListener.REFERENCED_NODE_NO_TOKEN, output.get(0));
+
+    output = console.executeCommand("tc #n1 no");
+    assertEquals(1, output.size());
+    assertEquals(SyntaxListener.REFERENCED_NODE_NO_TOKEN, output.get(0));
   }
 
   /**

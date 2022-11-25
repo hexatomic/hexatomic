@@ -54,7 +54,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
 

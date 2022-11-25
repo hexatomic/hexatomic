@@ -11,6 +11,11 @@ There are, however, two ground rules for when a release is created:
 1. Whenever a bug in a previous release of Hexatomic is [hotfixed](../../development/workflow/#contribute-critical-bug-fixes-or-urgent-documentation-or-release-engineering-fixes-for-a-released-version-hotfix), a [new hotfix release](#hotfix-releases) *must* be created.
 2. Whenever new functionality has been implemented and merged into the `develop` branch, a [new feature release](#feature-releases) *should* be created.
 
+Before you make a release, make sure that you have configured [commit signature verification with GPG](https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification/about-commit-signature-verification), or else the release workflow will fail.
+
+Also make sure that you have the Eclipse IDE closed during the release process.
+The IDE sometimes updates files that may interfere with the release.
+
 ## Feature releases
 
 To release a new *feature* (i.e., minor) version of Hexatomic, run the following commands in the repository root directory.
@@ -27,13 +32,16 @@ To release a new *feature* (i.e., minor) version of Hexatomic, run the following
 10. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 11. `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
 12. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
-13. `git push` - Updates the remote release branch.
-14. `mvn gitflow:release-finish` - Finalizes the release process.
+13. `mvn -Pcff package` - Updates the third-party folder and citation file.
+14. `git add CITATION.cff THIRD-PARTY/` - Adds the updated folder and citation file to the Git index.
+15. `git commit -m "Update third party folder and citation file"` - Commits the changed folder and file to version control.
+16. `git push` - Updates the remote release branch.
+17. `mvn gitflow:release-finish` - Finalizes the release process.
 
 ## Hotfix releases
 
-Hotfixes come into the project via pull requests of a *hotfix branch* against `master`.
-**Important**: Do **not** merge pull requests from hotfix branches into master!
+Hotfixes come into the project via pull requests of a *hotfix branch* against `main`.
+**Important**: Do **not** merge pull requests from hotfix branches into `main`!
 
 Instead, checkout the hotfix branch locally, and start the merge and release process with the Maven GitFlow plugin:
 
@@ -47,8 +55,11 @@ Instead, checkout the hotfix branch locally, and start the merge and release pro
 8. `mvn keepachangelog:release -N` - Updates the changelog in the release branch.
 9.  `git add CHANGELOG.md` - Adds the updated changelog to the Git index.
 10. `git commit -m "Update changelog"` - Commits the updated changelog to version control.
-11. `git push` - Updates the remote release branch.
-12. `mvn gitflow:hotfix-finish` - Finalizes the hotfix and finishes the merge and release procedure.
+11. `mvn -Pcff package` - Updates the third-party folder and citation file.
+12. `git add CITATION.cff THIRD-PARTY/` - Adds the updated folder and citation file to the Git index.
+13. `git commit -m "Update third party folder and citation file"` - Commits the changed folder and file to version control.
+14. `git push` - Updates the remote release branch.
+15. `mvn gitflow:hotfix-finish` - Finalizes the hotfix and finishes the merge and release procedure.
 
 ## Promoting releases on GitHub
 
@@ -66,10 +77,33 @@ You can now make a release from this tag:
    2. A short description of the fix (including issue numbers with hash prefixes, e.g. `#123`) or the added functionality. You can use bullet lists if more than one fix or feature has been added.
    3. A link to the user documentation with, e.g., the following text: `:green_book: Read the [user documentation](https://hexatomic.github.io/hexatomic/user/v0.5/index.html) for Hexatomic to learn how to install and use it.` Make sure you get the `vMAJOR.MINOR` part in the documentation URL right.
 5. Click the **Preview** tab and check if everything looks good.
-6. Click on the green **Publish release** button. You can always delete and re-create releases from tags if something goes wrong.
-7. Check if the release contains all "binaries", i.e., the product .zip files for all three major operating systems.
+6. Wait until the respective continuous integration workflow has added all "binaries" to the release draft, i.e., the product .zip files for all three major operating systems.
+7. Click on the green **Publish release** button. You can always delete and re-create releases from tags if something goes wrong. In any case, making the release also creates an archived version of the source code on [Zenodo](https://zenodo.org) that is given a [DOI](https://en.wikipedia.org/wiki/Digital_object_identifier).
+8. A GitHub action should also automatically update the P2 repository. Run the old version of Hexatomic and check an update is found.
 
 ![Animation showing how to create a release on GitHub](release.gif)
+
+## Promoting releases to the community
+
+Hexatomic has a mailing list for users: `hexatomic-users@lists.hu-berlin.de`.
+The maintainers of the Hexatomic software project are also [maintainers of this mailing list](https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users).
+Whenever a new version of Hexatomic is released, the mailing list should be notified of this.
+To do so, write an email to `hexatomic-users@lists.hu-berlin.de` using the following template.
+Replace the \<PLACEHOLDERS\> with the actual values.
+
+> **Subject:** Hexatomic \<VERSION NUMBER OF THE NEW VERSION\> is released!
+> 
+> **Body:**  
+> Dear list,
+>
+> We have released a new version of Hexatomic (\<FULL VERSION NAME OF THE NEW VERSION, e.g., 0.6.0 Beta\>). You can download it here: https://github.com/hexatomic/hexatomic/releases/tag/\<TAG FOR THE NEW VERSION\>.
+> 
+> \<BRIEF SUMMARY OF THE CHANGELOG, MENTION THE MOST IMPORTANT CHANGES\>
+> 
+> If you have questions or feature requests, please open an issue on the Hexatomic GitHub repository: https://github.com/hexatomic/hexatomic/issues/new/choose.
+> 
+> Many thanks!  
+> \<NAME OF THE MAINTAINER\>
 
 ## What to do when releases go wrong?
 

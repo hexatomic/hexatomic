@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Integration Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.it.tests
-Bundle-Version: 0.6.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Automatic-Module-Name: org.corpus_tools.hexatomic.it.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.junit,
@@ -31,7 +31,8 @@ Require-Bundle: org.junit,
  org.mockito;bundle-version="2.23.0",
  org.eclipse.e4.core.services,
  org.corpus_tools.hexatomic.formats;bundle-version="0.5.0",
- org.apache.commons.lang3;bundle-version="3.4.0"
+ org.apache.commons.lang3;bundle-version="3.4.0",
+ org.eclipse.nebula.widgets.chips
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.e4.ui.di

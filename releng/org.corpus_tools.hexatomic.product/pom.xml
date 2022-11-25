@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.corpus_tools</groupId>
     <artifactId>org.corpus_tools.hexatomic.releng</artifactId>
-    <version>0.6.0-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
   </parent>
   <artifactId>org.corpus_tools.hexatomic.product</artifactId>
   <packaging>eclipse-repository</packaging>
@@ -49,4 +49,26 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+  		<profile>
+			<id>cff</id>
+			<build>
+				<plugins>
+					<plugin>
+		                <groupId>org.corpus-tools</groupId>
+		                <artifactId>cff-maven-plugin</artifactId>
+		                <executions>
+			                <execution>
+			                	<phase>prepare-package</phase>
+			                    <goals>
+			                        <goal>create</goal>
+			                        <goal>third-party-folder</goal>
+			                    </goals>
+			                </execution>
+			            </executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>  
+  </profiles>
 </project>

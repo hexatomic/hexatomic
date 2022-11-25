@@ -79,11 +79,6 @@ public class AboutDialog extends Dialog {
     return String.format("%d.%d", v.getMajor(), v.getMinor());
   }
 
-  private static String getQualifiedVersion() {
-    Version v = FrameworkUtil.getBundle(AboutDialog.class).getVersion();
-    return String.format("%d.%d.%d-%s", v.getMajor(), v.getMinor(), v.getMicro(), v.getQualifier());
-  }
-
   /**
    * Create the user documentation URL for the current version.
    * 
@@ -111,10 +106,6 @@ public class AboutDialog extends Dialog {
     lblVersion.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
     lblVersion.setText("Version: " + getFullVersion());
     lblVersion.setFont(versionFont);
-
-    Label lblQualifiedVersion = new Label(container, SWT.NONE);
-    lblQualifiedVersion.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-    lblQualifiedVersion.setText("Build: " + getQualifiedVersion());
 
     Link lnkHomepage = new Link(container, SWT.NONE);
     lnkHomepage.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -170,7 +161,7 @@ public class AboutDialog extends Dialog {
       public void widgetSelected(SelectionEvent e) {
         Program.launch(
             "https://github.com/hexatomic/hexatomic/issues/new?assignees=&labels=bug&template=bug_report.md&title=Bug in version "
-                + getQualifiedVersion());
+                + getFullVersion());
       }
     });
 

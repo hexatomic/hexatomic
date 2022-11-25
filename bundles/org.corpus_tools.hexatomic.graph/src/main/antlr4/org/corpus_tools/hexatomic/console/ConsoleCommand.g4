@@ -12,12 +12,14 @@ start
 
 command
     : NEW_NODE (attribute | node_reference | layer_reference)+ # NewNode
+    | NEW_SPAN (attribute | node_reference | layer_reference)+ # NewSpan
     | NEW_EDGE (attribute | new_edge_reference | layer_reference)+ # NewEdge
     | SET_ATTRIBUTE (attribute | node_reference | existing_edge_reference)+ # Annotate
     | DELETE (node_reference | existing_edge_reference)+ # Delete
     | TOKENIZE string+ # Tokenize
     | TOKENIZE_AFTER node_reference string+ # TokenizeAfter
     | TOKENIZE_BEFORE node_reference string+ # TokenizeBefore
+    | TOKEN_CHANGE_TEXT node_reference string # TokenChangeText
     | CLEAR # Clear
     ;
 

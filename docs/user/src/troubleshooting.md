@@ -47,7 +47,7 @@ This is the place where you can report an issue (a bug, missing documentation, e
 
 To do so, you need a GitHub user account. If you don't have one yet, you can register for one at <https://github.com/join>. It's free!
 
-First of all, please read the <i class="fa fa-book"></i> [*Contributing guidelines*](https://github.com/hexatomic/hexatomic/tree/master/CONTRIBUTING.md). It's a quick read, and the guidelines contain important details.
+First of all, please read the <i class="fa fa-book"></i> [*Contributing guidelines*](https://github.com/hexatomic/hexatomic/tree/main/CONTRIBUTING.md). It's a quick read, and the guidelines contain important details.
 
 Then, when you are logged in, go to <i class="fa fa-pencil"></i> <https://github.com/hexatomic/hexatomic/issues/new> to create a new issue.
 You will need to include the Hexatomic version in the issue.

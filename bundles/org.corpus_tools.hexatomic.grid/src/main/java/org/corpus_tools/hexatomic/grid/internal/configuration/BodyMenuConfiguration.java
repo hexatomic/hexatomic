@@ -26,8 +26,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.corpus_tools.hexatomic.grid.GridEditor;
+import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.actions.CreateSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.MergeSpanSelectionAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.ResolveAction;
+import org.corpus_tools.hexatomic.grid.internal.actions.SplitSpanSelectionAction;
 import org.corpus_tools.hexatomic.grid.internal.commands.DisplayAnnotationRenameDialogOnCellsCommand;
+import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
@@ -63,6 +68,8 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
 
   private static final String CHANGE_CELL_ANNOTATION_NAME_ITEM = "CHNG_ANNO_NAME"; //$NON-NLS-1$
   private static final String CREATE_SPAN_ITEM = "CREATE_SPAN_ITEM";
+  private static final String SPLIT_SPAN_ITEM = "SPLIT_SPAN_ITEM";
+  private static final String MERGE_SPAN_ITEM = "MERGE_SPAN_ITEM";
 
   /**
    * Constructor setting the table and selection layer fields, and creating the menu via
@@ -90,6 +97,19 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
     ValidSingleSpanColumnEmptySelectionState validSingleSpanColumnEmptySelectionState =
         new ValidSingleSpanColumnEmptySelectionState();
     builder.withVisibleState(CREATE_SPAN_ITEM, validSingleSpanColumnEmptySelectionState);
+    builder.withMenuItemProvider(SPLIT_SPAN_ITEM, new SplitSpanItemProvider());
+    ValidOnlySpanColumnsSingleSpanSelectionState validOnlySpanColumnsSingleSpanSelectionState =
+        new ValidOnlySpanColumnsSingleSpanSelectionState();
+    builder.withVisibleState(SPLIT_SPAN_ITEM, validOnlySpanColumnsSingleSpanSelectionState);
+    builder.withMenuItemProvider(MERGE_SPAN_ITEM, new MergeSpanItemProvider());
+    ValidOnlySpanColumnsMultipleSpanSelectionState validOnlySpanColumnsMultipleSpanSelectionState =
+        new ValidOnlySpanColumnsMultipleSpanSelectionState();
+    builder.withVisibleState(MERGE_SPAN_ITEM, validOnlySpanColumnsMultipleSpanSelectionState);
+    builder.withSeparator()
+        .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.TOKEN_ANNOTATION));
+    builder
+        .withMenuItemProvider(new AddAnnotationColumnMenuItemProvider(ColumnType.SPAN_ANNOTATION));
+    builder.withSeparator().withMenuItemProvider(new ResolveMenuItemProvider());
     return builder.build();
   }
 
@@ -102,12 +122,33 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
   }
 
   /**
+   * Provides a menu item for resolving the data model.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private final class ResolveMenuItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText(GridEditor.REFRESH_POPUP_MENU_LABEL);
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          new ResolveAction().run(natTable, null);
+        }
+      });
+    }
+
+  }
+
+  /**
    * Provides a menu item for deleting cells.
    * 
    * @author Stephan Druskat (mail@sdruskat.net)
    */
-  private class DeleteItemProvider implements IMenuItemProvider {
-
+  private final class DeleteItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
@@ -129,7 +170,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  private class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
+  private final class ChangeAnnotationNameItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
@@ -177,7 +218,7 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
    * 
    * @author Stephan Druskat {@literal <mail@sdruskat.net>}
    */
-  private class CreateSpanItemProvider implements IMenuItemProvider {
+  private final class CreateSpanItemProvider implements IMenuItemProvider {
 
     @Override
     public void addMenuItem(NatTable natTable, Menu popupMenu) {
@@ -187,20 +228,52 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
       item.addSelectionListener(new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent event) {
-          new CreateSpanSelectionAction(getSelectedNonTokenCells()).run(natTable);
+          new CreateSpanSelectionAction().run(natTable);
+        }
+      });
+    }
+  }
+
+  /**
+   * Provides a menu item for splitting a selected span.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private final class SplitSpanItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText(GridEditor.SPLIT_SPAN_POPUP_MENU_LABEL);
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          new SplitSpanSelectionAction().run(natTable);
         }
       });
     }
 
-    private Set<PositionCoordinate> getSelectedNonTokenCells() {
-      Set<PositionCoordinate> selectedNonTokenCells = new HashSet<>();
-      PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-      for (PositionCoordinate cellPosition : selectedCellCoordinates) {
-        if (!isTokenCell(cellPosition)) {
-          selectedNonTokenCells.add(cellPosition);
+  }
+
+  /**
+   * Provides a menu item for merging selected spans.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private final class MergeSpanItemProvider implements IMenuItemProvider {
+
+    @Override
+    public void addMenuItem(NatTable natTable, Menu popupMenu) {
+      MenuItem item = new MenuItem(popupMenu, SWT.PUSH);
+      item.setText(GridEditor.MERGE_SPAN_POPUP_MENU_LABEL);
+      item.setEnabled(true);
+      item.addSelectionListener(new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent event) {
+          new MergeSpanSelectionAction().run(natTable);
         }
-      }
-      return selectedNonTokenCells;
+      });
     }
 
   }
@@ -252,31 +325,67 @@ public class BodyMenuConfiguration extends AbstractUiBindingConfiguration {
         return false;
       } else {
         PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
-
-        int singleColumnPosition = -1;
-        for (PositionCoordinate coord : selectedCellCoordinates) {
-          int columnPosition = coord.getColumnPosition();
-          int rowPosition = coord.getRowPosition();
-          // Check for each coordinate pair whether it has the same column position as the first
-          // pair (otherwise the cell is in a different column).
-          if (singleColumnPosition == -1) {
-            singleColumnPosition = columnPosition;
-          } else if (columnPosition != singleColumnPosition) {
-            return false;
-          }
-          if (selectionLayer.getDataValueByPosition(columnPosition, rowPosition) != null) {
-            return false;
-          }
-        }
-        // At this point, singleColumnPosition should be set
-        // Return whether the single column is a span column
-        return isSpanColumn(singleColumnPosition);
+        return GridHelper.areSelectedCellsInSingleSpanColumn(selectedCellCoordinates,
+            selectionLayer)
+            && GridHelper.areSelectedCellsEmpty(selectedCellCoordinates, selectionLayer);
       }
     }
+  }
 
-    private boolean isSpanColumn(int singleColumnPosition) {
-      LabelStack configLabels = selectionLayer.getConfigLabelsByPosition(singleColumnPosition, 0);
-      return configLabels.getLabels().contains(StyleConfiguration.SPAN_ANNOTATION_CELL_STYLE);
+  /**
+   * A menu item state based on valid selection of cells.
+   * 
+   * <p>
+   * {@link #isActive(NatEventData)} returns <code>true</code> only when there is exactly one span
+   * selected within a single span column.
+   * </p>
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  public class ValidOnlySpanColumnsSingleSpanSelectionState implements IMenuItemState {
+
+    @Override
+    public boolean isActive(NatEventData natEventData) {
+      if (selectionLayer.getSelectedCells().isEmpty()) {
+        return false;
+      } else {
+        PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
+        if (selectedCellCoordinates.length < 2) {
+          return false;
+        }
+        boolean allInSpanColumn =
+            GridHelper.areAllSelectedCellsInSpanColumns(selectedCellCoordinates, selectionLayer);
+        boolean allSameSpan =
+            GridHelper.areAllSelectedCoordinatesOneSpan(selectedCellCoordinates, selectionLayer);
+        return allInSpanColumn && allSameSpan;
+      }
+    }
+  }
+
+  /**
+   * A menu item state based on valid selection of cells.
+   * 
+   * <p>
+   * {@link #isActive(NatEventData)} returns <code>true</code> only when there is more than one span
+   * selected within a single span column.
+   * </p>
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  public class ValidOnlySpanColumnsMultipleSpanSelectionState implements IMenuItemState {
+
+    @Override
+    public boolean isActive(NatEventData natEventData) {
+      if (selectionLayer.getSelectedCells().size() < 2) {
+        return false;
+      } else {
+        PositionCoordinate[] selectedCellCoordinates = selectionLayer.getSelectedCellPositions();
+        boolean allInSpanColumn =
+            GridHelper.areSelectedCellsInSingleSpanColumn(selectedCellCoordinates, selectionLayer);
+        boolean allNonNullSpans =
+            GridHelper.areAllSelectedCellsNonNullSpans(selectedCellCoordinates, selectionLayer);
+        return allInSpanColumn && allNonNullSpans;
+      }
     }
   }
 

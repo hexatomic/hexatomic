@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.antlr.v4.runtime.Token;
 import org.corpus_tools.hexatomic.console.ConsoleCommandBaseListener;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.AnnotateContext;
@@ -41,12 +42,14 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewDominanceEdgeR
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewEdgeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewNodeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewPointingEdgeReferenceContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NewSpanContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.Node_referenceContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.NonEmptyAttributeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.PunctuationContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.QuotedStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.RawStringContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.StringContext;
+import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenChangeTextContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeAfterContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeBeforeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
@@ -55,9 +58,11 @@ import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SDominanceRelation;
 import org.corpus_tools.salt.common.SPointingRelation;
+import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SAnnotationContainer;
@@ -70,10 +75,12 @@ import org.corpus_tools.salt.util.DataSourceSequence;
  * An ANTLR listener to modify an annotation graph.
  * 
  * @author Thomas Krause
+ * @author Stephan Druskat {@literal <mail@sdruskat.net>}
  *
  */
 public class SyntaxListener extends ConsoleCommandBaseListener {
 
+  public static final String REFERENCED_NODE_NO_TOKEN = "Referenced node is not a token.";
   private final SDocumentGraph graph;
   private final STextualDS selectedText;
   private final Set<SStructuredNode> referencedNodes = new LinkedHashSet<>();
@@ -321,6 +328,56 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
   }
 
   @Override
+  public void exitNewSpan(NewSpanContext ctx) {
+
+    boolean referencesTokensOnly = true;
+
+    for (SStructuredNode node : referencedNodes) {
+      if (!(node instanceof SToken)) {
+        this.outputLines
+            .add("Error: could not create the new span - " + node.getName() + " is not a token.");
+        referencesTokensOnly = false;
+      }
+    }
+    if (referencesTokensOnly) {
+
+      // Create the span
+      SSpan newSpan = this.graph.createSpan(
+          referencedNodes.parallelStream().map(node -> (SToken) node).collect(Collectors.toList()));
+      if (newSpan == null) {
+        this.outputLines.add("Error: could not create the new span.");
+      } else {
+        newSpan.setName(getUnusedName("s", this.graph.getSpans().size()));
+
+        // Add all annotations
+        for (SAnnotation anno : attributes) {
+          newSpan.addAnnotation(anno);
+        }
+
+        // Add or create a layer if given as argument
+        if (layer.isPresent()) {
+          List<SLayer> matchingLayers = this.graph.getLayerByName(layer.get());
+          if (matchingLayers == null || matchingLayers.isEmpty()) {
+            matchingLayers = new LinkedList<>();
+            matchingLayers.add(SaltFactory.createSLayer());
+            matchingLayers.get(0).setName(layer.get());
+            this.graph.addLayer(matchingLayers.get(0));
+          }
+
+          for (SLayer l : matchingLayers) {
+            l.addNode(newSpan);
+          }
+        }
+
+        this.outputLines.add("Created new span node #" + newSpan.getName() + ".");
+        for (SAnnotation anno : newSpan.getAnnotations()) {
+          this.outputLines.add(anno.toString());
+        }
+      }
+    }
+  }
+
+  @Override
   public void exitDelete(DeleteContext ctx) {
     for (SStructuredNode n : referencedNodes) {
       this.graph.removeNode(n);
@@ -395,8 +452,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
       SToken referencedToken = (SToken) n;
 
       @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences = currGraph.getOverlappedDataSourceSequence(
-          referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      List<DataSourceSequence> allSequences = currGraph
+          .getOverlappedDataSourceSequence(referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
         int offset = seq.getEnd().intValue();
@@ -412,7 +469,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
     }
   }
 
@@ -424,8 +481,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
       SToken referencedToken = (SToken) n;
 
       @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences = currGraph.getOverlappedDataSourceSequence(
-          referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      List<DataSourceSequence> allSequences = currGraph
+          .getOverlappedDataSourceSequence(referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> seq = allSequences.get(0);
         int offset = seq.getStart().intValue();
@@ -436,7 +493,54 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
         }
       }
     } else {
-      this.outputLines.add("Referenced node is not a token.");
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
+    }
+  }
+
+  @Override
+  public void exitTokenChangeText(TokenChangeTextContext ctx) {
+    final SStructuredNode n = referencedNodes.iterator().next();
+    final String newTokenText = getString(ctx.string());
+    if (n instanceof SToken && newTokenText != null) {
+      SToken referencedToken = (SToken) n;
+      @SuppressWarnings("rawtypes")
+      List<DataSourceSequence> allSequences =
+          this.graph.getOverlappedDataSourceSequence(referencedToken,
+              SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      if (allSequences != null && !allSequences.isEmpty()) {
+        DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
+        if (oldTokenSequence.getDataSource() instanceof STextualDS) {
+          // To change the token value, we need to change the covered text in the textual relation
+          STextualDS textDS = (STextualDS) oldTokenSequence.getDataSource();
+          String textBefore = textDS.getText().substring(0, oldTokenSequence.getStart().intValue());
+          String textAfter = textDS.getText().substring(oldTokenSequence.getEnd().intValue());
+          textDS.setData(textBefore + newTokenText + textAfter);
+
+          // In order for all other textual relations to be still valid, we need to update the
+          // references to the text for the affected and all following token.
+          int oldTokenTextLength =
+              oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
+          int offset = newTokenText.length() - oldTokenTextLength;
+          updateTextRelationsWithOffset(offset, textDS, oldTokenSequence);
+        }
+      }
+    } else {
+      this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
+    }
+  }
+
+  private void updateTextRelationsWithOffset(int offset, STextualDS ds,
+      DataSourceSequence<? extends Number> oldTokenSequence) {
+    for (STextualRelation rel : this.graph.getTextualRelations()) {
+      if (rel.getTarget() == ds) {
+        if (rel.getStart() == oldTokenSequence.getStart().intValue()
+            && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
+          rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
+        } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
+          rel.setStart(rel.getStart() + offset);
+          rel.setEnd(rel.getEnd() + offset);
+        }
+      }
     }
   }
 

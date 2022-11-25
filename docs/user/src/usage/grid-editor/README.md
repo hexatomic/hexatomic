@@ -1,6 +1,10 @@
 # Grid Editor
 
-The grid editor is for annotating tokens and spans.
+The grid editor is used for annotating tokens and spans.
+It displays a document's token and annotation data in a vertical grid, i.e.,
+the textual source data runs from top to bottom.
+[Navigation](#navigation-and-selection) and [editing](editing.md) is done by mouse and keyboard.
+An overview of keyboard shortcuts can be found in the section [Keyboard shortcuts](#keyboard-shortcuts).
 
 Tokens are the smallest countable units in a data source.
 Spans are units that span tokens.
@@ -33,6 +37,11 @@ Instead, the annotation values are spread over more than one adjacent columns, w
 > Instead, *S1*'s annotation value `val_span_1` will be displayed in one column with the header **five::span_1**, *S2*'s annotation value `val_span_3` in another column with the header **five::span_1 (2)**.  
 >
 > ![Screenshot of an annotation grid showing overlapping spans](overlap.png)
+
+Columns are not part of Hexatomic's internal [data model Salt](../projects.md#data-model).
+Therefore, they are not saved in the project when you save your changes.
+While columns may be empty with no values in their cells, e.g., after their initial creation or the deletion of all cells,
+they will be deleted as soon as the editor is closed, or another editor is opened on another document.
 
 **Merged cells** represent annotations on spans that cover more than one token.
 You can see this in the last grid column in the [screenshot](#screenshot) above.
@@ -94,6 +103,12 @@ To do so, simply select one or more rows or columns and click **Auto-resize row(
 
 You can move columns to another position in the grid by clicking on and holding the header of a column, and dragging it to its new position.
 
+### Manual refresh
+
+You can manually refresh the grid, which will rebuild it from scratch.
+In the process, any empty columns will be removed, and column order may be affected.
+To refresh the grid manually, press <kbd>F5</kbd> or right-click on the grid, and click the option **Refresh grid** in the popup menu.
+
 ## Export to Excel
 
 If, for whatever reason, you want to export the grid to a file in the Excel `.xls` format, you can do so.
@@ -102,3 +117,37 @@ Press <kbd>Ctrl</kbd> + <kbd>E</kbd>. This brings up a dialog for saving the fil
 Note that exporting to an Excel spreadsheet will lose the actual data model.
 Only the string values of annotations, the headers, and the token texts will be exported.
 Additionally, merged cells will be separated.
+
+## Keyboard shortcuts
+
+### Navigation
+
+|                        Shortcut                        | What the shortcut does                           | Constraints             |
+| :----------------------------------------------------: | :----------------------------------------------- | :---------------------- |
+|             <kbd>Shift</kbd> + mouse wheel             | Scrolls through the grid vertically              |                         |
+| <kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, <kbd>↓</kbd> | Move through the grid selecting individual cells | A cell must be selected |
+|                    <kbd>Home</kbd>                     | Jump to the first column                         | A cell must be selected |
+|                     <kbd>End</kbd>                     | Jump to the last column                          | A cell must be selected |
+|         <kbd>PageUp</kbd>, <kbd>PageDown</kbd>         | Jump a page up or down                           | A cell must be selected |
+
+### Selection
+
+|                     Shortcut                     | What the shortcut does                                                        | Constraints                             |
+| :----------------------------------------------: | :---------------------------------------------------------------------------- | :-------------------------------------- |
+|             <kbd>Shift</kbd> + click             | Select the range of cells from the currently selected one to the clicked cell | A cell must be selected                 |
+|             <kbd>Ctrl</kbd> + click              | Add/remove the clicked cell to the current selection of cells                 | A cell must be selected                 |
+|          <kbd>Ctrl</kbd> + <kbd>F</kbd>          | Open text search                                                              | The editor window must be active    |
+| <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> | Toggle freezing of rows and columns                                           | A cell, column, or row must be selected |
+
+### Data operations
+
+|                     Shortcut                     | What the shortcut does                      | Constraints                                |
+| :----------------------------------------------: | :------------------------------------------ | :----------------------------------------- |
+|                 <kbd>Space</kbd>                 | Activate cell for editing                   | Cell(s) must be selected                   |
+|                 <kbd>Enter</kbd>                 | Commit edited annotation value              | A cell must be in editing mode             |
+| <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> | Create a new column for *span* annotations  | The editor window must be active           |
+| <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> | Create a new column for *token* annotations | The editor window must be active           |
+|          <kbd>Alt</kbd> + <kbd>S</kbd>           | Create a new span                           | >1 cells in a span column must be selected |
+|                  <kbd>Del</kbd>                  | Delete selected cells                       | Cell(s) must be selected                   |
+|                  <kbd>F5</kbd>                   | Refresh editor from data model              | Cell(s) must be selected                   |
+|          <kbd>Ctrl</kbd> + <kbd>E</kbd>          | Export to Excel format                      | The editor window must be active           |

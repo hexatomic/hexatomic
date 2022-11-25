@@ -6,6 +6,138 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Stabilize graph editor test to wait until background jobs are finished before
+  selecting the text fragment.
+
+### Added
+
+- Add user interface for graph editor graph layout parameters  (#133)
+
+## [1.0.1] - 2022-08-30
+
+### Fixed
+
+- Create and use v1 update site
+
+## [1.0.0] - 2022-08-23
+
+### Changed
+
+- Improve developer docs on GitHub releases to wait for binaries attachments and mention Zenodo publications
+
+## [0.14.0] - 2022-08-23
+
+### Added
+
+- Add collection DOI to citation file template (#387)
+
+### Fixed
+
+- Disable automatic workflow that to update CITATION.CFF file since it always
+  fails to push without a PR and code review.
+- Fix documentation for releases on how to update the CITATION.CFF file.
+- Fix license metadata for referencing for bundle org.tukaani.xz
+
+
+## [0.13.0] - 2022-07-25
+
+### Added
+
+- Add CI workflow to automatically update dependency and citation metadata on
+  pushes to `develop` (#394)
+- Document to close IDEs during release process (#395)
+- Hexatomic is automatically published to Zenodo for each release (#387)
+- Use the product definition to create the CITATION.CFF file and THIRD-PARTY
+  folder. Excuting `mvn -Pcff package` in the root folder will re-create these
+  files.
+
+## [0.12.0] - 2022-06-21
+
+### Fixed
+
+- Manually update THIRD-PARTY folder and CITATION.cff during release process
+- Fix changelog sections that weren't updated for tag v0.11.0
+
+## [0.10.0] - 2022-06-21
+
+### Added
+
+- Add functionality for splitting spans into single spans to Grid Editor (#101)
+- Add functionality for merging spans into a single span to Grid Editor (#102)
+- Deploy p2 repo for updates automatically for releases (#288) 
+- Add auto-archival on Software Heritage whenever git tags are pushed to the repository (#21)
+
+### Changed
+
+- Changed name of the production branch from `master` to `main` (#333)
+- The About page doesn't show any information about the current snapshot build anymore, as only released versions are supported (#383)
+
+### Fixed
+
+- Fixed changelog rendering issue where links aren't rendered on GitHub (#388)
+- Fixed creation of the dependency list in CFF file (#392)
+
+## [0.9.0] - 2022-05-24
+
+### Added
+
+- Add keyboard shortcut to create spans in Grid Editor (#243)
+- Add "update functionality" in the "Help Menu"
+- Add "Preferences" dialog to allow auto-updates at startup in the "Help Menu"
+- Add overview tables for grid editor keyboard shortcuts to user documentation (#361)
+- Add support for adding new annotation columns via context menu and keyboard shortcuts to Grid Editor (#358)
+- Add command to change the covered text of a token in the Graph Editor (#373)
+
+### Changed
+
+- Use consistent and accessible colour palette across all editors (#173)
+- Allow to select multiple annotations in graph editor as filter (#4)
+- Updated Eclipse platform to release 2021-12
+- Updated Tycho to 2.7.0
+
+### Fixed
+
+- Optimize column lifecycle in the Grid Editor, so that emptied columns don't disappear (#258, #346)
+- Let annotation rename dialog display the actual annotation name, not the display name of the column (#259)
+- Graph Editor did not update view when an annotation value was changed (#362)
+- Checkstyle Eclipse plugin update site was wrong (#323)
+
+
+## [0.8.0] - 2021-11-16
+
+### Added
+
+- Add import of plain text files with optional tokenization (#110)
+- Add the GraphAnno format to the supported import formats (#112)
+- Add tutorial for creating a corpus from scratch
+
+### Fixed
+
+- Fixed some minor typos in the GUI
+
+## [0.7.1] - 2021-10-26
+
+### Fixed
+
+- Remove and ignore .settings folders from repository to enable smoother import into Eclipse (#332)
+- Fix partially failing integration test by determining file menu programmatically rather than relying on defaults
+
+## [0.7.0] - 2021-09-28
+
+### Added
+
+- Add a command to create spans to the graph editor (#337)
+
+## [0.6.1] - 2021-08-11
+
+### Fixed
+
+- Fix the update of the segmentation list when a token is deleted from the Graph Editor (#326)
+
+## [0.6.0] - 2021-05-26
+
 ### Added
 
 - Add section about building Hexatomic locally in developer/maintainer documentation (#194)
@@ -21,6 +153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document tasks for new maintainers when taking over the project (#275)
 - Document when to make releases (#61)
 - Document maintenance tasks (#277)
+- Document communication with users via mailing list (#318)
 
 ### Changed
 
@@ -108,7 +241,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the Eclipse platform to the 2020-03 release.
 - Updated PR template so that every checkbox is an actual task and should be checked to pass quality control.
 
-## Removed
+### Removed
 
 - The Salt graphs are not using the insufficient Salt notification extension anymore
 - `ProjectManager` is not managing the Salt update events anymore, its `addListener` and `removeListener` functions have been removed.
@@ -170,15 +303,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2019-11-01
 
 - This is the first public preview release of the Hexatomic developer platform.
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v0.5.1...HEAD
+
+
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/hexatomic/hexatomic/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/hexatomic/hexatomic/compare/v0.14.0...v1.0.0
+[0.14.0]: https://github.com/hexatomic/hexatomic/compare/v0.13.0...v0.14.0
+[0.13.0]: https://github.com/hexatomic/hexatomic/compare/v0.12.0...v0.13.0
+[0.12.0]: https://github.com/hexatomic/hexatomic/compare/v0.10.0...v0.12.0
+[0.10.0]: https://github.com/hexatomic/hexatomic/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/hexatomic/hexatomic/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/hexatomic/hexatomic/compare/v0.7.1...v0.8.0
+[0.7.1]: https://github.com/hexatomic/hexatomic/compare/v0.7.0...v0.7.1
+[0.7.0]: https://github.com/hexatomic/hexatomic/compare/v0.6.1...v0.7.0
+[0.6.1]: https://github.com/hexatomic/hexatomic/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/hexatomic/hexatomic/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/hexatomic/hexatomic/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/hexatomic/hexatomic/compare/v0.4.4...v0.5.0
 [0.4.4]: https://github.com/hexatomic/hexatomic/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/hexatomic/hexatomic/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/hexatomic/hexatomic/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/hexatomic/hexatomic/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/hexatomic/hexatomic/compare/vRemoved...v0.4.0
-[Removed]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...vRemoved
+[0.4.0]: https://github.com/hexatomic/hexatomic/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/hexatomic/hexatomic/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/hexatomic/hexatomic/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/hexatomic/hexatomic/compare/v0.1.3...v0.2.0

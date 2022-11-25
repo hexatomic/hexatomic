@@ -37,6 +37,7 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -73,7 +74,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -83,7 +83,6 @@ import org.junit.jupiter.api.Test;
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
-@SuppressWarnings("restriction")
 public class TestGridEditor {
 
 
@@ -99,6 +98,7 @@ public class TestGridEditor {
       "Some annotations were not renamed!";
 
   private static final String TOKEN_VALUE = "Token";
+  private static final String SPAN_VALUE = "Span";
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
@@ -117,6 +117,7 @@ public class TestGridEditor {
       + "src/main/resources/org/corpus_tools/hexatomic/grid/";
 
   private static final String RENAME_DIALOG_TITLE = "Rename annotation";
+  private static final String NEW_COLUMN_DIALOG_TITLE = "New annotation column";
 
   private static final String SPAN_1 = "span_1";
   private static final String SPAN_2 = "span_2";
@@ -129,12 +130,16 @@ public class TestGridEditor {
 
   private static final String NAMESPACED_LEMMA_NAME = NAMESPACE + LEMMA_NAME;
 
+  private static final String OK = "OK";
+  private static final String CANCEL = "Cancel";
+
 
 
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
+  private URI separateSpanExampleProjectUri;
   private URI twoDsExampleProjectUri;
   private URI scrollingExampleProjectUri;
   private ECommandService commandService;
@@ -168,6 +173,8 @@ public class TestGridEditor {
 
     File overlappingExampleProjectDirectory = new File(TESTPATH_GRID + "overlapping-spans/");
     assertTrue(overlappingExampleProjectDirectory.isDirectory());
+    File separateSpanExampleProjectDirectory = new File(TESTPATH_GRID + "separate-spans/");
+    assertTrue(separateSpanExampleProjectDirectory.isDirectory());
 
     File twoDsExampleProjectDirectory = new File(TESTPATH_GRID + "two-ds/");
     assertTrue(twoDsExampleProjectDirectory.isDirectory());
@@ -178,47 +185,27 @@ public class TestGridEditor {
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
     overlappingExampleProjectUri =
         URI.createFileURI(overlappingExampleProjectDirectory.getAbsolutePath());
+    separateSpanExampleProjectUri =
+        URI.createFileURI(separateSpanExampleProjectDirectory.getAbsolutePath());
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
     scrollingExampleProjectUri =
         URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
   }
 
-  @AfterEach
-  void cleanup() {
-    // Close all editors manually.
-    // If the editor is not closed, it might trigger bugs when executing other tests.
-    // For example, notifications about project changes might trigger exception when the document
-    // is already gone.
-    for (SWTBotView view : bot.parts()) {
-      if (view.getPart().getPersistedState()
-          .containsKey("org.corpus_tools.hexatomic.document-id")) {
-        view.close();
-      }
-    }
-    // Close any open rename dialogs
-    for (SWTBotShell shell : bot.shells()) {
-      if (shell.getText().equals(RENAME_DIALOG_TITLE)) {
-        shell.close();
-      }
-    }
-    // TODO: when close project is implemented with save functionality, change this to close the
-    // project and its editors
-
-  }
-
   SWTBotView openEditorForDefaultDocument() {
     // Select the first example document
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
-    SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
+    SWTBotView view = bot.partByTitle("doc2 (Grid Editor)");
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -226,11 +213,44 @@ public class TestGridEditor {
     return view;
   }
 
+  /**
+   * Opens the default example corpus document in grid editor.
+   * 
+   * <p>
+   * 1 token col, 11 rows; 2 token annotation columns, 1 span annotation column (2 spancs: cell 1,
+   * cells 2-11)
+   * </p>
+   */
   SWTBotView openDefaultExample() {
     // Programmatically open the example corpus
     openExample(exampleProjectUri);
 
     return openEditorForDefaultDocument();
+  }
+
+  private SWTBotView openEditorOnSameDocument() {
+    // Activate corpus structure editor
+    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+
+
+    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+        .expandNode("subCorpus1").expandNode("doc2");
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Text Viewer").click());
+
+    SWTBotView view = bot.partByTitle("doc2 (Text Viewer)");
+    assertNotNull(view);
+
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+
   }
 
   SWTBotView openOverlapExample() {
@@ -247,7 +267,31 @@ public class TestGridEditor {
     final SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
+  }
+
+  SWTBotView openSeparateSpanExample() {
+    // Programmatically open the example corpus
+    openExample(separateSpanExampleProjectUri);
+    // Select the first example document
+    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
+        .expandNode("subCorpus1").expandNode("doc1");
+
+    // select and open the editor
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
+
+    final SWTBotView view = bot.partByTitle("doc1 (Grid Editor)");
+    assertNotNull(view);
+
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -268,7 +312,8 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -290,7 +335,8 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle(DOC_GRID_EDITOR);
     assertNotNull(view);
 
-    // Use all available windows space (the table needs to be fully visible for some of the tests)
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -472,7 +518,7 @@ public class TestGridEditor {
 
     // Delete all token of the first document (but keep the STextualDS)
     Optional<SDocument> document =
-        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1", true);
+        projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2", true);
     assertTrue(document.isPresent());
     if (document.isPresent()) {
       SDocumentGraph docGraph = document.get().getDocumentGraph();
@@ -653,10 +699,10 @@ public class TestGridEditor {
   }
 
   /**
-   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the table has no active
-   * cell editors, up to 1000ms.
+   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the tableToTest has no
+   * active cell editors, up to 1000ms.
    * 
-   * @param table The {@link NatTable} to operate on
+   * @param tableToTest The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
   private void typeTextPressReturn(SWTBotNatTable table) {
@@ -753,28 +799,26 @@ public class TestGridEditor {
   }
 
   @Test
-  void testPopupMenuInvisibleOnSelectedTokenText() {
+  void testPopupMenuItemsOnSelectedTokenText() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist
-    assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
   }
 
   @Test
-  void testPopupMenuInvisibleOnNoSelection() {
+  void testPopupMenuItemsOnNoSelection() {
     openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // No context menu should exist
-    assertTrue(contextMenu.menuItems().isEmpty());
-    assertThrows(WidgetNotFoundException.class, contextMenu::contextMenu);
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
   }
 
   @Test
@@ -892,7 +936,7 @@ public class TestGridEditor {
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
-    tableBot.button("Cancel").click();
+    tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
   }
@@ -1034,13 +1078,13 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    assertTrue(table.widget.getDataValueByPosition(2, 3) instanceof SToken);
+    assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
+    assertTrue(table.widget.getDataValueByPosition(3, 3) instanceof SToken);
     // Old cell should now be null, old column has been pushed from col position 2 to 3
-    assertNull(table.widget.getDataValueByPosition(3, 3));
+    assertNull(table.widget.getDataValueByPosition(2, 3));
     // token should be the same as before
-    assertEquals(token, table.widget.getDataValueByPosition(2, 3));
+    assertEquals(token, table.widget.getDataValueByPosition(3, 3));
     assertEquals(EXAMPLE_VALUE,
         token.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
@@ -1072,7 +1116,7 @@ public class TestGridEditor {
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
-    tableBot.button("Cancel").click();
+    tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have not changed
     assertEquals(token, table.widget.getDataValueByPosition(2, 3));
@@ -1114,7 +1158,7 @@ public class TestGridEditor {
     NatTable natTable = table.widget;
     Display.getDefault().syncExec(() -> {
       // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
-      // within the table widget.
+      // within the tableToTest widget.
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 4, false, true));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 6, false, true));
@@ -1129,23 +1173,23 @@ public class TestGridEditor {
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
-    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
-    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 7) instanceof SToken);
-    // Old cell should now be null, old column has been pushed from col position 2 to 3
-    assertNull(table.widget.getDataValueByPosition(3, 4));
-    assertNull(table.widget.getDataValueByPosition(3, 5));
-    assertNull(table.widget.getDataValueByPosition(3, 7));
+    assertEquals("salt::" + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 3));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
+    assertTrue(table.widget.getDataValueByPosition(3, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(3, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(3, 7) instanceof SToken);
+    // Old cell should now be null
+    assertNull(table.widget.getDataValueByPosition(2, 4));
+    assertNull(table.widget.getDataValueByPosition(2, 5));
+    assertNull(table.widget.getDataValueByPosition(2, 7));
     // Tokens should be the same as before
-    assertEquals(token1, table.widget.getDataValueByPosition(2, 4));
+    assertEquals(token1, table.widget.getDataValueByPosition(3, 4));
     assertEquals(MORE_VALUE,
         token1.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(token2, table.widget.getDataValueByPosition(2, 5));
+    assertEquals(token2, table.widget.getDataValueByPosition(3, 5));
     assertEquals(COMPLICATED_VALUE,
         token2.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(token3, table.widget.getDataValueByPosition(2, 7));
+    assertEquals(token3, table.widget.getDataValueByPosition(3, 7));
     assertEquals(IT_VALUE,
         token3.getAnnotation(SaltUtil.SALT_NAMESPACE, TEST_ANNOTATION_VALUE).getValue());
   }
@@ -1181,7 +1225,7 @@ public class TestGridEditor {
     NatTable natTable = table.widget;
     Display.getDefault().asyncExec(() -> {
       // Coordinates are offset by -1 as header columns and rows are not within the body layer, but
-      // within the table widget.
+      // within the tableToTest widget.
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 1, 3, false, false));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 2, 4, false, true));
       natTable.doCommand(new SelectCellCommand(getBodyLayer(table), 3, 0, false, true));
@@ -1190,29 +1234,30 @@ public class TestGridEditor {
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     // Check that the fields are pre-filled
-    assertDialogTexts(dialog, null);
+    assertDialogTexts(dialog, "<annotation name/key>");
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed, the span annotation is added to a second new column
     // with the name TEST, as columns are specific to model element types.
-    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
-    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 3));
+    assertEquals(7, table.columnCount());
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
+    assertEquals(NAMESPACED_LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
     assertEquals(SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + POS_NAME,
-        table.getCellDataValueByPosition(0, 4));
+        table.getCellDataValueByPosition(0, 3));
     assertEquals(INF_STRUCT_NAME, table.getCellDataValueByPosition(0, 5));
     assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 6));
-    assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
-    assertTrue(table.widget.getDataValueByPosition(2, 5) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(4, 4) instanceof SToken);
+    assertTrue(table.widget.getDataValueByPosition(4, 5) instanceof SToken);
     assertTrue(table.widget.getDataValueByPosition(6, 1) instanceof SSpan);
     // Old cells should now be null
-    assertNull(table.widget.getDataValueByPosition(3, 4));
-    assertNull(table.widget.getDataValueByPosition(4, 5));
+    assertNull(table.widget.getDataValueByPosition(2, 4));
+    assertNull(table.widget.getDataValueByPosition(3, 5));
     assertNull(table.widget.getDataValueByPosition(5, 1));
     // Model elements should be the same as before
-    assertEquals(lemmaToken, table.widget.getDataValueByPosition(2, 4));
+    assertEquals(lemmaToken, table.widget.getDataValueByPosition(4, 4));
     assertEquals(MORE_VALUE, lemmaToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
-    assertEquals(posToken, table.widget.getDataValueByPosition(2, 5));
+    assertEquals(posToken, table.widget.getDataValueByPosition(4, 5));
     assertEquals(JJ_VALUE, posToken.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
     assertEquals(infSpan, table.widget.getDataValueByPosition(6, 1));
     assertEquals(CONTRAST_FOCUS_VALUE, infSpan.getAnnotation(TEST_ANNOTATION_VALUE).getValue());
@@ -1256,6 +1301,7 @@ public class TestGridEditor {
     assertEquals(MORE_VALUE,
         lemmaToken.getAnnotation(SaltUtil.SALT_NAMESPACE, LEMMA_NAME).getValue());
 
+
     // Assert that dialog is displayed
     SWTBotShell infoDialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
     assertNotNull(infoDialog);
@@ -1266,7 +1312,8 @@ public class TestGridEditor {
     try {
       assertEquals(
           "Could not rename some annotations, as annotations with the qualified target name 'pos'"
-              + " already exist on the respective nodes:\n- Token with text 'more'",
+              + " already exist on the respective nodes:\n- Token with text 'more' "
+              + "(existing annotation: 'RBR')",
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
       fail(e);
@@ -1440,6 +1487,464 @@ public class TestGridEditor {
   }
 
   /**
+   * Tests whether the manual data model resolution triggered by a user pressing the F5 key works.
+   */
+  @Test
+  void testManualResolveViaF5() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals(5, table.columnCount());
+
+    // Remove all cells in first token annotation column
+    table.click(1, 2);
+    shiftClick(table, 11, 2);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new ColumnIsEmptyCondition(table, 2));
+    table.click(1, 3);
+
+    bot.waitUntil(new ColumnCountCondition(table, 5));
+
+    keyboard.pressShortcut(Keystrokes.F5);
+    bot.waitUntil(new ColumnCountCondition(table, 4));
+  }
+
+  /**
+   * Tests whether the manual data model resolution triggered by a user selecting the refresh item
+   * from the body menu.
+   */
+  @Test
+  void testManualResolveViaBodyMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals(5, table.columnCount());
+
+    // Remove all cells in first token annotation column
+    table.click(1, 2);
+    shiftClick(table, 11, 2);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new ColumnIsEmptyCondition(table, 2));
+    table.click(1, 3);
+
+    bot.waitUntil(new ColumnCountCondition(table, 5));
+
+    List<String> columnItems = table.contextMenu(1, 1).menuItems();
+    assertTrue(columnItems.contains("Refresh grid"));
+    table.contextMenu(1, 1).contextMenu("Refresh grid").click();
+
+    bot.waitUntil(new ColumnCountCondition(table, 4));
+  }
+
+  /**
+   * Tests column behaviour to remain in existence after the last cell in it has been deleted.
+   */
+  @Test
+  void testColumnExistsAfterDeletionOfCells() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Select second token annotation column (salt::pos)
+    table.click(0, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    // Check that cells exist but are empty
+    for (int i = 1; i < 12; i++) {
+      assertEquals("", table.getCellDataValueByPosition(i, 3));
+    }
+    assertEquals(5, table.widget.getColumnCount());
+
+    // Select span annotation column
+    table.click(0, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    // Check that cells exist but are empty
+    for (int i = 1; i < 12; i++) {
+      assertEquals("", table.getCellDataValueByPosition(i, 3));
+    }
+    assertEquals(5, table.widget.getColumnCount());
+  }
+
+  /**
+   * Tests that a notification pops up when the user tries to rename two horizontally neighbouring
+   * cells, which compete for the same cell in the renamed column.
+   */
+  @Test
+  void testSingleNeighbouringSelectionBlockNameChange() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    table.click(1, 2);
+    ctrlClick(table, 1, 3);
+    table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
+    dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertTrue(dialog.isActive());
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Number of columns shouldn't have grown
+    assertEquals(5, table.columnCount());
+  }
+
+  /**
+   * Tests that a notification pops up when the user tries to rename horizontally neighbouring
+   * cells, which compete for the same cell in the renamed column, as part of a selection of more
+   * than just the neighbouring cells. Also tests that the concerned cells aren't moved, but all
+   * others are.
+   */
+  @Test
+  void testNeighbouringInMultiSelectionBlockNameChange() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    // Rename
+    table.click(1, 2);
+    ctrlClick(table, 1, 3);
+    ctrlClick(table, 3, 3);
+    table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // Assert notification dialog
+    bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
+    dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertTrue(dialog.isActive());
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+
+    // There should be one new column
+    assertEquals(6, table.columnCount());
+    // Cells shouldn't be empty as they weren't moved (neighbouring)
+    assertFalse(table.getCellDataValueByPosition(1, 2).isEmpty());
+    assertFalse(table.getCellDataValueByPosition(1, 3).isEmpty());
+    // Cell should be empty as it was moved (no neighbours)
+    assertTrue(table.getCellDataValueByPosition(3, 3).isEmpty());
+    // New column has been created and contains only one cell
+    assertEquals(TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 4));
+    int nonEmptyColumns = 0;
+    for (int i = 1; i < 12; i++) {
+      String value = table.getCellDataValueByPosition(i, 4);
+      if (!value.isEmpty()) {
+        nonEmptyColumns++;
+      }
+    }
+    assertEquals(1, nonEmptyColumns);
+  }
+
+  /**
+   * Tests that columns are retained when opening other editors on the same document.
+   */
+  @Test
+  void testColumnsRetained() {
+    String timeStamp = String.valueOf(System.currentTimeMillis());
+    SWTBotView view = openDefaultExample();
+    MPart part = view.getPart();
+    part.setElementId(timeStamp);
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Baseline
+    assertEquals(5, table.columnCount());
+
+    // Select second token annotation column (salt::pos)
+    table.click(0, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(500);
+    assertEquals(5, table.columnCount());
+
+    // Open Text Viewer
+    openEditorOnSameDocument();
+
+    // Reactivate grid editor
+    bot.partById(timeStamp).show();
+    assertEquals(5, table.columnCount());
+
+    // Show and close text viewer
+    bot.partById("org.corpus_tools.hexatomic.textviewer").show();
+    bot.partById("org.corpus_tools.hexatomic.textviewer").close();
+    assertEquals(5, table.columnCount());
+
+    // Reactivate grid editor
+    bot.partById(timeStamp).show();
+    assertEquals(5, table.columnCount());
+  }
+
+  /**
+   * Tests creation of spans via keyboard shortcut Alt + S.
+   */
+  @Test
+  void testCreateSpanWithKeyboardShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Clear the span column
+    table.click(0, 4);
+    table.contextMenu(1, 4).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
+
+    // Select a range of cells
+    table.click(2, 4);
+    shiftClick(table, 6, 4);
+
+    // Fire the keyboard shortcut
+    keyboard.pressShortcut(SWT.ALT, 's');
+
+    bot.sleep(500);
+
+    // Make sure that the whole range is one and the same span
+    NatTable natTable = table.widget;
+    assertNull(natTable.getDataValueByPosition(4, 1));
+    Object potentialSpan = natTable.getDataValueByPosition(4, 2);
+    assertTrue(potentialSpan instanceof SSpan);
+    SSpan span = (SSpan) potentialSpan;
+    assertEquals(span, natTable.getDataValueByPosition(4, 3));
+    assertEquals(span, natTable.getDataValueByPosition(4, 4));
+    assertEquals(span, natTable.getDataValueByPosition(4, 5));
+    assertEquals(span, natTable.getDataValueByPosition(4, 6));
+    assertNull(natTable.getDataValueByPosition(4, 7));
+  }
+
+  /**
+   * Tests the existence of the menu items for adding annotation columns in the popup menu.
+   */
+  @Test
+  void testAddColumnPopup() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    // Test for column header
+    List<String> menuItems1 = table.contextMenu(0, 3).menuItems();
+    assertTrue(menuItems1.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
+    assertTrue(menuItems1.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+
+    // Test for cell
+    List<String> menuItems2 = table.contextMenu(2, 4).menuItems();
+    assertTrue(menuItems2.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
+    assertTrue(menuItems2.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+  }
+
+  /**
+   * Tests the addition of a new token annotation column via context menu.
+   */
+  @Test
+  void testAddTokenColumnViaMenu() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+
+    // Create via click on span cell
+    addColumnOnCell(1, 3, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 4, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new span annotation column via context menu.
+   */
+  @Test
+  void testAddSpanColumnViaMenu() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+
+    // Create via click on span cell
+    addColumnOnCell(1, 2, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 3, tableBot);
+  }
+
+  /**
+   * Tests the addition of a new token annotation column via keyboard shortcut.
+   */
+  @Test
+  void testAddTokenColumnViaShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 2);
+    addColumn(tableBot, TOKEN_VALUE, OK);
+    // New columns created by keyboard are always added at the very end
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+  }
+
+  /**
+   * Tests the abortion of the action to add a new annotation column.
+   */
+  @Test
+  void testAbortNewColumnCommand() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    int oldColumnCount = table.columnCount();
+
+    table.click(2, 2);
+    addColumn(tableBot, TOKEN_VALUE, CANCEL);
+    // New columns created by keyboard are always added at the very end
+    assertEquals(oldColumnCount, table.columnCount());
+  }
+
+  /**
+   * Tests the addition of a new span annotation column via keyboard shortcut.
+   */
+  @Test
+  void testAddSpanColumnViaShortcut() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 1);
+    addColumn(tableBot, SPAN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+  }
+
+  /**
+   * Tests that no duplicate token annotation column can be added.
+   */
+  @Test
+  void testNoDuplicateTokenColumnAdded() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    final int oldColumnCount = table.columnCount();
+
+    table.click(2, 1);
+    addColumn(tableBot, TOKEN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+    addColumn(tableBot, TOKEN_VALUE, OK);
+    SWTBotShell dialog = tableBot.shell("Column already exists");
+    tableBot.button(OK).click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    assertEquals(oldColumnCount + 1, table.columnCount());
+  }
+
+  /**
+   * Tests that duplicate span columns can be added.
+   */
+  @Test
+  void testDuplicateSpanColumnAdded() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 1);
+    addColumn(tableBot, SPAN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+    addColumn(tableBot, SPAN_VALUE, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE + " (2)", 6, tableBot);
+  }
+
+  /**
+   * Tests that spans are split on issuing the respective command.
+   */
+  @Test
+  void testSplitSpan() {
+    openDefaultExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert state
+    Object span = natTable.getDataValueByPosition(4, 2);
+    assertTrue(span instanceof SSpan);
+    assertEquals(span, natTable.getDataValueByPosition(4, 2));
+    assertEquals(span, natTable.getDataValueByPosition(4, 3));
+    assertEquals(span, natTable.getDataValueByPosition(4, 11));
+
+    // Select span and click context menu
+    table.click(3, 4);
+    table.contextMenu(3, 4).contextMenu("Split span").click();
+    bot.waitUntil(new UnequalDataObjectsCondition(4, 2, natTable, 3, 11));
+  }
+
+  /**
+   * Tests that spans are merged on issuing the respective command.
+   */
+  @Test
+  void testMergeEqualAnnotationSpans() {
+    openSeparateSpanExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert state
+    Object one1 = natTable.getDataValueByPosition(2, 2);
+    assertTrue(one1 instanceof SSpan);
+    Object two = natTable.getDataValueByPosition(2, 3);
+    assertTrue(two instanceof SSpan);
+    Object one2 = natTable.getDataValueByPosition(2, 5);
+    assertTrue(one2 instanceof SSpan);
+    Object one3 = natTable.getDataValueByPosition(2, 6);
+    assertTrue(one3 instanceof SSpan);
+    assertFalse(one1 == one2);
+    assertFalse(one1 == one3);
+    assertFalse(one2 == one3);
+
+    // Select spans with equal annotations and click context menu
+    table.click(2, 2);
+    ctrlClick(table, 5, 2);
+    ctrlClick(table, 6, 2);
+    table.contextMenu(5, 2).contextMenu("Merge spans").click();
+    bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6));
+  }
+
+  /**
+   * Tests that spans with different annotation values are not merged on issuing the respective
+   * command.
+   */
+  @Test
+  void testMergeUnequalAnnotationSpansFails() {
+    openSeparateSpanExample();
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    NatTable natTable = table.widget;
+
+    // Assert state
+    Object one1 = natTable.getDataValueByPosition(2, 2);
+    assertTrue(one1 instanceof SSpan);
+    Object two = natTable.getDataValueByPosition(2, 3);
+    assertTrue(two instanceof SSpan);
+    Object one2 = natTable.getDataValueByPosition(2, 5);
+    assertTrue(one2 instanceof SSpan);
+    Object one3 = natTable.getDataValueByPosition(2, 6);
+    assertTrue(one3 instanceof SSpan);
+    assertFalse(one1 == one2);
+    assertFalse(one1 == one3);
+    assertFalse(one2 == one3);
+
+    // Select spans with equal annotations and click context menu
+    table.click(2, 2);
+    ctrlClick(table, 3, 2);
+    table.contextMenu(5, 2).contextMenu("Merge spans").click();
+    // Assert that waiting for merged spans times out (after 1 sec.)
+    assertThrows(TimeoutException.class,
+        () -> bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6), 1000L));
+  }
+
+  /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/252.
    */
   @Test
@@ -1512,6 +2017,87 @@ public class TestGridEditor {
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
     assertDialogTexts(dialog, "anno9");
+    dialog.close();
+  }
+
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/259.
+   * 
+   * <p>
+   * Tests that the annotation name, not the display name, is shown on columns that are secondary
+   * columns (e.g., "namespace::name (2)").
+   * </p>
+   * 
+   * @throws InterruptedException If the thread extracting the label text in the given dialog is
+   *         interrupted, or if there is an error during execution.
+   * @throws ExecutionException See InterruptedException
+   */
+  @Test
+  void testShowCorrectAnnotationNameInDialog() throws InterruptedException, ExecutionException {
+    openOverlapExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    assertEquals("five::span_1 (2)", table.getCellDataValueByPosition(0, 4));
+
+    // Test cell menu behaviour
+    table.click(1, 4);
+    table.contextMenu(1, 4).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+
+    bot.waitUntil(Conditions.shellIsActive(RENAME_DIALOG_TITLE));
+    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertDialogTexts(dialog, "five::span_1");
+    dialog.close();
+
+    // Test column menu
+    table.click(0, 4);
+    table.contextMenu(0, 4).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
+
+    bot.waitUntil(Conditions.shellIsActive(RENAME_DIALOG_TITLE));
+    dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
+    assertDialogTexts(dialog, "five::span_1");
+    dialog.close();
+  }
+
+
+  private void addColumn(SWTNatTableBot tableBot, String tokenValue, String buttonToClick) {
+    switch (tokenValue) {
+      case TOKEN_VALUE:
+        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 't');
+        break;
+
+      case SPAN_VALUE:
+        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 's');
+        break;
+
+      default:
+        fail();
+        break;
+    }
+    SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button(buttonToClick).click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+  }
+
+  private int addColumnOnCell(int rowIndex, int columnIndex, SWTNatTableBot tableBot) {
+    SWTBotNatTable table = tableBot.nattable();
+    final int columnCount = table.columnCount();
+    SWTBotRootMenu menu = table.contextMenu(rowIndex, columnIndex);
+    menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
+    SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    tableBot.button("OK").click();
+    bot.waitUntil(Conditions.shellCloses(dialog));
+    return columnCount;
+  }
+
+  private void assertColumnAddedAtIndex(String columnHeader, int newColumnIndex,
+      SWTNatTableBot tableBot) {
+    assertEquals(columnHeader, tableBot.nattable().getCellDataValueByPosition(0, newColumnIndex));
   }
 
   private void assertDialogTexts(SWTBotShell dialog, String qualifiedName)
@@ -1582,6 +2168,177 @@ public class TestGridEditor {
     ILayer layerUl = layer.getUnderlyingLayerByPosition(1, 1);
     assertTrue(layerUl instanceof CompositeFreezeLayer);
     return (CompositeFreezeLayer) layerUl;
+  }
+
+  /**
+   * The condition where all objects in the cells at the passed column index and the passed row
+   * indices are not the same object as the one in the cell at the passed fixture row index.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   *
+   */
+  public class UnequalDataObjectsCondition extends DefaultCondition {
+
+    private final int fixtureRowIndex;
+    private final NatTable natTable;
+    private final int[] rowIndices;
+    private final int columnIndex;
+    private final Object fixture;
+
+    /**
+     * Constructs a new {@link UnequalDataObjectsCondition} object.
+     * 
+     * @param columnIndex The columnIndex
+     * @param fixtureRowIndex The row index of the fixture
+     * @param natTable The underlying {@link NatTable}
+     * @param rowIndices The rowIndices to check for inequality against
+     */
+    public UnequalDataObjectsCondition(int columnIndex, int fixtureRowIndex, NatTable natTable,
+        int... rowIndices) {
+      this.fixtureRowIndex = fixtureRowIndex;
+      this.columnIndex = columnIndex;
+      this.natTable = natTable;
+      this.rowIndices = rowIndices;
+      this.fixture = natTable.getDataValueByPosition(this.columnIndex, this.fixtureRowIndex);
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      for (int i = 0; i < rowIndices.length; i++) {
+        int idx = rowIndices[i];
+        if (natTable.getDataValueByPosition(columnIndex, idx) == fixture) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Some of the test objects were the same as the fixture.";
+    }
+
+  }
+
+  /**
+   * The condition where all objects in the cells at the passed column index and the passed row
+   * indices are the same {@link SSpan} as the one in the cell at the passed fixture row index.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   *
+   */
+  public class SameSpansCondition extends DefaultCondition {
+
+    private final int fixtureRowIndex;
+    private final NatTable natTable;
+    private final int[] rowIndices;
+    private final int columnIndex;
+    private final Object fixture;
+
+    /**
+     * Constructs a {@link SameSpansCondition} object.
+     * 
+     * @param columnIndex The column index
+     * @param fixtureRowIndex The row index of the fixture
+     * @param natTable The underlying {@link NatTable}
+     * @param rowIndices The row indices to check for same span condition against the fixture for
+     */
+    public SameSpansCondition(int columnIndex, int fixtureRowIndex, NatTable natTable,
+        int... rowIndices) {
+      this.fixtureRowIndex = fixtureRowIndex;
+      this.columnIndex = columnIndex;
+      this.natTable = natTable;
+      this.rowIndices = rowIndices;
+      this.fixture = natTable.getDataValueByPosition(this.columnIndex, this.fixtureRowIndex);
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      if (!(fixture instanceof SSpan)) {
+        return false;
+      }
+      for (int i = 0; i < rowIndices.length; i++) {
+        int idx = rowIndices[i];
+        Object potentialSpan = natTable.getDataValueByPosition(columnIndex, idx);
+        if (!(potentialSpan instanceof SSpan)) {
+          return false;
+        }
+        if (potentialSpan != fixture) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Some of the test objects were not a span or not the same span as the fixture.";
+    }
+
+  }
+
+  /**
+   * The condition where the number of columns in a given table equals the expected count.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class ColumnCountCondition extends DefaultCondition {
+
+    private final int targetColumnCount;
+    private final SWTBotNatTable tableToTest;
+
+    public ColumnCountCondition(SWTBotNatTable tableToTest, int targetColumnCount) {
+      this.tableToTest = tableToTest;
+      this.targetColumnCount = targetColumnCount;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return this.tableToTest.columnCount() == this.targetColumnCount;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "The current column count is " + this.tableToTest.columnCount() + ", not "
+          + this.targetColumnCount + " as expected.";
+    }
+
+  }
+
+  /**
+   * The condition where all annotation cells in a table are empty.
+   * 
+   * @author Stephan Druskat {@literal <mail@sdruskat.net>}
+   */
+  private class ColumnIsEmptyCondition extends DefaultCondition {
+
+    private final int columnIndex;
+    private final SWTBotNatTable tableToTest;
+
+    public ColumnIsEmptyCondition(SWTBotNatTable tableToTest, int columnIndex) {
+      this.tableToTest = tableToTest;
+      this.columnIndex = columnIndex;
+    }
+
+    /**
+     * Tests whether all cells from the second row to the last are empty. The first row is not
+     * checked as it contains the qualified annotation name.
+     */
+    @Override
+    public boolean test() throws Exception {
+      for (int i = 1; i < tableToTest.rowCount(); i++) {
+        if (!tableToTest.getCellDataValueByPosition(i, columnIndex).isEmpty()) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Column " + this.columnIndex + " is not empty as expected.";
+    }
+
   }
 
   /**

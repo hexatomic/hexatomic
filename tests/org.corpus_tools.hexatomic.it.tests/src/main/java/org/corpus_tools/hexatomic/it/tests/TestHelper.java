@@ -1,5 +1,11 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.SystemUtils;
@@ -21,7 +27,6 @@ import org.osgi.framework.FrameworkUtil;
  * @author Stephan Druskat
  *
  */
-@SuppressWarnings("restriction")
 public class TestHelper {
 
   private static final String SWTBOT_KEYBOARD_LAYOUT = "SWTBOT_KEYBOARD_LAYOUT";
@@ -102,6 +107,29 @@ public class TestHelper {
     } else {
       return "Shift+";
     }
+
+  /**
+   * Recursively delete a directory.
+   * 
+   * @param directory The directory {@link Path} to delete recursively
+   * @return If the directory exists
+   * @throws IOException An error that occurred when reading or deleting from the file system
+   */
+  public static boolean deleteDirectory(Path directory) throws IOException {
+    Path startPath = Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        Files.delete(file);
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        Files.delete(dir);
+        return FileVisitResult.CONTINUE;
+      }
+    });
+    return Files.notExists(startPath);
   }
 
 }
