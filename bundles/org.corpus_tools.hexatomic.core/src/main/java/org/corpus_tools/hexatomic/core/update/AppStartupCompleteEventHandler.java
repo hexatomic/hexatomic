@@ -20,62 +20,35 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.workbench.IWorkbench;
-import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 
 public class AppStartupCompleteEventHandler implements EventHandler {
-  private IEventBroker eventBroker;
-  private IEclipseContext context;
-  IProvisioningAgent agent;
-  UISynchronize sync;
-  IProgressMonitor monitor;
-  IWorkbench workbench;
-  Shell shell;
-  IEventBroker events;
+
+  private final UpdateRunner updateRunner;
+  private final IEventBroker eventBroker;
+  private final Shell shell;
 
   /**
    * Create instance of AppStartupCompleteEventHandler.
    * 
+   * @param updateRunner Service for starting update check jobs.
    * @param eventBroker Event broker service to unsubscribe from subscribed event
-   * @param context Context of application to recieve workbench
-   * @param agent OSGi service to create an update operation
-   * @param sync Helper class to execute code in the UI thread
-   * @param monitor interface to show progress of update operation
    * @param shell The user interface shell.
    */
-  public AppStartupCompleteEventHandler(IEventBroker eventBroker, IEclipseContext context,
-      IProvisioningAgent agent, UISynchronize sync, IProgressMonitor monitor, Shell shell,
-      IEventBroker events) {
+  public AppStartupCompleteEventHandler(UpdateRunner updateRunner, IEventBroker eventBroker,
+      Shell shell) {
+    this.updateRunner = updateRunner;
     this.eventBroker = eventBroker;
-    this.context = context;
-    this.agent = agent;
-    this.sync = sync;
-    this.monitor = monitor;
     this.shell = shell;
-    this.events = events;
   }
 
 
   @Override
   public void handleEvent(Event event) {
     eventBroker.unsubscribe(this);
-    this.workbench = context.get(IWorkbench.class);
-    Job updateJob = new Job("Update Job") {
-      @Override
-      protected IStatus run(final IProgressMonitor monitor) {
-        UpdateRunner ur = new UpdateRunner();
-        return ur.checkForUpdates(agent, workbench, monitor, shell, sync, events);
-      }
-    };
-    updateJob.schedule();
+    updateRunner.scheduleUpdateJob(false, shell);
   }
 }
