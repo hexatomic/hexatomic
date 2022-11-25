@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Stabilize graph editor test to wait until background jobs are finished before
   selecting the text fragment.
+- Show more explanations when update check fails and only show status message
+  when update check was started in background (#410).
 
 ### Added
 
