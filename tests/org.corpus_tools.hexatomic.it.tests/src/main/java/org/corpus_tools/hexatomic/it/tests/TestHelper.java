@@ -107,6 +107,7 @@ public class TestHelper {
     } else {
       return "Shift+";
     }
+  }
 
   /**
    * Recursively delete a directory.
