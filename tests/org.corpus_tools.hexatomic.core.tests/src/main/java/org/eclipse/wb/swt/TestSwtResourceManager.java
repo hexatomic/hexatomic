@@ -3,6 +3,7 @@ package org.eclipse.wb.swt;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -19,32 +20,32 @@ class TestSwtResourceManager {
     assertEquals(0, SwtResourceManager.fontMap.size());
 
     // Add first font
-    Font font1 = SwtResourceManager.getFont("Sans", 12, SWT.NONE);
+    Font font1 = SwtResourceManager.getFont(getDefaultFontName(), 12, SWT.NONE);
     assertNotNull(font1);
-    assertEquals("Sans", font1.getFontData()[0].getName());
+    assertEquals(getDefaultFontName(), font1.getFontData()[0].getName());
     assertEquals(12, font1.getFontData()[0].getHeight());
     assertEquals(SWT.NONE, font1.getFontData()[0].getStyle());
     assertEquals(1, SwtResourceManager.fontMap.size());
 
     
     // Add second font (a bold version of the same font)
-    Font font2 = SwtResourceManager.getFont("Sans", 12, SWT.BOLD);
+    Font font2 = SwtResourceManager.getFont(getDefaultFontName(), 12, SWT.BOLD);
     assertNotNull(font2);
-    assertEquals("Sans", font2.getFontData()[0].getName());
+    assertEquals(getDefaultFontName(), font2.getFontData()[0].getName());
     assertEquals(12, font2.getFontData()[0].getHeight());
     assertEquals(SWT.BOLD, font2.getFontData()[0].getStyle());
     assertEquals(2, SwtResourceManager.fontMap.size());
     
     // Add third font (a larger version of the same font)
-    Font font3 = SwtResourceManager.getFont("Sans", 18, SWT.NONE);
+    Font font3 = SwtResourceManager.getFont(getDefaultFontName(), 18, SWT.NONE);
     assertNotNull(font3);
-    assertEquals("Sans", font3.getFontData()[0].getName());
+    assertEquals(getDefaultFontName(), font3.getFontData()[0].getName());
     assertEquals(18, font3.getFontData()[0].getHeight());
     assertEquals(SWT.NONE, font3.getFontData()[0].getStyle());
     assertEquals(3, SwtResourceManager.fontMap.size());
 
     // Add font again, this should not change the cache size
-    Font cachedFont = SwtResourceManager.getFont("Sans", 12, SWT.BOLD);
+    Font cachedFont = SwtResourceManager.getFont(getDefaultFontName(), 12, SWT.BOLD);
     assertEquals(font2, cachedFont);
     assertEquals(3, SwtResourceManager.fontMap.size());
     
@@ -95,4 +96,13 @@ class TestSwtResourceManager {
     assertEquals(0, SwtResourceManager.colorMap.size());
   }
 
+  
+  private String getDefaultFontName() {
+    if(SystemUtils.IS_OS_MAC_OSX) {
+      return ".AppleSystemUIFont";
+    } else {
+      return "Sans";
+    }
+  }
+  
 }
