@@ -105,7 +105,7 @@ class TestGraphEditor {
   private ProjectManager projectManager;
   private UiStatusReport uiStatus;
 
-  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
   private final class HorizontalNodeDistanceCondition extends DefaultCondition {
     private final SNode leftNode;
@@ -706,14 +706,14 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
-    annoFilter.typeText(INF_STRUCT);
+    annoFilter.typeText("inf");
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
 
     bot.waitUntil(new NumberOfNodesCondition(25));
 
     // Check that already added annotation names are not added twice
-    annoFilter.typeText(CONST);
+    annoFilter.typeText("inf");
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
 
