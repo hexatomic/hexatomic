@@ -61,6 +61,7 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.Position;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -68,12 +69,14 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -133,8 +136,6 @@ public class TestGridEditor {
   private static final String OK = "OK";
   private static final String CANCEL = "Cancel";
 
-
-
   private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
@@ -190,6 +191,15 @@ public class TestGridEditor {
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
     scrollingExampleProjectUri =
         URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
+  }
+
+  @AfterEach
+  void closeEditor() {
+    for (SWTBotView part : bot.parts()) {
+      if (part.getTitle().endsWith("(Grid Editor)")) {
+        part.close();
+      }
+    }
   }
 
   SWTBotView openEditorForDefaultDocument() {
@@ -1336,7 +1346,21 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     // Assert model elements
-    assertEquals(5, table.columnCount());
+    tableBot.waitUntil(new ICondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return table.columnCount() == 5;
+      }
+
+      @Override
+      public void init(SWTBot bot) {}
+
+      @Override
+      public String getFailureMessage() {
+        return "NatTable should have 5 columns, but had " + table.columnCount();
+      }
+    });
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
     SToken lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
     assertEquals(MORE_VALUE,
