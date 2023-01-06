@@ -70,7 +70,7 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
 
     if (dialog.isCancelPressed()) {
       log.debug("Execution of command {} cancelled.", getCommandClass().getSimpleName());
-      return false;
+      return true;
     }
 
     // If the index is -1, then we don't know where to insert the new column, so call the layer
