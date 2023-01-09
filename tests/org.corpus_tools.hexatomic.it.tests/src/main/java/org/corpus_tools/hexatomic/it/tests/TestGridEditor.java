@@ -89,6 +89,8 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditor {
 
 
+  private static final String REFRESH_GRID = "Refresh grid";
+
   private static final String TEXT1_CAPTION = "sText1";
 
   private static final String DOC_GRID_EDITOR = "doc (Grid Editor)";
@@ -838,8 +840,12 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> column0HeaderMenuItems = table.contextMenu(1, 1).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    List<String> column0HeaderMenuItems = contextMenu.menuItems();
     assertFalse(column0HeaderMenuItems.contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   @Test
@@ -1558,8 +1564,8 @@ public class TestGridEditor {
     bot.waitUntil(new ColumnCountCondition(table, 5));
 
     List<String> columnItems = table.contextMenu(1, 1).menuItems();
-    assertTrue(columnItems.contains("Refresh grid"));
-    table.contextMenu(1, 1).contextMenu("Refresh grid").click();
+    assertTrue(columnItems.contains(REFRESH_GRID));
+    table.contextMenu(1, 1).contextMenu(REFRESH_GRID).click();
 
     bot.waitUntil(new ColumnCountCondition(table, 4));
   }
@@ -1764,14 +1770,22 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     // Test for column header
-    List<String> menuItems1 = table.contextMenu(0, 3).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(0, 3);
+    List<String> menuItems1 = contextMenu.menuItems();
     assertTrue(menuItems1.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
     assertTrue(menuItems1.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
 
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu("Auto-resize column(s)").click();
+
     // Test for cell
-    List<String> menuItems2 = table.contextMenu(2, 4).menuItems();
+    contextMenu = table.contextMenu(2, 4);
+    List<String> menuItems2 = contextMenu.menuItems();
     assertTrue(menuItems2.contains(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL));
     assertTrue(menuItems2.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
+
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   /**
@@ -1990,6 +2004,8 @@ public class TestGridEditor {
       menu = table.contextMenu(pos.row, pos.column);
       menuItems = menu.menuItems();
       assertTrue(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+      // Click on an item to ensure the context menu is closed
+      menu.menu(REFRESH_GRID).click();
     } catch (WidgetNotFoundException e) {
       fail(e);
     }
@@ -2010,10 +2026,13 @@ public class TestGridEditor {
     // Make sure that the position we're checking is the correct one
     assertEquals("NodeNotifierImpl(salt:/corpus/doc#sSpan10)[anno9=value]], salt::SNAME=sSpan10]",
         table.getCellDataValueByPosition(pos));
-    List<String> menuItems = table.contextMenu(pos.row, pos.column).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(pos.row, pos.column);
+    List<String> menuItems = contextMenu.menuItems();
     // If #256 is fixed, the "Create span" menu item will not be present, as the respective
     // selection state validation will not have thrown an IndexOutofBoundsException
     assertFalse(menuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   /**
