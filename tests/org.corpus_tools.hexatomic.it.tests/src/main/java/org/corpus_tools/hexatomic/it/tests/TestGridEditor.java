@@ -988,7 +988,7 @@ public class TestGridEditor {
    */
   @Test
   void testAnnotationNameChangeRegistered() {
-    SWTBotView view = openDefaultExample();
+    openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
