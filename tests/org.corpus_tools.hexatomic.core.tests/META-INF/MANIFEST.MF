@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Core Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.core.tests
 Bundle-Version: 1.1.0.qualifier
-Fragment-Host: org.corpus_tools.hexatomic.core;bundle-version="0.2.0"
+Fragment-Host: org.corpus_tools.hexatomic.core
 Automatic-Module-Name: org.corpus_tools.hexatomic.core.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.osgi.services,
  org.mockito.mockito-core,
- org.hamcrest;bundle-version="1.1.0",
+ org.hamcrest,
  org.corpus-tools.salt-api,
  org.junit,
  junit-jupiter-api

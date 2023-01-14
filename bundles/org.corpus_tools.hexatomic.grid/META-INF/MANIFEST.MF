@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.corpus_tools.hexatomic.grid;singleton:=true
 Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: Hexatomic Research Project
 Require-Bundle: javax.inject,
- org.corpus_tools.hexatomic.core;bundle-version="0.4.0",
+ org.corpus_tools.hexatomic.core,
  org.slf4j.api,
  org.eclipse.jface,
  org.corpus-tools.salt-api,
@@ -14,11 +14,11 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.core.di.annotations,
- javax.annotation;bundle-version="1.2.0",
+ javax.annotation,
  org.corpus-tools.salt-extensions,
  org.eclipse.e4.core.services,
  org.eclipse.swt,
- org.apache.commons.lang3;bundle-version="3.4.0"
+ org.apache.commons.lang3
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.corpus_tools.hexatomic.grid,
