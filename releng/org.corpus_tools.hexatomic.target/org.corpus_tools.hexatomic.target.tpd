@@ -4,6 +4,8 @@ with requirements source configurePhase
 
 location 'http://download.eclipse.org/releases/2022-12/' {
 	org.slf4j.api
+	ch.qos.logback.core
+	ch.qos.logback.classic
 	org.eclipse.platform.sdk
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.emf.common
@@ -25,14 +27,13 @@ location 'http://download.eclipse.org/releases/2022-12/' {
 	org.eclipse.equinox.p2.engine
 	org.eclipse.equinox.p2.operations
 	org.eclipse.equinox.p2.metadata.repository
+	org.hamcrest.core
+	org.hamcrest.library
 }
 
 location 'https://download.eclipse.org/tools/orbit/downloads/2022-12/' {
-	ch.qos.logback.slf4j [1.1.2,2.0.0)
-	ch.qos.logback.classic [1.1.2,2.0.0)
 	org.mockito.mockito-core
 	org.mockito.junit-jupiter
-	org.hamcrest
 	org.antlr.runtime
 }
 

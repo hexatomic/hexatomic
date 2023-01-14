@@ -20,7 +20,6 @@ Require-Bundle: org.eclipse.e4.ui.workbench,
  org.eclipse.zest.core,
  org.corpus-tools.salt-api,
  org.corpus-tools.salt-extensions,
- org.hamcrest,
  org.eclipse.e4.core.di,
  org.corpus_tools.hexatomic.grid,
  org.eclipse.nebula.widgets.nattable.core,
@@ -32,7 +31,8 @@ Require-Bundle: org.eclipse.e4.ui.workbench,
  org.apache.commons.lang3,
  org.eclipse.nebula.widgets.chips,
  org.junit,
- junit-jupiter-api
+ junit-jupiter-api,
+ org.hamcrest.library;bundle-version="1.3.0"
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.e4.ui.di
