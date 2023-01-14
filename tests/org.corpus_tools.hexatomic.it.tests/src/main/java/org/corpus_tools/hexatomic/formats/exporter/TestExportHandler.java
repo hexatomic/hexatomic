@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -100,7 +100,7 @@ class TestExportHandler {
     executeHandler();
 
     verify(wizardDialog).open();
-    verifyNoInteractions(saveAsHandler, errorService);
+    verifyZeroInteractions(saveAsHandler, errorService);
   }
 
   @Test
@@ -117,7 +117,7 @@ class TestExportHandler {
 
     verify(wizardDialog).open();
 
-    verifyNoInteractions(saveAsHandler, errorService);
+    verifyZeroInteractions(saveAsHandler, errorService);
   }
 
   @Test
@@ -131,7 +131,7 @@ class TestExportHandler {
     assertNotNull(askSaveDialog);
 
     askSaveDialog.bot().button("Cancel").click();
-    verifyNoInteractions(wizardDialog, saveAsHandler, errorService);
+    verifyZeroInteractions(wizardDialog, saveAsHandler, errorService);
   }
 
 
@@ -151,7 +151,7 @@ class TestExportHandler {
     verify(saveAsHandler).execute(any(), any());
     verify(wizardDialog).open();
 
-    verifyNoInteractions(errorService);
+    verifyZeroInteractions(errorService);
   }
 
   @Test
@@ -165,7 +165,7 @@ class TestExportHandler {
     assertNotNull(saveDialog);
 
     saveDialog.bot().button("Cancel").click();
-    verifyNoInteractions(wizardDialog, saveAsHandler, errorService);
+    verifyZeroInteractions(wizardDialog, saveAsHandler, errorService);
   }
 
   @Test
@@ -186,7 +186,7 @@ class TestExportHandler {
     verify(saveAsHandler).execute(any(), any());
 
     // Wizard should not be opened
-    verifyNoInteractions(wizardDialog, errorService);
+    verifyZeroInteractions(wizardDialog, errorService);
   }
 
 }

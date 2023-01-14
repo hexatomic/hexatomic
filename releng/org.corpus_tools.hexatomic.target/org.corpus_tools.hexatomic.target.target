@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1673697728">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1673705989">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.slf4j.api" version="1.7.30.v20221112-0806"/>
-      <unit id="ch.qos.logback.core" version="1.2.11"/>
-      <unit id="ch.qos.logback.classic" version="1.2.11"/>
-      <unit id="org.eclipse.platform.sdk" version="4.26.0.I20221123-1800"/>
-      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.600.v20221116-1440"/>
-      <unit id="org.eclipse.emf.common" version="2.27.0.v20221121-1400"/>
-      <unit id="org.eclipse.e4.core.services" version="2.3.400.v20220915-1347"/>
-      <unit id="org.eclipse.zest.core" version="1.7.0.202211301913"/>
-      <unit id="org.eclipse.zest.layouts" version="1.2.200.202211301913"/>
-      <unit id="org.eclipse.jdt.junit5.runtime" version="1.1.100.v20220907-0450"/>
+      <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
+      <unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
+      <unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
+      <unit id="ch.qos.logback.classic" version="1.1.2.v20171220-1825"/>
+      <unit id="org.eclipse.platform.sdk" version="4.24.0.I20220607-0700"/>
+      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.400.v20220516-2155"/>
+      <unit id="org.eclipse.emf.common" version="2.25.0.v20220325-0806"/>
+      <unit id="org.eclipse.e4.core.services" version="2.3.200.v20220513-1235"/>
+      <unit id="org.eclipse.zest.core" version="1.5.300.201606061308"/>
+      <unit id="org.eclipse.zest.layouts" version="1.1.300.201606061308"/>
+      <unit id="org.eclipse.jdt.junit5.runtime" version="1.0.1500.v20220308-2347"/>
       <unit id="org.junit" version="4.13.2.v20211018-1956"/>
-      <unit id="junit-jupiter-api" version="5.9.1"/>
-      <unit id="junit-jupiter-engine" version="5.9.1"/>
-      <unit id="junit-platform-engine" version="1.9.1"/>
+      <unit id="org.junit.jupiter.api" version="5.8.1.v20211018-1956"/>
+      <unit id="org.junit.jupiter.engine" version="5.8.1.v20211018-1956"/>
+      <unit id="org.junit.platform.engine" version="1.8.1.v20211018-1956"/>
       <unit id="org.eclipse.swtbot.e4.finder" version="4.0.0.202206011610"/>
       <unit id="org.eclipse.swtbot.generator" version="4.0.0.202206011610"/>
       <unit id="org.eclipse.swtbot.go" version="4.0.0.202206011610"/>
       <unit id="org.eclipse.swtbot.swt.finder" version="4.0.0.202206011610"/>
-      <unit id="org.eclipse.jface" version="3.28.0.v20221024-1426"/>
+      <unit id="org.eclipse.jface" version="3.26.0.v20220513-0449"/>
       <unit id="org.eclipse.pde.junit.runtime" version="3.6.200.v20220523-1051"/>
-      <unit id="org.eclipse.equinox.p2.core" version="2.9.200.v20220817-1208"/>
-      <unit id="org.eclipse.equinox.p2.engine" version="2.7.500.v20220817-1208"/>
-      <unit id="org.eclipse.equinox.p2.operations" version="2.6.100.v20220817-1208"/>
+      <unit id="org.eclipse.equinox.p2.core" version="2.9.100.v20220310-1733"/>
+      <unit id="org.eclipse.equinox.p2.engine" version="2.7.400.v20220329-1456"/>
+      <unit id="org.eclipse.equinox.p2.operations" version="2.6.0.v20210315-2228"/>
       <unit id="org.eclipse.equinox.p2.metadata.repository" version="1.4.100.v20220329-1456"/>
       <unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
       <unit id="org.hamcrest.library" version="1.3.0.v20180524-2246"/>
-      <repository location="http://download.eclipse.org/releases/2022-12/"/>
+      <repository location="http://download.eclipse.org/releases/2022-06/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
-      <unit id="org.mockito.mockito-core" version="4.8.1.v20221103-2317"/>
-      <unit id="org.mockito.junit-jupiter" version="4.8.1.v20221103-2317"/>
-      <unit id="org.antlr.runtime" version="4.7.2.v20221112-0806"/>
-      <repository location="https://download.eclipse.org/tools/orbit/downloads/2022-12/"/>
+      <unit id="org.mockito" version="2.23.0.v20200310-1642"/>
+      <unit id="org.antlr.runtime" version="4.7.2.v20200218-0804"/>
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/2022-06/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="true" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.feature.group" version="17.0.5.v20221102-0933"/>

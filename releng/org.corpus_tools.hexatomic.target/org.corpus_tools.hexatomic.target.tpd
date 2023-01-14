@@ -2,8 +2,9 @@ target 'Hexatomic Target Platform Definition'
 
 with requirements source configurePhase
 
-location 'http://download.eclipse.org/releases/2022-12/' {
+location 'http://download.eclipse.org/releases/2022-06/' {
 	org.slf4j.api
+	ch.qos.logback.slf4j
 	ch.qos.logback.core
 	ch.qos.logback.classic
 	org.eclipse.platform.sdk
@@ -14,9 +15,9 @@ location 'http://download.eclipse.org/releases/2022-12/' {
 	org.eclipse.zest.layouts
 	org.eclipse.jdt.junit5.runtime
 	org.junit
-	junit-jupiter-api
-	junit-jupiter-engine
-	junit-platform-engine
+	org.junit.jupiter.api
+	org.junit.jupiter.engine
+	org.junit.platform.engine
 	org.eclipse.swtbot.e4.finder
 	org.eclipse.swtbot.generator
 	org.eclipse.swtbot.go
@@ -31,9 +32,8 @@ location 'http://download.eclipse.org/releases/2022-12/' {
 	org.hamcrest.library
 }
 
-location 'https://download.eclipse.org/tools/orbit/downloads/2022-12/' {
-	org.mockito.mockito-core
-	org.mockito.junit-jupiter
+location 'https://download.eclipse.org/tools/orbit/downloads/2022-06/' {
+	org.mockito
 	org.antlr.runtime
 }
 

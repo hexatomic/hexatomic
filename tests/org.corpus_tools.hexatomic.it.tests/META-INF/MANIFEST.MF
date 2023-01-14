@@ -25,14 +25,14 @@ Require-Bundle: org.eclipse.e4.ui.workbench,
  org.eclipse.nebula.widgets.nattable.core,
  org.eclipse.swtbot.nebula.nattable.finder,
  org.slf4j.api,
- org.mockito.mockito-core,
+ org.mockito,
  org.eclipse.e4.core.services,
  org.corpus_tools.hexatomic.formats,
  org.apache.commons.lang3,
  org.eclipse.nebula.widgets.chips,
  org.junit,
- junit-jupiter-api,
- org.hamcrest.library;bundle-version="1.3.0"
+ org.junit.jupiter.api,
+ org.hamcrest.library
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.e4.ui.di
