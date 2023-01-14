@@ -1360,7 +1360,9 @@ public class TestGridEditor {
       }
 
       @Override
-      public void init(SWTBot bot) {}
+      public void init(SWTBot bot) {
+        // No initialization necessary
+      }
 
       @Override
       public String getFailureMessage() {
