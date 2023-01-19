@@ -29,6 +29,7 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
 import org.eclipse.nebula.widgets.nattable.command.ILayerCommandHandler;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,8 +64,9 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
     int currentColumnIndex = command.getCurrentColumnIndex();
     ColumnType columnType = command.getColumnType();
+    Shell activeShell = Display.getCurrent().getActiveShell();
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), null,
+        new AnnotationRenameDialog(activeShell, null,
             "New annotation column");
     dialog.open();
 
