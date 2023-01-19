@@ -89,6 +89,10 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditor {
 
 
+  private static final String AUTO_RESIZE_COLUMN_S = "Auto-resize column(s)";
+
+  private static final String SHOW_ALL_COLUMNS = "Show all columns";
+
   private static final String REFRESH_GRID = "Refresh grid";
 
   private static final String TEXT1_CAPTION = "sText1";
@@ -570,8 +574,8 @@ public class TestGridEditor {
 
     List<String> columnItems = table.contextMenu(0, 1).menuItems();
     assertEquals("Hide column(s)", columnItems.get(0));
-    assertEquals("Show all columns", columnItems.get(1));
-    assertEquals("Auto-resize column(s)", columnItems.get(3));
+    assertEquals(SHOW_ALL_COLUMNS, columnItems.get(1));
+    assertEquals(AUTO_RESIZE_COLUMN_S, columnItems.get(3));
     assertEquals("Set column freeze", columnItems.get(5));
     assertEquals("Toggle freeze", columnItems.get(6));
   }
@@ -602,7 +606,7 @@ public class TestGridEditor {
     assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 1));
 
     // Show columns
-    table.contextMenu(0, 1).contextMenu("Show all columns").click();
+    table.contextMenu(0, 1).contextMenu(SHOW_ALL_COLUMNS).click();
     assertEquals(TOKEN_VALUE, table.getCellDataValueByPosition(0, 1));
   }
 
@@ -855,9 +859,12 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
-    List<String> column0HeaderMenuItems = table.contextMenu(1, 1).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    List<String> column0HeaderMenuItems = contextMenu.menuItems();
     assertFalse(
         column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   @Test
@@ -867,9 +874,12 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> column0HeaderMenuItems = table.contextMenu(1, 1).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    List<String> column0HeaderMenuItems = contextMenu.menuItems();
     assertFalse(
         column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   @Test
@@ -879,12 +889,15 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> columnHeaderMenuItems = table.contextMenu(0, 2).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(0, 2);
+    List<String> columnHeaderMenuItems = contextMenu.menuItems();
     assertTrue(columnHeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    assertTrue(table.contextMenu(0, 2)
+    assertTrue(contextMenu
         .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
-    assertTrue(table.contextMenu(0, 2)
+    assertTrue(contextMenu
         .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(AUTO_RESIZE_COLUMN_S).click();
   }
 
   @Test
@@ -894,12 +907,17 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> column0HeaderMenuItems = table.contextMenu(0, 0).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(0, 0);
+    List<String> column0HeaderMenuItems = contextMenu.menuItems();
     assertFalse(
         column0HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    List<String> column1HeaderMenuItems = table.contextMenu(0, 1).menuItems();
+
+    contextMenu = table.contextMenu(0, 1);
+    List<String> column1HeaderMenuItems = contextMenu.menuItems();
     assertFalse(
         column1HeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(AUTO_RESIZE_COLUMN_S).click();
   }
 
   @Test
@@ -1778,7 +1796,7 @@ public class TestGridEditor {
     assertTrue(menuItems1.contains(GridEditor.ADD_SPAN_ANNO_COL_POPUP_MENU_LABEL));
 
     // Click on an item to ensure the context menu is closed
-    contextMenu.menu("Auto-resize column(s)").click();
+    contextMenu.menu(AUTO_RESIZE_COLUMN_S).click();
 
     // Test for cell
     contextMenu = table.contextMenu(2, 4);
