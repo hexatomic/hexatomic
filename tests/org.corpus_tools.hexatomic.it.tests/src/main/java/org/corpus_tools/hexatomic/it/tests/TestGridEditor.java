@@ -61,7 +61,6 @@ import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.nebula.nattable.finder.SWTNatTableBot;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.Position;
 import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
@@ -69,7 +68,6 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
@@ -1370,23 +1368,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     // Assert model elements
-    tableBot.waitUntil(new ICondition() {
-
-      @Override
-      public boolean test() throws Exception {
-        return table.columnCount() == 5;
-      }
-
-      @Override
-      public void init(SWTBot bot) {
-        // No initialization necessary
-      }
-
-      @Override
-      public String getFailureMessage() {
-        return "NatTable should have 5 columns, but had " + table.columnCount();
-      }
-    });
+    tableBot.waitUntil(new ColumnCountCondition(table, 5));
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
     SToken lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
     assertEquals(MORE_VALUE,
@@ -1396,12 +1378,12 @@ public class TestGridEditor {
     table.click(4, 2);
     table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(LEMMA_NAME);
+    dialog.bot().text(1).setText(LEMMA_NAME);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
     // Assert model elements unchanged
-    assertEquals(5, table.columnCount());
+    bot.waitUntil(new ColumnCountCondition(table, 5));
     assertTrue(table.widget.getDataValueByPosition(2, 4) instanceof SToken);
     lemmaToken = (SToken) table.widget.getDataValueByPosition(2, 4);
     assertEquals(MORE_VALUE,
