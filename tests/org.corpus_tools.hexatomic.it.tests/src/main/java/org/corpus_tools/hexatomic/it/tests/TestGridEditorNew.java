@@ -77,6 +77,8 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditorNew {
 
 
+  private static final String AUTO_RESIZE_ROW_S = "Auto-resize row(s)";
+
   private static final String AUTO_RESIZE_COLUMN_S = "Auto-resize column(s)";
 
   private static final String SHOW_ALL_COLUMNS = "Show all columns";
@@ -580,10 +582,14 @@ public class TestGridEditorNew {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> columnItems = table.contextMenu(1, 0).menuItems();
-    assertEquals("Auto-resize row(s)", columnItems.get(0));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 0);
+    List<String> columnItems = contextMenu.menuItems();
+    assertEquals(AUTO_RESIZE_ROW_S, columnItems.get(0));
     assertEquals("Set row freeze", columnItems.get(2));
     assertEquals("Toggle freeze", columnItems.get(3));
+
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(AUTO_RESIZE_ROW_S).click();
   }
 
   @Test
