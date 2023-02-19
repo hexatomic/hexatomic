@@ -24,7 +24,6 @@ authors:
   orcid: https://orcid.org/0000-0002-9207-3420
 - family-names: Bunzeck
   given-names: Bastian
-  orcid: https://orcid.org/0000-0002-1832-4068
 repository-code: https://github.com/hexatomic/hexatomic
 url: https://hexatomic.github.io
 license: Apache-2.0
@@ -35,8 +34,8 @@ identifiers:
   type: doi
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
-version: 1.1.0-SNAPSHOT
-date-released: 2022-09-14
+version: 1.1.0
+date-released: 2023-02-19
 references:
 - type: software
   title: SWT Resource Manager
