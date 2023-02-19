@@ -46,13 +46,13 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
 
@@ -90,6 +90,11 @@ class TestProjectManager {
 
     errorService.clearLastException();
 
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
+  }
+
+  @AfterEach
+  void close() {
     TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
