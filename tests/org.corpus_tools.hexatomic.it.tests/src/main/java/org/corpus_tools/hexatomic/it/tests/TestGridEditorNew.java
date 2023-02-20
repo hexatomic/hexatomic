@@ -567,12 +567,16 @@ public class TestGridEditorNew {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> columnItems = table.contextMenu(0, 1).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(0, 1);
+    List<String> columnItems = contextMenu.menuItems();
     assertEquals("Hide column(s)", columnItems.get(0));
     assertEquals(SHOW_ALL_COLUMNS, columnItems.get(1));
     assertEquals(AUTO_RESIZE_COLUMN_S, columnItems.get(3));
     assertEquals("Set column freeze", columnItems.get(5));
     assertEquals("Toggle freeze", columnItems.get(6));
+
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(AUTO_RESIZE_COLUMN_S).click();
   }
 
   @Test
