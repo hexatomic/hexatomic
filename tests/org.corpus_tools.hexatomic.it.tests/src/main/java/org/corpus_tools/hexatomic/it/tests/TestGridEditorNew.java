@@ -103,7 +103,7 @@ public class TestGridEditorNew {
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
-  private static final String TEST_ANNOTATION_VALUE = "TEST";
+  private static final String TEST_ANNOTATION_VALUE = "test";
   private static final String CONTRAST_FOCUS_VALUE = "contrast-focus";
   private static final String MORE_VALUE = "more";
   private static final String COMPLICATED_VALUE = "complicated";
@@ -727,9 +727,7 @@ public class TestGridEditorNew {
    * @throws TimeoutException after 1000ms without returning successfully
    */
   private void typeTextPressReturn(SWTBotNatTable table) {
-    for (char c : TEST_ANNOTATION_VALUE.toCharArray()) {
-      keyboard.typeCharacter(c);
-    }
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new DefaultCondition() {
 
@@ -773,77 +771,81 @@ public class TestGridEditorNew {
     }
 
   }
-  //
-  // @Test
-  // void testRemoveSingleAnnotationByDelKey() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  //
-  // table.click(1, 4);
-  // keyboard.pressShortcut(Keystrokes.DELETE);
-  // bot.waitUntil(new CellDataValueCondition(tableBot, 1, 4, ""));
-  //
-  // table.click(2, 3);
-  // keyboard.pressShortcut(Keystrokes.DELETE);
-  // bot.waitUntil(new CellDataValueCondition(tableBot, 2, 3, ""));
-  //
-  // table.click(2, 4);
-  // keyboard.pressShortcut(Keystrokes.DELETE);
-  // bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
-  // NatTable natTable = table.widget;
-  // assertEquals("", table.getCellDataValueByPosition(3, 4));
-  // assertNull(natTable.getDataValueByPosition(4, 3));
-  // assertEquals("", table.getCellDataValueByPosition(4, 4));
-  // assertNull(natTable.getDataValueByPosition(4, 4));
-  // assertEquals("", table.getCellDataValueByPosition(5, 4));
-  // assertNull(natTable.getDataValueByPosition(4, 5));
-  // assertEquals("", table.getCellDataValueByPosition(6, 4));
-  // assertNull(natTable.getDataValueByPosition(4, 6));
-  // assertEquals("", table.getCellDataValueByPosition(7, 4));
-  // assertNull(natTable.getDataValueByPosition(4, 7));
-  // }
-  //
-  // @Test
-  // void testRemoveSingleAnnotationByPopupMenu() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  //
-  // table.click(1, 4);
-  // List<String> columnItems = table.contextMenu(2, 3).menuItems();
-  // assertTrue(columnItems.get(0).contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
-  // table.contextMenu(2, 3).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
-  // assertEquals("", table.getCellDataValueByPosition(1, 4));
-  // assertNull(table.widget.getDataValueByPosition(4, 1));
-  // assertNotNull(table.getCellDataValueByPosition(2, 3));
-  // }
-  //
-  // @Test
-  // void testPopupMenuItemsOnSelectedTokenText() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  // table.click(1, 1);
-  // SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-  // // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
-  // assertEquals(5, contextMenu.menuItems().size());
-  // }
-  //
-  // @Test
-  // void testPopupMenuItemsOnNoSelection() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  // SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-  // // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
-  // assertEquals(5, contextMenu.menuItems().size());
-  // }
-  //
+
+  @Test
+  void testRemoveSingleAnnotationByDelKey() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new CellDataValueCondition(tableBot, 1, 4, ""));
+
+    table.click(2, 3);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new CellDataValueCondition(tableBot, 2, 3, ""));
+
+    table.click(2, 4);
+    keyboard.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
+    NatTable natTable = table.widget;
+    assertEquals("", table.getCellDataValueByPosition(3, 4));
+    assertNull(natTable.getDataValueByPosition(4, 3));
+    assertEquals("", table.getCellDataValueByPosition(4, 4));
+    assertNull(natTable.getDataValueByPosition(4, 4));
+    assertEquals("", table.getCellDataValueByPosition(5, 4));
+    assertNull(natTable.getDataValueByPosition(4, 5));
+    assertEquals("", table.getCellDataValueByPosition(6, 4));
+    assertNull(natTable.getDataValueByPosition(4, 6));
+    assertEquals("", table.getCellDataValueByPosition(7, 4));
+    assertNull(natTable.getDataValueByPosition(4, 7));
+  }
+
+  @Test
+  void testRemoveSingleAnnotationByPopupMenu() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(1, 4);
+    List<String> columnItems = table.contextMenu(2, 3).menuItems();
+    assertTrue(columnItems.get(0).contains(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL));
+    table.contextMenu(2, 3).contextMenu(GridEditor.DELETE_CELLS_POPUP_MENU_LABEL).click();
+    assertEquals("", table.getCellDataValueByPosition(1, 4));
+    assertNull(table.widget.getDataValueByPosition(4, 1));
+    assertNotNull(table.getCellDataValueByPosition(2, 3));
+  }
+
+  @Test
+  void testPopupMenuItemsOnSelectedTokenText() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    table.click(1, 1);
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
+  }
+
+  @Test
+  void testPopupMenuItemsOnNoSelection() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
+    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
+    assertEquals(5, contextMenu.menuItems().size());
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
+  }
+
   // @Test
   // void testDeleteCellsPopupMenuInvisibleOnNoSelection() {
   // openDefaultExample();
