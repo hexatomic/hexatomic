@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -58,6 +59,7 @@ import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -624,64 +626,64 @@ public class TestGridEditorNew {
     assertTrue(table.hasConfigLabel(1, 5, StyleConfiguration.EMPTY_CELL_STYLE));
   }
 
-  // /**
-  // * Tests editing cells by activating the cell editor with a double-click on the cell.
-  // */
-  // @Test
-  // void testEditCellOnDoubleClick() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  //
-  // table.doubleclick(2, 2);
-  // typeTextPressReturn(table);
-  //
-  // Object nodeObj = table.widget.getDataValueByPosition(2, 2);
-  // assertTrue(nodeObj instanceof SNode);
-  // SNode node = (SNode) nodeObj;
-  // assertEquals(TEST_ANNOTATION_VALUE,
-  // node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
-  // }
-  //
-  // /**
-  // * Tests editing cells by activating the cell editor by just typing away.
-  // */
-  // @Test
-  // void testEditCellTyping() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  //
-  // table.click(2, 2);
-  // typeTextPressReturn(table);
-  // Object nodeObj = table.widget.getDataValueByPosition(2, 2);
-  // assertTrue(nodeObj instanceof SNode);
-  // SNode node = (SNode) nodeObj;
-  // assertEquals(TEST_ANNOTATION_VALUE,
-  // node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
-  // }
-  //
-  // /**
-  // * Tests editing cells by activating the cell editor by just typing away.
-  // */
-  // @Test
-  // void testEditCellSpaceActivatedTyping() {
-  // openDefaultExample();
-  //
-  // SWTNatTableBot tableBot = new SWTNatTableBot();
-  // SWTBotNatTable table = tableBot.nattable();
-  //
-  // table.click(2, 2);
-  // keyboard.pressShortcut(Keystrokes.SPACE);
-  // typeTextPressReturn(table);
-  // Object nodeObj = table.widget.getDataValueByPosition(2, 2);
-  // assertTrue(nodeObj instanceof SNode);
-  // SNode node = (SNode) nodeObj;
-  // assertEquals(TEST_ANNOTATION_VALUE,
-  // node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
-  // }
+  /**
+   * Tests editing cells by activating the cell editor with a double-click on the cell.
+   */
+  @Test
+  void testEditCellOnDoubleClick() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.doubleclick(2, 2);
+    typeTextPressReturn(table);
+
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+  }
+
+  /**
+   * Tests editing cells by activating the cell editor by just typing away.
+   */
+  @Test
+  void testEditCellTyping() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 2);
+    typeTextPressReturn(table);
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+  }
+
+  /**
+   * Tests editing cells by activating the cell editor by just typing away.
+   */
+  @Test
+  void testEditCellSpaceActivatedTyping() {
+    openDefaultExample();
+
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    SWTBotNatTable table = tableBot.nattable();
+
+    table.click(2, 2);
+    keyboard.pressShortcut(Keystrokes.SPACE);
+    typeTextPressReturn(table);
+    Object nodeObj = table.widget.getDataValueByPosition(2, 2);
+    assertTrue(nodeObj instanceof SNode);
+    SNode node = (SNode) nodeObj;
+    assertEquals(TEST_ANNOTATION_VALUE,
+        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+  }
   //
   // @Test
   // void testCreateAnnotationOnEmptySpanCell() {
@@ -716,60 +718,61 @@ public class TestGridEditorNew {
   // assertEquals(TEST_ANNOTATION_VALUE,
   // node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   // }
-  //
-  // /**
-  // * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the tableToTest has
-  // no
-  // * active cell editors, up to 1000ms.
-  // *
-  // * @param tableToTest The {@link NatTable} to operate on
-  // * @throws TimeoutException after 1000ms without returning successfully
-  // */
-  // private void typeTextPressReturn(SWTBotNatTable table) {
-  // keyboard.typeText(TEST_ANNOTATION_VALUE);
-  // keyboard.pressShortcut(Keystrokes.CR);
-  // bot.waitUntil(new DefaultCondition() {
-  //
-  // @Override
-  // public boolean test() throws Exception {
-  // return table.widget.getActiveCellEditor() == null;
-  // }
-  //
-  // @Override
-  // public String getFailureMessage() {
-  // return "Setting new value for cell took too long.";
-  // }
-  // }, 1000);
-  // }
-  //
-  // protected static class CellDataValueCondition extends DefaultCondition {
-  //
-  // private final SWTNatTableBot tableBot;
-  // private final int row;
-  // private final int column;
-  // private final String expected;
-  //
-  // public CellDataValueCondition(SWTNatTableBot tableBot, int row, int column, String expected) {
-  // super();
-  // this.tableBot = tableBot;
-  // this.row = row;
-  // this.column = column;
-  // this.expected = expected;
-  // }
-  //
-  // @Override
-  // public boolean test() throws Exception {
-  // String value = tableBot.nattable().getCellDataValueByPosition(row, column);
-  // return Objects.equals(value, expected);
-  // }
-  //
-  // @Override
-  // public String getFailureMessage() {
-  // return "NatTable cell at position " + row + "," + column + " did not have expected value "
-  // + expected;
-  // }
-  //
-  // }
+
+  /**
+   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the tableToTest has no
+   * active cell editors, up to 1000ms.
+   *
+   * @param tableToTest The {@link NatTable} to operate on
+   * @throws TimeoutException after 1000ms without returning successfully
+   */
+  private void typeTextPressReturn(SWTBotNatTable table) {
+    for (char c : TEST_ANNOTATION_VALUE.toCharArray()) {
+      keyboard.typeCharacter(c);
+    }
+    keyboard.pressShortcut(Keystrokes.CR);
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return table.widget.getActiveCellEditor() == null;
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Setting new value for cell took too long.";
+      }
+    }, 1000);
+  }
+
+  protected static class CellDataValueCondition extends DefaultCondition {
+
+    private final SWTNatTableBot tableBot;
+    private final int row;
+    private final int column;
+    private final String expected;
+
+    public CellDataValueCondition(SWTNatTableBot tableBot, int row, int column, String expected) {
+      super();
+      this.tableBot = tableBot;
+      this.row = row;
+      this.column = column;
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      String value = tableBot.nattable().getCellDataValueByPosition(row, column);
+      return Objects.equals(value, expected);
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "NatTable cell at position " + row + "," + column + " did not have expected value "
+          + expected;
+    }
+
+  }
   //
   // @Test
   // void testRemoveSingleAnnotationByDelKey() {
