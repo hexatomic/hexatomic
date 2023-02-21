@@ -112,7 +112,7 @@ public class TestGridEditor {
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
-  private static final String TEST_ANNOTATION_VALUE = "TEST";
+  private static final String TEST_ANNOTATION_VALUE = "test";
   private static final String CONTRAST_FOCUS_VALUE = "contrast-focus";
   private static final String MORE_VALUE = "more";
   private static final String COMPLICATED_VALUE = "complicated";
@@ -1849,9 +1849,9 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 2);
-    addColumn(tableBot, TOKEN_VALUE, OK);
+    addColumn(tableBot, TOKEN_VALUE, "TEST", OK);
     // New columns created by keyboard are always added at the very end
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+    assertColumnAddedAtIndex("TEST", 5, tableBot);
   }
 
   /**
@@ -1866,7 +1866,7 @@ public class TestGridEditor {
 
     table.click(2, 2);
 
-    addColumn(tableBot, TOKEN_VALUE, CANCEL);
+    addColumn(tableBot, TOKEN_VALUE, "TEST", CANCEL);
     // New columns created by keyboard are always added at the very end
     assertEquals(oldColumnCount, table.columnCount());
   }
@@ -1881,7 +1881,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 1);
-    addColumn(tableBot, SPAN_VALUE, OK);
+    addColumn(tableBot, SPAN_VALUE, "TEST", OK);
     assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
   }
 
@@ -1896,9 +1896,9 @@ public class TestGridEditor {
     final int oldColumnCount = table.columnCount();
 
     table.click(2, 1);
-    addColumn(tableBot, TOKEN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
-    addColumn(tableBot, TOKEN_VALUE, OK);
+    addColumn(tableBot, TOKEN_VALUE, "TEST", OK);
+    assertColumnAddedAtIndex("TEST", 5, tableBot);
+    addColumn(tableBot, TOKEN_VALUE, "TEST", OK);
     SWTBotShell dialog = tableBot.shell("Column already exists");
     tableBot.button(OK).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
@@ -1915,10 +1915,10 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 1);
-    addColumn(tableBot, SPAN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
-    addColumn(tableBot, SPAN_VALUE, OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE + " (2)", 6, tableBot);
+    addColumn(tableBot, SPAN_VALUE, "TEST", OK);
+    assertColumnAddedAtIndex("TEST", 5, tableBot);
+    addColumn(tableBot, SPAN_VALUE, "TEST", OK);
+    assertColumnAddedAtIndex("TEST" + " (2)", 6, tableBot);
   }
 
   /**
@@ -2132,14 +2132,15 @@ public class TestGridEditor {
   }
 
 
-  private void addColumn(SWTNatTableBot tableBot, String tokenValue, String buttonToClick) {
+  private void addColumn(SWTNatTableBot tableBot, String tokenValue, String columName,
+      String buttonToClick) {
     switch (tokenValue) {
       case TOKEN_VALUE:
-        keyboard.pressShortcut(SWT.MOD3 | SWT.MOD2, 't');
+        tableBot.nattable().pressShortcut(Keystrokes.toKeys(SWT.MOD2 | SWT.MOD3, 't'));
         break;
 
       case SPAN_VALUE:
-        keyboard.pressShortcut(SWT.MOD3 | SWT.MOD2, 's');
+        tableBot.nattable().pressShortcut(Keystrokes.toKeys(SWT.MOD2 | SWT.MOD3, 's'));
         break;
 
       default:
@@ -2148,7 +2149,7 @@ public class TestGridEditor {
     }
     bot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(columName);
     tableBot.button(buttonToClick).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
   }
@@ -2158,6 +2159,7 @@ public class TestGridEditor {
     final int columnCount = table.columnCount();
     SWTBotRootMenu menu = table.contextMenu(rowIndex, columnIndex);
     menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
+    tableBot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
