@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -86,6 +87,8 @@ import org.junit.jupiter.api.Test;
  */
 public class TestGridEditor {
 
+
+  private static final String AUTO_RESIZE_ROW_S = "Auto-resize row(s)";
 
   private static final String AUTO_RESIZE_COLUMN_S = "Auto-resize column(s)";
 
@@ -519,9 +522,14 @@ public class TestGridEditor {
     combo.setSelection(0);
     assertEquals(TEXT1_CAPTION, combo.getText());
 
-    combo.pressShortcut(KeyStroke.getInstance(SWT.ARROW_DOWN));
-    assertEquals("Token annotations only", combo.getText());
+    // Using the keyboard arrows only works on some systems, e.g. on macOS you can only click on the
+    // Combo Box to select the item
+    if (SystemUtils.IS_OS_LINUX) {
+      combo.pressShortcut(KeyStroke.getInstance(SWT.ARROW_DOWN));
+      assertEquals("Token annotations only", combo.getText());
+    }
   }
+
 
   @Test
   void testDropdownWithTextButNoToken() {
@@ -570,12 +578,16 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> columnItems = table.contextMenu(0, 1).menuItems();
+    SWTBotRootMenu contextMenu = table.contextMenu(0, 1);
+    List<String> columnItems = contextMenu.menuItems();
     assertEquals("Hide column(s)", columnItems.get(0));
     assertEquals(SHOW_ALL_COLUMNS, columnItems.get(1));
     assertEquals(AUTO_RESIZE_COLUMN_S, columnItems.get(3));
     assertEquals("Set column freeze", columnItems.get(5));
     assertEquals("Toggle freeze", columnItems.get(6));
+
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(AUTO_RESIZE_COLUMN_S).click();
   }
 
   @Test
@@ -585,10 +597,14 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    List<String> columnItems = table.contextMenu(1, 0).menuItems();
-    assertEquals("Auto-resize row(s)", columnItems.get(0));
+    SWTBotRootMenu contextMenu = table.contextMenu(1, 0);
+    List<String> columnItems = contextMenu.menuItems();
+    assertEquals(AUTO_RESIZE_ROW_S, columnItems.get(0));
     assertEquals("Set row freeze", columnItems.get(2));
     assertEquals("Toggle freeze", columnItems.get(3));
+
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(AUTO_RESIZE_ROW_S).click();
   }
 
   @Test
@@ -715,7 +731,7 @@ public class TestGridEditor {
   /**
    * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the tableToTest has no
    * active cell editors, up to 1000ms.
-   * 
+   *
    * @param tableToTest The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
@@ -822,6 +838,8 @@ public class TestGridEditor {
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
     // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
     assertEquals(5, contextMenu.menuItems().size());
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   @Test
@@ -833,6 +851,8 @@ public class TestGridEditor {
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
     // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add annotation column
     assertEquals(5, contextMenu.menuItems().size());
+    // Click on an item to ensure the context menu is closed
+    contextMenu.menu(REFRESH_GRID).click();
   }
 
   @Test
@@ -890,10 +910,10 @@ public class TestGridEditor {
     SWTBotRootMenu contextMenu = table.contextMenu(0, 2);
     List<String> columnHeaderMenuItems = contextMenu.menuItems();
     assertTrue(columnHeaderMenuItems.contains(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL));
-    assertTrue(contextMenu
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
-    assertTrue(contextMenu
-        .contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
+    assertTrue(
+        contextMenu.contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isVisible());
+    assertTrue(
+        contextMenu.contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).isEnabled());
     // Click on an item to ensure the context menu is closed
     contextMenu.menu(AUTO_RESIZE_COLUMN_S).click();
   }
@@ -1013,8 +1033,11 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertTrue(projectManager.isDirty());
     // Also check that the undo toolbar item has been enabled
-    assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
-    assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
+    assertTrue(bot.toolbarButtonWithTooltip("Undo (" + TestHelper.getControlTooltipPrefix() + "Z)")
+        .isEnabled());
+    assertFalse(bot.toolbarButtonWithTooltip(
+        "Redo (" + TestHelper.getShiftTooltipPrefix() + TestHelper.getControlTooltipPrefix() + "Z)")
+        .isEnabled());
   }
 
   /**
@@ -1083,7 +1106,7 @@ public class TestGridEditor {
   /**
    * Tests that when a single cell is selected and its annotation name changed, that a new column
    * for the new annotation name is created, and that the cell is moved into that column.
-   * 
+   *
    * @throws Exception if the thread extracting the information from a given dialog is interrupted,
    *         or if there is an error during execution. Can be either {@link InterruptedException} or
    *         {@link ExecutionException}.
@@ -1124,7 +1147,7 @@ public class TestGridEditor {
   /**
    * Tests that when a single cell is selected and the annotation rename dialog is cancelled, that
    * everything has stayed the same.
-   * 
+   *
    * @throws Exception if the thread extracting the information from a given dialog is interrupted,
    *         or if there is an error during execution. Can be either {@link InterruptedException} or
    *         {@link ExecutionException}.
@@ -1162,7 +1185,7 @@ public class TestGridEditor {
   /**
    * Tests that when multiple cells in the same column are selected, that the annotation renaming
    * works for all of these cells.
-   * 
+   *
    * @throws Exception if the thread extracting the information from a given dialog is interrupted,
    *         or if there is an error during execution. Can be either {@link InterruptedException} or
    *         {@link ExecutionException}.
@@ -1229,7 +1252,7 @@ public class TestGridEditor {
   /**
    * Tests that when multiple cells from multiple different columns are selected, that the
    * annotation renaming works for all of these cells.
-   * 
+   *
    * @throws Exception if the thread extracting the information from a given dialog is interrupted,
    *         or if there is an error during execution. Can be either {@link InterruptedException} or
    *         {@link ExecutionException}.
@@ -1299,7 +1322,7 @@ public class TestGridEditor {
    * Tests that when annotations with the qualified target annotation name already exist on a node
    * during a rename action, the cells and nodes remain unchanged, and a dialog is displayed
    * notifying the user of these unchanged annotations.
-   * 
+   *
    * @throws InterruptedException If the thread extracting the label text in the given dialog is
    *         interrupted, or if there is an error during execution.
    * @throws ExecutionException see InterruptedException
@@ -1842,6 +1865,7 @@ public class TestGridEditor {
     int oldColumnCount = table.columnCount();
 
     table.click(2, 2);
+
     addColumn(tableBot, TOKEN_VALUE, CANCEL);
     // New columns created by keyboard are always added at the very end
     assertEquals(oldColumnCount, table.columnCount());
@@ -2039,7 +2063,7 @@ public class TestGridEditor {
 
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/257.
-   * 
+   *
    * @throws InterruptedException If the thread extracting the label text in the given dialog is
    *         interrupted, or if there is an error during execution.
    * @throws ExecutionException see InterruptedException
@@ -2067,12 +2091,12 @@ public class TestGridEditor {
 
   /**
    * Regression test for https://github.com/hexatomic/hexatomic/issues/259.
-   * 
+   *
    * <p>
    * Tests that the annotation name, not the display name, is shown on columns that are secondary
    * columns (e.g., "namespace::name (2)").
    * </p>
-   * 
+   *
    * @throws InterruptedException If the thread extracting the label text in the given dialog is
    *         interrupted, or if there is an error during execution.
    * @throws ExecutionException See InterruptedException
@@ -2111,17 +2135,18 @@ public class TestGridEditor {
   private void addColumn(SWTNatTableBot tableBot, String tokenValue, String buttonToClick) {
     switch (tokenValue) {
       case TOKEN_VALUE:
-        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 't');
+        keyboard.pressShortcut(SWT.MOD3 | SWT.MOD2, 't');
         break;
 
       case SPAN_VALUE:
-        keyboard.pressShortcut(SWT.ALT | SWT.SHIFT, 's');
+        keyboard.pressShortcut(SWT.MOD3 | SWT.MOD2, 's');
         break;
 
       default:
         fail();
         break;
     }
+    bot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button(buttonToClick).click();
