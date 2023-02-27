@@ -736,6 +736,10 @@ public class TestGridEditor {
    * @throws TimeoutException after 1000ms without returning successfully
    */
   private void typeTextPressReturn(SWTBotNatTable table) {
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      keyboard.pressShortcut(Keystrokes.ESC);
+    }
+
     keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new DefaultCondition() {
@@ -1446,9 +1450,9 @@ public class TestGridEditor {
     shiftClick(table, 7, 4);
 
     // Create span and assert
-    List<String> contextMenuItems = table.contextMenu(5, 4).menuItems();
-    assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
-    table.contextMenu(5, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
+    SWTBotRootMenu contextMenu = table.contextMenu(5, 4);
+    contextMenu.contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
+
     typeTextPressReturn(table);
     assertNull(natTable.getDataValueByPosition(4, 2));
     Object potentialSpan = natTable.getDataValueByPosition(4, 3);
