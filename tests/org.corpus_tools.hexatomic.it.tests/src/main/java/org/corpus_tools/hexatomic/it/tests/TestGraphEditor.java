@@ -674,7 +674,6 @@ class TestGraphEditor {
   }
 
   @Test
-  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testFilterOptions() {
     openDefaultExample();
 
@@ -733,6 +732,7 @@ class TestGraphEditor {
 
   @Test
 
+  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testLayoutParameters() {
     openDefaultExample();
 
