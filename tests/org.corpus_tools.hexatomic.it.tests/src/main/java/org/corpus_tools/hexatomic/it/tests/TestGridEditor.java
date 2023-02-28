@@ -88,6 +88,7 @@ import org.junit.jupiter.api.Test;
 public class TestGridEditor {
 
 
+
   private static final String AUTO_RESIZE_ROW_S = "Auto-resize row(s)";
 
   private static final String AUTO_RESIZE_COLUMN_S = "Auto-resize column(s)";
@@ -112,6 +113,7 @@ public class TestGridEditor {
 
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
+  private static final String TEST_ANNOTATION_NAME = "TEST";
   private static final String TEST_ANNOTATION_VALUE = "test";
   private static final String CONTRAST_FOCUS_VALUE = "contrast-focus";
   private static final String MORE_VALUE = "more";
@@ -737,6 +739,10 @@ public class TestGridEditor {
    */
   private void typeTextPressReturn(SWTBotNatTable table) {
     if (SystemUtils.IS_OS_MAC_OSX) {
+      // There seems to be an issue with editing a cell when the span was created from a context
+      // menu triggered by SWT bot. Clicking manually on the context menu works and the text can be
+      // inserted right away. Pressing ESC first on macOS circumvents this problem, but is more a
+      // workaround.
       keyboard.pressShortcut(Keystrokes.ESC);
     }
 
@@ -1853,9 +1859,9 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 2);
-    addColumn(tableBot, TOKEN_VALUE, "TEST", OK);
+    addColumn(tableBot, TOKEN_VALUE, TEST_ANNOTATION_NAME, OK);
     // New columns created by keyboard are always added at the very end
-    assertColumnAddedAtIndex("TEST", 5, tableBot);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_NAME, 5, tableBot);
   }
 
   /**
@@ -1870,7 +1876,7 @@ public class TestGridEditor {
 
     table.click(2, 2);
 
-    addColumn(tableBot, TOKEN_VALUE, "TEST", CANCEL);
+    addColumn(tableBot, TOKEN_VALUE, TEST_ANNOTATION_NAME, CANCEL);
     // New columns created by keyboard are always added at the very end
     assertEquals(oldColumnCount, table.columnCount());
   }
@@ -1885,8 +1891,8 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 1);
-    addColumn(tableBot, SPAN_VALUE, "TEST", OK);
-    assertColumnAddedAtIndex(TEST_ANNOTATION_VALUE, 5, tableBot);
+    addColumn(tableBot, SPAN_VALUE, TEST_ANNOTATION_NAME, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_NAME, 5, tableBot);
   }
 
   /**
@@ -1900,9 +1906,9 @@ public class TestGridEditor {
     final int oldColumnCount = table.columnCount();
 
     table.click(2, 1);
-    addColumn(tableBot, TOKEN_VALUE, "TEST", OK);
-    assertColumnAddedAtIndex("TEST", 5, tableBot);
-    addColumn(tableBot, TOKEN_VALUE, "TEST", OK);
+    addColumn(tableBot, TOKEN_VALUE, TEST_ANNOTATION_NAME, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_NAME, 5, tableBot);
+    addColumn(tableBot, TOKEN_VALUE, TEST_ANNOTATION_NAME, OK);
     SWTBotShell dialog = tableBot.shell("Column already exists");
     tableBot.button(OK).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
@@ -1919,10 +1925,10 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 1);
-    addColumn(tableBot, SPAN_VALUE, "TEST", OK);
-    assertColumnAddedAtIndex("TEST", 5, tableBot);
-    addColumn(tableBot, SPAN_VALUE, "TEST", OK);
-    assertColumnAddedAtIndex("TEST" + " (2)", 6, tableBot);
+    addColumn(tableBot, SPAN_VALUE, TEST_ANNOTATION_NAME, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_NAME, 5, tableBot);
+    addColumn(tableBot, SPAN_VALUE, TEST_ANNOTATION_NAME, OK);
+    assertColumnAddedAtIndex(TEST_ANNOTATION_NAME + " (2)", 6, tableBot);
   }
 
   /**

@@ -89,7 +89,7 @@ public class TestHelper {
    * @return A string representation for the "Ctrl" key as used by tooltips on this system.
    */
   public static String getControlTooltipPrefix() {
-    if (SystemUtils.IS_OS_MAC) {
+    if (SystemUtils.IS_OS_MAC_OSX) {
       return "⌘";
     } else {
       return "Ctrl+";
@@ -102,7 +102,7 @@ public class TestHelper {
    * @return A string representation for the "Shift" key as used by tooltips on this system.
    */
   public static String getShiftTooltipPrefix() {
-    if (SystemUtils.IS_OS_MAC) {
+    if (SystemUtils.IS_OS_MAC_OSX) {
       return "⇧";
     } else {
       return "Shift+";
