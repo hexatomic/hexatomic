@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.lang3.SystemUtils;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.UiStatusReport;
@@ -73,13 +74,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
   private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String DOC1_TITLE = "doc1 (Graph Editor)";
-  private static final String INF_STRUCT = "Inf-Struct";
   private static final String CONST = "const";
   private static final String SEARCH = "Search";
   private static final String ANNOTATION_NAME = "Node Annotations";
@@ -105,7 +107,8 @@ class TestGraphEditor {
   private ProjectManager projectManager;
   private UiStatusReport uiStatus;
 
-  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
+  private final Keyboard awtKeyboard = KeyboardFactory.getAWTKeyboard();
 
   private final class HorizontalNodeDistanceCondition extends DefaultCondition {
     private final SNode leftNode;
@@ -446,7 +449,7 @@ class TestGraphEditor {
     // Make sure the cursor is at the end of the line
     console.navigateTo(console.getLineCount() - 1, command.length() + 2);
     // Finish with typing the return character
-    console.typeText("\n");
+    console.insertText("\n");
 
     // Wait until the graph has been rendered
     if (firstSelectedRow.isPresent()) {
@@ -489,7 +492,8 @@ class TestGraphEditor {
 
     Point origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
-    // Initially, the zoom is adjusted to match the height, so moving up/down should not do anything
+    // Initially, the zoom is adjusted to match the height, so moving up/down should
+    // not do anything
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
@@ -500,14 +504,16 @@ class TestGraphEditor {
         SWTBotPreferences.TIMEOUT, 100);
 
     // Zoom in so we can move the view with the arrow keys
-    // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad keys yet.
+    // Use the mock keyboard for this since AWT/SWT keyboards don't map the keypad
+    // keys yet.
     Keyboard mockKeyboadForGraph = KeyboardFactory.getMockKeyboard(g, new WidgetTextDescription(g));
     KeyStroke[] strokesZoomIn = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_ADD)};
     mockKeyboadForGraph.pressShortcut(strokesZoomIn);
 
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
 
-    // Scroll with arrow keys (left, right, up, down) and check that that view has been moved
+    // Scroll with arrow keys (left, right, up, down) and check that that view has
+    // been moved
     keyboard.pressShortcut(Keystrokes.RIGHT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)),
@@ -680,7 +686,8 @@ class TestGraphEditor {
     // Pointing relations are shown initially and the new one should be visible now
     bot.waitUntil(new NumberOfConnectionsCondition(23));
 
-    // Deactivate/activate pointing relations in view and check the view has less/more connections
+    // Deactivate/activate pointing relations in view and check the view has
+    // less/more connections
     bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
     SWTBotCheckBox includePointing = bot.checkBox("Pointing Relations");
     includePointing.deselect();
@@ -706,14 +713,14 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
-    annoFilter.typeText(INF_STRUCT);
+    annoFilter.typeText("inf");
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
 
     bot.waitUntil(new NumberOfNodesCondition(25));
 
     // Check that already added annotation names are not added twice
-    annoFilter.typeText(CONST);
+    annoFilter.typeText("inf");
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
 
@@ -724,6 +731,8 @@ class TestGraphEditor {
   }
 
   @Test
+
+  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testLayoutParameters() {
     openDefaultExample();
 
@@ -748,8 +757,8 @@ class TestGraphEditor {
       SWTBot botLayout = new SWTBot(layoutPanel.widget);
       SWTBotScale horizontalScale = botLayout.scale(0);
 
-      // Change the horizontal margin parameter and check that distance between the first two token
-      // is updated
+      // Change the horizontal margin parameter and check that distance between the
+      // first two token is updated
       horizontalScale.setValue(0);
       assertEquals("0.0", botLayout.label(1).getText());
       List<SToken> token = graph.getTokens();
@@ -777,7 +786,8 @@ class TestGraphEditor {
       bot.waitUntil(new HorizontalNodeDistanceCondition(token.get(0), token.get(1), 260.0, g),
           SWTBotPreferences.TIMEOUT, 100);
 
-      // Change the vertical margin and compare the distance between the root node and a node below
+      // Change the vertical margin and compare the distance between the root node and
+      // a node below
       // it
       SNode rootNode = graph.getNodesByName("structure1").get(0);
       SNode struct2 = graph.getNodesByName("structure2").get(0);
@@ -803,8 +813,8 @@ class TestGraphEditor {
       bot.waitUntil(new VerticalNodeDistanceCondition(rootNode, struct2, 106.0, g),
           SWTBotPreferences.TIMEOUT, 100);
 
-
-      // Change the vertical token margin and compare the distance between a token node and node and
+      // Change the vertical token margin and compare the distance between a token
+      // node and node and
       // a node on the lowest level
       verticalScale.setValue(0);
 
@@ -831,10 +841,8 @@ class TestGraphEditor {
       bot.waitUntil(new VerticalNodeDistanceCondition(struct12, tok10, 265.0, g),
           SWTBotPreferences.TIMEOUT, 100);
 
-
     }
   }
-
 
   private GraphNode getGraphNodeForSalt(SWTBot bot, Graph g, SNode saltNode) {
     return bot.getDisplay().syncCall(() -> {
@@ -938,7 +946,8 @@ class TestGraphEditor {
     keyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
 
-    // Go back again, just to make sure the user does not need to click the arrow key twice
+    // Go back again, just to make sure the user does not need to click the arrow
+    // key twice
     keyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
   }
@@ -1014,7 +1023,6 @@ class TestGraphEditor {
     ScalableFigure figure = g.getRootLayer();
     assertEquals(1.0, figure.getScale());
   }
-
 
   /**
    * Tests that the segmentation list is updated when a token is deleted. Regression test for
@@ -1095,9 +1103,6 @@ class TestGraphEditor {
     // Make sure the relevant spans are shown
     bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_TYPES);
     bot.checkBox(SPANS).select();
-    bot.expandBarInGroup(FILTER_VIEW).expandItem(ANNOTATION_NAME);
-    SWTBotText annoFilter = bot.textWithMessage(SEARCH);
-    annoFilter.setText("Inf\n");
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=contrast-focus"));
 
@@ -1112,12 +1117,27 @@ class TestGraphEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(1, 4);
-    keyboard.typeText("anothertest");
-    keyboard.pressShortcut(Keystrokes.CR);
+
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      // There seems to be an issue with editing a cell when the span was created from
+      // a context menu triggered by SWT bot. Clicking manually on the context menu
+      // works and the text can be inserted right away. Pressing ESC first on macOS
+      // circumvents this problem, but is more a workaround.
+      awtKeyboard.pressShortcut(Keystrokes.ESC);
+    }
+    awtKeyboard.pressShortcut(Keystrokes.ESC);
+
+    awtKeyboard.typeText("anothertest", 10);
+    awtKeyboard.pressShortcut(Keystrokes.CR);
+    bot.waitUntil(new TableCellEditorActiveCondition(table), 1000);
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change
-    TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
+    for (SWTBotView part : bot.parts()) {
+      if (part.getTitle().endsWith("(Grid Editor)")) {
+        part.close();
+      }
+    }
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
   }

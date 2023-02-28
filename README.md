@@ -223,7 +223,7 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [license-shield]: https://img.shields.io/github/license/hexatomic/hexatomic.svg?style=flat-square
 [license-url]: https://github.com/hexatomic/hexatomic/blob/main/LICENSE
 [product-screenshot]: images/screenshot.png
-[gh-actions-main-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
+[gh-actions-main-shield]: https://img.shields.io/github/actions/workflow/status/hexatomic/hexatomic/test.yml?branch=develop&style=flat-square
 [gh-actions-main-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests
 [sonarcloud-dashboard]: https://sonarcloud.io/dashboard?id=hexatomic_hexatomic
 

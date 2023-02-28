@@ -129,8 +129,7 @@ public abstract class PepperJobRunner implements IRunnableWithProgress {
    *         interrupted.
    * @throws ExecutionException Thrown for major execution errors.
    */
-  protected void runJob(IProgressMonitor monitor)
-      throws InterruptedException, ExecutionException {
+  protected void runJob(IProgressMonitor monitor) throws InterruptedException, ExecutionException {
 
     ExecutorService serviceExec = Executors.newSingleThreadExecutor();
     Future<?> background = serviceExec.submit(getJob()::convert);
@@ -139,7 +138,7 @@ public abstract class PepperJobRunner implements IRunnableWithProgress {
     // Create a set of already finished documents
     Set<String> completedDocuments = new HashSet<>();
 
-    while (!background.isDone() && !background.isCancelled()) {
+    do {
       if (monitor.isCanceled()) {
         // Cancel the Pepper job
         job.cancelConversion();
@@ -165,7 +164,7 @@ public abstract class PepperJobRunner implements IRunnableWithProgress {
         }
       }
       Thread.sleep(1000);
-    }
+    } while (!background.isDone() && !background.isCancelled());
 
     monitor.done();
 
