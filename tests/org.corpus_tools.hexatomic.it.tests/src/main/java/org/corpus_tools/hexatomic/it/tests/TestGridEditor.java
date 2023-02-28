@@ -2202,12 +2202,10 @@ public class TestGridEditor {
     PanelTextsTextExtractor extractor = new PanelTextsTextExtractor(dialog);
     FutureTask<Pair<String, String>> textTextFuture = new FutureTask<>(extractor);
     Pair<String, String> extractedNamePair = null;
-    String extractedNamespace = null;
-    String extractedName = null;
     Display.getDefault().syncExec(textTextFuture);
     extractedNamePair = textTextFuture.get();
-    extractedNamespace = extractedNamePair.getLeft();
-    extractedName = extractedNamePair.getRight();
+    String extractedNamespace = extractedNamePair.getLeft();
+    String extractedName = extractedNamePair.getRight();
 
     assertEquals(namespace, extractedNamespace);
     assertEquals(name, extractedName);
