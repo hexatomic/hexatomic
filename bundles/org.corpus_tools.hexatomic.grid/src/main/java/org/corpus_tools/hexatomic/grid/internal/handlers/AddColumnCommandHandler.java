@@ -29,6 +29,7 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.command.AbstractLayerCommandHandler;
 import org.eclipse.nebula.widgets.nattable.command.ILayerCommandHandler;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,22 +64,23 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
     log.debug("Executing command {}.", getCommandClass().getSimpleName());
     int currentColumnIndex = command.getCurrentColumnIndex();
     ColumnType columnType = command.getColumnType();
+    Shell activeShell = Display.getCurrent().getActiveShell();
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(Display.getDefault().getActiveShell(), null,
-            "New annotation column");
+        new AnnotationRenameDialog(activeShell, null, "New annotation column");
     dialog.open();
 
     if (dialog.isCancelPressed()) {
       log.debug("Execution of command {} cancelled.", getCommandClass().getSimpleName());
-      return false;
-    }
+    } else {
+      // If the index is -1, then we don't know where to insert the new column, so
+      // call the layer
+      // function respectively with -1
+      boolean isInsertionUnknown = (currentColumnIndex == -1);
+      int insertionIndex = isInsertionUnknown ? currentColumnIndex : (currentColumnIndex + 1);
+      this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), insertionIndex);
+      command.getNatTable().refresh(true);
 
-    // If the index is -1, then we don't know where to insert the new column, so call the layer
-    // function respectively with -1
-    boolean isInsertionUnknown = (currentColumnIndex == -1);
-    int insertionIndex = isInsertionUnknown ? currentColumnIndex : (currentColumnIndex + 1);
-    this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), insertionIndex);
-    command.getNatTable().refresh(true);
+    }
     return true;
   }
 

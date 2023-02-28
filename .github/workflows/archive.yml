@@ -7,7 +7,7 @@ on:
 jobs:
   trigger_archival:
     name: Trigger archival on Software Heritage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
         - name: Run Software Heritage Save action
           uses: sdruskat/swh-save-action@v1.0.1

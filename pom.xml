@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
-		<tycho.version>2.7.3</tycho.version>
+		<tycho.version>2.7.5</tycho.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
@@ -299,7 +299,7 @@
 					They are used during the aggregation phase for javadoc by the maven-javadoc-plugin -->
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
-				<version>3.0.0</version>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<id>parse-version</id>

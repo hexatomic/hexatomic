@@ -3,18 +3,22 @@ on: push
 
 jobs:
   test_jdk11:
-    name: OpenJDK 11 + SonarCloud code analysis
-    runs-on: ubuntu-20.04
+    name: OpenJDK 11 Linux + SonarCloud code analysis
+    runs-on: ubuntu-22.04
     steps:
       - name: Update packages
         run: sudo apt-get update
       - name: Install metacity window manager for background tests
         run: sudo apt-get install metacity
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           # Otherwise the new code can't be determined or code coverage is less informing
           fetch-depth: 0
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.7
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -30,10 +34,35 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           LANG: en_US.UTF-8
+  test_macos:
+    name: OpenJDK 11 macOS
+    runs-on: macos-12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.7
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-11-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-11-
+      - name: Run Maven install (includes tests)
+        run: mvn verify
+        env:
+          LANG: en_US.UTF-8
 
   test_docs:
     name: Test documentation
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
