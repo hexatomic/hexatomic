@@ -1371,15 +1371,11 @@ public class TestGridEditor {
     LabelTextExtractor uq = new LabelTextExtractor(infoDialog);
     FutureTask<String> labelTextFuture = new FutureTask<>(uq);
     Display.getDefault().syncExec(labelTextFuture);
-    try {
-      assertEquals(
-          "Could not rename some annotations, as annotations with the qualified target name 'pos'"
-              + " already exist on the respective nodes:\n- Token with text 'more' "
-              + "(existing annotation: 'RBR')",
-          labelTextFuture.get());
-    } catch (InterruptedException | ExecutionException e) {
-      throw e;
-    }
+    assertEquals(
+        "Could not rename some annotations, as annotations with the qualified target name 'pos'"
+            + " already exist on the respective nodes:\n- Token with text 'more' "
+            + "(existing annotation: 'RBR')",
+        labelTextFuture.get());
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(infoDialog));
 
@@ -2209,13 +2205,10 @@ public class TestGridEditor {
     String extractedNamespace = null;
     String extractedName = null;
     Display.getDefault().syncExec(textTextFuture);
-    try {
-      extractedNamePair = textTextFuture.get();
-      extractedNamespace = extractedNamePair.getLeft();
-      extractedName = extractedNamePair.getRight();
-    } catch (InterruptedException | ExecutionException e) {
-      throw e;
-    }
+    extractedNamePair = textTextFuture.get();
+    extractedNamespace = extractedNamePair.getLeft();
+    extractedName = extractedNamePair.getRight();
+
     assertEquals(namespace, extractedNamespace);
     assertEquals(name, extractedName);
   }
