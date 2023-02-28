@@ -23,6 +23,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -52,6 +53,10 @@ public class TestCorpusStructure {
 
   private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
+  private ECommandService commandService;
+
+  private EHandlerService handlerService;
+
   @BeforeEach
   void setup() {
     TestHelper.setKeyboardLayout();
@@ -60,16 +65,22 @@ public class TestCorpusStructure {
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
-    ECommandService commandService = ctx.get(ECommandService.class);
+    commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
 
-    EHandlerService handlerService = ctx.get(EHandlerService.class);
+    handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
     TestHelper.executeNewProjectCommand(commandService, handlerService);
 
     // Make sure to activate the part to test before selecting SWT components
     bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+  }
+
+  @AfterEach
+  void close() {
+    // Recreate original state by opening an empty project
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
   /**
