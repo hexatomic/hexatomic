@@ -1514,7 +1514,19 @@ public class TestGridEditor {
     assertNull(natTable.getDataValueByPosition(4, 8));
     assertEquals(span, natTable.getDataValueByPosition(4, 9));
     assertEquals(span, natTable.getDataValueByPosition(4, 10));
-    assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return TEST_ANNOTATION_VALUE.equals(span.getAnnotation(INF_STRUCT_NAME).getValue());
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Annotation span value should be '" + TEST_ANNOTATION_VALUE + "' but was '."
+            + span.getAnnotation(INF_STRUCT_NAME).getValue() + "'";
+      }
+    });
   }
 
   /**
