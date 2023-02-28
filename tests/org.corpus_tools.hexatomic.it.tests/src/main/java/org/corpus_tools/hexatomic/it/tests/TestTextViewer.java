@@ -38,9 +38,6 @@ class TestTextViewer {
 
   private ProjectManager projectManager;
 
-  private static final String CORPUS_EDITOR_PART_ID =
-      "org.corpus_tools.hexatomic.corpusedit.part.corpusstructure";
-
 
   @BeforeEach
   void setup() {

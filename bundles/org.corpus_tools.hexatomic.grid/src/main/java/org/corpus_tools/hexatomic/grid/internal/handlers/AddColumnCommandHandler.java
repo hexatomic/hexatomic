@@ -66,21 +66,21 @@ public class AddColumnCommandHandler extends AbstractLayerCommandHandler<AddColu
     ColumnType columnType = command.getColumnType();
     Shell activeShell = Display.getCurrent().getActiveShell();
     AnnotationRenameDialog dialog =
-        new AnnotationRenameDialog(activeShell, null,
-            "New annotation column");
+        new AnnotationRenameDialog(activeShell, null, "New annotation column");
     dialog.open();
 
     if (dialog.isCancelPressed()) {
       log.debug("Execution of command {} cancelled.", getCommandClass().getSimpleName());
-      return true;
-    }
+    } else {
+      // If the index is -1, then we don't know where to insert the new column, so
+      // call the layer
+      // function respectively with -1
+      boolean isInsertionUnknown = (currentColumnIndex == -1);
+      int insertionIndex = isInsertionUnknown ? currentColumnIndex : (currentColumnIndex + 1);
+      this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), insertionIndex);
+      command.getNatTable().refresh(true);
 
-    // If the index is -1, then we don't know where to insert the new column, so call the layer
-    // function respectively with -1
-    boolean isInsertionUnknown = (currentColumnIndex == -1);
-    int insertionIndex = isInsertionUnknown ? currentColumnIndex : (currentColumnIndex + 1);
-    this.layer.addAnnotationColumn(columnType, dialog.getNewQName(), insertionIndex);
-    command.getNatTable().refresh(true);
+    }
     return true;
   }
 

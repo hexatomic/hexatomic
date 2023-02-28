@@ -80,7 +80,6 @@ class TestGraphEditor {
 
   private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String DOC1_TITLE = "doc1 (Graph Editor)";
-  private static final String INF_STRUCT = "Inf-Struct";
   private static final String CONST = "const";
   private static final String SEARCH = "Search";
   private static final String ANNOTATION_NAME = "Node Annotations";
