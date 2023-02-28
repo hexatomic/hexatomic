@@ -125,7 +125,7 @@ class TestGraphEditor {
 
     @Override
     public String getFailureMessage() {
-      return String.format("Number of annotation filter facets should have been <{}> but was <{}>",
+      return String.format("Number of annotation filter facets should have been <%d> but was <%d>",
           expected, getVisibleChips(bot).size());
     }
   }
