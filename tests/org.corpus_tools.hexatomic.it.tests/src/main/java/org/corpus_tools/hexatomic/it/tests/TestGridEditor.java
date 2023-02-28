@@ -1378,7 +1378,6 @@ public class TestGridEditor {
               + "(existing annotation: 'RBR')",
           labelTextFuture.get());
     } catch (InterruptedException | ExecutionException e) {
-      fail(e);
       throw e;
     }
     tableBot.button("OK").click();
@@ -2215,7 +2214,6 @@ public class TestGridEditor {
       extractedNamespace = extractedNamePair.getLeft();
       extractedName = extractedNamePair.getRight();
     } catch (InterruptedException | ExecutionException e) {
-      fail(e);
       throw e;
     }
     assertEquals(namespace, extractedNamespace);
