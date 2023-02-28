@@ -221,8 +221,7 @@ public class TestGridEditor {
 
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc2");
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -263,8 +262,7 @@ public class TestGridEditor {
 
 
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc2");
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -288,9 +286,8 @@ public class TestGridEditor {
     openExample(overlappingExampleProjectUri);
     SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        corpusStructurePart.bot().tree().expandNode("corpus-graph").expandNode(CORPUS)
-            .expandNode(DOC);
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpus-graph")
+        .expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -315,8 +312,7 @@ public class TestGridEditor {
     SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
@@ -365,9 +361,8 @@ public class TestGridEditor {
     openExample(scrollingExampleProjectUri);
     SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        corpusStructurePart.bot().tree().expandNode("corpus-graph").expandNode(CORPUS)
-            .expandNode(DOC);
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpus-graph")
+        .expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -1061,7 +1056,9 @@ public class TestGridEditor {
     // Also check that the undo toolbar item has been enabled
     SWTBotToolbarButton btUndo = bot.toolbarButton(3);
     bot.waitUntil(Conditions.widgetIsEnabled(btUndo));
-    assertFalse(bot.toolbarButtonWithTooltip("Redo (" + TestHelper.getShiftTooltipPrefix() + TestHelper.getControlTooltipPrefix() + "Z)").isEnabled());
+    assertFalse(bot.toolbarButtonWithTooltip(
+        "Redo (" + TestHelper.getShiftTooltipPrefix() + TestHelper.getControlTooltipPrefix() + "Z)")
+        .isEnabled());
   }
 
   /**
