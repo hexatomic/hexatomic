@@ -23,6 +23,7 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -126,11 +127,19 @@ public class TestCorpusStructure {
     bot.text(DOCUMENT_1).setText(ABC).setFocus();
     keyboard.pressShortcut(Keystrokes.LF);
 
-    bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_2);
-    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_2).select();
-    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_2).doubleClick();
+    bot.waitUntil(Conditions.treeItemHasNode(bot.tree().getTreeItem(CORPUS_GRAPH_1), CORPUS_1));
+
+    SWTBotTreeItem corpusNode = bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1);
+    bot.waitUntil(Conditions.treeItemHasNode(corpusNode, DOCUMENT_2));
+    SWTBotTreeItem documentNode = corpusNode.expandNode(DOCUMENT_2);
+
+    documentNode.select();
+    documentNode.doubleClick();
     bot.text(DOCUMENT_2).setText(DEF).setFocus();
     keyboard.pressShortcut(Keystrokes.LF);
+
+    bot.waitUntil(Conditions
+        .treeItemHasNode(bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1), DEF));
   }
 
   @Test
