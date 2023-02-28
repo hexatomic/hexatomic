@@ -713,7 +713,7 @@ class TestGraphEditor {
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
-    annoFilter.typeText("inf");
+    annoFilter.typeText("inf-struct");
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
 
