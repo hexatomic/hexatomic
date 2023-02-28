@@ -3,7 +3,7 @@ on: push
 
 jobs:
   test_jdk:
-    name: OpenJDK 17 Linux + SonarCloud code analysis
+    name: OpenJDK Linux + SonarCloud code analysis
     runs-on: ubuntu-22.04
     steps:
       - name: Update packages
@@ -35,7 +35,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           LANG: en_US.UTF-8
   test_macos:
-    name: OpenJDK 12 macOS
+    name: OpenJDK macOS
     runs-on: macos-12
     steps:
       - name: Checkout
