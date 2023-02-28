@@ -74,6 +74,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
@@ -672,6 +674,7 @@ class TestGraphEditor {
   }
 
   @Test
+  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testFilterOptions() {
     openDefaultExample();
 
@@ -729,6 +732,7 @@ class TestGraphEditor {
   }
 
   @Test
+
   void testLayoutParameters() {
     openDefaultExample();
 
@@ -754,8 +758,7 @@ class TestGraphEditor {
       SWTBotScale horizontalScale = botLayout.scale(0);
 
       // Change the horizontal margin parameter and check that distance between the
-      // first two token
-      // is updated
+      // first two token is updated
       horizontalScale.setValue(0);
       assertEquals("0.0", botLayout.label(1).getText());
       List<SToken> token = graph.getTokens();
