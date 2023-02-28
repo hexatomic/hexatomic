@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -125,8 +126,9 @@ class TestGraphEditor {
 
     @Override
     public String getFailureMessage() {
-      return String.format("Number of annotation filter facets should have been <%d> but was <%d>",
-          expected, getVisibleChips(bot).size());
+      return MessageFormat.format(
+          "Number of annotation filter facets should have been <{0}> but was <{1}>", expected,
+          getVisibleChips(bot).size());
     }
   }
 
