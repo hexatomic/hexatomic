@@ -746,7 +746,7 @@ public class TestGridEditor {
       keyboard.pressShortcut(Keystrokes.ESC);
     }
 
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new DefaultCondition() {
 
@@ -957,7 +957,7 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
@@ -977,7 +977,7 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
@@ -997,7 +997,7 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + LEMMA_NAME, table.getCellDataValueByPosition(0, 2));
@@ -1038,7 +1038,7 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertTrue(projectManager.isDirty());
@@ -1093,7 +1093,7 @@ public class TestGridEditor {
     // Change annotation name in first overlapping column (currently at position 3)
     table.contextMenu(0, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1139,7 +1139,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1180,7 +1180,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button(CANCEL).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have not changed
@@ -1234,7 +1234,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, NAMESPACED_LEMMA_NAME);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1300,7 +1300,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, "<annotation name/key>");
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed, the span annotation is added to a second new column
@@ -1665,7 +1665,7 @@ public class TestGridEditor {
     ctrlClick(table, 1, 3);
     table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
@@ -1702,7 +1702,7 @@ public class TestGridEditor {
     ctrlClick(table, 3, 3);
     table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
@@ -2171,7 +2171,7 @@ public class TestGridEditor {
     }
     bot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
-    keyboard.typeText(columName);
+    keyboard.typeText(columName, 10);
     tableBot.button(buttonToClick).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
   }
@@ -2183,7 +2183,7 @@ public class TestGridEditor {
     menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
     tableBot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     return columnCount;
