@@ -1117,7 +1117,11 @@ class TestGraphEditor {
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change
-    TestGraphEditor.this.bot.partByTitle("doc1 (Grid Editor)").close();
+    for (SWTBotView part : bot.parts()) {
+      if (part.getTitle().endsWith("(Grid Editor)")) {
+        part.close();
+      }
+    }
 
     bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
   }
