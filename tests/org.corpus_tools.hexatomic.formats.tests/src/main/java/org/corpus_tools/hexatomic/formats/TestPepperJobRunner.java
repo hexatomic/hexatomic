@@ -79,4 +79,32 @@ class TestPepperJobRunner {
     assertEquals(0, runner.getFailedDocuments().size());
   }
 
+  /**
+   * Test that the progress is reported when no documents are imported.
+   * 
+   * @throws InterruptedException Can be interrupted.
+   * @throws ExecutionException Should not be thrown
+   */
+  @Test
+  public void testReportProgressNoDocuments() throws InterruptedException, ExecutionException {
+
+    // This mocked job directly jumps to importing the documents
+    when(job.getStatus()).thenReturn(JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE);
+    List<DocumentController> docControllers = new ArrayList<>();
+    when(job.getDocumentControllers()).thenReturn(docControllers);
+
+    PepperJobRunner runner = new DoNothingPepperJobRunner(job);
+
+    IProgressMonitor monitor = mock(IProgressMonitor.class);
+    runner.runJob(monitor);
+
+    verify(monitor).isCanceled();
+    verify(monitor).beginTask(eq("Processing 0 documents"), eq(0));
+    verify(monitor).done();
+    verifyNoMoreInteractions(monitor);
+
+    assertEquals(0, runner.getCompletedDocuments().size());
+    assertEquals(0, runner.getFailedDocuments().size());
+  }
+
 }
