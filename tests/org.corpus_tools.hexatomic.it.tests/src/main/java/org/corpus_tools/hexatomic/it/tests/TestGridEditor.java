@@ -91,6 +91,12 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 @Execution(ExecutionMode.SAME_THREAD)
 public class TestGridEditor {
 
+  private static final String ROOT_CORPUS = "rootCorpus";
+
+  private static final String CORPUS_GRAPH1 = "corpusGraph1";
+
+  private static final String CORPUS_STRUCTURE = "Corpus Structure";
+
   private static final String AUTO_RESIZE_ROW_S = "Auto-resize row(s)";
 
   private static final String AUTO_RESIZE_COLUMN_S = "Auto-resize column(s)";
@@ -217,11 +223,11 @@ public class TestGridEditor {
 
   SWTBotView openEditorForDefaultDocument() {
 
-    SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
 
     // Select the first example document
-    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc2");
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
+        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -257,12 +263,12 @@ public class TestGridEditor {
 
   private SWTBotView openEditorOnSameDocument() {
     // Activate corpus structure editor
-    SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     corpusStructurePart.show();
 
 
-    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc2");
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
+        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -284,7 +290,7 @@ public class TestGridEditor {
   SWTBotView openOverlapExample() {
     // Programmatically open the example corpus
     openExample(overlappingExampleProjectUri);
-    SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpus-graph")
         .expandNode(CORPUS).expandNode(DOC);
@@ -309,10 +315,10 @@ public class TestGridEditor {
   SWTBotView openSeparateSpanExample() {
     // Programmatically open the example corpus
     openExample(separateSpanExampleProjectUri);
-    SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
-    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
+        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
@@ -334,7 +340,7 @@ public class TestGridEditor {
   SWTBotView openTwoDsExample() {
     // Programmatically open the example corpus
     openExample(twoDsExampleProjectUri);
-    SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
     SWTBotTreeItem docMenu =
         corpusStructurePart.bot().tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
@@ -359,7 +365,7 @@ public class TestGridEditor {
   SWTBotView openScrollingExample() {
     // Programmatically open the example corpus
     openExample(scrollingExampleProjectUri);
-    SWTBotView corpusStructurePart = bot.partByTitle("Corpus Structure");
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpus-graph")
         .expandNode(CORPUS).expandNode(DOC);
@@ -390,7 +396,7 @@ public class TestGridEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    bot.partByTitle("Corpus Structure").show();
+    bot.partByTitle(CORPUS_STRUCTURE).show();
   }
 
   @Test
