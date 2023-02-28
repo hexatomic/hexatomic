@@ -110,6 +110,26 @@ class TestGraphEditor {
   private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
   private final Keyboard awtKeyboard = KeyboardFactory.getAWTKeyboard();
 
+  private final class VisibleChipsCondition extends DefaultCondition {
+    private final int expected;
+
+    public VisibleChipsCondition(int expected) {
+      super();
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return getVisibleChips(bot).size() == expected;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return String.format("Number of annotation filter facets should have been <{}> but was <{}>",
+          expected, getVisibleChips(bot).size());
+    }
+  }
+
   private final class HorizontalNodeDistanceCondition extends DefaultCondition {
     private final SNode leftNode;
     private final SNode rightNode;
@@ -708,14 +728,14 @@ class TestGraphEditor {
     // Tokens and the matching structure nodes
     annoFilter.typeText(CONST);
     annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(1, getVisibleChips(bot).size());
+    bot.waitUntil(new VisibleChipsCondition(1));
     final SwtBotChips constChip = new SwtBotChips(getVisibleChips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
     annoFilter.typeText("inf-struct");
     annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(2, getVisibleChips(bot).size());
+    bot.waitUntil(new VisibleChipsCondition(2));
 
     bot.waitUntil(new NumberOfNodesCondition(25));
 
