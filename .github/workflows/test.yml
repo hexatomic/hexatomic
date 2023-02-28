@@ -32,7 +32,7 @@ jobs:
           LANG: en_US.UTF-8
   test_macos:
     name: OpenJDK 11 macOS
-    runs-on: macos-12
+    runs-on: macos-11
     steps:
       - name: Checkout
         uses: actions/checkout@v3
