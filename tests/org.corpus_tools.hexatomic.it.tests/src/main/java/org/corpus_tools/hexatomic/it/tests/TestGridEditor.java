@@ -91,6 +91,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 @Execution(ExecutionMode.SAME_THREAD)
 public class TestGridEditor {
 
+  private static final String SUB_CORPUS1 = "subCorpus1";
+
   private static final String ROOT_CORPUS = "rootCorpus";
 
   private static final String CORPUS_GRAPH1 = "corpusGraph1";
@@ -227,7 +229,7 @@ public class TestGridEditor {
 
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
-        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc2");
+        .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -268,7 +270,7 @@ public class TestGridEditor {
 
 
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
-        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc2");
+        .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -318,7 +320,7 @@ public class TestGridEditor {
     SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
-        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc1");
+        .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
