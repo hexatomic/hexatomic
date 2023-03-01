@@ -29,19 +29,25 @@ jobs:
           uses: softprops/action-gh-release@v0.1.5
           with:
             files: |
-              releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-linux.gtk.x86_64.zip
+              releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-linux.gtk.x86_64.tar.gz
               releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-win32.win32.x86_64.zip  
             draft: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy_macos:
     name: Deploy release MacOS binaries
-    runs-on: macos-10.15
+    runs-on: macos-12
     steps:
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Set JAVA_HOME to OpenJDK 17
-          run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
+        - uses: actions/setup-java@v3
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+        - name: Set up Maven
+          uses: stCarolas/setup-maven@v4.5
+          with:
+            maven-version: 3.8.7
         - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
           run: mvn -Pcff -DskipTests clean install
           env:

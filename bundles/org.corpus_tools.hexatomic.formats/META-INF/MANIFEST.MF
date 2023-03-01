@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.di,
  javax.inject
 Automatic-Module-Name: org.corpus.tools.hexatomic.formats
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator
 Bundle-ActivationPolicy: lazy
 Export-Package: org.corpus_tools.hexatomic.formats, org.corpus_tools.hexatomic.formats.exporter

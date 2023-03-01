@@ -4,11 +4,11 @@
 
 1. Go to the download site for the latest release of Hexatomic:  
 <https://github.com/hexatomic/hexatomic/releases/latest>.
-2. Download the `.zip` file for your operating system:
-    - **Linux**: Download `hexatomic-<version>-linux.gtk.x86_64.zip`
+2. Download the `.zip` or `tar.gz` file for your operating system:
+    - **Linux**: Download `hexatomic-<version>-linux.gtk.x86_64.tar.gz`
     - **Mac OS**: Download `hexatomic-<version>-macosx.cocoa.x86_64.zip`
     - **Windows**: Download `hexatomic-<version>-win32.win32.x86_64.zip`
-3. On Windows and Linux, extract the downloaded `zip` file to a directory of your choice.[^1]. When you download the file on Mac OS with the Safari Browser, the `zip` file is extracted automatically.
+3. On Windows and Linux, extract the downloaded file to a directory of your choice.[^1]. When you download the file on Mac OS with the Safari Browser, the `zip` file is extracted automatically.
 
 For Linux and Windows, that's it. You can now run Hexatomic.
 

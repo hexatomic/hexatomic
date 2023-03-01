@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.corpus_tools.hexatomic.graph.tests
 Bundle-Version: 1.2.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.graph
 Automatic-Module-Name: org.corpus_tools.hexatomic.graph.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.mockito,
  org.junit.jupiter.api
 Export-Package: org.corpus_tools.hexatomic.console;x-internal:=true

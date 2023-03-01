@@ -6,7 +6,7 @@ Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: Hexatomic Research Project
 Fragment-Host: org.corpus_tools.hexatomic.grid
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.mockito,
  org.eclipse.emf.common,
  org.junit.jupiter.api

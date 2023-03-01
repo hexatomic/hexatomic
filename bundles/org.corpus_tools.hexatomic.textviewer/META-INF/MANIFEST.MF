@@ -18,5 +18,5 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.core.services,
  javax.annotation
 Automatic-Module-Name: org.corpus_tools.hexatomic.textview
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.textviewer
