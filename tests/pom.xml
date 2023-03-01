@@ -51,7 +51,7 @@
 					<version>${tycho.version}</version>
 					<configuration>
 						<!-- set a default argument line for all tycho surefire tests -->
-						<applicationArgs>${tycho-tests-jvmargs}</applicationArgs>
+						<argLine>${tycho-tests-jvmargs}</argLine>
 					</configuration>
 				</plugin>
 			</plugins>
