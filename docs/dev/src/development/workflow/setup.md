@@ -33,7 +33,7 @@ This means that
 	- *Target platform* definition; the target platform defines the features and plug-ins that Hexatomic is built on top of (*against*).
 	-  *Update site* definition; Hexatomic's features and plug-ins are provided 
 		1. through a repository in the [p2 repository format](http://web.archive.org/web/20190807191916/https://www.eclipse.org/equinox/p2/), from which Hexatomic can be updated automatically and manually from within the application; and
-		2. As deployable units, i.e., the actual zip files that users will download in order to get Hexatomic.
+		2. As deployable units, i.e., the actual files that users will download in order to get Hexatomic.
 	-  Miscellanea, e.g., shell scripts for deploying artifacts, etc. 
 5. It uses **pomless builds**, i.e., not every single plug-in or feature needs its own build definition XML file (`pom.xml`), which saves a lot of manual labour.
 
