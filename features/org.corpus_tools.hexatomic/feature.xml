@@ -33,7 +33,6 @@
       <import plugin="ch.qos.logback.classic"/>
       <import plugin="ch.qos.logback.core"/>
       <import plugin="org.slf4j.api"/>
-      <import plugin="org.corpus-tools.salt-api"/>
       <import plugin="javax.annotation"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.equinox.p2.ui"/>
@@ -43,11 +42,12 @@
       <import plugin="org.eclipse.equinox.p2.operations"/>
       <import plugin="org.eclipse.equinox.p2.metadata.repository"/>
       <import plugin="org.eclipse.osgi.services"/>
+      <import plugin="org.corpus-tools.salt-api"/>
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.eclipse.nebula.widgets.nattable.core"/>
-      <import plugin="org.corpus-tools.salt-extensions"/>
+      <import plugin="wrapped.org.corpus-tools.salt-extensions"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.eclipse.zest.core"/>
       <import plugin="org.eclipse.zest.layouts"/>
@@ -58,14 +58,8 @@
       <import plugin="org.eclipse.nebula.widgets.chips"/>
       <import plugin="org.corpus-tools.pepper-framework"/>
       <import plugin="org.eclipse.e4.core.commands"/>
+      <import plugin="org.slf4j.api" version="1.7.10" match="equivalent"/>
    </requires>
-
-   <plugin
-         id="org.corpus_tools.hexatomic.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.corpus_tools.hexatomic.corpusstructureeditor"
@@ -108,6 +102,13 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.corpus_tools.hexatomic.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
