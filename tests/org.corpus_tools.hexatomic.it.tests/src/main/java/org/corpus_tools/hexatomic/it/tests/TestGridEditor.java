@@ -1521,11 +1521,16 @@ public class TestGridEditor {
       keyboard.pressShortcut(Keystrokes.ESC);
     }
     keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      // This created a pop-up with a prompt for the new value, close it
+      SWTBotShell dialog = tableBot.shell("Enter new value");
+      tableBot.button("OK").click();
+      tableBot.waitUntil(Conditions.shellCloses(dialog));
+    } else {
+      keyboard.pressShortcut(Keystrokes.CR);
+    }
+    tableBot.waitUntil(new TableCellEditorInactiveCondition(table));
 
-    // This created a pop-up with a prompt for the new value, close it
-    SWTBotShell dialog = tableBot.shell("Enter new value");
-    tableBot.button("OK").click();
-    tableBot.waitUntil(Conditions.shellCloses(dialog));
 
     assertNull(natTable.getDataValueByPosition(4, 2));
     Object potentialSpan = natTable.getDataValueByPosition(4, 3);
