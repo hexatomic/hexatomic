@@ -20,7 +20,7 @@ Require-Bundle: javax.inject,
  org.eclipse.swt,
  org.apache.commons.lang3
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.grid,
  org.corpus_tools.hexatomic.grid.style
 Import-Package: org.eclipse.e4.ui.di

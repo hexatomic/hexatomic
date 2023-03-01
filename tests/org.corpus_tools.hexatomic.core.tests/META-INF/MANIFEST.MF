@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.corpus_tools.hexatomic.core.tests
 Bundle-Version: 1.2.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.core
 Automatic-Module-Name: org.corpus_tools.hexatomic.core.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.osgi.services,
  org.mockito,
  org.corpus-tools.salt-api,

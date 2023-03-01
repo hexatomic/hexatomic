@@ -5,6 +5,6 @@ Bundle-SymbolicName: org.corpus_tools.hexatomic.formats.tests
 Bundle-Version: 1.2.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.formats
 Automatic-Module-Name: org.corpus_tools.hexatomic.formats.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.mockito,
  org.junit.jupiter.api

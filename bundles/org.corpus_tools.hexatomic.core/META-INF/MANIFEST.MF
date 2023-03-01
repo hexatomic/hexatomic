@@ -38,6 +38,6 @@ Require-Bundle: javax.inject,
  org.eclipse.equinox.p2.operations,
  org.eclipse.equinox.p2.metadata.repository,
  org.eclipse.osgi.services
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
 Import-Package: javax.inject;version="1.0.0"

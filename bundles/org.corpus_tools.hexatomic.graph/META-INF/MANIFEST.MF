@@ -25,7 +25,7 @@ Require-Bundle: javax.inject,
  javax.annotation,
  org.eclipse.nebula.widgets.chips
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.console,
  org.corpus_tools.hexatomic.console.internal;x-internal:=true,
  org.corpus_tools.hexatomic.graph,

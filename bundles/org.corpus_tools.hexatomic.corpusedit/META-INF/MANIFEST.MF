@@ -17,7 +17,7 @@ Require-Bundle: javax.inject,
  org.eclipse.emf.common,
  org.eclipse.e4.ui.workbench,
  javax.annotation
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.corpusedit
 Bundle-ClassPath: .
 Export-Package: org.corpus_tools.hexatomic.corpusedit,
