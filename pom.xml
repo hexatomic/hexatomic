@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
-		<tycho.version>2.7.5</tycho.version>
+		<tycho.version>3.0.3</tycho.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
