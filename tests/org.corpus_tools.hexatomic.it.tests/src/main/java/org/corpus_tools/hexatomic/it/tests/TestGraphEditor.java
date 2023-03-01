@@ -1153,7 +1153,7 @@ class TestGraphEditor {
 
     awtKeyboard.typeText("anothertest", 10);
     awtKeyboard.pressShortcut(Keystrokes.CR);
-    bot.waitUntil(new TableCellEditorActiveCondition(table), 1000);
+    bot.waitUntil(new TableCellEditorInactiveCondition(table), 1000);
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change

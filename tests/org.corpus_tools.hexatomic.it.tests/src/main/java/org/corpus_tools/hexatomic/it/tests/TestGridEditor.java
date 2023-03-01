@@ -776,7 +776,7 @@ public class TestGridEditor {
 
     keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     keyboard.pressShortcut(Keystrokes.CR);
-    bot.waitUntil(new TableCellEditorActiveCondition(table), 1000);
+    bot.waitUntil(new TableCellEditorInactiveCondition(table));
   }
 
   protected static class CellDataValueCondition extends DefaultCondition {
@@ -1514,10 +1514,19 @@ public class TestGridEditor {
     ctrlClick(table, 10, 4);
 
     // Create span and assert
-    List<String> contextMenuItems = table.contextMenu(5, 4).menuItems();
-    assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
     table.contextMenu(5, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
-    typeTextPressReturn(table);
+
+    // Insert text
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      keyboard.pressShortcut(Keystrokes.ESC);
+    }
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+
+    // This created a pop-up with a prompt for the new value, close it
+    SWTBotShell dialog = tableBot.shell("Enter new value");
+    tableBot.button("OK").click();
+    tableBot.waitUntil(Conditions.shellCloses(dialog));
+
     assertNull(natTable.getDataValueByPosition(4, 2));
     Object potentialSpan = natTable.getDataValueByPosition(4, 3);
     assertTrue(potentialSpan instanceof SSpan);
@@ -1538,7 +1547,7 @@ public class TestGridEditor {
 
       @Override
       public String getFailureMessage() {
-        return "Annotation span value should be '" + TEST_ANNOTATION_VALUE + "' but was '."
+        return "Annotation span value should be '" + TEST_ANNOTATION_VALUE + "' but was '"
             + span.getAnnotation(INF_STRUCT_NAME).getValue() + "'";
       }
     });
