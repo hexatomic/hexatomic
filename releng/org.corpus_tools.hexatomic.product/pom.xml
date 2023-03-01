@@ -33,6 +33,11 @@
             <goals>
               <goal>archive-products</goal>
             </goals>
+            <configuration>
+				<formats>
+					<macosx>zip</macosx>
+				</formats>
+			</configuration>
           </execution>
         </executions>
         <configuration>
