@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -109,6 +110,27 @@ class TestGraphEditor {
 
   private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
   private final Keyboard awtKeyboard = KeyboardFactory.getAWTKeyboard();
+
+  private final class VisibleChipsCondition extends DefaultCondition {
+    private final int expected;
+
+    public VisibleChipsCondition(int expected) {
+      super();
+      this.expected = expected;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return getVisibleChips(bot).size() == expected;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return MessageFormat.format(
+          "Number of annotation filter facets should have been <{0}> but was <{1}>", expected,
+          getVisibleChips(bot).size());
+    }
+  }
 
   private final class HorizontalNodeDistanceCondition extends DefaultCondition {
     private final SNode leftNode;
@@ -385,9 +407,10 @@ class TestGraphEditor {
 
   @AfterEach
   void closeEditor() {
-    SWTBotView editor = bot.partByTitle(DOC1_TITLE);
-    if (editor != null) {
-      editor.close();
+    for (SWTBotView part : bot.parts()) {
+      if (part.getTitle().endsWith("(Graph Editor)")) {
+        part.close();
+      }
     }
   }
 
@@ -706,16 +729,18 @@ class TestGraphEditor {
     SWTBotText annoFilter = bot.textWithMessage(SEARCH);
 
     // Tokens and the matching structure nodes
-    annoFilter.typeText(CONST);
-    annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(1, getVisibleChips(bot).size());
+    annoFilter.setFocus();
+    awtKeyboard.typeText(CONST);
+    awtKeyboard.pressShortcut(Keystrokes.LF);
+    bot.waitUntil(new VisibleChipsCondition(1));
     final SwtBotChips constChip = new SwtBotChips(getVisibleChips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
-    annoFilter.typeText("inf");
-    annoFilter.pressShortcut(Keystrokes.LF);
-    assertEquals(2, getVisibleChips(bot).size());
+    annoFilter.setFocus();
+    awtKeyboard.typeText("inf-struct");
+    awtKeyboard.pressShortcut(Keystrokes.LF);
+    bot.waitUntil(new VisibleChipsCondition(2));
 
     bot.waitUntil(new NumberOfNodesCondition(25));
 
@@ -918,7 +943,9 @@ class TestGraphEditor {
     UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
 
     // The last save should not have triggered any errors
-    assertFalse(errorService.getLastException().isPresent());
+    assertFalse(errorService.getLastException().isPresent(),
+        () -> "Unexpected exception recorded by error service: "
+            + errorService.getLastException().get().toString());
   }
 
   @Test
@@ -1129,7 +1156,7 @@ class TestGraphEditor {
 
     awtKeyboard.typeText("anothertest", 10);
     awtKeyboard.pressShortcut(Keystrokes.CR);
-    bot.waitUntil(new TableCellEditorActiveCondition(table), 1000);
+    bot.waitUntil(new TableCellEditorInactiveCondition(table), 1000);
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change

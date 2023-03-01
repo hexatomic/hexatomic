@@ -15,8 +15,8 @@ jobs:
           run: sudo apt-get install metacity
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Set JAVA_HOME to OpenJDK 11
-          run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+        - name: Set JAVA_HOME to OpenJDK 17
+          run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
         - name: Run Maven install (includes tests) and re-create CFF file
           run: ./releng/sh/metacity-run.sh mvn -Pcff clean install
           env:
@@ -40,8 +40,8 @@ jobs:
     steps:
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Set JAVA_HOME to OpenJDK 11
-          run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+        - name: Set JAVA_HOME to OpenJDK 17
+          run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
         - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
           run: mvn -Pcff -DskipTests clean install
           env:
@@ -66,7 +66,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy_p2:
     name: Deploy P2 update site
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -86,7 +86,7 @@ jobs:
         commit_message: 'Update documentation'
   deploy_documentation:
     name: Deploy documentation
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2

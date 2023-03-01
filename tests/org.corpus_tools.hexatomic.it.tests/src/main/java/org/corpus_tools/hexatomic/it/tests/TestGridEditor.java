@@ -73,11 +73,14 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotRootMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
  * Integration tests for the grid editor.
@@ -85,7 +88,16 @@ import org.junit.jupiter.api.Test;
  * @author Stephan Druskat (mail@sdruskat.net)
  *
  */
+@Execution(ExecutionMode.SAME_THREAD)
 public class TestGridEditor {
+
+  private static final String SUB_CORPUS1 = "subCorpus1";
+
+  private static final String ROOT_CORPUS = "rootCorpus";
+
+  private static final String CORPUS_GRAPH1 = "corpusGraph1";
+
+  private static final String CORPUS_STRUCTURE = "Corpus Structure";
 
   private static final String AUTO_RESIZE_ROW_S = "Auto-resize row(s)";
 
@@ -143,7 +155,9 @@ public class TestGridEditor {
   private static final String OK = "OK";
   private static final String CANCEL = "Cancel";
 
-  private SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
+
+
+  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
 
   private URI exampleProjectUri;
   private URI overlappingExampleProjectUri;
@@ -197,6 +211,7 @@ public class TestGridEditor {
     twoDsExampleProjectUri = URI.createFileURI(twoDsExampleProjectDirectory.getAbsolutePath());
     scrollingExampleProjectUri =
         URI.createFileURI(scrollingExampleProjectDirectory.getAbsolutePath());
+
   }
 
   @AfterEach
@@ -209,9 +224,12 @@ public class TestGridEditor {
   }
 
   SWTBotView openEditorForDefaultDocument() {
+
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
+
     // Select the first example document
-    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc2");
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
+        .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -247,10 +265,12 @@ public class TestGridEditor {
 
   private SWTBotView openEditorOnSameDocument() {
     // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
+    corpusStructurePart.show();
 
-    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc2");
+
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
+        .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
@@ -259,8 +279,7 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle("doc2 (Text Viewer)");
     assertNotNull(view);
 
-    // Use all available windows space (the tableToTest needs to be fully visible
-    // for some of the
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
     // tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
@@ -273,9 +292,10 @@ public class TestGridEditor {
   SWTBotView openOverlapExample() {
     // Programmatically open the example corpus
     openExample(overlappingExampleProjectUri);
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpus-graph").expandNode(CORPUS).expandNode(DOC);
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpus-graph")
+        .expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -297,9 +317,10 @@ public class TestGridEditor {
   SWTBotView openSeparateSpanExample() {
     // Programmatically open the example corpus
     openExample(separateSpanExampleProjectUri);
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
-    SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
+        .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc1");
 
     // select and open the editor
     docMenu.click();
@@ -321,8 +342,10 @@ public class TestGridEditor {
   SWTBotView openTwoDsExample() {
     // Programmatically open the example corpus
     openExample(twoDsExampleProjectUri);
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
-    SWTBotTreeItem docMenu = bot.tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
+    SWTBotTreeItem docMenu =
+        corpusStructurePart.bot().tree().expandNode("<unknown>").expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -344,9 +367,10 @@ public class TestGridEditor {
   SWTBotView openScrollingExample() {
     // Programmatically open the example corpus
     openExample(scrollingExampleProjectUri);
+    SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
     // Select the first example document
-    SWTBotTreeItem docMenu =
-        bot.tree().expandNode("corpus-graph").expandNode(CORPUS).expandNode(DOC);
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpus-graph")
+        .expandNode(CORPUS).expandNode(DOC);
 
     // select and open the editor
     docMenu.click();
@@ -374,7 +398,7 @@ public class TestGridEditor {
     handlerService.executeHandler(cmd);
 
     // Activate corpus structure editor
-    bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+    bot.partByTitle(CORPUS_STRUCTURE).show();
   }
 
   @Test
@@ -752,7 +776,7 @@ public class TestGridEditor {
 
     keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
     keyboard.pressShortcut(Keystrokes.CR);
-    bot.waitUntil(new TableCellEditorActiveCondition(table), 1000);
+    bot.waitUntil(new TableCellEditorInactiveCondition(table));
   }
 
   protected static class CellDataValueCondition extends DefaultCondition {
@@ -1038,8 +1062,8 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertTrue(projectManager.isDirty());
     // Also check that the undo toolbar item has been enabled
-    assertTrue(bot.toolbarButtonWithTooltip("Undo (" + TestHelper.getControlTooltipPrefix() + "Z)")
-        .isEnabled());
+    SWTBotToolbarButton btUndo = bot.toolbarButton(3);
+    bot.waitUntil(Conditions.widgetIsEnabled(btUndo));
     assertFalse(bot.toolbarButtonWithTooltip(
         "Redo (" + TestHelper.getShiftTooltipPrefix() + TestHelper.getControlTooltipPrefix() + "Z)")
         .isEnabled());
@@ -1490,10 +1514,24 @@ public class TestGridEditor {
     ctrlClick(table, 10, 4);
 
     // Create span and assert
-    List<String> contextMenuItems = table.contextMenu(5, 4).menuItems();
-    assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
     table.contextMenu(5, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
-    typeTextPressReturn(table);
+
+    // Insert text
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      keyboard.pressShortcut(Keystrokes.ESC);
+    }
+    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      // This created a pop-up with a prompt for the new value, close it
+      SWTBotShell dialog = tableBot.shell("Enter new value");
+      tableBot.button("OK").click();
+      tableBot.waitUntil(Conditions.shellCloses(dialog));
+    } else {
+      keyboard.pressShortcut(Keystrokes.CR);
+    }
+    tableBot.waitUntil(new TableCellEditorInactiveCondition(table));
+
+
     assertNull(natTable.getDataValueByPosition(4, 2));
     Object potentialSpan = natTable.getDataValueByPosition(4, 3);
     assertTrue(potentialSpan instanceof SSpan);
@@ -1514,7 +1552,7 @@ public class TestGridEditor {
 
       @Override
       public String getFailureMessage() {
-        return "Annotation span value should be '" + TEST_ANNOTATION_VALUE + "' but was '."
+        return "Annotation span value should be '" + TEST_ANNOTATION_VALUE + "' but was '"
             + span.getAnnotation(INF_STRUCT_NAME).getValue() + "'";
       }
     });
@@ -1663,8 +1701,8 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellIsActive(UNRENAMED_ANNOTATIONS_DIALOG_TITLE));
     dialog = tableBot.shell(UNRENAMED_ANNOTATIONS_DIALOG_TITLE);
     assertNotNull(dialog);
-    assertTrue(dialog.isActive());
-    tableBot.button("OK").click();
+    assertTrue(dialog.isOpen());
+    dialog.bot().button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
     // Number of columns shouldn't have grown
@@ -1913,7 +1951,7 @@ public class TestGridEditor {
     assertColumnAddedAtIndex(TEST_ANNOTATION_NAME, 5, tableBot);
     addColumn(tableBot, TOKEN_VALUE, TEST_ANNOTATION_NAME, OK);
     SWTBotShell dialog = tableBot.shell("Column already exists");
-    tableBot.button(OK).click();
+    dialog.bot().button(OK).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(oldColumnCount + 1, table.columnCount());
   }
@@ -2101,6 +2139,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     assertDialogTexts(dialog, "anno9");
     dialog.close();
+    bot.waitUntil(Conditions.shellCloses(dialog));
   }
 
   /**
