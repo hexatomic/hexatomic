@@ -407,9 +407,10 @@ class TestGraphEditor {
 
   @AfterEach
   void closeEditor() {
-    SWTBotView editor = bot.partByTitle(DOC1_TITLE);
-    if (editor != null) {
-      editor.close();
+    for (SWTBotView part : bot.parts()) {
+      if (part.getTitle().endsWith("(Graph Editor)")) {
+        part.close();
+      }
     }
   }
 
@@ -942,7 +943,9 @@ class TestGraphEditor {
     UIThreadRunnable.syncExec(() -> handlerService.executeHandler(cmdSave));
 
     // The last save should not have triggered any errors
-    assertFalse(errorService.getLastException().isPresent());
+    assertFalse(errorService.getLastException().isPresent(),
+        () -> "Unexpected exception recorded by error service: "
+            + errorService.getLastException().get().toString());
   }
 
   @Test
