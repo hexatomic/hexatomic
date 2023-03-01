@@ -58,7 +58,6 @@
       <import plugin="org.eclipse.nebula.widgets.chips"/>
       <import plugin="org.corpus-tools.pepper-framework"/>
       <import plugin="org.eclipse.e4.core.commands"/>
-      <import plugin="org.slf4j.api" version="1.7.10" match="equivalent"/>
    </requires>
 
    <plugin
