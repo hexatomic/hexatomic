@@ -458,8 +458,8 @@ public class CorpusStructureView {
   }
 
   private void deleteCorpus(SCorpus selectedCorpus) {
-    boolean hasSubCorpora = selectedCorpus.getOutRelations().stream()
-        .anyMatch(SCorpusRelation.class::isInstance);
+    boolean hasSubCorpora =
+        selectedCorpus.getOutRelations().stream().anyMatch(SCorpusRelation.class::isInstance);
     boolean hasDocuments = selectedCorpus.getOutRelations().stream()
         .anyMatch(SCorpusDocumentRelation.class::isInstance);
     if (hasSubCorpora || hasDocuments) {
