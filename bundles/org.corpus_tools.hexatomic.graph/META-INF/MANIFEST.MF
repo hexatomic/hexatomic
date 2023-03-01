@@ -20,10 +20,10 @@ Require-Bundle: javax.inject,
  com.google.guava,
  org.eclipse.jface.text,
  org.hamcrest.library,
- org.antlr.runtime,
  org.eclipse.e4.core.services,
  javax.annotation,
- org.eclipse.nebula.widgets.chips
+ org.eclipse.nebula.widgets.chips,
+ org.antlr.antlr4-runtime;bundle-version="4.7.2"
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.console,
