@@ -728,15 +728,17 @@ class TestGraphEditor {
     SWTBotText annoFilter = bot.textWithMessage(SEARCH);
 
     // Tokens and the matching structure nodes
-    annoFilter.typeText(CONST);
-    annoFilter.pressShortcut(Keystrokes.LF);
+    annoFilter.setFocus();
+    keyboard.typeText(CONST);
+    keyboard.pressShortcut(Keystrokes.LF);
     bot.waitUntil(new VisibleChipsCondition(1));
     final SwtBotChips constChip = new SwtBotChips(getVisibleChips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
-    annoFilter.typeText("inf-struct");
-    annoFilter.pressShortcut(Keystrokes.LF);
+    annoFilter.setFocus();
+    keyboard.typeText("inf-struct");
+    keyboard.pressShortcut(Keystrokes.LF);
     bot.waitUntil(new VisibleChipsCondition(2));
 
     bot.waitUntil(new NumberOfNodesCondition(25));
