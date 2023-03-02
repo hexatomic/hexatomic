@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.timeline.internal.data;
+package org.corpus_tools.hexatomic.transcription.internal.data;
 
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;

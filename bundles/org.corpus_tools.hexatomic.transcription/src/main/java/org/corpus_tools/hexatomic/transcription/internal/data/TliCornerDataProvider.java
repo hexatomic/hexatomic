@@ -18,42 +18,21 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.timeline.internal.data;
+package org.corpus_tools.hexatomic.transcription.internal.data;
 
-import org.corpus_tools.salt.common.SDocumentGraph;
-import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
+import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
 
-@Creatable
-public class TextualDsHeaderDataProvider implements IDataProvider {
+public class TliCornerDataProvider extends DefaultCornerDataProvider {
 
-  private SDocumentGraph graph;
-
-  public void setGraph(SDocumentGraph graph) {
-    this.graph = graph;
+  public TliCornerDataProvider(IDataProvider columnHeaderDataProvider,
+      IDataProvider rowHeaderDataProvider) {
+    super(columnHeaderDataProvider, rowHeaderDataProvider);
   }
 
   @Override
   public Object getDataValue(int columnIndex, int rowIndex) {
-    return graph.getTextualDSs().get(columnIndex).getName();
-  }
-
-  @Override
-  public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    if (newValue instanceof String) {
-      graph.getTextualDSs().get(columnIndex).setName((String) newValue);
-    }
-  }
-
-  @Override
-  public int getColumnCount() {
-    // Every textual data source is a column
-    return graph.getTextualDSs().size();
-  }
-
-  @Override
-  public int getRowCount() {
-    return 1;
+    return "TLI";
   }
 
 }

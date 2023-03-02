@@ -23,7 +23,7 @@
 		<module>org.corpus_tools.hexatomic.graph</module>
 		<module>org.corpus_tools.hexatomic.grid</module>
 		<module>org.corpus_tools.hexatomic.formats</module>
-		<module>org.corpus_tools.hexatomic.timeline</module>
+		<module>org.corpus_tools.hexatomic.transcription</module>
 	</modules>
 	<build>
 		<plugins>

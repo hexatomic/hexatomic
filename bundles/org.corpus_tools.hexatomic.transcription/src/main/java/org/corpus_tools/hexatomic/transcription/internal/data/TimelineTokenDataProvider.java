@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.timeline.internal.data;
+package org.corpus_tools.hexatomic.transcription.internal.data;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

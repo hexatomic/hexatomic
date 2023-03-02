@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.timeline.internal.data;
+package org.corpus_tools.hexatomic.transcription.internal.data;
 
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STimeline;
