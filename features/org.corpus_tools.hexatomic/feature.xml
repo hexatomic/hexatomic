@@ -26,7 +26,6 @@
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.corpus-tools.salt-api"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.e4.ui.workbench"/>
       <import plugin="javax.annotation"/>
@@ -51,7 +50,7 @@
       <import plugin="org.eclipse.equinox.p2.operations"/>
       <import plugin="org.eclipse.osgi.services"/>
       <import plugin="org.junit"/>
-      <import plugin="org.slf4j.api" version="1.7.30" match="equivalent"/>
+      <import plugin="org.slf4j.api"/>
       <import feature="org.eclipse.e4.rcp" version="4.26.0.v20221123-2302"/>
       <import plugin="org.eclipse.e4.ui.services"/>
    </requires>
