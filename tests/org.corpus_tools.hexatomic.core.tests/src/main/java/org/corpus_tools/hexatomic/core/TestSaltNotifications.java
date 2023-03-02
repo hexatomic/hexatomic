@@ -149,9 +149,8 @@ class TestSaltNotifications {
         allOf(instanceOf(AddNodeToGraphOperation.class), hasProperty(CHANGED_ELEMENT, is(text)))));
     // Text text ID is an own object that is added to the node as label
     verify(events).send(eq(Topics.ANNOTATION_OPERATION_ADDED),
-        argThat(
-            allOf(instanceOf(LabelAddOperation.class), hasProperty(CHANGED_CONTAINER, is(text)),
-                hasProperty(QNAME, is(text.getIdentifier().getQName())))));
+        argThat(allOf(instanceOf(LabelAddOperation.class), hasProperty(CHANGED_CONTAINER, is(text)),
+            hasProperty(QNAME, is(text.getIdentifier().getQName())))));
     verifySetNameEvents(text);
 
     verifyCreatedAnnoEvents(text.getFeature(SaltUtil.FEAT_SDATA_QNAME));
@@ -226,8 +225,7 @@ class TestSaltNotifications {
     verifySetNameEvents(doc);
     verify(events).send(eq(Topics.ANNOTATION_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddNodeToGraphOperation.class),
-            hasProperty(CHANGED_ELEMENT, is(corpus)),
-            hasProperty(CHANGED_CONTAINER, is(graph)))));
+            hasProperty(CHANGED_ELEMENT, is(corpus)), hasProperty(CHANGED_CONTAINER, is(graph)))));
     verify(events).send(eq(Topics.ANNOTATION_OPERATION_ADDED),
         argThat(allOf(instanceOf(AddNodeToGraphOperation.class),
             hasProperty(CHANGED_ELEMENT, is(doc)), hasProperty(CHANGED_CONTAINER, is(graph)))));
@@ -250,9 +248,8 @@ class TestSaltNotifications {
     corpusRel.createProcessingAnnotation("just", "another", "annotation");
 
     verify(events).send(eq(Topics.ANNOTATION_OPERATION_ADDED),
-        argThat(
-            allOf(instanceOf(LabelAddOperation.class), hasProperty(QNAME, is("just::another")),
-                hasProperty(CHANGED_CONTAINER, is(corpusRel)))));
+        argThat(allOf(instanceOf(LabelAddOperation.class), hasProperty(QNAME, is("just::another")),
+            hasProperty(CHANGED_CONTAINER, is(corpusRel)))));
 
     corpusRel.setSource(corpus);
     corpusRel.setTarget(doc);
