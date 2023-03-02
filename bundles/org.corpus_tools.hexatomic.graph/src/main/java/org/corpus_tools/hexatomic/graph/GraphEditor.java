@@ -46,6 +46,7 @@ import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.graph.internal.AnnotationFilterWidget;
 import org.corpus_tools.hexatomic.graph.internal.GraphDragMoveAdapter;
+import org.corpus_tools.hexatomic.graph.internal.GraphLayoutParameterWidget;
 import org.corpus_tools.hexatomic.graph.internal.RootTraverser;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphContentProvider;
 import org.corpus_tools.hexatomic.graph.internal.SaltGraphLayout;
@@ -86,6 +87,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -110,7 +113,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.widgets.ZestStyles;
-import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
@@ -129,18 +131,23 @@ public class GraphEditor {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GraphEditor.class);
 
   /**
+   * The prefix for the SWTBot widget key IDs.
+   */
+  public static final String ID_PREFIX = "graph-editor/";
+
+  /**
    * The ID used as SWTBot widget key for the table of text ranges.
    */
-  public static final String TEXT_RANGE_ID = "graph-editor/text-range";
+  public static final String TEXT_RANGE_ID = ID_PREFIX + "text-range";
   /**
    * The ID used as SWTBot widget key for the console.
    */
-  public static final String CONSOLE_ID = "graph-editor/text-console";
+  public static final String CONSOLE_ID = ID_PREFIX + "text-console";
 
   private static final String TEXT = "text";
   private static final String RANGE = "range";
   static final int DEFAULT_DIFF = 25;
-  private static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
+  public static final String ORG_ECLIPSE_SWTBOT_WIDGET_KEY = "org.eclipse.swtbot.widget.key";
 
   @Inject
   ProjectManager projectManager;
@@ -178,6 +185,8 @@ public class GraphEditor {
 
   private AnnotationFilterWidget annoFilterWidget;
 
+  private SaltGraphLayout graphLayout;
+
   private String getDocumentId() {
     return thisPart.getPersistedState().get("org.corpus_tools.hexatomic.document-id");
   }
@@ -208,7 +217,8 @@ public class GraphEditor {
     viewer = new GraphViewer(graphSash, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
     viewer.getGraphControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
     viewer.setContentProvider(new SaltGraphContentProvider());
-    viewer.setLayoutAlgorithm(createLayout());
+    graphLayout = createLayout();
+    viewer.setLayoutAlgorithm(graphLayout);
     viewer.setNodeStyle(ZestStyles.NODES_NO_LAYOUT_ANIMATION);
     viewer.setConnectionStyle(ZestStyles.CONNECTIONS_DIRECTED);
     viewer.getGraphControl().setDragDetect(true);
@@ -218,8 +228,29 @@ public class GraphEditor {
     sideBar.setLayout(GridLayoutFactory.swtDefaults().create());
 
     // Weights can only be set after all items of the sash have been added
-    graphSash.setWeights(72, 28);
+    graphSash.setWeights(65, 35);
 
+    constructFilterView(sideBar);
+    constructGraphParams(sideBar);
+    constructSegmentFilter(sideBar);
+
+    registerGraphControlListeners();
+
+    viewer.getControl().forceFocus();
+
+    Document consoleDocument = new Document();
+    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
+    consoleViewer.setDocument(consoleDocument);
+    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
+    consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
+    mainSash.setWeights(85, 15);
+
+    SDocumentGraph graph = getGraph();
+    boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();
+    updateView(true, scrollToFirstToken);
+  }
+
+  private void constructFilterView(Composite sideBar) {
     Group filterGroup = new Group(sideBar, SWT.SHADOW_ETCHED_IN);
     filterGroup.setLayoutData(GridDataFactory.defaultsFor(filterGroup).align(SWT.FILL, SWT.TOP)
         .grab(true, false).create());
@@ -247,7 +278,6 @@ public class GraphEditor {
 
     Composite filterByType = new Composite(filterExpandBar, SWT.NONE);
     filterByType.setLayout(RowLayoutFactory.swtDefaults().type(SWT.VERTICAL).create());
-    filterByType.setLayoutData(filterByType);
 
     btnIncludeSpans = new Button(filterByType, SWT.CHECK);
     btnIncludeSpans.setLayoutData(RowDataFactory.swtDefaults().create());
@@ -272,7 +302,52 @@ public class GraphEditor {
     annoFilterExpandBar.setText("Node Annotations");
     annoFilterExpandBar.setHeight(ANNO_FILTER_HEIGHT);
     annoFilterExpandBar.setControl(annoFilterWidget);
+  }
 
+  private void constructGraphParams(Composite sideBar) {
+    ExpandBar paramExpandBar = new ExpandBar(sideBar, SWT.NONE);
+    paramExpandBar.setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, ID_PREFIX + "layout-expandbar");
+    paramExpandBar.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    paramExpandBar.addExpandListener(new ExpandListener() {
+
+      @Override
+      public void itemExpanded(ExpandEvent e) {
+        relayout();
+      }
+
+      @Override
+      public void itemCollapsed(ExpandEvent e) {
+        relayout();
+      }
+
+      private void relayout() {
+        Display.getDefault().timerExec(1, sideBar::layout);
+      }
+    });
+
+
+    GraphLayoutParameterWidget widget = new GraphLayoutParameterWidget(paramExpandBar, this.events);
+
+    ExpandItem paramExpandItem = new ExpandItem(paramExpandBar, SWT.NONE);
+    paramExpandItem.setText("Graph Layout");
+    paramExpandItem.setHeight(widget.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+    paramExpandItem.setControl(widget);
+    // There seems to be a SWT bug under Linux (GTK) where changing the value on the scale does not
+    // redraw the position of the slider. When the expand item is expanded once, the bug seems to be
+    // avoided. So the workaround is to expand and unexpand the parameter panel when the expand bar
+    // is resized.
+    paramExpandBar.addControlListener(new ControlAdapter() {
+      @Override
+      public void controlResized(ControlEvent e) {
+        if (paramExpandItem.getExpanded()) {
+          paramExpandItem.setExpanded(false);
+          Display.getDefault().timerExec(1, () -> paramExpandItem.setExpanded(true));
+        }
+      }
+    });
+  }
+
+  private void constructSegmentFilter(Composite sideBar) {
     textRangeTable = new Table(sideBar, SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION | SWT.MULTI);
     textRangeTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
     textRangeTable.setHeaderVisible(true);
@@ -288,21 +363,6 @@ public class GraphEditor {
     textRangeTable.addSelectionListener(new UpdateViewListener(false));
     btnIncludePointingRelations.addSelectionListener(new UpdateViewListener(true));
     btnIncludeSpans.addSelectionListener(new UpdateViewListener(true));
-
-    registerGraphControlListeners();
-
-    viewer.getControl().forceFocus();
-
-    Document consoleDocument = new Document();
-    SourceViewer consoleViewer = new SourceViewer(mainSash, null, SWT.V_SCROLL | SWT.H_SCROLL);
-    consoleViewer.setDocument(consoleDocument);
-    consoleViewer.getTextWidget().setData(ORG_ECLIPSE_SWTBOT_WIDGET_KEY, CONSOLE_ID);
-    consoleView = new ConsoleView(consoleViewer, sync, projectManager, getGraph());
-    mainSash.setWeights(85, 15);
-
-    SDocumentGraph graph = getGraph();
-    boolean scrollToFirstToken = graph != null && !graph.getTokens().isEmpty();
-    updateView(true, scrollToFirstToken);
   }
 
   private void registerGraphControlListeners() {
@@ -613,7 +673,7 @@ public class GraphEditor {
     return sortedRangesForDS;
   }
 
-  private LayoutAlgorithm createLayout() {
+  private SaltGraphLayout createLayout() {
 
     SaltGraphLayout layout = new SaltGraphLayout(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
 
@@ -778,6 +838,16 @@ public class GraphEditor {
   private void onCheckpointRestored(
       @UIEventTopic(Topics.ANNOTATION_CHECKPOINT_RESTORED) Object element) {
     updateView(true, false);
+  }
+
+  @Inject
+  @org.eclipse.e4.core.di.annotations.Optional
+  private void onGraphLayoutParamChanged(
+      @UIEventTopic(GraphLayoutParameterWidget.PARAM_CHANGED_TOPIC) Object element) {
+    if (element instanceof GraphDisplayConfiguration) {
+      this.graphLayout.setConfig((GraphDisplayConfiguration) element);
+    }
+    updateView(false, false);
   }
 
   private class RootFilter extends ViewerFilter {

@@ -17,17 +17,16 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestTextViewer {
 
@@ -40,11 +39,9 @@ class TestTextViewer {
   private ProjectManager projectManager;
 
 
-
   @BeforeEach
   void setup() {
     TestHelper.setKeyboardLayout();
-
     IEclipseContext ctx = TestHelper.getEclipseContext();
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
@@ -54,28 +51,21 @@ class TestTextViewer {
 
     handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
-    
-    EPartService partService = ctx.get(EPartService.class);
-    assertNotNull(partService);
 
     File exampleProjectDirectory = new File("../org.corpus_tools.hexatomic.core.tests/"
         + "src/main/resources/org/corpus_tools/hexatomic/core/example-corpus/");
     assertTrue(exampleProjectDirectory.isDirectory());
-
     exampleProjectUri = URI.createFileURI(exampleProjectDirectory.getAbsolutePath());
+  }
 
-    // Programmatically start a new salt project to get a clean state
-    Map<String, String> params = new HashMap<>();
-    params.put(CommandParams.FORCE_CLOSE, "true");
-    ParameterizedCommand cmd = commandService
-        .createCommand("org.corpus_tools.hexatomic.core.command.new_salt_project", params);
-    handlerService.executeHandler(cmd);
+  @AfterEach
+  void close() {
+    // Programmatically close the example corpus by opening a new fresh one
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
 
-  void openDefaultExample() {
-
-    // Programmatically open the example corpus
+  SWTBotView openDefaultExample() {
     Map<String, String> params = new HashMap<>();
     params.put(CommandParams.LOCATION, exampleProjectUri.toFileString());
     params.put(CommandParams.FORCE_CLOSE, "true");
@@ -88,12 +78,22 @@ class TestTextViewer {
 
     // Select the first example document
     SWTBotTreeItem docMenu = bot.tree().expandNode("corpusGraph1").expandNode("rootCorpus")
-        .expandNode("subCorpus1").expandNode("doc1");
+        .expandNode("subCorpus1").expandNode("doc2");
 
     // select and open the editor
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Text Viewer").click());
 
+    SWTBotView view = bot.partByTitle("doc2 (Text Viewer)");
+    assertNotNull(view);
+
+    // Use all available windows space (the tableToTest needs to be fully visible for some of the
+    // tests)
+    bot.waitUntil(new PartActiveCondition(view.getPart()));
+    view.maximise();
+    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
+
+    return view;
   }
 
 
@@ -104,15 +104,12 @@ class TestTextViewer {
     // Open example and maximize part
     openDefaultExample();
 
-    SWTBotView view = bot.partByTitle("doc1 (Text Viewer)");
-    view.maximise();
-    bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
     // Compare the shown text to the salt model
     assertEquals("Is this example more complicated than it appears to be?", bot.text().getText());
 
     // Change text and check its updated
-    Optional<SDocument> document = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc1");
+    Optional<SDocument> document = projectManager.getDocument("salt:/rootCorpus/subCorpus1/doc2");
     assertTrue(document.isPresent());
     if (document.isPresent()) {
       SDocumentGraph docGraph = document.get().getDocumentGraph();

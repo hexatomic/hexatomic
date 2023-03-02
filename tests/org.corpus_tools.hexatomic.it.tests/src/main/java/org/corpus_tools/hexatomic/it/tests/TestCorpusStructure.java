@@ -1,9 +1,9 @@
 package org.corpus_tools.hexatomic.it.tests;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,16 +23,43 @@ import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 public class TestCorpusStructure {
 
+
+  private final class DocumentRenamedCondition extends DefaultCondition {
+
+    private final String documentID;
+    private final String expectedName;
+
+    public DocumentRenamedCondition(String documentID, String expectedName) {
+      this.documentID = documentID;
+      this.expectedName = expectedName;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      Optional<SDocument> doc1 = projectManager.getDocument(documentID);
+      if (doc1.isPresent()) {
+        return doc1.get().getName().equals(expectedName);
+      } else {
+        return false;
+      }
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Document " + documentID + " has not been renamed to " + expectedName;
+    }
+  }
 
   private static final String SALT_PREFIX = "salt:/";
 
@@ -53,6 +80,10 @@ public class TestCorpusStructure {
 
   private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
+  private ECommandService commandService;
+
+  private EHandlerService handlerService;
+
   @BeforeEach
   void setup() {
     TestHelper.setKeyboardLayout();
@@ -61,16 +92,22 @@ public class TestCorpusStructure {
 
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
 
-    ECommandService commandService = ctx.get(ECommandService.class);
+    commandService = ctx.get(ECommandService.class);
     assertNotNull(commandService);
 
-    EHandlerService handlerService = ctx.get(EHandlerService.class);
+    handlerService = ctx.get(EHandlerService.class);
     assertNotNull(handlerService);
 
     TestHelper.executeNewProjectCommand(commandService, handlerService);
 
     // Make sure to activate the part to test before selecting SWT components
     bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure").show();
+  }
+
+  @AfterEach
+  void close() {
+    // Recreate original state by opening an empty project
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
   /**
@@ -114,13 +151,20 @@ public class TestCorpusStructure {
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_1).select();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_1).doubleClick();
     bot.text(DOCUMENT_1).setText(ABC).setFocus();
-    keyboard.pressShortcut(Keystrokes.LF);
+    keyboard.pressShortcut(Keystrokes.CR);
+
+    bot.waitUntil(new DocumentRenamedCondition(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_1, ABC));
+
 
     bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_2);
+
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_2).select();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(DOCUMENT_2).doubleClick();
     bot.text(DOCUMENT_2).setText(DEF).setFocus();
-    keyboard.pressShortcut(Keystrokes.LF);
+    keyboard.pressShortcut(Keystrokes.CR);
+
+    bot.waitUntil(new DocumentRenamedCondition(SALT_PREFIX + CORPUS_1 + "/" + DOCUMENT_2, DEF));
+
   }
 
   @Test
@@ -225,6 +269,7 @@ public class TestCorpusStructure {
     bot.button("OK").click();
 
     // Delete the sub-corpus
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).expand();
     bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNode(0).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
 

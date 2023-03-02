@@ -1,8 +1,8 @@
 package org.corpus_tools.hexatomic.grid.internal.data;
 
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.corpus_tools.hexatomic.grid.internal.test.TestHelper;

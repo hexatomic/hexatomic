@@ -12,15 +12,15 @@ You need all three on your computer to contribute code to Hexatomic.
 
 The documentation is written in Markdown and generated with **mdbook**.
 
-### Java 11
+### Java 17
 
-You need to have a copy of the **Java Development Kit (JDK), Version 11** installed on your computer.
+You need to have a copy of the **Java Development Kit (JDK), Version 17** installed on your computer.
 It shouldn't make any difference whether you use the open *OpenJDK* implementation of Java, or an *Oracle JDK*.
 We suggest that you use **OpenJDK** since more recent versions of the *Oracle JDK* have a more restricted license.
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
-For stand-alone packages, you can use the installers distributed by the [AdoptOpenJDK project](https://adoptopenjdk.net).
-AdoptOpenJDK packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
-When installing the AdoptOpenJDK on Windows, make sure that the option to set the `JAVA_HOME` environment variable is activated.
+For stand-alone packages, you can use the installers distributed by the [Adoptium project](https://adoptium.net).
+Adoptium packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
+When installing the Adoptium on Windows, make sure that the option to set the `JAVA_HOME` environment variable is activated.
 Otherwise you will have to set the environment variable manually.
 
 You can check which version of Java you have installed by typing the following command into the terminal of your computer:
@@ -32,9 +32,9 @@ java -version
 On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.
 
 ```bash
-openjdk version "11.0.10" 2021-01-19
-OpenJDK Runtime Environment (build 11.0.10+9-Ubuntu-0ubuntu1.20.04)
-OpenJDK 64-Bit Server VM (build 11.0.10+9-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
+openjdk version "17.0.6" 2023-01-17
+OpenJDK Runtime Environment Temurin-17.0.6+10 (build 17.0.6+10)
+OpenJDK 64-Bit Server VM Temurin-17.0.6+10 (build 17.0.6+10, mixed mode, sharing)
 ```
 
 ### Apache Maven
@@ -103,7 +103,7 @@ mdbook v0.3.1
 ## Suggested editor: Eclipse Integrated Development Environment (IDE)
 
 Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
-While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2021-12 or newer**.
+While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2022-12**.
 
 You can download it from the [Eclipse download website](https://www.eclipse.org/downloads/).
 
@@ -132,7 +132,4 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 
 ### List of Eclipse IDE plugins required for Hexatomic development
 
-- [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0-SNAPSHOT or newer**  
-(Update Site: <http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/>)
 - [**Eclipse Checkstyle Plugin**](https://checkstyle.org/eclipse-cs/) (Update Site: <https://checkstyle.org/eclipse-cs-update-site/>)
-- 
