@@ -52,10 +52,8 @@ Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/main/pom.
 
 #### Target platform
 
-The target platform for Hexatomic is defined using the []() plug-in for Eclipse.
-This allows to define the platform in a human-readable format, in the file [`org.corpus_tools.hexatomic.target.tpd`](https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.tpd).
-The actual [target platform definition file](https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target) that both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic) use is generated
-from this file.
+The target platform for Hexatomic is defined using the [target platform definition file](https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target).
+It is used by both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic).
 More details about target platforms can be found in the section [*Creating and activating the target platform*](../activating-target-platform.html).
 
 #### Documentation

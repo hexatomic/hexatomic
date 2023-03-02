@@ -13,12 +13,10 @@ Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.update,
  org.corpus_tools.hexatomic.styles,
  org.eclipse.wb.swt
+Import-Package: org.slf4j
 Require-Bundle: javax.inject,
  org.eclipse.core.runtime,
- org.eclipse.swt,
  org.eclipse.e4.ui.model.workbench,
- org.eclipse.jface,
- org.eclipse.e4.ui.services,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.core.di,
  org.eclipse.e4.ui.di,
@@ -27,17 +25,11 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.core.services,
  ch.qos.logback.classic,
  ch.qos.logback.core,
- org.slf4j.api,
- org.corpus-tools.salt-api,
  javax.annotation,
  org.eclipse.ui,
- org.eclipse.equinox.p2.ui,
- org.eclipse.e4.core.di.extensions,
  org.eclipse.equinox.p2.core,
- org.eclipse.equinox.p2.engine,
  org.eclipse.equinox.p2.operations,
- org.eclipse.equinox.p2.metadata.repository,
- org.eclipse.osgi.services
+ org.eclipse.osgi.services,
+ org.corpus-tools.salt-api
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
-Import-Package: javax.inject;version="1.0.0"

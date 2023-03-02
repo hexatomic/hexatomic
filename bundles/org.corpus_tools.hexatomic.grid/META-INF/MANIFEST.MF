@@ -15,9 +15,9 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.core.di.annotations,
  javax.annotation,
- org.corpus-tools.salt-extensions,
  org.eclipse.e4.core.services,
  org.eclipse.swt,
+ wrapped.org.corpus-tools.salt-extensions,
  org.apache.commons.lang3
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-17
