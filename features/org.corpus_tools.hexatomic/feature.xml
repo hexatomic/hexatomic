@@ -23,11 +23,10 @@
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.e4.ui.model.workbench"/>
       <import plugin="org.eclipse.e4.ui.di"/>
-      <import plugin="org.eclipse.e4.ui.services"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.corpus-tools.salt-api"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.slf4j.api"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.e4.ui.workbench"/>
       <import plugin="javax.annotation"/>
@@ -40,23 +39,21 @@
       <import plugin="org.eclipse.zest.layouts"/>
       <import plugin="com.google.guava"/>
       <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.hamcrest.library"/>
       <import plugin="org.eclipse.nebula.widgets.chips"/>
-      <import plugin="org.antlr.antlr4-runtime" version="4.7.2" match="greaterOrEqual"/>
+      <import plugin="org.antlr.runtime" version="4.7.2" match="greaterOrEqual"/>
       <import plugin="org.corpus-tools.pepper-framework"/>
       <import plugin="org.eclipse.e4.core.commands"/>
       <import plugin="org.eclipse.e4.core.di"/>
       <import plugin="org.eclipse.e4.core.contexts"/>
       <import plugin="ch.qos.logback.core"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.equinox.p2.ui"/>
-      <import plugin="org.eclipse.e4.core.di.extensions"/>
       <import plugin="org.eclipse.equinox.p2.core"/>
-      <import plugin="org.eclipse.equinox.p2.engine"/>
       <import plugin="org.eclipse.equinox.p2.operations"/>
-      <import plugin="org.eclipse.equinox.p2.metadata.repository"/>
       <import plugin="org.eclipse.osgi.services"/>
       <import plugin="org.junit"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="equivalent"/>
+      <import feature="org.eclipse.e4.rcp" version="4.26.0.v20221123-2302"/>
+      <import plugin="org.eclipse.e4.ui.services"/>
    </requires>
 
    <plugin
@@ -106,6 +103,14 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.slf4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>

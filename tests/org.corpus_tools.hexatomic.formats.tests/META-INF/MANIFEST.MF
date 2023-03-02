@@ -4,7 +4,7 @@ Bundle-Name: Importer and Exporter Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.formats.tests
 Bundle-Version: 1.2.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.formats
-Require-Bundle: junit-jupiter-api;bundle-version="5.9.2",
- org.mockito.mockito-core;bundle-version="2.23.0"
+Require-Bundle: org.mockito.mockito-core;bundle-version="2.23.0",
+ junit-jupiter-api;bundle-version="5.9.1"
 Automatic-Module-Name: org.corpus_tools.hexatomic.formats.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17

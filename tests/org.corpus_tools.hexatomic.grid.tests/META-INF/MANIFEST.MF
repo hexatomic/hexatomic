@@ -9,4 +9,4 @@ Automatic-Module-Name: org.corpus_tools.hexatomic.grid.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.emf.common,
  org.mockito.mockito-core;bundle-version="2.23.0",
- junit-jupiter-api;bundle-version="5.9.2"
+ junit-jupiter-api;bundle-version="5.9.1"
