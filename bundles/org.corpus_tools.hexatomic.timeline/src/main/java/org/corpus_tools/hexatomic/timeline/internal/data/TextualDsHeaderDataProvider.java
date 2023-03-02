@@ -40,8 +40,9 @@ public class TextualDsHeaderDataProvider implements IDataProvider {
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    // TODO Auto-generated method stub
-
+    if (newValue instanceof String) {
+      graph.getTextualDSs().get(columnIndex).setName((String) newValue);
+    }
   }
 
   @Override
