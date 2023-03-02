@@ -46,11 +46,14 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 @TestMethodOrder(OrderAnnotation.class)
 class TestProjectManager {
@@ -92,6 +95,11 @@ class TestProjectManager {
     TestHelper.executeNewProjectCommand(commandService, handlerService);
   }
 
+  @AfterEach
+  void close() {
+    TestHelper.executeNewProjectCommand(commandService, handlerService);
+  }
+
   @Test
   @Order(1)
   public void testOpenAndSave() throws IOException {
@@ -114,8 +122,7 @@ class TestProjectManager {
     assertFalse(projectManager.isDirty());
 
     // Load a single document into memory
-    Optional<SDocument> optionalDoc1 =
-        projectManager.getDocument(DOC1_SALT_ID, true);
+    Optional<SDocument> optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
     assertTrue(optionalDoc1.isPresent());
     if (optionalDoc1.isPresent()) {
       SDocument doc1 = optionalDoc1.get();
@@ -130,25 +137,30 @@ class TestProjectManager {
 
       assertTrue(projectManager.isDirty());
       bot.waitUntil(new ICondition() {
-        
+
         @Override
         public boolean test() throws Exception {
-          return bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled();
+          return bot
+              .toolbarButtonWithTooltip("Undo (" + TestHelper.getControlTooltipPrefix() + "Z)")
+              .isEnabled();
         }
-        
+
         @Override
         public void init(SWTBot bot) {
           // No initialization needed
         }
-        
+
         @Override
         public String getFailureMessage() {
           return "Undo toolbar button not enabled";
         }
       });
       // Also check that the undo toolbar item has been enabled
-      assertTrue(bot.toolbarButtonWithTooltip("Undo (Ctrl+Z)").isEnabled());
-      assertFalse(bot.toolbarButtonWithTooltip("Redo (Shift+Ctrl+Z)").isEnabled());
+      assertTrue(
+          bot.toolbarButtonWithTooltip("Undo (" + TestHelper.getControlTooltipPrefix() + "Z)")
+              .isEnabled());
+      assertFalse(bot.toolbarButtonWithTooltip("Redo (" + TestHelper.getShiftTooltipPrefix()
+          + TestHelper.getControlTooltipPrefix() + "Z)").isEnabled());
 
       // Save the project to a different location
       Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
@@ -166,8 +178,7 @@ class TestProjectManager {
       SaltProject savedProject =
           SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
-      SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-          .getNode(DOC1_SALT_ID);
+      SDocument savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0).getNode(DOC1_SALT_ID);
 
       Set<Difference> docDiff =
           SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
@@ -197,8 +208,7 @@ class TestProjectManager {
 
         savedProject = SaltUtil.loadCompleteSaltProject(URI.createFileURI(tmpDir.toString()));
 
-        savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0)
-            .getNode(DOC1_SALT_ID);
+        savedDoc = (SDocument) savedProject.getCorpusGraphs().get(0).getNode(DOC1_SALT_ID);
 
         docDiff = SaltUtil.compare(doc1Graph).with(savedDoc.getDocumentGraph()).andFindDiffs();
         assertThat(docDiff, is(empty()));
@@ -246,11 +256,11 @@ class TestProjectManager {
 
     Path tmpDir = Files.createTempDirectory("hexatomic-project-manager-test");
 
-    UIThreadRunnable.syncExec(() -> 
-        // Call saveTo which should show an error
-        spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
-          bot.getDisplay().getActiveShell()));
-    
+    // Call saveTo which should show an error
+    UIThreadRunnable
+        .syncExec(() -> spyingManager.saveTo(URI.createFileURI(tmpDir.toAbsolutePath().toString()),
+            bot.getDisplay().getActiveShell()));
+
     Optional<IStatus> lastException =
         UIThreadRunnable.syncExec(() -> errorService.getLastException());
     // Check the error has been recorded
@@ -259,9 +269,10 @@ class TestProjectManager {
       assertTrue(lastException.get().getException() instanceof InterruptedException);
     }
   }
-  
+
   @Test
   @Order(4)
+  @EnabledOnOs({OS.WINDOWS, OS.LINUX})
   void testCloseUnsavedChangesWarning() {
     projectManager.open(exampleProjectUri);
     Optional<SDocument> optionalDoc1 = projectManager.getDocument(DOC1_SALT_ID, true);
@@ -278,7 +289,7 @@ class TestProjectManager {
 
       // Click on the exit menu entry
       bot.menu("Exit").click();
-      
+
       // A warning dialog should appear
       SWTBotShell warningDialog = bot.shell("Discard unsaved changes?");
       assertNotNull(warningDialog);

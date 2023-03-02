@@ -7,7 +7,7 @@ on:
 jobs:
   deploy_binaries:
     name: Deploy release Windows and Linux binaries
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
         - name: Update packages
           run: sudo apt-get update
@@ -15,8 +15,8 @@ jobs:
           run: sudo apt-get install metacity
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Set JAVA_HOME to OpenJDK 11
-          run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+        - name: Set JAVA_HOME to OpenJDK 17
+          run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
         - name: Run Maven install (includes tests) and re-create CFF file
           run: ./releng/sh/metacity-run.sh mvn -Pcff clean install
           env:
@@ -29,19 +29,25 @@ jobs:
           uses: softprops/action-gh-release@v0.1.5
           with:
             files: |
-              releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-linux.gtk.x86_64.zip
+              releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-linux.gtk.x86_64.tar.gz
               releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-*-win32.win32.x86_64.zip  
             draft: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy_macos:
     name: Deploy release MacOS binaries
-    runs-on: macos-10.15
+    runs-on: macos-12
     steps:
         - name: Checkout
           uses: actions/checkout@v2
-        - name: Set JAVA_HOME to OpenJDK 11
-          run: echo JAVA_HOME=$JAVA_HOME_11_X64 >> $GITHUB_ENV
+        - uses: actions/setup-java@v3
+          with:
+            java-version: '17'
+            distribution: 'temurin'
+        - name: Set up Maven
+          uses: stCarolas/setup-maven@v4.5
+          with:
+            maven-version: 3.8.7
         - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
           run: mvn -Pcff -DskipTests clean install
           env:
@@ -66,7 +72,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy_p2:
     name: Deploy P2 update site
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -86,7 +92,7 @@ jobs:
         commit_message: 'Update documentation'
   deploy_documentation:
     name: Deploy documentation
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2

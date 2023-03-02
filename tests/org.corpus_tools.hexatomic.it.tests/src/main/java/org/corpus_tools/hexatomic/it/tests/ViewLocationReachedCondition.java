@@ -10,6 +10,8 @@ class ViewLocationReachedCondition extends DefaultCondition {
   private final Point expected;
   private Point lastChecked;
 
+  private static final int TOLERANCE_IN_PIXELS = 2;
+
   public ViewLocationReachedCondition(Viewport viewport, Point expected) {
     super();
     this.viewport = viewport;
@@ -19,7 +21,9 @@ class ViewLocationReachedCondition extends DefaultCondition {
   @Override
   public boolean test() throws Exception {
     lastChecked = viewport.getViewLocation();
-    return viewport.getViewLocation().equals(expected.x, expected.y);
+    int differenceX = Math.abs(expected.x - viewport.getViewLocation().x);
+    int differenceY = Math.abs(expected.y - viewport.getViewLocation().y);
+    return differenceX <= TOLERANCE_IN_PIXELS && differenceY <= TOLERANCE_IN_PIXELS;
   }
 
   @Override

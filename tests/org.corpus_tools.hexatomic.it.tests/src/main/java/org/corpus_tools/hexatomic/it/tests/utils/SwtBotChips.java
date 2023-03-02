@@ -19,7 +19,7 @@ public class SwtBotChips extends AbstractSWTBotControl<Chips> {
 
   @Override
   public AbstractSWTBot<Chips> click() {
-    log.debug(MessageFormat.format("Clicking on {0}", SWTUtils.getText(widget)));
+    log.debug("{}", MessageFormat.format("Clicking on {0}", SWTUtils.getText(widget)));
 
     waitForEnabled();
 
@@ -49,7 +49,7 @@ public class SwtBotChips extends AbstractSWTBotControl<Chips> {
     notify(SWT.MouseExit, e);
     notify(SWT.Deactivate, e);
     notify(SWT.FocusOut, e);
-    log.debug(MessageFormat.format("Clicked on {0}", SWTUtils.getText(widget)));
+    log.debug("{}", MessageFormat.format("Clicked on {0}", SWTUtils.getText(widget)));
     return this;
   }
 

@@ -80,16 +80,16 @@ class TestProjectManager {
 
     projectManager = new ProjectManager();
     projectManager.events = events;
-    
+
     errorService = mock(ErrorService.class);
     projectManager.errorService = errorService;
-    
+
     partService = mock(EPartService.class);
     projectManager.partService = partService;
 
     UiStatusReport uiStatus = mock(UiStatusReport.class);
     projectManager.uiStatus = uiStatus;
-    
+
     projectManager.sync = sync;
     projectManager.notificationFactory = factory;
 
@@ -291,6 +291,39 @@ class TestProjectManager {
 
       // Test that the graphs are equal again
       assertEquals(new HashSet<>(), docGraph1.findDiffs(docGraph3));
+    }
+  }
+
+  @Test
+  public void testRevertToLastCheckpoint() {
+
+    projectManager.open(exampleProjectUri);
+    assertFalse(projectManager.canUndo());
+    assertFalse(projectManager.canRedo());
+
+    Optional<SDocument> document = projectManager.getDocument(DOC3_ID, true);
+    assertTrue(document.isPresent());
+    if (document.isPresent()) {
+      SDocumentGraph docGraph = document.get().getDocumentGraph();
+      assertNotNull(docGraph);
+
+      // Change a token annotation without creating a checkpoint
+      List<SToken> token = docGraph.getSortedTokenByText();
+      token.get(0).createAnnotation("test", "anno", "0");
+      assertTrue(token.get(0).containsLabel(TEST_ANNO_QNAME));
+      token.get(1).createAnnotation("test", "anno", "1");
+      assertTrue(token.get(1).containsLabel(TEST_ANNO_QNAME));
+
+      assertFalse(projectManager.canRedo());
+      assertFalse(projectManager.canRedo());
+
+      // Revert changes and check that the created annotations are gone
+      projectManager.revertToLastCheckpoint();
+      assertFalse(token.get(0).containsLabel(TEST_ANNO_QNAME));
+      assertFalse(token.get(1).containsLabel(TEST_ANNO_QNAME));
+
+      assertFalse(projectManager.canRedo());
+      assertFalse(projectManager.canRedo());
     }
   }
 

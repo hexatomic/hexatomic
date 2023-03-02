@@ -42,7 +42,7 @@ This means that
     - *Target platform* definition; the target platform defines the features and bundles that Hexatomic is built on top of (*against*).
     - *Update site* definition; Hexatomic's features and bundles are provided 
         1. through a repository in the [p2 repository format](http://web.archive.org/web/20190807191916/https://www.eclipse.org/equinox/p2/), from which Hexatomic can be updated automatically and manually from within the application in the future; and
-        2. As deployable units, i.e., the actual zip files that users will download in order to get Hexatomic.
+        2. As deployable units, i.e., the actual files that users will download in order to get Hexatomic.
     -  Miscellanea, e.g., shell scripts for deploying artifacts, templates for third-party licensing and citation, etc. 
 5. It uses **pomless builds**, i.e., not every single bundle or feature needs its own build definition XML file (`pom.xml`), which saves a lot of manual labour.
 
@@ -52,10 +52,8 @@ Hexatomic has a [root POM](https://github.com/hexatomic/hexatomic/tree/main/pom.
 
 #### Target platform
 
-The target platform for Hexatomic is defined using the []() plug-in for Eclipse.
-This allows to define the platform in a human-readable format, in the file [`org.corpus_tools.hexatomic.target.tpd`](https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.tpd).
-The actual [target platform definition file](https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target) that both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic) use is generated
-from this file.
+The target platform for Hexatomic is defined using the [target platform definition file](https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target).
+It is used by both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic).
 More details about target platforms can be found in the section [*Creating and activating the target platform*](../activating-target-platform.html).
 
 #### Documentation

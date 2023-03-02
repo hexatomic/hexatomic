@@ -458,8 +458,8 @@ public class CorpusStructureView {
   }
 
   private void deleteCorpus(SCorpus selectedCorpus) {
-    boolean hasSubCorpora = selectedCorpus.getOutRelations().stream()
-        .anyMatch(SCorpusRelation.class::isInstance);
+    boolean hasSubCorpora =
+        selectedCorpus.getOutRelations().stream().anyMatch(SCorpusRelation.class::isInstance);
     boolean hasDocuments = selectedCorpus.getOutRelations().stream()
         .anyMatch(SCorpusDocumentRelation.class::isInstance);
     if (hasSubCorpora || hasDocuments) {
@@ -627,6 +627,7 @@ public class CorpusStructureView {
     List<MPartDescriptor> editorParts = application.getDescriptors().stream()
         .filter(p -> OpenSaltDocumentHandler.EDITOR_TAG.equals(p.getCategory()))
         .collect(Collectors.toList());
+    Collections.reverse(editorParts);
 
     for (MPartDescriptor desc : editorParts) {
       // Create a menu item for this editor
@@ -649,7 +650,7 @@ public class CorpusStructureView {
       // Add the new menu item to the popup menu
       for (MMenu menu : thisPart.getMenus()) {
         if (menu.getElementId().equals(OPEN_DOCUMENT_POPUP_MENU_ID)) {
-          menu.getChildren().add(menuItem);
+          menu.getChildren().add(0, menuItem);
         }
       }
     }

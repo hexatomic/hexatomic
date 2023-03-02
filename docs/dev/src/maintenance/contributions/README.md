@@ -85,7 +85,7 @@ In case that the pull request is related to the update functionality itself, you
 ```bash
 mvn -DskipTests package
 ```
-3. Unzip the product file (e.g. `releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip`) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the *test instance*.
+3. Unzip the product file (e.g. `releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.tar.gz`) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the *test instance*.
 4. In the *original* local Hexatomic source code repository, change the version number of Hexatomic to a large version number and build the update site by executing. This instance of Hexatomic now functions as the *update instance*.
 ```bash
 mvn tycho-versions:set-version -DnewVersion=1999.0.0 

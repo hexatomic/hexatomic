@@ -65,10 +65,10 @@ class TestPepperJobRunner {
     when(job.getDocumentControllers()).thenReturn(docControllers);
 
     PepperJobRunner runner = new DoNothingPepperJobRunner(job);
-    
+
     IProgressMonitor monitor = mock(IProgressMonitor.class);
     runner.runJob(monitor);
-    
+
     verify(monitor).isCanceled();
     verify(monitor).beginTask(eq("Processing 12 documents"), eq(TEST_NUMBER_OF_DOCUMENTS));
     verify(monitor, times(TEST_NUMBER_OF_DOCUMENTS)).worked(1);
@@ -77,6 +77,67 @@ class TestPepperJobRunner {
 
     assertEquals(TEST_NUMBER_OF_DOCUMENTS, runner.getCompletedDocuments().size());
     assertEquals(0, runner.getFailedDocuments().size());
+  }
+
+  /**
+   * Test that the progress is reported when no documents are imported.
+   * 
+   * @throws InterruptedException Can be interrupted.
+   * @throws ExecutionException Should not be thrown
+   */
+  @Test
+  public void testReportProgressNoDocuments() throws InterruptedException, ExecutionException {
+
+    // This mocked job directly jumps to importing the documents
+    when(job.getStatus()).thenReturn(JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE);
+    List<DocumentController> docControllers = new ArrayList<>();
+    when(job.getDocumentControllers()).thenReturn(docControllers);
+
+    PepperJobRunner runner = new DoNothingPepperJobRunner(job);
+
+    IProgressMonitor monitor = mock(IProgressMonitor.class);
+    runner.runJob(monitor);
+
+    verify(monitor).isCanceled();
+    verify(monitor).beginTask(eq("Processing 0 documents"), eq(0));
+    verify(monitor).done();
+    verifyNoMoreInteractions(monitor);
+
+    assertEquals(0, runner.getCompletedDocuments().size());
+    assertEquals(0, runner.getFailedDocuments().size());
+  }
+
+  /**
+   * Test that the progress is reported in case a document has failed.
+   * 
+   * @throws InterruptedException Can be interrupted.
+   * @throws ExecutionException Should not be thrown
+   */
+  @Test
+  public void testReportProgressFailedDocument() throws InterruptedException, ExecutionException {
+
+    // This mocked job directly jumps to importing the documents
+    when(job.getStatus()).thenReturn(JOB_STATUS.IMPORTING_DOCUMENT_STRUCTURE);
+    List<DocumentController> docControllers = new ArrayList<>();
+    DocumentController controller = mock(DocumentController.class);
+    when(controller.getGlobalStatus()).thenReturn(DOCUMENT_STATUS.FAILED);
+    when(controller.getGlobalId()).thenReturn("0");
+    docControllers.add(controller);
+    when(job.getDocumentControllers()).thenReturn(docControllers);
+
+    PepperJobRunner runner = new DoNothingPepperJobRunner(job);
+
+    IProgressMonitor monitor = mock(IProgressMonitor.class);
+    runner.runJob(monitor);
+
+    verify(monitor).isCanceled();
+    verify(monitor).beginTask(eq("Processing 1 documents"), eq(1));
+    verify(monitor, times(1)).worked(1);
+    verify(monitor).done();
+    verifyNoMoreInteractions(monitor);
+
+    assertEquals(0, runner.getCompletedDocuments().size());
+    assertEquals(1, runner.getFailedDocuments().size());
   }
 
 }

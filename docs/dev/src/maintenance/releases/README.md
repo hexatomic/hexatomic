@@ -77,7 +77,7 @@ You can now make a release from this tag:
    2. A short description of the fix (including issue numbers with hash prefixes, e.g. `#123`) or the added functionality. You can use bullet lists if more than one fix or feature has been added.
    3. A link to the user documentation with, e.g., the following text: `:green_book: Read the [user documentation](https://hexatomic.github.io/hexatomic/user/v0.5/index.html) for Hexatomic to learn how to install and use it.` Make sure you get the `vMAJOR.MINOR` part in the documentation URL right.
 5. Click the **Preview** tab and check if everything looks good.
-6. Wait until the respective continuous integration workflow has added all "binaries" to the release draft, i.e., the product .zip files for all three major operating systems.
+6. Wait until the respective continuous integration workflow has added all "binaries" to the release draft, i.e., the product files for all three major operating systems.
 7. Click on the green **Publish release** button. You can always delete and re-create releases from tags if something goes wrong. In any case, making the release also creates an archived version of the source code on [Zenodo](https://zenodo.org) that is given a [DOI](https://en.wikipedia.org/wiki/Digital_object_identifier).
 8. A GitHub action should also automatically update the P2 repository. Run the old version of Hexatomic and check an update is found.
 
