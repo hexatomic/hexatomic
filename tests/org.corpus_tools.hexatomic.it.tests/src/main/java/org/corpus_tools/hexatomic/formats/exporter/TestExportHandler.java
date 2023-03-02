@@ -54,7 +54,7 @@ class TestExportHandler {
   private ExportHandler fixture;
 
   @BeforeEach
-  private void setUp() {
+  void setUp() {
 
     wizardDialog = mock(WizardDialog.class);
     projectManager = mock(ProjectManager.class);

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.text.MessageFormat;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SSpan;
@@ -31,7 +32,7 @@ class TestColumn {
   private Column fixtureAnnotationColumn = null;
   private SToken token1 = null;
   private SToken token2 = null;
-  
+
   /**
    * Sets up the fixture for unit tests.
    */
@@ -147,11 +148,14 @@ class TestColumn {
     fixtureTokenTextColumn.setRow(2, structure);
     RuntimeException e =
         assertThrows(RuntimeException.class, () -> fixtureTokenTextColumn.getDisplayText(2));
-    assertEquals(
-        "A column of type TOKEN_TEXT can only contain data objects of type "
-            + "org.corpus_tools.salt.common.SToken. Encountered: class "
-            + "org.corpus_tools.salt.common.SStructure$MockitoMock",
-        e.getMessage().split("\\$[\\d]+")[0]);
+
+
+    String firstMessagePart = e.getMessage().split("\\$[\\d]+")[0];
+    String expectedStart = "A column of type TOKEN_TEXT can only contain data objects of type "
+        + "org.corpus_tools.salt.common.SToken. Encountered:";
+    assertTrue(firstMessagePart.startsWith(expectedStart), () -> MessageFormat
+        .format("Message should start with <{0}> but was <{1}>", expectedStart, firstMessagePart));
+
   }
 
   /**

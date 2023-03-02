@@ -29,7 +29,7 @@ public class TestSaveAsHandler {
 
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     dialog = mock(DirectoryDialog.class);
 
     this.fixture = new SaveAsHandler();
