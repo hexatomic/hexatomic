@@ -285,8 +285,8 @@ public class TestCorpusStructure {
   }
 
   @Test
-  @Order(3)
-  void testUndo() {
+  @Order(4)
+  void testUndoAdd() {
     // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
     // editor part
     bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
@@ -312,7 +312,44 @@ public class TestCorpusStructure {
 
     bot.menu("Undo").click();
     assertEquals(0, bot.tree().getAllItems().length);
+  }
 
+  /**
+   * Regression test for https://github.com/hexatomic/hexatomic/issues/422
+   */
+  @Test
+  @Order(5)
+  void testUndoDeleteDocumentAndCorpus() {
+    // Add corpus graph 1 by clicking on the first toolbar button ("Add") in the corpus structure
+    // editor part
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).select();
 
+    // Add corpus 1
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
+    bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).select();
+
+    // Add document_1
+    bot.toolbarDropDownButton(ADD_BUTTON_TEXT).click();
+    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
+
+    // Delete document
+    bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_1).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
+    assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
+
+    // Undo all changes and make sure the view has been updated
+    bot.menu("Undo").click();
+    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
+
+    // Delete corpus
+    bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
+    assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
+
+    // Undo all changes and make sure the view has been updated
+    bot.menu("Undo").click();
+    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
+    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
   }
 }
