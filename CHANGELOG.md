@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Workaround for a bug in Maven 3.9.0 that let our release workflows fail. To
+  avoid this, we excplicitly use a specific Maven version instead of using the
+  default one from GitHub Actions.
+
 ## [1.1.1] - 2023-03-03
 
 ### Fixed
