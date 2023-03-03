@@ -35,7 +35,7 @@ identifiers:
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
 version: 1.2.0-SNAPSHOT
-date-released: 2023-03-02
+date-released: 2023-03-03
 references:
 - type: software
   title: SWT Resource Manager
@@ -61,29 +61,6 @@ references:
   - name: Kohsuke Kaw
   - name: Stephen Connolly
   repository-code: http://fisheye.codehaus.org/browse/mojo/tags/animal-sniffer-parent-1.9/animal-sniffer-annotations
-- type: software
-  title: Apache Commons IO
-  version: 2.11.0
-  abbreviation: commons-io:commons-io
-  license: Apache-2.0
-  notes: More license information can be found in the THIRD-PARTY/Apache_Commons_IO
-    directory.
-  authors:
-  - name: Scott Sanders
-  - name: dIon Gillard
-  - name: Nicola Ken Barozzi
-  - name: Henri Yandell
-  - name: Stephen Colebourne
-  - name: Jeremias Maerki
-  - name: Matthew Hawthorne
-  - name: Martin Cooper
-  - name: Rob Oxspring
-  - name: Jochen Wiedmann
-  - name: Niall Pemberton
-  - name: Jukka Zitting
-  - name: Gary Gregory
-  - name: Kristian Rosenvold
-  repository-code: https://gitbox.apache.org/repos/asf?p=commons-io.git
 - type: software
   title: Apache Commons Lang
   version: '3.4'
@@ -128,6 +105,27 @@ references:
   authors:
   - name: The Legion of the Bouncy Castle Inc.
   repository-code: https://github.com/bcgit/bc-java
+- type: software
+  title: Commons IO
+  version: '2.4'
+  abbreviation: commons-io:commons-io
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Commons_IO directory.
+  authors:
+  - name: Scott Sanders
+  - name: dIon Gillard
+  - name: Nicola Ken Barozzi
+  - name: Henri Yandell
+  - name: Stephen Colebourne
+  - name: Jeremias Maerki
+  - name: Matthew Hawthorne
+  - name: Martin Cooper
+  - name: Rob Oxspring
+  - name: Jochen Wiedmann
+  - name: Niall Pemberton
+  - name: Jukka Zitting
+  - name: Gary Gregory
+  repository-code: http://svn.apache.org/viewvc/commons/proper/io/trunk
 - type: software
   title: 'Guava: Google Core Libraries for Java'
   version: '19.0'
