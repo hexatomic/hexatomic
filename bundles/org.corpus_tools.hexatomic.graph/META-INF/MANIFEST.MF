@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Graph Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.graph;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.1.4
 Require-Bundle: javax.inject,
  org.eclipse.jface,
  org.eclipse.e4.ui.model.workbench,
