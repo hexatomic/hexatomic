@@ -25,7 +25,6 @@ import org.corpus_tools.hexatomic.formats.ConfigurationPage;
 import org.corpus_tools.hexatomic.formats.importer.ImportFormat;
 import org.corpus_tools.pepper.modules.coreModules.TextImporter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +58,6 @@ public class TxtImportConfiguration extends ConfigurationPage {
     btnTokenize = new Button(container, SWT.CHECK);
     btnTokenize.setText("Tokenize after import");
     btnTokenize.setSelection(true);
-    btnTokenize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
   }
 
   @Override
