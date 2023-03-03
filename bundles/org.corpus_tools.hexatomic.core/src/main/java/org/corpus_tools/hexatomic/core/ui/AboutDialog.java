@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
+import org.corpus_tools.hexatomic.core.LinkOpener;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.FontDescriptor;
@@ -30,7 +31,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -44,14 +44,18 @@ public class AboutDialog extends Dialog {
   private final Font headerFont;
   private final Font versionFont;
 
+  private final LinkOpener linkOpener;
 
   /**
    * Create the dialog.
    * 
    * @param parentShell The parent
+   * @param linkOpener A service to open links in the browser.
    */
-  public AboutDialog(Shell parentShell) {
+  public AboutDialog(Shell parentShell, LinkOpener linkOpener) {
     super(parentShell);
+
+    this.linkOpener = linkOpener;
 
     Font dialogFont = JFaceResources.getDialogFont();
     FontDescriptor headerFontDescriptor = FontDescriptor.createFrom(dialogFont).setHeight(32);
@@ -117,7 +121,7 @@ public class AboutDialog extends Dialog {
     lnkHomepage.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch("https://hexatomic.github.io/");
+        linkOpener.open("https://hexatomic.github.io/");
       }
     });
 
@@ -128,7 +132,7 @@ public class AboutDialog extends Dialog {
     lnkDocumentation.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch(getOnlineDocumentationUrl());
+        linkOpener.open(getOnlineDocumentationUrl());
       }
     });
 
@@ -140,7 +144,7 @@ public class AboutDialog extends Dialog {
     lnkAuthors.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch("https://github.com/orgs/hexatomic/teams/project/members");
+        linkOpener.open("https://github.com/orgs/hexatomic/teams/project/members");
       }
     });
 
@@ -152,7 +156,7 @@ public class AboutDialog extends Dialog {
     lnkIssue.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch(
+        linkOpener.open(
             "https://github.com/hexatomic/hexatomic/issues/new?assignees=&labels=bug&template=bug_report.md&title=Bug in version "
                 + getFullVersion());
       }
@@ -169,7 +173,7 @@ public class AboutDialog extends Dialog {
     lnkLicense.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch("https://spdx.org/licenses/Apache-2.0.html");
+        linkOpener.open("https://spdx.org/licenses/Apache-2.0.html");
       }
     });
 
@@ -181,7 +185,7 @@ public class AboutDialog extends Dialog {
     lnkCitation.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch(getRepoLink("CITATION.cff"));
+        linkOpener.open(getRepoLink("CITATION.cff"));
       }
     });
 
@@ -193,7 +197,7 @@ public class AboutDialog extends Dialog {
     lnkThirdParty.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Program.launch(getRepoLink("THIRD-PARTY"));
+        linkOpener.open(getRepoLink("THIRD-PARTY"));
       }
     });
 
@@ -209,7 +213,7 @@ public class AboutDialog extends Dialog {
    */
   @Override
   protected void createButtonsForButtonBar(Composite parent) {
-    createButton(parent, IDialogConstants.OK_ID, "Close dialog", true);
+    createButton(parent, IDialogConstants.OK_ID, IDialogConstants.CLOSE_LABEL, true);
   }
 
   /**
