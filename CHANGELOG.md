@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bundle Java 17 and update to Eclipse platform version 2022-12
+- Bundle Java 17 and update to Eclipse platform version 2022-12.
+  This does not change any functionality for the user.
 
 ## [1.1.0] - 2023-02-19
 
