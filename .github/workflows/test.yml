@@ -20,12 +20,10 @@ jobs:
         with:
           maven-version: 3.8.7
       - name: Cache local Maven repository
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-11-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-11-
+          key: ${{ runner.os }}-maven
       - name: Set JAVA_HOME to OpenJDK 17
         run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
       - name: Run Maven Tests with enabled code coverage and upload results to SonarCloud
@@ -49,12 +47,10 @@ jobs:
         with:
           maven-version: 3.8.7
       - name: Cache local Maven repository
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-11-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-11-
+          key: ${{ runner.os }}-maven
       - name: Run Maven install (includes tests)
         run: mvn verify
         env:
