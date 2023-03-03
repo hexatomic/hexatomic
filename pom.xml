@@ -198,11 +198,6 @@
 								<pattern>.*:com\.sun\.jna\..*</pattern>
 								<template>${maven.multiModuleProjectDirectory}/releng/templates/jna.yml</template>
 							</referenceTemplate>
-							<!-- Wrapped Salt Extension Maven dependency -->
-							<referenceTemplate>
-								<pattern>.*\.org\.corpus-tools\.salt-extensions</pattern>
-								<template>${maven.multiModuleProjectDirectory}/releng/templates/jna.yml</template>
-							</referenceTemplate>
 							<!-- XMLUnit is bundled inside pepper-framework -->
 							<referenceTemplate>
 								<pattern>p2\.eclipse-plugin:org\.corpus-tools\.pepper-framework:jar:lib/xmlunit-1\.5.*</pattern>
