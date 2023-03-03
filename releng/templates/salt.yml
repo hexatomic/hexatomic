@@ -1,0 +1,8 @@
+type: software
+title: {{artifactId}}
+version: '{{version}}'
+license: Apache-2.0
+authors:
+- name: Florian Zipser
+- name: Thomas Krause
+notes: 'More license information can be found in the THIRD-PARTY/{{artifactId}} directory.'

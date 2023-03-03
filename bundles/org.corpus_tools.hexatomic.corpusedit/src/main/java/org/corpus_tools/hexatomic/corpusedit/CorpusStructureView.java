@@ -454,12 +454,13 @@ public class CorpusStructureView {
     projectManager.getProject().removeCorpusGraph(selectedCorpusGraph);
     // select nothing
     treeViewer.setSelection(null);
-    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+
+    projectManager.addCheckpoint();
   }
 
   private void deleteCorpus(SCorpus selectedCorpus) {
-    boolean hasSubCorpora = selectedCorpus.getOutRelations().stream()
-        .anyMatch(SCorpusRelation.class::isInstance);
+    boolean hasSubCorpora =
+        selectedCorpus.getOutRelations().stream().anyMatch(SCorpusRelation.class::isInstance);
     boolean hasDocuments = selectedCorpus.getOutRelations().stream()
         .anyMatch(SCorpusDocumentRelation.class::isInstance);
     if (hasSubCorpora || hasDocuments) {
@@ -480,8 +481,7 @@ public class CorpusStructureView {
     }
 
     selectedCorpus.getGraph().removeNode(selectedCorpus);
-
-    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+    projectManager.addCheckpoint();
   }
 
   private void deleteDocument(SDocument selectedDocument) {
@@ -525,7 +525,7 @@ public class CorpusStructureView {
     }
 
     selectedDocument.getGraph().removeNode(selectedDocument);
-    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+    projectManager.addCheckpoint();
   }
 
   private void createDeleteMenu(ToolBar toolBar) {

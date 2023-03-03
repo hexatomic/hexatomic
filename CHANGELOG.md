@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2023-03-03
+
+### Fixed
+
+- Deleting a document could not be undone (#422)
+- "Tokenize after import" checkbox label was located wrong in text importer (#420)
+- Running the tests on macOS would fail (#417). An GitHub action is now
+  configured to execute the tests also on macOS for each pull request.
+- About dialog did mention the Apache License for Hexatomic itself, but not the
+  dependencies (#416).
+- Update to Eclipse platform version 2022-12, which has various fixes. This does
+  not change any functionality for the user, but we also now bundle Java version
+
+
 ## [1.1.0] - 2023-02-19
 
 ### Fixed
@@ -311,7 +325,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/hexatomic/hexatomic/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/hexatomic/hexatomic/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/hexatomic/hexatomic/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/hexatomic/hexatomic/compare/v0.14.0...v1.0.0
