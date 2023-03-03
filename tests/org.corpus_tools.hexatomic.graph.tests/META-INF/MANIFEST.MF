@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Graph Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.graph.tests
-Bundle-Version: 1.1.5
+Bundle-Version: 1.2.0.qualifier
 Fragment-Host: org.corpus_tools.hexatomic.graph
 Require-Bundle: org.mockito.mockito-core;bundle-version="2.23.0",
  junit-jupiter-api;bundle-version="5.9.1"
