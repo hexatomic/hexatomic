@@ -52,8 +52,6 @@ jobs:
           uses: stCarolas/setup-maven@v4.5
           with:
             maven-version: 3.8.7
-        - name: Set JAVA_HOME to OpenJDK 17
-          run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
         - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
           run: mvn -Pcff -DskipTests clean install
           env:
@@ -86,6 +84,8 @@ jobs:
       uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.8.7
+    - name: Set JAVA_HOME to OpenJDK 17
+      run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
     - name: Create P2 repository with Maven
       run: mvn -DskipTests clean install
     - name: Pushes P2 repository to "updates" Git repository
