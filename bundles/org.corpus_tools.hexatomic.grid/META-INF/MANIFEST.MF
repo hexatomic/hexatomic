@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Grid Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.grid;singleton:=true
-Bundle-Version: 1.1.4
+Bundle-Version: 1.1.5
 Bundle-Vendor: Hexatomic Research Project
 Require-Bundle: javax.inject,
  org.corpus_tools.hexatomic.core,
@@ -17,8 +17,8 @@ Require-Bundle: javax.inject,
  javax.annotation,
  org.eclipse.e4.core.services,
  org.eclipse.swt,
- wrapped.org.corpus-tools.salt-extensions,
- org.apache.commons.lang3
+ org.apache.commons.lang3,
+ org.corpus-tools.salt-extensions;bundle-version="3.4.2"
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.grid,

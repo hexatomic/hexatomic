@@ -2,7 +2,7 @@
 <feature
       id="org.corpus_tools.hexatomic"
       label="Hexatomic Core Feature"
-      version="1.1.4"
+      version="1.1.5"
       provider-name="Hexatomic Research Project">
 
    <description url="http://www.example.com/description">
@@ -23,16 +23,17 @@
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.e4.ui.model.workbench"/>
       <import plugin="org.eclipse.e4.ui.di"/>
+      <import plugin="org.eclipse.e4.ui.services"/>
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.corpus-tools.salt-api"/>
       <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.slf4j.api"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.e4.ui.workbench"/>
       <import plugin="javax.annotation"/>
       <import plugin="org.eclipse.e4.core.services"/>
       <import plugin="org.eclipse.nebula.widgets.nattable.core"/>
       <import plugin="org.eclipse.swt"/>
-      <import plugin="wrapped.org.corpus-tools.salt-extensions"/>
       <import plugin="org.apache.commons.lang3"/>
       <import plugin="org.eclipse.zest.core"/>
       <import plugin="org.eclipse.zest.layouts"/>
@@ -50,9 +51,8 @@
       <import plugin="org.eclipse.equinox.p2.operations"/>
       <import plugin="org.eclipse.osgi.services"/>
       <import plugin="org.junit"/>
-      <import plugin="org.slf4j.api"/>
       <import feature="org.eclipse.e4.rcp" version="4.26.0.v20221123-2302"/>
-      <import plugin="org.eclipse.e4.ui.services"/>
+      <import plugin="org.corpus-tools.salt-extensions" match="greaterOrEqual"/>
    </requires>
 
    <plugin
