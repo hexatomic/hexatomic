@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Importer and Exporter Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.formats.tests
-Bundle-Version: 1.1.2
+Bundle-Version: 1.1.3
 Fragment-Host: org.corpus_tools.hexatomic.formats
 Require-Bundle: org.mockito.mockito-core;bundle-version="2.23.0",
  junit-jupiter-api;bundle-version="5.9.1"
