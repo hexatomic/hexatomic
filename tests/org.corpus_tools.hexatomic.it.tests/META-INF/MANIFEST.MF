@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Integration Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.it.tests
-Bundle-Version: 1.1.7
+Bundle-Version: 1.2.0.qualifier
 Automatic-Module-Name: org.corpus_tools.hexatomic.it.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.e4.ui.workbench,
