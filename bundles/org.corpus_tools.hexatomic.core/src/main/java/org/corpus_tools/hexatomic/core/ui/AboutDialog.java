@@ -88,6 +88,10 @@ public class AboutDialog extends Dialog {
     return "https://hexatomic.github.io/hexatomic/user/v" + getShortVersion() + "/";
   }
 
+  private static String getRepoLink(String path) {
+    return "https://github.com/hexatomic/hexatomic/blob/v" + getFullVersion() + "/" + path;
+  }
+
   /**
    * Create contents of the dialog.
    * 
@@ -140,17 +144,6 @@ public class AboutDialog extends Dialog {
       }
     });
 
-    Link lnkLicense = new Link(container, SWT.NONE);
-    lnkLicense.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-    lnkLicense
-        .setText("Published as Free and Open Source Software under the <a>Apache License 2.0</a>.");
-
-    lnkLicense.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        Program.launch("https://spdx.org/licenses/Apache-2.0.html");
-      }
-    });
 
     Link lnkIssue = new Link(container, SWT.NONE);
     lnkIssue.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -164,6 +157,47 @@ public class AboutDialog extends Dialog {
                 + getFullVersion());
       }
     });
+
+    Label separator = new Label(container, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.HORIZONTAL);
+    separator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+    Link lnkLicense = new Link(container, SWT.CENTER);
+    lnkLicense.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lnkLicense
+        .setText("Published as Free and Open Source Software under the <a>Apache License 2.0</a>.");
+
+    lnkLicense.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        Program.launch("https://spdx.org/licenses/Apache-2.0.html");
+      }
+    });
+
+    Link lnkCitation = new Link(container, SWT.CENTER);
+    lnkCitation.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lnkCitation.setText(
+        "See the <a>CITATION.cff</a> file for a list of included software and citation notes.");
+
+    lnkCitation.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        Program.launch(getRepoLink("CITATION.cff"));
+      }
+    });
+
+    Link lnkThirdParty = new Link(container, SWT.CENTER);
+    lnkThirdParty.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+    lnkThirdParty.setText(
+        "License files of included software are located in the <a>THIRD-PARTY</a> folder.");
+
+    lnkThirdParty.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        Program.launch(getRepoLink("THIRD-PARTY"));
+      }
+    });
+
+
 
     return container;
   }
@@ -183,7 +217,7 @@ public class AboutDialog extends Dialog {
    */
   @Override
   protected Point getInitialSize() {
-    return new Point(557, 350);
+    return new Point(557, 380);
   }
 
   @Override
