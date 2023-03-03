@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Excplicitly set the Java version in the workflow to publish the P2 update
+  site.
+
 ## [1.1.2] - 2023-03-03
 
 ### Fixed
