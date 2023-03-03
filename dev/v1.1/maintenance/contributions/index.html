@@ -224,7 +224,7 @@ In addition to manually checking the changes of the pull request, you should the
 <pre><code class="language-bash">mvn -DskipTests package
 </code></pre>
 <ol start="3">
-<li>Unzip the product file (e.g. <code>releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.zip</code>) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the <em>test instance</em>.</li>
+<li>Unzip the product file (e.g. <code>releng/org.corpus_tools.hexatomic.product/target/products/hexatomic-0.9.0-SNAPSHOT-linux.gtk.x86_64.tar.gz</code>) to a temporary directory. The instance of Hexatomic in this temporary directory now functions as the <em>test instance</em>.</li>
 <li>In the <em>original</em> local Hexatomic source code repository, change the version number of Hexatomic to a large version number and build the update site by executing. This instance of Hexatomic now functions as the <em>update instance</em>.</li>
 </ol>
 <pre><code class="language-bash">mvn tycho-versions:set-version -DnewVersion=1999.0.0 

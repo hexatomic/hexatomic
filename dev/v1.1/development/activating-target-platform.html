@@ -153,20 +153,11 @@ As these bundles are not available when you first start Eclipse, it will show nu
 This is because Eclipse cannot find the bundles that Hexatomic needs in the currently active target platform.</p>
 <p>The bundles that Hexatomic needs are defined in a custom target platform definition project, which is located in the <code>releng/org.corpus_tools.hexatomic.target/</code> directory.</p>
 <p>You can see this project in the Project Explorer in Eclipse.
-It contains two important files:</p>
-<ul>
-<li><code>org.corpus_tools.hexatomic.target.tpd</code>: A reasonably well-readable plain text files which describes which bundles from which bundle repository should go in the target platform</li>
-<li><code>org.corpus_tools.hexatomic.target.target</code>: An XML file describing the target platform so that the Eclipse IDE can read it and activate it</li>
-</ul>
+It contains the important <code>org.corpus_tools.hexatomic.target.target</code> file,
+which is an XML file describing the target platform so that the Eclipse IDE can
+read it and activate it.</p>
 <p>The first time you run Eclipse - and every consecutive time that the target platform definition changes - you will need to activate the target platform.
-To do so, use the plain text target platform description file ending on <code>.tpd</code> to create a new XML target platform definition:</p>
-<ul>
-<li>Right-click on <code>org.corpus_tools.hexatomic.target.tpd</code>, and click on <strong>Create Target Definition File</strong>, <em>or</em></li>
-<li>Select <code>org.corpus_tools.hexatomic.target.tpd</code> and press <kbd>Alt</kbd> + <kbd>R</kbd>.</li>
-</ul>
-<p>This will refresh the XML definition file with the contents of the description file, or create the XML file if it doesn't exist.</p>
-<p><img src="create-target-definition.png" alt="" /></p>
-<p>Next, open <code>org.corpus_tools.hexatomic.target.target</code>  (you may have to right-click and choose <strong>Open With</strong> &gt; <strong>Target Editor</strong>).
+To do so, open <code>org.corpus_tools.hexatomic.target.target</code> (you may have to right-click and choose <strong>Open With</strong> &gt; <strong>Target Editor</strong>).
 On opening the Target Editor, Eclipse will resolve the plugins in the target platform definition.
 Wait until this has finished, then click the <strong>Set as Active Target Platform</strong> link on the top-right of the Target Editor.</p>
 <p><img src="set-target-platform.png" alt="" /></p>

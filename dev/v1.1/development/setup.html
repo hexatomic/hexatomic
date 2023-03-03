@@ -153,22 +153,22 @@ We suggest that you use <strong>Linux</strong> for development, to avoid non-str
 <p>Hexatomic is implemented in <strong>Java</strong>, built with <strong>Apache Maven</strong>, and versioned with <strong>Git</strong>.
 You need all three on your computer to contribute code to Hexatomic.</p>
 <p>The documentation is written in Markdown and generated with <strong>mdbook</strong>.</p>
-<h3><a class="header" href="#java-11" id="java-11">Java 11</a></h3>
-<p>You need to have a copy of the <strong>Java Development Kit (JDK), Version 11</strong> installed on your computer.
+<h3><a class="header" href="#java-17" id="java-17">Java 17</a></h3>
+<p>You need to have a copy of the <strong>Java Development Kit (JDK), Version 17</strong> installed on your computer.
 It shouldn't make any difference whether you use the open <em>OpenJDK</em> implementation of Java, or an <em>Oracle JDK</em>.
 We suggest that you use <strong>OpenJDK</strong> since more recent versions of the <em>Oracle JDK</em> have a more restricted license.
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
-For stand-alone packages, you can use the installers distributed by the <a href="https://adoptopenjdk.net">AdoptOpenJDK project</a>.
-AdoptOpenJDK packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
-When installing the AdoptOpenJDK on Windows, make sure that the option to set the <code>JAVA_HOME</code> environment variable is activated.
+For stand-alone packages, you can use the installers distributed by the <a href="https://adoptium.net">Adoptium project</a>.
+Adoptium packages are are available for Windows, MacOS, and Linux. If you are asked to choose a JVM, both HotSpot and OpenJ9 work with Hexatomic.
+When installing the Adoptium on Windows, make sure that the option to set the <code>JAVA_HOME</code> environment variable is activated.
 Otherwise you will have to set the environment variable manually.</p>
 <p>You can check which version of Java you have installed by typing the following command into the terminal of your computer:</p>
 <pre><code class="language-bash">java -version
 </code></pre>
 <p>On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.</p>
-<pre><code class="language-bash">openjdk version &quot;11.0.10&quot; 2021-01-19
-OpenJDK Runtime Environment (build 11.0.10+9-Ubuntu-0ubuntu1.20.04)
-OpenJDK 64-Bit Server VM (build 11.0.10+9-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
+<pre><code class="language-bash">openjdk version &quot;17.0.6&quot; 2023-01-17
+OpenJDK Runtime Environment Temurin-17.0.6+10 (build 17.0.6+10)
+OpenJDK 64-Bit Server VM Temurin-17.0.6+10 (build 17.0.6+10, mixed mode, sharing)
 </code></pre>
 <h3><a class="header" href="#apache-maven" id="apache-maven">Apache Maven</a></h3>
 <p>You need to have a copy of <strong>Apache Maven</strong> in <strong>version 3.6.3 or newer</strong> installed on your computer.
@@ -210,7 +210,7 @@ To find out how to install mdbook on your system, please see the <a href="https:
 </code></pre>
 <h2><a class="header" href="#suggested-editor-eclipse-integrated-development-environment-ide" id="suggested-editor-eclipse-integrated-development-environment-ide">Suggested editor: Eclipse Integrated Development Environment (IDE)</a></h2>
 <p>Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
-While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source <strong>Eclipse IDE, version 2021-12 or newer</strong>.</p>
+While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source <strong>Eclipse IDE, version 2022-12</strong>.</p>
 <p>You can download it from the <a href="https://www.eclipse.org/downloads/">Eclipse download website</a>.</p>
 <h3><a class="header" href="#eclipse-ide-installation" id="eclipse-ide-installation">Eclipse IDE installation</a></h3>
 <p>The download contains an installer which lets you configure the setup of your IDE.
@@ -232,10 +232,7 @@ To develop Hexatomic, you will need to install <a href="https://www.eclipse.org/
 </ul>
 <h3><a class="header" href="#list-of-eclipse-ide-plugins-required-for-hexatomic-development" id="list-of-eclipse-ide-plugins-required-for-hexatomic-development">List of Eclipse IDE plugins required for Hexatomic development</a></h3>
 <ul>
-<li><a href="https://github.com/eclipse-cbi/targetplatform-dsl"><strong>Target Platform Definition DSL and Generator</strong></a>, <strong>version 3.0.0-SNAPSHOT or newer</strong><br />
-(Update Site: <a href="http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/">http://download.eclipse.org/cbi/tpd/3.0.0-SNAPSHOT/</a>)</li>
 <li><a href="https://checkstyle.org/eclipse-cs/"><strong>Eclipse Checkstyle Plugin</strong></a> (Update Site: <a href="https://checkstyle.org/eclipse-cs-update-site/">https://checkstyle.org/eclipse-cs-update-site/</a>)</li>
-<li></li>
 </ul>
 
                     </main>

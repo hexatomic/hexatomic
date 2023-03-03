@@ -152,11 +152,6 @@ If you encounter errors during the build or in the Eclipse IDE that aren't strai
 <p>Hexatomic uses a so-called <em>target platform</em> to define product and development dependencies.
 You can read about it in <a href="../development/activating-target-platform.html"><em>Creating and activating the target platform</em></a>.</p>
 <hr />
-<h3><a class="header" href="#-target-may-be-out-of-sync-with-tpd" id="-target-may-be-out-of-sync-with-tpd">🚧 <code>.target</code> may be out of sync with <code>.tpd</code></a></h3>
-<p>Sometimes, contributors may update the <code>.tpd</code> source file, but forget to push a newly generated <code>.target</code> file to the repository.
-This may lead to Eclipse being unable to resolve types, or other errors.</p>
-<p><strong>💡 Generate the <code>target</code> file from the <code>.tpd</code> file as described in <a href="../development/activating-target-platform.html"><em>Creating and activating the target platform</em></a>, and <a href="https://github.com/hexatomic/hexatomic/tree/develop/CONTRIBUTING.md">contribute</a> the newly generated <code>.target</code> file back to the project.</strong></p>
-<hr />
 <h3><a class="header" href="#-target-platform-may-not-be-resolved" id="-target-platform-may-not-be-resolved">🚧 Target Platform may not be resolved</a></h3>
 <p>Whenever a Target Platform definition file has been changed, you have to activate it in Eclipse, so that dependencies can be resolved.
 If you don't do this, Eclipse may show error messages which seemingly relate to something else, e.g.,

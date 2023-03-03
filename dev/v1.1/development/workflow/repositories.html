@@ -202,7 +202,7 @@ Lars Vogel and Simon Scholz, Version 13.03.2019, and <a href="http://web.archive
 <li><em>Update site</em> definition; Hexatomic's features and bundles are provided 
 <ol>
 <li>through a repository in the <a href="http://web.archive.org/web/20190807191916/https://www.eclipse.org/equinox/p2/">p2 repository format</a>, from which Hexatomic can be updated automatically and manually from within the application in the future; and</li>
-<li>As deployable units, i.e., the actual zip files that users will download in order to get Hexatomic.</li>
+<li>As deployable units, i.e., the actual files that users will download in order to get Hexatomic.</li>
 </ol>
 </li>
 <li>Miscellanea, e.g., shell scripts for deploying artifacts, templates for third-party licensing and citation, etc. </li>
@@ -213,10 +213,8 @@ Lars Vogel and Simon Scholz, Version 13.03.2019, and <a href="http://web.archive
 <h4><a class="header" href="#project-parent--root-pom" id="project-parent--root-pom">Project parent / root POM</a></h4>
 <p>Hexatomic has a <a href="https://github.com/hexatomic/hexatomic/tree/main/pom.xml">root POM</a> to build the entire project with a single Maven command, e.g., <code>mvn clean install</code>, issued in the root folder.</p>
 <h4><a class="header" href="#target-platform" id="target-platform">Target platform</a></h4>
-<p>The target platform for Hexatomic is defined using the <a href=""></a> plug-in for Eclipse.
-This allows to define the platform in a human-readable format, in the file <a href="https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.tpd"><code>org.corpus_tools.hexatomic.target.tpd</code></a>.
-The actual <a href="https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target">target platform definition file</a> that both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic) use is generated
-from this file.
+<p>The target platform for Hexatomic is defined using the <a href="https://github.com/hexatomic/hexatomic/blob/develop/releng/org.corpus_tools.hexatomic.target/org.corpus_tools.hexatomic.target.target">target platform definition file</a>.
+It is used by both the Eclipse IDE and the Tycho Maven Plugin (which is used to build Hexatomic).
 More details about target platforms can be found in the section <a href="../activating-target-platform.html"><em>Creating and activating the target platform</em></a>.</p>
 <h4><a class="header" href="#documentation" id="documentation">Documentation</a></h4>
 <p>Both the user documentation and the documentation for developers and maintainers are kept in the <a href="https://github.com/hexatomic/hexatomic/tree/develop/docs"><code>/docs/</code> folder</a>, in a subfolder for each documentation type.
