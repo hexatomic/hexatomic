@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Add required P2 update bundles directly to core bundle so they are not lost
+  when dependencies for the feature are calculated.
+
 ## [1.1.6] - 2023-03-03
 
 ### Fixed
