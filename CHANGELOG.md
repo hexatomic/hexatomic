@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- There seems to be an issue with Maven-based target platform entries and the
+  automatic update function. Removed Maven-based target platform entries and
+  replace them with the original P2 repos for Pepper and Salt. 
+
+## [1.1.4] - 2023-03-03
+
+### Fixed
+
 - Explicitly set the Java version in the workflow to publish the P2 update
   site.
 
