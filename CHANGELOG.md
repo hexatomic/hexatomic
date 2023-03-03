@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2023-03-03
+
+### Fixed
+
+- Workaround for a bug in Maven 3.9.0 that let our release workflows fail. To
+  avoid this, we excplicitly use a specific Maven version instead of using the
+  default one from GitHub Actions.
+
 ## [1.1.1] - 2023-03-03
 
 ### Fixed
@@ -325,7 +333,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/hexatomic/hexatomic/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/hexatomic/hexatomic/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/hexatomic/hexatomic/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/hexatomic/hexatomic/compare/v1.0.0...v1.0.1
