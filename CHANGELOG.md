@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Include missing functionality in the Eclipse platform for running updates.
+
 ## [1.1.5] - 2023-03-03
 
 ### Fixed
