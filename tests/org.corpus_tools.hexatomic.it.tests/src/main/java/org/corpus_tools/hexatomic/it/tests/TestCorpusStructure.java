@@ -342,14 +342,16 @@ public class TestCorpusStructure {
     bot.menu("Undo").click();
     assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
 
-    // Delete corpus
+    // Delete corpus (but first delete child document again)
+    bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).expandNode(DOCUMENT_1).select();
+    bot.toolbarButton(DELETE_BUTTON_TEXT).click();
     bot.tree().expandNode(CORPUS_GRAPH_1).expandNode(CORPUS_1).select();
     bot.toolbarButton(DELETE_BUTTON_TEXT).click();
     assertEquals(0, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
 
     // Undo all changes and make sure the view has been updated
     bot.menu("Undo").click();
-    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNodes().size());
-    assertEquals(1, bot.tree().getTreeItem(CORPUS_GRAPH_1).getNode(CORPUS_1).getNodes().size());
+    assertEquals(1, bot.tree().expandNode(CORPUS_GRAPH_1).getNodes().size());
+    assertEquals(CORPUS_1, bot.tree().expandNode(CORPUS_GRAPH_1).getNodes().get(0));
   }
 }

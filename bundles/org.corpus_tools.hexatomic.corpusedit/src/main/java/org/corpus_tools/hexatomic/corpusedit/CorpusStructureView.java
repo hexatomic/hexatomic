@@ -454,7 +454,8 @@ public class CorpusStructureView {
     projectManager.getProject().removeCorpusGraph(selectedCorpusGraph);
     // select nothing
     treeViewer.setSelection(null);
-    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+
+    projectManager.addCheckpoint();
   }
 
   private void deleteCorpus(SCorpus selectedCorpus) {
@@ -480,8 +481,7 @@ public class CorpusStructureView {
     }
 
     selectedCorpus.getGraph().removeNode(selectedCorpus);
-
-    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+    projectManager.addCheckpoint();
   }
 
   private void deleteDocument(SDocument selectedDocument) {
@@ -525,7 +525,7 @@ public class CorpusStructureView {
     }
 
     selectedDocument.getGraph().removeNode(selectedDocument);
-    treeViewer.setInput(projectManager.getProject().getCorpusGraphs());
+    projectManager.addCheckpoint();
   }
 
   private void createDeleteMenu(ToolBar toolBar) {
