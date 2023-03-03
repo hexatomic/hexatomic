@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Running the tests on macOS would fail (#417). An GitHub action is now
   configured to execute the tests also on macOS for each pull request.
+- About dialog did mention the Apache License for Hexatomic itself, but not the
+  dependencies (#416).
 
 ### Changed
 
