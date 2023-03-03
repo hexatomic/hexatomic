@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Corpus file formats
 Bundle-SymbolicName: org.corpus_tools.hexatomic.formats;singleton:=true
-Bundle-Version: 1.1.1
+Bundle-Version: 1.2.0.qualifier
 Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.jface,
