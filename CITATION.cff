@@ -34,7 +34,7 @@ identifiers:
   type: doi
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
-version: 1.1.5
+version: 1.1.6
 date-released: 2023-03-03
 references:
 - type: software
@@ -474,6 +474,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.jobs
     directory.
 - type: software
+  title: org.eclipse.core.net
+  version: 1.4.0.v20220813-1037
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.core.net
+    directory.
+- type: software
   title: org.eclipse.core.runtime
   version: 3.26.100.v20221021-0005
   license: EPL-2.0
@@ -634,6 +643,15 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.model.workbench
+    directory.
+- type: software
+  title: org.eclipse.e4.ui.progress
+  version: 0.3.600.v20221024-2137
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.progress
     directory.
 - type: software
   title: org.eclipse.e4.ui.services
@@ -888,6 +906,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.app
     directory.
 - type: software
+  title: org.eclipse.equinox.app.source
+  version: 1.6.200.v20220720-2012
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.app.source
+    directory.
+- type: software
   title: org.eclipse.equinox.bidi
   version: 1.4.200.v20220710-1223
   license: EPL-2.0
@@ -915,6 +942,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.concurrent
     directory.
 - type: software
+  title: org.eclipse.equinox.concurrent.source
+  version: 1.2.100.v20211021-1418
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.concurrent.source
+    directory.
+- type: software
   title: org.eclipse.equinox.console
   version: 1.4.500.v20211021-1418
   license: EPL-2.0
@@ -922,6 +958,15 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.console
+    directory.
+- type: software
+  title: org.eclipse.equinox.core.feature
+  version: 1.13.900.v20221116-1440
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.core.feature
     directory.
 - type: software
   title: org.eclipse.equinox.event
@@ -987,6 +1032,24 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.frameworkadmin.equinox
     directory.
 - type: software
+  title: org.eclipse.equinox.frameworkadmin.equinox.source
+  version: 1.2.200.v20220315-2155
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.frameworkadmin.equinox.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.frameworkadmin.source
+  version: 2.2.100.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.frameworkadmin.source
+    directory.
+- type: software
   title: org.eclipse.equinox.launcher
   version: 1.6.400.v20210924-0641
   license: EPL-2.0
@@ -1032,6 +1095,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.artifact.repository
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.artifact.repository.source
+  version: 1.4.600.v20221106-1146
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.artifact.repository.source
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.console
   version: 1.2.100.v20221111-1340
   license: EPL-2.0
@@ -1039,6 +1111,15 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.console
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.console.source
+  version: 1.2.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.console.source
     directory.
 - type: software
   title: org.eclipse.equinox.p2.core
@@ -1059,6 +1140,24 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.core.feature
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.core.feature.source
+  version: 1.6.1600.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.core.feature.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.core.source
+  version: 2.9.200.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.core.source
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.director
   version: 2.5.400.v20220817-1208
   license: EPL-2.0
@@ -1066,6 +1165,105 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.director
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.director.app
+  version: 1.2.300.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.director.app
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.director.app.source
+  version: 1.2.300.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.director.app.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.director.source
+  version: 2.5.400.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.director.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.directorywatcher
+  version: 1.3.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.directorywatcher
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.directorywatcher.source
+  version: 1.3.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.directorywatcher.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.discovery
+  version: 1.2.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.discovery
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.discovery.compatibility
+  version: 1.2.200.v20220210-1157
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.discovery.compatibility
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.discovery.compatibility.source
+  version: 1.2.200.v20220210-1157
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.discovery.compatibility.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.discovery.feature
+  version: 1.2.1200.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.discovery.feature
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.discovery.feature.source
+  version: 1.2.1200.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.discovery.feature.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.discovery.source
+  version: 1.2.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.discovery.source
     directory.
 - type: software
   title: org.eclipse.equinox.p2.engine
@@ -1077,6 +1275,51 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.engine
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.engine.source
+  version: 2.7.500.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.engine.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.extensionlocation
+  version: 1.4.100.v20220213-0541
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.extensionlocation
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.extensionlocation.source
+  version: 1.4.100.v20220213-0541
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.extensionlocation.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.extras.feature
+  version: 1.4.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.extras.feature
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.extras.feature.source
+  version: 1.4.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.extras.feature.source
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.garbagecollector
   version: 1.2.100.v20221111-1340
   license: EPL-2.0
@@ -1086,6 +1329,33 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.garbagecollector
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.garbagecollector.source
+  version: 1.2.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.garbagecollector.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.installer
+  version: 1.3.400.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.installer
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.installer.source
+  version: 1.3.400.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.installer.source
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.jarprocessor
   version: 1.2.300.v20220420-1427
   license: EPL-2.0
@@ -1093,6 +1363,15 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.jarprocessor
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.jarprocessor.source
+  version: 1.2.300.v20220420-1427
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.jarprocessor.source
     directory.
 - type: software
   title: org.eclipse.equinox.p2.metadata
@@ -1113,6 +1392,24 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata.repository
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.metadata.repository.source
+  version: 1.4.100.v20220329-1456
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata.repository.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.metadata.source
+  version: 2.6.300.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.metadata.source
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.operations
   version: 2.6.100.v20220817-1208
   license: EPL-2.0
@@ -1120,6 +1417,87 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.operations
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.operations.source
+  version: 2.6.100.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.operations.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.publisher
+  version: 1.7.200.v20220805-0804
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.publisher
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.publisher.eclipse
+  version: 1.4.200.v20221007-0636
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.publisher.eclipse
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.publisher.eclipse.source
+  version: 1.4.200.v20221007-0636
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.publisher.eclipse.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.publisher.source
+  version: 1.7.200.v20220805-0804
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.publisher.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.rcp.feature
+  version: 1.4.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.rcp.feature
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.rcp.feature.source
+  version: 1.4.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.rcp.feature.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.reconciler.dropins
+  version: 1.4.200.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.reconciler.dropins
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.reconciler.dropins.source
+  version: 1.4.200.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.reconciler.dropins.source
     directory.
 - type: software
   title: org.eclipse.equinox.p2.repository
@@ -1131,6 +1509,42 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.repository
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.repository.source
+  version: 2.6.300.v20221030-1923
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.repository.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.repository.tools
+  version: 2.3.200.v20221108-1232
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.repository.tools
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.repository.tools.source
+  version: 2.3.200.v20221108-1232
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.repository.tools.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.sdk
+  version: 3.11.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.sdk
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.touchpoint.eclipse
   version: 2.3.300.v20220817-1208
   license: EPL-2.0
@@ -1138,6 +1552,15 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.touchpoint.eclipse
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.touchpoint.eclipse.source
+  version: 2.3.300.v20220817-1208
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.touchpoint.eclipse.source
     directory.
 - type: software
   title: org.eclipse.equinox.p2.touchpoint.natives
@@ -1149,6 +1572,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.touchpoint.natives
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.touchpoint.natives.source
+  version: 1.4.400.v20220506-1821
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.touchpoint.natives.source
+    directory.
+- type: software
   title: org.eclipse.equinox.p2.transport.ecf
   version: 1.3.300.v20220512-1321
   license: EPL-2.0
@@ -1158,6 +1590,195 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.transport.ecf
     directory.
 - type: software
+  title: org.eclipse.equinox.p2.transport.ecf.source
+  version: 1.3.300.v20220512-1321
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.transport.ecf.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui
+  version: 2.7.700.v20221015-0933
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.admin
+  version: 1.2.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.admin
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.admin.rcp
+  version: 1.3.400.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.admin.rcp
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.admin.rcp.source
+  version: 1.3.400.v20220911-2007
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.admin.rcp.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.admin.source
+  version: 1.2.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.admin.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.discovery
+  version: 1.2.300.v20210813-0655
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.discovery
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.discovery.source
+  version: 1.2.300.v20210813-0655
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.discovery.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.importexport
+  version: 1.3.300.v20220329-1456
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.importexport
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.importexport.source
+  version: 1.3.300.v20220329-1456
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.importexport.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.sdk
+  version: 1.2.100.v20220814-1551
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.sdk
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.sdk.scheduler
+  version: 1.5.400.v20220805-0804
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.sdk.scheduler
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.sdk.scheduler.source
+  version: 1.5.400.v20220805-0804
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.sdk.scheduler.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.sdk.source
+  version: 1.2.100.v20220814-1551
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.sdk.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.ui.source
+  version: 2.7.700.v20221015-0933
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.ui.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.updatechecker
+  version: 1.3.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.updatechecker
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.updatechecker.source
+  version: 1.3.100.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.updatechecker.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.updatesite
+  version: 1.2.300.v20220420-1427
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.updatesite
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.updatesite.source
+  version: 1.2.300.v20220420-1427
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.updatesite.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.user.ui
+  version: 2.4.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.user.ui
+    directory.
+- type: software
+  title: org.eclipse.equinox.p2.user.ui.source
+  version: 2.4.1800.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.p2.user.ui.source
+    directory.
+- type: software
   title: org.eclipse.equinox.preferences
   version: 3.10.100.v20220710-1223
   license: EPL-2.0
@@ -1165,6 +1786,15 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.preferences
+    directory.
+- type: software
+  title: org.eclipse.equinox.preferences.source
+  version: 3.10.100.v20220710-1223
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.preferences.source
     directory.
 - type: software
   title: org.eclipse.equinox.registry
@@ -1194,6 +1824,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.linux
     directory.
 - type: software
+  title: org.eclipse.equinox.security.linux.source
+  version: 1.0.300.v20220904-1118
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.linux.source
+    directory.
+- type: software
   title: org.eclipse.equinox.security.macosx
   version: 1.101.400.v20210427-1958
   license: EPL-2.0
@@ -1203,6 +1842,42 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.macosx
     directory.
 - type: software
+  title: org.eclipse.equinox.security.macosx.source
+  version: 1.101.400.v20210427-1958
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.macosx.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.security.source
+  version: 1.3.1000.v20220801-1135
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.security.ui
+  version: 1.3.400.v20221007-1815
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.ui
+    directory.
+- type: software
+  title: org.eclipse.equinox.security.ui.source
+  version: 1.3.400.v20221007-1815
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.ui.source
+    directory.
+- type: software
   title: org.eclipse.equinox.security.win32.x86_64
   version: 1.1.300.v20211021-1418
   license: EPL-2.0
@@ -1210,6 +1885,33 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.win32.x86_64
+    directory.
+- type: software
+  title: org.eclipse.equinox.security.win32.x86_64.source
+  version: 1.1.300.v20211021-1418
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.win32.x86_64.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.server.p2
+  version: 1.12.700.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.server.p2
+    directory.
+- type: software
+  title: org.eclipse.equinox.server.p2.source
+  version: 1.12.700.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.server.p2.source
     directory.
 - type: software
   title: org.eclipse.equinox.simpleconfigurator
@@ -1228,6 +1930,24 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.simpleconfigurator.manipulator
+    directory.
+- type: software
+  title: org.eclipse.equinox.simpleconfigurator.manipulator.source
+  version: 2.2.100.v20221117-1044
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.simpleconfigurator.manipulator.source
+    directory.
+- type: software
+  title: org.eclipse.equinox.simpleconfigurator.source
+  version: 1.4.200.v20221111-1340
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.simpleconfigurator.source
     directory.
 - type: software
   title: org.eclipse.help
@@ -1426,6 +2146,24 @@ references:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.ui directory.
+- type: software
+  title: org.eclipse.ui.browser
+  version: 3.7.300.v20221024-2137
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.ui.browser
+    directory.
+- type: software
+  title: org.eclipse.ui.forms
+  version: 3.11.500.v20221024-2137
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.ui.forms
+    directory.
 - type: software
   title: org.eclipse.ui.workbench
   version: 3.127.0.v20221024-2137
