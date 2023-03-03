@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Deleting a document could not be undone (#422)
 - "Tokenize after import" checkbox label was located wrong in text importer (#420)
 - Running the tests on macOS would fail (#417). An GitHub action is now
   configured to execute the tests also on macOS for each pull request.
