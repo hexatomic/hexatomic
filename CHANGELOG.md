@@ -14,11 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   configured to execute the tests also on macOS for each pull request.
 - About dialog did mention the Apache License for Hexatomic itself, but not the
   dependencies (#416).
+- Update to Eclipse platform version 2022-12, which has various fixes. This does
+  not change any functionality for the user, but we also now bundle Java version
 
-### Changed
-
-- Bundle Java 17 and update to Eclipse platform version 2022-12.
-  This does not change any functionality for the user.
 
 ## [1.1.0] - 2023-02-19
 
