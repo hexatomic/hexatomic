@@ -15,6 +15,10 @@ jobs:
           run: sudo apt-get install metacity
         - name: Checkout
           uses: actions/checkout@v2
+        - name: Set up Maven
+          uses: stCarolas/setup-maven@v4.5
+          with:
+            maven-version: 3.8.7
         - name: Set JAVA_HOME to OpenJDK 17
           run: echo JAVA_HOME=$JAVA_HOME_17_X64 >> $GITHUB_ENV
         - name: Run Maven install (includes tests) and re-create CFF file
@@ -76,6 +80,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.8.7
     - name: Create P2 repository with Maven
       run: mvn -DskipTests clean install
     - name: Pushes P2 repository to "updates" Git repository
