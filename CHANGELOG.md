@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.6] - 2023-03-03
+
+### Fixed
+
+- Include missing functionality in the Eclipse platform for running updates.
+
 ## [1.1.5] - 2023-03-03
 
 ### Fixed
@@ -354,7 +360,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.5...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.6...HEAD
+[1.1.6]: https://github.com/hexatomic/hexatomic/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/hexatomic/hexatomic/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/hexatomic/hexatomic/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/hexatomic/hexatomic/compare/v1.1.2...v1.1.3

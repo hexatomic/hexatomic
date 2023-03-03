@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.corpus_tools</groupId>
 	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
 	<packaging>pom</packaging>
 	<!-- SCM -->
 	<scm>
@@ -119,7 +119,7 @@
 				<plugin>
 					<groupId>org.corpus-tools</groupId>
 					<artifactId>cff-maven-plugin</artifactId>
-					<version>0.6.0</version>
+					<version>0.7.0</version>
 					<configuration>
 						<includeEmail>false</includeEmail>
 						<input>${maven.multiModuleProjectDirectory}/releng/templates/CITATION.cff</input>
@@ -247,7 +247,7 @@
 						<artifact>
 							<groupId>org.corpus_tools</groupId>
 							<artifactId>org.corpus_tools.hexatomic.target</artifactId>
-							<version>1.1.5</version>
+							<version>1.1.6</version>
 						</artifact>
 					</target>
 					<resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
