@@ -88,7 +88,8 @@ class UpdateRunnerTest {
     
     assertEquals(false, fixture.autoUpdateAllowed(shell));
     
-    verify(updateRunner).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
+    verify(updateRunner).openQuestionDialog(any(), 
+        eq("Automatic update check configuration"), any());
     assertEquals(false, fixture.prefs.getBoolean(Preferences.AUTO_UPDATE, true));
   }
 
@@ -98,7 +99,8 @@ class UpdateRunnerTest {
     
     assertEquals(true, fixture.autoUpdateAllowed(shell));
     
-    verify(updateRunner).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
+    verify(updateRunner).openQuestionDialog(any(), 
+        eq("Automatic update check configuration"), any());
     assertEquals(true, fixture.prefs.getBoolean(Preferences.AUTO_UPDATE, false));
     verify(fixture.prefs).flush();
   }
