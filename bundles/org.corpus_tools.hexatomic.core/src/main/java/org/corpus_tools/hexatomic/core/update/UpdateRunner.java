@@ -62,7 +62,7 @@ public class UpdateRunner {
   IProvisioningAgent agent;
 
   @Inject
-  private IEclipseContext context;
+  IEclipseContext context;
 
   @Inject
   private IProgressMonitor monitor;

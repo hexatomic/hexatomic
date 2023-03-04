@@ -20,8 +20,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.jupiter.api.AfterEach;
@@ -74,6 +76,7 @@ class UpdateRunnerTest {
     fixture.errorService = mock(ErrorService.class);
     fixture.agent = mock(IProvisioningAgent.class);
     fixture.events = mock(IEventBroker.class);
+    fixture.context = mock(IEclipseContext.class);
 
   }
 
@@ -173,4 +176,43 @@ class UpdateRunnerTest {
     verify(fixture.events).send(eq(Topics.TOOLBAR_STATUS_MESSAGE), eq("Hexatomic is up to date"));
   }
 
+  @Test
+  void testUpdateAvailableAccepted() {
+    IStatus updateStatus = mock(IStatus.class);
+    when(updateStatus.getCode()).thenReturn(0);
+
+    ProvisioningJob job = mock(ProvisioningJob.class);
+
+    UpdateOperation op = mock(UpdateOperation.class);
+    when(op.resolveModal(any(IProgressMonitor.class))).thenReturn(updateStatus);
+    when(op.getProvisioningJob(any())).thenReturn(job);
+
+    when(updateRunner.createUpdateOperation()).thenReturn(op);
+
+    when(updateRunner.openQuestionDialog(any(), eq("Update available"), any())).thenReturn(true);
+
+    IStatus result = fixture.checkForUpdates(false, shell);
+
+    assertEquals(Status.OK_STATUS, result);
+  }
+
+  @Test
+  void testUpdateAvailableCancelled() {
+    IStatus updateStatus = mock(IStatus.class);
+    when(updateStatus.getCode()).thenReturn(0);
+
+    ProvisioningJob job = mock(ProvisioningJob.class);
+
+    UpdateOperation op = mock(UpdateOperation.class);
+    when(op.resolveModal(any(IProgressMonitor.class))).thenReturn(updateStatus);
+    when(op.getProvisioningJob(any())).thenReturn(job);
+
+    when(updateRunner.createUpdateOperation()).thenReturn(op);
+
+    when(updateRunner.openQuestionDialog(any(), eq("Update available"), any())).thenReturn(false);
+
+    IStatus result = fixture.checkForUpdates(false, shell);
+
+    assertEquals(Status.CANCEL_STATUS, result);
+  }
 }
