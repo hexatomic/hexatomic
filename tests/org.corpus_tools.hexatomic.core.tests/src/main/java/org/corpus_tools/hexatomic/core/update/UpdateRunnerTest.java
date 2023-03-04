@@ -13,9 +13,16 @@ import static org.mockito.Mockito.when;
 
 import org.corpus_tools.hexatomic.core.DummySync;
 import org.corpus_tools.hexatomic.core.Preferences;
+import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,14 +32,16 @@ import org.osgi.service.prefs.BackingStoreException;
 class UpdateRunnerTest {
 
 
-  public interface MessageDialogMock {
+  public interface UpdateRunnerMock {
     boolean openQuestionDialog(Shell parent, String title, String message);
+
+    UpdateOperation createUpdateOperation();
   }
 
   private UpdateRunner fixture;
 
   private Shell shell;
-  private MessageDialogMock dialog;
+  private UpdateRunnerMock updateRunner;
 
   private IEclipsePreferences actualPrefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
@@ -44,19 +53,27 @@ class UpdateRunnerTest {
 
 
     shell = mock(Shell.class);
-    dialog = mock(MessageDialogMock.class);
+    updateRunner = mock(UpdateRunnerMock.class);
 
     fixture = new UpdateRunner() {
       @Override
       protected boolean openQuestionDialog(Shell parent, String title, String message) {
-        return dialog.openQuestionDialog(parent, title, message);
+        return updateRunner.openQuestionDialog(parent, title, message);
+      }
+
+      @Override
+      protected UpdateOperation createUpdateOperation() {
+        return updateRunner.createUpdateOperation();
       }
     };
+
     fixture.sync = new DummySync();
     // Use the actual map implementation to store state, but allow mocking e.g. for throwing
     // exceptions
     fixture.prefs = spy(actualPrefs);
     fixture.errorService = mock(ErrorService.class);
+    fixture.agent = mock(IProvisioningAgent.class);
+    fixture.events = mock(IEventBroker.class);
 
   }
 
@@ -67,28 +84,28 @@ class UpdateRunnerTest {
 
   @Test
   void testUpdateDeniedAtStart() {
-    when(dialog.openQuestionDialog(any(), any(), any())).thenReturn(false);
+    when(updateRunner.openQuestionDialog(any(), any(), any())).thenReturn(false);
     
     assertEquals(false, fixture.autoUpdateAllowed(shell));
     
-    verify(dialog).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
+    verify(updateRunner).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
     assertEquals(false, fixture.prefs.getBoolean(Preferences.AUTO_UPDATE, true));
   }
 
   @Test
   void testUpdateAllowedAtStart() throws BackingStoreException {
-    when(dialog.openQuestionDialog(any(), any(), any())).thenReturn(true);
+    when(updateRunner.openQuestionDialog(any(), any(), any())).thenReturn(true);
     
     assertEquals(true, fixture.autoUpdateAllowed(shell));
     
-    verify(dialog).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
+    verify(updateRunner).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
     assertEquals(true, fixture.prefs.getBoolean(Preferences.AUTO_UPDATE, false));
     verify(fixture.prefs).flush();
   }
 
   @Test
   void testCantStoreApproval() throws BackingStoreException {
-    when(dialog.openQuestionDialog(any(), any(), any())).thenReturn(true);
+    when(updateRunner.openQuestionDialog(any(), any(), any())).thenReturn(true);
     doThrow(BackingStoreException.class).when(fixture.prefs).flush();;
     
     fixture.autoUpdateAllowed(shell);
@@ -102,7 +119,7 @@ class UpdateRunnerTest {
 
     assertEquals(true, fixture.autoUpdateAllowed(shell));
 
-    verifyNoInteractions(dialog);
+    verifyNoInteractions(updateRunner);
 
     assertEquals(true, fixture.prefs.getBoolean(Preferences.AUTO_UPDATE, false));
   }
@@ -113,7 +130,7 @@ class UpdateRunnerTest {
 
     assertEquals(false, fixture.autoUpdateAllowed(shell));
 
-    verifyNoInteractions(dialog);
+    verifyNoInteractions(updateRunner);
 
     assertEquals(false, fixture.prefs.getBoolean(Preferences.AUTO_UPDATE, true));
   }
@@ -138,6 +155,20 @@ class UpdateRunnerTest {
     fixture.autoUpdateAllowed(shell);
 
     verify(fixture.errorService).handleException(anyString(), any(), any());
+  }
+
+  @Test
+  void testNoUpdateAvailable() {
+    IStatus updateStatus = mock(IStatus.class);
+    when(updateStatus.getCode()).thenReturn(UpdateOperation.STATUS_NOTHING_TO_UPDATE);
+    UpdateOperation op = mock(UpdateOperation.class);
+    when(op.resolveModal(any(IProgressMonitor.class))).thenReturn(updateStatus);
+    when(updateRunner.createUpdateOperation()).thenReturn(op);
+
+    IStatus result = fixture.checkForUpdates(false, shell);
+
+    assertEquals(Status.CANCEL_STATUS, result);
+    verify(fixture.events).send(eq(Topics.TOOLBAR_STATUS_MESSAGE), eq("Hexatomic is up to date"));
   }
 
 }

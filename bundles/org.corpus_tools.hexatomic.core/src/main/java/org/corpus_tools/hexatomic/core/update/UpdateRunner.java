@@ -59,7 +59,7 @@ public class UpdateRunner {
   IEclipsePreferences prefs;
 
   @Inject
-  private IProvisioningAgent agent;
+  IProvisioningAgent agent;
 
   @Inject
   private IEclipseContext context;
@@ -71,7 +71,7 @@ public class UpdateRunner {
   UISynchronize sync;
 
   @Inject
-  private IEventBroker events;
+  IEventBroker events;
 
   @Inject
   ErrorService errorService;
@@ -151,9 +151,9 @@ public class UpdateRunner {
    *        of the user.
    * @param shell The user interface shell.
    */
-  private IStatus checkForUpdates(boolean triggeredManually, Shell shell) {
-
-    final UpdateOperation operation = createUpdateOperation(agent);
+  protected IStatus checkForUpdates(boolean triggeredManually, Shell shell) {
+    log.debug("Checking for updates");
+    final UpdateOperation operation = createUpdateOperation();
     log.debug("Update operation created");
     // Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
@@ -186,9 +186,7 @@ public class UpdateRunner {
       showProvisioningErrorMessage(triggeredManually);
       return Status.CANCEL_STATUS;
     }
-
   }
-
 
   private void configureProvisioningJob(ProvisioningJob provisioningJob, final Shell shell,
       final UISynchronize sync, final IWorkbench workbench) {
@@ -263,11 +261,8 @@ public class UpdateRunner {
     return MessageDialog.openQuestion(parent, title, message);
   }
 
-  static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
-    ProvisioningSession session = new ProvisioningSession(agent);
-    log.info("Provisioning session created");
-    // update all user-visible installable units
-    return new UpdateOperation(session);
+  protected UpdateOperation createUpdateOperation() {
+    return new UpdateOperation(new ProvisioningSession(agent));
   }
 
 }
