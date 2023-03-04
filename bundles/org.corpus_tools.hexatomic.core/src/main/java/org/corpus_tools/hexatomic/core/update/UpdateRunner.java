@@ -107,11 +107,11 @@ public class UpdateRunner {
         // Preference is not set yet, ask the user about whether to enable or disable it
         final AtomicBoolean userSetting = new AtomicBoolean(false);
         sync.syncExec(() -> userSetting
-            .set(MessageDialog.openQuestion(shell, "Automatic update check configuration.",
+            .set(MessageDialog.openQuestion(shell, "Automatic update check configuration",
                 "Hexatomic can enable automatic update checks at each startup. "
                     + "For this function to work, it needs to establish a  network connection to "
                     + "hexatomic.github.io (hosted by GitHub, Inc.) at every startup. "
-                    + "You can always disable the checks again in the preferences. "
+                    + "You can always disable the checks again in the preferences.\n\n"
                     + "Do you want to enable automatic update checks now?")));
         // Set the value so we don't ask for it at the next startup again
         prefs.putBoolean(Preferences.AUTO_UPDATE, userSetting.get());
