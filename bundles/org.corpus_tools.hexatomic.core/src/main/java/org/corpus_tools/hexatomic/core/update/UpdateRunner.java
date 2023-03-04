@@ -103,7 +103,7 @@ public class UpdateRunner {
     boolean autoUpdateEnabled = false;
     try {
       // Check if auto update was configured by the user explicitly
-      if (!Arrays.stream(prefs.keys()).anyMatch(k -> Preferences.AUTO_UPDATE.equals(k))) {
+      if (Arrays.stream(prefs.keys()).noneMatch(Preferences.AUTO_UPDATE::equals)) {
         // Preference is not set yet, ask the user about whether to enable or disable it
         final AtomicBoolean userSetting = new AtomicBoolean(false);
         sync.syncExec(() -> userSetting

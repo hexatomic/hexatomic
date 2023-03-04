@@ -126,7 +126,7 @@ class TestHelpMenu {
     } else {
       bot.menu("Help").menu(PREFERENCES).click();
     }
-    SWTBotShell preferencesShell = bot.shell("Preferences");
+    SWTBotShell preferencesShell = bot.shell(PREFERENCES);
     SWTBotCheckBox autoCheckbox = preferencesShell.bot().checkBox("Enable automatic update checks");
     assertTrue(autoCheckbox.isVisible());
     boolean autoUpdatePreSelect = prefs.getBoolean(Preferences.AUTO_UPDATE, true);
