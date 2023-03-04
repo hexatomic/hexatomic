@@ -32,9 +32,9 @@ public final class Preferences {
     // Private (but empty) constructor to avoid instantiation of this utility class.
   }
 
-  /** Whether to automatically check for updates **/
+  /** Whether to automatically check for updates. **/
   public static final String AUTO_UPDATE = "autoUpdate";
-  
+
   /** Set temporarly after an update was applied, so we know not check for newer updates. */
   public static final String JUST_UPDATED = "justUpdated";
 
