@@ -111,8 +111,7 @@ class UpdateRunnerTest {
   @Test
   void testCantStoreApproval() throws BackingStoreException {
     when(updateRunner.openQuestionDialog(any(), any(), any())).thenReturn(true);
-    doThrow(BackingStoreException.class).when(fixture.prefs).flush();;
-    
+    doThrow(BackingStoreException.class).when(fixture.prefs).flush(); 
     fixture.autoUpdateAllowed(shell);
     
     verify(fixture.errorService).handleException(anyString(), any(), any());
@@ -153,7 +152,7 @@ class UpdateRunnerTest {
 
   @Test
   void testCantStoreJustUpdated() throws BackingStoreException {
-    doThrow(BackingStoreException.class).when(fixture.prefs).flush();;
+    doThrow(BackingStoreException.class).when(fixture.prefs).flush();
     fixture.prefs.putBoolean(Preferences.AUTO_UPDATE, true);
     fixture.prefs.putBoolean(Preferences.JUST_UPDATED, true);
 
