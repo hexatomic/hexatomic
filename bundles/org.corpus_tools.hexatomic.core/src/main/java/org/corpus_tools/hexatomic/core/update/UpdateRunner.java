@@ -33,10 +33,10 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
@@ -52,8 +52,11 @@ import org.osgi.service.prefs.BackingStoreException;
 @Creatable
 public class UpdateRunner {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
-  private static final IEclipsePreferences prefs =
-      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
+
+
+  @Inject
+  @Preference(nodePath = "org.corpus_tools.hexatomic.core")
+  IEclipsePreferences prefs;
 
   @Inject
   private IProvisioningAgent agent;
@@ -71,7 +74,7 @@ public class UpdateRunner {
   private IEventBroker events;
 
   @Inject
-  private ErrorService errorService;
+  ErrorService errorService;
 
   /**
    * Schedules a {@link Job} that searches for updates and perform them if wanted.
@@ -115,6 +118,7 @@ public class UpdateRunner {
                     + "Do you want to enable automatic update checks now?")));
         // Set the value so we don't ask for it at the next startup again
         prefs.putBoolean(Preferences.AUTO_UPDATE, userSetting.get());
+        prefs.flush();
       }
       autoUpdateEnabled = prefs.getBoolean(Preferences.AUTO_UPDATE, false);
 
