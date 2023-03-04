@@ -21,6 +21,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,7 +115,7 @@ class TestHelpMenu {
   @Test
   void testOpenUpdateConfiguration() {
     SWTBotMenu helpMenu = bot.menu("Help");
-    assertNotNull(helpMenu.menu("Update"));
+    assertNotNull(helpMenu.menu("Check for updates"));
   }
 
   @Test
@@ -126,14 +127,13 @@ class TestHelpMenu {
       bot.menu("Help").menu(PREFERENCES).click();
     }
     SWTBotShell preferencesShell = bot.shell("Preferences");
-    assertTrue(preferencesShell.bot()
-        .label("When checked, Hexatomic will automatically check for updates at each start.")
-        .isVisible());
+    SWTBotCheckBox autoCheckbox = preferencesShell.bot().checkBox("Enable automatic update checks");
+    assertTrue(autoCheckbox.isVisible());
     boolean autoUpdatePreSelect = prefs.getBoolean(Preferences.AUTO_UPDATE, true);
-    if (preferencesShell.bot().checkBox().isChecked()) {
-      preferencesShell.bot().checkBox().deselect();
+    if (autoCheckbox.isChecked()) {
+      autoCheckbox.deselect();
     } else {
-      preferencesShell.bot().checkBox().select();
+      autoCheckbox.select();
     }
     preferencesShell.bot().button("OK").click();
     boolean autoUpdatePostSelect = prefs.getBoolean(Preferences.AUTO_UPDATE, false);
