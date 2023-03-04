@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.core.ui;
 
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -39,7 +40,8 @@ public class PreferencesDialog extends Dialog {
   IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   Button checkbox;
-  @Inject ErrorService errorService;
+  @Inject
+  ErrorService errorService;
 
   /**
    * Create the dialog.
@@ -50,7 +52,7 @@ public class PreferencesDialog extends Dialog {
     super(parentShell);
   }
 
-  
+
   @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
@@ -69,14 +71,14 @@ public class PreferencesDialog extends Dialog {
     label.setText("When checked, Hexatomic will automatically check for updates at each start.");
     checkbox = new Button(area, SWT.CHECK);
     checkbox.setText("Enable automatic update checks");
-    checkbox.setSelection(prefs.getBoolean("autoUpdate", true));
+    checkbox.setSelection(prefs.getBoolean(Preferences.AUTO_UPDATE, true));
     return area;
   }
-  
+
   @Override
   protected void okPressed() {
     if (prefs != null) {
-      prefs.putBoolean("autoUpdate", checkbox.getSelection());
+      prefs.putBoolean(Preferences.AUTO_UPDATE, checkbox.getSelection());
       try {
         prefs.flush();
       } catch (BackingStoreException ex) {
@@ -84,7 +86,7 @@ public class PreferencesDialog extends Dialog {
       }
     } else {
       log.info("Path to preferences not found");
-      
+
     }
     super.okPressed();
   }

@@ -96,14 +96,12 @@ public class ApplicationLifecycle {
       log.error("Could not configure logging", ex);
     }
   }
-  
+
   @PostContextCreate
-  void postContextcreate(final IProvisioningAgent agent, 
-      UISynchronize sync,
-      IProgressMonitor monitor,
-      IEventBroker eventBroker,
-      ErrorService errorService, UpdateRunner updateRunner) {
-    
+  void postContextcreate(final IProvisioningAgent agent, UISynchronize sync,
+      IProgressMonitor monitor, IEventBroker eventBroker, ErrorService errorService,
+      UpdateRunner updateRunner) {
+
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -112,16 +110,16 @@ public class ApplicationLifecycle {
         SwtResourceManager.dispose();
       }
     });
-    
-    //check if preferences are set to autoupdate and if app was recently updated
-    boolean justUpdated = prefs.getBoolean("justUpdated", false);
-    boolean autoUpdateEnabled = prefs.getBoolean("autoUpdate", true);
+
+    // check if preferences are set to autoupdate and if app was recently updated
+    boolean justUpdated = prefs.getBoolean(Preferences.JUST_UPDATED, false);
+    boolean autoUpdateEnabled = prefs.getBoolean(Preferences.AUTO_UPDATE, true);
     if (!justUpdated && autoUpdateEnabled) {
-      //add listener to perform updates as soon as workbench is created
+      // add listener to perform updates as soon as workbench is created
       eventBroker.subscribe(UIEvents.UILifeCycle.APP_STARTUP_COMPLETE,
           new AppStartupCompleteEventHandler(updateRunner, eventBroker, null));
     } else if (justUpdated) {
-      prefs.putBoolean("justUpdated", false);
+      prefs.putBoolean(Preferences.JUST_UPDATED, false);
       try {
         prefs.flush();
       } catch (BackingStoreException ex) {

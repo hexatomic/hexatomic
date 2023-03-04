@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.corpus_tools.hexatomic.core.LinkOpener;
+import org.corpus_tools.hexatomic.core.Preferences;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -128,14 +129,14 @@ class TestHelpMenu {
     assertTrue(preferencesShell.bot()
         .label("When checked, Hexatomic will automatically check for updates at each start.")
         .isVisible());
-    boolean autoUpdatePreSelect = prefs.getBoolean("autoUpdate", true);
+    boolean autoUpdatePreSelect = prefs.getBoolean(Preferences.AUTO_UPDATE, true);
     if (preferencesShell.bot().checkBox().isChecked()) {
       preferencesShell.bot().checkBox().deselect();
     } else {
       preferencesShell.bot().checkBox().select();
     }
     preferencesShell.bot().button("OK").click();
-    boolean autoUpdatePostSelect = prefs.getBoolean("autoUpdate", false);
+    boolean autoUpdatePostSelect = prefs.getBoolean(Preferences.AUTO_UPDATE, false);
     assertNotEquals(autoUpdatePreSelect, autoUpdatePostSelect);
 
     bot.waitUntil(Conditions.shellCloses(preferencesShell));
