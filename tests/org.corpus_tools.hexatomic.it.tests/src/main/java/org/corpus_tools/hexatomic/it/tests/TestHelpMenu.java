@@ -9,10 +9,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.corpus_tools.hexatomic.core.LinkOpener;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
@@ -23,6 +28,7 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 class TestHelpMenu {
+  private static final String PREFERENCES = "Preferences";
   private static final String USER_GUIDE_REGEX =
       "https://hexatomic.github.io/hexatomic/user/v[.0-9]+";
   private static final String ONLINE_DOCUMENTATION = "Online Documentation";
@@ -32,11 +38,20 @@ class TestHelpMenu {
 
   private LinkOpener linkOpener;
 
+  private ECommandService commandService;
+  private EHandlerService handlerService;
+
   @BeforeEach
   void setup() {
     TestHelper.setKeyboardLayout();
 
     IEclipseContext ctx = TestHelper.getEclipseContext();
+
+    commandService = ctx.get(ECommandService.class);
+    assertNotNull(commandService);
+
+    handlerService = ctx.get(EHandlerService.class);
+    assertNotNull(handlerService);
 
     // Replace the default link opener implementation with a mock
     linkOpener = mock(LinkOpener.class);
@@ -103,8 +118,12 @@ class TestHelpMenu {
 
   @Test
   void testOpenPreferenceDialog() {
-    SWTBotMenu helpMenu = bot.menu("Help");
-    helpMenu.menu("Preferences").click();
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      ParameterizedCommand cmd = commandService.createCommand("org.eclipse.ui.window.preferences");
+      Display.getDefault().asyncExec(() -> handlerService.executeHandler(cmd));
+    } else {
+      bot.menu("Help").menu(PREFERENCES).click();
+    }
     SWTBotShell preferencesShell = bot.shell("Enable startup checks");
     assertTrue(preferencesShell.bot()
         .label("When checked, Hexatomic will automatically check for updates at each start.")
