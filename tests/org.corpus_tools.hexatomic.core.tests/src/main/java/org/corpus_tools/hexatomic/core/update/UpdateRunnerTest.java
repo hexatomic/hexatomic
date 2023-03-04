@@ -214,4 +214,43 @@ class UpdateRunnerTest {
 
     assertEquals(Status.CANCEL_STATUS, result);
   }
+
+  @Test
+  void testUpdateAvailableErrorBackground() {
+    IStatus updateStatus = mock(IStatus.class);
+    // Return the status code for "missing requirements"
+    when(updateStatus.getCode()).thenReturn(10053);
+
+
+    UpdateOperation op = mock(UpdateOperation.class);
+    when(op.resolveModal(any(IProgressMonitor.class))).thenReturn(updateStatus);
+    when(op.getProvisioningJob(any())).thenReturn(null);
+    when(updateRunner.createUpdateOperation()).thenReturn(op);
+
+    IStatus result = fixture.checkForUpdates(false, shell);
+
+    assertEquals(Status.CANCEL_STATUS, result);
+    verify(fixture.events).send(eq(Topics.TOOLBAR_STATUS_MESSAGE),
+        eq("Update check failed (error code 10053)."));
+  }
+
+
+  @Test
+  void testUpdateAvailableErrorForeground() {
+    IStatus updateStatus = mock(IStatus.class);
+    // Return the status code for "missing requirements"
+    when(updateStatus.getCode()).thenReturn(10053);
+
+
+    UpdateOperation op = mock(UpdateOperation.class);
+    when(op.resolveModal(any(IProgressMonitor.class))).thenReturn(updateStatus);
+    when(op.getProvisioningJob(any())).thenReturn(null);
+    when(updateRunner.createUpdateOperation()).thenReturn(op);
+
+    IStatus result = fixture.checkForUpdates(true, shell);
+
+    assertEquals(Status.CANCEL_STATUS, result);
+    verify(fixture.errorService).showError(eq("Update check failed (code 10053)"), anyString(),
+        any());
+  }
 }

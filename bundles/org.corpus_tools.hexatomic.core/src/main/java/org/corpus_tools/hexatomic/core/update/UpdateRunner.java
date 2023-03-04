@@ -182,8 +182,9 @@ public class UpdateRunner {
         return Status.CANCEL_STATUS;
       }
     } else {
-      log.warn("Couldn't find ProvisioningJob.");
-      showProvisioningErrorMessage(triggeredManually);
+      log.warn("Error when resolving update operation (error code: {}, message: \"{}\")",
+          status.getCode(), status.getMessage());
+      showProvisioningErrorMessage(triggeredManually, status.getCode());
       return Status.CANCEL_STATUS;
     }
   }
@@ -219,7 +220,7 @@ public class UpdateRunner {
 
 
 
-  private void showProvisioningErrorMessage(boolean triggeredManually) {
+  private void showProvisioningErrorMessage(boolean triggeredManually, int errorCode) {
 
     if (triggeredManually) {
       // Give more feedback that needs to be acknowledged
@@ -240,11 +241,13 @@ public class UpdateRunner {
                 + "from inside the Eclipse development environment.");
       }
 
-      errorService.showError("Update check failed", message.toString(), UpdateRunner.class);
+      errorService.showError("Update check failed (code " + errorCode + ")", message.toString(),
+          UpdateRunner.class);
 
     } else {
       // Since this was a background task, also inform about this less prominent
-      events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Update check failed.");
+      events.send(Topics.TOOLBAR_STATUS_MESSAGE,
+          "Update check failed (error code " + errorCode + ").");
     }
   }
 
