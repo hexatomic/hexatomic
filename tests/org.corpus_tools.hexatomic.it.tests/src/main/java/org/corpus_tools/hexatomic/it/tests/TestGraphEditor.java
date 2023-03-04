@@ -738,8 +738,13 @@ class TestGraphEditor {
 
     // Tokens and the matching spans
     annoFilter.setFocus();
-    awtKeyboard.typeText("inf-struct");
-    awtKeyboard.pressShortcut(Keystrokes.LF);
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      keyboard.typeText("inf-struct");
+      keyboard.pressShortcut(Keystrokes.LF);
+    } else {
+      awtKeyboard.typeText("inf-struct");
+      awtKeyboard.pressShortcut(Keystrokes.LF);
+    }
     bot.waitUntil(new VisibleChipsCondition(2));
 
     bot.waitUntil(new NumberOfNodesCondition(25));

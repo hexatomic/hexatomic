@@ -106,7 +106,7 @@
   <commands xmi:id="_oseuoDpCEeu92f5JR1mQ3w" elementId="org.eclipse.ui.help.aboutAction" commandName="About"/>
   <commands xmi:id="_V7e7gDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.command.online_documentation" commandName="Online Documentation"/>
   <commands xmi:id="_k9bsQEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.update" commandName="Update"/>
-  <commands xmi:id="_o1QSYEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.command.preferences" commandName="Preferences"/>
+  <commands xmi:id="_o1QSYEE5Eey6GdYWLPWbkQ" elementId="org.eclipse.ui.window.preferences" commandName="Preferences"/>
   <commands xmi:id="_sisGMDi6Ee2qLN4J-P5SHw" elementId="org.corpus_tools.hexatomic.core.command.autogen-nodenames" commandName="Automatically generate node names">
     <parameters xmi:id="_yUxusDstEe25Ed8fdIAS9Q" elementId="org.corpus_tools.hexatomic.core.commandparameter.force_all" name="Force all documents"/>
   </commands>
