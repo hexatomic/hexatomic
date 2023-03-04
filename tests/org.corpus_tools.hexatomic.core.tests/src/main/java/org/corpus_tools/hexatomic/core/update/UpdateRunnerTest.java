@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import org.corpus_tools.hexatomic.core.DummySync;
@@ -63,6 +64,38 @@ class UpdateRunnerTest {
     assertEquals(false, fixture.autoUpdateAllowed(shell));
     
     verify(dialog).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
+    assertEquals(false, prefs.getBoolean(Preferences.AUTO_UPDATE, true));
+  }
+
+  @Test
+  void testUpdateAllowedAtStart() {
+    when(dialog.openQuestionDialog(any(), any(), any())).thenReturn(true);
+    
+    assertEquals(true, fixture.autoUpdateAllowed(shell));
+    
+    verify(dialog).openQuestionDialog(any(), eq("Automatic update check configuration"), any());
+    assertEquals(true, prefs.getBoolean(Preferences.AUTO_UPDATE, false));
+  }
+
+  @Test
+  void testUpdateWasAllowedInPreferences() {
+    prefs.putBoolean(Preferences.AUTO_UPDATE, true);
+
+    assertEquals(true, fixture.autoUpdateAllowed(shell));
+
+    verifyNoInteractions(dialog);
+
+    assertEquals(true, prefs.getBoolean(Preferences.AUTO_UPDATE, false));
+  }
+
+  @Test
+  void testUpdateWasDeniedInPreferences() {
+    prefs.putBoolean(Preferences.AUTO_UPDATE, false);
+
+    assertEquals(false, fixture.autoUpdateAllowed(shell));
+
+    verifyNoInteractions(dialog);
+
     assertEquals(false, prefs.getBoolean(Preferences.AUTO_UPDATE, true));
   }
 
