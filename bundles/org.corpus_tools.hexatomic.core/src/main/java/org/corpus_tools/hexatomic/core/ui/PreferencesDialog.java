@@ -56,7 +56,7 @@ public class PreferencesDialog extends Dialog {
   @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
-    newShell.setText("Enable startup checks");
+    newShell.setText("Preferences");
   }
 
   /**
@@ -67,11 +67,14 @@ public class PreferencesDialog extends Dialog {
   @Override
   protected Control createDialogArea(Composite parent) {
     Composite area = (Composite) super.createDialogArea(parent);
-    Label label = new Label(area, SWT.BORDER);
-    label.setText("When checked, Hexatomic will automatically check for updates at each start.");
+
     checkbox = new Button(area, SWT.CHECK);
     checkbox.setText("Enable automatic update checks");
     checkbox.setSelection(prefs.getBoolean(Preferences.AUTO_UPDATE, true));
+    Label label = new Label(area, SWT.BORDER | SWT.WRAP);
+    label.setText("When checked, Hexatomic will automatically check for updates at each start.\n"
+        + "For this function to work, it needs to establish a  network connection\n "
+        + "to hexatomic.github.io (hosted by GitHub, Inc.) at every startup. ");
     return area;
   }
 

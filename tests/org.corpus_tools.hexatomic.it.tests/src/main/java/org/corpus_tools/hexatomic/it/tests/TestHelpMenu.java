@@ -125,7 +125,7 @@ class TestHelpMenu {
     } else {
       bot.menu("Help").menu(PREFERENCES).click();
     }
-    SWTBotShell preferencesShell = bot.shell("Enable startup checks");
+    SWTBotShell preferencesShell = bot.shell("Preferences");
     assertTrue(preferencesShell.bot()
         .label("When checked, Hexatomic will automatically check for updates at each start.")
         .isVisible());
