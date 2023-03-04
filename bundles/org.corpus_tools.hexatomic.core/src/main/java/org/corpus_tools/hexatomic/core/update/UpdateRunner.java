@@ -20,8 +20,10 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,13 +81,62 @@ public class UpdateRunner {
    * @param shell The user interface shell.
    */
   public void scheduleUpdateJob(boolean triggeredManually, Shell shell) {
-    Job updateJob = new Job("Update Job") {
-      @Override
-      protected IStatus run(final IProgressMonitor monitor) {
-        return checkForUpdates(triggeredManually, shell);
+
+    if (triggeredManually || autoUpdateAllowed(shell)) {
+      Job updateJob = new Job("Update Job") {
+        @Override
+        protected IStatus run(final IProgressMonitor monitor) {
+          return checkForUpdates(triggeredManually, shell);
+        }
+      };
+      updateJob.schedule();
+    }
+  }
+
+  /**
+   * Check if updating automatically is allowed.
+   * 
+   * @return True if the preference has been manually set and if we did not just update recently.
+   */
+  protected boolean autoUpdateAllowed(Shell shell) {
+    boolean justUpdated = prefs.getBoolean(Preferences.JUST_UPDATED, false);
+    boolean autoUpdateEnabled = false;
+    try {
+      // Check if auto update was configured by the user explicitly
+      if (!Arrays.stream(prefs.keys()).anyMatch(k -> Preferences.AUTO_UPDATE.equals(k))) {
+        // Preference is not set yet, ask the user about whether to enable or disable it
+        final AtomicBoolean userSetting = new AtomicBoolean(false);
+        sync.syncExec(() -> userSetting
+            .set(MessageDialog.openQuestion(shell, "Automatic update check configuration.",
+                "Hexatomic can enable automatic update checks at each startup. "
+                    + "For this function to work, it needs to establish a  network connection to "
+                    + "hexatomic.github.io (hosted by GitHub, Inc.) at every startup. "
+                    + "You can always disable the checks again in the preferences. "
+                    + "Do you want to enable automatic update checks now?")));
+        // Set the value so we don't ask for it at the next startup again
+        prefs.putBoolean(Preferences.AUTO_UPDATE, userSetting.get());
       }
-    };
-    updateJob.schedule();
+      autoUpdateEnabled = prefs.getBoolean(Preferences.AUTO_UPDATE, false);
+
+    } catch (BackingStoreException ex) {
+      errorService.handleException(
+          "Could not get the setting for if the auto update functionality should be enabled.", ex,
+          UpdateRunner.class);
+    }
+
+
+
+    if (!justUpdated && autoUpdateEnabled) {
+      return true;
+    } else if (justUpdated) {
+      prefs.putBoolean(Preferences.JUST_UPDATED, false);
+      try {
+        prefs.flush();
+      } catch (BackingStoreException ex) {
+        errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
+      }
+    }
+    return false;
   }
 
 
@@ -182,11 +233,10 @@ public class UpdateRunner {
         // starting the update from Eclipse itself won't work.
         message.append("\n\n");
         message.append(
-            "In case of a developer build, "
-                + "this error can also occur when you start Hexatomic "
+            "In case of a developer build, " + "this error can also occur when you start Hexatomic "
                 + "from inside the Eclipse development environment.");
       }
-      
+
       errorService.showError("Update check failed", message.toString(), UpdateRunner.class);
 
     } else {
