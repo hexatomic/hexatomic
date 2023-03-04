@@ -65,7 +65,7 @@ public class UpdateRunner {
   private IProgressMonitor monitor;
 
   @Inject
-  private UISynchronize sync;
+  UISynchronize sync;
 
   @Inject
   private IEventBroker events;
@@ -106,8 +106,8 @@ public class UpdateRunner {
       if (Arrays.stream(prefs.keys()).noneMatch(Preferences.AUTO_UPDATE::equals)) {
         // Preference is not set yet, ask the user about whether to enable or disable it
         final AtomicBoolean userSetting = new AtomicBoolean(false);
-        sync.syncExec(() -> userSetting
-            .set(MessageDialog.openQuestion(shell, "Automatic update check configuration",
+        sync.syncExec(
+            () -> userSetting.set(openQuestionDialog(shell, "Automatic update check configuration",
                 "Hexatomic can enable automatic update checks at each startup. "
                     + "For this function to work, it needs to establish a  network connection to "
                     + "hexatomic.github.io (hosted by GitHub, Inc.) at every startup. "
@@ -167,7 +167,7 @@ public class UpdateRunner {
     if (provisioningJob != null) {
       log.info("Update available!");
       final AtomicBoolean performUpdate = new AtomicBoolean(false);
-      sync.syncExec(() -> performUpdate.set(MessageDialog.openQuestion(shell, "Update available",
+      sync.syncExec(() -> performUpdate.set(openQuestionDialog(shell, "Update available",
           "Do you want to install the available update?")));
       if (performUpdate.get()) {
         IWorkbench workbench = context.get(IWorkbench.class);
@@ -196,8 +196,9 @@ public class UpdateRunner {
       public void done(IJobChangeEvent event) {
         if (event.getResult().isOK()) {
           sync.syncExec(() -> {
-            boolean restart = MessageDialog.openQuestion(shell, "Updates installed, restart?",
-                "Updates have been installed. Do you want to restart?");
+            boolean restart =
+                UpdateRunner.this.openQuestionDialog(shell, "Updates installed, restart?",
+                    "Updates have been installed. Do you want to restart?");
             if (restart) {
               prefs.putBoolean("justUpdated", true);
               try {
@@ -243,8 +244,19 @@ public class UpdateRunner {
       // Since this was a background task, also inform about this less prominent
       events.send(Topics.TOOLBAR_STATUS_MESSAGE, "Update check failed.");
     }
+  }
 
-
+  /**
+   * Wrapper for {@link MessageDialog#openQuestion(Shell, String, String)}. Having this in a
+   * separate function allows easier unit testing by overwriting this method.
+   * 
+   * @param parent The parent {@link Shell}.
+   * @param title Title used in the message dialog window frame.
+   * @param message The actual message.
+   * @return True if the user answered "Yes".
+   */
+  protected boolean openQuestionDialog(Shell parent, String title, String message) {
+    return MessageDialog.openQuestion(parent, title, message);
   }
 
   static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
