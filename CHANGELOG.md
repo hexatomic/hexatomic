@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-03-05
+
 ### Added
 
 - Make preferences accessible via default means on macOS (#413)
@@ -375,7 +377,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.1.7...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/hexatomic/hexatomic/compare/v1.1.7...v1.2.0
 [1.1.7]: https://github.com/hexatomic/hexatomic/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/hexatomic/hexatomic/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/hexatomic/hexatomic/compare/v1.1.4...v1.1.5
