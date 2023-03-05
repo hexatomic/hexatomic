@@ -15,13 +15,16 @@ import org.corpus_tools.hexatomic.core.DummySync;
 import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.core.update.UpdateRunner.UpdateFinishedListener;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.equinox.p2.core.IProvisioningAgent;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
@@ -193,6 +196,73 @@ class UpdateRunnerTest {
     IStatus result = fixture.checkForUpdates(false, shell);
 
     assertEquals(Status.OK_STATUS, result);
+  }
+
+  @Test
+  void testUpdateFinishedListenerWithRestart() {
+    IWorkbench workbench = mock(IWorkbench.class);
+    IJobChangeEvent event = mock(IJobChangeEvent.class);
+    when(event.getResult()).thenReturn(Status.OK_STATUS);
+
+    when(updateRunner.openQuestionDialog(any(), eq("Updates installed, restart?"), any()))
+        .thenReturn(true);
+
+    UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
+
+    listener.done(event);
+
+    verify(workbench).restart();
+    assertEquals(true, fixture.prefs.getBoolean(Preferences.JUST_UPDATED, false));
+  }
+
+  @Test
+  void testUpdateFinishedListenerWithRestartPreferenceStorageFailing()
+      throws BackingStoreException {
+    IWorkbench workbench = mock(IWorkbench.class);
+    IJobChangeEvent event = mock(IJobChangeEvent.class);
+    when(event.getResult()).thenReturn(Status.OK_STATUS);
+    doThrow(BackingStoreException.class).when(fixture.prefs).flush();
+
+
+    when(updateRunner.openQuestionDialog(any(), eq("Updates installed, restart?"), any()))
+        .thenReturn(true);
+
+    UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
+
+    listener.done(event);
+
+    verify(fixture.errorService).handleException(anyString(), any(), any());
+  }
+
+
+
+  @Test
+  void testUpdateFinishedListenerNoRestart() {
+    IWorkbench workbench = mock(IWorkbench.class);
+    IJobChangeEvent event = mock(IJobChangeEvent.class);
+    when(event.getResult()).thenReturn(Status.OK_STATUS);
+
+    when(updateRunner.openQuestionDialog(any(), eq("Updates installed, restart?"), any()))
+        .thenReturn(false);
+
+    UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
+
+    listener.done(event);
+
+    verifyNoInteractions(workbench);
+  }
+
+  @Test
+  void testUpdateListenerNotFinished() {
+    IWorkbench workbench = mock(IWorkbench.class);
+    IJobChangeEvent event = mock(IJobChangeEvent.class);
+    when(event.getResult()).thenReturn(Status.CANCEL_STATUS);
+
+    UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
+
+    listener.done(event);
+
+    verifyNoInteractions(workbench);
   }
 
   @Test

@@ -51,6 +51,38 @@ import org.osgi.service.prefs.BackingStoreException;
 
 @Creatable
 public class UpdateRunner {
+
+  protected class UpdateFinishedListener extends JobChangeAdapter {
+    private final IWorkbench workbench;
+    private final Shell shell;
+
+    protected UpdateFinishedListener(IWorkbench workbench, Shell shell) {
+      this.workbench = workbench;
+      this.shell = shell;
+    }
+
+    @Override
+    public void done(IJobChangeEvent event) {
+      if (event.getResult().isOK()) {
+        sync.syncExec(() -> {
+          boolean restart =
+              UpdateRunner.this.openQuestionDialog(shell, "Updates installed, restart?",
+                  "Updates have been installed. Do you want to restart?");
+          if (restart) {
+            prefs.putBoolean("justUpdated", true);
+            try {
+              prefs.flush();
+            } catch (BackingStoreException ex) {
+              errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
+            }
+            workbench.restart();
+          }
+        });
+      }
+      super.done(event);
+    }
+  }
+
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
 
 
@@ -175,7 +207,7 @@ public class UpdateRunner {
           "Do you want to install the available update?")));
       if (performUpdate.get()) {
         IWorkbench workbench = context.get(IWorkbench.class);
-        configureProvisioningJob(provisioningJob, shell, sync, workbench);
+        configureProvisioningJob(provisioningJob, shell, workbench);
         provisioningJob.schedule();
         return Status.OK_STATUS;
       } else {
@@ -190,32 +222,11 @@ public class UpdateRunner {
   }
 
   private void configureProvisioningJob(ProvisioningJob provisioningJob, final Shell shell,
-      final UISynchronize sync, final IWorkbench workbench) {
+      final IWorkbench workbench) {
 
     // register a job change listener to track
     // installation progress and notify user upon success
-    provisioningJob.addJobChangeListener(new JobChangeAdapter() {
-      @Override
-      public void done(IJobChangeEvent event) {
-        if (event.getResult().isOK()) {
-          sync.syncExec(() -> {
-            boolean restart =
-                UpdateRunner.this.openQuestionDialog(shell, "Updates installed, restart?",
-                    "Updates have been installed. Do you want to restart?");
-            if (restart) {
-              prefs.putBoolean("justUpdated", true);
-              try {
-                prefs.flush();
-              } catch (BackingStoreException ex) {
-                errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
-              }
-              workbench.restart();
-            }
-          });
-        }
-        super.done(event);
-      }
-    });
+    provisioningJob.addJobChangeListener(new UpdateFinishedListener(workbench, shell));
   }
 
 
