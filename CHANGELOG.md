@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Make preferences accessible via default means on macOS (#413)
 
+### Fixed
+
+- Do not connect to GitHub without asking (#412)
+
 ## [1.1.7] - 2023-03-03
 
 ### Fixed
