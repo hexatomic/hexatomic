@@ -23,7 +23,10 @@ mvn tycho-versions:set-version -DnewVersion=1999.0.0
 ```
 3. Build the current version with `mvn package`
 4. Copy the folder `releng/org.corpus_tools.hexatomic.product/target/repository` to the temporary folder `<TMP>`
-5. Reset the version number to the next release
+5. Reset the version number configuration, but keep the `p2.inf` file changes.
+```bash
+git add releng/org.corpus_tools.hexatomic.product/p2.inf && git restore . && git reset
+``` 
 
 ## Updating from PR state to a newer version
 
