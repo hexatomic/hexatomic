@@ -19,7 +19,7 @@ We have to test two scenarios:
 ``` 
 2. Change the version number of Hexatomic to a large version number
 ```bash
-mvn tycho-versions:set-version -DnewVersion=1999.0.0 
+mvn tycho-versions:set-version -DnewVersion=1999.0.0
 ```
 3. Build the current version with `mvn package`
 4. Copy the folder `releng/org.corpus_tools.hexatomic.product/target/repository` to the temporary folder `<TMP>`
