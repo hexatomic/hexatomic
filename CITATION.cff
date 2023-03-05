@@ -35,7 +35,7 @@ identifiers:
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
 version: 1.2.0-SNAPSHOT
-date-released: 2023-03-04
+date-released: 2023-03-05
 references:
 - type: software
   title: SWT Resource Manager

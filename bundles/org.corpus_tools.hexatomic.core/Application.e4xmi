@@ -32,7 +32,7 @@
       <children xsi:type="menu:Menu" xmi:id="_trgNYDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.menu.help" label="&amp;Help">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_oEtxwDpHEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.online_documentation" label="Online Documentation" command="_V7e7gDpHEeu92f5JR1mQ3w"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_wIyIIDpCEeu92f5JR1mQ3w" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.about" label="About" command="_oseuoDpCEeu92f5JR1mQ3w"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_3rSSgEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.update" label="Update" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/sync-solid.png" command="_k9bsQEE5Eey6GdYWLPWbkQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_3rSSgEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.update" label="Check for updates" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/sync-solid.png" command="_k9bsQEE5Eey6GdYWLPWbkQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="__1kzYEE5Eey6GdYWLPWbkQ" elementId="org.corpus_tools.hexatomic.core.handledmenuitem.preferences" label="Preferences" iconURI="platform:/plugin/org.corpus_tools.hexatomic.core/icons/fontawesome/cog-solid.png" command="_o1QSYEE5Eey6GdYWLPWbkQ"/>
       </children>
     </mainMenu>
