@@ -24,7 +24,7 @@ mvn tycho-versions:set-version -DnewVersion=1999.0.0
 4. Copy the folder `releng/org.corpus_tools.hexatomic.product/target/repository` to the temporary folder `<TMP>`
 5. Reset the version number to the next release
 
-## Updating to a newer version
+## Updating from PR state to a newer version
 
 1. Execute `mvn package` to create the product
 2. Run Hexatomic from the command line and **check that there is a message in the toolbar about an available update**.
@@ -34,17 +34,14 @@ releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexat
 3. **Apply the update**. Restart if necessary.
 4. Manually check for an update via the *Help* > *Update* menu, and check that the status bar again reports that "Hexatomic is up to date".
 
-
-
 ## Updating from the latest release
 
-1. Checkout the source with the release tag `git checkout tags/v<version>`
-2. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines (but replace `<TMP>` with a temporary folder where you want to store the update site content, e.g. `/tmp/hexatomic-update-site`.
-```plain
-  addRepository(type:0,location:file${#58}<TMP>/repository,name:Local test,enabled:true);\
-  addRepository(type:1,location:file${#58}<TMP>/repository,name:Local test,enabled:true);\
+1. Checkout the source with the release tag `git checkout tags/v<version>`. The `p2.inf` file should stay locally altered.
+2. Execute `mvn package` to create the product
+3. Run Hexatomic from the command line and **check that there is a message in the toolbar about an available update**.
 ```
-3. Run the old version from Eclipse and **check that there is a message in the toolbar about an available update**.
+releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/linux/gtk/x86_64/hexatomic
+``` 
 4. **Apply the update**. Restart if necessary.
 5. Manually check for an update via the *Help* > *Update* menu, and check that the status bar again reports that "Hexatomic is up to date".
-6.  Revert all local changes in the source code repository using Git
+6.  Revert all local changes in the source code repository and checkout the original branch for the PR using Git.
