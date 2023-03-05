@@ -37,6 +37,9 @@ import org.osgi.service.prefs.BackingStoreException;
 class UpdateRunnerTest {
 
 
+  private static final String UPDATES_INSTALLED_RESTART = "Updates installed, restart?";
+
+
   public interface UpdateRunnerMock {
     boolean openQuestionDialog(Shell parent, String title, String message);
 
@@ -204,7 +207,7 @@ class UpdateRunnerTest {
     IJobChangeEvent event = mock(IJobChangeEvent.class);
     when(event.getResult()).thenReturn(Status.OK_STATUS);
 
-    when(updateRunner.openQuestionDialog(any(), eq("Updates installed, restart?"), any()))
+    when(updateRunner.openQuestionDialog(any(), eq(UPDATES_INSTALLED_RESTART), any()))
         .thenReturn(true);
 
     UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
@@ -224,7 +227,7 @@ class UpdateRunnerTest {
     doThrow(BackingStoreException.class).when(fixture.prefs).flush();
 
 
-    when(updateRunner.openQuestionDialog(any(), eq("Updates installed, restart?"), any()))
+    when(updateRunner.openQuestionDialog(any(), eq(UPDATES_INSTALLED_RESTART), any()))
         .thenReturn(true);
 
     UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
@@ -242,7 +245,7 @@ class UpdateRunnerTest {
     IJobChangeEvent event = mock(IJobChangeEvent.class);
     when(event.getResult()).thenReturn(Status.OK_STATUS);
 
-    when(updateRunner.openQuestionDialog(any(), eq("Updates installed, restart?"), any()))
+    when(updateRunner.openQuestionDialog(any(), eq(UPDATES_INSTALLED_RESTART), any()))
         .thenReturn(false);
 
     UpdateFinishedListener listener = fixture.new UpdateFinishedListener(workbench, shell);
