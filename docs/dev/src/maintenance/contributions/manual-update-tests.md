@@ -29,7 +29,7 @@ mvn tycho-versions:set-version -DnewVersion=1999.0.0
 
 1. Execute `mvn package` to create the product
 2. Run Hexatomic from the command line and **check that there is a message in the toolbar about an available update**.
-```
+```bash
 releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/linux/gtk/x86_64/hexatomic
 ``` 
 3. **Apply the update**. Restart if necessary.
@@ -40,7 +40,7 @@ releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexat
 1. Check out the source with the release tag `git checkout tags/v<version>`. The `p2.inf` file should stay locally altered.
 2. Execute `mvn package` to create the product
 3. Run Hexatomic from the command line and **check that there is a message in the toolbar about an available update**.
-```
+```bash
 releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/linux/gtk/x86_64/hexatomic
 ``` 
 4. **Apply the update**. Restart if necessary.
