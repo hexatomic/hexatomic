@@ -26,9 +26,13 @@ mvn tycho-versions:set-version -DnewVersion=1999.0.0
 
 ## Updating to a newer version
 
-1. [Run Hexatomic from Eclipse](../../development/running-debugging-with-eclipse.md) and **check that there is a message in the toolbar about an available update**.
-2. **Apply the update**. Restart if necessary.
-3. Manually check for an update via the *Help* > *Update* menu, and check that the status bar again reports that "Hexatomic is up to date".
+1. Execute `mvn package` to create the product
+2. Run Hexatomic from the command line and **check that there is a message in the toolbar about an available update**.
+```
+releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/linux/gtk/x86_64/hexatomic
+``` 
+3. **Apply the update**. Restart if necessary.
+4. Manually check for an update via the *Help* > *Update* menu, and check that the status bar again reports that "Hexatomic is up to date".
 
 
 

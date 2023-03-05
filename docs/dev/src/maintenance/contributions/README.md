@@ -74,7 +74,9 @@ In addition to manually checking the changes of the pull request, you should the
 1. that there is a **status in the lower toolbar** ("Hexatomic is up to date") on start up which shows that the update check has been executed, and
 2. that clicking on the *Help* menu item, and then *Update*, triggers another **manual update check** (the status message in the toolbar should be highlighted by changing its color for a moment).
 
-In case that the pull request is related to the update functionality itself, you should [test that updates can be performed successfully](manual-update-tests.md).
+In case that the pull request is related to the update functionality itself or
+updates the target platform, you should [test that updates can be performed
+successfully](manual-update-tests.md).
 
 
 ### Moving pull requests forward
