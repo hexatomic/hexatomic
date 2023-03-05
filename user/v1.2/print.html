@@ -1,0 +1,1006 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Hexatomic User Documentation</title>
+        
+        <meta name="robots" content="noindex" />
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li><ol class="section"><li><a href="update.html"><strong aria-hidden="true">2.1.</strong> Updates</a></li></ol></li><li><a href="usage/index.html"><strong aria-hidden="true">3.</strong> Usage</a></li><li><ol class="section"><li><a href="usage/projects.html"><strong aria-hidden="true">3.1.</strong> Working with projects</a></li><li><ol class="section"><li><a href="usage/import-export.html"><strong aria-hidden="true">3.1.1.</strong> Importing and exporting corpora</a></li></ol></li><li><a href="usage/corpus-structure.html"><strong aria-hidden="true">3.2.</strong> Editing the corpus structure</a></li><li><a href="usage/open-editor.html"><strong aria-hidden="true">3.3.</strong> Opening an editor</a></li><li><a href="usage/graph-editor/index.html"><strong aria-hidden="true">3.4.</strong> Graph Editor</a></li><li><ol class="section"><li><a href="usage/graph-editor/filter.html"><strong aria-hidden="true">3.4.1.</strong> Filter visible annotations</a></li><li><a href="usage/graph-editor/console.html"><strong aria-hidden="true">3.4.2.</strong> Editing the graph</a></li><li><a href="usage/graph-editor/layout-params.html"><strong aria-hidden="true">3.4.3.</strong> Change layout parameters</a></li></ol></li><li><a href="usage/grid-editor/index.html"><strong aria-hidden="true">3.5.</strong> Grid Editor</a></li><li><ol class="section"><li><a href="usage/grid-editor/editing.html"><strong aria-hidden="true">3.5.1.</strong> Editing the grid</a></li><li><ol class="section"><li><a href="usage/grid-editor/editing-columns.html"><strong aria-hidden="true">3.5.1.1.</strong> Editing annotation columns</a></li><li><a href="usage/grid-editor/editing-values.html"><strong aria-hidden="true">3.5.1.2.</strong> Editing annotation values</a></li><li><a href="usage/grid-editor/editing-names.html"><strong aria-hidden="true">3.5.1.3.</strong> Editing annotation names</a></li><li><a href="usage/grid-editor/deleting-annotations.html"><strong aria-hidden="true">3.5.1.4.</strong> Deleting annotations</a></li></ol></li></ol></li><li><a href="usage/refactoring/index.html"><strong aria-hidden="true">3.6.</strong> Refactoring</a></li></ol></li><li><a href="troubleshooting.html"><strong aria-hidden="true">4.</strong> Troubleshooting &amp; getting help</a></li><li><a href="howtos/index.html"><strong aria-hidden="true">5.</strong> HOW-TOs</a></li><li><ol class="section"><li><a href="howtos/corpus-creation.html"><strong aria-hidden="true">5.1.</strong> Creating a corpus from scratch</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic User Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#welcome-to-hexatomic" id="welcome-to-hexatomic">Welcome to Hexatomic!</a></h1>
+<p>You are reading the user documentation for <a href="https://corpus-tools.org/hexatomic">Hexatomic</a>.</p>
+<h2><a class="header" href="#what-is-hexatomic" id="what-is-hexatomic">What is Hexatomic?</a></h2>
+<p>Hexatomic is an extensible OS-independent platform for deep multi-layer linguistic corpus annotation.</p>
+<p>Research projects want to answer very specific research questions.
+When they use corpora, they may have to use specific software that can</p>
+<ul>
+<li>handle the format their corpus data is available in, or</li>
+<li>provide annotation functionality for the annotation types they want to use.</li>
+</ul>
+<p>Projects may also need additional software to search their data.
+If they have corpora in more than one format, they may have to duplicate the number of software tools they have to use in order to answer their research question. And if this software doesn't exist yet, they have to implement a new tool from scratch.</p>
+<p>Hexatomic aims to alleviate this situation, and reduce the number of tools a project will have to use (and install, and maintain, and learn) to 1.</p>
+<h5><a class="header" href="#how-does-it-do-that" id="how-does-it-do-that">How does it do that?</a></h5>
+<ol>
+<li>It works with a generic graph-based data model, that can handle many different types of annotations.</li>
+<li>It includes a converter framework, which allows the import of a multitude of different corpus formats, provides them in the generic graph-based model
+for manipulation (corpus-building, annotation, cleaning, etc.), and can export the corpus data to yet another multitude of corpus and other data formats.</li>
+<li>It includes powerful corpus search functionality, that offers the usual free text- and regex-based search, but can also search across linguistic
+structures and build complex queries across layers.</li>
+</ol>
+<h5><a class="header" href="#what-if-hexatomic-cannot-handle-my-specific-annotation-typeuse-case" id="what-if-hexatomic-cannot-handle-my-specific-annotation-typeuse-case">What if Hexatomic cannot handle my specific annotation type/use case?</a></h5>
+<p>Hexatomic is built to be extensible through plugins.
+If it doesn't offer what you are looking for, you don't have to implement a new tool from scratch, 
+but can instead build a plugin that does what you need.
+On top, the existing functionality, the data model, import and export functionality, and search come for free with that.</p>
+<h5><a class="header" href="#what-kind-of-software-is-hexatomic" id="what-kind-of-software-is-hexatomic">What kind of software is Hexatomic?</a></h5>
+<p>Hexatomic is software for the desktop.
+You download it to your computer.
+It does not need an internet connection to run, and therefore you can also use it in the field, or on the train en route to a conference.</p>
+<p>Specifically, it is an Eclipse e4 application implemented in Java.</p>
+<p>Hexatomic is <i class="fa fa-heart"></i> free and open source under the <a href="https://github.com/hexatomic/hexatomic/tree/main/LICENSE">Apache License, Version 2.0</a>.</p>
+<h2><a class="header" href="#how-can-hexatomic-be-used" id="how-can-hexatomic-be-used">How can Hexatomic be used?</a></h2>
+<p>You can use Hexatomic to do, for example, any or all of the following:</p>
+<p><i class="fa fa-wrench"></i> Build a corpus from scratch</p>
+<p><i class="fa fa-object-group"></i> Merge different corpora into a new one</p>
+<p><i class="fa fa-pencil"></i> Annotate an existing corpus</p>
+<p><i class="fa fa-bug"></i> Error correct a corpus</p>
+<p><i class="fa fa-search"></i> Search a corpus</p>
+<h1><a class="header" href="#hexatomic-installation--start" id="hexatomic-installation--start">Hexatomic installation &amp; start</a></h1>
+<h2><a class="header" href="#download" id="download">Download</a></h2>
+<ol>
+<li>Go to the download site for the latest release of Hexatomic:<br />
+<a href="https://github.com/hexatomic/hexatomic/releases/latest">https://github.com/hexatomic/hexatomic/releases/latest</a>.</li>
+<li>Download the <code>.zip</code> or <code>tar.gz</code> file for your operating system:
+<ul>
+<li><strong>Linux</strong>: Download <code>hexatomic-&lt;version&gt;-linux.gtk.x86_64.tar.gz</code></li>
+<li><strong>Mac OS</strong>: Download <code>hexatomic-&lt;version&gt;-macosx.cocoa.x86_64.zip</code></li>
+<li><strong>Windows</strong>: Download <code>hexatomic-&lt;version&gt;-win32.win32.x86_64.zip</code></li>
+</ul>
+</li>
+<li>On Windows and Linux, extract the downloaded file to a directory of your choice.<sup class="footnote-reference"><a href="#1">1</a></sup>. When you download the file on Mac OS with the Safari Browser, the <code>zip</code> file is extracted automatically.</li>
+</ol>
+<p>For Linux and Windows, that's it. You can now run Hexatomic.</p>
+<p>On macOS, you need to move the Hexatomic application from the &quot;Download&quot; folder to the &quot;Applications&quot; folder by dragging it to &quot;Applications&quot; in the Finder.</p>
+<p><img src="macos-install.png" alt="Drag the Hexatomic application to Applications" /></p>
+<h2><a class="header" href="#run-hexatomic" id="run-hexatomic">Run Hexatomic</a></h2>
+<ol>
+<li>Go to the folder into which you have unzipped the Hexatomic download (e.g. &quot;Applications&quot; on macOS).</li>
+<li>Run Hexatomic by  double-clicking on the launcher file in a file manager.<sup class="footnote-reference"><a href="#cmdrun">2</a></sup></li>
+</ol>
+<h3><a class="header" href="#macos-specific-instructions" id="macos-specific-instructions">macOS-specific instructions</a></h3>
+<p>When you start Hexatomic for the first time on macOS, use the context menu and choose &quot;Open&quot; from there.</p>
+<p><img src="macos-open.png" alt="Open Hexatomic from the context menu on macOS" /></p>
+<p>You will be asked if you want to open Hexatomic, although it has not been downloaded from a trusted source.
+This dialog appears because we don't have an expensive Apple Developer ID and therefore cannot sign Hexatomic releases with it.
+Choose to open Hexatomic anyway. This dialog will be only shown on the first start, and you can open Hexatomic regularly afterwards.</p>
+<p><img src="macos-security-alert.png" alt="Security warning on macOS" /></p>
+<hr />
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>Some archive extraction software may not work, and Hexatomic may not start. In this case, try <a href="https://www.7-zip.org/">7zip</a>, which should work.</p>
+</div>
+<div class="footnote-definition" id="cmdrun"><sup class="footnote-definition-label">2</sup>
+<p>Users with command line experience can also start the launcher file from the command line.</p>
+<ul>
+<li>In <strong>Linux</strong>, the launcher file is simply called <code>hexatomic</code> and can be started with <code>./hexatomic</code>.</li>
+<li>In <strong>Windows</strong>, the launcher file is simply called <code>hexatomic.exe</code> and can be started with <code>hexatomic</code>.</li>
+<li>For <strong>Mac OS X</strong>, we provide an <code>.app</code> file called <code>hexatomic.app</code>.</li>
+</ul>
+</div>
+<h1><a class="header" href="#updates" id="updates">Updates</a></h1>
+<h2><a class="header" href="#search-for-updates" id="search-for-updates">Search for updates</a></h2>
+<p>There are two ways to update Hexatomic. You can either update it manually or enable automatic checks at each startup.</p>
+<h3><a class="header" href="#manual-updates" id="manual-updates">Manual updates</a></h3>
+<ol>
+<li>Click on <em>Help</em> in the main menu.</li>
+<li>Select <em>Check for updates</em>.
+<img src="./selectUpdate.png" alt="Search for updates manually" /></li>
+</ol>
+<p>This will check if a new update is available.
+If not, a message in the status bar will be displayed, that there is no update available, and that &quot;Hexatomic is up to date&quot;.</p>
+<h3><a class="header" href="#auto-updates-at-startup" id="auto-updates-at-startup">Auto-updates at startup</a></h3>
+<ol>
+<li>Click on <em>Help</em> in the main menu.</li>
+<li>Select <em>Preferences</em>.
+<img src="./selectPreferences.png" alt="Go to Preferences menu" /></li>
+<li>Check the box <em>Enable automatic update search at startup</em> and confirm with <strong>OK</strong>.
+If checked, Hexatomic will search for updates automatically at each startup.
+<img src="./settingpreferences.png" alt="Check Enable automatic update search at startup" /></li>
+</ol>
+<h2><a class="header" href="#perform-updates" id="perform-updates">Perform updates</a></h2>
+<ol>
+<li>If there are updates available, you are asked if you want to install them. Otherwise you will be informed that there are no updates available.</li>
+<li>After successful installation, Hexatomic has to be restarted to apply the update. You will be asked if you want to restart. If you have unsaved changes, save them first and perform the restart manually.</li>
+</ol>
+<h1><a class="header" href="#usage" id="usage">Usage</a></h1>
+<p>This section describes how to use the user interface of Hexatomic.
+See one of the following sub-sections for more details.</p>
+<h1><a class="header" href="#working-with-projects" id="working-with-projects">Working with projects</a></h1>
+<h2><a class="header" href="#data-model" id="data-model">Data model</a></h2>
+<p>Hexatomic uses the graph-based data model Salt as its native data model.
+Read more about the data model in the <a href="https://corpus-tools.org/salt/#documentation">Salt documentation</a>.</p>
+<h2><a class="header" href="#projects" id="projects">Projects</a></h2>
+<p>Hexatomic works on a single Salt project at any one time.
+A project consists of a directory containing a project file (<code>saltProject.salt</code>) and a number of sub-directories containing the Salt document files.</p>
+<p>To open a project in Hexatomic, click on <em>File</em> in the main menu and select the option <em>Open Salt Project</em>.
+A new file dialog window will come up.
+Choose the folder containing the project file you want to open, and open it.</p>
+<p><img src="usage/open-salt-project.png" alt="Opening a project in Hexatomic" /></p>
+<p>After opening a Salt project, you can select <em>Save Salt Project</em>, which will save the project as Salt XML files in the structure explained at the beginning of this section into the same
+folder that they have been loaded from. Alternatively, you can select <em>Save Salt Project As...</em>  to select a different location to save the files to.
+You can see the currently loaded Salt project path in the Window title.
+If there are unsaved changes in any document or in the corpus structure, a <em>*</em> will be appended to the title.</p>
+<p><img src="usage/project-window-title.png" alt="Project location and * to indicate unsaved changes" /></p>
+<p>Saving the project will always save all documents, not only the openend ones.
+If you close an editor, the changes are not lost as long as you save the project afterwards.</p>
+<p>To start a new and empty project in the same application window, choose <em>Start New Salt Project</em>.</p>
+<p>If an action would discard unsaved changes, you are always given the choice to cancel it.</p>
+<p>You can undo and redo changes with the menu entries <em>Undo</em> and <em>Redo</em> in the <em>Edit</em> menu or by clicking on the toolbar buttons.</p>
+<p><img src="usage/toolbar.png" alt="Toolbar items with undo and redo" /></p>
+<h1><a class="header" href="#importing-and-exporting-corpora" id="importing-and-exporting-corpora">Importing and exporting corpora</a></h1>
+<p>Per default, Hexatomic will store its project in its native data format Salt.
+You can, however, import and export corpora from and to different formats.</p>
+<h2><a class="header" href="#supported-file-formats" id="supported-file-formats">Supported file formats</a></h2>
+<p>Currently, Hexatomic supports the following external file formats:</p>
+<ul>
+<li><a href="https://github.com/korpling/paula-xml">PAULA XML</a></li>
+<li><a href="https://exmaralda.org">EXMARaLDA *.exb files</a></li>
+<li><a href="https://linktype.iaa.uni-jena.de/?nav=graph-anno">GraphAnno</a> (import only)</li>
+<li>Plain text *.txt files (import only)</li>
+</ul>
+<h2><a class="header" href="#import-an-existing-corpus" id="import-an-existing-corpus">Import an existing corpus</a></h2>
+<p>To import existing corpora, which are not stored in Salt, choose the <em>Import</em> entry in the <em>File</em> menu.
+This will start a wizard, which will guide you through all necessary import steps.</p>
+<p>First, select the directory that contains the corpus files you want to import.
+For most corpus formats, the selected directory name will become the root corpus name.
+E.g., in the following example this would be <code>example-corpus</code>.</p>
+<p><img src="usage/import-select-directory.png" alt="Import directory selection with the last directory name example-corpus" /></p>
+<p>Most formats use a single file for each document, with the exception of PAULA XML, which uses a sub-directory containing files for each annotation layer.</p>
+<p>After clicking on <em>Next &gt;</em> in the wizard, you will see the format selection page.
+The wizard will try to auto-detect and preselect the correct format in the given directory and select it for you.
+Make sure Hexatomic selected the correct corpus format and press <em>Finish</em> to import the corpus with the default settings.
+Some formats allow various configuration settings, that can be changed by clicking on <em>Next &gt;</em> instead.</p>
+<p><img src="usage/import-format-selection.png" alt="Format selection wizard step" /></p>
+<p><img src="usage/import-format-settings.png" alt="Format settings wizard step" /></p>
+<p>After clicking on <em>Finish</em> the import will start and show the progress.
+The wizard will close automatically after the import process finishes.
+You can also abort the import process by clicking on the red square <em>stop</em> button right next to the progress bar.</p>
+<p><img src="usage/import-progress.png" alt="Import progress and cancel button" /></p>
+<h2><a class="header" href="#export-to-a-different-format" id="export-to-a-different-format">Export to a different format</a></h2>
+<p>Exporting a corpus project is similar to importing one.
+You select <em>Export</em> from the <em>File</em> menu, select an output path and the output format and finish the wizard.
+The output path should not contain the root corpus name, since this will be appended automatically.
+A project must be saved to disk and must not have any unsaved changes before you can export it.</p>
+<h1><a class="header" href="#editing-the-corpus-structure" id="editing-the-corpus-structure">Editing the corpus structure</a></h1>
+<p>Each corpus project can consist of multiple documents which are organized into</p>
+<ul>
+<li>corpus graphs,</li>
+<li>corpora, and</li>
+<li>sub-corpora.</li>
+</ul>
+<p>Even in simple projects with only one document, this corpus structure exists and can be used to extend or re-organize existing corpora.
+The minimal structure for a corpus with one document is therefore: One corpus graph containing one corpus containing one document.</p>
+<p>In Hexatomic, the corpus structure is always visible in the special “Corpus Structure” editor.</p>
+<p><img src="usage/./example-corpus-structure.png" alt="An example corpus structure" /></p>
+<h2><a class="header" href="#corpus-graphs" id="corpus-graphs">Corpus graphs</a></h2>
+<p>Corpora, sub-corpora and documents are organized in a hierarchical structure, the so-called corpus graph.
+A project in Hexatomic <em>can</em> have more than one corpus graph, but for most projects a single corpus graph is sufficient.
+In the special case where you import different corpora from different annotation formats into the same Hexatomic project for merging them, you will need more than one corpus graph.</p>
+<p>In an empty project, just click on the “Add“ button to add a new corpus structure.</p>
+<p><img src="usage/./corpus-structure-add-default.png" alt="Add button for default action" /></p>
+<p>The default “Add“ button is context-sensitive, and will add elements &quot;intelligently&quot;, depending on which type of element is currently selected in the corpus structure.
+To explicitly choose the element to add, click on the small arrow on the right side of the button and a drop-down menu with the different options will appear.</p>
+<p><img src="usage/./corpus-structure-add-specific.png" alt="Add button for specific action" /></p>
+<p>If you delete a corpus graph, all of its documents and corpora will also be deleted.
+Before you delete a (sub-) corpus, delete all of its child elements first.</p>
+<h2><a class="header" href="#corpora-and-sub-corpora" id="corpora-and-sub-corpora">Corpora and sub-corpora</a></h2>
+<p>Inside a corpus graph, the different corpora and sub-corpora are organized as a hierarchy.
+A corpus graph should only contain one top-level corpus, whose name is often used as corpus name when exporting the corpus to a different format.
+To add a sub-corpus, select the parent corpus, click on the arrow on the right side of the “Add” button and choose “(Sub-) Corpus”.
+You can edit the name of a corpus by double-clicking on its entry and pressing enter when finished.</p>
+<p><img src="usage/./corpus-structure-rename.png" alt="Rename a corpus" /></p>
+<h2><a class="header" href="#documents" id="documents">Documents</a></h2>
+<p>When a corpus is selected, the default action for the &quot;Add&quot; button is to add a new document.
+When a document is selected, the &quot;Add&quot; button will create a new sibling document in the same parent corpus.
+Documents must have a corpus as a parent and contain the base text and linguistic annotations.
+You can move a document from one (sub-) corpus to another by dragging and dropping it.</p>
+<p><img src="usage/./corpus-structure-drag.png" alt="Drag document" />
+<img src="usage/./corpus-structure-drop.png" alt="Drop document" />
+<img src="usage/./corpus-structure-drop-result.png" alt="Drop document result" /></p>
+<p>It is possible to apply a filter, to only show documents whose names contain a certain string.</p>
+<p><img src="usage/./corpus-structure-filter-doc.png" alt="Filter by name" /></p>
+<h1><a class="header" href="#opening-an-editor" id="opening-an-editor">Opening an editor</a></h1>
+<p>To open an editor for a document of the corpus, first select the corpus in the &quot;Corpus Structure&quot; editor on the left.
+Then, use the right mouse button to open the context menu for the selected document and click &quot;Open with Text Viewer&quot;.
+This will open a new view where the text of the document is displayed.</p>
+<p><img src="usage/show-document-text.png" alt="The text of a document is displayed in a window on the right." /></p>
+<h1><a class="header" href="#graph-editor" id="graph-editor">Graph Editor</a></h1>
+<p>The graph editor is for visualizing and annotating annotation graphs.
+It provides a general visualization that displays all possible types of annotation in a graph of annotatable elements.</p>
+<p><img src="usage/graph-editor/graph-viewer.png" alt="Screenshot of the graph editor" /></p>
+<p>On the bottom of the graph editor is the console that you can use to edit the graph.
+How to do this is explained in detail in the <a href="usage/graph-editor/./console.html">Editing the graph</a> section.</p>
+<h2><a class="header" href="#select-visible-segment" id="select-visible-segment">Select visible segment</a></h2>
+<p>On the right-hand side of the interface, you can select which segment of the current document to show in the <a href="usage/graph-editor/index.html#graph-view">graph view</a>.
+For large graphs, it can take some time until its layout is calculated.
+The checkbox next to the segment indicates if this calculation is finished.
+You can select more than one segment to display, by holding the <kbd>Ctrl</kbd> key while clicking on additional segments.
+You can also show a whole range of segments by holding the <kbd>Shift</kbd> key and clicking on the last segment of the range you want to select.</p>
+<h2><a class="header" href="#graph-view" id="graph-view">Graph view</a></h2>
+<p>The left-hand side of the graph editor is taken up by the graph view, which displays the nodes and relations in the data model of the current document.</p>
+<p>You can navigate the graph view as follows:</p>
+<ul>
+<li>
+<p><strong>Zoom in and out</strong> by using the <strong>mouse wheel</strong>.</p>
+<ul>
+<li>You will zoom in to where your mouse cursor is.</li>
+</ul>
+</li>
+<li>
+<p><strong>Zoom in and out</strong> by using <strong>using the keyboard</strong>.</p>
+<ul>
+<li>If you press and hold the <kbd>Ctrl</kbd> key, you can zoom in with the <kbd>+</kbd> key and zoom out with the <kbd>-</kbd> key.</li>
+</ul>
+</li>
+<li>
+<p><strong>Move</strong> the area of the graph that is displayed by <strong>using the keyboard</strong>:</p>
+<ul>
+<li>The <kbd>Arrow keys</kbd> move the area in the respective direction, and <kbd>PgUp</kbd> and <kbd>PgDown</kbd> move it up and down.</li>
+<li>If you press and hold the <kbd>Shift</kbd> key and then use the arrow or paging keys, you move more quickly.</li>
+</ul>
+</li>
+<li>
+<p><strong>Move</strong> the area of the graph that is displayed by <strong>using the mouse wheel and function keys</strong>:</p>
+<ul>
+<li>If you hold down <kbd>Shift</kbd> key while moving the mouse wheel, you can scroll <em>up and down</em>.</li>
+<li>If you hold down <kbd>Ctrl</kbd> key while moving the mouse wheel, you can scroll <em>left and right</em>.</li>
+</ul>
+</li>
+<li>
+<p>You can <strong>center the view</strong> around a specific point in the graph by double-clicking that point.</p>
+</li>
+</ul>
+<p>If you don't like the layout of the graph, you can change it by dragging nodes with your mouse or <a href="usage/graph-editor/./layout-params.html">adjusting the layout parameters</a>.</p>
+<h1><a class="header" href="#filter-visible-annotations" id="filter-visible-annotations">Filter visible annotations</a></h1>
+<p>To access additional filter options, click and expand a relevant category in the <strong>Filter View</strong> section.</p>
+<p><img src="usage/graph-editor/filter-view.png" alt="Screenshot of the graph editor with expanded filter view" /></p>
+<p>You can choose to display spans and their annotations in the graph, by first expanding <strong>Annotation Types</strong> and then checking the checkbox <strong>Spans</strong>. 
+Spans are special nodes that &quot;collect&quot; a number of tokens.
+Span annotations can then be made for that <em>specific set</em> of tokens, e.g., a phrase, clause or sentence.
+If you want to learn more about spans, please read the <a href="http://corpus-tools.org/salt/#documentation">Salt documentation</a>.</p>
+<p>Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox <strong>Pointing Relations</strong>.</p>
+<p><strong>Node Annotations</strong> allows you to filter the segments that include annotations of a specific <em>name</em>.
+To add a filter criterion (also called a &quot;facet&quot;), search for an annotation name in the text field and select the matching annotation.
+This creates a new filter badge with the annotation name of the applied filter.
+You can add more than one filter. All nodes that contain any of the selected annotation names will be shown.
+Click on the close button on a filter badge to delete the respective annotation name filter.
+If you select no annotation names, all annotations will be visible.</p>
+<h1><a class="header" href="#editing-the-graph" id="editing-the-graph">Editing the graph</a></h1>
+<p>The graph editor contains a console, which you can use to manipulate the annotation graph.
+You first enter a command by entering it as text behind the so-called prompt <code>&gt; </code> and pressing <kbd>Enter</kbd>.</p>
+<p><img src="usage/graph-editor/prompt.png" alt="Screenshot of the console prompt, showing the text &gt; name arg1 arg2" /></p>
+<p>Commands typically start with its name and a list of arguments. The arguments are specific to each command but can share similar syntax.
+Hexatomics command line syntax is similar to the one of <a href="https://github.com/LBierkandt/graph-anno/blob/master/doc/GraphAnno-Documentation_en.pdf">GraphAnno</a>.</p>
+<p>Currently, the following commands are supported.</p>
+<blockquote>
+<ul>
+<li><a href="usage/graph-editor/console.html#tokenize-t"><code>t</code>: Tokenize</a></li>
+<li><a href="usage/graph-editor/console.html#tokenize-before-tb-and-after-ta-a-given-token"><code>tb</code>/<code>ta</code>: Tokenize before /after a token</a></li>
+<li><a href="usage/graph-editor/console.html#change-the-text-of-a-token-tc"><code>tc</code>: Change the text of a token</a></li>
+<li><a href="usage/graph-editor/console.html#new-node-n"><code>n</code>: New node</a></li>
+<li><a href="usage/graph-editor/console.html#new-span-s"><code>s</code>: New span</a></li>
+<li><a href="usage/graph-editor/console.html#new-edge-e"><code>e</code>: New edge</a></li>
+<li><a href="usage/graph-editor/console.html#annotate-a"><code>a</code>: Annotate</a></li>
+<li><a href="usage/graph-editor/console.html#delete-elements-d"><code>d</code>: Delete elements</a></li>
+</ul>
+</blockquote>
+<h2><a class="header" href="#tokenize-t" id="tokenize-t">Tokenize: <code>t</code></a></h2>
+<p>Tokenize the given argument string and add the tokens to the annotation graph.
+String values can be enclosed in quotes, e.g., for punctuation and for tokens that include whitespace.</p>
+<h3><a class="header" href="#examples" id="examples">Examples</a></h3>
+<pre><code class="language-text">t This is an example &quot;.&quot;
+</code></pre>
+<p>This command will result in 5 tokens: <code>[This] [is] [an] [example] [.]</code>.</p>
+<p><img src="usage/graph-editor/tokenize-example.png" alt="The resulting tokens after the command" /></p>
+<p>If you call <code>t</code> again, the new token will be appended to the end.
+E.g. calling <code>t Not .</code> will result in 7 tokens in total: <code>[This] [is] [an] [example] [.] [Not] [.]</code>.
+Note that the dot is not escaped with <code>&quot;</code> quotation marks in this example, and that <code>t Not.</code> would also work.</p>
+<p>Other than that, escaping punctuation with quotation marks is required for all non-alphabetical characters, to ensure correct tokenization, such as in <code>t I &quot;'&quot; m ...</code>.</p>
+<h2><a class="header" href="#tokenize-before-tb-and-after-ta-a-given-token" id="tokenize-before-tb-and-after-ta-a-given-token">Tokenize before (<code>tb</code>) and after (<code>ta</code>) a given token</a></h2>
+<p>Tokenize the given argument string and add the tokens to the annotation graph before or after a given reference token.</p>
+<h3><a class="header" href="#examples-1" id="examples-1">Examples</a></h3>
+<p>Starting with an initial text with the two tokens <code>[This] [text]</code> (first one is called &quot;t1&quot; and the second one &quot;t2&quot;),
+executing</p>
+<pre><code class="language-text">tb #t2 very simple
+</code></pre>
+<p>will append the two new tokens <em>before</em> the second token: <code>[This] [very] [simple] [text]</code>.
+Given the new tokens, calling the following command will insert the two new tokens <em>after</em> the first token (<code>[This] [is] [a] [very] [simple] [text]</code>).</p>
+<pre><code class="language-text">ta #t1 is a
+</code></pre>
+<h2><a class="header" href="#change-the-text-of-a-token-tc" id="change-the-text-of-a-token-tc">Change the text of a token: <code>tc</code></a></h2>
+<p>Change the text that an existing token covers.</p>
+<h3><a class="header" href="#examples-2" id="examples-2">Examples</a></h3>
+<p>Let's start with an initial text with the two tokens <code>[This] [text]</code>. The first token is called &quot;t1&quot; and the second one &quot;t2&quot;.
+You can execute the following command:</p>
+<pre><code class="language-text">tc #t2 example
+</code></pre>
+<p>This will change the covered token text from &quot;text&quot; to &quot;example&quot;: <code>[This] [example]</code>.
+All tokens before and after the changed token are not affected.
+Only one token can be changed at a time.</p>
+<h4><a class="header" href="#see-also" id="see-also">See also</a></h4>
+<ul>
+<li><a href="usage/graph-editor/console.html#identifying-elements">Identifying elements</a></li>
+</ul>
+<h2><a class="header" href="#new-node-n" id="new-node-n">New node: <code>n</code></a></h2>
+<p>The command <code>n</code> will create a new node, and dominance relations between the new node and existing nodes.</p>
+<p>Additionally, it can be used to annotate the new node in the same command.</p>
+<p>Arguments starting with <code>#</code> refer to the node names to which dominance edges are added (e.g. <code>#someNodeName</code>).</p>
+<p>When the creation was successful, the console will print a message giving the name of the new node and its annotations.</p>
+<h3><a class="header" href="#examples-3" id="examples-3">Examples</a></h3>
+<p>Starting with the tokens <code>[This] [is] [an] [example] [.]</code>, the following command will group &quot;an example&quot; to a node
+with the label &quot;cat=NP&quot;.</p>
+<pre><code class="language-text">n cat:NP #t3 #t4
+</code></pre>
+<p><img src="usage/graph-editor/newnode-example-1.png" alt="Output after adding an NP node" /></p>
+<p>The following command creates a new node using the namespace &quot;tiger&quot; for the annotation.</p>
+<pre><code class="language-text">n tiger:cat:NP #t1
+</code></pre>
+<p><img src="usage/graph-editor/newnode-example-2.png" alt="Output after adding an NP and a namespace" /></p>
+<p>You can mix nodes and tokens in the <code>n</code> command.
+Also, the number of dominated nodes is not restricted.</p>
+<pre><code class="language-text">n cat:VP #t2 #n1
+n cat:S #n2 #n3
+</code></pre>
+<p><img src="usage/graph-editor/newnode-example-3.png" alt="Complete syntax annotation" /></p>
+<h4><a class="header" href="#see-also-1" id="see-also-1">See also</a></h4>
+<ul>
+<li><a href="usage/graph-editor/console.html#identifying-elements">Identifying elements</a></li>
+<li><a href="usage/graph-editor/console.html#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#new-span-s" id="new-span-s">New span: <code>s</code></a></h2>
+<p>The command <code>s</code> will create a new span, and spanning relations between the new span and existing tokens.</p>
+<p>Additionally, it can be used to annotate the new span in the same command.</p>
+<p>Arguments starting with <code>#</code> refer to the token names to which spanning edges are added (e.g. <code>#someTokenName</code>).</p>
+<p>When the creation was successful, the console will print a message giving the name of the new span and its annotations.</p>
+<p>Note that spans can created over tokens only.</p>
+<h3><a class="header" href="#examples-4" id="examples-4">Examples</a></h3>
+<p>Starting with the tokens <code>[This] [is] [an] [example] [.]</code>, the following command will group the whole sentence to a span
+with the label &quot;cat=sent&quot;.</p>
+<pre><code class="language-text">s cat:sent #t1 #t2 #t3 #t4 #t5
+</code></pre>
+<p><img src="usage/graph-editor/newspan-example-1.png" alt="Output after adding an NP node" /></p>
+<p>The following command creates a new span using the namespace &quot;tiger&quot; for the annotation.</p>
+<pre><code class="language-text">s tiger:cat:NP #t1
+</code></pre>
+<p><img src="usage/graph-editor/newspan-example-2.png" alt="Output after adding an NP and a namespace" /></p>
+<p>You can only use tokens in the <code>s</code> command.
+Also, the number of spanned nodes is not restricted.</p>
+<pre><code class="language-text">n #t5 cat:punct
+s cat:impossible #t1 #n1
+</code></pre>
+<p><img src="usage/graph-editor/newspan-example-3.png" alt="Error message" /></p>
+<h4><a class="header" href="#see-also-2" id="see-also-2">See also</a></h4>
+<ul>
+<li><a href="usage/graph-editor/console.html#identifying-elements">Identifying elements</a></li>
+<li><a href="usage/graph-editor/console.html#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#new-edge-e" id="new-edge-e">New edge: <code>e</code></a></h2>
+<p>You can add two types of edges to the graph: dominance relations (e.g., for syntax trees) and pointing relations (directed edges without a specific semantic).
+Dominance edges are created with the syntax <code>e #source &gt; #target</code> where <code>#source</code> is a node reference to the source node and <code>#target</code> a node reference to the target node.
+For pointing relations, use <code>-&gt;</code> instead of <code>&gt;</code>.
+This syntax is used to reference edges in general, e.g., when annotating or deleting them.
+As with new nodes, initial annotations can be added as arguments: <code>e #source &gt; #target name:value</code>.</p>
+<h3><a class="header" href="#examples-5" id="examples-5">Examples</a></h3>
+<pre><code class="language-text">e #t2 -&gt; #t1 func:nsubj
+</code></pre>
+<p>This adds a pointing relation between <code>#t2</code> and <code>#t1</code> with an annotation named &quot;func&quot; and the value &quot;nsubj.&quot;</p>
+<p><img src="usage/graph-editor/addedge-pointing.png" alt="Added pointing relation" /></p>
+<pre><code class="language-text">e #n1 &gt; #t3
+</code></pre>
+<p>This example adds a dominance relation between the existing nodes.</p>
+<p><img src="usage/graph-editor/addedge-dominance.png" alt="Added dominance relation" /></p>
+<h4><a class="header" href="#see-also-3" id="see-also-3">See also</a></h4>
+<ul>
+<li><a href="usage/graph-editor/console.html#identifying-elements">Identifying elements</a></li>
+<li><a href="usage/graph-editor/console.html#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#annotate-a" id="annotate-a">Annotate: <code>a</code></a></h2>
+<p>Adds, updates, or deletes annotations on existing nodes or edges.
+Takes as arguments the nodes or edges which should be annotated, and the annotation to add, change, or delete.
+You can delete existing annotations by leaving the value in the annotation attribute empty.</p>
+<h3><a class="header" href="#examples-6" id="examples-6">Examples</a></h3>
+<pre><code class="language-text">a pos:DT #t1 #t3
+</code></pre>
+<p>Sets the annotation &quot;pos&quot; to the value &quot;DT&quot; for both nodes &quot;t1&quot; and &quot;t3&quot;.</p>
+<p><img src="usage/graph-editor/set-annotation-dt.png" alt="Annotated tokens" /></p>
+<pre><code class="language-text">a pos: #t1
+</code></pre>
+<p>Deletes the &quot;pos&quot; annotation for the &quot;t1&quot; node.</p>
+<pre><code class="language-text">a func_alt:nominal_subject #t2 -&gt; #t1
+</code></pre>
+<p>Adds the &quot;func_alt&quot; annotation to the existing pointing relation between &quot;t2&quot; and &quot;t1&quot;.</p>
+<h4><a class="header" href="#see-also-4" id="see-also-4">See also</a></h4>
+<ul>
+<li><a href="usage/graph-editor/console.html#identifying-elements">Identifying elements</a></li>
+<li><a href="usage/graph-editor/console.html#defining-annotations">Defining annotations</a></li>
+</ul>
+<h2><a class="header" href="#delete-elements-d" id="delete-elements-d">Delete elements: <code>d</code></a></h2>
+<p>Deletes any node or edge of the graph.
+Give the elements to delete as an argument.</p>
+<h3><a class="header" href="#examples-7" id="examples-7">Examples</a></h3>
+<pre><code class="language-text">d #t4 #t5
+</code></pre>
+<p>Deletes nodes &quot;t4&quot; and &quot;t5&quot;.</p>
+<pre><code class="language-text">d #t2 -&gt; #t1
+</code></pre>
+<p>Deletes the pointing relation between &quot;t2&quot; and &quot;t1&quot;.</p>
+<h4><a class="header" href="#see-also-5" id="see-also-5">See also</a></h4>
+<ul>
+<li><a href="usage/graph-editor/console.html#identifying-elements">Identifying elements</a></li>
+</ul>
+<h2><a class="header" href="#identifying-elements" id="identifying-elements">Identifying elements</a></h2>
+<p>Elements in the graph are identified by the identifier on the node/edge in the graph. In the example below, the tokens have
+the identifiers <code>sTok1</code>, <code>sTok2</code>, <code>sTok3</code>, and <code>t4</code>. </p>
+<p>Note that identifiers for the same type of element may look different within one and the same document (as in <code>sTok1</code> and <code>t4</code>).</p>
+<p><img src="usage/graph-editor/node-labels.png" alt="Labelled token nodes" /></p>
+<h2><a class="header" href="#defining-annotations" id="defining-annotations">Defining annotations</a></h2>
+<p>Annotation arguments have the form <code>name:value</code> or <code>namespace:name:value</code>.</p>
+<p>This is true both for defining new annotations (<code>namespace</code> is optional), and for addressing existing annotations (<code>namespace</code> is <strong>required</strong>).</p>
+<h1><a class="header" href="#change-layout-parameters" id="change-layout-parameters">Change layout parameters</a></h1>
+<p>Depending on the visible annotations and the specific graph, the default visualization of the graph might be cluttered.
+The graph editor will try to arrange the nodes using a default layout algorithm.
+You can adjust the layout parameters by expanding the &quot;Graph Layout&quot; section.</p>
+<p><img src="usage/graph-editor/./layout-params.png" alt="Graph editor view with expanded layout parameters" /></p>
+<h2><a class="header" href="#horizontal-margin-between-tokens" id="horizontal-margin-between-tokens">Horizontal margin between tokens</a></h2>
+<p><img src="usage/graph-editor/./layout-param-horizontal-margin.png" alt="Horizontal margin parameter slider" /></p>
+<p>This parameter changes the horizontal space between the tokens at the bottom of the graph.
+If the space is increased, this indirectly affects the space between other nodes, too.</p>
+<p>This parameter is measured in &quot;multiples of the average token width&quot;.
+So for &quot;0&quot; there is no margin, for &quot;1&quot; the margin has the same width as the average token node, and for &quot;2&quot; the margin is twice as high as the average token node width.</p>
+<p><img src="usage/graph-editor/horizontal-margin-examples.png" alt="Effect of the settings 0, 1 and 2 for the horizontal margin parameter" /></p>
+<h2><a class="header" href="#vertical-margin-between-nodes" id="vertical-margin-between-nodes">Vertical margin between nodes</a></h2>
+<p><img src="usage/graph-editor/./layout-param-vertical-margin.png" alt="Vertical margin parameter slider" /></p>
+<p>This parameter configures the vertical margin between <em>all</em> nodes.</p>
+<p>This is measured in &quot;multiples of the node height&quot;.
+So for &quot;0&quot; there is no margin, for &quot;1&quot; the margin has the same height as the node.</p>
+<p><img src="usage/graph-editor/vertical-margin-examples.png" alt="Effect of the settings 0, 1 and 2 for the vertical margin parameter" /></p>
+<h2><a class="header" href="#vertical-margin-between-tokens-and-non-tokens" id="vertical-margin-between-tokens-and-non-tokens">Vertical margin between tokens and non-tokens</a></h2>
+<p><img src="usage/graph-editor/./layout-param-token-margin.png" alt="Vertical margin between token and non-token parameter slider" /></p>
+<p>Tokens are grouped horizontally at the bottom of the graph visualization, i.e., in the bottom &quot;row&quot;.
+To allow space for pointing relations, you can add a margin between the token &quot;row&quot; and the annotation nodes in the &quot;row&quot; just above it.
+This margin is in addition to the <a href="usage/graph-editor/layout-params.html#vertical-margin-between-nodes">vertical margin between nodes</a>.</p>
+<p>A margin of &quot;1&quot; means there is one empty level added between the token &quot;row&quot; and the annotation node &quot;row&quot; above it, an offset of &quot;0&quot;
+means there is no additional space except for the regular vertical margin.</p>
+<p><img src="usage/graph-editor/./vertical-token-margin-examples.png" alt="Effect of the settings 0 and 3 for the vertical token margin parameter" /></p>
+<h1><a class="header" href="#grid-editor" id="grid-editor">Grid Editor</a></h1>
+<p>The grid editor is used for annotating tokens and spans.
+It displays a document's token and annotation data in a vertical grid, i.e.,
+the textual source data runs from top to bottom.
+<a href="usage/grid-editor/index.html#navigation-and-selection">Navigation</a> and <a href="usage/grid-editor/editing.html">editing</a> is done by mouse and keyboard.
+An overview of keyboard shortcuts can be found in the section <a href="usage/grid-editor/index.html#keyboard-shortcuts">Keyboard shortcuts</a>.</p>
+<p>Tokens are the smallest countable units in a data source.
+Spans are units that span tokens.
+To learn more about how Hexatomic's data model - Salt - defines these units, please refer to the <a href="https://corpus-tools.org/salt/#documentation">Salt documentation</a>.</p>
+<p><img src="usage/grid-editor/grid-editor.png" alt="Screenshot of the grid editor" /><a name="screenshot"/></p>
+<h2><a class="header" href="#data-source-selection" id="data-source-selection">Data source selection</a></h2>
+<p>A corpus document may contain more than one data source (text, audio, video), and their corresponding annotations.
+The grid editor displays one of these data sources at a time.</p>
+<p>On the upper hand side of the grid editor interface, there is a dropdown menu to select the data source which should be displayed.
+If a document contains only a single data source, it is automatically selected.</p>
+<h2><a class="header" href="#rows-columns-and-cells" id="rows-columns-and-cells">Rows, columns, and cells</a></h2>
+<p><strong>Rows</strong> in the grid contain a single token, its annotations, and the annotations on spans that overlap this token. <em>A token</em> in this case is the section of the data source the token covers. Depending on the type of data source and the resolution of the tokenization, this may be a word, a morpheme, a phoneme, a section of an audio or video source, etc.</p>
+<p><strong>Columns</strong> in the grid contain all values of a single qualified annotation in this document, that is, a unique combination of <code>namespace</code> and <code>name</code> of an annotation. 
+Additionally, the tokens in a document - or rather, the segment of the document text they represent - are displayed in separate columns preceding any annotation columns.</p>
+<p>Note that overlapping spans which are annotated with the same qualified annotation cannot be visualized within the same column.
+Instead, the annotation values are spread over more than one adjacent columns, whose headers are then suffixed with the count of existing columns for that qualified annotation.</p>
+<blockquote>
+<p><em>Example</em><br />
+One span (S1) covers the first token in a data source, another one (S2) covers the first and second token.
+Both spans are annotated with values for an annotation <code>five::span_1</code>.
+Obviously, the overlap of both spans (both include the first token) cannot be visualized in a single column.
+Instead, <em>S1</em>'s annotation value <code>val_span_1</code> will be displayed in one column with the header <strong>five::span_1</strong>, <em>S2</em>'s annotation value <code>val_span_3</code> in another column with the header <strong>five::span_1 (2)</strong>.</p>
+<p><img src="usage/grid-editor/overlap.png" alt="Screenshot of an annotation grid showing overlapping spans" /></p>
+</blockquote>
+<p>Columns are not part of Hexatomic's internal <a href="usage/grid-editor/../projects.html#data-model">data model Salt</a>.
+Therefore, they are not saved in the project when you save your changes.
+While columns may be empty with no values in their cells, e.g., after their initial creation or the deletion of all cells,
+they will be deleted as soon as the editor is closed, or another editor is opened on another document.</p>
+<p><strong>Merged cells</strong> represent annotations on spans that cover more than one token.
+You can see this in the last grid column in the <a href="usage/grid-editor/index.html#screenshot">screenshot</a> above.</p>
+<p>To distinguish between the different types of content diplayed in the grid cells, they are styled differently:</p>
+<ul>
+<li><em>Token text</em> is displayed in italics.</li>
+<li><em>Token annotations</em> are displayed in a black font.</li>
+<li><em>Span annotations</em> are displayed in a green font.</li>
+</ul>
+<h2><a class="header" href="#navigation-and-selection" id="navigation-and-selection">Navigation and selection</a></h2>
+<p>The grid can be scrolled with the mouse using the scrollbars.
+If you have a mouse wheel, it will scroll horizontally.
+If you press <kbd>Shift</kbd> while using the mouse wheel, the grid will scroll vertically.</p>
+<p>Alternatively, you can navigate the grid by selecting a cell and using the arrow keys to navigate.
+Pressing <kbd>Home</kbd> will jump to the first column, <kbd>End</kbd> will jump to the last column.
+<kbd>PageUp</kbd> and <kbd>PageDown</kbd> will jump a page up or down, a page being approximately the number of rows that fit the screen.</p>
+<p>You can select whole rows or columns by clicking on the respective header.
+When you select a cell, press and hold <kbd>Shift</kbd> and click on another cell, the region between these two cells will be selected.
+This also works for headers, where all rows or columns between the two selected header cells will be selected.</p>
+<p>Selecting non-adjacent cells, rows, or columns works by pressing and holding <kbd>Ctrl</kbd> while clicking the items to select.</p>
+<h2><a class="header" href="#text-search" id="text-search">Text search</a></h2>
+<p>You can search the grid using free text or regular expressions, with a number of options, e.g., search in columns first.</p>
+<p>To bring up the search window, press <kbd>Ctrl</kbd> + <kbd>F</kbd>.</p>
+<p><img src="usage/grid-editor/search.png" alt="Screenshot of the search window showing examples" /></p>
+<h2><a class="header" href="#display-options" id="display-options">Display options</a></h2>
+<h3><a class="header" href="#freezing-grid-sections" id="freezing-grid-sections">Freezing grid sections</a></h3>
+<p>You can freeze a section of the grid, so that it it remains visible while you scroll.
+This comes in handy for example when you have a large grid and want to keep the token column visible at all times.</p>
+<p>To freeze a specific section, select the last cell, row or column that should remain visible, and press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd>.
+To unfreeze the grid, press <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> again.</p>
+<p>Column and row freezing is also available from a popup menu in row and column headers, where you can (re-) set the row or column freeze, or toggle the general freeze state.
+The popup menu is opened by right-clicking the row or column header.</p>
+<h3><a class="header" href="#hiding-columns" id="hiding-columns">Hiding columns</a></h3>
+<p>You can hide columns by selecting one or more columns, and clicking <strong>Hide column(s)</strong> in the popup menu, available on right-click in any of the selected column headers.
+To show columns again, click the option <strong>Show all columns</strong> in the same popup menu.</p>
+<h3><a class="header" href="#auto-resizing-rows-and-columns" id="auto-resizing-rows-and-columns">Auto-resizing rows and columns</a></h3>
+<p>You can auto-resize rows columns, so that the row is high/column is wide enough to show all cell contents and the header content completely.
+To do so, simply select one or more rows or columns and click <strong>Auto-resize row(s)</strong> or <strong>Auto-resize column(s)</strong> in the popup menu, available on right-click in any of the selected headers.</p>
+<h3><a class="header" href="#moving-columns" id="moving-columns">Moving columns</a></h3>
+<p>You can move columns to another position in the grid by clicking on and holding the header of a column, and dragging it to its new position.</p>
+<h3><a class="header" href="#manual-refresh" id="manual-refresh">Manual refresh</a></h3>
+<p>You can manually refresh the grid, which will rebuild it from scratch.
+In the process, any empty columns will be removed, and column order may be affected.
+To refresh the grid manually, press <kbd>F5</kbd> or right-click on the grid, and click the option <strong>Refresh grid</strong> in the popup menu.</p>
+<h2><a class="header" href="#export-to-excel" id="export-to-excel">Export to Excel</a></h2>
+<p>If, for whatever reason, you want to export the grid to a file in the Excel <code>.xls</code> format, you can do so.
+Press <kbd>Ctrl</kbd> + <kbd>E</kbd>. This brings up a dialog for saving the file.</p>
+<p>Note that exporting to an Excel spreadsheet will lose the actual data model.
+Only the string values of annotations, the headers, and the token texts will be exported.
+Additionally, merged cells will be separated.</p>
+<h2><a class="header" href="#keyboard-shortcuts" id="keyboard-shortcuts">Keyboard shortcuts</a></h2>
+<h3><a class="header" href="#navigation" id="navigation">Navigation</a></h3>
+<table><thead><tr><th align="center">Shortcut</th><th align="left">What the shortcut does</th><th align="left">Constraints</th></tr></thead><tbody>
+<tr><td align="center"><kbd>Shift</kbd> + mouse wheel</td><td align="left">Scrolls through the grid vertically</td><td align="left"></td></tr>
+<tr><td align="center"><kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, <kbd>↓</kbd></td><td align="left">Move through the grid selecting individual cells</td><td align="left">A cell must be selected</td></tr>
+<tr><td align="center"><kbd>Home</kbd></td><td align="left">Jump to the first column</td><td align="left">A cell must be selected</td></tr>
+<tr><td align="center"><kbd>End</kbd></td><td align="left">Jump to the last column</td><td align="left">A cell must be selected</td></tr>
+<tr><td align="center"><kbd>PageUp</kbd>, <kbd>PageDown</kbd></td><td align="left">Jump a page up or down</td><td align="left">A cell must be selected</td></tr>
+</tbody></table>
+<h3><a class="header" href="#selection" id="selection">Selection</a></h3>
+<table><thead><tr><th align="center">Shortcut</th><th align="left">What the shortcut does</th><th align="left">Constraints</th></tr></thead><tbody>
+<tr><td align="center"><kbd>Shift</kbd> + click</td><td align="left">Select the range of cells from the currently selected one to the clicked cell</td><td align="left">A cell must be selected</td></tr>
+<tr><td align="center"><kbd>Ctrl</kbd> + click</td><td align="left">Add/remove the clicked cell to the current selection of cells</td><td align="left">A cell must be selected</td></tr>
+<tr><td align="center"><kbd>Ctrl</kbd> + <kbd>F</kbd></td><td align="left">Open text search</td><td align="left">The editor window must be active</td></tr>
+<tr><td align="center"><kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd></td><td align="left">Toggle freezing of rows and columns</td><td align="left">A cell, column, or row must be selected</td></tr>
+</tbody></table>
+<h3><a class="header" href="#data-operations" id="data-operations">Data operations</a></h3>
+<table><thead><tr><th align="center">Shortcut</th><th align="left">What the shortcut does</th><th align="left">Constraints</th></tr></thead><tbody>
+<tr><td align="center"><kbd>Space</kbd></td><td align="left">Activate cell for editing</td><td align="left">Cell(s) must be selected</td></tr>
+<tr><td align="center"><kbd>Enter</kbd></td><td align="left">Commit edited annotation value</td><td align="left">A cell must be in editing mode</td></tr>
+<tr><td align="center"><kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd></td><td align="left">Create a new column for <em>span</em> annotations</td><td align="left">The editor window must be active</td></tr>
+<tr><td align="center"><kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd></td><td align="left">Create a new column for <em>token</em> annotations</td><td align="left">The editor window must be active</td></tr>
+<tr><td align="center"><kbd>Alt</kbd> + <kbd>S</kbd></td><td align="left">Create a new span</td><td align="left">&gt;1 cells in a span column must be selected</td></tr>
+<tr><td align="center"><kbd>Del</kbd></td><td align="left">Delete selected cells</td><td align="left">Cell(s) must be selected</td></tr>
+<tr><td align="center"><kbd>F5</kbd></td><td align="left">Refresh editor from data model</td><td align="left">Cell(s) must be selected</td></tr>
+<tr><td align="center"><kbd>Ctrl</kbd> + <kbd>E</kbd></td><td align="left">Export to Excel format</td><td align="left">The editor window must be active</td></tr>
+</tbody></table>
+<h1><a class="header" href="#editing-the-grid" id="editing-the-grid">Editing the grid</a></h1>
+<p>You can edit the corpus document in the grid in different ways.</p>
+<ol>
+<li>You can change the <strong>values</strong> of annotations. In this case, the namespace and name of the annotations stay the same.</li>
+<li>You can <strong>rename</strong> annotations, that is, change their namespace and/or name. In this case, the annotations' value stays the same.</li>
+<li>You can delete annotations. In this case, the whole annotation is removed.</li>
+</ol>
+<p>You can read how to do these things in the following sections.</p>
+<h1><a class="header" href="#editing-annotation-columns" id="editing-annotation-columns">Editing annotation columns</a></h1>
+<h2><a class="header" href="#adding-annotation-columns" id="adding-annotation-columns">Adding annotation columns</a></h2>
+<p>Annotation columns can be created for either span annotations or token annotations.
+Note that for token annotations, there can only be one column for any qualified annotation name.
+You can create a new column for annotations by using the editor's popup menu:</p>
+<p>Right-click on a cell or column header to bring up the popup menu, then click <strong>Add token annotation column</strong> or <strong>Add span annotation column</strong> in the popup menu. This will open an editor dialog where you can set the namespace and name for the annotations in the column.</p>
+<p>To change the annotations, confirm by clicking <strong>OK</strong>.
+You can cancel the creation of the new column by clicking <strong>Cancel</strong> or closing the dialog.
+The new column will be created to the right of the column on which you right-clicked for the popup menu.</p>
+<p>You can also create new annotations columns by using a keyboard shortcut:</p>
+<ul>
+<li>To create a new <em>token</em> annotation columns, press the shortcut <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>.</li>
+<li>To create a new <em>span</em> annotation columns, press the shortcut <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd>.</li>
+</ul>
+<p>Again, use the dialog to specify the annotation namespace and name for the column. The new column will be added as the last column.</p>
+<p><img src="usage/grid-editor/add-column.png" alt="Screenshot of Hexatomic showing the context menu and dialog for adding new annotation columns." /></p>
+<h2><a class="header" href="#deleting-annotation-columns" id="deleting-annotation-columns">Deleting annotation columns</a></h2>
+<p>Columns are not part of Hexatomic's data model, Salt.
+Annotation columns without any annotation values in them will therefore be deleted when you <a href="usage/grid-editor/index.html#manual-refresh">refresh the editor manually</a>, or when the project is closed, or another document is opened.
+For more information, read the <a href="usage/grid-editor/index.html#rows-columns-and-cells">section about columns</a>.</p>
+<h1><a class="header" href="#editing-annotation-values" id="editing-annotation-values">Editing annotation values</a></h1>
+<p><img src="usage/grid-editor/editing.png" alt="Screenshot showing an activated cell editor (left), and an active multi-cell editor window (right)." /></p>
+<h2><a class="header" href="#editing-a-single-annotation-value" id="editing-a-single-annotation-value">Editing a single annotation value</a></h2>
+<p>To edit a single annotation value, you have to activate the <em>single cell editor</em>.
+The left-hand side of the screenshot above shows an activated single cell editor.</p>
+<p>There are several ways to activate a single cell editor:</p>
+<p>A. Double-click on the cell you want to edit.<br />
+B. Press the <kbd>Space</kbd> key.<br />
+C. Just start typing the new annotation value.</p>
+<h2><a class="header" href="#editing-multiple-annotation-values-at-once" id="editing-multiple-annotation-values-at-once">Editing multiple annotation values at once</a></h2>
+<p>You can edit multiple values at once.
+To do so, select more than one cell (see <a href="usage/grid-editor/index.html#navigation-and-selection"><em>Navigation and selection</em></a>), and press <kbd>Space</kbd>.
+This will bring up a <em>multi-cell editor window</em> where you can edit the value of all selected annotations.
+The right-hand side of the screenshot above shows three selected cells, and the multi-cell editor window to change their values.</p>
+<h2><a class="header" href="#adding-or-changing-values" id="adding-or-changing-values">Adding or changing values</a></h2>
+<p>You can add annotation values to empty cells, or change existing ones.</p>
+<h2><a class="header" href="#adding-or-changing-a-single-value" id="adding-or-changing-a-single-value">Adding or changing a single value</a></h2>
+<p>In the <em>single cell editor</em>, type in the new annotation value and press <kbd>Enter</kbd> to commit the new value.</p>
+<p>You can cancel the edit by pressing <kbd>Esc</kbd>.
+The cell value will remain the same as before you started editing it.</p>
+<h2><a class="header" href="#adding-or-changing-multiple-values-at-once" id="adding-or-changing-multiple-values-at-once">Adding or changing multiple values at once</a></h2>
+<p>In the <em>multi-cell editor window</em>, enter the new value for all selected cells, and commit it by clicking <strong>OK</strong>, or pressing <kbd>Enter</kbd>.</p>
+<p>As with the single cell editor, you can cancel the edit by pressing <kbd>Esc</kbd>, or by clicking <strong>Cancel</strong>.</p>
+<p>You can also do both adding and changing at once.
+If you have selected a mixture of empty cells and ones with existing annotation values, the new value you commit in the <em>multi-cell editor window</em> will be set to all cells alike.</p>
+<h2><a class="header" href="#creating-a-new-span-and-adding-an-annotation-value" id="creating-a-new-span-and-adding-an-annotation-value">Creating a new span and adding an annotation value</a></h2>
+<p>You can create new spans in existing span columns and add annotation values for them:</p>
+<ol>
+<li>Select the empty cells in a span column you want to annotate as a span.</li>
+<li>Press <kbd>Alt</kbd>+<kbd>S</kbd> <em>or</em> right-click with the mouse and select <strong>Create new span</strong> from the context menu.
+This will create a new span cell, and open its <em>single cell editor</em>.</li>
+<li>Type in the new annotation value and press <kbd>Enter</kbd> to commit the new value.</li>
+</ol>
+<p>Note that it is possible to create two types of spans:</p>
+<ul>
+<li><em>Continuous spans</em> cover a set of tokens without any gaps between them.</li>
+<li><em>Discontinuous spans</em> cover a set of tokens with gaps between them.
+In a document with five tokens (<code>token 1</code> to <code>token 5</code>), a single span can cover <code>token 2</code>, <code>token 3</code> and <code>token 5</code>. 
+Although the span does <em>not</em> cover the token between <code>3</code> and <code>5</code>, <code>token 4</code>, and has a &quot;gap&quot;, it is still only a single span, and can only have one value for any annotation.</li>
+</ul>
+<p>An example of the different span types is shown in the figure below.</p>
+<p><img src="usage/grid-editor/spans.png" alt="Screenshot of the Hexatomic Grid Editor showing examples of a discontinuous and a continuous span. Note that these examples aren't linguistically useful." /></p>
+<h2><a class="header" href="#splitting-and-merging-spans" id="splitting-and-merging-spans">Splitting and merging spans</a></h2>
+<p>You can split spans, and merge spans that are in the same annotation column.</p>
+<h3><a class="header" href="#splitting-spans" id="splitting-spans">Splitting spans</a></h3>
+<p>You can split spans that span over more than one token, and therefore cover multiple grid cells within one annotation column:</p>
+<ol>
+<li>Select the span cell that you want to split into single-cell spans.</li>
+<li>Right-click on the span cell, and select <strong>Split span</strong> from the contect menu.</li>
+</ol>
+<p>The span will be split into single-cell spans with the same annotation value as the original multi-cell span.
+Each of these new spans covers exactly one token.</p>
+<p><img src="usage/grid-editor/split-spans.png" alt="Edited screenshots showing a selected multi-cell span with activated Split span menu, and the result of the span operation at the tip of the arrow." /></p>
+<h3><a class="header" href="#merging-spans" id="merging-spans">Merging spans</a></h3>
+<p>You can merge spans that are in the same annotation column and have the same annotation value:</p>
+<ol>
+<li>Select all spans that you want to merge. These may be discontinuous.</li>
+<li>Right-click on one of the selected spans, and select <strong>Merge spans</strong> from the context menu.</li>
+</ol>
+<p>The spans will be merged into a single span, that may now cover multiple grid cells.
+The span will all have the same annotation value as the original single-cell spans.</p>
+<p><img src="usage/grid-editor/merge-spans.png" alt="Edited screenshots showing two selected span cells with the same annotation value with activated Merge spans menu, and the result of the span operation at the tip of the arrow." /></p>
+<h1><a class="header" href="#editing-annotation-names" id="editing-annotation-names">Editing annotation names</a></h1>
+<p>You can change the qualified name of annotations.
+Qualified annotation names consist of a namespace and a name.
+The column headers in the grid display the current qualified annotation name.</p>
+<p>If the column header label includes a double colon <code>::</code>, the qualified name consists of a namespace and a name.</p>
+<p>If the label does <em>not</em> include a double colon <code>::</code>, the qualified annotation name consists only of a name.
+In this case, you can add a namespace.</p>
+<p>If the label does <em>end</em> with a double colon <code>::</code>, the qualified annotation name consists only of a namespace.
+In this case, you can add a name.</p>
+<h2><a class="header" href="#changing-annotation-names" id="changing-annotation-names">Changing annotation names</a></h2>
+<p>You can change annotation names either for all cells in one column, or only for selected cells from one or more columns.</p>
+<ul>
+<li>
+<p>To change the qualified annotation name for <em>all cells in a column</em>, right-click the respective column header to bring up the popup menu.
+In the popup menu, click <strong>Change annotation name</strong>.</p>
+</li>
+<li>
+<p>To change the qualified annotation name for <em>one or more specific cells</em>, select the cells you want to change the annotation name for.
+It doesn't matter if all selected cells are in the same column, or if you select cells from different annotation columns.
+Right-click the anywhere in the body of the table (i.e., not on a row or column header) to bring up the popup menu.
+In the popup menu, click <strong>Change annotation name</strong>.</p>
+</li>
+</ul>
+<p>This will open an editor dialog where you can set the namespace and name for the annotations in the column.</p>
+<p>To change the annotations, confirm by clicking <strong>OK</strong>.</p>
+<p>You can cancel the change by clicking <strong>Cancel</strong> or closing the dialog.</p>
+<p><img src="usage/grid-editor/./change-annotation-name.png" alt="Open the editor for changing qualified annotation names via the popup menu." /></p>
+<h3><a class="header" href="#cases-where-renaming-annotations-doesnt-work" id="cases-where-renaming-annotations-doesnt-work">Cases where renaming annotations doesn't work</a></h3>
+<p>There are two cases in which changing an annotation name will not work.</p>
+<ol>
+<li>When the new qualified annotation name is the same as the current one, the rename operation is simply ignored.</li>
+<li>When there already is an annotation with the new qualified annotation name on a token or a span, the rename operation is not completed.
+Instead you will be shown an information dialog notifying you of this.</li>
+</ol>
+<p><img src="usage/grid-editor/./unrenamed.png" alt="Edited screenshot of Hexatomic showing what happens when you try to rename an annotation, and an annotation with the new name already exists on the node." />.</p>
+<h1><a class="header" href="#deleting-annotations" id="deleting-annotations">Deleting annotations</a></h1>
+<p>You can delete annotations in two different ways:</p>
+<ol>
+<li>Set an empty annotation value in one or more cells. This works regardless of whether you edit a single cell, or multiple cells at once.</li>
+<li>Select one or more annotation cells, and then<br />
+A. either press the <kbd>Del</kbd> key, or<br />
+B. right-click with the mouse and select <strong>Delete cell(s)</strong> from the context menu.
+This menu item will only be available when deleting the selected cells is possible.</li>
+</ol>
+<p>After you have deleted one or more annotations, one or more spans could be left without any annotations.
+In this case, these spans will also be deleted.</p>
+<h1><a class="header" href="#refactoring" id="refactoring">Refactoring</a></h1>
+<p>Hexatomic offers some so-called refactoring operations, which perform changes on
+bulk. Refactoring operations can be applied to the whole project (via the menu
+<strong>Edit -&gt; Refactor</strong>) or on selected documents or sub-corpora, by clicking right
+on selected item in the <a href="usage/refactoring/../corpus-structure.html">“Corpus Structure” editor</a> and
+opening the <strong>Refactor</strong> context menu item.</p>
+<h2><a class="header" href="#automatically-generate-node-names" id="automatically-generate-node-names">Automatically generate node names</a></h2>
+<p>Node names are e.g. used in the <a href="usage/refactoring/../graph-editor/console.html">Graph Editor
+console</a>. If these node names are not unique or too
+complex to easily reference them, you can replace all node names with
+automatically generated ones. Tokens will have the pattern <code>t1</code>, <code>t2</code>, <code>t3</code> and
+so on. They will be ordered by the position of the token in the text. Other
+nodes will have generic names like <code>n1</code>, <code>n2</code>, <code>n3</code> and so on.</p>
+<p><strong>Warning:</strong> Some corpus preparation pipelines use the node names to merge files
+in different formats. If your corpus preparation pipeline requires specific node
+names, you should not use this refactoring operation.</p>
+<h1><a class="header" href="#troubleshooting-hexatomic--getting-help" id="troubleshooting-hexatomic--getting-help">Troubleshooting Hexatomic &amp; getting help</a></h1>
+<p>Please go through the sections on this page to see if one is what you are looking for. If you don't find what you are looking for here, please report the issue in Hexatomic's issue tracker. The section &quot;<a href="troubleshooting.html#reporting-issues">Reporting issues</a>&quot; explains how this is done (it's quick and easy).</p>
+<h2><a class="header" href="#sections" id="sections">Sections</a></h2>
+<blockquote>
+<p><i class="fa fa-question-circle"></i> <a href="troubleshooting.html#how-do-i-do-x-why-doesnt-y-work-where-can-i-go-to-get-help">How do I do X? Why doesn’t Y work? Where can I go to get help?</a><br />
+<i class="fa fa-book"></i> <a href="troubleshooting.html#the-documentation-didnt-help-me">The documentation didn't help me!</a><br />
+<i class="fa fa-bug"></i> <a href="troubleshooting.html#ive-found-a-bug">I've found a bug!</a><br />
+<i class="fa fa-code"></i> <a href="troubleshooting.html#im-looking-for-hexatomics-source-code">I'm looking for Hexatomic's source code!</a><br />
+<i class="fa fa-phone"></i> <a href="troubleshooting.html#i-need-to-contact-the-hexatomic-team">I need to contact the Hexatomic team!</a></p>
+</blockquote>
+<h2><a class="header" href="#how-do-i-do-x-why-doesnt-y-work-where-can-i-go-to-get-help" id="how-do-i-do-x-why-doesnt-y-work-where-can-i-go-to-get-help">How do I do X? Why doesn’t Y work? Where can I go to get help?</a></h2>
+<p>This user documentation is the one-stop source of information on using Hexatomic, and can hopefully help you.</p>
+<p>If you have read through it and haven't found an answer to your question, you can write to the <nobr><a href="https://sympa.cms.hu-berlin.de/sympa/info/hexatomic-users"><strong><i class="fa fa-envelope"></i> Hexatomic User Mailing List</strong></a></nobr> and ask your question there. (Please don't use the mailing list to report bugs, see <a href="troubleshooting.html#ive-found-a-bug"><em>I've found a bug!</em></a> instead.)</p>
+<p>If you have an idea how we could make the documentation better so that the next person with your question can get it answered in the documentation, please let us know! &quot;<a href="troubleshooting.html#the-documentation-didnt-help-me">The documentation didn't help me!</a>&quot; below shows you how to do this.</p>
+<h2><a class="header" href="#the-documentation-didnt-help-me" id="the-documentation-didnt-help-me">The documentation didn't help me!</a></h2>
+<p>This user documentation is the one-stop source of information on using Hexatomic.</p>
+<p>If you find that something is missing from the documentation, or that it could be made better in any way,
+please let us know! The way to do this is through reporting this issue on Hexatomic's GitHub page (cf. <a href="troubleshooting.html#reporting-issues">below</a> for how to do this).</p>
+<h2><a class="header" href="#ive-found-a-bug" id="ive-found-a-bug">I've found a bug!</a></h2>
+<p>If you think you have found a bug, or Hexatomic does not work the way you have expected after reading the documentation, or Hexatomic doesn't work at all on your machine,
+please let us know! The way to do this is through reporting this issue on Hexatomic's GitHub page (cf. <a href="troubleshooting.html#reporting-issues">below</a> for how to do this).</p>
+<h2><a class="header" href="#im-looking-for-hexatomics-source-code" id="im-looking-for-hexatomics-source-code">I'm looking for Hexatomic's source code!</a></h2>
+<p>It's open source and can be found online at <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</p>
+<h2><a class="header" href="#i-need-to-contact-the-hexatomic-team" id="i-need-to-contact-the-hexatomic-team">I need to contact the Hexatomic team!</a></h2>
+<p>We'd love to hear from you. Please write us an email at <code>hexatomic [at] corpus-tools.org</code>.</p>
+<h1><a class="header" href="#reporting-issues" id="reporting-issues">Reporting issues</a></h1>
+<p>We use GitHub, a web-based platform for collaboration on software, to develop Hexatomic.
+The Hexatomic GitHub page is at <i class="fa fa-github"></i> <a href="https://github.com/hexatomic/hexatomic">https://github.com/hexatomic/hexatomic</a>.</p>
+<p>This is the place where you can report an issue (a bug, missing documentation, etc.) and suggest new features.</p>
+<p>To do so, you need a GitHub user account. If you don't have one yet, you can register for one at <a href="https://github.com/join">https://github.com/join</a>. It's free!</p>
+<p>First of all, please read the <i class="fa fa-book"></i> <a href="https://github.com/hexatomic/hexatomic/tree/main/CONTRIBUTING.md"><em>Contributing guidelines</em></a>. It's a quick read, and the guidelines contain important details.</p>
+<p>Then, when you are logged in, go to <i class="fa fa-pencil"></i> <a href="https://github.com/hexatomic/hexatomic/issues/new">https://github.com/hexatomic/hexatomic/issues/new</a> to create a new issue.
+You will need to include the Hexatomic version in the issue.
+If you are unsure what version of Hexatomic you are running, you can click <em>About</em> in the <em>Help</em> menu to show the <strong>About dialog</strong> which shows you the version and build number.</p>
+<p>Alternatively, you can click the link <em>Create a bug report to notify us of an error in Hexatomic.</em> in the <strong>About dialog</strong>.
+This will open the issue creation page in a browser and prepopulate it with the build number of the version you are using, and an issue report form that you can fill in.</p>
+<h1><a class="header" href="#how-tos" id="how-tos">HOW-TOs</a></h1>
+<p>This section provides information on how to complete specific common tasks using Hexatomic.</p>
+<h1><a class="header" href="#how-to-create-a-corpus-from-scratch" id="how-to-create-a-corpus-from-scratch">How to create a corpus from scratch</a></h1>
+<ol>
+<li>
+<p>Create a directory with the name that your corpus should have.
+Avoid special characters and spaces when naming your directory.</p>
+</li>
+<li>
+<p><strong>[Optional]</strong> Create subdirectories for any subcorpora you want to create.</p>
+</li>
+<li>
+<p>Add plain text files ending in <code>.txt</code> that contain the raw text of your corpus.
+Create one file for each text that should make up a separate document in the corpus.
+Sort the files into the respective subfolders for subcorpora, should you have any.
+Make sure to save the text files with the <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8 character encoding</a>.
+If you use Windows, you cannot use the default Notepad.
+Use another text editor instead, for example the free and open source <a href="https://notepad-plus-plus.org/">Notepad++</a>
+that uses UTF-8 per default.</p>
+</li>
+</ol>
+<p>A simple corpus structure may, for example, may now look like this:</p>
+<pre><code class="language-bash">my-corpus/
+├── document1.txt
+└── document2.txt
+</code></pre>
+<p>A (slightly) more complex corpus with two subcorpora may now look like this:</p>
+<pre><code class="language-bash">gutenberg/
+├── authors_A-M
+│   ├── jane_eyre.txt
+│   ├── moby_dick.txt
+│   ├── sense_and_sensibility.txt
+│   └── sherlock_holmes.txt
+└── authors_N-Z
+    ├── dracula.txt
+    ├── frankenstein.txt
+    └── time_machine.txt
+</code></pre>
+<ol start="4">
+<li>Open Hexatomic, and import the newly created main corpus directory (from step 1),
+using the text importer as described in <a href="howtos/../usage/import-export.html">Importing and exporting corpora</a>.</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
+        
+
+    </body>
+</html>
