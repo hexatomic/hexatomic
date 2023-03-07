@@ -1021,8 +1021,8 @@ public class GraphEditor {
       Display.getCurrent().syncExec(() -> {
         ScalableFigure figure = viewer.getGraphControl().getRootLayer();
         // Get the height needed for showing all tree layers
-        double newScale = (double) viewer.getGraphControl().getBounds().height
-            / figure.getBounds().preciseHeight();
+        double newScale =
+            viewer.getGraphControl().getBounds().height / figure.getBounds().preciseHeight();
         figure.setScale(newScale);
 
         viewer.getGraphControl().getViewport().setViewLocation(0, 0);

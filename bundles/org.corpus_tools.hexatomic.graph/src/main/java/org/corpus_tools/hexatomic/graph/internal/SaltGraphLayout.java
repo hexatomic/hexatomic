@@ -179,8 +179,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         if (n != null && n.getGraph() instanceof SDocumentGraph) {
           SDocumentGraph graph = (SDocumentGraph) n.getGraph();
           List<DataSourceSequence<? extends Number>> sequences = new LinkedList<>(
-              graph.getOverlappedDataSourceSequence(n,
-              SALT_TYPE.STEXT_OVERLAPPING_RELATION));
+              graph.getOverlappedDataSourceSequence(n, SALT_TYPE.STEXT_OVERLAPPING_RELATION));
           if (overlapsExisting(sequences, occupiedByText)) {
             // assign a new sub-rank to this node
             subrank++;
@@ -364,9 +363,8 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         for (SToken t : sortedTokens) {
           InternalNode n = this.nodes.inverse().get(t);
           if (n != null) {
-            n.setInternalLocation(x,
-                boundsY
-                    + (tokenRank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
+            n.setInternalLocation(x, boundsY
+                + (tokenRank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
             x += this.averageTokenNodeWidth * (config.getHorizontalTokenMargin());
             x += n.getWidthInLayout();
           }
@@ -413,7 +411,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     }
 
     if (tokenCount > 0) {
-      this.averageTokenNodeWidth = sumWidth / (double) tokenCount;
+      this.averageTokenNodeWidth = sumWidth / tokenCount;
     } else {
       this.averageTokenNodeWidth = 0;
     }
