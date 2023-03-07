@@ -343,7 +343,7 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
 
       // Create the span
       SSpan newSpan = this.graph.createSpan(
-          referencedNodes.parallelStream().map(node -> (SToken) node).collect(Collectors.toList()));
+          referencedNodes.parallelStream().map(SToken.class::cast).collect(Collectors.toList()));
       if (newSpan == null) {
         this.outputLines.add("Error: could not create the new span.");
       } else {
@@ -504,9 +504,8 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     if (n instanceof SToken && newTokenText != null) {
       SToken referencedToken = (SToken) n;
       @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences =
-          this.graph.getOverlappedDataSourceSequence(referencedToken,
-              SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      List<DataSourceSequence> allSequences = this.graph
+          .getOverlappedDataSourceSequence(referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
       if (allSequences != null && !allSequences.isEmpty()) {
         DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
         if (oldTokenSequence.getDataSource() instanceof STextualDS) {
