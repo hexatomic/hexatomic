@@ -681,7 +681,7 @@ public class GraphDataProvider implements IDataProvider {
     List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
         .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
     // Check that all potentialTokens are in fact tokens
-    List<SToken> tokens = potentialTokens.parallelStream().map(n -> {
+    return potentialTokens.parallelStream().map(n -> {
       if (n instanceof SToken) {
         return (SToken) n;
       } else {
@@ -690,7 +690,6 @@ public class GraphDataProvider implements IDataProvider {
                 + " in the first column of the grid, but found a " + n.getClass().getSimpleName());
       }
     }).collect(Collectors.toList());
-    return tokens;
   }
 
 
