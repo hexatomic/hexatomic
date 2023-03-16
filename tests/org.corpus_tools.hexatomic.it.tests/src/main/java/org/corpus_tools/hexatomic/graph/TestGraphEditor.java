@@ -624,6 +624,7 @@ class TestGraphEditor {
       assertEquals(0, graph.getRelations(STRUCTURE3_ID, STRUCTURE5_ID).size());
 
       SWTBotView view = bot.partByTitle(DOC1_TITLE);
+      view.show();
       bot.waitUntil(new DefaultCondition() {
 
         @Override
