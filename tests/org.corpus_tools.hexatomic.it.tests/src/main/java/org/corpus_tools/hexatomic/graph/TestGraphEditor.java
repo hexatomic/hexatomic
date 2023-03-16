@@ -1,8 +1,9 @@
-package org.corpus_tools.hexatomic.it.tests;
+package org.corpus_tools.hexatomic.graph;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,10 @@ import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.UiStatusReport;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
-import org.corpus_tools.hexatomic.graph.GraphEditor;
+import org.corpus_tools.hexatomic.it.tests.PartMaximizedCondition;
+import org.corpus_tools.hexatomic.it.tests.TableCellEditorInactiveCondition;
+import org.corpus_tools.hexatomic.it.tests.TestCorpusStructure;
+import org.corpus_tools.hexatomic.it.tests.TestHelper;
 import org.corpus_tools.hexatomic.it.tests.utils.SwtBotChips;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -45,6 +50,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.nebula.widgets.chips.Chips;
 import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
@@ -81,6 +87,8 @@ import org.junit.jupiter.api.condition.OS;
 @TestMethodOrder(OrderAnnotation.class)
 class TestGraphEditor {
 
+  private static final String STRUCTURE5_ID = "salt:/rootCorpus/subCorpus1/doc1#structure5";
+  private static final String STRUCTURE3_ID = "salt:/rootCorpus/subCorpus1/doc1#structure3";
   private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String DOC1_TITLE = "doc1 (Graph Editor)";
   private static final String CONST = "const";
@@ -614,18 +622,51 @@ class TestGraphEditor {
       SDocumentGraph graph = doc.getDocumentGraph();
 
       // Before state: no edges between the two structures
-      assertEquals(0, graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
-          "salt:/rootCorpus/subCorpus1/doc1#structure5").size());
+      assertEquals(0, graph.getRelations(STRUCTURE3_ID, STRUCTURE5_ID).size());
 
-      // Add a pointing relation between the two structures
-      enterCommand(ADD_POINTING_COMMMAND);
+      SWTBotView view = bot.partByTitle(DOC1_TITLE);
+      assertInstanceOf(GraphEditor.class, view.getPart().getObject());
+      GraphEditor graphEditor = (GraphEditor) view.getPart().getObject();
+
+      // Test that double clicking without selected node does nothing
+      SWTBotStyledText console = bot.styledTextWithId(GraphEditor.CONSOLE_ID);
+      assertEquals("> ", console.getTextOnCurrentLine());
+      bot.getDisplay().syncExec(() -> {
+        graphEditor.getViewer().setSelection(new StructuredSelection(new ArrayList<>()));
+        graphEditor.appendSelectedNodeNameToConsole();
+      });
+      assertEquals("> ", console.getTextOnCurrentLine());
+
+      // Type start of the command
+      console.insertText("e");
+      console.navigateTo(console.getLineCount() - 1, console.getTextOnCurrentLine().length());
+
+      // Emulate double clicking on the first referenced node
+      bot.getDisplay().syncExec(() -> {
+        graphEditor.getViewer().setSelection(new StructuredSelection(graph.getNode(STRUCTURE3_ID)));
+        graphEditor.appendSelectedNodeNameToConsole();
+      });
+
+      // Add the point relation operator to the command
+      console.insertText("-> ");
+      console.navigateTo(console.getLineCount() - 1, console.getTextOnCurrentLine().length());
+
+      // Emulate double clicking on the second referenced node
+      bot.getDisplay().syncExec(() -> {
+        graphEditor.getViewer().setSelection(new StructuredSelection(graph.getNode(STRUCTURE5_ID)));
+        graphEditor.appendSelectedNodeNameToConsole();
+      });
+
+      assertEquals("> " + ADD_POINTING_COMMMAND + " ", console.getTextOnCurrentLine());
+      console.navigateTo(console.getLineCount() - 1, console.getTextOnCurrentLine().length());
+      console.insertText("\n");
+
 
       // Check that no exception was thrown/handled by UI
       assertFalse(errorService.getLastException().isPresent());
 
       // Check that the edge has been added to the graph
-      List<?> rels = graph.getRelations("salt:/rootCorpus/subCorpus1/doc1#structure3",
-          "salt:/rootCorpus/subCorpus1/doc1#structure5");
+      List<?> rels = graph.getRelations(STRUCTURE3_ID, STRUCTURE5_ID);
       assertEquals(1, rels.size());
       assertTrue(rels.get(0) instanceof SPointingRelation);
 

@@ -168,6 +168,10 @@ public class GraphEditor {
 
   private GraphViewer viewer;
 
+  public GraphViewer getViewer() {
+    return viewer;
+  }
+
   @Inject
   UISynchronize sync;
 
@@ -200,6 +204,7 @@ public class GraphEditor {
     }
     return null;
   }
+
 
   /**
    * Create a new graph viewer.
@@ -750,13 +755,20 @@ public class GraphEditor {
     @Override
     public void mouseDoubleClick(MouseEvent e) {
       Point clickedInViewport = new Point(e.x, e.y);
-      if (viewer.getSelection() instanceof IStructuredSelection) {
-        IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-        if (selection.getFirstElement() instanceof SNode) {
-          consoleView.appendNodeName((SNode) selection.getFirstElement());
-        }
-      }
+      appendSelectedNodeNameToConsole();
       centerViewportToPoint(clickedInViewport);
+    }
+  }
+
+  /**
+   * Helper function which appends the name of the currently selected node to the internal console.
+   */
+  public void appendSelectedNodeNameToConsole() {
+    if (viewer.getSelection() instanceof IStructuredSelection) {
+      IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+      if (selection.getFirstElement() instanceof SNode) {
+        consoleView.appendNodeName((SNode) selection.getFirstElement());
+      }
     }
   }
 
