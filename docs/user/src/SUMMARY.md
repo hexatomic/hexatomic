@@ -22,3 +22,4 @@
 - [Troubleshooting & getting help](./troubleshooting.md)
 - [HOW-TOs](./howtos/README.md)
     - [Creating a corpus from scratch](howtos/corpus-creation.md)
+    - [Import a corpus from EXMARaLDA](howtos/exmaralda-import.md)
