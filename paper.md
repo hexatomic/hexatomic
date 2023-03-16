@@ -75,9 +75,9 @@ While there is a wide variety of corpus annotation tools available,
 most are "specialized single-user tools" [@biemann].
 *Hexatomic* meets a demand across different linguistic fields for an interdisciplinarily usable, 
 highly compatible platform for multi-layer annotation of linguistic corpora.
-This is achieved through $n:m$ conversion capabilities, 
-the generic nature of the data model,
-and the wide applicability of the core editors.
+This is achieved through $n:m$ conversion capabilities, the generic nature of
+the data model, the wide applicability of the core editors, and the possibility
+to extend *Hexatomic* with new editors for specific annotation tasks.
 Corpora from different sources, e.g., from corpus linguistic and language documentation research, can be merged into a single project.
 Subsequently, they can be annotated in *Hexatomic* to help answer research questions from different linguistic disciplines,
 and finally exported to ANNIS for multi-layer search and analysis.
@@ -99,6 +99,8 @@ There is extensive documentation, including documentation for maintenance proces
 changes in maintenance, 
 and revival after periods without maintenance.
 *Hexatomic* will also be supported in the future through a long-term software maintenance and research software engineering position at the corpus linguistics working group at Humboldt-Universität zu Berlin.
+
+# Future work
 
 Developed as a platform, *Hexatomic* will be used for annotating the RIDGES Herbology corpus [@ridges], a diachronic corpus of historic herbal texts.
 It is also planned for use for the various corpora of the Deutsch Diachron Digital projects[^ddd] that create a reference corpus for historical German texts for different time periods.
