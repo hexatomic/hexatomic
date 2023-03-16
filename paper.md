@@ -98,7 +98,7 @@ and explicitly designed for extensibility, adaption, and reuse.
 There is extensive documentation, including documentation for maintenance processes, 
 changes in maintenance, 
 and revival after periods without maintenance.
-*Hexatomic* will also be supported in the future through a long-term software maintenance and research software engineering position at the corpus linguistics working group at Humboldt-Unviersität zu Berlin.
+*Hexatomic* will also be supported in the future through a long-term software maintenance and research software engineering position at the corpus linguistics working group at Humboldt-Universität zu Berlin.
 
 Developed as a platform, *Hexatomic* will be used for annotating the RIDGES Herbology corpus [@ridges], a diachronic corpus of historic herbal texts.
 It is also planned for use for the various corpora of the Deutsch Diachron Digital projects[^ddd] that create a reference corpus for historical German texts for different time periods.
