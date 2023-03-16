@@ -3,7 +3,6 @@ package org.corpus_tools.hexatomic.graph;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -625,7 +624,18 @@ class TestGraphEditor {
       assertEquals(0, graph.getRelations(STRUCTURE3_ID, STRUCTURE5_ID).size());
 
       SWTBotView view = bot.partByTitle(DOC1_TITLE);
-      assertInstanceOf(GraphEditor.class, view.getPart().getObject());
+      bot.waitUntil(new DefaultCondition() {
+
+        @Override
+        public boolean test() throws Exception {
+          return view.getPart().getObject() instanceof GraphEditor;
+        }
+
+        @Override
+        public String getFailureMessage() {
+          return "Part object did not have the GraphEditor type";
+        }
+      });
       GraphEditor graphEditor = (GraphEditor) view.getPart().getObject();
 
       // Test that double clicking without selected node does nothing
