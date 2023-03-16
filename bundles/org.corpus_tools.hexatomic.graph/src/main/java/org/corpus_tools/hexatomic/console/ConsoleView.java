@@ -27,6 +27,7 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
@@ -122,10 +123,29 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   public void writeLine(String str) {
     sync.asyncExec(() -> {
       document.set(document.get() + str + "\n");
-      if (view != null && view.getTextWidget() != null) {
-        view.getTextWidget().setCaretOffset(document.getLength());
-        view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
-      }
+      synchronizeViewWithDocument();
+    });
+  }
+
+  private void synchronizeViewWithDocument() {
+    if (view != null && view.getTextWidget() != null) {
+      view.getTextWidget().setCaretOffset(document.getLength());
+      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+    }
+  }
+
+  /**
+   * Allows to append the name of the given node to the prompt, e.g. because it was selected in the
+   * graph view.
+   * 
+   * @param n The node that was selected.
+   */
+  public void appendNodeName(SNode n) {
+    sync.asyncExec(() -> {
+      String prefix = document.get().endsWith(" ") ? "#" : " #";
+      document.set(document.get() + prefix + n.getName() + " ");
+      synchronizeViewWithDocument();
+      view.getTextWidget().setFocus();
     });
   }
 

@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-03-16
+
+### Added
+
+- Added HOW-TO for importing and annotating a demo corpus to the user
+  documentation (#446).
+- Double-click on nodes in the graph viewer will add the node name reference to
+  the command prompt.
+- Hexatomic will now remember the last opened project location and pre-select it
+  in the "Open Salt Project" dialog.
+
+### Fixed
+
+- Only import files with `.exb` file ending in the EXMARaLDA importer (#441)
+
 ## [1.2.0] - 2023-03-05
 
 ### Added
@@ -377,7 +392,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/hexatomic/hexatomic/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/hexatomic/hexatomic/compare/v1.1.7...v1.2.0
 [1.1.7]: https://github.com/hexatomic/hexatomic/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/hexatomic/hexatomic/compare/v1.1.5...v1.1.6

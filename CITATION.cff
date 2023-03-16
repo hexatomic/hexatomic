@@ -34,9 +34,20 @@ identifiers:
   type: doi
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
-version: 1.2.0
-date-released: 2023-03-05
+version: 1.3.0
+date-released: 2023-03-16
 references:
+- type: art
+  title: Font Awesome
+  license: CC-BY-4.0
+  license-url: https://creativecommons.org/licenses/by/4.0/
+  authors:
+  - name: Fonticons, Inc.
+  format: SVG
+  notes: Located im folder bundles/org.corpus_tools.hexatomic.core/icons/fontawesome/.
+    Some of the files have been resized and converted from the original SVG format
+    to PNG.
+  version: null
 - type: software
   title: SWT Resource Manager
   license: EPL-1.0
