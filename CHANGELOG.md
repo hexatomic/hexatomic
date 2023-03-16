@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added HOW-TO for importing and annotating a demo corpus to the user
   documentation (#446).
+- Double-click on nodes in the graph viewer will add the node name reference to
+  the command prompt.
+- Hexatomic will now remember the last opened project location and pre-select it
+  in the "Open Salt Project" dialog.
 
 ### Fixed
 

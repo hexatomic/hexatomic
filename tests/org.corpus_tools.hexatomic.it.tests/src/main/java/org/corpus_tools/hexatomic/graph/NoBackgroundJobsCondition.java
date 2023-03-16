@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.it.tests;
+package org.corpus_tools.hexatomic.graph;
 
 import org.corpus_tools.hexatomic.core.UiStatusReport;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;

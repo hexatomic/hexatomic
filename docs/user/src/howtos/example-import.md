@@ -20,6 +20,6 @@ Then type `cat` into the “Search” field and click on the `tiger::cat` filter
 This still shows the whole document, but now we can select the segments we are interested in.
 Click on the first three segments while holding the <kbd>Ctrl</kbd> key.
 ![Graph editor with selected segments](pcc2-select-segments.png)
-1. Add new annotations using the [console](../usage/graph-editor/console.md). To add a root node connecting the trailing token “!” with the sentence constituent node, enter `n tiger:cat:ROOT  #tok_7 #const_2` to the console and press <kbd>Enter</kbd>. Note that the segmentation changes because we connected the previously separate segments.   
+9. Add new annotations using the [console](../usage/graph-editor/console.md). To add a root node connecting the trailing token “!” with the sentence constituent node, enter `n tiger:cat:ROOT` in the console. Then double-click on the `tok_7` node and again on the  `const_2` node. This should complete the prompt in the console to `n tiger:cat:ROOT #tok_7 #const_2`. With the cursor active at the end of the prompt, press <kbd>Enter</kbd>. Note that the segmentation changes because we connected the previously separate segments.   
 ![Adding a root node with the graph editor](pcc2-add-root-node.png)
-2. Save the project via by clicking on the *File* menu and then *Save Salt Project As...* to persist the changes as a [project](../usage/projects.md).
+10. Save the project via by clicking on the *File* menu and then *Save Salt Project As...* to persist the changes as a [project](../usage/projects.md).
