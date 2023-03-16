@@ -83,6 +83,7 @@ import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -749,6 +750,12 @@ public class GraphEditor {
     @Override
     public void mouseDoubleClick(MouseEvent e) {
       Point clickedInViewport = new Point(e.x, e.y);
+      if (viewer.getSelection() instanceof IStructuredSelection) {
+        IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+        if (selection.getFirstElement() instanceof SNode) {
+          consoleView.appendNodeName((SNode) selection.getFirstElement());
+        }
+      }
       centerViewportToPoint(clickedInViewport);
     }
   }
