@@ -82,8 +82,11 @@ Corpora from different sources, e.g., from corpus linguistic and language docume
 Subsequently, they can be annotated in *Hexatomic* to help answer research questions from different linguistic disciplines,
 and finally exported to ANNIS for multi-layer search and analysis.
 
-Web-based annotation tools such as WebAnno [@webanno], INCEpTION [@inception] or GATE [@gate] often run on centralized servers.
-This not only creates operating costs, but also complicates data transfer and constitutes a single point of failure, increasing the risk of data loss.
+Web-based annotation tools such as WebAnno [@webanno], INCEpTION [@inception] or
+GATE [@gate] often run on centralized servers for easy access by users without
+the need for an installation procedure, even if some of these tools also support
+installation on end-user machines.
+Operating a server not only creates operating costs, but also complicates data transfer and constitutes a single point of failure, increasing the risk of data loss.
 Additionally, web-based annotation is impractical in regions without easily accessible internet connectivity, e.g., during linguistic fieldwork.
 *Hexatomic* is used on the researcher's local machine and offers full control over data, including the possibility to version data with existing version control systems.
 Version controlled local corpus data can additionally be shared and collaborated on via existing collaboration platforms, e.g., those based on `git`.
