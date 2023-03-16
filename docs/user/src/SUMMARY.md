@@ -21,4 +21,6 @@
   	- [Refactoring](usage/refactoring/README.md)
 - [Troubleshooting & getting help](./troubleshooting.md)
 - [HOW-TOs](./howtos/README.md)
+    - [Import and annotate a corpus](howtos/example-import.md)
     - [Creating a corpus from scratch](howtos/corpus-creation.md)
+    - [Import a corpus from EXMARaLDA](howtos/exmaralda-import.md)

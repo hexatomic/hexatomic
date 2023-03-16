@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added HOW-TO for importing and annotating a demo corpus to the user
+  documentation (#446).
+
 ### Fixed
 
 - Only import files with `.exb` file ending in the EXMARaLDA importer (#441)
