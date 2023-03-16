@@ -20,23 +20,34 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
+import static org.corpus_tools.hexatomic.core.Preferences.LAST_PROJECT_LOCATION;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
+import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class OpenSaltProjectHandler {
 
   @Inject
   private ProjectManager projectManager;
 
-  private String lastPath;
+  @Inject
+  private ErrorService errors;
+
+  @Inject
+  @Preference(nodePath = "org.corpus_tools.hexatomic.core")
+  IEclipsePreferences prefs;
 
   /**
    * Show a file choose to open Salt project.
@@ -65,6 +76,7 @@ public class OpenSaltProjectHandler {
 
     if (location == null) {
       DirectoryDialog dialog = new DirectoryDialog(shell);
+      String lastPath = prefs.get(LAST_PROJECT_LOCATION, null);
       if (lastPath != null) {
         dialog.setFilterPath(lastPath);
       }
@@ -77,7 +89,12 @@ public class OpenSaltProjectHandler {
 
     if (resultPath != null) {
       projectManager.open(URI.createFileURI(resultPath));
-      lastPath = resultPath;
+      prefs.put(LAST_PROJECT_LOCATION, resultPath);
+      try {
+        prefs.flush();
+      } catch (BackingStoreException e) {
+        errors.handleException("Could not store preferences", e, this.getClass());
+      }
     }
   }
 }

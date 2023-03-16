@@ -35,9 +35,10 @@ public final class Preferences {
   /** Whether to automatically check for updates. **/
   public static final String AUTO_UPDATE = "autoUpdate";
 
-  /** Set temporarly after an update was applied, so we know not check for newer updates. */
+  /** Set temporarily after an update was applied, so we know not check for newer updates. */
   public static final String JUST_UPDATED = "justUpdated";
 
-
+  /** Location of the last opened project. */
+  public static final String LAST_PROJECT_LOCATION = "lastProjectLocation";
 
 }
