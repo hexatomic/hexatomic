@@ -88,7 +88,8 @@ the need for an installation procedure, even if some of these tools also support
 installation on end-user machines.
 Operating a server not only creates operating costs, but also complicates data transfer and constitutes a single point of failure, increasing the risk of data loss.
 Additionally, web-based annotation is impractical in regions without easily accessible internet connectivity, e.g., during linguistic fieldwork.
-*Hexatomic* is used on the researcher's local machine and offers full control over data, including the possibility to version the project folder with existing version control systems.
+*Hexatomic* is used on the researcher's local machine and offers full control over data.
+The local project folder holding the annotation data can be versioned with existing version control systems.
 By using Salt XML [@pepper] to store the project data and having separate files for each corpus document, conflicts in version control systems are minimized.
 Version controlled local corpus data can additionally be shared and collaborated on via existing collaboration platforms, e.g., those based on `git`.
 
