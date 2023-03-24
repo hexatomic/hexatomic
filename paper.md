@@ -104,7 +104,7 @@ and revival after periods without maintenance.
 # Future work
 
 Developed as a platform, *Hexatomic* will be used for annotating the RIDGES Herbology corpus [@ridges], a diachronic corpus of historic herbal texts.
-It is also planned for use for the various corpora of the Deutsch Diachron Digital projects[^ddd] that create a reference corpus for historical German texts for different time periods.
+It is also planned to use it for the various corpora of the Deutsch Diachron Digital projects[^ddd] that create a reference corpus of historical German texts for different time periods.
 To support these annotation projects along with other use cases, next development steps include:
 
 - A specialized editor for different aligned tokenization layers of the same texts [@multipletokenization].
