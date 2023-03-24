@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Manual tests of updates - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="../../development/architecture/index.html"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="../../development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="../../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="../../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="../../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="../../development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/taking-over/index.html"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="../../maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="../../maintenance/contributions/index.html"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><ol class="section"><li><a href="../../maintenance/contributions/manual-update-tests.html" class="active"><strong aria-hidden="true">3.4.1.</strong> Manual tests of updates</a></li></ol></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="../../maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="../../maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="../../maintenance/prepare-end/index.html"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="../../common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="../../governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#manual-tests-of-updates" id="manual-tests-of-updates">Manual tests of updates</a></h1>
+<p>For updates, we rely on the Eclipse platform and our update site that is <a href="https://github.com/hexatomic/updates">hosted
+on GitHub pages</a> and there are several
+things that can't be tested automatically, but can break for various reasons.
+We have to test two scenarios: </p>
+<ul>
+<li>Updates from the last released version works with the changes from this pull request</li>
+<li>It is possible to update to a newer version with the changes from this pull request.</li>
+</ul>
+<p><strong>Do not commit any changes during the manual tests.</strong></p>
+<h2><a class="header" href="#prepare-a-local-update-site" id="prepare-a-local-update-site">Prepare a local update site</a></h2>
+<ol>
+<li>Adjust the file <code>releng/org.corpus_tools.hexatomic.product/p2.inf</code> and the local update site as repository by adding the following lines. 
+Replace <code>&lt;TMP&gt;</code> with a temporary folder where you want to store the update site content, e.g. <code>/tmp/hexatomic-update-site</code>.</li>
+</ol>
+<pre><code class="language-plain">  addRepository(type:0,location:file${#58}&lt;TMP&gt;/repository,name:Local test,enabled:true);\
+  addRepository(type:1,location:file${#58}&lt;TMP&gt;/repository,name:Local test,enabled:true);\
+</code></pre>
+<ol start="2">
+<li>Change the version number of Hexatomic to a large version number</li>
+</ol>
+<pre><code class="language-bash">mvn tycho-versions:set-version -DnewVersion=1999.0.0
+</code></pre>
+<ol start="3">
+<li>Build the current version with <code>mvn package</code></li>
+<li>Copy the folder <code>releng/org.corpus_tools.hexatomic.product/target/repository</code> to the temporary folder <code>&lt;TMP&gt;</code></li>
+<li>Reset the version number configuration, but keep the <code>p2.inf</code> file changes.</li>
+</ol>
+<pre><code class="language-bash">git add releng/org.corpus_tools.hexatomic.product/p2.inf &amp;&amp; git restore . &amp;&amp; git reset
+</code></pre>
+<h2><a class="header" href="#updating-from-pr-state-to-a-newer-version" id="updating-from-pr-state-to-a-newer-version">Updating from PR state to a newer version</a></h2>
+<ol>
+<li>Execute <code>mvn package</code> to create the product</li>
+<li>Run Hexatomic from the command line and <strong>check that there is a message in the toolbar about an available update</strong>.</li>
+</ol>
+<pre><code class="language-bash">releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/linux/gtk/x86_64/hexatomic
+</code></pre>
+<ol start="3">
+<li><strong>Apply the update</strong>. Restart if necessary.</li>
+<li>Manually check for an update via the <em>Help</em> &gt; <em>Update</em> menu, and check that the status bar again reports that &quot;Hexatomic is up to date&quot;.</li>
+</ol>
+<h2><a class="header" href="#updating-from-the-latest-release" id="updating-from-the-latest-release">Updating from the latest release</a></h2>
+<ol>
+<li>Check out the source with the release tag <code>git checkout tags/v&lt;version&gt;</code>. The <code>p2.inf</code> file should stay locally altered.</li>
+<li>Execute <code>mvn package</code> to create the product</li>
+<li>Run Hexatomic from the command line and <strong>check that there is a message in the toolbar about an available update</strong>.</li>
+</ol>
+<pre><code class="language-bash">releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexatomic.product/linux/gtk/x86_64/hexatomic
+</code></pre>
+<ol start="4">
+<li><strong>Apply the update</strong>. Restart if necessary.</li>
+<li>Manually check for an update via the <em>Help</em> &gt; <em>Update</em> menu, and check that the status bar again reports that &quot;Hexatomic is up to date&quot;.</li>
+<li>Revert all local changes in the source code repository and checkout the original branch for the PR using Git.</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../maintenance/contributions/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../maintenance/licensing/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../maintenance/contributions/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../maintenance/licensing/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

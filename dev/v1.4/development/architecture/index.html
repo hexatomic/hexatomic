@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Architecture - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="../../development/architecture/index.html" class="active"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="../../development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="../../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="../../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="../../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="../../development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/taking-over/index.html"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="../../maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="../../maintenance/contributions/index.html"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><ol class="section"><li><a href="../../maintenance/contributions/manual-update-tests.html"><strong aria-hidden="true">3.4.1.</strong> Manual tests of updates</a></li></ol></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="../../maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="../../maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="../../maintenance/prepare-end/index.html"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="../../common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="../../governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#architecture" id="architecture">Architecture</a></h1>
+<p>Considerations regarding the architecture of Hexatomic are driven by
+the requirement that Hexatomic is <strong>extensible</strong>, and can be used
+for different kinds of corpus linguistic research.</p>
+<p>The most essential architectural feature of Hexatomic is therefore a high degree of <strong>modularization</strong>. 
+This means that whatever feature should be added to Hexatomic, it should be added as a new module,
+while at the same time the existing code base needs as few changes as possible.</p>
+<p>For different stakeholders in Hexatomic, the architecture should cater for their respective needs:</p>
+<ul>
+<li><em>Linguistic researchers</em> expect a seamless experience in using the software,
+and should be able to achieve their research goals without having to use other tools
+during their research workflow.</li>
+<li><em>Maintainers</em> expect a clean overview of the architecture, and to
+be able to locate different parts easily.</li>
+<li><em>Developers</em> expect to be able to add new features with minimum effort,
+in cleanly encapsulated modules, against well-defined and documented interfaces.</li>
+</ul>
+<h2><a class="header" href="#modularization" id="modularization">Modularization</a></h2>
+<p>Hexatomic is implemented as a desktop application based on an application framework,
+the <em>Eclipse Rich Client Platform</em> (RCP). 
+This framework has its own terminology with regard to its architectural components. 
+The following sections introduce some of the relevant terms and relate them to Hexatomic.</p>
+<h3><a class="header" href="#the-building-blocks-of-hexatomic" id="the-building-blocks-of-hexatomic">The building blocks of Hexatomic</a></h3>
+<h4><a class="header" href="#product" id="product">Product</a></h4>
+<p>Hexatomic is a <strong>product</strong>: a standalone software program built with the Eclipse RCP.
+It is defined and configured in the <code>releng/org.corpus_tools.hexatomic.product/org.corpus_tools.hexatomic.product</code> file.
+The contents of a product are its <a href="#features">features</a>.</p>
+<h4><a class="header" href="#features" id="features">Features</a></h4>
+<p>Features are sets of <a href="#plugins">plugins</a>. They can also contain other features.
+Features represent larger, but logically separate units, for example tooling for a specific annotation task.
+This may include a specific editor UI, its annotation logic, and other related functionality.</p>
+<p>Hexatomic contains several features.
+Most of them come from the Eclipse RCP platform,
+but one of them also contains a Java Runtime Environment (JRE) that is shipped together with Hexatomic,
+so that users don't have to download and install a JRE to be able to run Hexatomic (<em>JustJ OpenJDK Feature</em> in the figure below).</p>
+<p>Finally, the Hexatomic product also contains the <strong>Hexatomic core feature</strong>, 
+which contains all the parts that make Hexatomic software for linguistic research.
+The core feature is <a href="#the-hexatomic-core-feature">described further below</a>.</p>
+<p>The following figure shows a product-level view of Hexatomic's architecture.</p>
+<p><img src="product.svg" alt="A product-level view of Hexatomic's architecture." /></p>
+<h5><a class="header" href="#features-as-main-unit-of-modularization" id="features-as-main-unit-of-modularization">Features as main unit of modularization</a></h5>
+<p>Features are also the main &quot;unit of modularization&quot;.
+This means that Hexatomic is extended through the inclusion of additional features.
+This inclusion can happen in two ways:</p>
+<ol>
+<li>Additional features are added to the Hexatomic product via its product definition file, see the <a href="#product">section on Hexatomic as a product</a>.
+This way, the additional features are shipped as part of the Hexatomic standalone software (e.g., <em>Hexatomic Feature A</em> and <em>Hexatomic Feature B</em> in the figure above).</li>
+<li>Additional features are added to Hexatomic <em>at runtime</em>, i.e., when it is being run.
+This way, users can extend Hexatomic &quot;on-the-fly&quot; while they use it, by downloading and installing additional features (e.g., <em>New Feature A</em> and <em>New Feature B</em> in the figure above).
+To enable the installation of new features at runtime, they must be available in a <em>p2 repository</em>.
+A p2 repository is an accessible folder structure that contains features and their plugins, 
+but also metadata files that can be read by Eclipse RCP products through their update and installation mechanism.</li>
+</ol>
+<h4><a class="header" href="#plugins" id="plugins">Plugins</a></h4>
+<p>Finally, <strong>plugins</strong> are the smallest deployable and installable software component in the Eclipse RCP world.
+They encapsulate cleanly separated functionality.
+For example, there is a Hexatomic plugin which only deals with different linguistic formats, i.e.,
+their conversion into and from Hexatomic's data model.</p>
+<p>On a technical level, Hexatomic plugins (and Eclipse RCP plugins in general) are also <em>OSGi bundles</em>.
+<a href="https://www.osgi.org/resources/what-is-osgi/">OSGi</a> is a modularization framework for Java, and Eclipse Equinox - which is contained in the Eclipse RCP platform - is the OSGi reference implementation.</p>
+<h2><a class="header" href="#the-hexatomic-core-feature" id="the-hexatomic-core-feature">The Hexatomic core feature</a></h2>
+<p>The Hexatomic core feature contains the fundamental parts of the software application:</p>
+<ul>
+<li>The configuration of the Eclipse RCP application platform (<code>bundles/org.corpus_tools.hexatomic.core/Application.e4xmi</code>), and basic application functionality such as logging</li>
+<li>The Salt data model API (see <code>features/org.corpus_tools.hexatomic/feature.xml</code>)</li>
+<li>The Pepper conversion framework configuration logic, GUI and format-specific plugins (see <code>bundles/org.corpus_tools.hexatomic.formats</code>)</li>
+<li>The corpus project management API and GUI (<code>bundles/org.corpus_tools.hexatomic.corpusedit</code>)</li>
+<li>Two powerful basic editors for the manipulation of the data model via annotation tasks: the Graph Editor(<code>bundles/org.corpus_tools.hexatomic.graph</code>) and the Grid Editor (<code>bundles/org.corpus_tools.hexatomic.grid</code>)</li>
+<li>A simple viewer for document texts (<code>bundles/org.corpus_tools.hexatomic.textviewer</code>)</li>
+</ul>
+<p>Other features can build on the core feature and its plugins to extend Hexatomic's functionality.</p>
+<h2><a class="header" href="#extending-hexatomic" id="extending-hexatomic">Extending Hexatomic</a></h2>
+<p>The <a href="#the-hexatomic-core-feature">core feature</a> has a defined scope, and should not be extended by adding further plugins.
+Generally, its scope is to enable basic manipulation of Salt models: provision of the application, creation or import of corpora, basic manipulation of these corpora (covered by the Graph Editor and the Grid Editor), and export to corpus formats.
+For all new functionality that goes beyond this, you should create a new feature, and add new plugins to it that implement the functionality.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../development/workflow/repositories.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../development/data-model/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../development/workflow/repositories.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../development/data-model/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

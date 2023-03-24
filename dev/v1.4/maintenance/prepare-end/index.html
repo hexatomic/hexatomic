@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Prepare end-of-maintenance - Hexatomic Developer &amp; Maintainer Documentation</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../../highlight.css">
+        <link rel="stylesheet" href="../../tomorrow-night.css">
+        <link rel="stylesheet" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body class="light">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../../";
+            var default_theme = "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="../../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><a href="../../development/index.html"><strong aria-hidden="true">2.</strong> Development</a></li><li><ol class="section"><li><a href="../../development/setup.html"><strong aria-hidden="true">2.1.</strong> Development setup</a></li><li><ol class="section"><li><a href="../../development/getting-the-source-code.html"><strong aria-hidden="true">2.1.1.</strong> Getting the source code</a></li><li><a href="../../development/coding-style.html"><strong aria-hidden="true">2.1.2.</strong> Coding style and formatting</a></li><li><a href="../../development/activating-target-platform.html"><strong aria-hidden="true">2.1.3.</strong> Creating and activating the target platform</a></li><li><a href="../../development/running-debugging-with-eclipse.html"><strong aria-hidden="true">2.1.4.</strong> Running and debugging Hexatomic in Eclipse</a></li></ol></li><li><a href="../../development/workflow/index.html"><strong aria-hidden="true">2.2.</strong> Workflow</a></li><li><ol class="section"><li><a href="../../development/workflow/repositories.html"><strong aria-hidden="true">2.2.1.</strong> Repositories</a></li></ol></li><li><a href="../../development/architecture/index.html"><strong aria-hidden="true">2.3.</strong> Architecture</a></li><li><a href="../../development/data-model/index.html"><strong aria-hidden="true">2.4.</strong> Data model</a></li><li><a href="../../development/logging-error-handling.html"><strong aria-hidden="true">2.5.</strong> Logging and error handling</a></li><li><a href="../../development/add-new-editor.html"><strong aria-hidden="true">2.6.</strong> Adding a new editor</a></li><li><a href="../../development/automated-tests/index.html"><strong aria-hidden="true">2.7.</strong> Automated tests</a></li><li><ol class="section"><li><a href="../../development/automated-tests/adding-test-bundle.html"><strong aria-hidden="true">2.7.1.</strong> Adding a test bundle</a></li><li><a href="../../development/automated-tests/adding-test-case.html"><strong aria-hidden="true">2.7.2.</strong> Adding a test case</a></li><li><a href="../../development/automated-tests/mocking-injected-dependencies.html"><strong aria-hidden="true">2.7.3.</strong> Mocking injected dependencies</a></li><li><a href="../../development/automated-tests/ui-integration-tests.html"><strong aria-hidden="true">2.7.4.</strong> UI integration tests</a></li></ol></li><li><a href="../../development/documentation/index.html"><strong aria-hidden="true">2.8.</strong> Documentation</a></li></ol></li><li><a href="../../maintenance/index.html"><strong aria-hidden="true">3.</strong> Maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/taking-over/index.html"><strong aria-hidden="true">3.1.</strong> Taking over as maintainer</a></li><li><a href="../../maintenance/versioning/index.html"><strong aria-hidden="true">3.2.</strong> Versioning</a></li><li><a href="../../maintenance/continuous-integration/index.html"><strong aria-hidden="true">3.3.</strong> Continuous integration</a></li><li><a href="../../maintenance/contributions/index.html"><strong aria-hidden="true">3.4.</strong> Working with contributions</a></li><li><ol class="section"><li><a href="../../maintenance/contributions/manual-update-tests.html"><strong aria-hidden="true">3.4.1.</strong> Manual tests of updates</a></li></ol></li><li><a href="../../maintenance/licensing/index.html"><strong aria-hidden="true">3.5.</strong> Licensing and citation</a></li><li><a href="../../maintenance/releases/index.html"><strong aria-hidden="true">3.6.</strong> Releases</a></li><li><a href="../../maintenance/unreviewed-code-triage.html"><strong aria-hidden="true">3.7.</strong> Periodic unreviewed code triage</a></li><li><a href="../../maintenance/repository/index.html"><strong aria-hidden="true">3.8.</strong> Repository maintenance</a></li><li><ol class="section"><li><a href="../../maintenance/repository/templates.html"><strong aria-hidden="true">3.8.1.</strong> Template files</a></li></ol></li><li><a href="../../maintenance/prepare-end/index.html" class="active"><strong aria-hidden="true">3.9.</strong> Prepare end-of-maintenance</a></li></ol></li><li><a href="../../common-issues/index.html"><strong aria-hidden="true">4.</strong> Common issues</a></li><li><a href="../../governance.html"><strong aria-hidden="true">5.</strong> Governance</a></li><li><a href="../../LICENSE.html"><strong aria-hidden="true">6.</strong> License</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">Hexatomic Developer &amp; Maintainer Documentation</h1>
+
+                        <div class="right-buttons">
+                            <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#prepare-for-the-end-of-maintenance-period" id="prepare-for-the-end-of-maintenance-period">Prepare for the end of maintenance period</a></h1>
+<p>Due to the prevalence of fixed-term contracts, research software projects are under constant threat to lose funding and thus be brought to a premature end-of-life.
+To react to this eventuality, it is necessary to prepare Hexatomic for its end-of-maintenance.
+This is part of a setup of the software project, that makes it possible to revive the project even after longer periods of dormancy or abandonment.</p>
+<p>If you know that your maintenance term is coming to an end, please take the following precautions to prepare Hexatomic for a later revival.
+For each step, an approximate <i class="fa fa-hourglass-start"></i> start time is suggested.</p>
+<h2><a class="header" href="#1-freeze-development" id="1-freeze-development">1. Freeze development</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>Start of the last quarter of your maintenance term</em></p>
+<p>Do not start to draft, plan, or develop new functionality features.
+Instead, use available resources to prepare for end-of-maintenance.</p>
+<p>Communicate the upcoming end-of-maintenance to current contributors during as soon as possible.
+If you are lucky, one of them may want to integrate a feature so badly that they take on maintenance themself, or are able to round up more funding.</p>
+<h2><a class="header" href="#2-prioritize-and-clear-open-issues-and-pull-requests" id="2-prioritize-and-clear-open-issues-and-pull-requests">2. Prioritize and clear open issues and pull requests</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>Start of the last quarter of your maintenance term</em></p>
+<p>Prioritize open issues and pull requests by necessity to be merged before end-of-maintenance.
+If you use a code platform such as GitHub or GitLab, use its project management features (boards, milestones, etc.) to track progress, and react to delays by communicating with the stakeholders in issues and pull requests.
+De-prioritize as necessary.</p>
+<p>For any new incoming issue or pull request, communicate to their authors that development is frozen due to the upcoming end of your maintenance term.
+Perhaps there is a new maintainer among them, or a new funding idea to be had.</p>
+<p>Focus on clearing those issues and PRs with the highest priority.
+Make sure that you maintain the high standards for accepting contributions to Hexatomic.</p>
+<p>You can work on clearing issues and PRs up until one month before the end of your maintenance term.</p>
+<h2><a class="header" href="#3-issue-an-end-of-maintenance-announcement-to-the-whole-community" id="3-issue-an-end-of-maintenance-announcement-to-the-whole-community">3. Issue an end-of-maintenance announcement to the whole community</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>Start of the last quarter of your maintenance term</em></p>
+<p>Publicize the end-of-maintenance date loud and clear wherever it makes sense, e.g., the project homepage and the <code>README.md</code> file.
+Make sure to use any communication channels to the community you have: issues, mailing lists, conferences, etc.
+Don't forget to provide a way to contact you, as someone from the community may want to volunteer as maintainer, or may have funding available.</p>
+<h2><a class="header" href="#4-batten-down-the-hatches" id="4-batten-down-the-hatches">4. Batten down the hatches</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>1 month before the end of your maintenance term</em></p>
+<p>Take a round trip across the project.
+Read the documentation carefully again to make sure that it contains everything that may be needed for a revival later on.
+Fix last <em>small</em> things that catch your attention.</p>
+<h2><a class="header" href="#5-release-and-archive" id="5-release-and-archive">5. Release and archive</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>1 week before the end of your maintenance term</em></p>
+<p>Make sure that everything that is release-ready has been released.
+Make one last release if necessary, and publish it.
+Archive the whole repository on Software Heritage;
+read the <a href="https://www.softwareheritage.org/save-and-reference-research-software/">Software Heritage documentation</a> to learn how.</p>
+<h2><a class="header" href="#6-say-goodbye" id="6-say-goodbye">6. Say goodbye</a></h2>
+<p><i class="fa fa-hourglass-start"></i> <em>1 day before the end of your maintenance term</em></p>
+<p>Add a note at the top of the <code>README.md</code>, notifying future repository visitors that Hexatomic has reached a temporary end-of-maintenance.
+Include contact details for yourself in that note that don't rely on GitHub functionality (e.g., an email address), so that potential new maintainers can get in touch with you if they want to revive the repository.
+Let them know that it can, however, be revived, and link to the relevant developer and maintainer documentation on Software Heritage (e.g., <a href="https://archive.softwareheritage.org/browse/origin/content/?origin_url=https://github.com/hexatomic/hexatomic&amp;path=docs/dev/src/SUMMARY.md"><code>https://archive.softwareheritage.org/browse/origin/content/?origin_url=https://github.com/hexatomic/hexatomic&amp;path=docs/dev/src/SUMMARY.md</code></a>). 
+Archive the repository on GitHub.
+This will preserve everything that's in the repository, including issues and pull requests, but everything will be read-only.
+Take your leave, and don't forget to switch off the lights.
+Thank you for maintaining Hexatomic! <i class="fa fa-heart"></i></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../../maintenance/repository/templates.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../../common-issues/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="../../maintenance/repository/templates.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="../../common-issues/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="../../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
