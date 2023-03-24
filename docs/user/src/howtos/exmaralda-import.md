@@ -21,3 +21,4 @@ dialog.demo/
 8. Unfold the corpus and in the “Corpus Structure” and right-click on the “dialog.demo” document, select “Open with Grid Editor”.
 Choose “phon0” as data source to show the token and span annotations for the first speaker.
 ![Grid editor with the openend document](dialog-demo-grid-editor.png)
+9. You can now continue to [work with the imported data in the Grid Editor](../usage/grid-editor/index.html).
