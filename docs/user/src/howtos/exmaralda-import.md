@@ -18,7 +18,7 @@ dialog.demo/
 ![Select a corpus folder in the import wizard](select-dialog-demo-folder.png)
 7. The importer should correctly identify this corpus as "EXMARALDA format (*.exb)". Click on *Finish* to import the corpus.
 ![Format selection wizard step](dialog-demo-finish.png)
-8. Unfold the corpus and in the "Corpus Structure" and right-click on the "dialog.demo" document, select "Open with Grid Editor".
+8. Expand the corpus structure in the "Corpus Structure" view and right-click on the "dialog.demo" document, select "Open with Grid Editor".
 Choose "phon0" as data source to show the token and span annotations for the first speaker.
 ![Grid editor with the openend document](dialog-demo-grid-editor.png)
 9. You can now continue to [work with the imported data in the Grid Editor](../usage/grid-editor/index.html).
