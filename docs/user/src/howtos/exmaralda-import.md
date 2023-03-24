@@ -1,13 +1,13 @@
 # How to import a corpus from EXMARaLDA
 
 We will import an example corpus from the [ANNIS demo corpus
-page](https://corpus-tools.org/annis/corpora.html), namely the so-called
+page](https://corpus-tools.org/annis/corpora.html), the so-called
 “dialog.demo” corpus, a sample from the [BeMaTaC corpus](https://www.linguistik.hu-berlin.de/de/institut/professuren/korpuslinguistik/forschung/bematac).
 
 1. Go to <https://corpus-tools.org/annis/corpora.html>.
 2. [Download](https://corpus-tools.org/corpora/dialog.demo_EXMARaLDA.zip) the corpus named “dialog.demo” in the EXMARaLDA format.
 3. Unzip the file to a folder of your choice
-4. The folder will have a structure with the root corpus as folder and a single `.exb` file containing a document. The video file next to it will be linked with the document, but Hexatomic does not allow playing video files yet.
+4. The folder will have a structure with the root corpus as folder and a single `.exb` file containing a document. The video file next to it will be linked with the document, but Hexatomic can not yet play video files.
 ```plain
 dialog.demo/
 ├── dialog.demo.exb
