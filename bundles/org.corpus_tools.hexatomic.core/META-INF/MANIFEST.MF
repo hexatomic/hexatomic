@@ -30,7 +30,7 @@ Require-Bundle: javax.inject,
  org.eclipse.equinox.p2.core,
  org.eclipse.equinox.p2.operations,
  org.eclipse.osgi.services,
- org.corpus-tools.salt-api,
+ org.corpus-tools.salt-api;bundle-version="3.4.3",
  org.eclipse.equinox.p2.engine;bundle-version="2.7.500",
  org.eclipse.equinox.p2.metadata.repository;bundle-version="1.4.100",
  org.eclipse.e4.core.di.extensions;bundle-version="0.17.200"
