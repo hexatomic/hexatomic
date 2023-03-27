@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.tests</artifactId>
-        <version>1.4.1</version>
+        <version>1.5.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>org.corpus_tools.hexatomic.it.tests</artifactId>
