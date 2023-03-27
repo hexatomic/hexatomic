@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Graph editor could not show segments in graphs where a pointing relation and
+  other edges like dominance relations would create a cycle. It is perfectly
+  fine for graphs to have cycles consisting of pointing relations, but the graph
+  traversal implementation in Salt was buggy and returned an error. We updated
+  the Salt dependency to 3.4.3 to resolve this issue.
+
 ## [1.4.0] - 2023-03-24
 
 ### Changed
