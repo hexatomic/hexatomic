@@ -42,8 +42,8 @@
 	  </location>
 	  <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 		  <repository location="https://korpling.github.io/salt/p2/salt-3.4/"/>
-		  <unit id="org.corpus-tools.salt-api" version="3.4.2"/>
-		  <unit id="org.corpus-tools.salt-extensions" version="3.4.2"/>
+		  <unit id="org.corpus-tools.salt-api" version="3.4.3"/>
+		  <unit id="org.corpus-tools.salt-extensions" version="3.4.3"/>
 	  </location>
   </locations>
 </target>
