@@ -10,15 +10,6 @@ You can read about it in [*Creating and activating the target platform*](../deve
 
 ---
 
-### 🚧 `.target` may be out of sync with `.tpd`
-
-Sometimes, contributors may update the `.tpd` source file, but forget to push a newly generated `.target` file to the repository.
-This may lead to Eclipse being unable to resolve types, or other errors.
-
-**💡 Generate the `target` file from the `.tpd` file as described in [*Creating and activating the target platform*](../development/activating-target-platform.md), and [contribute](https://github.com/hexatomic/hexatomic/tree/develop/CONTRIBUTING.md) the newly generated `.target` file back to the project.**
-
----
-
 ### 🚧 Target Platform may not be resolved
 
 Whenever a Target Platform definition file has been changed, you have to activate it in Eclipse, so that dependencies can be resolved.

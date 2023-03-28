@@ -27,6 +27,7 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.salt.SaltFactory;
+import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.SPointingRelation;
@@ -80,16 +81,16 @@ class TestProjectManager {
 
     projectManager = new ProjectManager();
     projectManager.events = events;
-    
+
     errorService = mock(ErrorService.class);
     projectManager.errorService = errorService;
-    
+
     partService = mock(EPartService.class);
     projectManager.partService = partService;
 
     UiStatusReport uiStatus = mock(UiStatusReport.class);
     projectManager.uiStatus = uiStatus;
-    
+
     projectManager.sync = sync;
     projectManager.notificationFactory = factory;
 
@@ -291,6 +292,67 @@ class TestProjectManager {
 
       // Test that the graphs are equal again
       assertEquals(new HashSet<>(), docGraph1.findDiffs(docGraph3));
+    }
+  }
+
+  /**
+   * Deletes a document and checks if the changes can be undone.
+   */
+  @Test
+  public void testUndoDocumentDeletion() {
+    projectManager.open(exampleProjectUri);
+
+    List<SCorpusGraph> corpusGraphs = projectManager.getProject().getCorpusGraphs();
+    assertEquals(1, corpusGraphs.size());
+    SCorpusGraph cg = corpusGraphs.get(0);
+    assertEquals(4, cg.getDocuments().size());
+
+    // Delete on of the documents and set a checkpoint
+    cg.removeNode(cg.getDocuments().get(0));
+    projectManager.addCheckpoint();
+    assertEquals(3, cg.getDocuments().size());
+
+    // Undo the change, the document should exist again
+    assertEquals(true, projectManager.canUndo());
+    projectManager.undo();
+    assertEquals(4, cg.getDocuments().size());
+
+    // Redo the changes, which should delete the document again
+    assertEquals(true, projectManager.canRedo());
+    projectManager.redo();
+    assertEquals(3, cg.getDocuments().size());
+  }
+
+  @Test
+  public void testRevertToLastCheckpoint() {
+
+    projectManager.open(exampleProjectUri);
+    assertFalse(projectManager.canUndo());
+    assertFalse(projectManager.canRedo());
+
+    Optional<SDocument> document = projectManager.getDocument(DOC3_ID, true);
+    assertTrue(document.isPresent());
+    if (document.isPresent()) {
+      SDocumentGraph docGraph = document.get().getDocumentGraph();
+      assertNotNull(docGraph);
+
+      // Change a token annotation without creating a checkpoint
+      List<SToken> token = docGraph.getSortedTokenByText();
+      token.get(0).createAnnotation("test", "anno", "0");
+      assertTrue(token.get(0).containsLabel(TEST_ANNO_QNAME));
+      token.get(1).createAnnotation("test", "anno", "1");
+      assertTrue(token.get(1).containsLabel(TEST_ANNO_QNAME));
+
+      assertFalse(projectManager.canRedo());
+      assertFalse(projectManager.canRedo());
+
+      // Revert changes and check that the created annotations are gone
+      projectManager.revertToLastCheckpoint();
+      assertFalse(token.get(0).containsLabel(TEST_ANNO_QNAME));
+      assertFalse(token.get(1).containsLabel(TEST_ANNO_QNAME));
+
+      assertFalse(projectManager.canRedo());
+      assertFalse(projectManager.canRedo());
     }
   }
 

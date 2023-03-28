@@ -37,13 +37,13 @@ class TesttStatusBar {
   void testCustomStatusMessage() {
     events.send(Topics.TOOLBAR_STATUS_MESSAGE, "This is an example");
     bot.waitUntil(new DefaultCondition() {
-      
+
       @Override
       public boolean test() throws Exception {
         SWTBotLabel lbl = bot.labelWithId("permanent-status-message");
         return "This is an example".equals(lbl.getText());
       }
-      
+
       @Override
       public String getFailureMessage() {
         return "Permanent status message should have value \"This is an example\"";

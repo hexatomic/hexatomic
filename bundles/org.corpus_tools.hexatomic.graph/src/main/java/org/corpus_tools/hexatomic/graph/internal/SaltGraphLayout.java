@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import org.corpus_tools.hexatomic.graph.GraphDisplayConfiguration;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
@@ -57,10 +58,13 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
  */
 public class SaltGraphLayout extends AbstractLayoutAlgorithm {
 
+  private static final int MINIMAL_NODE_HEIGHT = 50;
+
+  private GraphDisplayConfiguration config = new GraphDisplayConfiguration();
+
   private double averageTokenNodeWidth;
   private double maxNodeHeight;
 
-  private static final double PERCENT_INTER_NODE_MARGIN = 1.8;
 
   private BiMap<InternalNode, SNode> nodes;
   private BiMap<InternalRelationship, SRelation<?, ?>> relations;
@@ -70,6 +74,9 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     super(styles);
   }
 
+  public void setConfig(GraphDisplayConfiguration config) {
+    this.config = config;
+  }
 
 
   @Override
@@ -172,8 +179,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         if (n != null && n.getGraph() instanceof SDocumentGraph) {
           SDocumentGraph graph = (SDocumentGraph) n.getGraph();
           List<DataSourceSequence<? extends Number>> sequences = new LinkedList<>(
-              graph.getOverlappedDataSourceSequence(n,
-              SALT_TYPE.STEXT_OVERLAPPING_RELATION));
+              graph.getOverlappedDataSourceSequence(n, SALT_TYPE.STEXT_OVERLAPPING_RELATION));
           if (overlapsExisting(sequences, occupiedByText)) {
             // assign a new sub-rank to this node
             subrank++;
@@ -241,7 +247,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
           }
         }
         node.setInternalLocation(boundsX + x,
-            boundsY + (rank * (this.maxNodeHeight * PERCENT_INTER_NODE_MARGIN)));
+            boundsY + (rank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
 
       }
     }
@@ -269,8 +275,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     fireProgressEvent(1, 3);
 
     // 3. layout tokens and put them one rank below the number of ranks
-    // TODO: check if any pointing relations are present and use +1 if not
-    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + 2);
+    layoutTokenOrder(tokens, boundsX, boundsY, flattenedRank + config.getTokenRankOffset() + 1);
     fireProgressEvent(2, 3);
 
     // 4. assign position based on (sub-) rank and the covered tokens
@@ -358,9 +363,9 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
         for (SToken t : sortedTokens) {
           InternalNode n = this.nodes.inverse().get(t);
           if (n != null) {
-            n.setInternalLocation(x,
-                boundsY + (tokenRank * (this.maxNodeHeight * PERCENT_INTER_NODE_MARGIN)));
-            x += this.averageTokenNodeWidth / 2.0;
+            n.setInternalLocation(x, boundsY
+                + (tokenRank * (this.maxNodeHeight * (config.getVerticalNodeMargin() + 1.0))));
+            x += this.averageTokenNodeWidth * (config.getHorizontalTokenMargin());
             x += n.getWidthInLayout();
           }
         }
@@ -389,7 +394,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
       }
     }
 
-    this.maxNodeHeight = 50;
+    this.maxNodeHeight = MINIMAL_NODE_HEIGHT;
     // Calculate the average width and height to get a good distance between the tokens
     double sumWidth = 0.0;
     int tokenCount = 0;
@@ -406,7 +411,7 @@ public class SaltGraphLayout extends AbstractLayoutAlgorithm {
     }
 
     if (tokenCount > 0) {
-      this.averageTokenNodeWidth = sumWidth / (double) tokenCount;
+      this.averageTokenNodeWidth = sumWidth / tokenCount;
     } else {
       this.averageTokenNodeWidth = 0;
     }

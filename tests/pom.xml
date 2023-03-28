@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.corpus_tools</groupId>
 		<artifactId>org.corpus_tools.hexatomic.root</artifactId>
-		<version>1.0.0</version>
+		<version>1.4.1</version>
 	</parent>
 	
 	<properties>
@@ -16,6 +16,7 @@
 		aggregated into a report project. Tell SonarCloud to use the aggregated data.
 		-->
 		<sonar.coverage.jacoco.xmlReportPaths>${basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+		<tycho-tests-jvmargs></tycho-tests-jvmargs>
 	</properties>
 
 	<modules>
@@ -26,5 +27,35 @@
 		<module>org.corpus_tools.hexatomic.it.tests</module>
 		<module>org.corpus_tools.hexatomic.tests.report</module>
 	</modules>
+
+	<profiles>
+    	<profile>
+            <id>macos</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <tycho-tests-jvmargs>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</tycho-tests-jvmargs>
+            </properties>
+        </profile>
+    </profiles>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<!-- set a default argument line for all tycho surefire tests -->
+						<argLine>${tycho-tests-jvmargs}</argLine>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>

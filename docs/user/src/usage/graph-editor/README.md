@@ -5,27 +5,16 @@ It provides a general visualization that displays all possible types of annotati
 
 ![Screenshot of the graph editor](graph-viewer.png)
 
-## Filters
+On the bottom of the graph editor is the console that you can use to edit the graph.
+How to do this is explained in detail in the [Editing the graph](./console.md) section.
+
+## Select visible segment
 
 On the right-hand side of the interface, you can select which segment of the current document to show in the [graph view](#graph-view).
 For large graphs, it can take some time until its layout is calculated.
 The checkbox next to the segment indicates if this calculation is finished.
 You can select more than one segment to display, by holding the <kbd>Ctrl</kbd> key while clicking on additional segments.
 You can also show a whole range of segments by holding the <kbd>Shift</kbd> key and clicking on the last segment of the range you want to select.
-
-To access additional filter options, click and expand a relevant category in the **Filter View** section.
-
-You can choose to display spans and their annotations in the graph, by first expanding **Annotation Types** and the checking the checkbox **Spans**. 
-Spans are special nodes to collect a number of tokens and to annotate them all at once.
-If you want to learn more about spans, please read the [Salt documentation](http://corpus-tools.org/salt/#documentation).
-Similarly, you can show or hide pointing relations between nodes in the graph by using the checkbox **Pointing Relations**.
-
-**Node Annotations** allows you to filter the segments that include annotations of a specific *name*.
-To add a filter criterion (also called a "facet"), search for an annotation name in the text field and select the matching annotation.
-This creates a box with the annotation name of the applied filter.
-You can add more than one filter and any node, that contains any of the selected annotation names, will be shown.
-Click on the close button to delete the annotation name filter again.
-If you select no annotation names, all annotations will be visible.
 
 ## Graph view
 
@@ -48,9 +37,7 @@ You can navigate the graph view as follows:
 
 - You can **center the view** around a specific point in the graph by double-clicking that point.
 
-If you don't like the layout of the graph, you can change it by simply dragging nodes with your mouse.
+- Double-clicking over a node will additionally **append the node name reference to the console prompt**. This allows to insert node references easily without having to type them in [console commands](console.md).
 
-## Console
+If you don't like the layout of the graph, you can change it by dragging nodes with your mouse or [adjusting the layout parameters](./layout-params.md).
 
-On the bottom of the graph editor, there is the console which you can use to actually edit the graph.
-How to do this is explained in detail in the next section, [Editing the graph](./console.md).

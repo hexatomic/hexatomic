@@ -9,22 +9,12 @@ This is because Eclipse cannot find the bundles that Hexatomic needs in the curr
 The bundles that Hexatomic needs are defined in a custom target platform definition project, which is located in the `releng/org.corpus_tools.hexatomic.target/` directory.
 
 You can see this project in the Project Explorer in Eclipse.
-It contains two important files:
-
-- `org.corpus_tools.hexatomic.target.tpd`: A reasonably well-readable plain text files which describes which bundles from which bundle repository should go in the target platform
-- `org.corpus_tools.hexatomic.target.target`: An XML file describing the target platform so that the Eclipse IDE can read it and activate it
+It contains the important `org.corpus_tools.hexatomic.target.target` file,
+which is an XML file describing the target platform so that the Eclipse IDE can
+read it and activate it.
 
 The first time you run Eclipse - and every consecutive time that the target platform definition changes - you will need to activate the target platform.
-To do so, use the plain text target platform description file ending on `.tpd` to create a new XML target platform definition:
-
-- Right-click on `org.corpus_tools.hexatomic.target.tpd`, and click on **Create Target Definition File**, *or*
-- Select `org.corpus_tools.hexatomic.target.tpd` and press <kbd>Alt</kbd> + <kbd>R</kbd>.
-
-This will refresh the XML definition file with the contents of the description file, or create the XML file if it doesn't exist.
-
-![](create-target-definition.png)
-
-Next, open `org.corpus_tools.hexatomic.target.target`  (you may have to right-click and choose **Open With** > **Target Editor**).
+To do so, open `org.corpus_tools.hexatomic.target.target` (you may have to right-click and choose **Open With** > **Target Editor**).
 On opening the Target Editor, Eclipse will resolve the plugins in the target platform definition.
 Wait until this has finished, then click the **Set as Active Target Platform** link on the top-right of the Target Editor.
 

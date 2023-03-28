@@ -54,9 +54,6 @@
 - [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
   - [Technologies](#technologies)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Build](#build)
 - [Documentation](#documentation)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
@@ -92,44 +89,11 @@ Development is based at the [Department of English Studies (Friedrich Schiller U
 - The Hexatomic documentation is built with [mdbook][mdbook], a utility to create modern online books from Markdown files.
 
 
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-Clone this repository to your computer:
-
-```sh
-git clone https://github.com/hexatomic/hexatomic.git
-```
-
-### Prerequisites
-
-You need at least the following software installed on your computer to develop Hexatomic:
-
-- Java Development Kit (JDK) version `>= 1.8`, either [OpenJDK][openjdk] (Linux, Mac OS), or [Oracle JDK][oracle-jdk] (Windows)
-- [Apache Maven][maven] version `>= 3.6.0`
-
-If you want to build the documentation locally, you also need
-
-- [mdbook][mdbook] version `>= 0.3.1`
-
-For development, we recommend that you use the tooling provided by the
-
-- [Eclipse IDE][eclipse-download] version `>= 2019-06`
-
-### Build
-
-Go to the repository root on your computer, and run the following command to verify that the project builds.
-
-```bash
-mvn clean install
-```
-
-
 <!-- USAGE EXAMPLES -->
 ## Documentation
 
 Please refer to the documentation for details on how to develop Hexatomic: [Developer & Maintainer Documentation][dev-docs].
+For getting started, see the section "Development setup" which explains which software is needed and how to build Hexatomic.
 
 If you are looking for documentation of how to *use* Hexatomic, please refer to the [user documentation][user-docs].
 
@@ -138,8 +102,6 @@ If you are looking for documentation of how to *use* Hexatomic, please refer to 
 ## Roadmap
 
 See the [open issues](https://github.com/hexatomic/hexatomic/issues) for a list of proposed features (and known issues).
-
-
 
 
 <!-- CONTRIBUTING -->
@@ -223,7 +185,7 @@ You can contact us per email: `hexatomic [at] corpus-tools.org`.
 [license-shield]: https://img.shields.io/github/license/hexatomic/hexatomic.svg?style=flat-square
 [license-url]: https://github.com/hexatomic/hexatomic/blob/main/LICENSE
 [product-screenshot]: images/screenshot.png
-[gh-actions-main-shield]: https://img.shields.io/github/workflow/status/hexatomic/hexatomic/Automated%20tests/develop?style=flat-square
+[gh-actions-main-shield]: https://img.shields.io/github/actions/workflow/status/hexatomic/hexatomic/test.yml?branch=develop&style=flat-square
 [gh-actions-main-url]: https://github.com/hexatomic/hexatomic/actions?query=workflow%3A%22Automated+tests
 [sonarcloud-dashboard]: https://sonarcloud.io/dashboard?id=hexatomic_hexatomic
 

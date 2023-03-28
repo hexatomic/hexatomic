@@ -21,6 +21,7 @@
 package org.corpus_tools.hexatomic.core.ui;
 
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -39,7 +40,8 @@ public class PreferencesDialog extends Dialog {
   IEclipsePreferences prefs =
       ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
   Button checkbox;
-  @Inject ErrorService errorService;
+  @Inject
+  ErrorService errorService;
 
   /**
    * Create the dialog.
@@ -50,11 +52,11 @@ public class PreferencesDialog extends Dialog {
     super(parentShell);
   }
 
-  
+
   @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
-    newShell.setText("Enable startup checks");
+    newShell.setText("Preferences");
   }
 
   /**
@@ -65,18 +67,21 @@ public class PreferencesDialog extends Dialog {
   @Override
   protected Control createDialogArea(Composite parent) {
     Composite area = (Composite) super.createDialogArea(parent);
-    Label label = new Label(area, SWT.BORDER);
-    label.setText("When checked, Hexatomic will automatically check for updates at each start.");
+
     checkbox = new Button(area, SWT.CHECK);
     checkbox.setText("Enable automatic update checks");
-    checkbox.setSelection(prefs.getBoolean("autoUpdate", true));
+    checkbox.setSelection(prefs.getBoolean(Preferences.AUTO_UPDATE, true));
+    Label label = new Label(area, SWT.BORDER | SWT.WRAP);
+    label.setText("When checked, Hexatomic will automatically check for updates at each start.\n"
+        + "For this function to work, it needs to establish a  network connection\n "
+        + "to hexatomic.github.io (hosted by GitHub, Inc.) at every startup. ");
     return area;
   }
-  
+
   @Override
   protected void okPressed() {
     if (prefs != null) {
-      prefs.putBoolean("autoUpdate", checkbox.getSelection());
+      prefs.putBoolean(Preferences.AUTO_UPDATE, checkbox.getSelection());
       try {
         prefs.flush();
       } catch (BackingStoreException ex) {
@@ -84,7 +89,7 @@ public class PreferencesDialog extends Dialog {
       }
     } else {
       log.info("Path to preferences not found");
-      
+
     }
     super.okPressed();
   }

@@ -36,31 +36,26 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
-import org.eclipse.jface.resource.FontDescriptor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.widgets.Display;
 
 public class NodeFigure extends Figure {
 
 
   private final String caption;
-  private final Font boldFont;
 
   /**
    * Creates a new node figure for a given salt node.
    * 
    * @param item The salt node.
+   * @param defaultFont Font resource used to display the normal text of the node.
+   * @param boldFont Font resource used for displaying bold text in the node.
    * @param fontMetrics Metrics describing the font used to render the text.
    */
-  public NodeFigure(SNode item, FontMetrics fontMetrics, AnnotationFilter filter) {
+  public NodeFigure(SNode item, Font defaultFont, Font boldFont, FontMetrics fontMetrics,
+      AnnotationFilter filter) {
 
-    Font font = Display.getCurrent().getSystemFont();
-    FontDescriptor boldDescriptor = FontDescriptor.createFrom(font).setStyle(SWT.BOLD);
-    this.boldFont = boldDescriptor.createFont(Display.getCurrent());
-
-    setFont(font);
+    setFont(defaultFont);
     caption = item.getName();
 
 
@@ -115,5 +110,6 @@ public class NodeFigure extends Figure {
       add(new Label(annoDesc));
     }
   }
+
 
 }

@@ -6,6 +6,124 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2023-03-27
+
+### Fixed
+
+- Graph editor could not show segments in graphs where a pointing relation and
+  other edges like dominance relations would create a cycle. It is perfectly
+  fine for graphs to have cycles consisting of pointing relations, but the graph
+  traversal implementation in Salt was buggy and returned an error. We updated
+  the Salt dependency to 3.4.3 to resolve this issue.
+
+## [1.4.0] - 2023-03-24
+
+### Changed
+
+- Improve import how-to in user docs (#452)
+
+## [1.3.0] - 2023-03-16
+
+### Added
+
+- Added HOW-TO for importing and annotating a demo corpus to the user
+  documentation (#446).
+- Double-click on nodes in the graph viewer will add the node name reference to
+  the command prompt.
+- Hexatomic will now remember the last opened project location and pre-select it
+  in the "Open Salt Project" dialog.
+
+### Fixed
+
+- Only import files with `.exb` file ending in the EXMARaLDA importer (#441)
+
+## [1.2.0] - 2023-03-05
+
+### Added
+
+- Make preferences accessible via default means on macOS (#413)
+
+### Fixed
+
+- Do not connect to GitHub without asking (#412)
+
+## [1.1.7] - 2023-03-03
+
+### Fixed
+
+- Add required P2 update bundles directly to core bundle so they are not lost
+  when dependencies for the feature are calculated.
+
+## [1.1.6] - 2023-03-03
+
+### Fixed
+
+- Include missing functionality in the Eclipse platform for running updates.
+
+## [1.1.5] - 2023-03-03
+
+### Fixed
+
+- There seems to be an issue with Maven-based target platform entries and the
+  automatic update function. Removed Maven-based target platform entries and
+  replace them with the original P2 repos for Pepper and Salt. 
+
+## [1.1.4] - 2023-03-03
+
+### Fixed
+
+- Explicitly set the Java version in the workflow to publish the P2 update
+  site.
+
+
+## [1.1.3] - 2023-03-03
+
+- ~~Excplicitly set the Java version in the workflow to publish the P2 update
+  site.~~ 
+
+## [1.1.2] - 2023-03-03
+
+### Fixed
+
+- Workaround for a bug in Maven 3.9.0 that let our release workflows fail. To
+  avoid this, we excplicitly use a specific Maven version instead of using the
+  default one from GitHub Actions.
+
+## [1.1.1] - 2023-03-03
+
+### Fixed
+
+- Deleting a document could not be undone (#422)
+- "Tokenize after import" checkbox label was located wrong in text importer (#420)
+- Running the tests on macOS would fail (#417). An GitHub action is now
+  configured to execute the tests also on macOS for each pull request.
+- About dialog did mention the Apache License for Hexatomic itself, but not the
+  dependencies (#416).
+- Update to Eclipse platform version 2022-12, which has various fixes. This does
+  not change any functionality for the user, but we also now bundle Java version
+
+
+## [1.1.0] - 2023-02-19
+
+### Fixed
+
+- Stabilize graph editor test to wait until background jobs are finished before
+  selecting the text fragment.
+- Clarify Mac OS installation instructions in user documentation.
+- Show more explanations when update check fails and only show status message
+  when update check was started in background (#410).
+
+### Added
+
+- Add user interface for graph editor graph layout parameters  (#133)
+- Add refactoring operation to automatically generate node names like `n1`, `t1`, etc. (#370)
+
+## [1.0.1] - 2022-08-30
+
+### Fixed
+
+- Create and use v1 update site
+
 ## [1.0.0] - 2022-08-23
 
 ### Changed
@@ -290,7 +408,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/hexatomic/hexatomic/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/hexatomic/hexatomic/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/hexatomic/hexatomic/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/hexatomic/hexatomic/compare/v1.1.7...v1.2.0
+[1.1.7]: https://github.com/hexatomic/hexatomic/compare/v1.1.6...v1.1.7
+[1.1.6]: https://github.com/hexatomic/hexatomic/compare/v1.1.5...v1.1.6
+[1.1.5]: https://github.com/hexatomic/hexatomic/compare/v1.1.4...v1.1.5
+[1.1.4]: https://github.com/hexatomic/hexatomic/compare/v1.1.3...v1.1.4
+[1.1.3]: https://github.com/hexatomic/hexatomic/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/hexatomic/hexatomic/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/hexatomic/hexatomic/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/hexatomic/hexatomic/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/hexatomic/hexatomic/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/hexatomic/hexatomic/compare/v0.14.0...v1.0.0
 [0.14.0]: https://github.com/hexatomic/hexatomic/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/hexatomic/hexatomic/compare/v0.12.0...v0.13.0

@@ -27,6 +27,7 @@ import java.util.Optional;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
@@ -42,7 +43,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.wb.swt.SwtResourceManager;
 
 public class ConsoleView implements Runnable, IDocumentListener, VerifyListener {
 
@@ -66,8 +67,7 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
    * @param projectManager An project manager object.
    * @param graph The Salt graph to edit.
    */
-  public ConsoleView(SourceViewer view, UISynchronize sync,
-      ProjectManager projectManager,
+  public ConsoleView(SourceViewer view, UISynchronize sync, ProjectManager projectManager,
       SDocumentGraph graph) {
     this.document = view.getDocument();
     this.sync = sync;
@@ -123,10 +123,29 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
   public void writeLine(String str) {
     sync.asyncExec(() -> {
       document.set(document.get() + str + "\n");
-      if (view != null && view.getTextWidget() != null) {
-        view.getTextWidget().setCaretOffset(document.getLength());
-        view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
-      }
+      synchronizeViewWithDocument();
+    });
+  }
+
+  private void synchronizeViewWithDocument() {
+    if (view != null && view.getTextWidget() != null) {
+      view.getTextWidget().setCaretOffset(document.getLength());
+      view.getTextWidget().setTopIndex(view.getTextWidget().getLineCount() - 1);
+    }
+  }
+
+  /**
+   * Allows to append the name of the given node to the prompt, e.g. because it was selected in the
+   * graph view.
+   * 
+   * @param n The node that was selected.
+   */
+  public void appendNodeName(SNode n) {
+    sync.asyncExec(() -> {
+      String prefix = document.get().endsWith(" ") ? "#" : " #";
+      document.set(document.get() + prefix + n.getName() + " ");
+      synchronizeViewWithDocument();
+      view.getTextWidget().setFocus();
     });
   }
 
@@ -208,21 +227,25 @@ public class ConsoleView implements Runnable, IDocumentListener, VerifyListener 
     private void verifyCtrlPlusKey(VerifyEvent e) {
       e.doit = false;
       FontData[] fd = styledText.getFont().getFontData();
-
-      fd[0].setHeight(fd[0].getHeight() + 1);
-      styledText.setFont(new Font(Display.getCurrent(), fd[0]));
+      if (fd.length > 0) {
+        Font newFont =
+            SwtResourceManager.getFont(fd[0].getName(), fd[0].getHeight() + 1, fd[0].getStyle());
+        styledText.setFont(newFont);
+      }
     }
 
     private void verifyCtrlMinusKey(VerifyEvent e) {
       e.doit = false;
       FontData[] fd = styledText.getFont().getFontData();
 
-      if (fd[0].getHeight() > 6) {
-        fd[0].setHeight(fd[0].getHeight() - 1);
+      // Minimum font size is 6
+      if (fd.length > 0 && fd[0].getHeight() > 6) {
+        Font newFont =
+            SwtResourceManager.getFont(fd[0].getName(), fd[0].getHeight() - 1, fd[0].getStyle());
+        styledText.setFont(newFont);
       }
-      styledText.setFont(new Font(Display.getCurrent(), fd[0]));
     }
-    
+
     private void setCommand(String cmd) {
       if (cmd == null) {
         return;

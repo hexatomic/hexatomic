@@ -37,7 +37,6 @@ import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;
-import org.corpus_tools.hexatomic.grid.GridHelper;
 import org.corpus_tools.hexatomic.grid.internal.commands.MergeSpanCommand;
 import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.data.Column.ColumnType;
@@ -682,7 +681,7 @@ public class GraphDataProvider implements IDataProvider {
     List<SStructuredNode> potentialTokens = selectedRows.parallelStream()
         .map(i -> getColumns().get(0).getDataObject(i)).collect(Collectors.toList());
     // Check that all potentialTokens are in fact tokens
-    List<SToken> tokens = potentialTokens.parallelStream().map(n -> {
+    return potentialTokens.parallelStream().map(n -> {
       if (n instanceof SToken) {
         return (SToken) n;
       } else {
@@ -691,7 +690,6 @@ public class GraphDataProvider implements IDataProvider {
                 + " in the first column of the grid, but found a " + n.getClass().getSimpleName());
       }
     }).collect(Collectors.toList());
-    return tokens;
   }
 
 

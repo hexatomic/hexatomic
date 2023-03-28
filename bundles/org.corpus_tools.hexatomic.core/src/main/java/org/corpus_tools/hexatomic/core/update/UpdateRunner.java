@@ -20,8 +20,10 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
+import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,9 +31,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
-import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.IWorkbench;
@@ -44,27 +49,143 @@ import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.prefs.BackingStoreException;
 
 
+@Creatable
 public class UpdateRunner {
+
+  protected class UpdateFinishedListener extends JobChangeAdapter {
+    private final IWorkbench workbench;
+    private final Shell shell;
+
+    protected UpdateFinishedListener(IWorkbench workbench, Shell shell) {
+      this.workbench = workbench;
+      this.shell = shell;
+    }
+
+    @Override
+    public void done(IJobChangeEvent event) {
+      if (event.getResult().isOK()) {
+        sync.syncExec(() -> {
+          boolean restart =
+              UpdateRunner.this.openQuestionDialog(shell, "Updates installed, restart?",
+                  "Updates have been installed. Do you want to restart?");
+          if (restart) {
+            prefs.putBoolean("justUpdated", true);
+            try {
+              prefs.flush();
+            } catch (BackingStoreException ex) {
+              errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
+            }
+            workbench.restart();
+          }
+        });
+      }
+      super.done(event);
+    }
+  }
+
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpdateRunner.class);
-  private static final IEclipsePreferences prefs =
-      ConfigurationScope.INSTANCE.getNode("org.corpus_tools.hexatomic.core");
+
+
+  @Inject
+  @Preference(nodePath = "org.corpus_tools.hexatomic.core")
+  IEclipsePreferences prefs;
+
+  @Inject
+  IProvisioningAgent agent;
+
+  @Inject
+  IEclipseContext context;
+
+  @Inject
+  private IProgressMonitor monitor;
+
+  @Inject
+  UISynchronize sync;
+
+  @Inject
+  IEventBroker events;
+
   @Inject
   ErrorService errorService;
 
   /**
+   * Schedules a {@link Job} that searches for updates and perform them if wanted.
+   * 
+   * @param triggeredManually Indicates whether the update processes was started by a manual action
+   *        of the user.
+   * @param shell The user interface shell.
+   */
+  public void scheduleUpdateJob(boolean triggeredManually, Shell shell) {
+
+    if (triggeredManually || autoUpdateAllowed(shell)) {
+      Job updateJob = new Job("Update Job") {
+        @Override
+        protected IStatus run(final IProgressMonitor monitor) {
+          return checkForUpdates(triggeredManually, shell);
+        }
+      };
+      updateJob.schedule();
+    }
+  }
+
+  /**
+   * Check if updating automatically is allowed.
+   * 
+   * @return True if the preference has been manually set and if we did not just update recently.
+   */
+  protected boolean autoUpdateAllowed(Shell shell) {
+    boolean justUpdated = prefs.getBoolean(Preferences.JUST_UPDATED, false);
+    boolean autoUpdateEnabled = false;
+    try {
+      // Check if auto update was configured by the user explicitly
+      if (Arrays.stream(prefs.keys()).noneMatch(Preferences.AUTO_UPDATE::equals)) {
+        // Preference is not set yet, ask the user about whether to enable or disable it
+        final AtomicBoolean userSetting = new AtomicBoolean(false);
+        sync.syncExec(
+            () -> userSetting.set(openQuestionDialog(shell, "Automatic update check configuration",
+                "Hexatomic can enable automatic update checks at each startup. "
+                    + "For this function to work, it needs to establish a  network connection to "
+                    + "hexatomic.github.io (hosted by GitHub, Inc.) at every startup. "
+                    + "You can always disable the checks again in the preferences.\n\n"
+                    + "Do you want to enable automatic update checks now?")));
+        // Set the value so we don't ask for it at the next startup again
+        prefs.putBoolean(Preferences.AUTO_UPDATE, userSetting.get());
+        prefs.flush();
+      }
+      autoUpdateEnabled = prefs.getBoolean(Preferences.AUTO_UPDATE, false);
+
+    } catch (BackingStoreException ex) {
+      errorService.handleException(
+          "Could not get the setting for if the auto update functionality should be enabled.", ex,
+          UpdateRunner.class);
+    }
+
+
+
+    if (!justUpdated && autoUpdateEnabled) {
+      return true;
+    } else if (justUpdated) {
+      prefs.putBoolean(Preferences.JUST_UPDATED, false);
+      try {
+        prefs.flush();
+      } catch (BackingStoreException ex) {
+        errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
+      }
+    }
+    return false;
+  }
+
+
+  /**
    * Search for updates and perform them if wanted.
    * 
-   * @param agent OSGi service to create an update operation.
-   * @param workbench current workbench to restart the application.
-   * @param monitor interface to show progress of update operation.
+   * @param triggeredManually Indicates whether the update processes was started by a manual action
+   *        of the user.
    * @param shell The user interface shell.
-   * @param sync Helper class to execute code in the UI thread.
-   * @param events Allows to send events.
-   * 
    */
-  public IStatus checkForUpdates(final IProvisioningAgent agent, final IWorkbench workbench,
-      IProgressMonitor monitor, final Shell shell, final UISynchronize sync, IEventBroker events) {
-    final UpdateOperation operation = createUpdateOperation(agent);
+  protected IStatus checkForUpdates(boolean triggeredManually, Shell shell) {
+    log.debug("Checking for updates");
+    final UpdateOperation operation = createUpdateOperation();
     log.debug("Update operation created");
     // Check if there are Updates available
     SubMonitor sub = SubMonitor.convert(monitor, "Checking for application updates...", 200);
@@ -77,70 +198,85 @@ public class UpdateRunner {
 
     // create update job
     ProvisioningJob provisioningJob = operation.getProvisioningJob(monitor);
-    log.debug("provisioningJob={}", provisioningJob);
 
     // run update job
     if (provisioningJob != null) {
       log.info("Update available!");
       final AtomicBoolean performUpdate = new AtomicBoolean(false);
-      sync.syncExec(() -> performUpdate.set(MessageDialog.openQuestion(shell, "Update available",
+      sync.syncExec(() -> performUpdate.set(openQuestionDialog(shell, "Update available",
           "Do you want to install the available update?")));
       if (performUpdate.get()) {
-        configureProvisioningJob(provisioningJob, shell, sync, workbench);
+        IWorkbench workbench = context.get(IWorkbench.class);
+        configureProvisioningJob(provisioningJob, shell, workbench);
         provisioningJob.schedule();
         return Status.OK_STATUS;
       } else {
         return Status.CANCEL_STATUS;
       }
     } else {
-      showProvisioningMessage(shell, sync);
-      log.warn("Couldn't find ProvisioningJob.");
+      log.warn("Error when resolving update operation (error code: {}, message: \"{}\")",
+          status.getCode(), status.getMessage());
+      showProvisioningErrorMessage(triggeredManually, status.getCode());
       return Status.CANCEL_STATUS;
     }
-
   }
 
-
   private void configureProvisioningJob(ProvisioningJob provisioningJob, final Shell shell,
-      final UISynchronize sync, final IWorkbench workbench) {
+      final IWorkbench workbench) {
 
     // register a job change listener to track
     // installation progress and notify user upon success
-    provisioningJob.addJobChangeListener(new JobChangeAdapter() {
-      @Override
-      public void done(IJobChangeEvent event) {
-        if (event.getResult().isOK()) {
-          sync.syncExec(() -> {
-            boolean restart = MessageDialog.openQuestion(shell, "Updates installed, restart?",
-                "Updates have been installed. Do you want to restart?");
-            if (restart) {
-              prefs.putBoolean("justUpdated", true);
-              try {
-                prefs.flush();
-              } catch (BackingStoreException ex) {
-                errorService.handleException("Couldn't update preferences", ex, UpdateRunner.class);
-              }
-              workbench.restart();
-            }
-          });
-        }
-        super.done(event);
+    provisioningJob.addJobChangeListener(new UpdateFinishedListener(workbench, shell));
+  }
+
+
+
+  private void showProvisioningErrorMessage(boolean triggeredManually, int errorCode) {
+
+    if (triggeredManually) {
+      // Give more feedback that needs to be acknowledged
+      final StringBuilder message = new StringBuilder();
+      message.append("Update check failed for unknown reasons. "
+          + "This can happen e.g. if the network is unreachable "
+          + "or if some firewalls block the connection to the update server.\n\n"
+          + "Please retry later or check the debug logs if the problem persists.");
+
+      // Check if a special environment variable set in the Eclipse run configuration is set
+      if ("true".equalsIgnoreCase(System.getenv("runInEclipse"))) {
+        // Hexatomic is started/debugged from inside Eclipse and the developer might need some
+        // additional hints that
+        // starting the update from Eclipse itself won't work.
+        message.append("\n\n");
+        message.append(
+            "In case of a developer build, " + "this error can also occur when you start Hexatomic "
+                + "from inside the Eclipse development environment.");
       }
-    });
+
+      errorService.showError("Update check failed (code " + errorCode + ")", message.toString(),
+          UpdateRunner.class);
+
+    } else {
+      // Since this was a background task, also inform about this less prominent
+      events.send(Topics.TOOLBAR_STATUS_MESSAGE,
+          "Update check failed (error code " + errorCode + ").");
+    }
   }
 
-
-
-  private void showProvisioningMessage(final Shell parent, final UISynchronize sync) {
-    sync.syncExec(() -> MessageDialog.openWarning(parent, "Couldn't find ProvisioningJob",
-        "Did you start Update from within the Eclipse IDE?"));
+  /**
+   * Wrapper for {@link MessageDialog#openQuestion(Shell, String, String)}. Having this in a
+   * separate function allows easier unit testing by overwriting this method.
+   * 
+   * @param parent The parent {@link Shell}.
+   * @param title Title used in the message dialog window frame.
+   * @param message The actual message.
+   * @return True if the user answered "Yes".
+   */
+  protected boolean openQuestionDialog(Shell parent, String title, String message) {
+    return MessageDialog.openQuestion(parent, title, message);
   }
 
-  static UpdateOperation createUpdateOperation(IProvisioningAgent agent) {
-    ProvisioningSession session = new ProvisioningSession(agent);
-    log.info("Provisioning session created");
-    // update all user-visible installable units
-    return new UpdateOperation(session);
+  protected UpdateOperation createUpdateOperation() {
+    return new UpdateOperation(new ProvisioningSession(agent));
   }
 
 }

@@ -33,10 +33,10 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@SuppressWarnings("restriction")
 @TestMethodOrder(OrderAnnotation.class)
 class TestImportExport {
 
@@ -284,6 +284,7 @@ class TestImportExport {
    * @throws IOException Might throw an exception when there are no temporary directories to create
    */
   @Test
+  @Order(1)
   void testExportImportPaula() throws IOException {
     // Check that export is disabled for empty default project (which has no
     // location on disk)
@@ -384,6 +385,7 @@ class TestImportExport {
    * @throws IOException Might throw an exception when there are no temporary directories to create
    */
   @Test
+  @Order(2)
   void testImportGraphAnno() throws IOException {
 
 
@@ -425,6 +427,7 @@ class TestImportExport {
    * @throws IOException May throw an exception when temporary directory creation fails
    */
   @Test
+  @Order(3)
   void testImportTextWithDefaults() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
     assertFalse(bot.menu(EXPORT).isEnabled());
@@ -481,6 +484,7 @@ class TestImportExport {
    * @throws IOException May throw an exception when temporary directory creation fails
    */
   @Test
+  @Order(4)
   void testImportTextWithTokenizationOff() throws IOException {
     // Check that export is disabled for empty default project (which has no location on disk)
     assertFalse(bot.menu(EXPORT).isEnabled());

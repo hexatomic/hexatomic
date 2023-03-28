@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.tests</artifactId>
-        <version>1.0.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <artifactId>org.corpus_tools.hexatomic.it.tests</artifactId>
@@ -38,5 +38,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -6,10 +6,10 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.e4.ui.workbench.swt.E4Application"
-            name="org.corpus_tools.hexatomic">
+            name="Hexatomic">
          <property
                name="appName"
-               value="org.corpus_tools.hexatomic">
+               value="Hexatomic">
          </property>
       </product>
    </extension>

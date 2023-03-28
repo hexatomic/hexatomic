@@ -43,20 +43,20 @@ public class FreezeGridBindings extends AbstractUiBindingConfiguration implement
   @Override
   public void configureUiBindings(UiBindingRegistry uiBindingRegistry) {
     // Shift + Alt + F toggles freeze
-    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 'f'),
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.MOD3 | SWT.MOD2, 'f'),
         new FreezeGridAction(true));
     // F5 triggers grid refresh
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.F5), new ResolveAction());
     // Alt + S creates a new span
-    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT, 's'),
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.MOD3, 's'),
         new CreateSpanSelectionAction());
     // Shift + Alt + T creates a new token annotation column, an insertion index of -1 signifies
     // that we don't know where exactly to add the new column
-    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 't'),
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.MOD3 | SWT.MOD2, 't'),
         new AddColumnAction(ColumnType.TOKEN_ANNOTATION, -1, 1));
     // Shift + Alt + S creates a new span annotation column, an insertion index of -1 signifies
     // that we don't know where exactly to add the new column
-    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT | SWT.MOD2, 's'),
+    uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.MOD3 | SWT.MOD2, 's'),
         new AddColumnAction(ColumnType.SPAN_ANNOTATION, -1, 1));
   }
 
