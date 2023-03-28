@@ -11,21 +11,21 @@ We have to test two scenarios:
 
 ## Prepare a local update site
 
-1. Adjust the file `releng/org.corpus_tools.hexatomic.product/p2.inf` and the local update site as repository by adding the following lines. 
+1. Adjust the file `releng/org.corpus_tools.hexatomic.product/org.corpus_tools.hexatomic.p2.inf` and the local update site as repository by adding the following lines. 
    Replace `<TMP>` with a temporary folder where you want to store the update site content, e.g. `/tmp/hexatomic-update-site`.
 ```plain
   addRepository(type:0,location:file${#58}<TMP>/repository,name:Local test,enabled:true);\
   addRepository(type:1,location:file${#58}<TMP>/repository,name:Local test,enabled:true);\
 ``` 
-2. Change the version number of Hexatomic to a large version number
+1. Change the version number of Hexatomic to a large version number
 ```bash
 mvn tycho-versions:set-version -DnewVersion=1999.0.0
 ```
-3. Build the current version with `mvn package`
-4. Copy the folder `releng/org.corpus_tools.hexatomic.product/target/repository` to the temporary folder `<TMP>`
-5. Reset the version number configuration, but keep the `p2.inf` file changes.
+1. Build the current version with `mvn package`
+2. Copy the folder `releng/org.corpus_tools.hexatomic.product/target/repository` to the temporary folder `<TMP>`
+3. Reset the version number configuration, but keep the `org.corpus_tools.hexatomic.p2.inf` file changes.
 ```bash
-git add releng/org.corpus_tools.hexatomic.product/p2.inf && git restore . && git reset
+git add releng/org.corpus_tools.hexatomic.product/org.corpus_tools.hexatomic.p2.inf && git restore . && git reset
 ``` 
 
 ## Updating from PR state to a newer version
@@ -40,7 +40,7 @@ releng/org.corpus_tools.hexatomic.product/target/products/org.corpus_tools.hexat
 
 ## Updating from the latest release
 
-1. Check out the source with the release tag `git checkout tags/v<version>`. The `p2.inf` file should stay locally altered.
+1. Check out the source with the release tag `git checkout tags/v<version>`. The `org.corpus_tools.hexatomic.p2.inf` file should stay locally altered.
 2. Execute `mvn package` to create the product
 3. Run Hexatomic from the command line and **check that there is a message in the toolbar about an available update**.
 ```bash
