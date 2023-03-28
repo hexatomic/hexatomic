@@ -93,7 +93,7 @@ jobs:
       env:
         API_TOKEN_GITHUB: ${{ secrets.HEXATOMIC_UPLOAD_TOKEN }}
       with:
-        source_file: 'releng/org.corpus_tools.hexatomic.update/target/repository'
+        source_file: 'releng/org.corpus_tools.hexatomic.product/target/repository'
         destination_repo: 'hexatomic/updates'
         # Change when we have a new major version
         destination_folder: 'v1'

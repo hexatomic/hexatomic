@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Stabilize automatic updates by providing a product update site instead only an
+  update site for the main feature.
+
 ## [1.4.1] - 2023-03-27
 
 ### Fixed

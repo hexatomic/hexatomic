@@ -9,7 +9,6 @@
         <version>1.5.0-SNAPSHOT</version>
     </parent>
     <modules>
-        <module>org.corpus_tools.hexatomic.update</module>
         <module>org.corpus_tools.hexatomic.product</module>
         <module>org.corpus_tools.hexatomic.target</module>
     </modules>
