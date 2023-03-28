@@ -1462,23 +1462,23 @@ We have to test two scenarios: </p>
 <p><strong>Do not commit any changes during the manual tests.</strong></p>
 <h2><a class="header" href="#prepare-a-local-update-site" id="prepare-a-local-update-site">Prepare a local update site</a></h2>
 <ol>
-<li>Adjust the file <code>releng/org.corpus_tools.hexatomic.product/p2.inf</code> and the local update site as repository by adding the following lines. 
+<li>Adjust the file <code>releng/org.corpus_tools.hexatomic.product/org.corpus_tools.hexatomic.p2.inf</code> and the local update site as repository by adding the following lines. 
 Replace <code>&lt;TMP&gt;</code> with a temporary folder where you want to store the update site content, e.g. <code>/tmp/hexatomic-update-site</code>.</li>
 </ol>
 <pre><code class="language-plain">  addRepository(type:0,location:file${#58}&lt;TMP&gt;/repository,name:Local test,enabled:true);\
   addRepository(type:1,location:file${#58}&lt;TMP&gt;/repository,name:Local test,enabled:true);\
 </code></pre>
-<ol start="2">
+<ol>
 <li>Change the version number of Hexatomic to a large version number</li>
 </ol>
 <pre><code class="language-bash">mvn tycho-versions:set-version -DnewVersion=1999.0.0
 </code></pre>
-<ol start="3">
+<ol>
 <li>Build the current version with <code>mvn package</code></li>
 <li>Copy the folder <code>releng/org.corpus_tools.hexatomic.product/target/repository</code> to the temporary folder <code>&lt;TMP&gt;</code></li>
-<li>Reset the version number configuration, but keep the <code>p2.inf</code> file changes.</li>
+<li>Reset the version number configuration, but keep the <code>org.corpus_tools.hexatomic.p2.inf</code> file changes.</li>
 </ol>
-<pre><code class="language-bash">git add releng/org.corpus_tools.hexatomic.product/p2.inf &amp;&amp; git restore . &amp;&amp; git reset
+<pre><code class="language-bash">git add releng/org.corpus_tools.hexatomic.product/org.corpus_tools.hexatomic.p2.inf &amp;&amp; git restore . &amp;&amp; git reset
 </code></pre>
 <h2><a class="header" href="#updating-from-pr-state-to-a-newer-version" id="updating-from-pr-state-to-a-newer-version">Updating from PR state to a newer version</a></h2>
 <ol>
@@ -1493,7 +1493,7 @@ Replace <code>&lt;TMP&gt;</code> with a temporary folder where you want to store
 </ol>
 <h2><a class="header" href="#updating-from-the-latest-release" id="updating-from-the-latest-release">Updating from the latest release</a></h2>
 <ol>
-<li>Check out the source with the release tag <code>git checkout tags/v&lt;version&gt;</code>. The <code>p2.inf</code> file should stay locally altered.</li>
+<li>Check out the source with the release tag <code>git checkout tags/v&lt;version&gt;</code>. The <code>org.corpus_tools.hexatomic.p2.inf</code> file should stay locally altered.</li>
 <li>Execute <code>mvn package</code> to create the product</li>
 <li>Run Hexatomic from the command line and <strong>check that there is a message in the toolbar about an available update</strong>.</li>
 </ol>
