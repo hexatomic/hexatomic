@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature id="org.corpus_tools.hexatomic">
-      <category name="hexatomic"/>
-   </feature>
-   <category-def name="hexatomic" label="Hexatomic"/>
-</site>
