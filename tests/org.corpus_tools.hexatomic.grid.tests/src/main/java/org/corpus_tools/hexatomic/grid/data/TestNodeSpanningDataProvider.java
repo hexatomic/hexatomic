@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.grid.internal.data;
+package org.corpus_tools.hexatomic.grid.data;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
 import org.junit.jupiter.api.BeforeEach;
