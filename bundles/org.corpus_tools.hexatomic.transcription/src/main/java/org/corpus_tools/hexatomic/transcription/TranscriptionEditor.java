@@ -26,8 +26,8 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.GridDisplayConverter;
-import org.corpus_tools.hexatomic.transcription.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TextualDsHeaderDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TliCornerDataProvider;
@@ -116,8 +116,7 @@ public class TranscriptionEditor {
 
     // Row layer
     DataLayer rowHeaderDataLayer = new DataLayer(tliRowDataProvider);
-    ILayer rowHeaderLayer =
-        new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
+    ILayer rowHeaderLayer = new RowHeaderLayer(rowHeaderDataLayer, viewportLayer, selectionLayer);
 
     // Corner
     final TliCornerDataProvider cornerDataProvider =
@@ -164,11 +163,10 @@ public class TranscriptionEditor {
 
   }
 
-  
+
   @Inject
   @org.eclipse.e4.core.di.annotations.Optional
-  protected void onCheckpointCreated(
-      @UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
+  protected void onCheckpointCreated(@UIEventTopic(Topics.ANNOTATION_CHANGED) Object element) {
 
     if (element instanceof ChangeSet) {
       ChangeSet changeSet = (ChangeSet) element;
