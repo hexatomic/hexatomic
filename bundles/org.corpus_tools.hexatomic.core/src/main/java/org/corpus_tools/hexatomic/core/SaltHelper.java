@@ -174,8 +174,10 @@ public class SaltHelper {
   /**
    * Changes the covered text for an existing token.
    * 
+   * <p>
    * This inserts the new text at the correct position in textual datasource and updates all textual
    * relations to use the new indexes.
+   * </p>
    * 
    * @param token The token to change the covered text for.
    * @param newTokenText The new text the token should cover.
