@@ -61,6 +61,7 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.config.DefaultSelectionLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
+import org.eclipse.nebula.widgets.nattable.viewport.command.ShowRowInViewportCommand;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -157,9 +158,6 @@ public class TranscriptionEditor {
       public void configureRegistry(IConfigRegistry configRegistry) {
         configRegistry.registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
             IEditableRule.ALWAYS_EDITABLE);
-
-        // Tag all columns with a label to mark them for value conversion
-        // labelAccumulator.registerOverrides(CONVERTED_COLUMN_LABEL);
         configRegistry.registerConfigAttribute(CellConfigAttributes.DISPLAY_CONVERTER,
             new GridDisplayConverter(), DisplayMode.NORMAL);
 
@@ -169,8 +167,9 @@ public class TranscriptionEditor {
     bodyDataLayer.addLayerListener(event -> {
       if (event instanceof DataUpdateEvent) {
         DataUpdateEvent editEvent = (DataUpdateEvent) event;
-        selectionLayer.selectCell(editEvent.getColumnPosition(), editEvent.getRowPosition() + 1,
-            false, false);
+        int nextRow = editEvent.getRowPosition() + 1;
+        selectionLayer.selectCell(editEvent.getColumnPosition(), nextRow, false, false);
+        natTable.doCommand(new ShowRowInViewportCommand(nextRow));
       }
     });
 
