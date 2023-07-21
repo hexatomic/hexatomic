@@ -54,7 +54,7 @@ import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
-import org.eclipse.nebula.widgets.nattable.selection.config.DefaultRowSelectionLayerConfiguration;
+import org.eclipse.nebula.widgets.nattable.selection.config.DefaultSelectionLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
@@ -105,7 +105,7 @@ public class TranscriptionEditor {
 
     // Define scrollable body layer
     SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
-    selectionLayer.addConfiguration(new DefaultRowSelectionLayerConfiguration());
+    selectionLayer.addConfiguration(new DefaultSelectionLayerConfiguration());
     ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
     viewportLayer.setRegionName(GridRegion.BODY);
 
