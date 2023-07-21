@@ -83,6 +83,7 @@ import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -167,6 +168,10 @@ public class GraphEditor {
 
   private GraphViewer viewer;
 
+  public GraphViewer getViewer() {
+    return viewer;
+  }
+
   @Inject
   UISynchronize sync;
 
@@ -199,6 +204,7 @@ public class GraphEditor {
     }
     return null;
   }
+
 
   /**
    * Create a new graph viewer.
@@ -749,7 +755,20 @@ public class GraphEditor {
     @Override
     public void mouseDoubleClick(MouseEvent e) {
       Point clickedInViewport = new Point(e.x, e.y);
+      appendSelectedNodeNameToConsole();
       centerViewportToPoint(clickedInViewport);
+    }
+  }
+
+  /**
+   * Helper function which appends the name of the currently selected node to the internal console.
+   */
+  public void appendSelectedNodeNameToConsole() {
+    if (viewer.getSelection() instanceof IStructuredSelection) {
+      IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+      if (selection.getFirstElement() instanceof SNode) {
+        consoleView.appendNodeName((SNode) selection.getFirstElement());
+      }
     }
   }
 
@@ -1021,8 +1040,8 @@ public class GraphEditor {
       Display.getCurrent().syncExec(() -> {
         ScalableFigure figure = viewer.getGraphControl().getRootLayer();
         // Get the height needed for showing all tree layers
-        double newScale = (double) viewer.getGraphControl().getBounds().height
-            / figure.getBounds().preciseHeight();
+        double newScale =
+            viewer.getGraphControl().getBounds().height / figure.getBounds().preciseHeight();
         figure.setScale(newScale);
 
         viewer.getGraphControl().getViewport().setViewLocation(0, 0);

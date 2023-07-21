@@ -327,23 +327,26 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     }
   }
 
-  @Override
-  public void exitNewSpan(NewSpanContext ctx) {
-
-    boolean referencesTokensOnly = true;
+  private boolean checkReferencesOnlyTokens() {
 
     for (SStructuredNode node : referencedNodes) {
       if (!(node instanceof SToken)) {
         this.outputLines
             .add("Error: could not create the new span - " + node.getName() + " is not a token.");
-        referencesTokensOnly = false;
+        return false;
       }
     }
-    if (referencesTokensOnly) {
+    return true;
+  }
+
+  @Override
+  public void exitNewSpan(NewSpanContext ctx) {
+
+    if (checkReferencesOnlyTokens()) {
 
       // Create the span
       SSpan newSpan = this.graph.createSpan(
-          referencedNodes.parallelStream().map(node -> (SToken) node).collect(Collectors.toList()));
+          referencedNodes.parallelStream().map(SToken.class::cast).collect(Collectors.toList()));
       if (newSpan == null) {
         this.outputLines.add("Error: could not create the new span.");
       } else {

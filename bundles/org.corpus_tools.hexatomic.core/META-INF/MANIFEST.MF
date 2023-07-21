@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Core Plugin
 Bundle-SymbolicName: org.corpus_tools.hexatomic.core;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.5.0.qualifier
 Bundle-Vendor: Hexatomic Research Project
 Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.errors,
@@ -30,6 +30,9 @@ Require-Bundle: javax.inject,
  org.eclipse.equinox.p2.core,
  org.eclipse.equinox.p2.operations,
  org.eclipse.osgi.services,
- org.corpus-tools.salt-api
+ org.corpus-tools.salt-api;bundle-version="3.4.3",
+ org.eclipse.equinox.p2.engine;bundle-version="2.7.500",
+ org.eclipse.equinox.p2.metadata.repository;bundle-version="1.4.100",
+ org.eclipse.e4.core.di.extensions;bundle-version="0.17.200"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.core

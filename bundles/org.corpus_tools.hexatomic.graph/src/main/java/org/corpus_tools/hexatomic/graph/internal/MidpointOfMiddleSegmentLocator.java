@@ -41,7 +41,7 @@ public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
    * 
    * @return the reference point
    */
-  
+
   @Override
   protected Point getReferencePoint() {
     Connection conn = getConnection();
@@ -52,7 +52,7 @@ public class MidpointOfMiddleSegmentLocator extends ConnectionLocator {
 
       // Since there are at least two points, nrPoints / 2 is at least "1"
       // We need to select the point before (-1) and the following one
-      int index = ((int) Math.floor((double) conn.getPoints().size() / 2.0) - 1);
+      int index = ((int) Math.floor(conn.getPoints().size() / 2.0) - 1);
 
       Point p1 = conn.getPoints().getPoint(index);
       Point p2 = conn.getPoints().getPoint(index + 1);

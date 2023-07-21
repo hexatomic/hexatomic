@@ -6,7 +6,7 @@ There are two ways to update Hexatomic. You can either update it manually or ena
 
 ### Manual updates
 1. Click on *Help* in the main menu.
-2. Select *Update*.
+2. Select *Check for updates*.
 ![Search for updates manually](./selectUpdate.png)
 
 This will check if a new update is available.

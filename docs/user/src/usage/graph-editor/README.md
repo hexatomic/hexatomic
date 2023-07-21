@@ -37,5 +37,7 @@ You can navigate the graph view as follows:
 
 - You can **center the view** around a specific point in the graph by double-clicking that point.
 
+- Double-clicking over a node will additionally **append the node name reference to the console prompt**. This allows to insert node references easily without having to type them in [console commands](console.md).
+
 If you don't like the layout of the graph, you can change it by dragging nodes with your mouse or [adjusting the layout parameters](./layout-params.md).
 
