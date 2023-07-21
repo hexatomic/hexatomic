@@ -55,15 +55,15 @@ public class GridDisplayConverter extends ContextualDisplayConverter {
       SNode node = (SNode) SaltHelper.resolveDelegation(canonicalValue);
       if (node instanceof SToken) {
         SToken token = (SToken) node;
-        return token.getGraph().getText(token);
+        if (token.getGraph() != null) {
+          return token.getGraph().getText(token);
+        }
       } else {
-        throw new HexatomicRuntimeException(
-            "Cell " + cell + " must contain SToken. Contained: "
-                + canonicalValue.getClass().getCanonicalName());
+        throw new HexatomicRuntimeException("Cell " + cell + " must contain SToken. Contained: "
+            + canonicalValue.getClass().getCanonicalName());
       }
-    } else {
-      return null;
     }
+    return null;
   }
 
   @Override

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.transcription.internal.commands;
+package org.corpus_tools.hexatomic.transcription.internal.handlers;
 
 import java.util.Set;
 import org.eclipse.nebula.widgets.nattable.command.AbstractContextFreeCommand;

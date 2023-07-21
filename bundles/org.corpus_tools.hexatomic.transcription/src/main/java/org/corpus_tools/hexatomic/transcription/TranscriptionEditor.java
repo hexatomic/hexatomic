@@ -46,6 +46,7 @@ import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
+import org.eclipse.nebula.widgets.nattable.edit.command.DeleteSelectionCommandHandler;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
@@ -110,6 +111,7 @@ public class TranscriptionEditor {
     SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
     selectionLayer.addConfiguration(new DefaultSelectionLayerConfiguration());
     selectionLayer.registerCommandHandler(new InsertRowCommandHandler(graph, projectManager));
+    selectionLayer.registerCommandHandler(new DeleteSelectionCommandHandler(selectionLayer));
     ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
     viewportLayer.setRegionName(GridRegion.BODY);
 

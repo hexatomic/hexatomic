@@ -149,13 +149,23 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    if (newValue instanceof String) {
-      String newText = (String) newValue;
-      // Get the DS for this column
-      STextualDS ds = graph.getTextualDSs().get(columnIndex);
+    // Get the DS for this column
+    STextualDS ds = graph.getTextualDSs().get(columnIndex);
+    // Get the token associated with this cell
+    Optional<SToken> tokenForTli = getTokenForTli(columnIndex, rowIndex);
 
-      // Get the token associated with this cell
-      Optional<SToken> tokenForTli = getTokenForTli(columnIndex, rowIndex);
+    if (newValue == null) {
+      if (tokenForTli.isPresent()) {
+        SToken tok = tokenForTli.get();
+
+        // The token text should not part of the textual data source anymore
+        SaltHelper.changeTokenText(tok, "");
+        graph.removeNode(tok);
+        projectManager.addCheckpoint();
+      }
+    } else if (newValue instanceof String) {
+      String newText = (String) newValue;
+
       if (tokenForTli.isEmpty()) {
         // No token yet, create a new one
         StringBuilder sb;
