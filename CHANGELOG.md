@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Updated the included Java Runtime Environment to 17.0.7.
+
 ## [1.4.2] - 2023-03-28
 
 ### Fixed
