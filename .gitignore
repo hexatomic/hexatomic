@@ -6,3 +6,4 @@ tests/**/Rerun*
 **/.vscode/
 **/.DS_Store
 **/.settings/
+**/.polyglot.META-INF
