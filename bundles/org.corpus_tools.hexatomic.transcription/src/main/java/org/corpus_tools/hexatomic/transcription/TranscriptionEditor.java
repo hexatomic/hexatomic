@@ -27,7 +27,9 @@ import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
 import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
+import org.corpus_tools.hexatomic.grid.style.StyleConfiguration;
 import org.corpus_tools.hexatomic.transcription.internal.data.GridDisplayConverter;
+import org.corpus_tools.hexatomic.transcription.internal.data.LabelAccumulator;
 import org.corpus_tools.hexatomic.transcription.internal.data.TextualDsHeaderDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TliCornerDataProvider;
@@ -41,7 +43,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
-import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
@@ -103,6 +104,7 @@ public class TranscriptionEditor {
     // Create data provider & layer, data layer needs to be most bottom layer in the stack!
     NodeSpanningDataProvider spanningDataProvider = new NodeSpanningDataProvider(bodyDataProvider);
     final SpanningDataLayer bodyDataLayer = new SpanningDataLayer(spanningDataProvider);
+    bodyDataLayer.setConfigLabelAccumulator(new LabelAccumulator(bodyDataLayer));
 
     // Define scrollable body layer
     SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
@@ -145,7 +147,8 @@ public class TranscriptionEditor {
     natTable = new NatTable(parent,
         SWT.NO_REDRAW_RESIZE | SWT.DOUBLE_BUFFERED | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL,
         gridLayer, false);
-    natTable.addConfiguration(new DefaultNatTableStyleConfiguration());
+
+    natTable.addConfiguration(new StyleConfiguration());
     natTable.addConfiguration(new AbstractRegistryConfiguration() {
       @Override
       public void configureRegistry(IConfigRegistry configRegistry) {
