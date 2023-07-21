@@ -32,6 +32,7 @@ import org.corpus_tools.hexatomic.transcription.internal.data.TextualDsHeaderDat
 import org.corpus_tools.hexatomic.transcription.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TliCornerDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TliRowHeaderDataProvider;
+import org.corpus_tools.hexatomic.transcription.internal.handlers.InsertRowCommandHandler;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -106,6 +107,7 @@ public class TranscriptionEditor {
     // Define scrollable body layer
     SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
     selectionLayer.addConfiguration(new DefaultSelectionLayerConfiguration());
+    selectionLayer.registerCommandHandler(new InsertRowCommandHandler(graph, projectManager));
     ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
     viewportLayer.setRegionName(GridRegion.BODY);
 
@@ -157,6 +159,7 @@ public class TranscriptionEditor {
 
       }
     });
+    natTable.addConfiguration(new TranscriptionKeyBindings(selectionLayer));
 
     natTable.configure();
     GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
