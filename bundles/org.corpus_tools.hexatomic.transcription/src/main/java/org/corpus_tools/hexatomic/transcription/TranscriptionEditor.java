@@ -47,6 +47,7 @@ import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.edit.command.DeleteSelectionCommandHandler;
+import org.eclipse.nebula.widgets.nattable.edit.event.DataUpdateEvent;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
@@ -165,6 +166,13 @@ public class TranscriptionEditor {
       }
     });
     natTable.addConfiguration(new TranscriptionKeyBindings(selectionLayer));
+    bodyDataLayer.addLayerListener(event -> {
+      if (event instanceof DataUpdateEvent) {
+        DataUpdateEvent editEvent = (DataUpdateEvent) event;
+        selectionLayer.selectCell(editEvent.getColumnPosition(), editEvent.getRowPosition() + 1,
+            false, false);
+      }
+    });
 
     natTable.configure();
     GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);

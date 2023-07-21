@@ -143,8 +143,6 @@ public class TimelineTokenDataProvider implements IDataProvider {
     });
 
     job.schedule();
-
-
   }
 
   @Override
@@ -155,52 +153,59 @@ public class TimelineTokenDataProvider implements IDataProvider {
     Optional<SToken> tokenForTli = getTokenForTli(columnIndex, rowIndex);
 
     if (newValue == null) {
-      if (tokenForTli.isPresent()) {
-        SToken tok = tokenForTli.get();
-
-        // The token text should not part of the textual data source anymore
-        SaltHelper.changeTokenText(tok, "");
-        graph.removeNode(tok);
-        projectManager.addCheckpoint();
-      }
+      deleteToken(tokenForTli);
     } else if (newValue instanceof String) {
       String newText = (String) newValue;
-
       if (tokenForTli.isEmpty()) {
         // No token yet, create a new one
-        StringBuilder sb;
-        if (ds.getText() == null) {
-          sb = new StringBuilder();
-        } else {
-          sb = new StringBuilder(ds.getText());
-        }
-        if (sb.length() > 0) {
-          // Add a space to the previous token
-          sb.append(' ');
-        }
-        int startPosition = sb.length();
-        sb.append(newText);
-        int endPosition = sb.length();
-        ds.setText(sb.toString());
-        SToken newToken = graph.createToken(ds, startPosition, endPosition);
-        // Align new token with the selected TLI
-        STimelineRelation timeLineRel = SaltFactory.createSTimelineRelation();
-        timeLineRel.setSource(newToken);
-        timeLineRel.setTarget(graph.getTimeline());
-        timeLineRel.setStart(rowIndex);
-        timeLineRel.setEnd(rowIndex + 1);
-        graph.addRelation(timeLineRel);
-        if ((rowIndex + 1) == graph.getTimeline().getEnd()) {
-          // Add an additional TLI at the end
-          graph.getTimeline().increasePointOfTime();
-        }
+        createToken(columnIndex, rowIndex, ds, newText);
       } else {
-        // Change the text of the token
+        // Change the text of the existing token
         SaltHelper.changeTokenText(tokenForTli.get(), newText);
       }
-
       projectManager.addCheckpoint();
+    }
+  }
 
+  private void createToken(int columnIndex, int rowIndex, STextualDS ds, String newText) {
+    // TODO handle token creation in between existing token
+
+    StringBuilder sb;
+    if (ds.getText() == null) {
+      sb = new StringBuilder();
+    } else {
+      sb = new StringBuilder(ds.getText());
+    }
+    if (sb.length() > 0) {
+      // Add a space to the previous token
+      sb.append(' ');
+    }
+    int startPosition = sb.length();
+    sb.append(newText);
+    int endPosition = sb.length();
+    ds.setText(sb.toString());
+    SToken newToken = graph.createToken(ds, startPosition, endPosition);
+    // Align new token with the selected TLI
+    STimelineRelation timeLineRel = SaltFactory.createSTimelineRelation();
+    timeLineRel.setSource(newToken);
+    timeLineRel.setTarget(graph.getTimeline());
+    timeLineRel.setStart(rowIndex);
+    timeLineRel.setEnd(rowIndex + 1);
+    graph.addRelation(timeLineRel);
+    if ((rowIndex + 1) == graph.getTimeline().getEnd()) {
+      // Add an additional TLI at the end
+      graph.getTimeline().increasePointOfTime();
+    }
+  }
+
+  private void deleteToken(Optional<SToken> tokenForTli) {
+    if (tokenForTli.isPresent()) {
+      SToken tok = tokenForTli.get();
+
+      // The token text should not part of the textual data source anymore
+      SaltHelper.changeTokenText(tok, "");
+      graph.removeNode(tok);
+      projectManager.addCheckpoint();
     }
   }
 
