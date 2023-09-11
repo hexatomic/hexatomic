@@ -40,8 +40,11 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
   protected Button btnGraphAnno;
   protected Button btnTxt;
 
-  protected CorpusFormatSelectionPage(String pageName) {
+  private boolean isExport;
+
+  protected CorpusFormatSelectionPage(String pageName, boolean isExport) {
     super(pageName);
+    this.isExport = isExport;
   }
 
   protected CorpusFormatSelectionPage(String pageName, String title, ImageDescriptor titleImage) {
@@ -74,13 +77,16 @@ public abstract class CorpusFormatSelectionPage<F> extends WizardPage {
     btnPaulaXml.addSelectionListener(checkboxSelectionAdapter);
     btnPaulaXml.setText("PAULA format");
 
-    btnGraphAnno = new Button(container, SWT.RADIO);
-    btnGraphAnno.addSelectionListener(checkboxSelectionAdapter);
-    btnGraphAnno.setText("GraphAnno format");
+    // Some of the formats are not available for export
+    if (!isExport) {
+      btnGraphAnno = new Button(container, SWT.RADIO);
+      btnGraphAnno.addSelectionListener(checkboxSelectionAdapter);
+      btnGraphAnno.setText("GraphAnno format");
 
-    btnTxt = new Button(container, SWT.RADIO);
-    btnTxt.addSelectionListener(checkboxSelectionAdapter);
-    btnTxt.setText("Plain text format (*.txt)");
+      btnTxt = new Button(container, SWT.RADIO);
+      btnTxt.addSelectionListener(checkboxSelectionAdapter);
+      btnTxt.setText("Plain text format (*.txt)");
+    }
   }
 
 
