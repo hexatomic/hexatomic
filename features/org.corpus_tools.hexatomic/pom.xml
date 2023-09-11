@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.corpus_tools</groupId>
         <artifactId>org.corpus_tools.hexatomic.features</artifactId>
-        <version>1.4.3</version>
+        <version>1.4.4</version>
     </parent>
 </project>
 
