@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Only show the formats suitable for export in the wizard page (#458).
 - Update CFF Maven plugin to version 0.8.1 to address some security issues.
 
 ## [1.4.3] - 2023-09-11
