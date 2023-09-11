@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Corpus file formats
 Bundle-SymbolicName: org.corpus_tools.hexatomic.formats;singleton:=true
-Bundle-Version: 1.4.3
+Bundle-Version: 1.4.4
 Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.jface,
@@ -20,4 +20,6 @@ Automatic-Module-Name: org.corpus.tools.hexatomic.formats
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator
 Bundle-ActivationPolicy: lazy
-Export-Package: org.corpus_tools.hexatomic.formats, org.corpus_tools.hexatomic.formats.exporter
+Export-Package: org.corpus_tools.hexatomic.formats,
+ org.corpus_tools.hexatomic.formats.exporter,
+ org.corpus_tools.hexatomic.formats.importer
