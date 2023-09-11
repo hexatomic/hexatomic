@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.3] - 2023-09-11
+
+### Fixed
+
+- Updated the included Java Runtime Environment to 17.0.7.
+- Use GitHub raw URL as P2 update site to fix issues with larger files.
+
 ## [1.4.2] - 2023-03-28
 
 ### Fixed
@@ -415,7 +422,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.4.2...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.4.3...HEAD
+[1.4.3]: https://github.com/hexatomic/hexatomic/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/hexatomic/hexatomic/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/hexatomic/hexatomic/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/hexatomic/hexatomic/compare/v1.3.0...v1.4.0

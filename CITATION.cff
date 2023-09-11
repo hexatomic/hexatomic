@@ -34,8 +34,8 @@ identifiers:
   type: doi
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
-version: 1.4.2
-date-released: 2023-03-28
+version: 1.4.3
+date-released: 2023-09-11
 references:
 - type: art
   title: Font Awesome
@@ -72,29 +72,6 @@ references:
   - name: Kohsuke Kaw
   - name: Stephen Connolly
   repository-code: http://fisheye.codehaus.org/browse/mojo/tags/animal-sniffer-parent-1.9/animal-sniffer-annotations
-- type: software
-  title: Apache Commons IO
-  version: 2.11.0
-  abbreviation: commons-io:commons-io
-  license: Apache-2.0
-  notes: More license information can be found in the THIRD-PARTY/Apache_Commons_IO
-    directory.
-  authors:
-  - name: Scott Sanders
-  - name: dIon Gillard
-  - name: Nicola Ken Barozzi
-  - name: Henri Yandell
-  - name: Stephen Colebourne
-  - name: Jeremias Maerki
-  - name: Matthew Hawthorne
-  - name: Martin Cooper
-  - name: Rob Oxspring
-  - name: Jochen Wiedmann
-  - name: Niall Pemberton
-  - name: Jukka Zitting
-  - name: Gary Gregory
-  - name: Kristian Rosenvold
-  repository-code: https://gitbox.apache.org/repos/asf?p=commons-io.git
 - type: software
   title: Bouncy Castle OpenPGP API
   version: '1.72'
@@ -1295,40 +1272,40 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.jface.text
     directory.
 - type: software
-  title: org.eclipse.justj.openjdk.hotspot.jre.full
-  version: 17.0.6.v20230204-1729
+  title: org.eclipse.justj.openjdk.hotspot.jre.full.stripped
+  version: 17.0.7.v20230425-1502
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.stripped
     directory.
 - type: software
-  title: org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64
-  version: 17.0.6.v20230204-1729
+  title: org.eclipse.justj.openjdk.hotspot.jre.full.stripped.linux.x86_64
+  version: 17.0.7.v20230425-1502
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.linux.x86_64
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.stripped.linux.x86_64
     directory.
 - type: software
-  title: org.eclipse.justj.openjdk.hotspot.jre.full.macosx.x86_64
-  version: 17.0.6.v20230204-1729
+  title: org.eclipse.justj.openjdk.hotspot.jre.full.stripped.macosx.x86_64
+  version: 17.0.7.v20230425-1502
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.macosx.x86_64
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.stripped.macosx.x86_64
     directory.
 - type: software
-  title: org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64
-  version: 17.0.6.v20230204-1729
+  title: org.eclipse.justj.openjdk.hotspot.jre.full.stripped.win32.x86_64
+  version: 17.0.7.v20230425-1502
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.justj.openjdk.hotspot.jre.full.stripped.win32.x86_64
     directory.
 - type: software
   title: org.eclipse.nebula.widgets.chips

@@ -1,7 +1,7 @@
 # Manual tests of updates
 
 For updates, we rely on the Eclipse platform and our update site that is [hosted
-on GitHub pages](https://github.com/hexatomic/updates) and there are several
+on GitHub](https://github.com/hexatomic/updates) and there are several
 things that can't be tested automatically, but can break for various reasons.
 We have to test two scenarios: 
 - Updates from the last released version works with the changes from this pull request
