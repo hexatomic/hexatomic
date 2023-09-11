@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Only calculate the text of the widget if logging is in debug mode (#456).
+
 ## [1.4.4] - 2023-09-11
 
 ### Fixed
