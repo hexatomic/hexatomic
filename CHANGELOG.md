@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Update CFF Maven plugin to version 0.8.1 to address some security issues.
+
 ## [1.4.3] - 2023-09-11
 
 ### Fixed
