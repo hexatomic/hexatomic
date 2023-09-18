@@ -38,7 +38,7 @@ public class ImporterSelectionPage extends CorpusFormatSelectionPage<ImportForma
 
 
   protected ImporterSelectionPage() {
-    super("Select import format");
+    super("Select import format", false);
     setTitle("Select import format");
     setDescription(
         "Corpora are stored in specific formats and you need to select the correct one.");

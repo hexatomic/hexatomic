@@ -28,7 +28,7 @@ public class ExporterSelectionPage extends CorpusFormatSelectionPage<ExportForma
     implements IWizardPage {
 
   protected ExporterSelectionPage() {
-    super("Select export format");
+    super("Select export format", true);
     setTitle("Select export format");
     setDescription(
         "Corpora are stored in specific formats and you need to select the requested one.");

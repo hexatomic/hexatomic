@@ -19,15 +19,16 @@ public class SwtBotChips extends AbstractSWTBotControl<Chips> {
 
   @Override
   public AbstractSWTBot<Chips> click() {
-    log.debug("{}", MessageFormat.format("Clicking on {0}", SWTUtils.getText(widget)));
+    if (log.isDebugEnabled()) {
+      log.debug("{}", MessageFormat.format("Clicking on {0}", SWTUtils.getText(widget)));
+    }
 
     waitForEnabled();
 
     // Get coordinates of the right part of the chip, where the close button is located
     Point clickPoint = syncExec(() -> {
       Rectangle area = widget.getClientArea();
-      return new Point(area.x + area.width - 20,
-          Math.round(area.y + (area.height / 2.0f)));
+      return new Point(area.x + area.width - 20, Math.round(area.y + (area.height / 2.0f)));
     });
 
     // Use the local click point as parameter for the mouse events
@@ -49,7 +50,9 @@ public class SwtBotChips extends AbstractSWTBotControl<Chips> {
     notify(SWT.MouseExit, e);
     notify(SWT.Deactivate, e);
     notify(SWT.FocusOut, e);
-    log.debug("{}", MessageFormat.format("Clicked on {0}", SWTUtils.getText(widget)));
+    if (log.isDebugEnabled()) {
+      log.debug("{}", MessageFormat.format("Clicked on {0}", SWTUtils.getText(widget)));
+    }
     return this;
   }
 

@@ -1,5 +1,8 @@
 package org.corpus_tools.hexatomic.it.tests;
 
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withStyle;
+import static org.hamcrest.Matchers.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,12 +14,15 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.formats.exporter.ExportFormat;
+import org.corpus_tools.hexatomic.formats.importer.ImportFormat;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.util.SaltUtil;
@@ -27,6 +33,8 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
@@ -41,7 +49,9 @@ import org.junit.jupiter.api.TestMethodOrder;
 class TestImportExport {
 
   private static final String ROOT_CORPUS = "rootCorpus";
-  private static final String WIZARD_CAPTION =
+  private static final String WIZARD_EXPORT_CAPTION =
+      "Export a corpus project to a different file format";
+  private static final String WIZARD_IMPORT_CAPTION =
       "Import a corpus project from a different file format";
   private static final String DOC1_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String EXMARALDA_FORMAT_EXB = "EXMARaLDA format (*.exb)";
@@ -49,6 +59,7 @@ class TestImportExport {
   private static final String GRAPHANNOS_FORMAT = "GraphAnno format";
   private static final String TEXT_FORMAT = "Plain text format (*.txt)";
   private static final String FINISH = "Finish";
+  private static final String CANCEL = "Cancel";
   private static final String NEXT = "Next >";
   private static final String EXPORT = "Export";
   private static final String IMPORT = "Import";
@@ -157,7 +168,7 @@ class TestImportExport {
     // Click on the export menu add fill out the wizard
     getFileMenu().menu(EXPORT).click();
 
-    SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
+    SWTBotShell wizard = bot.shell(WIZARD_EXPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
@@ -184,7 +195,7 @@ class TestImportExport {
     // Re-import the just created exb files
     assertTrue(bot.menu(IMPORT).isEnabled());
     getFileMenu().menu(IMPORT).click();
-    wizard = bot.shell(WIZARD_CAPTION);
+    wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
     // The path should have been pre-set and the same as the one we exported the
@@ -234,7 +245,7 @@ class TestImportExport {
 
     // Import again, but this time with spaces
     getFileMenu().menu(IMPORT).click();
-    wizard = bot.shell(WIZARD_CAPTION);
+    wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
     wizard.bot().text().setText(tmpDir.resolve(ROOT_CORPUS).toAbsolutePath().toString());
@@ -310,7 +321,7 @@ class TestImportExport {
     // Click on the export menu add fill out the wizard
     getFileMenu().menu(EXPORT).click();
 
-    SWTBotShell wizard = bot.shell("Export a corpus project to a different file format");
+    SWTBotShell wizard = bot.shell(WIZARD_EXPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
@@ -353,7 +364,7 @@ class TestImportExport {
     assertTrue(getFileMenu().menu(IMPORT).isEnabled());
     getFileMenu().menu(IMPORT).click();
 
-    wizard = bot.shell(WIZARD_CAPTION);
+    wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
@@ -392,7 +403,7 @@ class TestImportExport {
     // Import the just exported corpus
     bot.menu(IMPORT).click();
 
-    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    SWTBotShell wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
@@ -442,7 +453,7 @@ class TestImportExport {
     // Import the created document
     bot.menu(IMPORT).click();
 
-    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    SWTBotShell wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
@@ -499,7 +510,7 @@ class TestImportExport {
     // Import the created document
     bot.menu(IMPORT).click();
 
-    SWTBotShell wizard = bot.shell(WIZARD_CAPTION);
+    SWTBotShell wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
 
@@ -537,6 +548,55 @@ class TestImportExport {
 
     // Clean up
     assertTrue(TestHelper.deleteDirectory(tmpDir));
+  }
+
+  /**
+   * When presenting the formats, it makes a difference whether we import or export a corpus. This
+   * is a regression test for <a href="https://github.com/hexatomic/hexatomic/issues/458">#458</a>.
+   * 
+   * @throws IOException May throw an exception when temporary directory creation fails
+   */
+  @Test
+  @Order(5)
+  void testCorrectNumberOfFormatsAvailable() throws IOException {
+    // Open example corpus
+    openDefaultExample();
+
+    // Test the number of import formats, but don't actually import
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_IMPORT_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    Path tmpDir = Files.createTempDirectory("hexatomic-import-export-test");
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    wizard.bot().button(NEXT).click();
+
+
+
+    List<? extends Button> importWidgets =
+        wizard.bot().widgets(allOf(widgetOfType(Button.class), withStyle(SWT.RADIO, "SWT.RADIO")));
+    assertEquals(ImportFormat.values().length, importWidgets.size());
+
+    wizard.bot().button(CANCEL).click();
+
+    // Test the number of export formats, but don't actually export
+    getFileMenu().menu(EXPORT).click();
+
+    wizard = bot.shell(WIZARD_EXPORT_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    wizard.bot().text().setText(tmpDir.toAbsolutePath().toString());
+    wizard.bot().button(NEXT).click();
+
+    List<? extends Button> exportWidgets =
+        wizard.bot().widgets(allOf(widgetOfType(Button.class), withStyle(SWT.RADIO, "SWT.RADIO")));
+    assertEquals(ExportFormat.values().length, exportWidgets.size());
+
+    wizard.bot().button(CANCEL).click();
+
   }
 
 }
