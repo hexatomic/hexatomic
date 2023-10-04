@@ -13,7 +13,7 @@ PRs: #408, #411, #418, #426, #428, #429, #430, #433, #434, #435, #436, #437,
 
 ### Issues
 
-- `SwtBotChips`` unconditionally calls `SWTUtils.getText`` for debug messages #456 
+- `SwtBotChips` unconditionally calls `SWTUtils.getText`` for debug messages #456 
 
 ## 2022-08-25
 
