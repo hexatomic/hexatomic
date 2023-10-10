@@ -657,9 +657,6 @@ class TestImportExport {
     assertTrue(warningDialog.isOpen());
     warningDialog.bot().button("OK").click();
 
-    // Import an example project
-    bot.menu(IMPORT).click();
-
     SWTBotShell wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());

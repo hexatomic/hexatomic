@@ -27,20 +27,29 @@ import org.corpus_tools.hexatomic.formats.Activator;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 
 public class ImportHandler {
 
   @Execute
-  protected void execute(Shell shell, ErrorService errorService,
-      ProjectManager projectManager, SaltNotificationFactory notificationFactory,
-      UISynchronize sync) {
+  protected void execute(Shell shell, ErrorService errorService, ProjectManager projectManager,
+      SaltNotificationFactory notificationFactory, UISynchronize sync) {
+    if (projectManager.isDirty()) {
+      // Ask user if project should be closed even with unsaved changes
+      boolean confirmed = MessageDialog.openConfirm(shell, "Discard unsaved changes?",
+          "There are unsaved changes in the project that will be lost if you close it. "
+              + "Do you really want to close the project and open a new one?");
+      if (!confirmed) {
+        return;
+      }
+    }
     WizardDialog dialog = new WizardDialog(shell,
         new ImportWizard(errorService, projectManager, notificationFactory, sync));
     dialog.open();
   }
-  
+
   @CanExecute
   protected boolean canExecute() {
     return Activator.getPepper().isPresent();
