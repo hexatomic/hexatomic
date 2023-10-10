@@ -674,7 +674,19 @@ class TestImportExport {
     bot.waitUntil(new WizardClosedCondition(wizard), 30000);
 
     // No editor should be opened
-    assertEquals(0, bot.parts(WithPartName.withPartName(DOC1_TITLE)).size());
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return TestImportExport.this.bot.parts(WithPartName.withPartName(DOC1_TITLE)).isEmpty();
+      }
+
+      @Override
+      public String getFailureMessage() {
+
+        return "No graph editor should be open";
+      }
+    });
 
 
 

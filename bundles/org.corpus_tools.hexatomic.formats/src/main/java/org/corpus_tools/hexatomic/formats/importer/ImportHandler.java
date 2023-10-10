@@ -40,7 +40,7 @@ public class ImportHandler {
       // Ask user if project should be closed even with unsaved changes
       boolean confirmed = MessageDialog.openConfirm(shell, "Discard unsaved changes?",
           "There are unsaved changes in the project that will be lost if you close it. "
-              + "Do you really want to close the project and open a new one?");
+              + "Do you really want to close the project and import a new one?");
       if (!confirmed) {
         return;
       }
