@@ -35,10 +35,13 @@ import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swtbot.e4.finder.matchers.WithPartName;
+import org.eclipse.swtbot.e4.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -65,6 +68,7 @@ class TestImportExport {
   private static final String IMPORT = "Import";
   private static final String ADD_SPACES_BETWEEN_TOKEN = "Add spaces between tokens";
   private static final String TOKENIZE = "Tokenize after import";
+  private static final String DOC1_TITLE = "doc1 (Graph Editor)";
 
   private final class WizardClosedCondition extends DefaultCondition {
     private final SWTBotShell wizard;
@@ -599,4 +603,83 @@ class TestImportExport {
 
   }
 
+
+  /**
+   * When importing a corpus and we have unsaved changes, there should be warning. This is a
+   * regression test for <a href="https://github.com/hexatomic/hexatomic/issues/450">#450</a>.
+   * 
+   * @throws IOException May throw an exception when temporary directory creation fails
+   */
+  @Test
+  @Order(6)
+  void testWarningBeforeLoosingChanges() throws IOException {
+    // Open example corpus
+    openDefaultExample();
+
+    // Open with graph editor
+    SWTBotView corpusStructurePart =
+        bot.partById("org.corpus_tools.hexatomic.corpusedit.part.corpusstructure");
+    corpusStructurePart.restore();
+    corpusStructurePart.show();
+    SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
+        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
+    docMenu.click();
+    assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
+    bot.waitUntil(new DefaultCondition() {
+
+      @Override
+      public boolean test() throws Exception {
+        return TestImportExport.this.bot.parts(WithPartName.withPartName(DOC1_TITLE)).size() == 1;
+      }
+
+      @Override
+      public String getFailureMessage() {
+
+        return "One graph editor should be open";
+      }
+    });
+
+
+    // Apply some changes to the project
+    SDocument doc1 = projectManager.getDocument(DOC1_ID).get();
+    doc1.getDocumentGraph().getSortedTokenByText().get(0).createAnnotations("test=anno");
+
+    projectManager.addCheckpoint();
+    assertEquals(true, projectManager.isDirty());
+
+    // Open the import wizard, which should open a warning similar to creating a new project when
+    // there are unsaved changes.
+    bot.menu(IMPORT).click();
+
+    // A warning dialog should appear and we acknowledge that we loose the changes
+    SWTBotShell warningDialog = bot.shell("Discard unsaved changes?");
+    assertNotNull(warningDialog);
+    assertTrue(warningDialog.isOpen());
+    warningDialog.bot().button("OK").click();
+
+    // Import an example project
+    bot.menu(IMPORT).click();
+
+    SWTBotShell wizard = bot.shell(WIZARD_IMPORT_CAPTION);
+    assertNotNull(wizard);
+    assertTrue(wizard.isOpen());
+
+    // Next button is not enabled when importing an invalid path (e.g. when empty)
+    wizard.bot().text().setText("");
+    assertFalse(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().text().setText(graphAnnoExampleCorpusUri.toFileString());
+    // Valid path was selected, this should enable the next button
+    assertTrue(wizard.bot().button(NEXT).isEnabled());
+    wizard.bot().button(NEXT).click();
+
+    wizard.bot().radio(GRAPHANNOS_FORMAT).click();
+    wizard.bot().button(FINISH).click();
+    bot.waitUntil(new WizardClosedCondition(wizard), 30000);
+
+    // No editor should be opened
+    assertEquals(0, bot.parts(WithPartName.withPartName(DOC1_TITLE)).size());
+
+
+
+  }
 }
