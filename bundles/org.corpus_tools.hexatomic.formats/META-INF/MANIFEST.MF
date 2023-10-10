@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.ui.di,
  javax.inject,
- com.google.guava
+ com.google.guava,
+ org.eclipse.e4.ui.workbench
 Automatic-Module-Name: org.corpus.tools.hexatomic.formats
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator

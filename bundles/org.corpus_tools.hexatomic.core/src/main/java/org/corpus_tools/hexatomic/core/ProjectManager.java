@@ -53,6 +53,7 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -228,9 +229,8 @@ public class ProjectManager {
             }
           } catch (IOException ex) {
             monitor.done();
-            sync.asyncExec(() -> 
-                errorService.handleException("Could not copy Salt document " + doc.getId(), ex,
-                  ProjectManager.class));
+            sync.asyncExec(() -> errorService.handleException(
+                "Could not copy Salt document " + doc.getId(), ex, ProjectManager.class));
             return;
           }
         } else {
@@ -262,6 +262,9 @@ public class ProjectManager {
 
   @Inject
   EPartService partService;
+
+  @Inject
+  MApplication application;
 
   @Inject
   UiStatusReport uiStatus;
@@ -436,15 +439,17 @@ public class ProjectManager {
    */
   private void closeOpenEditors() {
 
-    try {
-      for (MPart part : partService.getParts()) {
-        String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
-        if (docID != null && !docID.isEmpty()) {
-          partService.hidePart(part);
+    if (application.getContext().getActiveChild() != null) {
+      try {
+        for (MPart part : partService.getParts()) {
+          String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+          if (docID != null && !docID.isEmpty()) {
+            partService.hidePart(part, true);
+          }
         }
+      } catch (IllegalStateException ex) {
+        // Ignore, this can happen when the application is closing
       }
-    } catch (IllegalStateException ex) {
-      // Ignore, this can happen when the application is closing
     }
   }
 
@@ -738,11 +743,10 @@ public class ProjectManager {
     // Check if any other editor is open for this document
     if (documentID != null) {
       Optional<SDocument> document = getDocument(documentID, false);
-      if (document.isPresent()
-           && getNumberOfOpenEditors(document.get()) <= 1
-           // No other editor found, unload document graph if it can be located on disk
-           && document.get().getDocumentGraphLocation() != null
-           && document.get().getDocumentGraph() != null) {
+      if (document.isPresent() && getNumberOfOpenEditors(document.get()) <= 1
+      // No other editor found, unload document graph if it can be located on disk
+          && document.get().getDocumentGraphLocation() != null
+          && document.get().getDocumentGraph() != null) {
         log.debug("Unloading document {}", documentID);
         // Suppress superfluous notifications
         notificationFactory.setSuppressingEvents(true);

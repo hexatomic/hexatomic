@@ -23,10 +23,13 @@ package org.corpus_tools.hexatomic.formats.importer;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
+import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;
 import org.corpus_tools.hexatomic.formats.Activator;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -35,7 +38,7 @@ public class ImportHandler {
 
   @Execute
   protected void execute(Shell shell, ErrorService errorService, ProjectManager projectManager,
-      SaltNotificationFactory notificationFactory, UISynchronize sync) {
+      SaltNotificationFactory notificationFactory, UISynchronize sync, EPartService partService) {
     if (projectManager.isDirty()) {
       // Ask user if project should be closed even with unsaved changes
       boolean confirmed = MessageDialog.openConfirm(shell, "Discard unsaved changes?",
@@ -45,6 +48,15 @@ public class ImportHandler {
         return;
       }
     }
+
+    // Close all open editors before running the wizard
+    for (MPart part : partService.getParts()) {
+      String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
+      if (docID != null && !docID.isEmpty()) {
+        partService.hidePart(part, true);
+      }
+    }
+
     WizardDialog dialog = new WizardDialog(shell,
         new ImportWizard(errorService, projectManager, notificationFactory, sync));
     dialog.open();

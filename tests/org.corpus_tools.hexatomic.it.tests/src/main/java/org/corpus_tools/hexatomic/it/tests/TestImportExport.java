@@ -88,7 +88,7 @@ class TestImportExport {
     }
   }
 
-  private final SWTWorkbenchBot bot = new SWTWorkbenchBot(TestHelper.getEclipseContext());
+  private SWTWorkbenchBot bot;
 
   private URI exampleProjectUri;
   private URI graphAnnoExampleCorpusUri;
@@ -103,6 +103,8 @@ class TestImportExport {
     TestHelper.setKeyboardLayout();
 
     IEclipseContext ctx = TestHelper.getEclipseContext();
+
+    bot = new SWTWorkbenchBot(ctx);
 
     errorService = ContextInjectionFactory.make(ErrorService.class, ctx);
     projectManager = ContextInjectionFactory.make(ProjectManager.class, ctx);
