@@ -49,6 +49,7 @@ import org.corpus_tools.salt.exceptions.SaltResourceException;
 import org.corpus_tools.salt.util.SaltUtil;
 import org.corpus_tools.salt.util.internal.persistence.SaltXML10Writer;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -439,7 +440,8 @@ public class ProjectManager {
    */
   private void closeOpenEditors() {
 
-    if (application.getContext().getActiveChild() != null) {
+    IEclipseContext ctx = application.getContext();
+    if (ctx != null && ctx.getActiveChild() != null) {
       try {
         for (MPart part : partService.getParts()) {
           String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
