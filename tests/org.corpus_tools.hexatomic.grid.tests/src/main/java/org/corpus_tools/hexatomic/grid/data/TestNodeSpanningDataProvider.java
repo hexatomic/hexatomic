@@ -1,4 +1,4 @@
-package org.corpus_tools.hexatomic.grid.internal.data;
+package org.corpus_tools.hexatomic.grid.data;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
+import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +34,7 @@ class TestNodeSpanningDataProvider {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider#NodeSpanningDataProvider(org.eclipse.nebula.widgets.nattable.data.IDataProvider, boolean, boolean)}.
+   * {@link org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider#NodeSpanningDataProvider(org.eclipse.nebula.widgets.nattable.data.IDataProvider, boolean, boolean)}.
    */
   @Test
   void testNodeSpanningDataProvider() {
@@ -42,7 +44,7 @@ class TestNodeSpanningDataProvider {
 
   /**
    * Test method for
-   * {@link org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider#valuesNotEqual(java.lang.Object, java.lang.Object)}.
+   * {@link org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider#valuesNotEqual(java.lang.Object, java.lang.Object)}.
    */
   @Test
   void testValuesNotEqualObjectObject() {

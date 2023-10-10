@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_kGOAcD2tEe2Kg-VXLjEEsw">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_lVzZAD2tEe2Kg-VXLjEEsw" featurename="descriptors" parentElementId="xpath:/">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_n6e8QD2tEe2Kg-VXLjEEsw" elementId="org.corpus_tools.hexatomic.transcription.partdescriptor.transcriptioneditor" label="Transcription Editor" allowMultiple="true" category="org.corpus_tools.hexatomic.tag.editor" closeable="true" contributionURI="bundleclass://org.corpus_tools.hexatomic.transcription/org.corpus_tools.hexatomic.transcription.TranscriptionEditor"/>
+  </fragments>
+</fragment:ModelFragments>
