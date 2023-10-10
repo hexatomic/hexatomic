@@ -744,9 +744,9 @@ public class ProjectManager {
     if (documentID != null) {
       Optional<SDocument> document = getDocument(documentID, false);
       if (document.isPresent() && getNumberOfOpenEditors(document.get()) <= 1
-      // No other editor found, unload document graph if it can be located on disk
           && document.get().getDocumentGraphLocation() != null
           && document.get().getDocumentGraph() != null) {
+        // No other editor found, unload document graph if it can be located on disk
         log.debug("Unloading document {}", documentID);
         // Suppress superfluous notifications
         notificationFactory.setSuppressingEvents(true);
