@@ -251,6 +251,12 @@ class TestImportExport {
 
     // Import again, but this time with spaces
     getFileMenu().menu(IMPORT).click();
+    // A warning dialog should appear and we acknowledge that we loose the changes
+    SWTBotShell warningDialog = bot.shell("Discard unsaved changes?");
+    assertNotNull(warningDialog);
+    assertTrue(warningDialog.isOpen());
+    warningDialog.bot().button("OK").click();
+
     wizard = bot.shell(WIZARD_IMPORT_CAPTION);
     assertNotNull(wizard);
     assertTrue(wizard.isOpen());
