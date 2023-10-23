@@ -53,7 +53,7 @@ public class ImportHandler {
     for (MPart part : partService.getParts()) {
       String docID = part.getPersistedState().get(OpenSaltDocumentHandler.DOCUMENT_ID);
       if (docID != null && !docID.isEmpty()) {
-        partService.hidePart(part, true);
+        partService.hidePart(part);
       }
     }
 
