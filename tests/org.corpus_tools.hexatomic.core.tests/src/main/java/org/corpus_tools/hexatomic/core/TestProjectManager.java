@@ -35,6 +35,7 @@ import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SLayer;
 import org.corpus_tools.salt.core.SNode;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
@@ -93,6 +94,8 @@ class TestProjectManager {
 
     projectManager.sync = sync;
     projectManager.notificationFactory = factory;
+
+    projectManager.application = mock(MApplication.class);
 
     projectManager.postConstruct();
   }
