@@ -651,7 +651,9 @@ class TestImportExport {
     // Apply some changes to the project
     Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID);
     assertEquals(true, doc1.isPresent());
-    doc1.get().getDocumentGraph().getSortedTokenByText().get(0).createAnnotations("test=anno");
+    if (doc1.isPresent()) {
+      doc1.get().getDocumentGraph().getSortedTokenByText().get(0).createAnnotations("test=anno");
+    }
 
     projectManager.addCheckpoint();
     assertEquals(true, projectManager.isDirty());
