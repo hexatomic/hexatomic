@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Do not import with unsaved changes and avoid errors about vanished graphs by
+  closing the open editors (#450).
 - Only calculate the text of the widget if logging is in debug mode (#456).
 
 ## [1.4.4] - 2023-09-11
