@@ -630,7 +630,7 @@ class TestImportExport {
     corpusStructurePart.restore();
     corpusStructurePart.show();
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode("corpusGraph1")
-        .expandNode("rootCorpus").expandNode("subCorpus1").expandNode("doc1");
+        .expandNode(ROOT_CORPUS).expandNode("subCorpus1").expandNode("doc1");
     docMenu.click();
     assertNotNull(docMenu.contextMenu("Open with Graph Editor").click());
     bot.waitUntil(new DefaultCondition() {
@@ -649,8 +649,9 @@ class TestImportExport {
 
 
     // Apply some changes to the project
-    SDocument doc1 = projectManager.getDocument(DOC1_ID).get();
-    doc1.getDocumentGraph().getSortedTokenByText().get(0).createAnnotations("test=anno");
+    Optional<SDocument> doc1 = projectManager.getDocument(DOC1_ID);
+    assertEquals(true, doc1.isPresent());
+    doc1.get().getDocumentGraph().getSortedTokenByText().get(0).createAnnotations("test=anno");
 
     projectManager.addCheckpoint();
     assertEquals(true, projectManager.isDirty());
