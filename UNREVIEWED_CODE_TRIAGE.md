@@ -2,6 +2,18 @@
 
 See the "Periodic unreviewed code triage" section in the [Developer and Maintainer Documentation](https://hexatomic.github.io/hexatomic/dev/) for how to edit this file.
 
+## 2023-10-04
+
+Triage done by [thomaskrause](https://github.com/thomaskrause/).
+
+Revision Range 9111de91ab6620b1f366ee6c831b1ba1b993b0d7..1fa4cf35c94f03d448025b9fd8441bfbf43fc405
+
+PRs: #457, #459, #460, #461
+
+### Issues
+
+None found
+
 ## 2023-07-19 
 
 Triage done by [thomaskrause](https://github.com/thomaskrause/).
@@ -13,7 +25,7 @@ PRs: #408, #411, #418, #426, #428, #429, #430, #433, #434, #435, #436, #437,
 
 ### Issues
 
-- `SwtBotChips`` unconditionally calls `SWTUtils.getText`` for debug messages #456 
+- `SwtBotChips` unconditionally calls `SWTUtils.getText` for debug messages #456 
 
 ## 2022-08-25
 

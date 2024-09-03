@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
     <setAttribute key="additional_plugins">
-        <setEntry value="org.corpus_tools.hexatomic.it.tests:1.2.0.qualifier:default:true:default:default"/>
+        <setEntry value="org.corpus_tools.hexatomic.it.tests:1.5.0.qualifier:default:true:default:default"/>
         <setEntry value="org.eclipse.jdt.junit5.runtime:1.1.100.v20220907-0450:default:false:default:default"/>
     </setAttribute>
     <booleanAttribute key="append.args" value="true"/>
@@ -22,20 +22,20 @@
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
     <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/org.corpus_tools.hexatomic.it.tests"/>
+        <listEntry value="/org.corpus_tools.hexatomic.it.tests/src/main/java/org/corpus_tools/hexatomic/it/tests/TestImportExport.java"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-        <listEntry value="4"/>
+        <listEntry value="1"/>
     </listAttribute>
-    <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=org.corpus_tools.hexatomic.it.tests"/>
+    <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
     <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
-    <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
+    <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value="testWarningBeforeLoosingChanges"/>
     <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit5"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
-    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value=""/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.corpus_tools.hexatomic.it.tests.TestImportExport"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.corpus_tools.hexatomic.it.tests"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
