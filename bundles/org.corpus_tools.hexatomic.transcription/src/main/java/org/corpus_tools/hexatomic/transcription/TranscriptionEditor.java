@@ -96,6 +96,11 @@ public class TranscriptionEditor {
 
 
 
+  /**
+   * Creates a new transcription editor.
+   * 
+   * @param parent The parent SWT object
+   */
   @PostConstruct
   public void postConstruct(Composite parent, MPart part, ProjectManager projectManager) {
     parent.setLayout(new GridLayout());

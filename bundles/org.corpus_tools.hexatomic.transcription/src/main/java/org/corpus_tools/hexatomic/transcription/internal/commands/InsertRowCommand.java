@@ -37,8 +37,7 @@ public class InsertRowCommand extends AbstractContextFreeCommand {
   /**
    * Creates a new {@link InsertRowCommand}.
    * 
-   * @param selectedTimelineItems A set of the {@link PositionCoordinate}s of the currently selected
-   *        cells
+   * @param selectedCells A set of the {@link PositionCoordinate}s of the currently selected cells
    */
   public InsertRowCommand(Set<PositionCoordinate> selectedCells) {
     this.selectedCells = selectedCells;

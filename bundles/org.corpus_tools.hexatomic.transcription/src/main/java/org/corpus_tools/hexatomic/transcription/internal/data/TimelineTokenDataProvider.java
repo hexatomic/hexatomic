@@ -52,6 +52,12 @@ public class TimelineTokenDataProvider implements IDataProvider {
   private final Map<STextualDS, TreeMap<Integer, SToken>> tokenByPosition =
       new LinkedHashMap<STextualDS, TreeMap<Integer, SToken>>();
 
+  /**
+   * Set the graph that is used to provide the grid data. This can be a costly operation, because
+   * several indexes have to be (re-) created.
+   * 
+   * @param graph The graph to use.
+   */
   public void setGraph(SDocumentGraph graph) {
     this.graph = graph;
     // TODO: make this a question to the user
@@ -76,7 +82,7 @@ public class TimelineTokenDataProvider implements IDataProvider {
     }
   }
 
-  /** Find the tokens that are connected to TLI belonging to a data source */
+  /** Find the tokens that are connected to TLI belonging to a data source. */
   private Optional<SToken> getTokenForTli(int columnIndex, int rowIndex) {
 
     synchronized (tokenByPosition) {
