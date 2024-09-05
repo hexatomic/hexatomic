@@ -47,13 +47,14 @@ import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.edit.command.DeleteSelectionCommandHandler;
+import org.eclipse.nebula.widgets.nattable.edit.config.DefaultEditBindings;
+import org.eclipse.nebula.widgets.nattable.edit.config.DefaultEditConfiguration;
 import org.eclipse.nebula.widgets.nattable.edit.event.DataUpdateEvent;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
-import org.eclipse.nebula.widgets.nattable.grid.layer.config.DefaultGridLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
@@ -136,7 +137,8 @@ public class TranscriptionEditor {
     // Create the grid layer with header and body
     final GridLayer gridLayer =
         new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
-    gridLayer.addConfiguration(new DefaultGridLayerConfiguration(gridLayer));
+    gridLayer.addConfiguration(new DefaultEditConfiguration());
+    gridLayer.addConfiguration(new DefaultEditBindings());
 
     Button btnAddText = new Button(parent, SWT.NONE);
     btnAddText.addSelectionListener(new SelectionAdapter() {
