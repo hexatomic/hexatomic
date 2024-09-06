@@ -27,7 +27,6 @@ import org.corpus_tools.hexatomic.transcription.internal.commands.InsertRowComma
 import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfiguration;
 import org.eclipse.nebula.widgets.nattable.coordinate.PositionCoordinate;
-import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
 import org.eclipse.nebula.widgets.nattable.ui.matcher.KeyEventMatcher;
@@ -44,6 +43,7 @@ public class TranscriptionKeyBindings extends AbstractUiBindingConfiguration
 
   @Override
   public void configureUiBindings(UiBindingRegistry uiBindingRegistry) {
+
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.ALT, 's'), (table, keyEvent) -> {
 
       Set<PositionCoordinate> cellPositions = Set.of(selectionLayer.getSelectedCellPositions());
@@ -53,6 +53,8 @@ public class TranscriptionKeyBindings extends AbstractUiBindingConfiguration
         table.doCommand(new CreateSpanCommand(cellPositions, table));
       }
     });
+
+
     // Ctrl + Shift + (plus) inserts a row, which is consistent with Excel shortcuts
     uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.SHIFT | SWT.CTRL, '+'),
         (table, keyEvent) -> {
@@ -64,10 +66,6 @@ public class TranscriptionKeyBindings extends AbstractUiBindingConfiguration
             table.doCommand(new InsertRowCommand(cellPositions));
           }
         });
-
-
-    uiBindingRegistry.registerFirstKeyBinding(new KeyEventMatcher(SWT.DEL),
-        new DeleteSelectionAction());
   }
 
 }

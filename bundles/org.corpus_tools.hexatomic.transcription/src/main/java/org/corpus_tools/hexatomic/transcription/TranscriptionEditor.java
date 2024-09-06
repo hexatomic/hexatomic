@@ -43,25 +43,32 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.AbstractRegistryConfiguration;
+import org.eclipse.nebula.widgets.nattable.config.AbstractUiBindingConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
+import org.eclipse.nebula.widgets.nattable.edit.action.DeleteSelectionAction;
+import org.eclipse.nebula.widgets.nattable.edit.action.KeyEditAction;
+import org.eclipse.nebula.widgets.nattable.edit.action.MouseEditAction;
 import org.eclipse.nebula.widgets.nattable.edit.command.DeleteSelectionCommandHandler;
-import org.eclipse.nebula.widgets.nattable.edit.config.DefaultEditBindings;
-import org.eclipse.nebula.widgets.nattable.edit.config.DefaultEditConfiguration;
 import org.eclipse.nebula.widgets.nattable.edit.event.DataUpdateEvent;
 import org.eclipse.nebula.widgets.nattable.grid.GridRegion;
 import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.config.DefaultGridLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayer;
 import org.eclipse.nebula.widgets.nattable.layer.SpanningDataLayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.selection.config.DefaultSelectionLayerConfiguration;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
+import org.eclipse.nebula.widgets.nattable.ui.binding.UiBindingRegistry;
+import org.eclipse.nebula.widgets.nattable.ui.matcher.CellEditorMouseEventMatcher;
+import org.eclipse.nebula.widgets.nattable.ui.matcher.KeyEventMatcher;
+import org.eclipse.nebula.widgets.nattable.ui.matcher.LetterOrDigitKeyEventMatcher;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.nebula.widgets.nattable.viewport.command.ShowRowInViewportCommand;
 import org.eclipse.swt.SWT;
@@ -144,8 +151,33 @@ public class TranscriptionEditor {
     // Create the grid layer with header and body
     final GridLayer gridLayer =
         new GridLayer(viewportLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
-    gridLayer.addConfiguration(new DefaultEditConfiguration());
-    gridLayer.addConfiguration(new DefaultEditBindings());
+    gridLayer.addConfiguration(new DefaultGridLayerConfiguration(gridLayer) {
+      @Override
+      protected void addEditingUIConfig() {
+        addConfiguration(new AbstractUiBindingConfiguration() {
+          @Override
+          public void configureUiBindings(UiBindingRegistry uiBindingRegistry) {
+            // Start editing on press of space key
+            uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.NONE, 32),
+                new KeyEditAction());
+            // Start editing when user starts typing
+            uiBindingRegistry.registerKeyBinding(new LetterOrDigitKeyEventMatcher(),
+                new KeyEditAction());
+            // Start editing when user starts typing with Shift pressed
+            uiBindingRegistry.registerKeyBinding(new LetterOrDigitKeyEventMatcher(SWT.SHIFT),
+                new KeyEditAction());
+            // Start typing on double-click (single click only selects
+            uiBindingRegistry.registerFirstDoubleClickBinding(
+                new CellEditorMouseEventMatcher(GridRegion.BODY), new MouseEditAction());
+
+            // Delete annotation when user presses Delete key
+            uiBindingRegistry.registerKeyBinding(new KeyEventMatcher(SWT.NONE, SWT.DEL),
+                new DeleteSelectionAction());
+          }
+        });
+      }
+
+    });
 
     Button btnAddText = new Button(parent, SWT.NONE);
     btnAddText.addSelectionListener(new SelectionAdapter() {
