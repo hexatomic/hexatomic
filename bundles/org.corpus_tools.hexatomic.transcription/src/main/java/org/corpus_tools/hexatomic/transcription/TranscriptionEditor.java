@@ -34,6 +34,7 @@ import org.corpus_tools.hexatomic.transcription.internal.data.TextualDsHeaderDat
 import org.corpus_tools.hexatomic.transcription.internal.data.TimelineTokenDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TliCornerDataProvider;
 import org.corpus_tools.hexatomic.transcription.internal.data.TliRowHeaderDataProvider;
+import org.corpus_tools.hexatomic.transcription.internal.handlers.CreateSpanCommandHandler;
 import org.corpus_tools.hexatomic.transcription.internal.handlers.InsertRowCommandHandler;
 import org.corpus_tools.salt.common.SDocument;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -119,6 +120,7 @@ public class TranscriptionEditor {
     SelectionLayer selectionLayer = new SelectionLayer(bodyDataLayer);
     selectionLayer.addConfiguration(new DefaultSelectionLayerConfiguration());
     selectionLayer.registerCommandHandler(new InsertRowCommandHandler(graph, projectManager));
+    selectionLayer.registerCommandHandler(new CreateSpanCommandHandler(bodyDataProvider));
     selectionLayer.registerCommandHandler(new DeleteSelectionCommandHandler(selectionLayer));
     ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
     viewportLayer.setRegionName(GridRegion.BODY);

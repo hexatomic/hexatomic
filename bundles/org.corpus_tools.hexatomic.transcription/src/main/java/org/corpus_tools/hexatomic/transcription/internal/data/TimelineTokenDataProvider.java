@@ -20,10 +20,13 @@
 
 package org.corpus_tools.hexatomic.transcription.internal.data;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
@@ -153,8 +156,7 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
   @Override
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    // Get the DS for this column
-    STextualDS ds = graph.getTextualDSs().get(columnIndex);
+
     // Get the token associated with this cell
     Optional<SToken> tokenForTli = getTokenForTli(columnIndex, rowIndex);
 
@@ -164,18 +166,25 @@ public class TimelineTokenDataProvider implements IDataProvider {
       String newText = (String) newValue;
       if (tokenForTli.isEmpty()) {
         // No token yet, create a new one
-        createToken(columnIndex, rowIndex, ds, newText);
+        createToken(columnIndex, Arrays.asList(rowIndex), newText);
       } else {
         // Change the text of the existing token
         SaltHelper.changeTokenText(tokenForTli.get(), newText);
+        projectManager.addCheckpoint();
       }
-      projectManager.addCheckpoint();
     }
   }
 
-  private void createToken(int columnIndex, int rowIndex, STextualDS ds, String newText) {
-    // TODO handle token creation in between existing token
+  public void createToken(int columnIndex, Collection<Integer> rowIndex,
+      String newText) {
 
+    if (rowIndex.isEmpty()) {
+      return;
+    }
+
+    STextualDS ds = graph.getTextualDSs().get(columnIndex);
+
+    // TODO handle token creation in between existing token
     StringBuilder sb;
     if (ds.getText() == null) {
       sb = new StringBuilder();
@@ -195,13 +204,19 @@ public class TimelineTokenDataProvider implements IDataProvider {
     STimelineRelation timeLineRel = SaltFactory.createSTimelineRelation();
     timeLineRel.setSource(newToken);
     timeLineRel.setTarget(graph.getTimeline());
-    timeLineRel.setStart(rowIndex);
-    timeLineRel.setEnd(rowIndex + 1);
+
+    TreeSet<Integer> rowIndexSorted = new TreeSet<>(rowIndex);
+
+    int first = rowIndexSorted.first();
+    int last = rowIndexSorted.last();
+    timeLineRel.setStart(first);
+    timeLineRel.setEnd(last + 1);
     graph.addRelation(timeLineRel);
-    if ((rowIndex + 1) == graph.getTimeline().getEnd()) {
+    if ((last + 1) == graph.getTimeline().getEnd()) {
       // Add an additional TLI at the end
       graph.getTimeline().increasePointOfTime();
     }
+    projectManager.addCheckpoint();
   }
 
   private void deleteToken(Optional<SToken> tokenForTli) {

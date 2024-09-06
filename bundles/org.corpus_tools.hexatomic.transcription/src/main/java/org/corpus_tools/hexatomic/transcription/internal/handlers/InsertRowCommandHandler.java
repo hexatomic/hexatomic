@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An {@link AbstractLayerCommandHandler} that handles {@link InsertRowCommand}s, i.e., the creation
- * of new spans over empty cells in an existing span column.
+ * An {@link AbstractLayerCommandHandler} that handles {@link InsertRowCommand}s, i.e., the
+ * insertion of new rows between existing ones. existing span column.
  * 
  * @author Thomas Krause {@literal <thomas.krause@hu-berlin.de>}
  */
