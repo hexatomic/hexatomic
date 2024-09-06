@@ -23,6 +23,7 @@ package org.corpus_tools.hexatomic.transcription.internal.data;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -33,12 +34,14 @@ import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.undo.ChangeSet;
+import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
 import org.corpus_tools.salt.common.STextualDS;
 import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.STimelineRelation;
 import org.corpus_tools.salt.common.SToken;
+import org.corpus_tools.salt.util.DataSourceSequence;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.ui.di.UIEventTopic;
@@ -175,8 +178,7 @@ public class TimelineTokenDataProvider implements IDataProvider {
     }
   }
 
-  public void createToken(int columnIndex, Collection<Integer> rowIndex,
-      String newText) {
+  public void createToken(int columnIndex, Collection<Integer> rowIndex, String newText) {
 
     if (rowIndex.isEmpty()) {
       return;
@@ -184,35 +186,52 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
     STextualDS ds = graph.getTextualDSs().get(columnIndex);
 
-    // TODO handle token creation in between existing token
-    StringBuilder sb;
-    if (ds.getText() == null) {
-      sb = new StringBuilder();
-    } else {
-      sb = new StringBuilder(ds.getText());
+
+    TreeSet<Integer> rowIndexSorted = new TreeSet<>(rowIndex);
+
+    int firstRow = rowIndexSorted.first();
+    int lastRow = rowIndexSorted.last();
+
+    // get the next non-empty cell
+    int rowCount = getRowCount();
+    SToken nextToken = null;
+    synchronized (tokenByPosition) {
+      TreeMap<Integer, SToken> tokenPositionIndex = tokenByPosition.get(ds);
+      if (tokenPositionIndex != null) {
+        for (int i = lastRow + 1; i < rowCount; i++) {
+          nextToken = tokenPositionIndex.get(i);
+          if (nextToken != null) {
+            break;
+          }
+
+        }
+      }
     }
-    if (sb.length() > 0) {
-      // Add a space to the previous token
-      sb.append(' ');
+    int insertTextAt = ds.getText().length();
+    if (nextToken != null) {
+      // Determine the position of this token
+
+      @SuppressWarnings("rawtypes")
+      List<DataSourceSequence> overlappedSequences =
+          graph.getOverlappedDataSourceSequence(nextToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+      if (overlappedSequences != null) {
+        for (DataSourceSequence<?> seq : overlappedSequences) {
+          insertTextAt = Math.min(insertTextAt, seq.getStart().intValue());
+        }
+      }
     }
-    int startPosition = sb.length();
-    sb.append(newText);
-    int endPosition = sb.length();
-    ds.setText(sb.toString());
-    SToken newToken = graph.createToken(ds, startPosition, endPosition);
+    SToken newToken = SaltHelper.insertNewToken(ds, insertTextAt, newText, "");
+
+
     // Align new token with the selected TLI
     STimelineRelation timeLineRel = SaltFactory.createSTimelineRelation();
     timeLineRel.setSource(newToken);
     timeLineRel.setTarget(graph.getTimeline());
 
-    TreeSet<Integer> rowIndexSorted = new TreeSet<>(rowIndex);
-
-    int first = rowIndexSorted.first();
-    int last = rowIndexSorted.last();
-    timeLineRel.setStart(first);
-    timeLineRel.setEnd(last + 1);
+    timeLineRel.setStart(firstRow);
+    timeLineRel.setEnd(lastRow + 1);
     graph.addRelation(timeLineRel);
-    if ((last + 1) == graph.getTimeline().getEnd()) {
+    if ((lastRow + 1) == graph.getTimeline().getEnd()) {
       // Add an additional TLI at the end
       graph.getTimeline().increasePointOfTime();
     }

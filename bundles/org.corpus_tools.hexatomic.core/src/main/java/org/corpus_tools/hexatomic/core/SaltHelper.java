@@ -206,15 +206,56 @@ public class SaltHelper {
     }
   }
 
+  /**
+   * Inserts a token at the give position of the textual data source and updates all textual
+   * relations to use the new indexes.
+   *
+   * @param textDs The textual data source to add the token to.
+   * @param pos At which position in the text the token should be inserted to.
+   * @param newTokenText The new text the token should cover.
+   * @param whitespaceAfter A string that is inserted after the token, e.g. as whitespace between
+   *        the token.
+   */
+  public static SToken insertNewToken(STextualDS textDs, int pos, String newTokenText,
+      String whitespaceAfter) {
+    SDocumentGraph graph = textDs.getGraph();
+
+    String currentText = textDs.getText();
+    String textBefore = currentText.substring(0, pos);
+    String textAfter = currentText.substring(pos);
+
+    DataSourceSequence<Integer> newTokenSequence =
+        new DataSourceSequence<>(textDs, pos, pos + newTokenText.length());
+    textDs.setData(textBefore + newTokenText + whitespaceAfter + textAfter);
+
+    // In order for all other textual relations to be still valid, we need to update the
+    // references for all following token.
+    int offset = newTokenText.length() + whitespaceAfter.length();
+    if (offset > 0) {
+      for (STextualRelation rel : graph.getTextualRelations()) {
+        if (rel.getTarget() == textDs) {
+          if (rel.getStart() >= pos) {
+            rel.setStart(rel.getStart() + offset);
+            rel.setEnd(rel.getEnd() + offset);
+          }
+        }
+      }
+    }
+
+    return graph.createToken(newTokenSequence);
+
+
+  }
+
 
   private static void updateTextRelationsWithOffset(SDocumentGraph graph, int offset, STextualDS ds,
-      DataSourceSequence<? extends Number> oldTokenSequence) {
+      DataSourceSequence<? extends Number> updatedTokenSequence) {
     for (STextualRelation rel : graph.getTextualRelations()) {
       if (rel.getTarget() == ds) {
-        if (rel.getStart() == oldTokenSequence.getStart().intValue()
-            && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
-          rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
-        } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
+        if (rel.getStart() == updatedTokenSequence.getStart().intValue()
+            && rel.getEnd() == updatedTokenSequence.getEnd().intValue()) {
+          rel.setEnd(updatedTokenSequence.getEnd().intValue() + offset);
+        } else if (rel.getStart() >= updatedTokenSequence.getEnd().intValue()) {
           rel.setStart(rel.getStart() + offset);
           rel.setEnd(rel.getEnd() + offset);
         }
