@@ -27,6 +27,9 @@
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="4"/>
     </listAttribute>
+    <mapAttribute key="org.eclipse.debug.core.environmentVariables">
+        <mapEntry key="GDK_BACKEND" value="x11"/>
+    </mapAttribute>
     <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=org.corpus_tools.hexatomic.it.tests"/>
     <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
     <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
