@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -73,7 +74,16 @@ public class TimelineTokenDataProvider implements IDataProvider {
     if (this.graph.getTimeline().getData() == null) {
       this.graph.getTimeline().increasePointOfTime();
     }
+    // Check that all the graph has one more TLI than needed, so we have an empty row at the end to
+    // append new token.
 
+    OptionalInt largestTliFromRel =
+        this.graph.getTimelineRelations().stream().mapToInt(STimelineRelation::getEnd).max();
+    if (largestTliFromRel.isPresent()
+        && this.graph.getTimeline().getEnd() <= largestTliFromRel.getAsInt()) {
+      this.graph.getTimeline().setData(largestTliFromRel.getAsInt() + 1);
+
+    }
     updateTokenPosition();
   }
 
