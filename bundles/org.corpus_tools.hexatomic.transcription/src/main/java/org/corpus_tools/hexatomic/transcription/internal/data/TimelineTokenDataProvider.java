@@ -178,6 +178,13 @@ public class TimelineTokenDataProvider implements IDataProvider {
     }
   }
 
+  /**
+   * Creates a new token at the given position.
+   * 
+   * @param columnIndex The column/textual datasource to which the token will belong to.
+   * @param rowIndex A collection TLI/column indexes where to insert the token.
+   * @param newText The text value assigned to the new token.
+   */
   public void createToken(int columnIndex, Collection<Integer> rowIndex, String newText) {
 
     if (rowIndex.isEmpty()) {
@@ -189,8 +196,8 @@ public class TimelineTokenDataProvider implements IDataProvider {
 
     TreeSet<Integer> rowIndexSorted = new TreeSet<>(rowIndex);
 
-    int firstRow = rowIndexSorted.first();
-    int lastRow = rowIndexSorted.last();
+    final int firstRow = rowIndexSorted.first();
+    final int lastRow = rowIndexSorted.last();
 
     // get the next non-empty cell
     int rowCount = getRowCount();
