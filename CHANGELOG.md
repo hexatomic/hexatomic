@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Internal configuration for checking contributions using SonaCloud (#463).
+
 ## [1.4.4] - 2023-09-11
 
 ### Fixed
