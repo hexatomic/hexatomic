@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.corpus_tools</groupId>
 		<artifactId>org.corpus_tools.hexatomic.tests</artifactId>
-		<version>1.4.4</version>
+		<version>1.4.5</version>
 	</parent>
 
 	<artifactId>org.corpus_tools.hexatomic.tests.report</artifactId>
