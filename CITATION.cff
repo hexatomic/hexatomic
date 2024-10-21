@@ -34,8 +34,8 @@ identifiers:
   type: doi
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
-version: 1.4.4
-date-released: 2023-09-11
+version: 1.4.5
+date-released: 2024-10-21
 references:
 - type: art
   title: Font Awesome
