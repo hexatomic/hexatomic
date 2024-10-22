@@ -35,7 +35,7 @@ identifiers:
   value: 10.5281/zenodo.6900689
 doi: 10.5281/zenodo.6900689
 version: 1.5.0-SNAPSHOT
-date-released: 2023-10-23
+date-released: 2024-10-22
 references:
 - type: art
   title: Font Awesome
@@ -73,46 +73,93 @@ references:
   - name: Stephen Connolly
   repository-code: http://fisheye.codehaus.org/browse/mojo/tags/animal-sniffer-parent-1.9/animal-sniffer-annotations
 - type: software
-  title: Bouncy Castle OpenPGP API
-  version: '1.72'
-  abbreviation: org.bouncycastle:bcpg-jdk18on
+  title: Apache Commons IO
+  version: 2.16.1
+  abbreviation: commons-io:commons-io
   license: Apache-2.0
-  notes: More license information can be found in the THIRD-PARTY/Bouncy_Castle_OpenPGP_API
+  notes: More license information can be found in the THIRD-PARTY/Apache_Commons_IO
     directory.
   authors:
-  - name: The Legion of the Bouncy Castle Inc.
-  repository-code: https://github.com/bcgit/bc-java
+  - name: Scott Sanders
+  - name: dIon Gillard
+  - name: Nicola Ken Barozzi
+  - name: Henri Yandell
+  - name: Stephen Colebourne
+  - name: Jeremias Maerki
+  - name: Matthew Hawthorne
+  - name: Martin Cooper
+  - name: Rob Oxspring
+  - name: Jochen Wiedmann
+  - name: Niall Pemberton
+  - name: Jukka Zitting
+  - name: Gary Gregory
+  - name: Kristian Rosenvold
+  repository-code: https://gitbox.apache.org/repos/asf?p=commons-io.git
 - type: software
-  title: Bouncy Castle Provider
-  version: '1.72'
-  abbreviation: org.bouncycastle:bcprov-jdk18on
-  license: MIT
-  notes: More license information can be found in the THIRD-PARTY/Bouncy_Castle_Provider
+  title: Apache Commons Lang
+  version: 3.16.0
+  abbreviation: org.apache.commons:commons-lang3
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Apache_Commons_Lang
     directory.
   authors:
-  - name: The Legion of the Bouncy Castle Inc.
-  repository-code: https://github.com/bcgit/bc-java
+  - name: Daniel Rall
+  - name: Stephen Colebourne
+  - name: Henri Yandell
+  - name: Steven Caswell
+  - name: Robert Burrell Donkin
+  - name: Gary Gregory
+  - name: Fredrik Westermarck
+  - name: James Carman
+  - name: Niall Pemberton
+  - name: Matt Benson
+  - name: Joerg Schaible
+  - name: Oliver Heger
+  - name: Paul Benedict
+  - name: Benedikt Ritter
+  - name: Duncan Jones
+  - name: Loic Guibert
+  - name: Rob Tompkins
+  repository-code: https://gitbox.apache.org/repos/asf?p=commons-lang.git
 - type: software
-  title: ICU4J
-  version: '72.1'
-  abbreviation: com.ibm.icu:icu4j
-  license: Unicode-DFS-2016
-  notes: More license information can be found in the THIRD-PARTY/ICU4J directory.
+  title: Eclipse Compiler for Java(TM)
+  version: 3.33.0
+  abbreviation: org.eclipse.jdt:ecj
+  license: NOASSERTION
+  notes: More license information can be found in the THIRD-PARTY/Eclipse_Compiler_for_Java_TM_
+    directory.
   authors:
-  - name: Mark Davis
-  - name: John Emmons
-  - name: Doug Felt
-  - name: Deborah Goldsmith
-  - name: Steven Loomis
-  - name: Markus Scherer
-  - name: Peter Edberg
-  - name: Yoshito Umaoka
-  repository-code: https://github.com/unicode-org/icu
+  - name: The Eclipse Compiler for Java(TM) 3.33.0 Team
+  repository-code: https://github.com/eclipse-jdt/eclipse.jdt.core
+- type: software
+  title: Jakarta Annotations API
+  version: 2.1.1
+  abbreviation: jakarta.annotation:jakarta.annotation-api
+  license: EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0
+  notes: More license information can be found in the THIRD-PARTY/Jakarta_Annotations_API
+    directory.
+  authors:
+  - name: Linda De Michiel
+  - name: Dmitry Kornilov
+  repository-code: https://github.com/eclipse-ee4j/common-annotations-api
+- type: software
+  title: Jakarta Dependency Injection
+  version: 2.0.1
+  abbreviation: jakarta.inject:jakarta.inject-api
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Jakarta_Dependency_Injection
+    directory.
+  authors:
+  - name: Antoine Sabot-Durand
+  - name: Martin Kouba
+  - name: Tomas Remes
+  - name: Matej Novotny
+  repository-code: https://github.com/eclipse-ee4j/injection-api
 - type: software
   title: Java Native Access
-  version: 5.12.1
+  version: 5.14.0
   abbreviation: net.java.dev.jna:jna
-  license: Apache-2.0 OR LGPL-2.1-or-later
+  license: LGPL-2.1 OR Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/Java_Native_Access
     directory.
   authors:
@@ -121,7 +168,7 @@ references:
   repository-code: https://github.com/java-native-access/jna
 - type: software
   title: Java Native Access Platform
-  version: 5.12.1
+  version: 5.14.0
   abbreviation: net.java.dev.jna:jna-platform
   license: LGPL-2.1 OR Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/Java_Native_Access_Platform
@@ -130,6 +177,75 @@ references:
   - name: Timothy Wall
   - name: Matthias Bläsing
   repository-code: https://github.com/java-native-access/jna
+- type: software
+  title: 'Jetty :: Schemas'
+  version: '5.2'
+  abbreviation: org.eclipse.jetty.toolchain:jetty-schemas
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Jetty_Schemas directory.
+  authors:
+  - name: Greg Wilkins
+  - name: Jan Bartel
+  - name: Jules Gosnell
+  - name: James Strachan
+  - name: Simone Bordet
+  - name: Tim Vernum
+  - name: Nik Gonzalez
+  - name: Jeanfrancois Arcand
+  - name: Jesse McConnell
+  - name: David Jencks
+  - name: David Yu
+  - name: Athena Yao
+  - name: Joakim Erdfelt
+  - name: Hugues Malphettes
+  - name: Michael Gorovoy
+  repository-code: https://github.com/eclipse/jetty.toolchain/tree/master/jetty-schemas
+- type: software
+  title: 'Jetty :: Servlet API and Schemas for JPMS and OSGi'
+  version: 4.0.6
+  abbreviation: org.eclipse.jetty.toolchain:jetty-servlet-api
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/Jetty_Servlet_API_and_Schemas_for_JPMS_and_OSGi
+    directory.
+  authors:
+  - name: Greg Wilkins
+  - name: Jan Bartel
+  - name: Jules Gosnell
+  - name: James Strachan
+  - name: Simone Bordet
+  - name: Tim Vernum
+  - name: Nik Gonzalez
+  - name: Jeanfrancois Arcand
+  - name: Jesse McConnell
+  - name: David Jencks
+  - name: David Yu
+  - name: Athena Yao
+  - name: Joakim Erdfelt
+  - name: Hugues Malphettes
+  - name: Michael Gorovoy
+  repository-code: https://github.com/eclipse/jetty.toolchain/tree/master/jetty-servlet-api
+- type: software
+  title: 'MortBay :: Apache EL :: API and Implementation'
+  version: 9.0.90
+  abbreviation: org.mortbay.jasper:apache-el
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/MortBay_Apache_EL_API_and_Implementation
+    directory.
+  authors:
+  - name: Jan Bartel
+  - name: Olivier Lamy
+  repository-code: https://github.com/jetty-project/jasper-jsp/apache-el
+- type: software
+  title: 'MortBay :: Apache Jasper :: JSP Implementation'
+  version: 9.0.90
+  abbreviation: org.mortbay.jasper:apache-jsp
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/MortBay_Apache_Jasper_JSP_Implementation
+    directory.
+  authors:
+  - name: Jan Bartel
+  - name: Olivier Lamy
+  repository-code: https://github.com/jetty-project/jasper-jsp/apache-jsp
 - type: software
   title: Neo Visionaries Internationalization Package
   version: '1.1'
@@ -171,13 +287,68 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.slf4j.api directory.
 - type: software
   title: XZ for Java
-  version: '1.9'
+  version: '1.10'
   abbreviation: org.tukaani:xz
-  license: OTHER
+  license: 0BSD
   notes: More license information can be found in the THIRD-PARTY/XZ_for_Java directory.
   authors:
   - name: Lasse Collin
-  repository-code: https://git.tukaani.org/?p=xz-java.git
+  repository-code: https://github.com/tukaani-project/xz-java
+- type: software
+  title: asm
+  version: '9.7'
+  abbreviation: org.ow2.asm:asm
+  license: BSD-3-Clause
+  notes: More license information can be found in the THIRD-PARTY/asm directory.
+  authors:
+  - name: Eric Bruneton
+  - name: Eugene Kuleshov
+  - name: Remi Forax
+  repository-code: https://gitlab.ow2.org/asm/asm/
+- type: software
+  title: asm-analysis
+  version: '9.7'
+  abbreviation: org.ow2.asm:asm-analysis
+  license: BSD-3-Clause
+  notes: More license information can be found in the THIRD-PARTY/asm_analysis directory.
+  authors:
+  - name: Eric Bruneton
+  - name: Eugene Kuleshov
+  - name: Remi Forax
+  repository-code: https://gitlab.ow2.org/asm/asm/
+- type: software
+  title: asm-commons
+  version: '9.7'
+  abbreviation: org.ow2.asm:asm-commons
+  license: BSD-3-Clause
+  notes: More license information can be found in the THIRD-PARTY/asm_commons directory.
+  authors:
+  - name: Eric Bruneton
+  - name: Eugene Kuleshov
+  - name: Remi Forax
+  repository-code: https://gitlab.ow2.org/asm/asm/
+- type: software
+  title: asm-tree
+  version: '9.7'
+  abbreviation: org.ow2.asm:asm-tree
+  license: BSD-3-Clause
+  notes: More license information can be found in the THIRD-PARTY/asm_tree directory.
+  authors:
+  - name: Eric Bruneton
+  - name: Eugene Kuleshov
+  - name: Remi Forax
+  repository-code: https://gitlab.ow2.org/asm/asm/
+- type: software
+  title: asm-util
+  version: '9.7'
+  abbreviation: org.ow2.asm:asm-util
+  license: BSD-3-Clause
+  notes: More license information can be found in the THIRD-PARTY/asm_util directory.
+  authors:
+  - name: Eric Bruneton
+  - name: Eugene Kuleshov
+  - name: Remi Forax
+  repository-code: https://gitlab.ow2.org/asm/asm/
 - type: software
   title: ch.qos.logback.classic
   version: 1.2.3.v20221112-0806
@@ -217,6 +388,21 @@ references:
   authors:
   - name: The com.google.guava 19.0.0 Team
 - type: software
+  title: com.sun.jna
+  version: 5.14.0.v20231211-1200
+  authors:
+  - name: The com.sun.jna 5.14.0.v20231211-1200 Team
+- type: software
+  title: icu4j
+  version: '75.1'
+  abbreviation: com.ibm.icu:icu4j
+  license: NOASSERTION AND NTP
+  notes: More license information can be found in the THIRD-PARTY/icu4j directory.
+  authors:
+  - name: Markus Scherer
+  - name: Yoshito Umaoka
+  repository-code: https://github.com/unicode-org/icu/main/icu4j
+- type: software
   title: javax.annotation
   version: 1.3.5.v20221112-0806
   license: EPL-1.0
@@ -238,8 +424,16 @@ references:
   authors:
   - name: The json 20160810.0.0 Team
 - type: software
+  title: org.apache.aries.spifly.dynamic.bundle
+  version: 1.3.7
+  license: Apache-2.0
+  authors:
+  - name: Apache Software Foundation
+  notes: More license information can be found in the THIRD-PARTY/org.apache.aries.spifly.dynamic.bundle
+    directory.
+- type: software
   title: org.apache.batik.constants
-  version: 1.16.0.v20221027-0840
+  version: 1.17.0.v20231215-1130
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -247,7 +441,7 @@ references:
     directory.
 - type: software
   title: org.apache.batik.css
-  version: 1.16.0.v20221027-0840
+  version: 1.17.0.v20231215-1130
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -255,7 +449,7 @@ references:
     directory.
 - type: software
   title: org.apache.batik.i18n
-  version: 1.16.0.v20221027-0840
+  version: 1.17.0.v20231215-1130
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -263,35 +457,19 @@ references:
     directory.
 - type: software
   title: org.apache.batik.util
-  version: 1.16.0.v20221027-0840
+  version: 1.17.0.v20231215-1130
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.batik.util
     directory.
 - type: software
-  title: org.apache.commons.codec
-  version: 1.14.0.v20221112-0806
+  title: org.apache.commons.collections
+  version: 3.2.2.v20220405-1659
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
-  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.codec
-    directory.
-- type: software
-  title: org.apache.commons.jxpath
-  version: 1.3.0.v200911051830
-  license: Apache-2.0
-  authors:
-  - name: Apache Software Foundation
-  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.jxpath
-    directory.
-- type: software
-  title: org.apache.commons.lang3
-  version: 3.4.0
-  license: Apache-2.0
-  authors:
-  - name: Apache Software Foundation
-  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.lang3
+  notes: More license information can be found in the THIRD-PARTY/org.apache.commons.collections
     directory.
 - type: software
   title: org.apache.commons.logging
@@ -327,7 +505,7 @@ references:
     directory.
 - type: software
   title: org.apache.felix.scr
-  version: 2.2.4
+  version: 2.2.12
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -335,7 +513,7 @@ references:
     directory.
 - type: software
   title: org.apache.httpcomponents.client5.httpclient5
-  version: 5.1.3.v20221013-1742
+  version: 5.3.1.v20240126-0900
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -343,7 +521,7 @@ references:
     directory.
 - type: software
   title: org.apache.httpcomponents.client5.httpclient5-win
-  version: 5.1.3.v20221013-1742
+  version: 5.2.3.v20231203-1619
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -351,7 +529,7 @@ references:
     directory.
 - type: software
   title: org.apache.httpcomponents.core5.httpcore5
-  version: 5.1.4.v20221013-1742
+  version: 5.2.3.v20230922-1600
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -359,7 +537,7 @@ references:
     directory.
 - type: software
   title: org.apache.httpcomponents.core5.httpcore5-h2
-  version: 5.1.4.v20221013-1742
+  version: 5.2.3.v20230922-1600
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
@@ -367,12 +545,22 @@ references:
     directory.
 - type: software
   title: org.apache.xmlgraphics
-  version: 2.7.0.v20221018-0736
+  version: 2.9.0.v20230916-1600
   license: Apache-2.0
   authors:
   - name: Apache Software Foundation
   notes: More license information can be found in the THIRD-PARTY/org.apache.xmlgraphics
     directory.
+- type: software
+  title: org.bouncycastle.bcpg
+  version: 1.72.0.v20221013-1810
+  authors:
+  - name: The org.bouncycastle.bcpg 1.72.0.v20221013-1810 Team
+- type: software
+  title: org.bouncycastle.bcprov
+  version: 1.72.0.v20221013-1810
+  authors:
+  - name: The org.bouncycastle.bcprov 1.72.0.v20221013-1810 Team
 - type: software
   title: org.corpus-tools.pepper-framework
   version: 3.6.0
@@ -390,8 +578,17 @@ references:
   authors:
   - name: The org.corpus-tools.salt-extensions 3.4.3 Team
 - type: software
+  title: org.eclipse.collections
+  version: 10.4.0.v20200820-2049
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.collections
+    directory.
+- type: software
   title: org.eclipse.core.commands
-  version: 3.10.300.v20221024-2137
+  version: 3.12.200.v20240627-1019
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -400,7 +597,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.contenttype
-  version: 3.8.200.v20220817-1539
+  version: 3.9.500.v20240708-0707
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -409,7 +606,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.databinding
-  version: 1.11.200.v20221024-2137
+  version: 1.13.300.v20240424-0444
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -418,7 +615,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.databinding.beans
-  version: 1.9.0.v20221024-2137
+  version: 1.10.300.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -427,7 +624,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.databinding.observable
-  version: 1.12.100.v20221024-2137
+  version: 1.13.300.v20240424-0444
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -436,7 +633,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.databinding.property
-  version: 1.9.100.v20221024-2137
+  version: 1.10.300.v20240424-0444
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -445,7 +642,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.expressions
-  version: 3.8.200.v20220613-1047
+  version: 3.9.400.v20240413-1529
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -454,7 +651,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.jobs
-  version: 3.13.200.v20221102-1024
+  version: 3.15.400.v20240619-0602
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -463,7 +660,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.core.runtime
-  version: 3.26.100.v20221021-0005
+  version: 3.31.100.v20240524-2010
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -472,7 +669,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.draw2d
-  version: 3.12.0.202211301913
+  version: 3.17.0.202409021815
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -481,7 +678,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.commands
-  version: 1.0.300.v20221024-2137
+  version: 1.1.400.v20240424-0444
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -490,7 +687,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.contexts
-  version: 1.11.0.v20220716-0839
+  version: 1.12.600.v20240413-1529
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -499,7 +696,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di
-  version: 1.8.300.v20220817-1539
+  version: 1.9.500.v20240606-1236
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -508,7 +705,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di.annotations
-  version: 1.7.200.v20220613-1008
+  version: 1.8.400.v20240413-1529
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -517,7 +714,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di.extensions
-  version: 0.17.200.v20220613-1008
+  version: 0.18.300.v20240413-1529
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -526,7 +723,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.di.extensions.supplier
-  version: 0.16.400.v20220613-1047
+  version: 0.17.500.v20240419-1233
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -535,7 +732,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.core.services
-  version: 2.3.400.v20220915-1347
+  version: 2.4.400.v20240413-1529
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -544,7 +741,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.emf.xpath
-  version: 0.3.100.v20221024-2137
+  version: 0.4.300.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -553,7 +750,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.rcp
-  version: 4.26.0.v20221123-2302
+  version: 4.33.0.v20240903-0618
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -562,7 +759,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.bindings
-  version: 0.13.200.v20221024-2137
+  version: 0.14.400.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -571,7 +768,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.css.core
-  version: 0.13.400.v20221024-2137
+  version: 0.14.500.v20240606-0949
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -580,7 +777,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.css.swt
-  version: 0.14.700.v20221102-0748
+  version: 0.15.400.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -589,7 +786,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.css.swt.theme
-  version: 0.13.200.v20221024-2137
+  version: 0.14.400.v20240424-0956
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -598,7 +795,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.di
-  version: 1.4.100.v20221024-2137
+  version: 1.5.400.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -607,7 +804,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.dialogs
-  version: 1.3.400.v20221024-2137
+  version: 1.5.0.v20240424-0957
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -616,7 +813,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.model.workbench
-  version: 2.2.300.v20221024-2137
+  version: 2.4.300.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -624,8 +821,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.model.workbench
     directory.
 - type: software
+  title: org.eclipse.e4.ui.progress
+  version: 0.4.600.v20240606-1020
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.e4.ui.progress
+    directory.
+- type: software
   title: org.eclipse.e4.ui.services
-  version: 1.5.100.v20221024-2137
+  version: 1.6.300.v20231201-1637
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -634,7 +840,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.swt.gtk
-  version: 1.1.200.v20221111-1208
+  version: 1.2.200.v20240416-0658
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -643,7 +849,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.swt.win32
-  version: 1.1.100.v20221024-2137
+  version: 1.2.300.v20240416-0658
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -652,7 +858,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.widgets
-  version: 1.3.100.v20221024-2137
+  version: 1.4.200.v20240801-0837
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -661,7 +867,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.workbench
-  version: 1.14.0.v20221024-2137
+  version: 1.15.500.v20240730-1919
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -670,7 +876,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.workbench.addons.swt
-  version: 1.4.500.v20221028-0801
+  version: 1.5.500.v20240620-1945
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -679,7 +885,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.workbench.renderers.swt
-  version: 0.15.700.v20221024-2137
+  version: 0.16.500.v20240727-1037
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -688,7 +894,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.workbench.renderers.swt.cocoa
-  version: 0.13.0.v20221111-1208
+  version: 0.14.400.v20240525-0701
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -697,7 +903,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.workbench.swt
-  version: 0.16.700.v20221024-2137
+  version: 0.17.500.v20240807-0911
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -706,7 +912,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.e4.ui.workbench3
-  version: 0.16.100.v20221024-2137
+  version: 0.17.400.v20240321-1245
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -715,7 +921,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf
-  version: 3.10.0.v20210925-0032
+  version: 3.11.0.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -724,7 +930,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.core.feature
-  version: 1.6.1.v20211005-1944
+  version: 1.6.2.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -733,7 +939,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.core.ssl.feature
-  version: 1.1.501.v20210409-2301
+  version: 1.1.600.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -742,7 +948,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.filetransfer
-  version: 5.1.102.v20210409-2301
+  version: 5.1.103.v20230705-0614
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -751,7 +957,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.filetransfer.feature
-  version: 3.14.1800.v20220215-0126
+  version: 3.14.1900.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -760,7 +966,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.filetransfer.httpclient5.feature
-  version: 1.1.701.v20221112-0806
+  version: 1.1.702.v20240808-1900
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -768,8 +974,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.ecf.filetransfer.httpclient5.feature
     directory.
 - type: software
+  title: org.eclipse.ecf.filetransfer.httpclientjava.feature
+  version: 2.0.200.v20240808-1900
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.ecf.filetransfer.httpclientjava.feature
+    directory.
+- type: software
   title: org.eclipse.ecf.filetransfer.ssl.feature
-  version: 1.1.401.v20210409-2301
+  version: 1.1.402.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -778,7 +993,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.identity
-  version: 3.9.402.v20210409-2301
+  version: 3.10.0.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -787,7 +1002,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.provider.filetransfer
-  version: 3.2.800.v20220215-0126
+  version: 3.3.0.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -796,7 +1011,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.provider.filetransfer.httpclient5
-  version: 1.0.401.v20221105-0315
+  version: 1.1.100.v20240808-1900
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -805,7 +1020,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.provider.filetransfer.httpclient5.win32
-  version: 1.0.501.v20221105-0315
+  version: 1.1.100.v20240808-1900
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -813,8 +1028,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.ecf.provider.filetransfer.httpclient5.win32
     directory.
 - type: software
+  title: org.eclipse.ecf.provider.filetransfer.httpclientjava
+  version: 2.0.300.v20240808-1900
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.ecf.provider.filetransfer.httpclientjava
+    directory.
+- type: software
   title: org.eclipse.ecf.provider.filetransfer.ssl
-  version: 1.0.201.v20210409-2301
+  version: 1.1.0.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -823,7 +1047,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ecf.ssl
-  version: 1.2.401.v20210409-2301
+  version: 1.3.100.v20240812-1535
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -832,7 +1056,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.emf.common
-  version: 2.27.0.v20221121-1400
+  version: 2.31.0.v20240731-0952
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -841,7 +1065,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.emf.ecore
-  version: 2.29.0.v20221121-1400
+  version: 2.37.0.v20240721-0802
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -850,7 +1074,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.emf.ecore.change
-  version: 2.14.0.v20190528-0725
+  version: 2.17.0.v20240604-0832
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -859,7 +1083,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.emf.ecore.xmi
-  version: 2.17.0.v20220817-1334
+  version: 2.38.0.v20240721-0634
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -868,7 +1092,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.app
-  version: 1.6.200.v20220720-2012
+  version: 1.7.200.v20240722-2103
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -877,7 +1101,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.bidi
-  version: 1.4.200.v20220710-1223
+  version: 1.5.100.v20240321-1445
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -886,7 +1110,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.common
-  version: 3.17.0.v20221108-1156
+  version: 3.19.100.v20240524-2011
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -895,7 +1119,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.concurrent
-  version: 1.2.100.v20211021-1418
+  version: 1.3.100.v20240514-0729
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -904,7 +1128,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.console
-  version: 1.4.500.v20211021-1418
+  version: 1.4.800.v20240513-1104
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -913,7 +1137,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.core.feature
-  version: 1.13.900.v20221116-1440
+  version: 1.15.200.v20240722-2103
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -922,7 +1146,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.event
-  version: 1.6.100.v20211021-1418
+  version: 1.7.100.v20240321-1445
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -931,7 +1155,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.executable
-  version: 3.8.1900.v20221108-1024
+  version: 3.8.2600.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -940,7 +1164,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.executable_root.cocoa.macosx.x86_64
-  version: 3.8.1900.v20221108-1024
+  version: 3.8.2600.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -949,7 +1173,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.executable_root.gtk.linux.x86_64
-  version: 3.8.1900.v20221108-1024
+  version: 3.8.2600.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -958,7 +1182,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.executable_root.win32.win32.x86_64
-  version: 3.8.1900.v20221108-1024
+  version: 3.8.2600.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -967,7 +1191,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.frameworkadmin
-  version: 2.2.100.v20220817-1208
+  version: 2.3.200.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -976,7 +1200,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.frameworkadmin.equinox
-  version: 1.2.200.v20220315-2155
+  version: 1.3.200.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -984,8 +1208,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.frameworkadmin.equinox
     directory.
 - type: software
+  title: org.eclipse.equinox.http.service.api
+  version: 1.2.2.v20231218-2126
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.http.service.api
+    directory.
+- type: software
   title: org.eclipse.equinox.launcher
-  version: 1.6.400.v20210924-0641
+  version: 1.6.900.v20240613-2009
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -994,7 +1227,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.launcher.cocoa.macosx.x86_64
-  version: 1.2.700.v20221108-1024
+  version: 1.2.1100.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1003,7 +1236,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.launcher.gtk.linux.x86_64
-  version: 1.2.700.v20221108-1024
+  version: 1.2.1100.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1012,7 +1245,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.launcher.win32.win32.x86_64
-  version: 1.2.700.v20221108-1024
+  version: 1.2.1100.v20240722-2106
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1021,7 +1254,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.artifact.repository
-  version: 1.4.600.v20221106-1146
+  version: 1.5.400.v20240416-0654
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1030,7 +1263,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.console
-  version: 1.2.100.v20221111-1340
+  version: 1.3.400.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1039,7 +1272,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.core
-  version: 2.9.200.v20220817-1208
+  version: 2.12.100.v20240702-1335
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1048,7 +1281,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.core.feature
-  version: 1.6.1600.v20221117-1044
+  version: 1.7.300.v20240801-1024
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1057,7 +1290,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.director
-  version: 2.5.400.v20220817-1208
+  version: 2.6.400.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1066,7 +1299,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.engine
-  version: 2.7.500.v20220817-1208
+  version: 2.10.200.v20240425-1316
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1075,7 +1308,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.garbagecollector
-  version: 1.2.100.v20221111-1340
+  version: 1.3.300.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1084,7 +1317,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.jarprocessor
-  version: 1.2.300.v20220420-1427
+  version: 1.3.400.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1093,7 +1326,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.metadata
-  version: 2.6.300.v20220817-1208
+  version: 2.9.100.v20240416-0654
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1102,7 +1335,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.metadata.repository
-  version: 1.4.100.v20220329-1456
+  version: 1.5.400.v20240515-1919
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1111,7 +1344,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.operations
-  version: 2.6.100.v20220817-1208
+  version: 2.7.400.v20240425-0751
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1120,7 +1353,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.repository
-  version: 2.6.300.v20221030-1923
+  version: 2.9.100.v20240511-1722
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1129,7 +1362,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.touchpoint.eclipse
-  version: 2.3.300.v20220817-1208
+  version: 2.4.300.v20240511-1722
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1138,7 +1371,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.touchpoint.natives
-  version: 1.4.400.v20220506-1821
+  version: 1.5.300.v20240423-0755
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1147,7 +1380,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.p2.transport.ecf
-  version: 1.3.300.v20220512-1321
+  version: 1.4.300.v20240321-1450
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1156,7 +1389,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.preferences
-  version: 3.10.100.v20220710-1223
+  version: 3.11.100.v20240327-0645
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1165,7 +1398,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.registry
-  version: 3.11.200.v20220817-1601
+  version: 3.12.100.v20240524-2011
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1174,7 +1407,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.security
-  version: 1.3.1000.v20220801-1135
+  version: 1.4.400.v20240702-1702
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1183,7 +1416,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.security.linux
-  version: 1.0.300.v20220904-1118
+  version: 1.1.300.v20240419-2334
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1192,7 +1425,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.security.macosx
-  version: 1.101.400.v20210427-1958
+  version: 1.102.300.v20240419-2334
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1200,17 +1433,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.macosx
     directory.
 - type: software
-  title: org.eclipse.equinox.security.win32.x86_64
-  version: 1.1.300.v20211021-1418
+  title: org.eclipse.equinox.security.win32
+  version: 1.3.0.v20240419-2334
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
     website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.win32.x86_64
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.equinox.security.win32
     directory.
 - type: software
   title: org.eclipse.equinox.simpleconfigurator
-  version: 1.4.200.v20221111-1340
+  version: 1.5.300.v20240424-1301
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1219,7 +1452,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.equinox.simpleconfigurator.manipulator
-  version: 2.2.100.v20221117-1044
+  version: 2.3.300.v20240702-1335
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1228,7 +1461,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.help
-  version: 3.9.100.v20210721-0601
+  version: 3.10.400.v20240415-0528
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1236,8 +1469,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.help
     directory.
 - type: software
+  title: org.eclipse.jdt.core.compiler.batch
+  version: 3.39.0.v20240820-0604
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.jdt.core.compiler.batch
+    directory.
+- type: software
   title: org.eclipse.jface
-  version: 3.28.0.v20221024-1426
+  version: 3.35.0.v20240820-2045
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1246,7 +1488,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.jface.databinding
-  version: 1.14.0.v20221024-2137
+  version: 1.15.300.v20240424-0444
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1255,7 +1497,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.jface.notifications
-  version: 0.5.100.v20221024-2137
+  version: 0.7.300.v20240707-1119
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1264,7 +1506,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.jface.text
-  version: 3.22.0.v20221119-1047
+  version: 3.25.200.v20240816-1151
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1318,7 +1560,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.nebula.widgets.nattable.core
-  version: 1.6.0.201909181823
+  version: 2.4.0.202405230453
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1335,8 +1577,17 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.nebula.widgets.opal.commons
     directory.
 - type: software
+  title: org.eclipse.orbit.xml-apis-ext
+  version: 1.0.0.v20230923-0644
+  license: EPL-2.0
+  authors:
+  - name: The Eclipse Foundation
+    website: https://www.eclipse.org/
+  notes: More license information can be found in the THIRD-PARTY/org.eclipse.orbit.xml-apis-ext
+    directory.
+- type: software
   title: org.eclipse.osgi
-  version: 3.18.200.v20221116-1324
+  version: 3.21.0.v20240717-2103
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1345,7 +1596,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.osgi.compatibility.state
-  version: 1.2.800.v20221116-1440
+  version: 1.2.1000.v20240213-1057
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1354,7 +1605,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.osgi.services
-  version: 3.11.100.v20221006-1531
+  version: 3.12.100.v20240327-0645
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1363,7 +1614,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.osgi.util
-  version: 3.7.100.v20220615-1601
+  version: 3.7.300.v20231104-1118
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1372,7 +1623,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt
-  version: 3.122.0.v20221123-2302
+  version: 3.127.0.v20240903-0618
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1381,7 +1632,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt.cocoa.macosx.x86_64
-  version: 3.122.0.v20221123-2302
+  version: 3.127.0.v20240903-0618
   license: EPL-1.0
   authors:
   - name: The Eclipse Foundation
@@ -1390,7 +1641,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt.gtk.linux.x86_64
-  version: 3.122.0.v20221123-2302
+  version: 3.127.0.v20240903-0618
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1399,7 +1650,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.swt.win32.win32.x86_64
-  version: 3.122.0.v20221123-2302
+  version: 3.127.0.v20240903-0618
   license: EPL-1.0
   authors:
   - name: The Eclipse Foundation
@@ -1408,7 +1659,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.text
-  version: 3.12.300.v20220921-1010
+  version: 3.14.100.v20240524-2010
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1417,7 +1668,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.ui
-  version: 3.201.200.v20221024-2137
+  version: 3.206.100.v20240720-1232
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1425,7 +1676,7 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.ui directory.
 - type: software
   title: org.eclipse.ui.workbench
-  version: 3.127.0.v20221024-2137
+  version: 3.133.0.v20240818-1923
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1434,7 +1685,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.urischeme
-  version: 1.2.200.v20221024-2137
+  version: 1.3.400.v20240606-1412
   license: EPL-2.0
   authors:
   - name: The Eclipse Foundation
@@ -1443,7 +1694,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.zest.core
-  version: 1.7.0.202211301913
+  version: 1.13.0.202409021815
   license: EPL-1.0
   authors:
   - name: The Eclipse Foundation
@@ -1452,7 +1703,7 @@ references:
     directory.
 - type: software
   title: org.eclipse.zest.layouts
-  version: 1.2.200.202211301913
+  version: 1.6.0.202409021815
   license: EPL-1.0
   authors:
   - name: The Eclipse Foundation
@@ -1460,8 +1711,13 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.eclipse.zest.layouts
     directory.
 - type: software
+  title: org.hamcrest
+  version: 2.2.0.v20210711-0821
+  authors:
+  - name: The org.hamcrest 2.2.0.v20210711-0821 Team
+- type: software
   title: org.hamcrest.core
-  version: 1.3.0.v20180420-1519
+  version: 2.2.0.v20230809-1000
   license: BSD-2-Clause
   authors:
   - family-names: Walnes
@@ -1477,10 +1733,15 @@ references:
   notes: More license information can be found in the THIRD-PARTY/org.hamcrest.core
     directory.
 - type: software
-  title: org.junit
-  version: 4.13.2.v20211018-1956
+  title: org.jdom
+  version: 1.1.3.v20230812-1600
   authors:
-  - name: The org.junit 4.13.2.v20211018-1956 Team
+  - name: The org.jdom 1.1.3.v20230812-1600 Team
+- type: software
+  title: org.junit
+  version: 4.13.2.v20230809-1000
+  authors:
+  - name: The org.junit 4.13.2.v20230809-1000 Team
 - type: software
   title: org.osgi:org.osgi.namespace.extender
   version: 1.0.1
@@ -1513,7 +1774,7 @@ references:
   repository-code: https://github.com/osgi/osgi
 - type: software
   title: org.osgi:org.osgi.service.component
-  version: 1.5.0
+  version: 1.5.1
   abbreviation: org.osgi:org.osgi.service.component
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/org.osgi_org.osgi.service.component
@@ -1537,6 +1798,16 @@ references:
   abbreviation: org.osgi:org.osgi.service.event
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/org.osgi_org.osgi.service.event
+    directory.
+  authors:
+  - name: OSGi Working Group
+  repository-code: https://github.com/osgi/osgi
+- type: software
+  title: org.osgi:org.osgi.service.http.whiteboard
+  version: 1.1.1
+  abbreviation: org.osgi:org.osgi.service.http.whiteboard
+  license: Apache-2.0
+  notes: More license information can be found in the THIRD-PARTY/org.osgi_org.osgi.service.http.whiteboard
     directory.
   authors:
   - name: OSGi Working Group
@@ -1633,7 +1904,7 @@ references:
   repository-code: https://osgi.org/git/build.git
 - type: software
   title: org.osgi:org.osgi.util.promise
-  version: 1.2.0
+  version: 1.3.0
   abbreviation: org.osgi:org.osgi.util.promise
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/org.osgi_org.osgi.util.promise
@@ -1653,7 +1924,7 @@ references:
   repository-code: https://github.com/osgi/osgi
 - type: software
   title: org.osgi:osgi.annotation
-  version: 8.0.1
+  version: 8.1.0
   abbreviation: org.osgi:osgi.annotation
   license: Apache-2.0
   notes: More license information can be found in the THIRD-PARTY/org.osgi_osgi.annotation
@@ -1662,44 +1933,10 @@ references:
   - name: OSGi Working Group
   repository-code: https://github.com/osgi/osgi
 - type: software
-  title: org.w3c.css.sac
-  version: 1.3.1.v200903091627
-  license: W3C
+  title: org.slf4j.apis.jcl
+  version: 1.7.30.v20221112-0806
   authors:
-  - name: Copyright (c) 2002 http://www.w3.org/' World Wide Web Consortium, http://www.lcs.mit.edu/'
-      Massachusetts Institute
-  - name: Copyright (c) 1994-2002 http://www.w3.org/' World Wide Web Consortium, http://www.lcs.mit.edu/'
-      Massachusetts Institute
-  - name: Copyright (c) 2002 World Wide Web Consortium, (Massachusetts Institute of
-      Technology, Institut National de Recherche en Informatique et en Automatique,
-      Keio University).
-- type: software
-  title: org.w3c.dom.events
-  version: 3.0.0.draft20060413_v201105210656
-  license: EPL-1.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.w3c.dom.events
-    directory.
-- type: software
-  title: org.w3c.dom.smil
-  version: 1.0.1.v200903091627
-  license: EPL-1.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.w3c.dom.smil
-    directory.
-- type: software
-  title: org.w3c.dom.svg
-  version: 1.1.0.v201011041433
-  license: EPL-1.0
-  authors:
-  - name: The Eclipse Foundation
-    website: https://www.eclipse.org/
-  notes: More license information can be found in the THIRD-PARTY/org.w3c.dom.svg
-    directory.
+  - name: The org.slf4j.apis.jcl 1.7.30.v20221112-0806 Team
 - type: software
   title: stax2-api
   version: 3.1.4
