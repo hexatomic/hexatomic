@@ -879,7 +879,7 @@ public class TestGridEditor {
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
     // Context menu should have 4 items, 1 separator, "refresh grid", and 2x add
     // annotation column
-    assertEquals(5, contextMenu.menuItems().size());
+    assertEquals(4, contextMenu.menuItems().size());
     // Click on an item to ensure the context menu is closed
     contextMenu.menu(REFRESH_GRID).click();
   }
