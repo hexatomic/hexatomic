@@ -1,0 +1,29 @@
+// ------------------------------------------------------------------
+// Transitive dependencies of this project determined from the
+// maven pom organized by organization.
+// ------------------------------------------------------------------
+
+Apache Aries SPI Fly Dynamic Weaving Bundle
+
+
+From: 'OW2' (http://www.ow2.org/)
+
+  - asm (http://asm.ow2.io/) org.ow2.asm:asm:jar:9.6
+    License: BSD-3-Clause  (https://asm.ow2.io/license.html)
+
+  - asm-analysis (http://asm.ow2.io/) org.ow2.asm:asm-analysis:jar:9.6
+    License: BSD-3-Clause  (https://asm.ow2.io/license.html)
+
+  - asm-commons (http://asm.ow2.io/) org.ow2.asm:asm-commons:jar:9.6
+    License: BSD-3-Clause  (https://asm.ow2.io/license.html)
+
+  - asm-tree (http://asm.ow2.io/) org.ow2.asm:asm-tree:jar:9.6
+    License: BSD-3-Clause  (https://asm.ow2.io/license.html)
+
+  - asm-util (http://asm.ow2.io/) org.ow2.asm:asm-util:jar:9.6
+    License: BSD-3-Clause  (https://asm.ow2.io/license.html)
+
+
+
+
+

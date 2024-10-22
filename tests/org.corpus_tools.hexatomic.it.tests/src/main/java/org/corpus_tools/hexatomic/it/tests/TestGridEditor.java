@@ -863,7 +863,8 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Context menu should have 4 items: 2x add annotation column, 1 separator, and "refresh grid"
+    // Context menu should have 4 items, 1 separator, "refresh grid", and 2x add
+    // annotation column
     assertEquals(4, contextMenu.menuItems().size());
     // Click on an item to ensure the context menu is closed
     contextMenu.menu(REFRESH_GRID).click();
@@ -876,7 +877,8 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Context menu should have 4 items: 2x add annotation column, 1 separator, and "refresh grid"
+    // Context menu should have 4 items, 1 separator, "refresh grid", and 2x add
+    // annotation column
     assertEquals(4, contextMenu.menuItems().size());
     // Click on an item to ensure the context menu is closed
     contextMenu.menu(REFRESH_GRID).click();
