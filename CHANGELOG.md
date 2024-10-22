@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   closing the open editors (#450).
 - Only calculate the text of the widget if logging is in debug mode (#456).
 
+## [1.4.5] - 2024-10-21
+
+### Fixed
+
+- Internal configuration for checking contributions using SonaCloud (#463).
+
 ## [1.4.4] - 2023-09-11
 
 ### Fixed
@@ -435,7 +441,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - This is the first public preview release of the Hexatomic developer platform.
 
 
-[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.4.4...HEAD
+[Unreleased]: https://github.com/hexatomic/hexatomic/compare/v1.4.5...HEAD
+[1.4.5]: https://github.com/hexatomic/hexatomic/compare/v1.4.4...v1.4.5
 [1.4.4]: https://github.com/hexatomic/hexatomic/compare/v1.4.3...v1.4.4
 [1.4.3]: https://github.com/hexatomic/hexatomic/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/hexatomic/hexatomic/compare/v1.4.1...v1.4.2
