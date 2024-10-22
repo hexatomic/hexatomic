@@ -284,6 +284,7 @@
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="org.corpus_tools.hexatomic.core.tests@default:false"/>
         <setEntry value="org.corpus_tools.hexatomic.core@default:default"/>
+        <setEntry value="org.corpus_tools.hexatomic.transcription@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>

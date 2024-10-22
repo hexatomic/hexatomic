@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Integration Tests
 Bundle-SymbolicName: org.corpus_tools.hexatomic.it.tests
-Bundle-Version: 1.4.5
+Bundle-Version: 1.5.0.qualifier
 Automatic-Module-Name: org.corpus_tools.hexatomic.it.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.e4.ui.workbench,
@@ -31,7 +31,8 @@ Require-Bundle: org.eclipse.e4.ui.workbench,
  org.eclipse.core.runtime;bundle-version="3.26.100",
  junit-jupiter-api;bundle-version="5.9.1",
  org.eclipse.e4.core.di;bundle-version="1.8.300",
- org.corpus_tools.hexatomic.textviewer
+ org.corpus_tools.hexatomic.textviewer,
+ org.corpus_tools.hexatomic.transcription;bundle-version="1.2.0"
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Import-Package: org.eclipse.e4.ui.di
 Bundle-ActivationPolicy: lazy

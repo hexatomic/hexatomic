@@ -28,6 +28,7 @@ import javax.inject.Named;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
+import org.corpus_tools.hexatomic.grid.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.bindings.FreezeGridBindings;
 import org.corpus_tools.hexatomic.grid.internal.configuration.BodyMenuConfiguration;
 import org.corpus_tools.hexatomic.grid.internal.configuration.ColumnHeaderMenuConfiguration;
@@ -36,7 +37,6 @@ import org.corpus_tools.hexatomic.grid.internal.configuration.GridLayerConfigura
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.GraphDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.LabelAccumulator;
-import org.corpus_tools.hexatomic.grid.internal.data.NodeSpanningDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.data.RowHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.events.ColumnsChangedEvent;
 import org.corpus_tools.hexatomic.grid.internal.events.TriggerResolutionEvent;

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.corpus_tools</groupId>
 		<artifactId>org.corpus_tools.hexatomic.tests</artifactId>
-		<version>1.4.5</version>
+		<version>1.5.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>org.corpus_tools.hexatomic.tests.report</artifactId>
@@ -58,6 +58,12 @@
 		<dependency>
 			<groupId>org.corpus_tools</groupId>
 			<artifactId>org.corpus_tools.hexatomic.textviewer</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.corpus_tools</groupId>
+			<artifactId>org.corpus_tools.hexatomic.transcription</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

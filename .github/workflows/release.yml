@@ -14,9 +14,9 @@ jobs:
         - name: Install metacity window manager for background tests
           run: sudo apt-get install metacity
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
         - name: Set up Maven
-          uses: stCarolas/setup-maven@v4.5
+          uses: stCarolas/setup-maven@v5
           with:
             maven-version: 3.8.7
         - name: Set JAVA_HOME to OpenJDK 17
@@ -40,16 +40,16 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy_macos:
     name: Deploy release MacOS binaries
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
         - name: Checkout
-          uses: actions/checkout@v2
-        - uses: actions/setup-java@v3
+          uses: actions/checkout@v4
+        - uses: actions/setup-java@v4
           with:
             java-version: '17'
             distribution: 'temurin'
         - name: Set up Maven
-          uses: stCarolas/setup-maven@v4.5
+          uses: stCarolas/setup-maven@v5
           with:
             maven-version: 3.8.7
         - name: Run Maven install (excludes tests since they currently fail on macOS) and re-create CFF file
@@ -79,9 +79,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Set up Maven
-      uses: stCarolas/setup-maven@v4.5
+      uses: stCarolas/setup-maven@v5
       with:
         maven-version: 3.8.7
     - name: Set JAVA_HOME to OpenJDK 17
@@ -105,7 +105,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Download and install mdBook 
         run: curl -L -o mdbook.tar.gz https://github.com/rust-lang-nursery/mdBook/releases/download/v$MDBOOK_VERSION/mdbook-v$MDBOOK_VERSION-x86_64-unknown-linux-gnu.tar.gz && tar -C $HOME/.cargo/bin/ -zvxf mdbook.tar.gz
         env:
