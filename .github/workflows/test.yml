@@ -52,7 +52,7 @@ jobs:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven
       - name: Run Maven install (includes tests)
-        run: mvn verify
+        run: mvn -Djava.awt.headless=false verify
         env:
           LANG: en_US.UTF-8
 
