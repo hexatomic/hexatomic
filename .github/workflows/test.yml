@@ -52,6 +52,8 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven
+      - name: "Allow SWTBot to act as accessibility helper"
+      	run: brew install tccutil && sudo tccutil --enable com.apple.Terminal
       - name: Run Maven install (includes tests)
         run: mvn -Djava.awt.headless=false verify
         env:
