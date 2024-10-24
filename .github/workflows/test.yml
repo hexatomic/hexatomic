@@ -32,7 +32,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           LANG: en_US.UTF-8
-          WEBKIT_DISABLE_DMABUF_RENDERER: 1
   test_macos:
     name: OpenJDK macOS
     runs-on: macos-13
@@ -52,14 +51,10 @@ jobs:
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven
-      - run: brew install tccutil
-      - name: Allow SWTBot to act as accessibility helper
-        run: sudo tccutil --enable com.apple.Terminal
       - name: Run Maven install (includes tests)
-        run: mvn -Djava.awt.headless=false verify
+        run: mvn verify
         env:
           LANG: en_US.UTF-8
-          WEBKIT_DISABLE_DMABUF_RENDERER: 1
 
   test_docs:
     name: Test documentation
