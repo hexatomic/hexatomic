@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.corpus_tools</groupId>
 	<artifactId>org.corpus_tools.hexatomic.root</artifactId>
-	<version>1.4.5</version>
+	<version>1.5.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<!-- SCM -->
 	<scm>
@@ -17,7 +17,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>17</maven.compiler.release>
 		<tycho.version>3.0.3</tycho.version>
-		<jacoco.version>0.8.8</jacoco.version>
+		<jacoco.version>0.8.12</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
 	</properties>
 	<!-- MODULES -->
@@ -247,7 +247,7 @@
 						<artifact>
 							<groupId>org.corpus_tools</groupId>
 							<artifactId>org.corpus_tools.hexatomic.target</artifactId>
-							<version>1.4.5</version>
+							<version>1.5.0-SNAPSHOT</version>
 						</artifact>
 					</target>
 					<resolveWithExecutionEnvironmentConstraints>false</resolveWithExecutionEnvironmentConstraints>
