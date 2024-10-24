@@ -55,6 +55,7 @@ jobs:
         run: mvn verify
         env:
           LANG: en_US.UTF-8
+          MAVEN_OPTS: "-Djava.awt.headless=true"
 
   test_docs:
     name: Test documentation
