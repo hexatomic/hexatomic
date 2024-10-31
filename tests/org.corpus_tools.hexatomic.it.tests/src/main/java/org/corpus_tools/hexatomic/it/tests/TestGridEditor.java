@@ -67,6 +67,7 @@ import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.keyboard.MockKeyboardStrategy;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -167,7 +168,7 @@ public class TestGridEditor {
   private ECommandService commandService;
   private EHandlerService handlerService;
 
-  private final Keyboard keyboard = KeyboardFactory.getAWTKeyboard();
+  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
 
   private ProjectManager projectManager;
 
@@ -399,6 +400,10 @@ public class TestGridEditor {
 
     // Activate corpus structure editor
     bot.partByTitle(CORPUS_STRUCTURE).show();
+  }
+
+  private void typeText(String text) {
+    text.chars().forEach(c -> keyboard.pressShortcut(KeyStroke.getInstance(c)));
   }
 
   @Test
@@ -673,7 +678,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.doubleclick(2, 2);
-    typeTextPressReturn(table);
+    typeTextPressReturn(tableBot);
 
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
@@ -693,7 +698,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 2);
-    typeTextPressReturn(table);
+    typeTextPressReturn(tableBot);
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
@@ -712,8 +717,8 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 2);
-    keyboard.pressShortcut(Keystrokes.SPACE);
-    typeTextPressReturn(table);
+    table.pressShortcut(Keystrokes.SPACE);
+    typeTextPressReturn(tableBot);
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
@@ -730,7 +735,8 @@ public class TestGridEditor {
 
     assertEquals("", table.getCellDataValueByPosition(1, 5));
     table.click(1, 5);
-    typeTextPressReturn(table);
+    bot.waitUntil(new GridIsActive(tableBot));
+    typeTextPressReturn(tableBot);
     Object nodeObj = table.widget.getDataValueByPosition(5, 1);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
@@ -747,7 +753,7 @@ public class TestGridEditor {
 
     assertEquals("", table.getCellDataValueByPosition(2, 2));
     table.click(2, 2);
-    typeTextPressReturn(table);
+    typeTextPressReturn(tableBot);
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
@@ -756,28 +762,31 @@ public class TestGridEditor {
   }
 
   /**
-   * Types the value of TEST_ANNOTATION_VALUE, then Return, then waits until the tableToTest has no
-   * active cell editors, up to 1000ms.
+   * Types the value of TEST_ANNOTATION_VALUE on the NatTable, then Return, then waits until the
+   * tableToTest has no active cell editors, up to 1000ms.
    *
    * @param tableToTest The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
-  private void typeTextPressReturn(SWTBotNatTable table) {
-    if (SystemUtils.IS_OS_MAC_OSX) {
-      // There seems to be an issue with editing a cell when the span was created from
-      // a context
-      // menu triggered by SWT bot. Clicking manually on the context menu works and
-      // the text can be
-      // inserted right away. Pressing ESC first on macOS circumvents this problem,
-      // but is more a
-      // workaround.
-      keyboard.pressShortcut(Keystrokes.ESC);
-    }
+  private void typeTextPressReturn(SWTNatTableBot tableBot) {
+    tableBot.nattable().setFocus();
+    // Activate the cell editor with a mock keyboard event
+    MockKeyboardStrategy mockKeyboard = new MockKeyboardStrategy();
+    mockKeyboard.init(tableBot.nattable().widget, d -> d.appendText("Active Grid cell"));
+    mockKeyboard.pressKeys(KeyStroke.getInstance('t'));
 
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    // Type the rest "naturally"
+    keyboard.pressShortcut(KeyStroke.getInstance('e'));
+    tableBot.sleep(10);
+    keyboard.pressShortcut(KeyStroke.getInstance('s'));
+    tableBot.sleep(10);
+    keyboard.pressShortcut(KeyStroke.getInstance('t'));
+    tableBot.sleep(10);
+
     keyboard.pressShortcut(Keystrokes.CR);
-    bot.waitUntil(new TableCellEditorInactiveCondition(table));
+    tableBot.waitUntil(new TableCellEditorInactiveCondition(tableBot.nattable()));
   }
+
 
   protected static class CellDataValueCondition extends DefaultCondition {
 
@@ -816,15 +825,15 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(1, 4);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 1, 4, ""));
 
     table.click(2, 3);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 2, 3, ""));
 
     table.click(2, 4);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
     NatTable natTable = table.widget;
     assertEquals("", table.getCellDataValueByPosition(3, 4));
@@ -976,7 +985,8 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+
+    typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
@@ -996,7 +1006,7 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
@@ -1035,9 +1045,9 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(1, 1);
-    shiftClick(table, 5, 1);
-    ctrlClick(table, 2, 3);
-    ctrlClick(table, 4, 3);
+    shiftClick(tableBot, 5, 1);
+    ctrlClick(tableBot, 2, 3);
+    ctrlClick(tableBot, 4, 3);
 
     List<String> column0HeaderMenuItems = table.contextMenu(0, 0).menuItems();
     assertFalse(
@@ -1112,7 +1122,7 @@ public class TestGridEditor {
     // Change annotation name in first overlapping column (currently at position 3)
     table.contextMenu(0, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1158,7 +1168,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1254,7 +1264,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, NAMESPACED_LEMMA_NAME);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1321,7 +1331,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, "<annotation name/key>");
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed, the span annotation is added to a
@@ -1377,7 +1387,7 @@ public class TestGridEditor {
     table.click(4, 2);
     table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(POS_NAME);
+    typeText(POS_NAME);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
@@ -1462,19 +1472,25 @@ public class TestGridEditor {
     assertEquals(TOPIC_VALUE, ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
         .getAnnotation(INF_STRUCT_NAME).getValue());
     table.click(2, 4);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
     assertNull(natTable.getDataValueByPosition(4, 2));
 
     // Select cells for new span
     table.click(3, 4);
-    shiftClick(table, 7, 4);
+    shiftClick(tableBot, 7, 4);
 
     // Create span and assert
     SWTBotRootMenu contextMenu = table.contextMenu(5, 4);
     contextMenu.contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
 
-    typeTextPressReturn(table);
+    keyboard.pressShortcut(KeyStroke.getInstance('t'));
+    keyboard.pressShortcut(KeyStroke.getInstance('e'));
+    keyboard.pressShortcut(KeyStroke.getInstance('s'));
+    keyboard.pressShortcut(KeyStroke.getInstance('t'));
+    keyboard.pressShortcut(Keystrokes.CR);
+    tableBot.waitUntil(new TableCellEditorInactiveCondition(tableBot.nattable()));
+
     assertNull(natTable.getDataValueByPosition(4, 2));
     Object potentialSpan = natTable.getDataValueByPosition(4, 3);
     assertTrue(potentialSpan instanceof SSpan);
@@ -1502,16 +1518,16 @@ public class TestGridEditor {
     assertEquals(TOPIC_VALUE, ((SAnnotationContainer) natTable.getDataValueByPosition(4, 2))
         .getAnnotation(INF_STRUCT_NAME).getValue());
     table.click(2, 4);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 2, 4, ""));
     assertNull(natTable.getDataValueByPosition(4, 2));
 
     // Select cells for new span
     table.click(3, 4);
-    shiftClick(table, 5, 4);
-    ctrlClick(table, 7, 4);
-    ctrlClick(table, 9, 4);
-    ctrlClick(table, 10, 4);
+    shiftClick(tableBot, 5, 4);
+    ctrlClick(tableBot, 7, 4);
+    ctrlClick(tableBot, 9, 4);
+    ctrlClick(tableBot, 10, 4);
 
     // Create span and assert
     table.contextMenu(5, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
@@ -1520,7 +1536,7 @@ public class TestGridEditor {
     if (SystemUtils.IS_OS_MAC_OSX) {
       keyboard.pressShortcut(Keystrokes.ESC);
     }
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     if (SystemUtils.IS_OS_MAC_OSX) {
       // This created a pop-up with a prompt for the new value, close it
       SWTBotShell dialog = tableBot.shell("Enter new value");
@@ -1574,7 +1590,7 @@ public class TestGridEditor {
         ((SAnnotationContainer) natTable.getDataValueByPosition(4, 1))
             .getAnnotation(INF_STRUCT_NAME).getValue());
     table.click(1, 4);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new CellDataValueCondition(tableBot, 1, 4, ""));
     assertNull(natTable.getDataValueByPosition(4, 1));
 
@@ -1585,7 +1601,7 @@ public class TestGridEditor {
     List<String> contextMenuItems = table.contextMenu(1, 4).menuItems();
     assertTrue(contextMenuItems.contains(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL));
     table.contextMenu(1, 4).contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
-    typeTextPressReturn(table);
+    typeTextPressReturn(tableBot);
     Object potentialSpan = natTable.getDataValueByPosition(4, 1);
     assertTrue(potentialSpan instanceof SSpan);
     SSpan span = (SSpan) potentialSpan;
@@ -1606,14 +1622,14 @@ public class TestGridEditor {
 
     // Remove all cells in first token annotation column
     table.click(1, 2);
-    shiftClick(table, 11, 2);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    shiftClick(tableBot, 11, 2);
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new ColumnIsEmptyCondition(table, 2));
     table.click(1, 3);
 
     bot.waitUntil(new ColumnCountCondition(table, 5));
 
-    keyboard.pressShortcut(Keystrokes.F5);
+    table.pressShortcut(Keystrokes.F5);
     bot.waitUntil(new ColumnCountCondition(table, 4));
   }
 
@@ -1632,8 +1648,9 @@ public class TestGridEditor {
 
     // Remove all cells in first token annotation column
     table.click(1, 2);
-    shiftClick(table, 11, 2);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    shiftClick(tableBot, 11, 2);
+
+    table.pressShortcut(Keystrokes.DELETE);
     bot.waitUntil(new ColumnIsEmptyCondition(table, 2));
     table.click(1, 3);
 
@@ -1647,7 +1664,7 @@ public class TestGridEditor {
   }
 
   /**
-   * Tests column behaviour to remain in existence after the last cell in it has been deleted.
+   * Tests column behavior to remain in existence after the last cell in it has been deleted.
    */
   @Test
   void testColumnExistsAfterDeletionOfCells() {
@@ -1658,8 +1675,8 @@ public class TestGridEditor {
 
     // Select second token annotation column (salt::pos)
     table.click(0, 3);
-    keyboard.pressShortcut(Keystrokes.DELETE);
-    bot.sleep(500);
+    table.pressShortcut(Keystrokes.DELETE);
+    bot.waitUntil(new GridIsActive(tableBot));
     // Check that cells exist but are empty
     for (int i = 1; i < 12; i++) {
       assertEquals("", table.getCellDataValueByPosition(i, 3));
@@ -1668,7 +1685,7 @@ public class TestGridEditor {
 
     // Select span annotation column
     table.click(0, 4);
-    keyboard.pressShortcut(Keystrokes.DELETE);
+    table.pressShortcut(Keystrokes.DELETE);
     // Check that cells exist but are empty
     for (int i = 1; i < 12; i++) {
       assertEquals("", table.getCellDataValueByPosition(i, 3));
@@ -1691,7 +1708,7 @@ public class TestGridEditor {
     assertEquals(5, table.columnCount());
 
     table.click(1, 2);
-    ctrlClick(table, 1, 3);
+    ctrlClick(tableBot, 1, 3);
     table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
@@ -1727,11 +1744,11 @@ public class TestGridEditor {
 
     // Rename
     table.click(1, 2);
-    ctrlClick(table, 1, 3);
-    ctrlClick(table, 3, 3);
+    ctrlClick(tableBot, 1, 3);
+    ctrlClick(tableBot, 3, 3);
     table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
@@ -1816,10 +1833,10 @@ public class TestGridEditor {
 
     // Select a range of cells
     table.click(2, 4);
-    shiftClick(table, 6, 4);
+    shiftClick(tableBot, 6, 4);
 
     // Fire the keyboard shortcut
-    keyboard.pressShortcut(SWT.ALT, 's');
+    table.pressShortcut(SWT.ALT, 's');
 
     bot.sleep(500);
 
@@ -2020,8 +2037,8 @@ public class TestGridEditor {
 
     // Select spans with equal annotations and click context menu
     table.click(2, 2);
-    ctrlClick(table, 5, 2);
-    ctrlClick(table, 6, 2);
+    ctrlClick(tableBot, 5, 2);
+    ctrlClick(tableBot, 6, 2);
     table.contextMenu(5, 2).contextMenu("Merge spans").click();
     bot.waitUntil(new SameSpansCondition(2, 2, natTable, 5, 6));
   }
@@ -2052,7 +2069,7 @@ public class TestGridEditor {
 
     // Select spans with equal annotations and click context menu
     table.click(2, 2);
-    ctrlClick(table, 3, 2);
+    ctrlClick(tableBot, 3, 2);
     table.contextMenu(5, 2).contextMenu("Merge spans").click();
     // Assert that waiting for merged spans times out (after 1 sec.)
     assertThrows(TimeoutException.class,
@@ -2213,7 +2230,7 @@ public class TestGridEditor {
     menu.contextMenu(GridEditor.ADD_TOK_ANNO_COL_POPUP_MENU_LABEL).click();
     tableBot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
-    keyboard.typeText(TEST_ANNOTATION_VALUE, 10);
+    dialog.bot().text(1).setText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     return columnCount;
@@ -2250,20 +2267,23 @@ public class TestGridEditor {
     assertEquals(name, extractedName);
   }
 
-  private void ctrlClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
-    clickWithMask(false, true, rowPosition, columnPosition, table);
+  private void ctrlClick(SWTNatTableBot tableBot, int rowPosition, int columnPosition) {
+    clickWithMask(false, true, rowPosition, columnPosition, tableBot);
   }
 
-  private void shiftClick(SWTBotNatTable table, int rowPosition, int columnPosition) {
-    clickWithMask(true, false, rowPosition, columnPosition, table);
+  private void shiftClick(SWTNatTableBot tableBot, int rowPosition, int columnPosition) {
+    clickWithMask(true, false, rowPosition, columnPosition, tableBot);
   }
 
   private void clickWithMask(boolean shiftMask, boolean ctrlMask, int rowPosition,
-      int columnPosition, SWTBotNatTable table) {
-    ILayer selectionLayer = getSelectionLayer(table);
+      int columnPosition, SWTNatTableBot tableBot) {
+    ILayer selectionLayer = getSelectionLayer(tableBot.nattable());
     Display.getDefault()
         .syncExec(() -> selectionLayer.doCommand(new SelectCellCommand(selectionLayer,
             columnPosition - 1, rowPosition - 1, shiftMask, ctrlMask)));
+    // Wait until the table is active again
+    tableBot.waitUntil(new GridIsActive(tableBot));
+
   }
 
   private SelectionLayer getSelectionLayer(SWTBotNatTable table) {
@@ -2540,6 +2560,25 @@ public class TestGridEditor {
         }
       }
       return null;
+    }
+  }
+
+
+  private final class GridIsActive extends DefaultCondition {
+    private final SWTNatTableBot tableBot;
+
+    private GridIsActive(SWTNatTableBot tableBot) {
+      this.tableBot = tableBot;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return tableBot.nattable().isActive();
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Table that was clicked did not become active again";
     }
   }
 
