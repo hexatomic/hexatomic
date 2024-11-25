@@ -5,7 +5,7 @@ location "https://download.eclipse.org/justj/jres/17/updates/release/17.0.7" {
 	org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group
 }
 
-location "https://download.eclipse.org/releases/2022-12/" {
+location "https://download.eclipse.org/releases/2023-03/" {
 	org.eclipse.zest.sdk.feature.group
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.sdk.feature.group
@@ -13,7 +13,7 @@ location "https://download.eclipse.org/releases/2022-12/" {
 	org.eclipse.equinox.p2.core.feature.feature.group
 }
 
-location "https://download.eclipse.org/tools/orbit/downloads/2022-12/" {
+location "https://download.eclipse.org/tools/orbit/downloads/2023-03/" {
 	org.hamcrest
 	org.mockito.junit-jupiter
 	org.mockito.mockito-core

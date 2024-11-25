@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Hexatomic Target Platform Definition" sequenceNumber="1732546890">
+<target name="Hexatomic Target Platform Definition" sequenceNumber="1732547192">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group" version="17.0.7.v20230425-1502"/>
@@ -9,11 +9,11 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.zest.sdk.feature.group" version="3.15.0.202211301913"/>
-      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.600.v20221116-1440"/>
-      <unit id="org.eclipse.sdk.feature.group" version="4.26.0.v20221123-2302"/>
+      <unit id="org.eclipse.equinox.sdk.feature.group" version="3.23.700.v20230220-1352"/>
+      <unit id="org.eclipse.sdk.feature.group" version="4.27.0.v20230302-0300"/>
       <unit id="org.eclipse.swtbot.eclipse.feature.group" version="4.0.0.202206011610"/>
-      <unit id="org.eclipse.equinox.p2.core.feature.feature.group" version="1.6.1600.v20221117-1044"/>
-      <repository location="https://download.eclipse.org/releases/2022-12/"/>
+      <unit id="org.eclipse.equinox.p2.core.feature.feature.group" version="1.6.1700.v20230120-0604"/>
+      <repository location="https://download.eclipse.org/releases/2023-03/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.hamcrest" version="2.2.0.v20210711-0821"/>
@@ -21,8 +21,8 @@
       <unit id="org.mockito.mockito-core" version="4.8.1.v20221103-2317"/>
       <unit id="ch.qos.logback.classic" version="1.2.3.v20221112-0806"/>
       <unit id="ch.qos.logback.slf4j" version="1.2.3.v20221112-0806"/>
-      <unit id="org.antlr.runtime" version="4.7.2.v20221112-0806"/>
-      <repository location="https://download.eclipse.org/tools/orbit/downloads/2022-12/"/>
+      <unit id="org.antlr.runtime" version="4.10.1.v20230210-1433"/>
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/2023-03/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.nebula.widgets.nattable.core" version="1.6.0.201909181823"/>
