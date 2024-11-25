@@ -132,4 +132,6 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 
 ### List of Eclipse IDE plugins required for Hexatomic development
 
+- [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0 or newer**  
+(Update Site: <https://download.eclipse.org/cbi/updates/tpd/release/3.0.0>)
 - [**Eclipse Checkstyle Plugin**](https://checkstyle.org/eclipse-cs/) (Update Site: <https://checkstyle.org/eclipse-cs-update-site/>)
