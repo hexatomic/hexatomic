@@ -19,7 +19,7 @@ location "https://download.eclipse.org/tools/orbit/downloads/2023-03/" {
 	org.mockito.mockito-core
 	ch.qos.logback.classic
 	ch.qos.logback.slf4j
-	org.antlr.runtime
+	org.antlr.runtime [4.10.1,4.11.0)
 }
 
 location "https://download.eclipse.org/nattable/releases/1.6.0/repository/" {
