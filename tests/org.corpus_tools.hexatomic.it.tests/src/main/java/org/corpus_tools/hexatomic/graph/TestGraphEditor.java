@@ -114,7 +114,7 @@ class TestGraphEditor {
   private ProjectManager projectManager;
   private UiStatusReport uiStatus;
 
-  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
+  private final Keyboard keyboard = TestHelper.getAWTKeyboard();
 
   private final class NumberOfShellsIncreased extends DefaultCondition {
     private final int oldNumberOfShells;
@@ -540,11 +540,12 @@ class TestGraphEditor {
 
     // Initially, the zoom is adjusted to match the height, so moving up/down should
     // not do anything
-    keyboard.pressShortcut(Keystrokes.DOWN);
+    Keyboard swtKeyboard = KeyboardFactory.getSWTKeyboard();
+    swtKeyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
@@ -560,52 +561,52 @@ class TestGraphEditor {
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has
     // been moved
-    keyboard.pressShortcut(Keystrokes.RIGHT);
+    swtKeyboard.pressShortcut(Keystrokes.RIGHT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.LEFT);
+    swtKeyboard.pressShortcut(Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.PAGE_DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.PAGE_DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.PAGE_UP);
+    swtKeyboard.pressShortcut(Keystrokes.PAGE_UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
 
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 250, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 250)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 250)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_UP);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
@@ -614,11 +615,11 @@ class TestGraphEditor {
     KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
-    keyboard.pressShortcut(Keystrokes.DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
@@ -799,12 +800,11 @@ class TestGraphEditor {
     // Tokens and the matching structure nodes
     annoFilter.setFocus();
     int oldNumberOfShells = bot.shells().length;
-    keyboard.pressShortcut(KeyStroke.getInstance('c'), KeyStroke.getInstance('o'),
-        KeyStroke.getInstance('n'), KeyStroke.getInstance('s'), KeyStroke.getInstance('t'));
+    annoFilter.setFocus();
+    annoFilter.typeText("const");
 
     // wait for PopupDialog shell
     bot.waitUntil(new NumberOfShellsIncreased(oldNumberOfShells));
-
 
     MockKeyboardStrategy mockKeyboardStrategy = new MockKeyboardStrategy();
     mockKeyboardStrategy.init(annoFilter.widget, desc -> desc.appendText("Filter text widget"));
@@ -815,10 +815,7 @@ class TestGraphEditor {
 
     // Tokens and the matching spans
     annoFilter.setFocus();
-    keyboard.pressShortcut(KeyStroke.getInstance('i'), KeyStroke.getInstance('n'),
-        KeyStroke.getInstance('f'), KeyStroke.getInstance('-'), KeyStroke.getInstance('s'),
-        KeyStroke.getInstance('t'), KeyStroke.getInstance('r'), KeyStroke.getInstance('u'),
-        KeyStroke.getInstance('c'), KeyStroke.getInstance('t'));
+    annoFilter.typeText("inf");
 
     bot.waitUntil(new NumberOfShellsIncreased(oldNumberOfShells));
 

@@ -38,7 +38,6 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -65,9 +64,7 @@ import org.eclipse.swtbot.nebula.nattable.finder.widgets.SWTBotNatTable;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
-import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
-import org.eclipse.swtbot.swt.finder.keyboard.MockKeyboardStrategy;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -125,7 +122,7 @@ public class TestGridEditor {
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
   private static final String TEST_ANNOTATION_NAME = "TEST";
-  private static final String TEST_ANNOTATION_VALUE = "TEST";
+  private static final String TEST_ANNOTATION_VALUE = "test";
   private static final String CONTRAST_FOCUS_VALUE = "contrast-focus";
   private static final String MORE_VALUE = "more";
   private static final String COMPLICATED_VALUE = "complicated";
@@ -168,7 +165,7 @@ public class TestGridEditor {
   private ECommandService commandService;
   private EHandlerService handlerService;
 
-  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
+  private final Keyboard keyboard = TestHelper.getAWTKeyboard();
 
   private ProjectManager projectManager;
 
@@ -222,26 +219,48 @@ public class TestGridEditor {
         part.close();
       }
     }
+    for (SWTBotShell shell : bot.shells()) {
+      if (shell.getText().startsWith("Hexatomic")) {
+        shell.activate();
+        break;
+      }
+    }
   }
 
   SWTBotView openEditorForDefaultDocument() {
 
     SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
 
+    corpusStructurePart.bot().tree().setFocus();
+
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
         .expandNode(ROOT_CORPUS).expandNode(SUB_CORPUS1).expandNode("doc2");
 
     // select and open the editor
-    docMenu.click();
+    docMenu.select();
+
     assertNotNull(docMenu.contextMenu(OPEN_WITH_GRID_EDITOR).click());
 
     SWTBotView view = bot.partByTitle("doc2 (Grid Editor)");
     assertNotNull(view);
 
+    SWTNatTableBot tableBot = new SWTNatTableBot();
+    tableBot.waitUntil(new DefaultCondition() {
+      @Override
+
+      public boolean test() throws Exception {
+        return tableBot.nattable().rowCount() > 1;
+      }
+
+      @Override
+      public String getFailureMessage() {
+        return "Rows for default example did not populate";
+      }
+    });
+
     // Use all available windows space (the tableToTest needs to be fully visible
-    // for some of the
-    // tests)
+    // for some of the tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
@@ -402,12 +421,6 @@ public class TestGridEditor {
     bot.partByTitle(CORPUS_STRUCTURE).show();
   }
 
-  private void typeText(String text) {
-    text.chars().forEach(c -> {
-      keyboard.pressShortcut(KeyStroke.getInstance(c));
-      bot.sleep(10);
-    });
-  }
 
   @Test
   void testShowSaltExample() {
@@ -686,8 +699,7 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals("test",
-        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+    assertEquals("test", node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
@@ -705,8 +717,7 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals("test",
-        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+    assertEquals("test", node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
@@ -748,8 +759,7 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(5, 1);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals("test",
-        node.getAnnotation(table.getCellDataValueByPosition(0, 5)).getValue());
+    assertEquals("test", node.getAnnotation(table.getCellDataValueByPosition(0, 5)).getValue());
   }
 
   @Test
@@ -765,31 +775,19 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals("test",
-        node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
+    assertEquals("test", node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
-   * Types the value "test" on the NatTable, then Return, then waits until the tableToTest has no
-   * active cell editors, up to 1000ms.
+   * Types the value {@link TEST_ANNOTATION_VALUE} on the NatTable, then Return, then waits until
+   * the tableToTest has no active cell editors, up to 1000ms.
    *
    * @param tableToTest The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
    */
   private void typeTextPressReturn(SWTNatTableBot tableBot) {
     tableBot.nattable().setFocus();
-    // Activate the cell editor with a mock keyboard event
-    MockKeyboardStrategy mockKeyboard = new MockKeyboardStrategy();
-    mockKeyboard.init(tableBot.nattable().widget, d -> d.appendText("Active Grid cell"));
-    mockKeyboard.pressKeys(KeyStroke.getInstance('t'));
-    tableBot.sleep(10);
-
-    // Type the rest "naturally"
-    keyboard.pressShortcut(KeyStroke.getInstance('e'));
-    tableBot.sleep(10);
-    keyboard.pressShortcut(KeyStroke.getInstance('s'));
-    tableBot.sleep(10);
-    keyboard.pressShortcut(KeyStroke.getInstance('t'));
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.sleep(10);
 
     keyboard.pressShortcut(Keystrokes.CR);
@@ -993,9 +991,9 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
-    SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    SWTBotShell dialog = bot.shell(RENAME_DIALOG_TITLE);
 
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
@@ -1015,7 +1013,7 @@ public class TestGridEditor {
 
     table.contextMenu(0, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(Conditions.shellCloses(dialog));
     assertEquals(NAMESPACE + TEST_ANNOTATION_VALUE, table.getCellDataValueByPosition(0, 2));
@@ -1131,7 +1129,7 @@ public class TestGridEditor {
     // Change annotation name in first overlapping column (currently at position 3)
     table.contextMenu(0, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1177,7 +1175,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, SaltUtil.SALT_NAMESPACE + SaltUtil.NAMESPACE_SEPERATOR + LEMMA_NAME);
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1273,7 +1271,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, NAMESPACED_LEMMA_NAME);
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed
@@ -1340,7 +1338,7 @@ public class TestGridEditor {
     assertNotNull(dialog);
     // Check that the fields are pre-filled
     assertDialogTexts(dialog, "<annotation name/key>");
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
     // Assert names and positions have changed, the span annotation is added to a
@@ -1397,7 +1395,7 @@ public class TestGridEditor {
     table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     assertNotNull(dialog);
-    typeText(POS_NAME);
+    keyboard.typeText(POS_NAME);
     bot.sleep(100);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
@@ -1495,10 +1493,10 @@ public class TestGridEditor {
     SWTBotRootMenu contextMenu = table.contextMenu(5, 4);
     contextMenu.contextMenu(GridEditor.CREATE_SPAN_POPUP_MENU_LABEL).click();
 
-    keyboard.pressShortcut(KeyStroke.getInstance('t'));
-    keyboard.pressShortcut(KeyStroke.getInstance('e'));
-    keyboard.pressShortcut(KeyStroke.getInstance('s'));
-    keyboard.pressShortcut(KeyStroke.getInstance('t'));
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      keyboard.pressShortcut(Keystrokes.ESC);
+    }
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     keyboard.pressShortcut(Keystrokes.CR);
     tableBot.waitUntil(new TableCellEditorInactiveCondition(tableBot.nattable()));
 
@@ -1546,13 +1544,19 @@ public class TestGridEditor {
     // Insert text
     if (SystemUtils.IS_OS_MAC_OSX) {
       keyboard.pressShortcut(Keystrokes.ESC);
+      bot.sleep(100);
     }
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     if (SystemUtils.IS_OS_MAC_OSX) {
       // This created a pop-up with a prompt for the new value, close it
-      SWTBotShell dialog = tableBot.shell("Enter new value");
-      tableBot.button("OK").click();
-      tableBot.waitUntil(Conditions.shellCloses(dialog));
+      // The language setting might be different and thus the title of the shell can vary.
+      for (SWTBotShell dialog : bot.shells()) {
+        if (!dialog.getText().startsWith("Hexatomic")) {
+          tableBot.button("OK").click();
+          tableBot.waitUntil(Conditions.shellCloses(dialog));
+          break;
+        }
+      }
     } else {
       keyboard.pressShortcut(Keystrokes.CR);
     }
@@ -1760,7 +1764,7 @@ public class TestGridEditor {
     ctrlClick(tableBot, 3, 3);
     table.contextMenu(1, 3).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
-    typeText(TEST_ANNOTATION_VALUE);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
@@ -1796,10 +1800,7 @@ public class TestGridEditor {
    */
   @Test
   void testColumnsRetained() {
-    String timeStamp = String.valueOf(System.currentTimeMillis());
-    SWTBotView view = openDefaultExample();
-    MPart part = view.getPart();
-    part.setElementId(timeStamp);
+    final SWTBotView gridView = openDefaultExample();
 
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
@@ -1817,7 +1818,7 @@ public class TestGridEditor {
     openEditorOnSameDocument();
 
     // Reactivate grid editor
-    bot.partById(timeStamp).show();
+    gridView.show();
     assertEquals(5, table.columnCount());
 
     // Show and close text viewer
@@ -1826,7 +1827,7 @@ public class TestGridEditor {
     assertEquals(5, table.columnCount());
 
     // Reactivate grid editor
-    bot.partById(timeStamp).show();
+    gridView.show();
     assertEquals(5, table.columnCount());
   }
 

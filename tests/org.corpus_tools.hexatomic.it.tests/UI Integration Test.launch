@@ -29,6 +29,7 @@
     </listAttribute>
     <mapAttribute key="org.eclipse.debug.core.environmentVariables">
         <mapEntry key="GDK_BACKEND" value="x11"/>
+        <mapEntry key="LANG" value="en_US.UTF-8"/>
     </mapAttribute>
     <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=org.corpus_tools.hexatomic.it.tests"/>
     <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
