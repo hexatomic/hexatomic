@@ -15,10 +15,10 @@ Require-Bundle: org.eclipse.jface,
  org.eclipse.jface.text,
  org.eclipse.e4.core.services,
  org.eclipse.nebula.widgets.chips,
- org.antlr.runtime;bundle-version="4.7.2",
  slf4j.api;bundle-version="2.0.7",
- javax.inject;bundle-version="1.0.0",
- javax.annotation;bundle-version="1.3.5"
+ org.antlr.antlr4-runtime;bundle-version="4.13.2",
+ jakarta.inject.jakarta.inject-api;bundle-version="2.0.1",
+ jakarta.annotation-api;bundle-version="2.1.1"
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.console,

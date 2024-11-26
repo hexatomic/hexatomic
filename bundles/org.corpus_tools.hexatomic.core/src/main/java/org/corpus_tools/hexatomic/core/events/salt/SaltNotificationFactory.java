@@ -21,7 +21,7 @@
 
 package org.corpus_tools.hexatomic.core.events.salt;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.salt.ISaltFactory;
 import org.corpus_tools.salt.SaltFactory;

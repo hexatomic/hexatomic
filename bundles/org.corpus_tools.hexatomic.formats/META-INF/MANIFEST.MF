@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.e4.ui.model.workbench,
  com.google.guava,
  org.eclipse.e4.ui.workbench,
  slf4j.api;bundle-version="2.0.7",
- javax.inject;bundle-version="1.0.0"
+ jakarta.inject.jakarta.inject-api;bundle-version="2.0.1"
 Automatic-Module-Name: org.corpus.tools.hexatomic.formats
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator

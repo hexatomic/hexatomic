@@ -22,7 +22,7 @@ The currently opened Salt project is part of the global state of the application
 For an overview of how dependency injection works in Eclipse-based applications such as Hexatomic, see Lars Vogel's tutorial ["Dependency injection and Eclipse"](http://web.archive.org/web/20190807184652/https://www.vogella.com/tutorials/EclipseRCP/article.html#dependency-injection-and-eclipse).
 
 ```java
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.salt.common.SaltProject;
 

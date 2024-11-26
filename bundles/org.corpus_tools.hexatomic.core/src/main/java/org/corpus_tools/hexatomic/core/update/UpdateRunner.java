@@ -20,9 +20,9 @@
 
 package org.corpus_tools.hexatomic.core.update;
 
+import jakarta.inject.Inject;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;

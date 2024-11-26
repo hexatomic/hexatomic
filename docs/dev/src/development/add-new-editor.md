@@ -16,7 +16,7 @@ A part consists of two components:
 Add a Java class to your bundle project.
 This class does not need to inherit any interface, but should have a method with the `@PostConstruct` annotation.
 ```java
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /* ... */
 
@@ -112,7 +112,7 @@ When posting an event, you have to use the topic `DOCUMENT_CLOSED` and give the 
 
 ```java
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import org.corpus_tools.hexatomic.core.Topics;
 
 /* ... */

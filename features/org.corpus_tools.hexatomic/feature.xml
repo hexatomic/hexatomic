@@ -42,7 +42,6 @@
       <import plugin="com.google.guava"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.nebula.widgets.chips"/>
-      <import plugin="org.antlr.runtime" version="4.7.2" match="greaterOrEqual"/>
       <import plugin="org.corpus-tools.pepper-framework"/>
       <import plugin="org.eclipse.e4.core.commands"/>
       <import plugin="org.eclipse.e4.core.di"/>
