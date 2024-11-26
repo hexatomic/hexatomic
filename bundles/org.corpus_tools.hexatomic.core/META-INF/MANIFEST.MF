@@ -13,9 +13,7 @@ Export-Package: org.corpus_tools.hexatomic.core,
  org.corpus_tools.hexatomic.core.update,
  org.corpus_tools.hexatomic.styles,
  org.eclipse.wb.swt
-Import-Package: org.slf4j
-Require-Bundle: javax.inject,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.core.di,
@@ -23,8 +21,6 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.core.contexts,
  org.eclipse.emf.common,
  org.eclipse.e4.core.services,
- ch.qos.logback.classic,
- ch.qos.logback.core,
  javax.annotation,
  org.eclipse.ui,
  org.eclipse.equinox.p2.core,
@@ -33,6 +29,10 @@ Require-Bundle: javax.inject,
  org.corpus-tools.salt-api;bundle-version="3.4.3",
  org.eclipse.equinox.p2.engine;bundle-version="2.7.500",
  org.eclipse.equinox.p2.metadata.repository;bundle-version="1.4.100",
- org.eclipse.e4.core.di.extensions;bundle-version="0.17.200"
+ org.eclipse.e4.core.di.extensions;bundle-version="0.17.200",
+ slf4j.api;bundle-version="2.0.7",
+ jakarta.inject.jakarta.inject-api;bundle-version="1.0.5",
+ ch.qos.logback.classic;bundle-version="1.4.11",
+ ch.qos.logback.core;bundle-version="1.4.11"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.core

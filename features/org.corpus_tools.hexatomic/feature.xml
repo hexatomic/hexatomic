@@ -31,7 +31,6 @@
       <import plugin="org.eclipse.e4.core.di.annotations"/>
       <import plugin="org.corpus-tools.salt-api"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.slf4j.api"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.e4.ui.workbench"/>
       <import plugin="javax.annotation"/>
@@ -64,59 +63,34 @@
 
    <plugin
          id="org.corpus_tools.hexatomic.corpusstructureeditor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.corpus_tools.hexatomic.textviewer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.corpus_tools.hexatomic.grid"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.corpus_tools.hexatomic.graph"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.corpus_tools.hexatomic.formats"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.corpus_tools.hexatomic.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
-         id="ch.qos.logback.classic"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         id="org.apache.aries.spifly.dynamic.bundle"
+         version="0.0.0"/>
 
    <plugin
-         id="ch.qos.logback.slf4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         id="jakarta.servlet-api"
+         version="0.0.0"/>
 
 </feature>

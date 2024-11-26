@@ -43,6 +43,7 @@ import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SwtResourceManager;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
 
@@ -66,29 +67,32 @@ public class ApplicationLifecycle {
    */
   @ProcessAdditions
   private void processAdditions() {
-    LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-    JoranConfigurator jc = new JoranConfigurator();
-    jc.setContext(context);
-    context.reset();
+    ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
+    if (loggerFactory instanceof LoggerContext) {
+      LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+      JoranConfigurator jc = new JoranConfigurator();
+      jc.setContext(context);
+      context.reset();
 
-    Location installationLocation = Platform.getInstallLocation();
-    File productionConfig = new File(installationLocation.getURL().getPath(), "logback.xml");
-    try {
-      if (productionConfig.isFile()) {
-        // use the customized logging configuration
-        jc.doConfigure(productionConfig);
-        log.info("Logging configured from logback.xml in the Hexatomic root folder");
-      } else {
-        Bundle bundle = FrameworkUtil.getBundle(ApplicationLifecycle.class);
-        URL url = FileLocator.find(bundle, new Path("logback-test.xml"), null);
-        if (url != null) {
-          // use the default configuration from the classpath for tests
-          jc.doConfigure(url);
-          log.info("Logging configured from internal configuration");
+      Location installationLocation = Platform.getInstallLocation();
+      File productionConfig = new File(installationLocation.getURL().getPath(), "logback.xml");
+      try {
+        if (productionConfig.isFile()) {
+          // use the customized logging configuration
+          jc.doConfigure(productionConfig);
+          log.info("Logging configured from logback.xml in the Hexatomic root folder");
+        } else {
+          Bundle bundle = FrameworkUtil.getBundle(ApplicationLifecycle.class);
+          URL url = FileLocator.find(bundle, new Path("logback-test.xml"), null);
+          if (url != null) {
+            // use the default configuration from the classpath for tests
+            jc.doConfigure(url);
+            log.info("Logging configured from internal configuration");
+          }
         }
+      } catch (JoranException ex) {
+        log.error("Could not configure logging", ex);
       }
-    } catch (JoranException ex) {
-      log.error("Could not configure logging", ex);
     }
   }
 

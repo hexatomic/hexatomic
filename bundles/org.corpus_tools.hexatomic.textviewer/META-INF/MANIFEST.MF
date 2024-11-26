@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.corpus_tools.hexatomic.textviewer
 Bundle-SymbolicName: org.corpus_tools.hexatomic.textviewer;singleton:=true
 Bundle-Version: 1.5.0.qualifier
-Require-Bundle: javax.inject,
- org.eclipse.osgi,
+Require-Bundle: org.eclipse.osgi,
  org.eclipse.jface,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.di,
@@ -13,10 +12,11 @@ Require-Bundle: javax.inject,
  org.corpus-tools.salt-api,
  org.eclipse.core.runtime,
  org.corpus_tools.hexatomic.core,
- org.slf4j.api,
  org.eclipse.emf.common,
  org.eclipse.e4.core.services,
- javax.annotation
+ javax.annotation,
+ slf4j.api;bundle-version="2.0.7",
+ jakarta.inject.jakarta.inject-api;bundle-version="1.0.5"
 Automatic-Module-Name: org.corpus_tools.hexatomic.textview
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: org.corpus_tools.hexatomic.textviewer

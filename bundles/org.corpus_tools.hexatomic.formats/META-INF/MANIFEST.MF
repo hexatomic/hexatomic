@@ -10,13 +10,13 @@ Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.corpus_tools.hexatomic.core,
  org.eclipse.emf.common,
  org.eclipse.core.runtime,
- org.slf4j.api,
  org.corpus-tools.salt-api,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.ui.di,
- javax.inject,
  com.google.guava,
- org.eclipse.e4.ui.workbench
+ org.eclipse.e4.ui.workbench,
+ slf4j.api;bundle-version="2.0.7",
+ jakarta.inject.jakarta.inject-api;bundle-version="1.0.5"
 Automatic-Module-Name: org.corpus.tools.hexatomic.formats
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator
