@@ -125,7 +125,7 @@ public class TestGridEditor {
   private static final String OPEN_WITH_GRID_EDITOR = "Open with Grid Editor";
 
   private static final String TEST_ANNOTATION_NAME = "TEST";
-  private static final String TEST_ANNOTATION_VALUE = "test";
+  private static final String TEST_ANNOTATION_VALUE = "TEST";
   private static final String CONTRAST_FOCUS_VALUE = "contrast-focus";
   private static final String MORE_VALUE = "more";
   private static final String COMPLICATED_VALUE = "complicated";
@@ -396,14 +396,17 @@ public class TestGridEditor {
     params.put(CommandParams.FORCE_CLOSE, "true");
     ParameterizedCommand cmd = commandService
         .createCommand("org.corpus_tools.hexatomic.core.command.open_salt_project", params);
-    handlerService.executeHandler(cmd);
+    Display.getDefault().syncExec(() -> handlerService.executeHandler(cmd));
 
     // Activate corpus structure editor
     bot.partByTitle(CORPUS_STRUCTURE).show();
   }
 
   private void typeText(String text) {
-    text.chars().forEach(c -> keyboard.pressShortcut(KeyStroke.getInstance(c)));
+    text.chars().forEach(c -> {
+      keyboard.pressShortcut(KeyStroke.getInstance(c));
+      bot.sleep(10);
+    });
   }
 
   @Test
@@ -683,7 +686,7 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals(TEST_ANNOTATION_VALUE,
+    assertEquals("test",
         node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
@@ -702,7 +705,7 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals(TEST_ANNOTATION_VALUE,
+    assertEquals("test",
         node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
@@ -717,8 +720,13 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     table.click(2, 2);
-    table.pressShortcut(Keystrokes.SPACE);
-    typeTextPressReturn(tableBot);
+
+    table.pressShortcut(Keystrokes.create(' '));
+    bot.sleep(10);
+    keyboard.typeText(TEST_ANNOTATION_VALUE);
+    table.pressShortcut(Keystrokes.CR);
+    bot.sleep(10);
+
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
@@ -740,7 +748,7 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(5, 1);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals(TEST_ANNOTATION_VALUE,
+    assertEquals("test",
         node.getAnnotation(table.getCellDataValueByPosition(0, 5)).getValue());
   }
 
@@ -757,13 +765,13 @@ public class TestGridEditor {
     Object nodeObj = table.widget.getDataValueByPosition(2, 2);
     assertTrue(nodeObj instanceof SNode);
     SNode node = (SNode) nodeObj;
-    assertEquals(TEST_ANNOTATION_VALUE,
+    assertEquals("test",
         node.getAnnotation(table.getCellDataValueByPosition(0, 2)).getValue());
   }
 
   /**
-   * Types the value of TEST_ANNOTATION_VALUE on the NatTable, then Return, then waits until the
-   * tableToTest has no active cell editors, up to 1000ms.
+   * Types the value "test" on the NatTable, then Return, then waits until the tableToTest has no
+   * active cell editors, up to 1000ms.
    *
    * @param tableToTest The {@link NatTable} to operate on
    * @throws TimeoutException after 1000ms without returning successfully
@@ -774,6 +782,7 @@ public class TestGridEditor {
     MockKeyboardStrategy mockKeyboard = new MockKeyboardStrategy();
     mockKeyboard.init(tableBot.nattable().widget, d -> d.appendText("Active Grid cell"));
     mockKeyboard.pressKeys(KeyStroke.getInstance('t'));
+    tableBot.sleep(10);
 
     // Type the rest "naturally"
     keyboard.pressShortcut(KeyStroke.getInstance('e'));
@@ -872,9 +881,9 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
     table.click(1, 1);
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add
+    // Context menu should have 4 items, 1 separator, "refresh grid", and 2x add
     // annotation column
-    assertEquals(5, contextMenu.menuItems().size());
+    assertEquals(4, contextMenu.menuItems().size());
     // Click on an item to ensure the context menu is closed
     contextMenu.menu(REFRESH_GRID).click();
   }
@@ -886,9 +895,9 @@ public class TestGridEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
     SWTBotRootMenu contextMenu = table.contextMenu(1, 1);
-    // Context menu should have 5 items, 2 separators, "refresh grid", and 2x add
+    // Context menu should have 4 items: 1 separator, "refresh grid", and 2x add
     // annotation column
-    assertEquals(5, contextMenu.menuItems().size());
+    assertEquals(4, contextMenu.menuItems().size());
     // Click on an item to ensure the context menu is closed
     contextMenu.menu(REFRESH_GRID).click();
   }
@@ -1388,6 +1397,7 @@ public class TestGridEditor {
     table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
     typeText(POS_NAME);
+    bot.sleep(100);
     tableBot.button("OK").click();
     bot.waitUntil(Conditions.shellCloses(dialog));
 
@@ -1500,7 +1510,7 @@ public class TestGridEditor {
     assertEquals(span, natTable.getDataValueByPosition(4, 6));
     assertEquals(span, natTable.getDataValueByPosition(4, 7));
     assertNull(natTable.getDataValueByPosition(4, 8));
-    assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+    assertEquals("test", span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
 
   /**
@@ -1605,7 +1615,7 @@ public class TestGridEditor {
     Object potentialSpan = natTable.getDataValueByPosition(4, 1);
     assertTrue(potentialSpan instanceof SSpan);
     SSpan span = (SSpan) potentialSpan;
-    assertEquals(TEST_ANNOTATION_VALUE, span.getAnnotation(INF_STRUCT_NAME).getValue());
+    assertEquals("test", span.getAnnotation(INF_STRUCT_NAME).getValue());
   }
 
   /**
@@ -1676,6 +1686,7 @@ public class TestGridEditor {
     // Select second token annotation column (salt::pos)
     table.click(0, 3);
     table.pressShortcut(Keystrokes.DELETE);
+    bot.sleep(10);
     bot.waitUntil(new GridIsActive(tableBot));
     // Check that cells exist but are empty
     for (int i = 1; i < 12; i++) {
@@ -2219,6 +2230,7 @@ public class TestGridEditor {
     bot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
     keyboard.typeText(columName, 10);
+    bot.sleep(10);
     tableBot.button(buttonToClick).click();
     bot.waitUntil(Conditions.shellCloses(dialog));
   }
