@@ -76,7 +76,7 @@ public class TestHelper {
    * 
    * @return An AWT based keyboard implementation.
    */
-  public static Keyboard getAWTKeyboard() {
+  public static Keyboard getAwtKeyboard() {
     TestHelper.setKeyboardLayout();
     return KeyboardFactory.getAWTKeyboard();
   }

@@ -114,7 +114,7 @@ class TestGraphEditor {
   private ProjectManager projectManager;
   private UiStatusReport uiStatus;
 
-  private final Keyboard keyboard = TestHelper.getAWTKeyboard();
+  private final Keyboard keyboard = TestHelper.getAwtKeyboard();
 
   private final class NumberOfShellsIncreased extends DefaultCondition {
     private final int oldNumberOfShells;

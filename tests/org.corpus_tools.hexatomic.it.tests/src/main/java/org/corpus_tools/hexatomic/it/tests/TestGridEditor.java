@@ -165,7 +165,7 @@ public class TestGridEditor {
   private ECommandService commandService;
   private EHandlerService handlerService;
 
-  private final Keyboard keyboard = TestHelper.getAWTKeyboard();
+  private final Keyboard keyboard = TestHelper.getAwtKeyboard();
 
   private ProjectManager projectManager;
 
