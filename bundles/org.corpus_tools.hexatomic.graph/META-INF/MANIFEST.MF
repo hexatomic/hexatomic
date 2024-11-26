@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.jface,
  slf4j.api;bundle-version="2.0.7",
  jakarta.inject.jakarta.inject-api;bundle-version="2.0.1",
  jakarta.annotation-api;bundle-version="2.1.1",
- org.antlr.antlr4-runtime;bundle-version="4.13.1"
+ org.antlr.runtime;bundle-version="4.7.2"
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.corpus_tools.hexatomic.console,

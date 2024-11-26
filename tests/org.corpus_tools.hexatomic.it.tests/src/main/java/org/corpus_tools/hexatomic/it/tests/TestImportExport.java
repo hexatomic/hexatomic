@@ -2,7 +2,7 @@ package org.corpus_tools.hexatomic.it.tests;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.widgetOfType;
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withStyle;
-import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -31,7 +31,7 @@ Require-Bundle: org.eclipse.e4.ui.workbench,
  org.eclipse.e4.core.di;bundle-version="1.8.300",
  org.corpus_tools.hexatomic.textviewer,
  slf4j.api;bundle-version="2.0.7",
- org.hamcrest;bundle-version="2.2.0"
+ org.hamcrest.core;bundle-version="1.3.0"
 Export-Package: org.corpus_tools.hexatomic.it.tests
 Import-Package: org.eclipse.e4.ui.di
 Bundle-ActivationPolicy: lazy
