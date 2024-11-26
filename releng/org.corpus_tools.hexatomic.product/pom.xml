@@ -13,8 +13,10 @@
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-repository-plugin</artifactId>
         <version>${tycho.version}</version>
-        <configuration>
-          <includeAllDependencies>true</includeAllDependencies>
+	<configuration>
+	  <includeAllDependencies>true</includeAllDependencies>
+	  <eclipse.p2.mirrors>false</eclipse.p2.mirrors>
+	  <eclipse.p2.maxDownloadAttempts>5</eclipse.p2.maxDownloadAttempts>
         </configuration>
       </plugin>
       <plugin>
