@@ -57,7 +57,6 @@
       <import feature="org.eclipse.equinox.p2.core.feature" version="1.6.1600.v20221117-1044"/>
       <import plugin="org.eclipse.equinox.p2.engine" version="2.7.500" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.p2.metadata.repository" version="1.4.100" match="greaterOrEqual"/>
-      <import plugin="jakarta.annotation-api"/>
    </requires>
 
    <plugin

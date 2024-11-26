@@ -32,7 +32,7 @@ Require-Bundle: org.eclipse.core.runtime,
  slf4j.api;bundle-version="2.0.7",
  ch.qos.logback.classic;bundle-version="1.4.11",
  ch.qos.logback.core;bundle-version="1.4.11",
- jakarta.annotation-api,
- javax.inject;bundle-version="1.0.0"
+ javax.inject;bundle-version="1.0.0",
+ javax.annotation;bundle-version="1.3.5"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.core
