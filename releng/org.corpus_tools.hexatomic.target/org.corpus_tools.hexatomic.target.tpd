@@ -1,7 +1,7 @@
 target "Hexatomic Target Platform Definition"
 with source requirements
 
-location "https://download.eclipse.org/justj/jres/17/updates/release/17.0.7" {
+location "https://download.eclipse.org/justj/jres/21/updates/release" {
 	org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group
 }
 

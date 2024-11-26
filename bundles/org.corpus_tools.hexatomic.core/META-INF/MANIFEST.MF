@@ -34,5 +34,5 @@ Require-Bundle: org.eclipse.core.runtime,
  ch.qos.logback.core;bundle-version="1.4.11",
  jakarta.annotation-api;bundle-version="2.1.1",
  jakarta.inject.jakarta.inject-api;bundle-version="2.0.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Automatic-Module-Name: org.corpus_tools.hexatomic.core

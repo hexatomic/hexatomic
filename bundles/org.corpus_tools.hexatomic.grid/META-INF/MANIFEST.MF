@@ -20,7 +20,7 @@ Require-Bundle: org.corpus_tools.hexatomic.core,
  jakarta.inject.jakarta.inject-api;bundle-version="2.0.1",
  jakarta.annotation-api;bundle-version="2.1.1"
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.corpus_tools.hexatomic.grid,
  org.corpus_tools.hexatomic.grid.style
 Import-Package: org.eclipse.e4.ui.di
