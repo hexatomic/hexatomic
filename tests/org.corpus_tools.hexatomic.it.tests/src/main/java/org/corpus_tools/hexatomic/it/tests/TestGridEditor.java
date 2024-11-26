@@ -1396,6 +1396,7 @@ public class TestGridEditor {
     table.click(4, 2);
     table.contextMenu(4, 2).contextMenu(GridEditor.CHANGE_ANNOTATION_NAME_POPUP_MENU_LABEL).click();
     SWTBotShell dialog = tableBot.shell(RENAME_DIALOG_TITLE);
+    assertNotNull(dialog);
     typeText(POS_NAME);
     bot.sleep(100);
     tableBot.button("OK").click();
@@ -2229,6 +2230,7 @@ public class TestGridEditor {
     }
     bot.waitUntil(Conditions.shellIsActive(NEW_COLUMN_DIALOG_TITLE));
     SWTBotShell dialog = tableBot.shell(NEW_COLUMN_DIALOG_TITLE);
+    assertNotNull(dialog);
     keyboard.typeText(columName, 10);
     bot.sleep(10);
     tableBot.button(buttonToClick).click();

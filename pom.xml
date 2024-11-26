@@ -19,6 +19,8 @@
 		<tycho.version>4.0.10</tycho.version>
 		<jacoco.version>0.8.12</jacoco.version>
 		<aggregate.report.dir>tests/org.corpus_tools.hexatomic.tests.report/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+		<eclipse.p2.mirrors>false</eclipse.p2.mirrors>
+		<eclipse.p2.maxDownloadAttempts>5</eclipse.p2.maxDownloadAttempts>
 	</properties>
 	<!-- MODULES -->
 	<modules>
