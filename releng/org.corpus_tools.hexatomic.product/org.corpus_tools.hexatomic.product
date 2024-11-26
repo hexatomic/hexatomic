@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Hexatomic" uid="org.corpus_tools.hexatomic.product" id="org.corpus_tools.hexatomic.core.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.5.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Hexatomic" uid="org.corpus_tools.hexatomic.product" id="org.corpus_tools.hexatomic.core.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.5.0.qualifier" type="features" includeLaunchers="true" includeJRE="true" autoIncludeRequirements="true">
+
 
    <configIni use="default">
    </configIni>
@@ -16,11 +17,13 @@
 
    <windowImages/>
 
+
    <launcher name="hexatomic">
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
