@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.e4.core.contexts,
  org.eclipse.emf.common,
  org.eclipse.e4.core.services,
- javax.annotation,
  org.eclipse.ui,
  org.eclipse.equinox.p2.core,
  org.eclipse.equinox.p2.operations,
@@ -31,8 +30,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.equinox.p2.metadata.repository;bundle-version="1.4.100",
  org.eclipse.e4.core.di.extensions;bundle-version="0.17.200",
  slf4j.api;bundle-version="2.0.7",
- jakarta.inject.jakarta.inject-api;bundle-version="1.0.5",
  ch.qos.logback.classic;bundle-version="1.4.11",
- ch.qos.logback.core;bundle-version="1.4.11"
+ ch.qos.logback.core;bundle-version="1.4.11",
+ jakarta.annotation-api,
+ javax.inject;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: org.corpus_tools.hexatomic.core

@@ -15,6 +15,7 @@ location "https://download.eclipse.org/releases/2023-09/" {
 	org.apache.aries.spifly.dynamic.bundle
 	ch.qos.logback.classic
 	jakarta.servlet-api
+	javax.inject
 }
 
 location "https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2023-09" {
@@ -22,6 +23,7 @@ location "https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2023
 	org.mockito.junit-jupiter
 	org.mockito.mockito-core
 	org.antlr.runtime [4.10.1,4.11.0)
+	jakarta.annotation-api
 }
 
 location "https://download.eclipse.org/nattable/releases/1.6.0/repository/" {
