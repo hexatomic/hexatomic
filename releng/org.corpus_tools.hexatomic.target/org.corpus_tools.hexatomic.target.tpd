@@ -5,7 +5,7 @@ location "https://download.eclipse.org/justj/jres/21/updates/release" {
 	org.eclipse.justj.openjdk.hotspot.jre.full.stripped.feature.group
 }
 
-location "https://download.eclipse.org/releases/2024-09/" {
+location "https://download.eclipse.org/releases/2024-06/" {
 	// Eclipse platform
 	org.eclipse.equinox.p2.core.feature.feature.group
 	org.eclipse.equinox.sdk.feature.group
@@ -16,6 +16,8 @@ location "https://download.eclipse.org/releases/2024-09/" {
 	slf4j.api
 	org.apache.aries.spifly.dynamic.bundle
 	ch.qos.logback.classic
+	// Testing
+	junit-jupiter-api
 	// Others
 	jakarta.servlet-api
 	jakarta.inject.jakarta.inject-api
@@ -24,9 +26,8 @@ location "https://download.eclipse.org/releases/2024-09/" {
 	org.apache.commons.lang3
 }
 
-location "https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2024-09" {
-	junit-jupiter-api
-	org.hamcrest
+
+location "https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2024-06" {
 	org.mockito.mockito-core
 	org.antlr.antlr4-runtime
 }
@@ -40,7 +41,7 @@ location "https://archive.eclipse.org/nebula/releases/3.1.0/" {
 	org.eclipse.nebula.widgets.chips
 }
 
-location "https://download.eclipse.org/technology/swtbot/releases/4.2.1/" {
+location "https://download.eclipse.org/technology/swtbot/releases/4.2.0/" {
 	org.eclipse.swtbot.nebula.nattable.feature.group
 }
 
