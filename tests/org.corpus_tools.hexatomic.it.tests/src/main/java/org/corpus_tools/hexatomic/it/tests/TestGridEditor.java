@@ -231,7 +231,12 @@ public class TestGridEditor {
 
     SWTBotView corpusStructurePart = bot.partByTitle(CORPUS_STRUCTURE);
 
-    corpusStructurePart.bot().tree().setFocus();
+    if (SystemUtils.IS_OS_MAC_OSX) {
+      // HACK: sometimes the window content freezes when there is no activity like a mouse movement
+      // or window resize.
+      bot.activeShell().maximize(true);
+      bot.activeShell().maximize(false);
+    }
 
     // Select the first example document
     SWTBotTreeItem docMenu = corpusStructurePart.bot().tree().expandNode(CORPUS_GRAPH1)
@@ -245,23 +250,10 @@ public class TestGridEditor {
     SWTBotView view = bot.partByTitle("doc2 (Grid Editor)");
     assertNotNull(view);
 
-    SWTNatTableBot tableBot = new SWTNatTableBot();
-    tableBot.waitUntil(new DefaultCondition() {
-      @Override
-
-      public boolean test() throws Exception {
-        return tableBot.nattable().rowCount() > 1;
-      }
-
-      @Override
-      public String getFailureMessage() {
-        return "Rows for default example did not populate";
-      }
-    });
-
     // Use all available windows space (the tableToTest needs to be fully visible
     // for some of the tests)
     bot.waitUntil(new PartActiveCondition(view.getPart()));
+
     view.maximise();
     bot.waitUntil(new PartMaximizedCondition(view.getPart()));
 
@@ -1721,7 +1713,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     // Baseline
-    assertEquals(5, table.columnCount());
+    tableBot.waitUntil(new ColumnCountCondition(table, 5));
 
     table.click(1, 2);
     ctrlClick(tableBot, 1, 3);
@@ -1756,7 +1748,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     // Baseline
-    assertEquals(5, table.columnCount());
+    tableBot.waitUntil(new ColumnCountCondition(table, 5));
 
     // Rename
     table.click(1, 2);
@@ -1806,7 +1798,7 @@ public class TestGridEditor {
     SWTBotNatTable table = tableBot.nattable();
 
     // Baseline
-    assertEquals(5, table.columnCount());
+    tableBot.waitUntil(new ColumnCountCondition(table, 5));
 
     // Select second token annotation column (salt::pos)
     table.click(0, 3);
