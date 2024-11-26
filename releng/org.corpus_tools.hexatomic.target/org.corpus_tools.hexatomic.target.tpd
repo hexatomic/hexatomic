@@ -6,22 +6,27 @@ location "https://download.eclipse.org/justj/jres/17/updates/release/17.0.7" {
 }
 
 location "https://download.eclipse.org/releases/2024-09/" {
-	org.eclipse.zest.sdk.feature.group
+	// Eclipse platform
+	org.eclipse.equinox.p2.core.feature.feature.group
 	org.eclipse.equinox.sdk.feature.group
 	org.eclipse.sdk.feature.group
+	org.eclipse.zest.sdk.feature.group
 	org.eclipse.swtbot.eclipse.feature.group
-	org.eclipse.equinox.p2.core.feature.feature.group
+	// Logging
 	slf4j.api
 	org.apache.aries.spifly.dynamic.bundle
 	ch.qos.logback.classic
+	// Others
 	jakarta.servlet-api
 	jakarta.inject.jakarta.inject-api
 	jakarta.annotation-api
+	com.google.guava
+	org.apache.commons.lang3
 }
 
 location "https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/2024-09" {
+	junit-jupiter-api
 	org.hamcrest
-	org.mockito.junit-jupiter
 	org.mockito.mockito-core
 	org.antlr.antlr4-runtime
 }
