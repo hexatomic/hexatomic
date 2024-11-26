@@ -60,6 +60,8 @@ public class TestHelper {
       if (forcedKeyboardLayout != null) {
         org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT =
             forcedKeyboardLayout;
+      } else if (SystemUtils.IS_OS_MAC_OSX) {
+        org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "MAC_EN_US";
       }
     } catch (SecurityException ex) {
       log.error("Could not get environment variable " + SWTBOT_KEYBOARD_LAYOUT
