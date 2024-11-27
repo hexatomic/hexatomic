@@ -830,6 +830,9 @@ class TestGraphEditor {
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
 
+    // Give it time to change the color back to grey
+    bot.sleep(1100);
+
     // Remove chip again by simulating a mouse click
     constChip.click();
     assertEquals(1, getVisibleChips(bot).size());
