@@ -53,6 +53,7 @@ import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenChangeTextCo
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeAfterContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeBeforeContext;
 import org.corpus_tools.hexatomic.console.ConsoleCommandParser.TokenizeContext;
+import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.SaltFactory;
 import org.corpus_tools.salt.common.SDocumentGraph;
@@ -62,7 +63,6 @@ import org.corpus_tools.salt.common.SSpan;
 import org.corpus_tools.salt.common.SStructure;
 import org.corpus_tools.salt.common.SStructuredNode;
 import org.corpus_tools.salt.common.STextualDS;
-import org.corpus_tools.salt.common.STextualRelation;
 import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.core.SAnnotation;
 import org.corpus_tools.salt.core.SAnnotationContainer;
@@ -505,44 +505,9 @@ public class SyntaxListener extends ConsoleCommandBaseListener {
     final SStructuredNode n = referencedNodes.iterator().next();
     final String newTokenText = getString(ctx.string());
     if (n instanceof SToken && newTokenText != null) {
-      SToken referencedToken = (SToken) n;
-      @SuppressWarnings("rawtypes")
-      List<DataSourceSequence> allSequences = this.graph
-          .getOverlappedDataSourceSequence(referencedToken, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
-      if (allSequences != null && !allSequences.isEmpty()) {
-        DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
-        if (oldTokenSequence.getDataSource() instanceof STextualDS) {
-          // To change the token value, we need to change the covered text in the textual relation
-          STextualDS textDS = (STextualDS) oldTokenSequence.getDataSource();
-          String textBefore = textDS.getText().substring(0, oldTokenSequence.getStart().intValue());
-          String textAfter = textDS.getText().substring(oldTokenSequence.getEnd().intValue());
-          textDS.setData(textBefore + newTokenText + textAfter);
-
-          // In order for all other textual relations to be still valid, we need to update the
-          // references to the text for the affected and all following token.
-          int oldTokenTextLength =
-              oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
-          int offset = newTokenText.length() - oldTokenTextLength;
-          updateTextRelationsWithOffset(offset, textDS, oldTokenSequence);
-        }
-      }
+      SaltHelper.changeTokenText((SToken) n, newTokenText);
     } else {
       this.outputLines.add(REFERENCED_NODE_NO_TOKEN);
-    }
-  }
-
-  private void updateTextRelationsWithOffset(int offset, STextualDS ds,
-      DataSourceSequence<? extends Number> oldTokenSequence) {
-    for (STextualRelation rel : this.graph.getTextualRelations()) {
-      if (rel.getTarget() == ds) {
-        if (rel.getStart() == oldTokenSequence.getStart().intValue()
-            && rel.getEnd() == oldTokenSequence.getEnd().intValue()) {
-          rel.setEnd(oldTokenSequence.getEnd().intValue() + offset);
-        } else if (rel.getStart() >= oldTokenSequence.getEnd().intValue()) {
-          rel.setStart(rel.getStart() + offset);
-          rel.setEnd(rel.getEnd() + offset);
-        }
-      }
     }
   }
 

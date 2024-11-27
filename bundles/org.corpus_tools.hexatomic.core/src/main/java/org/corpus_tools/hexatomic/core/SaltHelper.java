@@ -25,8 +25,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import org.corpus_tools.hexatomic.core.events.salt.NotifyingElement;
+import org.corpus_tools.salt.SALT_TYPE;
 import org.corpus_tools.salt.common.SCorpusGraph;
 import org.corpus_tools.salt.common.SDocumentGraph;
+import org.corpus_tools.salt.common.STextualDS;
+import org.corpus_tools.salt.common.STextualRelation;
+import org.corpus_tools.salt.common.SToken;
 import org.corpus_tools.salt.common.SaltProject;
 import org.corpus_tools.salt.core.SFeature;
 import org.corpus_tools.salt.core.SGraph;
@@ -35,6 +39,7 @@ import org.corpus_tools.salt.graph.Label;
 import org.corpus_tools.salt.graph.LabelableElement;
 import org.corpus_tools.salt.graph.Node;
 import org.corpus_tools.salt.graph.Relation;
+import org.corpus_tools.salt.util.DataSourceSequence;
 
 /**
  * A utility class to handle Salt objects.
@@ -163,6 +168,98 @@ public class SaltHelper {
       cg.removeLabel(SaltHelper.HEXATOMIC_NAMESPACE, SaltHelper.CORPUS_ORIGIN);
       cg.createFeature(SaltHelper.HEXATOMIC_NAMESPACE, SaltHelper.CORPUS_ORIGIN,
           f.getAbsolutePath());
+    }
+  }
+
+  /**
+   * Changes the covered text for an existing token.
+   * 
+   * <p>
+   * This inserts the new text at the correct position in textual datasource and updates all textual
+   * relations to use the new indexes.
+   * </p>
+   * 
+   * @param token The token to change the covered text for.
+   * @param newTokenText The new text the token should cover.
+   */
+  public static void changeTokenText(SToken token, String newTokenText) {
+    SDocumentGraph graph = token.getGraph();
+    @SuppressWarnings("rawtypes")
+    List<DataSourceSequence> allSequences =
+        graph.getOverlappedDataSourceSequence(token, SALT_TYPE.STEXT_OVERLAPPING_RELATION);
+    if (allSequences != null && !allSequences.isEmpty()) {
+      DataSourceSequence<?> oldTokenSequence = allSequences.get(0);
+      if (oldTokenSequence.getDataSource() instanceof STextualDS) {
+        // To change the token value, we need to change the covered text in the textual relation
+        STextualDS textDS = (STextualDS) oldTokenSequence.getDataSource();
+        String textBefore = textDS.getText().substring(0, oldTokenSequence.getStart().intValue());
+        String textAfter = textDS.getText().substring(oldTokenSequence.getEnd().intValue());
+        textDS.setData(textBefore + newTokenText + textAfter);
+
+        // In order for all other textual relations to be still valid, we need to update the
+        // references to the text for the affected and all following token.
+        int oldTokenTextLength =
+            oldTokenSequence.getEnd().intValue() - oldTokenSequence.getStart().intValue();
+        int offset = newTokenText.length() - oldTokenTextLength;
+        updateTextRelationsWithOffset(graph, offset, textDS, oldTokenSequence);
+      }
+    }
+  }
+
+  /**
+   * Inserts a token at the give position of the textual data source and updates all textual
+   * relations to use the new indexes.
+   *
+   * @param textDs The textual data source to add the token to.
+   * @param pos At which position in the text the token should be inserted to.
+   * @param newTokenText The new text the token should cover.
+   * @param whitespaceAfter A string that is inserted after the token, e.g. as whitespace between
+   *        the token.
+   */
+  public static SToken insertNewToken(STextualDS textDs, int pos, String newTokenText,
+      String whitespaceAfter) {
+    SDocumentGraph graph = textDs.getGraph();
+
+    String currentText = textDs.getText();
+    String textBefore = currentText.substring(0, pos);
+    String textAfter = currentText.substring(pos);
+
+    DataSourceSequence<Integer> newTokenSequence =
+        new DataSourceSequence<>(textDs, pos, pos + newTokenText.length());
+    textDs.setData(textBefore + newTokenText + whitespaceAfter + textAfter);
+
+    // In order for all other textual relations to be still valid, we need to update the
+    // references for all following token.
+    int offset = newTokenText.length() + whitespaceAfter.length();
+    if (offset > 0) {
+      for (STextualRelation rel : graph.getTextualRelations()) {
+        if (rel.getTarget() == textDs) {
+          if (rel.getStart() >= pos) {
+            rel.setStart(rel.getStart() + offset);
+            rel.setEnd(rel.getEnd() + offset);
+          }
+        }
+      }
+    }
+
+    return graph.createToken(newTokenSequence);
+
+
+  }
+
+
+  private static void updateTextRelationsWithOffset(SDocumentGraph graph, int offset, STextualDS ds,
+      DataSourceSequence<? extends Number> updatedTokenSequence) {
+    for (STextualRelation rel : graph.getTextualRelations()) {
+      if (rel.getTarget() == ds) {
+        if (rel.getStart() == updatedTokenSequence.getStart().intValue()
+            && rel.getEnd() == updatedTokenSequence.getEnd().intValue()) {
+          rel.setEnd(updatedTokenSequence.getEnd().intValue() + offset);
+        } else if (rel.getStart() >= updatedTokenSequence.getEnd().intValue()) {
+          rel.setStart(rel.getStart() + offset);
+          rel.setEnd(rel.getEnd() + offset);
+        }
+      }
     }
   }
 }

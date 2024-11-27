@@ -22,5 +22,6 @@ Require-Bundle: org.corpus_tools.hexatomic.core,
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.corpus_tools.hexatomic.grid,
+ org.corpus_tools.hexatomic.grid.data,
  org.corpus_tools.hexatomic.grid.style
 Import-Package: org.eclipse.e4.ui.di

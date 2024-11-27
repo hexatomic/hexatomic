@@ -18,10 +18,11 @@
  * #L%
  */
 
-package org.corpus_tools.hexatomic.grid.internal.data;
+package org.corpus_tools.hexatomic.grid.data;
 
 import java.util.Objects;
 import org.eclipse.nebula.widgets.nattable.data.AutomaticSpanningDataProvider;
+import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 
 /**
  * A spanning data provider which spans automatically based on the condition that the underlying
@@ -37,11 +38,10 @@ public class NodeSpanningDataProvider extends AutomaticSpanningDataProvider {
    * Constructor checking if the data provider is null. Always passes <code>false</code> for
    * autoColumnSpan and <code>true</code> for autoRowSpan to the superclass.
    * 
-   * @param underlyingDataProvider The underlying data provider. Must be of type
-   *        {@link GraphDataProvider}.
-   * @throws IllegalArgumentException if the {@link GraphDataProvider} argument is null.
+   * @param underlyingDataProvider The underlying data provider.
+   * @throws IllegalArgumentException if the {@link IDataProvider} argument is null.
    */
-  public NodeSpanningDataProvider(GraphDataProvider underlyingDataProvider) {
+  public NodeSpanningDataProvider(IDataProvider underlyingDataProvider) {
     super(underlyingDataProvider, false, true);
     if (underlyingDataProvider == null) {
       throw new IllegalArgumentException(

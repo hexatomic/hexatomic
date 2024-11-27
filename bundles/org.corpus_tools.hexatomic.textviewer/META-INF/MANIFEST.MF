@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.corpus_tools.hexatomic.textviewer
+Bundle-Name: Hexatomic Text viewer
 Bundle-SymbolicName: org.corpus_tools.hexatomic.textviewer;singleton:=true
 Bundle-Version: 1.5.0.qualifier
 Require-Bundle: org.eclipse.osgi,
