@@ -20,7 +20,7 @@
 
 package org.corpus_tools.hexatomic.formats.exporter;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;

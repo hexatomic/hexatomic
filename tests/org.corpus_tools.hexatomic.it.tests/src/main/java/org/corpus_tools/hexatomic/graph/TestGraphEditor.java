@@ -21,7 +21,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.lang3.SystemUtils;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.UiStatusReport;
@@ -61,6 +60,7 @@ import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
 import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
+import org.eclipse.swtbot.swt.finder.keyboard.MockKeyboardStrategy;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.swtbot.swt.finder.utils.WidgetTextDescription;
@@ -90,7 +90,6 @@ class TestGraphEditor {
   private static final String STRUCTURE3_ID = "salt:/rootCorpus/subCorpus1/doc1#structure3";
   private static final String DOC1_SALT_ID = "salt:/rootCorpus/subCorpus1/doc1";
   private static final String DOC1_TITLE = "doc1 (Graph Editor)";
-  private static final String CONST = "const";
   private static final String SEARCH = "Search";
   private static final String ANNOTATION_NAME = "Node Annotations";
   private static final String SPANS = "Spans";
@@ -115,8 +114,25 @@ class TestGraphEditor {
   private ProjectManager projectManager;
   private UiStatusReport uiStatus;
 
-  private final Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
-  private final Keyboard awtKeyboard = KeyboardFactory.getAWTKeyboard();
+  private final Keyboard keyboard = TestHelper.getAwtKeyboard();
+
+  private final class NumberOfShellsIncreased extends DefaultCondition {
+    private final int oldNumberOfShells;
+
+    private NumberOfShellsIncreased(int oldNumberOfShells) {
+      this.oldNumberOfShells = oldNumberOfShells;
+    }
+
+    @Override
+    public boolean test() throws Exception {
+      return bot.shells().length > oldNumberOfShells;
+    }
+
+    @Override
+    public String getFailureMessage() {
+      return "Number of shells not increased";
+    }
+  }
 
   private final class VisibleChipsCondition extends DefaultCondition {
     private final int expected;
@@ -524,11 +540,12 @@ class TestGraphEditor {
 
     // Initially, the zoom is adjusted to match the height, so moving up/down should
     // not do anything
-    keyboard.pressShortcut(Keystrokes.DOWN);
+    Keyboard swtKeyboard = KeyboardFactory.getSWTKeyboard();
+    swtKeyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
@@ -544,52 +561,52 @@ class TestGraphEditor {
 
     // Scroll with arrow keys (left, right, up, down) and check that that view has
     // been moved
-    keyboard.pressShortcut(Keystrokes.RIGHT);
+    swtKeyboard.pressShortcut(Keystrokes.RIGHT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 25, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.LEFT);
+    swtKeyboard.pressShortcut(Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.PAGE_DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.PAGE_DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 25)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.PAGE_UP);
+    swtKeyboard.pressShortcut(Keystrokes.PAGE_UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
 
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.RIGHT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x + 250, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.LEFT);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 250)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y + 250)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_UP);
+    swtKeyboard.pressShortcut(Keystrokes.SHIFT, Keystrokes.PAGE_UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
@@ -598,11 +615,11 @@ class TestGraphEditor {
     KeyStroke[] strokesZoomOut = {Keystrokes.CTRL, KeyStroke.getInstance(0, SWT.KEYPAD_SUBTRACT)};
     mockKeyboadForGraph.pressShortcut(strokesZoomOut);
     origLocation = (Point) SWTUtils.invokeMethod(viewPort, GET_VIEW_LOCATION);
-    keyboard.pressShortcut(Keystrokes.DOWN);
+    swtKeyboard.pressShortcut(Keystrokes.DOWN);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
-    keyboard.pressShortcut(Keystrokes.UP);
+    swtKeyboard.pressShortcut(Keystrokes.UP);
     bot.waitUntil(
         new ViewLocationReachedCondition(viewPort, new Point(origLocation.x, origLocation.y)),
         SWTBotPreferences.TIMEOUT, 100);
@@ -782,21 +799,28 @@ class TestGraphEditor {
 
     // Tokens and the matching structure nodes
     annoFilter.setFocus();
-    awtKeyboard.typeText(CONST);
-    awtKeyboard.pressShortcut(Keystrokes.LF);
+    int oldNumberOfShells = bot.shells().length;
+    annoFilter.setFocus();
+    annoFilter.typeText("const");
+
+    // wait for PopupDialog shell
+    bot.waitUntil(new NumberOfShellsIncreased(oldNumberOfShells));
+
+    MockKeyboardStrategy mockKeyboardStrategy = new MockKeyboardStrategy();
+    mockKeyboardStrategy.init(annoFilter.widget, desc -> desc.appendText("Filter text widget"));
+    mockKeyboardStrategy.pressKeys(Keystrokes.LF);
     bot.waitUntil(new VisibleChipsCondition(1));
     final SwtBotChips constChip = new SwtBotChips(getVisibleChips(bot).get(0));
     bot.waitUntil(new NumberOfNodesCondition(23));
 
     // Tokens and the matching spans
     annoFilter.setFocus();
-    if (SystemUtils.IS_OS_MAC_OSX) {
-      keyboard.typeText("inf-struct");
-      keyboard.pressShortcut(Keystrokes.LF);
-    } else {
-      awtKeyboard.typeText("inf-struct");
-      awtKeyboard.pressShortcut(Keystrokes.LF);
-    }
+    annoFilter.typeText("inf");
+
+    bot.waitUntil(new NumberOfShellsIncreased(oldNumberOfShells));
+
+    mockKeyboardStrategy.pressKeys(Keystrokes.LF);
+
     bot.waitUntil(new VisibleChipsCondition(2));
 
     bot.waitUntil(new NumberOfNodesCondition(25));
@@ -805,6 +829,9 @@ class TestGraphEditor {
     annoFilter.typeText("inf");
     annoFilter.pressShortcut(Keystrokes.LF);
     assertEquals(2, getVisibleChips(bot).size());
+
+    // Give it time to change the color back to grey
+    bot.sleep(1100);
 
     // Remove chip again by simulating a mouse click
     constChip.click();
@@ -1018,22 +1045,22 @@ class TestGraphEditor {
     console.setFocus();
 
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console), SWTBotPreferences.TIMEOUT, 10);
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console), SWTBotPreferences.TIMEOUT, 10);
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new CurrentConsoleLineCondition("> c1", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c1", console), SWTBotPreferences.TIMEOUT, 10);
 
     // Go forward in history again
     keyboard.pressShortcut(Keystrokes.DOWN);
-    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console), SWTBotPreferences.TIMEOUT, 10);
     keyboard.pressShortcut(Keystrokes.DOWN);
-    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c3", console), SWTBotPreferences.TIMEOUT, 10);
 
     // Go back again, just to make sure the user does not need to click the arrow
     // key twice
     keyboard.pressShortcut(Keystrokes.UP);
-    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console));
+    bot.waitUntil(new CurrentConsoleLineCondition("> c2", console), SWTBotPreferences.TIMEOUT, 10);
   }
 
   @Test
@@ -1200,20 +1227,12 @@ class TestGraphEditor {
     SWTNatTableBot tableBot = new SWTNatTableBot();
     SWTBotNatTable table = tableBot.nattable();
 
-    table.click(1, 4);
+    table.doubleclick(1, 4);
 
-    if (SystemUtils.IS_OS_MAC_OSX) {
-      // There seems to be an issue with editing a cell when the span was created from
-      // a context menu triggered by SWT bot. Clicking manually on the context menu
-      // works and the text can be inserted right away. Pressing ESC first on macOS
-      // circumvents this problem, but is more a workaround.
-      awtKeyboard.pressShortcut(Keystrokes.ESC);
-    }
-    awtKeyboard.pressShortcut(Keystrokes.ESC);
-
-    awtKeyboard.typeText("anothertest", 10);
-    awtKeyboard.pressShortcut(Keystrokes.CR);
+    keyboard.typeText("ANOTHERTEST", 10);
+    keyboard.pressShortcut(Keystrokes.CR);
     bot.waitUntil(new TableCellEditorInactiveCondition(table), 1000);
+
 
     // Close the Grid editor, which selects the Graph Editor again and
     // wait for the annotation value to change
@@ -1223,6 +1242,6 @@ class TestGraphEditor {
       }
     }
 
-    bot.waitUntil(new HasNodeWithText("Inf-Struct=anothertest"));
+    bot.waitUntil(new HasNodeWithText("Inf-Struct=ANOTHERTEST"));
   }
 }

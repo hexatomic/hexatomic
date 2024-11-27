@@ -20,8 +20,8 @@
 
 package org.corpus_tools.hexatomic.core.handlers;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.eclipse.e4.core.di.annotations.Execute;

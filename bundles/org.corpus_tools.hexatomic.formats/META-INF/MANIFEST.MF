@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Corpus file formats
 Bundle-SymbolicName: org.corpus_tools.hexatomic.formats;singleton:=true
-Bundle-Version: 1.4.5
+Bundle-Version: 1.5.0.qualifier
 Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.core.di.annotations,
  org.eclipse.jface,
@@ -10,15 +10,15 @@ Require-Bundle: org.eclipse.e4.ui.model.workbench,
  org.corpus_tools.hexatomic.core,
  org.eclipse.emf.common,
  org.eclipse.core.runtime,
- org.slf4j.api,
  org.corpus-tools.salt-api,
  org.eclipse.e4.core.commands,
  org.eclipse.e4.ui.di,
- javax.inject,
  com.google.guava,
- org.eclipse.e4.ui.workbench
+ org.eclipse.e4.ui.workbench,
+ slf4j.api;bundle-version="2.0.7",
+ jakarta.inject.jakarta.inject-api;bundle-version="2.0.1"
 Automatic-Module-Name: org.corpus.tools.hexatomic.formats
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Activator: org.corpus_tools.hexatomic.formats.Activator
 Bundle-ActivationPolicy: lazy
 Export-Package: org.corpus_tools.hexatomic.formats,

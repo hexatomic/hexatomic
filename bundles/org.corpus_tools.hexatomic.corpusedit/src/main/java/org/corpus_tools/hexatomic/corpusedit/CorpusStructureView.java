@@ -20,6 +20,8 @@
 
 package org.corpus_tools.hexatomic.corpusedit;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -27,8 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.SaltHelper;

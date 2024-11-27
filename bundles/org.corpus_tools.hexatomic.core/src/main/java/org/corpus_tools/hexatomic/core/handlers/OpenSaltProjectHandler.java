@@ -22,8 +22,8 @@ package org.corpus_tools.hexatomic.core.handlers;
 
 import static org.corpus_tools.hexatomic.core.Preferences.LAST_PROJECT_LOCATION;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.corpus_tools.hexatomic.core.CommandParams;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;

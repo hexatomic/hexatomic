@@ -2,11 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Hexatomic Grid Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.grid;singleton:=true
-Bundle-Version: 1.4.5
+Bundle-Version: 1.5.0.qualifier
 Bundle-Vendor: Hexatomic Research Project
-Require-Bundle: javax.inject,
- org.corpus_tools.hexatomic.core,
- org.slf4j.api,
+Require-Bundle: org.corpus_tools.hexatomic.core,
  org.eclipse.jface,
  org.corpus-tools.salt-api,
  org.eclipse.e4.ui.model.workbench,
@@ -14,13 +12,15 @@ Require-Bundle: javax.inject,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.services,
  org.eclipse.e4.core.di.annotations,
- javax.annotation,
  org.eclipse.e4.core.services,
  org.eclipse.swt,
  org.apache.commons.lang3,
- org.corpus-tools.salt-extensions;bundle-version="3.4.2"
+ org.corpus-tools.salt-extensions;bundle-version="3.4.2",
+ slf4j.api;bundle-version="2.0.7",
+ jakarta.inject.jakarta.inject-api;bundle-version="2.0.1",
+ jakarta.annotation-api;bundle-version="2.1.1"
 Automatic-Module-Name: org.corpus_tools.hexatomic.grid
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.corpus_tools.hexatomic.grid,
  org.corpus_tools.hexatomic.grid.style
 Import-Package: org.eclipse.e4.ui.di

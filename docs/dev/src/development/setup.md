@@ -12,9 +12,9 @@ You need all three on your computer to contribute code to Hexatomic.
 
 The documentation is written in Markdown and generated with **mdbook**.
 
-### Java 17
+### Java 21
 
-You need to have a copy of the **Java Development Kit (JDK), Version 17** installed on your computer.
+You need to have a copy of the **Java Development Kit (JDK), Version 21** installed on your computer.
 It shouldn't make any difference whether you use the open *OpenJDK* implementation of Java, or an *Oracle JDK*.
 We suggest that you use **OpenJDK** since more recent versions of the *Oracle JDK* have a more restricted license.
 OpenJDK is included in the package management repositories (dpkg (via apt), RPM, etc.) of most Linux distributions.
@@ -32,14 +32,14 @@ java -version
 On Linux, this should produce the following output, or something similar. The second line may look different, depending on the Linux distribution you use.
 
 ```bash
-openjdk version "17.0.6" 2023-01-17
-OpenJDK Runtime Environment Temurin-17.0.6+10 (build 17.0.6+10)
-OpenJDK 64-Bit Server VM Temurin-17.0.6+10 (build 17.0.6+10, mixed mode, sharing)
+openjdk version "21.0.5" 2024-10-15
+OpenJDK Runtime Environment (build 21.0.5+11-Ubuntu-1ubuntu124.04)
+OpenJDK 64-Bit Server VM (build 21.0.5+11-Ubuntu-1ubuntu124.04, mixed mode, sharing)
 ```
 
 ### Apache Maven
 
-You need to have a copy of **Apache Maven** in **version 3.6.3 or newer** installed on your computer.
+You need to have a copy of **Apache Maven** in **version 3.9.9 or newer** installed on your computer.
 To find out how to install Maven on your system, please see the [Apache Maven website](https://maven.apache.org/).
 
 You can check which version of Maven you have installed by typing the following command into the terminal of your computer:
@@ -51,18 +51,12 @@ mvn -version
 On Linux, this should produce the following output, or something similar. The first line is the important one, the other ones may look different, depending on the Linux distribution you use.
 
 ```bash
-Apache Maven 3.6.3
-Maven home: /usr/share/maven
-Java version: 11.0.10, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd64
+Apache Maven 3.9.9 (8e8579a9e76f7d015ee5ec7bfcdc97d260186937)
+Maven home: /opt/apache-maven-3.9.9
+Java version: 21.0.5, vendor: Ubuntu, runtime: /usr/lib/jvm/java-21-openjdk-amd64
 Default locale: de_DE, platform encoding: UTF-8
-OS name: "linux", version: "5.10.0-1016-oem", arch: "amd64", family: "unix"
+OS name: "linux", version: "6.8.0-49-generic", arch: "amd64", family: "unix"
 ```
-
-> <i class="fa fa-bug"></i> **Known bug in Maven version 3.6.2**
->
-> If `mvn -version` returns Maven version *3.6.2*, you will have to install version 3.6.3 or newer instead,
-> as version 3.6.2 contains a bug that will break the Hexatomic build. 
-> You can learn more about this in the respective [bug report](https://issues.apache.org/jira/browse/MNG-6765).
 
 ### Git
 
@@ -103,7 +97,7 @@ mdbook v0.3.1
 ## Suggested editor: Eclipse Integrated Development Environment (IDE)
 
 Hexatomic is built on the Eclipse 4 Platform, and takes the form of an Eclipse product composed of Eclipse plugins and Eclipse features.
-While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2022-12**.
+While you can certainly write your Java, XML, Markdown, etc., in any editor of your choice, we suggest that you use the free and open source **Eclipse IDE, version 2024-09**.
 
 You can download it from the [Eclipse download website](https://www.eclipse.org/downloads/).
 
@@ -132,4 +126,6 @@ If not noted otherwise, Eclipse plugins are installed as follows:
 
 ### List of Eclipse IDE plugins required for Hexatomic development
 
+- [**Target Platform Definition DSL and Generator**](https://github.com/eclipse-cbi/targetplatform-dsl), **version 3.0.0 or newer**  
+(Update Site: <https://download.eclipse.org/cbi/updates/tpd/release/3.0.0>)
 - [**Eclipse Checkstyle Plugin**](https://checkstyle.org/eclipse-cs/) (Update Site: <https://checkstyle.org/eclipse-cs-update-site/>)
