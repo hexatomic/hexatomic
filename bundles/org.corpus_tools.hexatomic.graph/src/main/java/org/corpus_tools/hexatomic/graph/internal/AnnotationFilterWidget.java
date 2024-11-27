@@ -158,8 +158,10 @@ public class AnnotationFilterWidget extends Composite
       existing.get().setChipsBackground(ColorPalette.REDDISH_PURPLE);
       existing.get().redraw();
       Display.getCurrent().timerExec(1000, () -> {
-        existing.get().setChipsBackground(ColorPalette.GRAY);
-        existing.get().redraw();
+        if (existing.isPresent() && !existing.get().isDisposed()) {
+          existing.get().setChipsBackground(ColorPalette.GRAY);
+          existing.get().redraw();
+        }
       });
 
       return;

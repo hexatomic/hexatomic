@@ -20,10 +20,10 @@
 
 package org.corpus_tools.hexatomic.textviewer;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;

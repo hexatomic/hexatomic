@@ -20,6 +20,7 @@
 
 package org.corpus_tools.hexatomic.transcription.internal.data;
 
+import jakarta.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -30,7 +31,6 @@ import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Stream;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.SaltHelper;
 import org.corpus_tools.hexatomic.core.Topics;

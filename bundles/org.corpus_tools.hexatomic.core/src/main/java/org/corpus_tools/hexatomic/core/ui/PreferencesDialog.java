@@ -20,7 +20,7 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.corpus_tools.hexatomic.core.Preferences;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;

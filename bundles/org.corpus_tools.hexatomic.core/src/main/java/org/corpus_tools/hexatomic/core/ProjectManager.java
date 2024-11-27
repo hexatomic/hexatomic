@@ -20,6 +20,9 @@
 
 package org.corpus_tools.hexatomic.core;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
@@ -32,9 +35,6 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.events.salt.SaltNotificationFactory;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;

@@ -3,24 +3,24 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Graph Editor
 Bundle-SymbolicName: org.corpus_tools.hexatomic.graph;singleton:=true
 Bundle-Version: 1.5.0.qualifier
-Require-Bundle: javax.inject,
- org.eclipse.jface,
+Require-Bundle: org.eclipse.jface,
  org.eclipse.e4.ui.model.workbench,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.core.di.annotations,
  org.corpus-tools.salt-api,
  org.corpus_tools.hexatomic.core,
- org.slf4j.api,
  org.eclipse.zest.core,
  org.eclipse.zest.layouts,
  com.google.guava,
  org.eclipse.jface.text,
  org.eclipse.e4.core.services,
- javax.annotation,
  org.eclipse.nebula.widgets.chips,
+ slf4j.api;bundle-version="2.0.7",
+ jakarta.inject.jakarta.inject-api;bundle-version="2.0.1",
+ jakarta.annotation-api;bundle-version="2.1.1",
  org.antlr.runtime;bundle-version="4.7.2"
 Automatic-Module-Name: org.corpus_tools.hexatomic.edit.graph
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.corpus_tools.hexatomic.console,
  org.corpus_tools.hexatomic.console.internal;x-internal:=true,
  org.corpus_tools.hexatomic.graph,

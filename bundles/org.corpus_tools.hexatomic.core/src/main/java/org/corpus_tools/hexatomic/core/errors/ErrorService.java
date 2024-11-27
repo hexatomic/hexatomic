@@ -20,11 +20,11 @@
 
 package org.corpus_tools.hexatomic.core.errors;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;

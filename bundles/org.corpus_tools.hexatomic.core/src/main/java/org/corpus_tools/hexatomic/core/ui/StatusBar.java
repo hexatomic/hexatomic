@@ -21,10 +21,10 @@
 
 package org.corpus_tools.hexatomic.core.ui;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.UiStatusReport;
 import org.corpus_tools.hexatomic.styles.ColorPalette;

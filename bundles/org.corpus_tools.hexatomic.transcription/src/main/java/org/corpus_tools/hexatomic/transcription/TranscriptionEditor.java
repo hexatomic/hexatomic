@@ -20,8 +20,8 @@
 
 package org.corpus_tools.hexatomic.transcription;
 
+import jakarta.inject.Inject;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.Topics;
 import org.corpus_tools.hexatomic.core.handlers.OpenSaltDocumentHandler;

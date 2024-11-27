@@ -1,7 +1,8 @@
 package org.eclipse.wb.swt;
 
-import static org.junit.Assert.assertNotNull;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.swt.SWT;

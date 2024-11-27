@@ -17,6 +17,8 @@ import org.eclipse.e4.core.contexts.EclipseContextFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.swtbot.e4.finder.widgets.SWTWorkbenchBot;
+import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
+import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -60,11 +62,23 @@ public class TestHelper {
       if (forcedKeyboardLayout != null) {
         org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT =
             forcedKeyboardLayout;
+      } else if (SystemUtils.IS_OS_MAC_OSX) {
+        org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences.KEYBOARD_LAYOUT = "MAC_EN_US";
       }
     } catch (SecurityException ex) {
       log.error("Could not get environment variable " + SWTBOT_KEYBOARD_LAYOUT
           + " because the security mananger is running and disallowed access", ex);
     }
+  }
+
+  /**
+   * Get the AWT based keyboard implementation, but sets the keyboard layout before creating it.
+   * 
+   * @return An AWT based keyboard implementation.
+   */
+  public static Keyboard getAwtKeyboard() {
+    TestHelper.setKeyboardLayout();
+    return KeyboardFactory.getAWTKeyboard();
   }
 
   /**

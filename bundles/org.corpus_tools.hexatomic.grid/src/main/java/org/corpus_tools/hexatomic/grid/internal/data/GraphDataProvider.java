@@ -21,6 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.data;
 
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +34,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import org.corpus_tools.hexatomic.core.ProjectManager;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.core.errors.HexatomicRuntimeException;

@@ -21,7 +21,7 @@
 
 package org.corpus_tools.hexatomic.grid.internal.layers;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.corpus_tools.hexatomic.core.errors.ErrorService;
 import org.corpus_tools.hexatomic.grid.internal.data.ColumnHeaderDataProvider;
 import org.corpus_tools.hexatomic.grid.internal.handlers.DisplayAnnotationRenameDialogOnColumnCommandHandler;
